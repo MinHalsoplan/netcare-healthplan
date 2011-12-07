@@ -18,42 +18,27 @@ package org.callistasoftware.netcare.core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user")
-@Inheritance(strategy=InheritanceType.JOINED)
-public abstract class UserEntity {
+@Table(name="care_giver")
+@PrimaryKeyJoinColumn(name="id")
+public class CareGiverEntity extends UserEntity {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	
 	@Column
-	private String name;
+	private String hsaId;
 	
-	UserEntity(final String name) {
-		this.setName(name);
+	CareGiverEntity(final String name, final String hsaId) {
+		super(name);
+		this.setHsaId(hsaId);
 	}
-	
-	public Long getId() {
-		return this.id;
+
+	public String getHsaId() {
+		return hsaId;
 	}
-	
-	void setId(final Long id) {
-		this.id = id;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	void setName(final String name) {
-		this.name = name;
+
+	void setHsaId(String hsaId) {
+		this.hsaId = hsaId;
 	}
 }

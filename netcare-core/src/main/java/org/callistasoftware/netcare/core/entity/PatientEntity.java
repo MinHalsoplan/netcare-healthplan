@@ -18,42 +18,42 @@ package org.callistasoftware.netcare.core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user")
-@Inheritance(strategy=InheritanceType.JOINED)
-public abstract class UserEntity {
+@Table(name="patient")
+@PrimaryKeyJoinColumn(name="id")
+public class PatientEntity extends UserEntity {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
+	@Column
+	private String civicRegistrationNumber;
 	
 	@Column
-	private String name;
+	private boolean isMobile;
 	
-	UserEntity(final String name) {
-		this.setName(name);
+	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
+		return new PatientEntity(name, civicRegistrationNumber);
 	}
 	
-	public Long getId() {
-		return this.id;
+	PatientEntity(final String name, final String civicRegistrationNumber) {
+		super(name);
+		this.setCivicRegistrationNumber(civicRegistrationNumber);
 	}
-	
-	void setId(final Long id) {
-		this.id = id;
+
+	public String getCivicRegistrationNumber() {
+		return civicRegistrationNumber;
 	}
-	
-	public String getName() {
-		return this.name;
+
+	void setCivicRegistrationNumber(String civicRegistrationNumber) {
+		this.civicRegistrationNumber = civicRegistrationNumber;
 	}
-	
-	void setName(final String name) {
-		this.name = name;
+
+	public boolean isMobile() {
+		return isMobile;
+	}
+
+	void setMobile(boolean isMobile) {
+		this.isMobile = isMobile;
 	}
 }

@@ -16,9 +16,12 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import static org.junit.Assert.*;
+
+
 import java.util.List;
 
-import org.callistasoftware.netcare.core.entity.UserEntity;
+import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +30,25 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
-public class UserRepositoryTest {
+public class PatientRepositoryTest {
 
 	@Autowired
-	private UserRepository repo;
+	private PatientRepository repo;
 	
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		
-		final UserEntity u1 = UserEntity.newEntity("Marcus");
-		this.repo.save(u1);
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
 		
-		final List<UserEntity> all = this.repo.findAll();
+		this.repo.save(p1);
+		
+		final List<PatientEntity> all = this.repo.findAll();
 		assertNotNull(all);
 		assertEquals(1, all.size());
+		assertFalse(all.get(0).isMobile());
 	}
 }

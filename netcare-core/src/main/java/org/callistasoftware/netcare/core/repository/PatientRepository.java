@@ -16,9 +16,9 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import org.callistasoftware.netcare.core.entity.UserEntity;
+import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 
 }
