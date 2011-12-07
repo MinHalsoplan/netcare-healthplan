@@ -30,7 +30,8 @@
 	<security:http security="none" pattern="/netcare/error/**" />
 
 	<security:http>
-		<security:intercept-url pattern="/**" access="ROLE_USER"/>
+		<security:intercept-url pattern="/netcare/user/**" access="ROLE_USER"/>
+		<security:intercept-url pattern="/netcare/admin/**" access="ROLE_ADMIN"/>
 		<security:form-login/>
 	</security:http>
 	

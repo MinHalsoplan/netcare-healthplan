@@ -28,8 +28,8 @@
 	<link rel="stylesheet" href="${bootstrapCss}" />
 	
 	<!-- Include JQuery UI Css -->
-	<%--<c:url value="/css/ui-lightness/jquery-ui-1.8.16.custom.css" var="jqueryUiCss" scope="page" />
-	<link href="${jqueryUiCss}" type="text/css" rel="stylesheet" /> --%>
+	<c:url value="/css/ui-lightness/jquery-ui-1.8.16.custom.css" var="jqueryUiCss" scope="page" />
+	<link href="${jqueryUiCss}" type="text/css" rel="stylesheet" />
 	
 	<!-- Include our CSS -->
 	<c:url value="/css/netcare.css" var="netcareCss" scope="page" />
@@ -40,8 +40,8 @@
 	<script type="text/javascript" src="${jqueryJs}"></script>
 	
 	<!-- Include JQuery UI Widgets -->
-	<%--<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
-	<script type="text/javascript" src="${jqueryUiJs}"></script> --%>
+	<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
+	<script type="text/javascript" src="${jqueryUiJs}"></script>
 	
 	<!-- Include Twitter bootstrap js -->
 	<c:url value="/js/bootstrap-alerts.js" var="bootstrapAlerts" scope="page" />
