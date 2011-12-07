@@ -27,17 +27,7 @@
 
 	<security:http security="none" pattern="/js/**" />
 	<security:http security="none" pattern="/css/**" />
-
 	<security:http security="none" pattern="/netcare/error/**" />
-
-	<!-- 
-		The /initial path should be configured to ONLY
-		be accessible in a pre-authentication scenario
-		and ONLY if it is the first time the user
-		access the system
-	 -->
-	<security:http security="none" pattern="/netcare/initial" />
-	<security:http security="none" pattern="/netcare/create" />
 
 	<security:http>
 		<security:intercept-url pattern="/**" access="ROLE_USER"/>
