@@ -18,6 +18,8 @@ package org.callistasoftware.netcare.core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -31,6 +33,10 @@ public class PatientEntity extends UserEntity {
 	
 	@Column
 	private boolean isMobile;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private CareGiverEntity primaryCareGiver;
+	
 	
 	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
 		return new PatientEntity(name, civicRegistrationNumber);
@@ -55,5 +61,13 @@ public class PatientEntity extends UserEntity {
 
 	void setMobile(boolean isMobile) {
 		this.isMobile = isMobile;
+	}
+
+	public void setPrimaryCareGiver(CareGiverEntity primaryCareGiver) {
+		this.primaryCareGiver = primaryCareGiver;
+	}
+
+	public CareGiverEntity getPrimaryCareGiver() {
+		return primaryCareGiver;
 	}
 }

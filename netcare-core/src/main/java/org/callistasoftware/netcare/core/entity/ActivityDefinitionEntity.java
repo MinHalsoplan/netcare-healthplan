@@ -16,7 +16,7 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
-import java.util.SortedSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.CollectionTable;
@@ -49,7 +49,7 @@ public class ActivityDefinitionEntity {
 
     @ElementCollection(fetch=FetchType.LAZY)
     @CollectionTable(name = "scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
-	SortedSet<ScheduledActivityEntity> scheduledActivities;
+	Set<ScheduledActivityEntity> scheduledActivities;
     
     
     public ActivityDefinitionEntity() {
@@ -84,7 +84,7 @@ public class ActivityDefinitionEntity {
 		return Frequency.unmarshal(frequency);
 	}
 	
-	public SortedSet<ScheduledActivityEntity> getScheduledActivities() {
+	public Set<ScheduledActivityEntity> getScheduledActivities() {
 		return scheduledActivities;
 	}
 }
