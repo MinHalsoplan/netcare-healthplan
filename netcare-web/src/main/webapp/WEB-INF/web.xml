@@ -87,12 +87,17 @@
 	
 	<error-page>
 		<error-code>404</error-code>
-		<location>/netcare/404</location>
+		<location>/netcare/error/404</location>
 	</error-page>
 	
 	<error-page>
 		<error-code>403</error-code>
-		<location>/WEB-INF/pages/error/denied.jsp</location>
+		<location>/netcare/error/403</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>500</error-code>
+		<location>/netcare/error/500</location>
 	</error-page>
 
 </web-app>

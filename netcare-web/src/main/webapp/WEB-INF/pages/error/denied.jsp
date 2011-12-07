@@ -25,21 +25,11 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <netcare:page>
-	<netcare:header>
-		<script type="text/javascript">
-			$(function() {
-				$('div[class="box"]').position({
-					of : $(window)
-				});
-			});
-		</script>
-	</netcare:header>
-	<netcare:body>
-		<div class="box">
-			<h1><spring:message code="denied" /></h1>
-			<p>
-				<spring:message code="deniedText" />
-			</p>
-		</div>
+	<netcare:header />
+	<netcare:body singleColumn="true">
+		<h1><spring:message code="denied" /></h1>
+		<p>
+			<spring:message code="deniedText" />
+		</p>
 	</netcare:body>
 </netcare:page>

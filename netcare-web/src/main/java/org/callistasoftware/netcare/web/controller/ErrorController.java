@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping(value="/error")
 public class ErrorController extends ControllerSupport {
 
 	@RequestMapping(value="/404")
@@ -30,5 +31,10 @@ public class ErrorController extends ControllerSupport {
 	@RequestMapping(value="/403")
 	public String getPermissionDeniedPage() {
 		return "error/denied";
+	}
+	
+	@RequestMapping(value="/500")
+	public String getInternalErrorPage() {
+		return "error/error";
 	}
 }

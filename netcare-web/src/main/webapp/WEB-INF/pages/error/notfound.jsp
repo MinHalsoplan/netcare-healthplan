@@ -24,21 +24,11 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <netcare:page>
-	<netcare:header>
-		<script type="text/javascript">
-			$(function() {
-				$('div[class="box"]').position({
-					of : $(window)
-				});
-			});
-		</script>
-	</netcare:header>
-	<netcare:body>
-		<div id="box">
-			<h1><spring:message code="notFound" /></h1>
-			<p>
-				<spring:message code="notFoundDesc" />
-			</p>
-		</div>
+	<netcare:header />
+	<netcare:body singleColumn="true">
+		<h1><spring:message code="notFound" /></h1>
+		<p>
+			<spring:message code="notFoundDesc" />
+		</p>
 	</netcare:body>
 </netcare:page>

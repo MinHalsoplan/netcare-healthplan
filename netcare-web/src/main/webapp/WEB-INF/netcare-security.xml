@@ -28,8 +28,7 @@
 	<security:http security="none" pattern="/js/**" />
 	<security:http security="none" pattern="/css/**" />
 
-	<security:http security="none" pattern="/netcare/404" />
-	<security:http security="none" pattern="/netcare/403" />
+	<security:http security="none" pattern="/netcare/error/**" />
 
 	<!-- 
 		The /initial path should be configured to ONLY

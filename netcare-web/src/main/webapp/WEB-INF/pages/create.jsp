@@ -24,64 +24,8 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <netcare:page>
-	<netcare:header>
-		<script type="text/javascript">
-			$(function() {
-				
-				$('div[class="box"]').position({
-					of : $(window)
-				});
-				
-				/* Hide pincode initially */
-				var mobileElem = $('input[name="mobile"]');
-				if (mobileElem.attr('checked') === undefined) {
-					$('#pinField').hide();
-				}
-				
-				$(mobileElem).click(function(event) {
-					if(mobileElem.attr('checked') == 'checked') {
-						console.log('Show pin code');
-						$('#pinField').fadeIn(500);
-					} else {
-						console.log('Hide pin code');
-						$('#pinField').fadeOut(250);
-					}
-				});
-			});
-		</script>
-	</netcare:header>
+	<netcare:header />
 	<netcare:body>
-		<div class="box">
-			<h1><spring:message code="initialCreate" /></h1>
-			<p>
-				<spring:message code="initialCreateDesc" />
-			</p>
-		
-			<form:form modelAttribute="user" action="create" method="post">
-				<div class="row">
-					<form:label path="name"><spring:message code="name" /></form:label>
-					<form:input path="name"/>
-				</div>
-				
-				<div class="row">
-					<form:label path="email"><spring:message code="email" /></form:label>
-					<form:input path="email" />
-				</div>
-				
-				<div class="row">
-					<form:label path="mobile"><spring:message code="mobile" /></form:label>
-					<form:checkbox path="mobile"/>
-				</div>
-				
-				<div id="pinField" class="row">
-					<form:label path="pinCode"><spring:message code="pincode" /></form:label>
-					<form:password path="pinCode"/>
-				</div>
-			
-				<div>
-					<input type="submit" value="<spring:message code='create' />" />
-				</div>
-			</form:form>
-		</div>
+		<h2>Välkommen!</h2>
 	</netcare:body>
 </netcare:page>

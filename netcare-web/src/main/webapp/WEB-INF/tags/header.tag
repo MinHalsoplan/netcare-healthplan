@@ -24,11 +24,12 @@
 	<title>NetCare</title>
 	
 	<!-- Include Twitter bootstrap -->
-	<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css" />
+	<c:url value="/css/bootstrap.min.css" var="bootstrapCss" scope="page" />
+	<link rel="stylesheet" href="${bootstrapCss}" />
 	
 	<!-- Include JQuery UI Css -->
-	<c:url value="/css/ui-lightness/jquery-ui-1.8.16.custom.css" var="jqueryUiCss" scope="page" />
-	<link href="${jqueryUiCss}" type="text/css" rel="stylesheet" />
+	<%--<c:url value="/css/ui-lightness/jquery-ui-1.8.16.custom.css" var="jqueryUiCss" scope="page" />
+	<link href="${jqueryUiCss}" type="text/css" rel="stylesheet" /> --%>
 	
 	<!-- Include our CSS -->
 	<c:url value="/css/netcare.css" var="netcareCss" scope="page" />
@@ -39,11 +40,11 @@
 	<script type="text/javascript" src="${jqueryJs}"></script>
 	
 	<!-- Include JQuery UI Widgets -->
-	<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
-	<script type="text/javascript" src="${jqueryUiJs}"></script>
+	<%--<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
+	<script type="text/javascript" src="${jqueryUiJs}"></script> --%>
 	
 	<!-- Include Twitter bootstrap js -->
-	<c:url value="/js/bootstrap-alert.js" var="bootstrapAlert" scope="page" />
+	<c:url value="/js/bootstrap-alerts.js" var="bootstrapAlerts" scope="page" />
 	<c:url value="/js/bootstrap-buttons.js" var="bootstrapButtons" scope="page" />
 	<c:url value="/js/bootstrap-dropdown.js" var="bootstrapDropdown" scope="page" />
 	<c:url value="/js/bootstrap-modal.js" var="bootstrapModal" scope="page" />
@@ -52,7 +53,7 @@
 	<c:url value="/js/bootstrap-tabs.js" var="bootstrapTabs" scope="page" />
 	<c:url value="/js/bootstrap-twipsy.js" var="bootstrapTwipsy" scope="page" />
 	
-	<script type="text/javascript" src="${bootstrapAlert}"></script>
+	<script type="text/javascript" src="${bootstrapAlerts}"></script>
 	<script type="text/javascript" src="${bootstrapButtons}"></script>
 	<script type="text/javascript" src="${bootstrapDropdown}"></script>
 	<script type="text/javascript" src="${bootstrapModal}"></script>
@@ -64,6 +65,54 @@
 	<!-- Include  -->
 	<c:url value="/js/netcare.js" var="netcareJs" scope="page" />
 	<script type="text/javascript" src="${netcareJs}"></script>
+	
+	<style type="text/css">
+		/* Override some defaults */
+      html, body {
+        background-color: #eee;
+      }
+      body {
+        padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+      }
+      .container > footer p {
+        text-align: center; /* center align it with the container */
+      }
+      .container {
+        width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+      }
+
+      /* The white background content wrapper */
+      .content {
+        background-color: #fff;
+        padding: 20px;
+        margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+        -webkit-border-radius: 6px 6px 6px 6px;
+           -moz-border-radius: 6px 6px 6px 6px;
+                border-radius: 6px 6px 6px 6px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+      }
+
+      /* Page header tweaks */
+      .page-header {
+        background-color: #f5f5f5;
+        padding: 20px 20px 10px;
+        margin: -20px -20px 20px;
+      }
+
+      /* Styles you shouldn't keep as they are for displaying this base example only */
+      .content .span10,
+      .content .span4 {
+        min-height: 500px;
+      }
+      /* Give a quick and non-cross-browser friendly divider */
+      .content .span4 {
+        margin-left: 0;
+        padding-left: 19px;
+        border-left: 1px solid #eee;
+      }
+	</style>
 	
 	<jsp:doBody />
 </head>

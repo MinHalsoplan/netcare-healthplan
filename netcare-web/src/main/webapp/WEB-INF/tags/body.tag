@@ -17,8 +17,29 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
+<%@ attribute name="singleColumn" required="false" type="java.lang.Boolean" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <body>
-	<jsp:doBody />
+	<div class="container">
+		<div class="content">
+			<div class="page-header">
+				<h1>Planerade hälsotjänster <small>Tagline text kan skrivas här</small></h1>
+			</div>
+			<div class="row">
+				<div class="span10">
+					<jsp:doBody />
+				</div>
+				<c:if test="${empty singleColumn}">
+					<div class="span4">
+						<h3>Vad vill du göra?</h3>
+					</div>
+				</c:if>
+			</div>
+		</div>
+		<footer>
+			<p>Callista Software</p>
+		</footer>
+	</div>
+	
 </body>
