@@ -16,7 +16,21 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
-public enum FrequencyUnit {
-	DAILY,
-	WEEKLY,
+public class FrequencyTime {
+	private int hour;
+	private int minute;
+	
+	
+	public void setHour(int hour) {
+		this.hour = hour;
+	}
+	public int getHour() {
+		return hour;
+	}
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
+	public int getMinute() {
+		return minute;
+	}
 }

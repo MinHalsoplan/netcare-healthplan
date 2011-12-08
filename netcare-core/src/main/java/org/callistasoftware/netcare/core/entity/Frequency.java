@@ -24,36 +24,24 @@ public class Frequency {
 	static final String REC_SEP = ";";
 	static final String VAL_SEP = ":";
 	
-	private FrequencyUnit frequencyUnit;
-	private List<FrequencyValue> values;
+	private List<FrequencyTime> times;
+	private FrequencyDay frequencyDay;
 		
-	Frequency() {
-		this.values = new LinkedList<FrequencyValue>();	
+	public Frequency() {
+		this.times = new LinkedList<FrequencyTime>();
+		this.frequencyDay = new FrequencyDay();
 	}
 	
-	public Frequency(FrequencyUnit frequencyUnit) {
-		this();
-		this.frequencyUnit = frequencyUnit;
-	}
-
-	public List<FrequencyValue> getValues() {
-		return values;
+	public List<FrequencyTime> getTimes() {
+		return times;
 	}
 	
-	public FrequencyUnit getFrequencyUnit() {
-		return frequencyUnit;
-	}
 
 	public static String marshal(Frequency frequency) {
-		StringBuffer sb = new StringBuffer(frequency.getFrequencyUnit().toString());
-		for (FrequencyValue v : frequency.getValues()) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(FrequencyDay.marshal(frequency.getFrequencyDay()));
+		for (FrequencyTime v : frequency.getTimes()) {
 			sb.append(REC_SEP);
-			if (frequency.getFrequencyUnit() == FrequencyUnit.DAILY) {
-				sb.append("");
-			} else {
-				sb.append(v.getDay().toString());
-			}
-			sb.append(VAL_SEP);
 			sb.append(v.getHour());
 			sb.append(VAL_SEP);
 			sb.append(v.getMinute());
@@ -65,20 +53,24 @@ public class Frequency {
 		if (s == null || s.length() == 0) {
 			return null;
 		}
-		StringTokenizer t = new StringTokenizer(s, REC_SEP);
-		FrequencyUnit unit = FrequencyUnit.valueOf(t.nextToken());
-		Frequency f = new Frequency(unit);
-		while (t.hasMoreTokens()) {
-			FrequencyValue value = new FrequencyValue();
-			String[] values = t.nextToken().split(VAL_SEP);
-			if (unit == FrequencyUnit.WEEKLY) {
-				value.setDay(FrequencyDay.valueOf(values[0]));
-			}
-			value.setHour(Integer.valueOf(values[1]));
-			value.setMinute(Integer.valueOf(values[2]));
-
-			f.getValues().add(value);
+		StringTokenizer tokenizer = new StringTokenizer(s, REC_SEP);
+		Frequency frequency = new Frequency();
+		frequency.setFrequencyDay(FrequencyDay.unmarshal(tokenizer.nextToken()));
+		while (tokenizer.hasMoreTokens()) {
+			FrequencyTime time = new FrequencyTime();
+			String[] values = tokenizer.nextToken().split(VAL_SEP);
+			time.setHour(Integer.valueOf(values[0]));
+			time.setMinute(Integer.valueOf(values[1]));
+			frequency.getTimes().add(time);
 		}
-		return f;
+		return frequency;
+	}
+
+	public void setFrequencyDay(FrequencyDay frequencyDay) {
+		this.frequencyDay = frequencyDay;
+	}
+
+	public FrequencyDay getFrequencyDay() {
+		return frequencyDay;
 	}
 }

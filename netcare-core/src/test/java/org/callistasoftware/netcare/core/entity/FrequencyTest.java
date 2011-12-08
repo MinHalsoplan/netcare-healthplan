@@ -22,91 +22,51 @@ import org.junit.Test;
 
 public class FrequencyTest {
 	
-	static Frequency createDailyFrequency() {
-		Frequency f = new Frequency(FrequencyUnit.DAILY);
-		assertEquals(FrequencyUnit.DAILY, f.getFrequencyUnit());
+	static Frequency createFrequency() {
+		Frequency f = new Frequency();
 		
-		FrequencyValue v = new FrequencyValue();
+		f.getFrequencyDay().addDay(FrequencyDay.TUE);
+		f.getFrequencyDay().addDay(FrequencyDay.WED);
+		f.getFrequencyDay().addDay(FrequencyDay.FRI);
+		f.getFrequencyDay().addDay(FrequencyDay.SAT);
+
+		FrequencyTime v = new FrequencyTime();
 		v.setHour(14);
 		v.setMinute(00);
-		f.getValues().add(v);
+		f.getTimes().add(v);
 		
-		v = new FrequencyValue();
+		v = new FrequencyTime();
 		v.setHour(8);
 		v.setMinute(30);
-		f.getValues().add(v);
+		f.getTimes().add(v);
 		
-		v = new FrequencyValue();
+		v = new FrequencyTime();
 		v.setHour(21);
 		v.setMinute(30);
-		f.getValues().add(v);
+		f.getTimes().add(v);
 		
-		assertEquals(3, f.getValues().size());
-		return f;
-	}
-	
-	
-	static Frequency createWeeklyFrequency() {
-		Frequency f = new Frequency(FrequencyUnit.WEEKLY);
-		assertEquals(FrequencyUnit.WEEKLY, f.getFrequencyUnit());
-		
-		FrequencyValue v = new FrequencyValue();
-		v.setHour(14);
-		v.setMinute(00);
-		v.setDay(FrequencyDay.MONDAY);
-		f.getValues().add(v);
-		
-		v = new FrequencyValue();
-		v.setHour(8);
-		v.setMinute(30);
-		v.setDay(FrequencyDay.WEDNESDAY);
-		f.getValues().add(v);
-		
-		v = new FrequencyValue();
-		v.setHour(21);
-		v.setMinute(30);
-		v.setDay(FrequencyDay.FRIDAY);
-		f.getValues().add(v);
-		
-		assertEquals(3, f.getValues().size());
+		assertEquals(3, f.getTimes().size());
 		return f;
 	}
 	
 	
 	@Test
-	public void testDaily() throws Exception {
-		createDailyFrequency();
+	public void testBasic() throws Exception {
+		createFrequency();
 	}
 	
 	@Test
-	public void testDailyMarshal() {
-		Frequency f = createDailyFrequency();
+	public void testMarshal() {
+		Frequency f = createFrequency();
 		String s = Frequency.marshal(f);
 		Frequency r = Frequency.unmarshal(s);
-		assertEquals(f.getFrequencyUnit(),r.getFrequencyUnit());
-		assertEquals(f.getValues().size(),r.getValues().size());
-		for (int i = 0; i < f.getValues().size(); i++) {
-			FrequencyValue lv = f.getValues().get(i);
-			FrequencyValue rv = r.getValues().get(i);
+		assertEquals(f.getTimes().size(),r.getTimes().size());
+		assertEquals(f.getFrequencyDay().getDays(), f.getFrequencyDay().getDays());
+		for (int i = 0; i < f.getTimes().size(); i++) {
+			FrequencyTime lv = f.getTimes().get(i);
+			FrequencyTime rv = r.getTimes().get(i);
 			assertEquals(lv.getHour(), rv.getHour());
 			assertEquals(lv.getMinute(), rv.getMinute());
 		}
 	}
-
-	@Test
-	public void testWeeklyMarshal() {
-		Frequency f = createWeeklyFrequency();
-		String s = Frequency.marshal(f);
-		Frequency r = Frequency.unmarshal(s);
-		assertEquals(f.getFrequencyUnit(),r.getFrequencyUnit());
-		assertEquals(f.getValues().size(),r.getValues().size());
-		for (int i = 0; i < f.getValues().size(); i++) {
-			FrequencyValue lv = f.getValues().get(i);
-			FrequencyValue rv = r.getValues().get(i);
-			assertEquals(lv.getHour(), rv.getHour());
-			assertEquals(lv.getMinute(), rv.getMinute());
-			assertEquals(lv.getDay(), rv.getDay());
-		}
-	}
-
 }

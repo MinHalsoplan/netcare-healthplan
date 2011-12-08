@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.core.entity.Frequency;
-import org.callistasoftware.netcare.core.entity.FrequencyUnit;
-import org.callistasoftware.netcare.core.entity.FrequencyValue;
+import org.callistasoftware.netcare.core.entity.FrequencyDay;
+import org.callistasoftware.netcare.core.entity.FrequencyTime;
 import org.callistasoftware.netcare.core.entity.ScheduledActivityEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,11 +47,13 @@ public class ActivityDefinitionRepositoryTest {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
-		Frequency freq = new Frequency(FrequencyUnit.DAILY);
-		FrequencyValue fval = new FrequencyValue();
+		Frequency freq = new Frequency();
+		freq.getFrequencyDay().addDay(FrequencyDay.MON);
+		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
+		FrequencyTime fval = new FrequencyTime();
 		fval.setHour(10);
 		fval.setMinute(0);
-		freq.getValues().add(fval);
+		freq.getTimes().add(fval);
 		entity.setFrequency(freq);
 		ScheduledActivityEntity sa = new ScheduledActivityEntity();
 		sa.setScheduledTime(new Date());
@@ -62,6 +64,8 @@ public class ActivityDefinitionRepositoryTest {
 		final List<ActivityDefinitionEntity> all = repo.findAll();
 		assertNotNull(all);
 		assertEquals(1, all.size());
-		assertEquals(true, all.get(0).getFrequency().getValues().get(0).getHour() == 10);
+		assertEquals(true, all.get(0).getFrequency().getTimes().get(0).getHour() == 10);
+		assertEquals(true, all.get(0).getFrequency().getFrequencyDay().isMonday());
+		assertEquals(true, all.get(0).getFrequency().getFrequencyDay().isFriday());
 	}
 }
