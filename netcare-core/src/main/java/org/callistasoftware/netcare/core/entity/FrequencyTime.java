@@ -17,7 +17,7 @@
 package org.callistasoftware.netcare.core.entity;
 
 /**
- * Keeps track if time in hours and moinutes.
+ * Keeps track of time in hours and minutes.
  * 
  * @author Peter
  *

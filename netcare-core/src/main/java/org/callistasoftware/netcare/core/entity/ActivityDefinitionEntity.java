@@ -40,6 +40,9 @@ public class ActivityDefinitionEntity {
 
 	@Column
 	private String frequency;
+	
+	@Column
+	private int weeklyTarget;
 
 	@ManyToOne
 	private OrdinationEntity ordination;
@@ -86,5 +89,24 @@ public class ActivityDefinitionEntity {
 	
 	public Set<ScheduledActivityEntity> getScheduledActivities() {
 		return scheduledActivities;
+	}
+
+	/**
+	 * Sets the weekly target for this activity, which will be used during follow up.
+	 * 
+	 * @param weeklyTarget the weekly target in the same unit as specified by {@link ActivityTypeEntity}
+	 * and the actual unit {@link MeasureUnit}
+	 */
+	public void setWeeklyTarget(int weeklyTarget) {
+		this.weeklyTarget = weeklyTarget;
+	}
+
+	/**
+	 * Returns the weekly target.
+	 * 
+	 * @return the weekly target in the same unit as specified by {@link ActivityTypeEntity}
+	 */
+	public int getWeeklyTarget() {
+		return weeklyTarget;
 	}
 }
