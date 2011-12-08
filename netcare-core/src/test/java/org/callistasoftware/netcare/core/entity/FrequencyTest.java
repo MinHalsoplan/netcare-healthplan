@@ -46,6 +46,14 @@ public class FrequencyTest {
 		f.getTimes().add(v);
 		
 		assertEquals(3, f.getTimes().size());
+		
+		assertEquals(true, f.getFrequencyDay().isTuesday());
+		assertEquals(false, f.getFrequencyDay().isSunday());
+		
+		f.getFrequencyDay().removeDay(FrequencyDay.TUE);
+		assertEquals(false, f.getFrequencyDay().isTuesday());
+		assertEquals(true, f.getFrequencyDay().isWedbesday());
+
 		return f;
 	}
 	
