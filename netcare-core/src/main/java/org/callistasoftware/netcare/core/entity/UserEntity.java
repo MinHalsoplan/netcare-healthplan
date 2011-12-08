@@ -47,10 +47,12 @@ public abstract class UserEntity {
 	@Column(unique=true)
 	private String email;
 	
-    @ElementCollection(fetch=FetchType.LAZY)
+	@ElementCollection(fetch=FetchType.LAZY)
     @CollectionTable(name = "user_properties", joinColumns = {@JoinColumn(name="user_id")})
 	private Map<String, String> properties;
-
+	
+	UserEntity() {
+	}
 	
 	UserEntity(final String name) {
 		this.setName(name);

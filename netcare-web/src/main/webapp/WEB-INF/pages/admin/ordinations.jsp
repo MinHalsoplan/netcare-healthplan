@@ -28,23 +28,17 @@
 		<script type="text/javascript">
 			$(function() {
 				
-				var units = new NC.Units();
-				units.loadOptions($('#activityTypeForm select[name="unit"]'));
-				
 			});
 		</script>
 	</netcare:header>
 	<netcare:body>
-		<h1><spring:message code="ordinations" /></h1>
-		<p>
-			Den här sidan låter dig skapa en ordination för en patient. Ordinationen kan sedan schemaläggas som sedan patient
-			kan rapportera på. Beskrivande text... bla bla.
-		</p>
-		
-		<form>
-			<fieldset>
-				<legend><spring:message code="create" /></legend>
-			</fieldset>
-		</form>
+		<netcare:content>
+			<h1><spring:message code="ordinations" /></h1>
+			<p>
+				Den här sidan låter dig skapa en ordination för en patient. Ordinationen kan sedan schemaläggas som sedan patient
+				kan rapportera på. Beskrivande text... bla bla.
+			</p>
+		</netcare:content>
+		<netcare:menu />
 	</netcare:body>
 </netcare:page>

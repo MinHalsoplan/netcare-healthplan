@@ -42,6 +42,10 @@ public class PatientEntity extends UserEntity {
 		return new PatientEntity(name, civicRegistrationNumber);
 	}
 	
+	PatientEntity() {
+		super();
+	}
+	
 	PatientEntity(final String name, final String civicRegistrationNumber) {
 		super(name);
 		this.setCivicRegistrationNumber(civicRegistrationNumber);

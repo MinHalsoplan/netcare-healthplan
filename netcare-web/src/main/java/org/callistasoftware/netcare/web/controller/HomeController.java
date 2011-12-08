@@ -16,8 +16,12 @@
  */
 package org.callistasoftware.netcare.web.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.callistasoftware.netcare.core.api.MinimalUser;
+import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.impl.MinimalUserImpl;
+import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -84,9 +88,14 @@ public class HomeController extends ControllerSupport {
 		return "admin/home";
 	}
 	
-	@RequestMapping(value="/admin/ordinations", method=RequestMethod.GET)
-	public String displayCreateOrdination() {
+	@RequestMapping(value="/admin/ordination/new", method=RequestMethod.GET)
+	public String displayCreateOrdination(final Model m, final HttpSession session) {
 		log.info("Displaying create new ordination");
+		
+		if (session.getAttribute("currentPatient") == null) {
+			m.addAttribute("result", ServiceResultImpl.createFailedResult(new DefaultSystemMessage("Du arbetar för närvarande inte med någon patient. Var god välj en patient att arbeta med först.")));
+		}
+		
 		return "admin/ordinations";
 	}
 	

@@ -27,4 +27,11 @@ public interface PatientService {
 	 * @return A list of patients or an empty list if no patients could be found
 	 */
 	ServiceResult<PatientBaseView[]> findPatients(final String freeTextSearch);
+	
+	/**
+	 * Load a patient with a specific id
+	 * @param id
+	 * @return
+	 */
+	ServiceResult<PatientBaseView> loadPatient(final Long id);
 }
