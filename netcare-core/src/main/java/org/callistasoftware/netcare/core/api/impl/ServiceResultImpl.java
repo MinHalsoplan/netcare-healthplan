@@ -66,7 +66,7 @@ public class ServiceResultImpl<T extends Serializable> implements ServiceResult<
 	
 	@Override
 	public boolean isSuccess() {
-		if (this.getErrorMessages().isEmpty()) {
+		if (!this.getErrorMessages().isEmpty()) {
 			throw new IllegalStateException("Service result is marked as successful, but it has error messages attached to it.");
 		}
 		

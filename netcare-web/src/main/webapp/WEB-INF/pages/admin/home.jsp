@@ -24,11 +24,20 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <netcare:page>
-	<netcare:header />
+	<netcare:header>
+		<script type="text/javascript">
+			$(function() {
+				
+				var units = new NC.Units();
+				units.loadOptions($('#activityTypeForm select[name="unit"]'));
+				
+			});
+		</script>
+	</netcare:header>
 	<netcare:body>
 		<h1>Välkommen till Admin!</h1>
 		
-		<form method="post" action="#">
+		<form id="activityTypeForm" method="post" action="#">
 			<fieldset>
 				<legend><spring:message code="addActivityType" /></legend>
 				<div class="clearfix">
@@ -41,8 +50,7 @@
 				<div class="clearfix">
 					<label for="activityUnit"><spring:message code="unit" /></label>
 					<div class="input">
-						<select class="medium">
-						
+						<select name="unit" class="medium">
 						</select>
 					</div>
 				</div>
