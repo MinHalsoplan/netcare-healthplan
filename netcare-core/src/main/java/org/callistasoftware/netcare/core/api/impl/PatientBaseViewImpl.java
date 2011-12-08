@@ -14,57 +14,57 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.core.api.impl;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 
-@Entity
-@Table(name="user")
-@Inheritance(strategy=InheritanceType.JOINED)
-public abstract class UserEntity {
+/**
+ * Implementation of a patient base view
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public class PatientBaseViewImpl implements PatientBaseView {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	
-	@Column(nullable=false)
 	private String name;
+	private String civicRegistrationNumber;
 	
-	@Column(unique=true)
-	private String email;
-	
-	UserEntity(final String name) {
-		this.setName(name);
-	}
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
 	public Long getId() {
 		return this.id;
 	}
 	
-	void setId(final Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
-	
+
+	@Override
 	public String getName() {
 		return this.name;
 	}
 	
-	void setName(final String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
-	
-	public String getEmail() {
-		return this.email;
+
+	@Override
+	public boolean isCareGiver() {
+		return false;
+	}
+
+	@Override
+	public String getCivicRegistrationNumber() {
+		return this.civicRegistrationNumber;
 	}
 	
-	public void setEmail(final String email) {
-		this.email = email;
+	public void setCivicRegistrationNumber(final String civicRegistrationNumber) {
+		this.civicRegistrationNumber = civicRegistrationNumber;
 	}
+
 }

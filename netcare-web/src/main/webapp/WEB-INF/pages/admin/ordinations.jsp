@@ -35,43 +35,16 @@
 		</script>
 	</netcare:header>
 	<netcare:body>
-		<h1>Välkommen</h1>
-		 
-		<form id="pickPatientForm">
-			<fieldset>
-				<legend><spring:message code="pickPatient" /></legend>
-			</fieldset>
-			<div class="clearfix">
-				<label for="pickPatient"><spring:message code="search" /></label>
-				<div class="input">
-					<input name="pickPatient" class="xlarge" size="30" type="text" />
-					
-					<spring:message code="pick" var="pick" scope="page" />
-					<input name="pickSubmit" type="submit" value="${pageScope.pick}"/>
-				</div>
-			</div>
-		</form>
+		<h1><spring:message code="ordinations" /></h1>
+		<p>
+			Den här sidan låter dig skapa en ordination för en patient. Ordinationen kan sedan schemaläggas som sedan patient
+			kan rapportera på. Beskrivande text... bla bla.
+		</p>
 		
-		<%--<form id="activityTypeForm" method="post" action="#">
+		<form>
 			<fieldset>
-				<legend><spring:message code="addActivityType" /></legend>
-				<div class="clearfix">
-					<label for="activityName"><spring:message code="name" /></label>
-					<div class="input">
-						<input name="activityName" class="xlarge" size="30" type="text" />
-					</div>
-				</div>
-				
-				<div class="clearfix">
-					<label for="activityUnit"><spring:message code="unit" /></label>
-					<div class="input">
-						<select name="unit" class="medium">
-						</select>
-					</div>
-				</div>
-				
+				<legend><spring:message code="create" /></legend>
 			</fieldset>
 		</form>
-		 --%>
-	</netcare:body>	
+	</netcare:body>
 </netcare:page>

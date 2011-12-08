@@ -17,12 +17,35 @@
 
 NC = {};
 
+NC.Patient = function() {
+	var _baseUrl = "/netcare-web/api/user";
+	
+	return {
+		findPatients : function() {
+			console.log("Finding patients. Searching for: ")
+			$.ajax({
+				url : _baseUrl + '/find',
+				dataType : 'json',
+				data : { search : search },
+				success : function(data) {
+					
+				}
+			})
+		}
+	}
+};
+
 NC.Units = function() {
 	
 	var _baseUrl = "/netcare-web/api/support/units";
 	
 	return {
 		loadOptions : function(selectElem) {
+			
+			if (selectElem === undefined) {
+				return false;
+			}
+			
 			var url = _baseUrl + '/load';
 			console.log("Loading unit options from: " + url);
 			

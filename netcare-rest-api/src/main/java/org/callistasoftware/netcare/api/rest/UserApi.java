@@ -16,9 +16,12 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -29,5 +32,11 @@ public class UserApi {
 	@ResponseBody
 	public String createUser() {
 		return "hello world";
+	}
+	
+	@RequestMapping(value = "/find", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<UserBaseView[]> findUsers(@RequestParam(value="search", required=true) final String search) {
+		throw new UnsupportedOperationException("Implement");
 	}
 }

@@ -14,21 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.repository;
+package org.callistasoftware.netcare.core.api;
 
-import java.util.List;
-
-import org.callistasoftware.netcare.core.entity.PatientEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
+/**
+ * Defines a base view of a patient
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface PatientBaseView extends UserBaseView {
 
 	/**
-	 * Find patients by name, email or civic registration number
-	 * @param name
-	 * @param email
-	 * @param civicRegistrationNumber
+	 * Get the civic registration number for the patient
 	 * @return
 	 */
-	List<PatientEntity> findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(final String name, final String email, final String civicRegistrationNumber); 
+	String getCivicRegistrationNumber();
 }
