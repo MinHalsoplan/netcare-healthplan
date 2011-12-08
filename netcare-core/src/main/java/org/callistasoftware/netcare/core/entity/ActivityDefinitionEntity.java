@@ -42,7 +42,7 @@ public class ActivityDefinitionEntity {
 	private String frequency;
 	
 	@Column
-	private int weeklyTarget;
+	private int activityTarget;
 
 	@ManyToOne
 	private OrdinationEntity ordination;
@@ -92,13 +92,13 @@ public class ActivityDefinitionEntity {
 	}
 
 	/**
-	 * Sets the weekly target for this activity, which will be used during follow up.
+	 * Sets the target for this activity (for each execution), which will be used during follow up.
 	 * 
-	 * @param weeklyTarget the weekly target in the same unit as specified by {@link ActivityTypeEntity}
+	 * @param activityTarget the target in the same unit as specified by {@link ActivityTypeEntity}
 	 * and the actual unit {@link MeasureUnit}
 	 */
-	public void setWeeklyTarget(int weeklyTarget) {
-		this.weeklyTarget = weeklyTarget;
+	public void setActivityTarget(int activityTarget) {
+		this.activityTarget = activityTarget;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ActivityDefinitionEntity {
 	 * 
 	 * @return the weekly target in the same unit as specified by {@link ActivityTypeEntity}
 	 */
-	public int getWeeklyTarget() {
-		return weeklyTarget;
+	public int getActivityTarget() {
+		return activityTarget;
 	}
 }

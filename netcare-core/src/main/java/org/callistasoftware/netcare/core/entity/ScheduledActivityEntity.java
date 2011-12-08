@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
 
 @Embeddable
 public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity> {
-	@Column
+	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date scheduledTime;
 	
@@ -35,6 +35,9 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	
 	@Column
 	private int reportedValue;
+	
+	@Column
+	private int targetValue;
 
 	public void setScheduledTime(Date scheduledTime) {
 		this.scheduledTime = scheduledTime;
@@ -63,5 +66,23 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Override
 	public int compareTo(ScheduledActivityEntity r) {
 		return scheduledTime.compareTo(r.getScheduledTime());
+	}
+
+	/**
+	 * The target value as it was defined when this activity was scheduled.
+	 * 
+	 * @param targetValue the origin target value to measure against.
+	 */
+	public void setTargetValue(int targetValue) {
+		this.targetValue = targetValue;
+	}
+
+	/**
+	 * Returns the target value as it was defined when this activity was scheduled.
+	 * 
+	 * @return the origin target value.
+	 */
+	public int getTargetValue() {
+		return targetValue;
 	}
 }
