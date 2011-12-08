@@ -20,6 +20,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * Defines a week based frequency in days and times.
+ * 
+ * @author Peter
+ *
+ */
 public class Frequency {
 	static final String REC_SEP = ";";
 	static final String VAL_SEP = ":";
@@ -35,8 +41,21 @@ public class Frequency {
 	public List<FrequencyTime> getTimes() {
 		return times;
 	}
-	
+		
+	public void setFrequencyDay(FrequencyDay frequencyDay) {
+		this.frequencyDay = frequencyDay;
+	}
 
+	public FrequencyDay getFrequencyDay() {
+		return frequencyDay;
+	}
+
+	/**
+	 * Marshals a frequency into a string representation.
+	 * 
+	 * @param frequency the frequency to marshal.
+	 * @return a string representation.
+	 */
 	public static String marshal(Frequency frequency) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(FrequencyDay.marshal(frequency.getFrequencyDay()));
@@ -49,11 +68,18 @@ public class Frequency {
 		return sb.toString();
 	}
 	
-	public static Frequency unmarshal(String s) {
-		if (s == null || s.length() == 0) {
+	/**
+	 * Unmarshals a frequency from a string representation.
+	 * 
+	 * @param stringFrequency the string representation.
+	 * @return a corresponding frequency object.
+	 */
+	
+	public static Frequency unmarshal(String stringFrequency) {
+		if (stringFrequency == null || stringFrequency.length() == 0) {
 			return null;
 		}
-		StringTokenizer tokenizer = new StringTokenizer(s, REC_SEP);
+		StringTokenizer tokenizer = new StringTokenizer(stringFrequency, REC_SEP);
 		Frequency frequency = new Frequency();
 		frequency.setFrequencyDay(FrequencyDay.unmarshal(tokenizer.nextToken()));
 		while (tokenizer.hasMoreTokens()) {
@@ -66,11 +92,4 @@ public class Frequency {
 		return frequency;
 	}
 
-	public void setFrequencyDay(FrequencyDay frequencyDay) {
-		this.frequencyDay = frequencyDay;
-	}
-
-	public FrequencyDay getFrequencyDay() {
-		return frequencyDay;
-	}
 }

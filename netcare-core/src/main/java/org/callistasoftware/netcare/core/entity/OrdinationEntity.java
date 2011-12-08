@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +49,12 @@ public class OrdinationEntity {
 	@Temporal(TemporalType.DATE)
 	private Date end;
 	
+	@Column
+	private int duration;
+	
+	@Column
+	private DurationUnit durationUnit;
+	
 	@ManyToOne
 	private CareGiverEntity issuedBy;
 	
@@ -73,14 +80,11 @@ public class OrdinationEntity {
 
 	public void setStart(Date start) {
 		this.start = start;
+		calculateEnd();
 	}
 
 	public Date getStart() {
 		return start;
-	}
-
-	public void setEnd(Date end) {
-		this.end = end;
 	}
 
 	public Date getEnd() {
@@ -101,5 +105,34 @@ public class OrdinationEntity {
 
 	public List<ActivityDefinitionEntity> getActivityDefinitions() {
 		return activityDefinitions;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+		calculateEnd();
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDurationUnit(DurationUnit durationUnit) {
+		this.durationUnit = durationUnit;
+		calculateEnd();
+	}
+
+	public DurationUnit getDurationUnit() {
+		return durationUnit;
+	}
+	
+	protected void calculateEnd() {
+		if (durationUnit != null && start != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(start);
+			c.add(durationUnit == DurationUnit.MONTH ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
+			end = c.getTime();
+		} else {
+			end = null;
+		}
 	}
 }

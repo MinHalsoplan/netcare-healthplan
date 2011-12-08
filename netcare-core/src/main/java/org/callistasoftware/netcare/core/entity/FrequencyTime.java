@@ -16,20 +16,35 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+/**
+ * Keeps track if time in hours and moinutes.
+ * 
+ * @author Peter
+ *
+ */
 public class FrequencyTime {
 	private int hour;
 	private int minute;
 	
 	
 	public void setHour(int hour) {
+		if (hour < 0 || hour > 23) {
+			throw new IllegalArgumentException("Invalid hour: " + hour);
+		}
 		this.hour = hour;
 	}
+	
 	public int getHour() {
 		return hour;
 	}
+	
 	public void setMinute(int minute) {
+		if (minute < 0 || minute > 59) {
+			throw new IllegalArgumentException("Invalid minute: " + minute);
+		}
 		this.minute = minute;
 	}
+	
 	public int getMinute() {
 		return minute;
 	}

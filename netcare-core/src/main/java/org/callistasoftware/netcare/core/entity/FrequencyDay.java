@@ -61,7 +61,7 @@ public class FrequencyDay {
 	 * @param day any of the defined day constants form this class (MON-SAT and ALL)
 	 */
 	public void addDay(int day) {		
-		assert(isValidDay(day));
+		validateDay(day);
 		dayMask |= day;
 	}
 	
@@ -71,7 +71,7 @@ public class FrequencyDay {
 	 * @param day any of the defined day constants form this class (MON-SAT and ALL)
 	 */
 	public void removeDay(int day) {
-		assert(isValidDay(day));
+		validateDay(day);
 		dayMask &= ~day;
 	}
 	
@@ -82,7 +82,7 @@ public class FrequencyDay {
 	 * @return 
 	 */
 	public boolean isSet(int day) {
-		assert(isValidDay(day));
+		validateDay(day);
 		return (dayMask & day) != 0;
 	}
 
@@ -150,20 +150,19 @@ public class FrequencyDay {
 	}
 	
 	/**
-	 * Returns if the parameter is a valid discrete day.
+	 * Returns if the parameter is a valid discrete day or all days.
 	 * 
-	 * @param day the day bit.
+	 * @param day the day bits.
 	 * 
-	 * @return true if its valid, otherwise false.
 	 */
-	protected boolean isValidDay(int day) {
+	protected void validateDay(int day) {
 		switch (day) {
 		case MON: case TUE: case WED:
 		case THU: case FRI: case SAT:
 		case SUN: case ALL:
-			return true;
+			return;
 		default:
-			return false;
+			throw new IllegalArgumentException("Invalid day bitmask: " + day);
 		}
 	}
 	
