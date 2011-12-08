@@ -84,6 +84,12 @@ public class HomeController extends ControllerSupport {
 		return "admin/home";
 	}
 	
+	@RequestMapping(value="/admin/ordinations", method=RequestMethod.GET)
+	public String displayCreateOrdination() {
+		log.info("Displaying create new ordination");
+		return "admin/ordinations";
+	}
+	
 	@RequestMapping(value="/user/home", method=RequestMethod.GET)
 	public String displayUserHome() {
 		log.info("Displaying home for user");

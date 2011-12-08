@@ -15,4 +15,55 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-NETCARE = {};
+NC = {};
+
+NC.Patient = function() {
+	var _baseUrl = "/netcare-web/api/user";
+	
+	return {
+		findPatients : function() {
+			console.log("Finding patients. Searching for: ")
+			$.ajax({
+				url : _baseUrl + '/find',
+				dataType : 'json',
+				data : { search : search },
+				success : function(data) {
+					
+				}
+			})
+		}
+	}
+};
+
+NC.Units = function() {
+	
+	var _baseUrl = "/netcare-web/api/support/units";
+	
+	return {
+		loadOptions : function(selectElem) {
+			
+			if (selectElem === undefined) {
+				return false;
+			}
+			
+			var url = _baseUrl + '/load';
+			console.log("Loading unit options from: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("Error: " + errorThrown);
+				},
+				success : function(data, textStatus, jqXHR) {
+					console.log("Success: " + data.data);
+					
+					$.each(data.data, function(index, value) {
+						console.log("Processing index: " + index + ", data: " + value);
+						$('<option>' + value + '</option>').appendTo(selectElem);
+					});
+				}
+			});
+		}
+	}
+}

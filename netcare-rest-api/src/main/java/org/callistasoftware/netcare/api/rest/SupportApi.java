@@ -17,26 +17,28 @@
 package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * Api for support operations such as loading units etc.
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
 @Controller
-@RequestMapping(value="/user")
-public class UserApi {
+@RequestMapping(value="/support")
+public class SupportApi {
 
-	@RequestMapping(value="/create", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/units/load", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public String createUser() {
-		return "hello world";
-	}
-	
-	@RequestMapping(value = "/find", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<UserBaseView[]> findUsers(@RequestParam(value="search", required=true) final String search) {
-		throw new UnsupportedOperationException("Implement");
+	public ServiceResult<String[]> loadUnits() {
+		final String[] units = {"min", "km"};
+		final ServiceResultImpl<String[]> result = ServiceResultImpl.createSuccessResult(units, new DefaultSystemMessage("Operation returned success"));
+		
+		return result;
 	}
 }

@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.repository;
 import static org.junit.Assert.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.entity.PatientEntity;
@@ -50,5 +51,46 @@ public class PatientRepositoryTest {
 		assertNotNull(all);
 		assertEquals(1, all.size());
 		assertFalse(all.get(0).isMobile());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testFindByFreeText() throws Exception {
+		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
+		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004");
+		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005");
+		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006");
+		final PatientEntity p4 = PatientEntity.newEntity("Marcus", "123456789007");
+		
+		ents.add(p1);
+		ents.add(p2);
+		ents.add(p3);
+		ents.add(p4);
+		
+		this.repo.save(ents);
+		
+		long count = this.repo.count();
+		assertEquals(4, count);
+		
+		String search = "%123%";
+		List<PatientEntity> result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		assertNotNull(result);
+		assertEquals(4, result.size());
+		
+		search = "%004%";
+		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		
+		search = "%rne%";
+		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		
+		search = "%Arn%";
+		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		assertNotNull(result);
+		assertEquals(1, result.size());
 	}
 }

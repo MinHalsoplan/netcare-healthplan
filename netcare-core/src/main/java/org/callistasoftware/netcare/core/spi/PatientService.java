@@ -14,10 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.repository;
+package org.callistasoftware.netcare.core.spi;
 
-import org.callistasoftware.netcare.core.entity.PatientEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.ServiceResult;
 
-public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
+public interface PatientService {
+
+	/**
+	 * Find patients from a free text search.
+	 * @param freeTextSearch - Can be either name, email or civic registration number
+	 * @return A list of patients or an empty list if no patients could be found
+	 */
+	ServiceResult<PatientBaseView[]> findPatients(final String freeTextSearch);
 }
