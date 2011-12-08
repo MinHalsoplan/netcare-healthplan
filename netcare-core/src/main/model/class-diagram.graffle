@@ -51,7 +51,7 @@
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{108.33331, 270.39752}, {53, 20}}</string>
+			<string>{{108.33331, 270.39752}, {58, 20}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -132,7 +132,7 @@
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
 
 \f0\fs16 \cf0 \expnd0\expndtw0\kerning0
-delegate (1)}</string>
+delegatee (1)}</string>
 			</dict>
 			<key>Wrap</key>
 			<string>NO</string>
@@ -1967,7 +1967,7 @@ CareGiver}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2011-12-08 12:43:04 +0000</string>
+	<string>2011-12-08 15:09:18 +0000</string>
 	<key>Modifier</key>
 	<string>Peter Larsson</string>
 	<key>NotesVisible</key>
@@ -2062,7 +2062,7 @@ CareGiver}</string>
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{0.66666669, 1.3333334}, {509.33334, 412.66666}}</string>
+		<string>{{0.66666669, 0}, {509.33334, 412.66666}}</string>
 		<key>Zoom</key>
 		<real>1.5</real>
 		<key>ZoomValues</key>
