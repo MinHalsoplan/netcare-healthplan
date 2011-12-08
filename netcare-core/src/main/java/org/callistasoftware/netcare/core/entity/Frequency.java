@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
  *
  */
 public class Frequency {
+	static final String VERSION = "1";
 	static final String REC_SEP = ";";
 	static final String VAL_SEP = ":";
 	
@@ -58,6 +59,8 @@ public class Frequency {
 	 */
 	public static String marshal(Frequency frequency) {
 		StringBuffer sb = new StringBuffer();
+		sb.append(VERSION);
+		sb.append(REC_SEP);
 		sb.append(FrequencyDay.marshal(frequency.getFrequencyDay()));
 		for (FrequencyTime v : frequency.getTimes()) {
 			sb.append(REC_SEP);
@@ -80,6 +83,10 @@ public class Frequency {
 			return null;
 		}
 		StringTokenizer tokenizer = new StringTokenizer(stringFrequency, REC_SEP);
+		String version = tokenizer.nextToken();
+		if (!VERSION.equals(version)){
+			throw new IllegalArgumentException("Invalid string frequency version: " + version + ", expetced: " + VERSION);
+		}
 		Frequency frequency = new Frequency();
 		frequency.setFrequencyDay(FrequencyDay.unmarshal(tokenizer.nextToken()));
 		while (tokenizer.hasMoreTokens()) {
