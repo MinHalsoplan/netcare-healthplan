@@ -16,17 +16,13 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Date;
 import java.util.List;
 
-import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
-import org.callistasoftware.netcare.core.entity.Frequency;
-import org.callistasoftware.netcare.core.entity.FrequencyDay;
-import org.callistasoftware.netcare.core.entity.FrequencyTime;
-import org.callistasoftware.netcare.core.entity.ScheduledActivityEntity;
+import static org.junit.Assert.assertEquals;
+
+import org.callistasoftware.netcare.core.entity.CareGiverDelegationEntity;
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,34 +33,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
-public class ActivityDefinitionRepositoryTest {
+public class CareGiverDelegationRepositoryTest {
 	@Autowired
-	private ActivityDefinitionRepository repo;
+	private CareGiverDelegationRepository dr;
+	@Autowired
+	private CareGiverRepository cr;
 	
+	/**
+	 * 2 doctors delegates to the same nurse.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
-		Frequency freq = new Frequency();
-		freq.getFrequencyDay().addDay(FrequencyDay.MON);
-		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
-		FrequencyTime fval = new FrequencyTime();
-		fval.setHour(10);
-		fval.setMinute(0);
-		freq.getTimes().add(fval);
-		entity.setFrequency(freq);
-		ScheduledActivityEntity sa = new ScheduledActivityEntity();
-		sa.setScheduledTime(new Date());
-		entity.getScheduledActivities().add(sa);
-		repo.save(entity);
-		repo.flush();
+		CareGiverEntity cd1 =  CareGiverEntity.newEntity("doctor peter", "2-14");
+		cr.save(cd1);
+
+		CareGiverEntity cd2 =  CareGiverEntity.newEntity("doctor mikael", "32-14");
+		cr.save(cd2);
+
+		CareGiverEntity cn =  CareGiverEntity.newEntity("nurse emma", "63-14");
+		cr.save(cn);
+		cr.flush();
 		
-		final List<ActivityDefinitionEntity> all = repo.findAll();
-		assertNotNull(all);
-		assertEquals(1, all.size());
-		assertEquals(true, all.get(0).getFrequency().getTimes().get(0).getHour() == 10);
-		assertEquals(true, all.get(0).getFrequency().getFrequencyDay().isMonday());
-		assertEquals(true, all.get(0).getFrequency().getFrequencyDay().isFriday());
+		CareGiverDelegationEntity de1 = CareGiverDelegationEntity.newEntity(cd1, cn, new Date(), new Date());
+		dr.save(de1);
+		
+		CareGiverDelegationEntity de2 = CareGiverDelegationEntity.newEntity(cd2, cn, new Date(), new Date());
+		dr.save(de2);
+		dr.flush();
+		
+		List<CareGiverDelegationEntity> list = dr.findByCareGiverDelegatee(cn);
+		assertEquals(2, list.size());
+		
+		assertEquals(cn, list.get(0).getCareGiverDelegatee());
 	}
 }

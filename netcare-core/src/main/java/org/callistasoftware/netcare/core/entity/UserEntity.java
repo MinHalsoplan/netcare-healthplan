@@ -16,13 +16,20 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -40,8 +47,14 @@ public abstract class UserEntity {
 	@Column(unique=true)
 	private String email;
 	
+    @ElementCollection(fetch=FetchType.LAZY)
+    @CollectionTable(name = "user_properties", joinColumns = {@JoinColumn(name="user_id")})
+	private Map<String, String> properties;
+
+	
 	UserEntity(final String name) {
 		this.setName(name);
+		this.properties = new HashMap<String, String>();
 	}
 	
 	public Long getId() {
@@ -66,5 +79,9 @@ public abstract class UserEntity {
 	
 	public void setEmail(final String email) {
 		this.email = email;
+	}
+
+	public Map<String, String> getProperties() {
+		return properties;
 	}
 }
