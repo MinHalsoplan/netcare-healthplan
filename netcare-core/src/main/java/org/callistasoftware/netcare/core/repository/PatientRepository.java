@@ -22,7 +22,6 @@ import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
-
 	/**
 	 * Find patients by name, email or civic registration number
 	 * @param name

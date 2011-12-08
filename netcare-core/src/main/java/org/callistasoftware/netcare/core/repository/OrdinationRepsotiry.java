@@ -14,38 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.core.repository;
 
-/**
- * Keeps track of time in hours and minutes.
- * 
- * @author Peter
- *
- */
-public class FrequencyTime {
-	private int hour;
-	private int minute;
-	
-	
-	public void setHour(int hour) {
-		if (hour < 0 || hour > 23) {
-			throw new IllegalArgumentException("Invalid hour: " + hour);
-		}
-		this.hour = hour;
-	}
-	
-	public int getHour() {
-		return hour;
-	}
-	
-	public void setMinute(int minute) {
-		if (minute < 0 || minute > 59) {
-			throw new IllegalArgumentException("Invalid minute: " + minute);
-		}
-		this.minute = minute;
-	}
-	
-	public int getMinute() {
-		return minute;
-	}
+import org.callistasoftware.netcare.core.entity.OrdinationEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrdinationRepsotiry extends JpaRepository<OrdinationEntity, Long> {
 }

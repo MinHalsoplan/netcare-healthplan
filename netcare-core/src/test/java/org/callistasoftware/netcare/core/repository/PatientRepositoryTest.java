@@ -56,6 +56,29 @@ public class PatientRepositoryTest {
 	@Test
 	@Transactional
 	@Rollback(true)
+	public void testProperties() {
+		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
+		p.getProperties().put("prop1", "val1");
+		p.getProperties().put("prop2", "val2");
+		repo.save(p);
+		repo.flush();
+		
+		final PatientEntity p2 = repo.findOne(p.getId());
+		assertEquals(2, p2.getProperties().size());
+		
+		p2.getProperties().remove("prop1");
+		p2.getProperties().put("prop3", "val2");
+		repo.save(p2);
+		repo.flush();
+		
+		final PatientEntity p3 = repo.findOne(p.getId());
+		assertEquals(2, p3.getProperties().size());
+		assertNotNull(p3.getProperties().get("prop3"));
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
 	public void testFindByFreeText() throws Exception {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
 		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004");

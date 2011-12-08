@@ -16,8 +16,13 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -29,9 +34,21 @@ public class CareGiverEntity extends UserEntity {
 	@Column
 	private String hsaId;
 	
-	CareGiverEntity(final String name, final String hsaId) {
+	@OneToMany(fetch=FetchType.LAZY)
+	private List<CareGiverDelegationEntity> careGiverDelegations;
+	
+	CareGiverEntity(final String name) {
 		super(name);
+		careGiverDelegations = new LinkedList<CareGiverDelegationEntity>();
+	}
+	
+	CareGiverEntity(final String name, final String hsaId) {
+		this(name);
 		this.setHsaId(hsaId);
+	}
+
+	public static CareGiverEntity newEntity(final String name, final String hsaId) {
+		return new CareGiverEntity(name, hsaId);
 	}
 
 	public String getHsaId() {
@@ -40,5 +57,9 @@ public class CareGiverEntity extends UserEntity {
 
 	void setHsaId(String hsaId) {
 		this.hsaId = hsaId;
+	}
+
+	public List<CareGiverDelegationEntity> getCareGiverDelegations() {
+		return careGiverDelegations;
 	}
 }
