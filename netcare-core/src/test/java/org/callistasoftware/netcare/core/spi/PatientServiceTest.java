@@ -60,4 +60,22 @@ public class PatientServiceTest {
 		assertEquals(p1.getCivicRegistrationNumber(), p.getCivicRegistrationNumber());
 		assertEquals(p1.getId(), p.getId());
 	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testLoadPatient() throws Exception {
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
+		final PatientEntity saved = this.patientRepository.save(p1);
+		
+		final ServiceResult<PatientBaseView> bv = this.service.loadPatient(saved.getId());
+		assertNotNull(bv);
+		assertTrue(bv.isSuccess());
+		assertNotNull(bv.getData());
+		
+		final PatientBaseView data = bv.getData();
+		assertEquals(saved.getName(), data.getName());
+		assertEquals(saved.getId(), data.getId());
+		assertEquals(saved.getCivicRegistrationNumber(), data.getCivicRegistrationNumber());
+	}
 }

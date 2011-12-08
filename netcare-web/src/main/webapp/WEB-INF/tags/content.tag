@@ -16,22 +16,12 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
-	<netcare:header />
-	<netcare:body>
-		<netcare:content>
-			<h1><spring:message code="internalError" /></h1>
-			<p>
-				<spring:message code="generalError" /><br />
-			</p>
-		</netcare:content>
-	</netcare:body>
-</netcare:page>
 
+<div class="span10">
+	<jsp:doBody />
+</div>

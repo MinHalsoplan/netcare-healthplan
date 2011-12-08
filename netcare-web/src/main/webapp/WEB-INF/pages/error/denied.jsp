@@ -26,10 +26,12 @@
 
 <netcare:page>
 	<netcare:header />
-	<netcare:body singleColumn="true">
-		<h1><spring:message code="denied" /></h1>
-		<p>
-			<spring:message code="deniedText" />
-		</p>
+	<netcare:body>
+		<netcare:content>
+			<h1><spring:message code="denied" /></h1>
+			<p>
+				<spring:message code="deniedText" />
+			</p>
+		</netcare:content>
 	</netcare:body>
 </netcare:page>

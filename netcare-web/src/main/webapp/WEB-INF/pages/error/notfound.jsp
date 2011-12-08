@@ -25,10 +25,12 @@
 
 <netcare:page>
 	<netcare:header />
-	<netcare:body singleColumn="true">
-		<h1><spring:message code="notFound" /></h1>
-		<p>
-			<spring:message code="notFoundDesc" />
-		</p>
+	<netcare:body>
+		<netcare:content>
+			<h1><spring:message code="notFound" /></h1>
+			<p>
+				<spring:message code="notFoundDesc" />
+			</p>
+		</netcare:content>
 	</netcare:body>
 </netcare:page>

@@ -17,20 +17,48 @@
 
 NC = {};
 
+NC.Util = function() {
+	return {
+		updateCurrentPatient : function(name) {
+			console.log("Updating current patient. Display: " + name);
+			$('#currentpatient a').html(name);
+			$('#nopatient').hide();
+			$('#currentpatient').show();
+		}
+	}
+}
+
 NC.Patient = function() {
 	var _baseUrl = "/netcare-web/api/user";
 	
 	return {
-		findPatients : function() {
-			console.log("Finding patients. Searching for: ")
+		/**
+		 * Called when the care giver wants to find a patient
+		 */
+		findPatients : function(searchValue, successFunction) {
+			console.log("Finding patients. Searching for: " + searchValue)
 			$.ajax({
 				url : _baseUrl + '/find',
 				dataType : 'json',
-				data : { search : search },
-				success : function(data) {
-					
-				}
-			})
+				data : { search : searchValue },
+				success : successFunction
+			});
+		},
+		
+		/**
+		 * Called when care giver selects a patient to
+		 * work with. This method adds the selected patient
+		 * to the session scope and the menu should always
+		 * display the selected patient
+		 */
+		selectPatient : function(patientId, successFunction) {
+			console.log("Selecting patient: " + patientId);
+			$.ajax({
+				url : _baseUrl + '/' + patientId + '/select',
+				dataType : 'json',
+				type : 'post',
+				success : successFunction
+			});
 		}
 	}
 };
@@ -40,6 +68,10 @@ NC.Units = function() {
 	var _baseUrl = "/netcare-web/api/support/units";
 	
 	return {
+		/**
+		 * Load all unit options that exist in the
+		 * application.
+		 */
 		loadOptions : function(selectElem) {
 			
 			if (selectElem === undefined) {

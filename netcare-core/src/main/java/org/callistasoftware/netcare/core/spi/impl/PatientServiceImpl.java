@@ -57,4 +57,14 @@ public class PatientServiceImpl implements PatientService {
 		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]), new DefaultSystemMessage("Found " + dtos.size() + " patients that matched your critera."));
 	}
 
+	@Override
+	public ServiceResult<PatientBaseView> loadPatient(Long id) {
+		final PatientEntity ent = this.patientRepository.findOne(id);
+		final PatientBaseView dto = new PatientBaseViewImpl();
+		
+		BeanUtils.copyProperties(ent, dto);
+		
+		return ServiceResultImpl.createSuccessResult(dto, null);
+	}
+
 }

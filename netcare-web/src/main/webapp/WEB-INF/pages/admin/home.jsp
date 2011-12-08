@@ -27,6 +27,58 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				var util = new NC.Util();
+				var patient = new NC.Patient();
+				var patientSearchInput = $('#pickPatientForm input[name="pickPatient"]'); 
+				
+				patientSearchInput.autocomplete({
+					source : function(request, response) {
+						
+						/*
+						 * Call find patients. Pass in the search value as well as
+						 * a function that should be executed upon success.
+						 */
+						patient.findPatients(request.term, function(data) {
+							console.log("Found " + data.data.length + " patients.");
+							response($.map(data.data, function(item) {
+								console.log("Processing item: " + item.name);
+								return { label : item.name, value : item.name, patientId : item.id };
+							}));
+						});
+					},
+					select : function(event, ui) {
+						console.log("Setting hidden field value to: " + ui.item.patientId);
+						$('#pickPatientForm input[name="selectedPatient"]').attr('value', ui.item.patientId);
+					}
+				});
+				
+				var selectPatientSuccess = function(data) {
+					var name = data.data.name;
+					util.updateCurrentPatient(name);
+				};
+				
+				var selectPatient = function(event) {
+					patient.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
+					event.preventDefault();
+				}
+				
+				/*
+				 * When the user presses enter in the search field will cause
+				 * the form to submit
+				 */
+				patientSearchInput.keypress(function(e) {
+					if (e.which == 13) {
+						selectPatient(e);
+					}
+				});
+				
+				/*
+				 * When the user clicks on the submit button, we perform
+				 * an ajax call that selects the patient in the session.
+				 */
+				$('#pickPatientForm').submit(function(event) {
+					selectPatient(event);
+				});
 				
 				var units = new NC.Units();
 				units.loadOptions($('#activityTypeForm select[name="unit"]'));
@@ -35,43 +87,50 @@
 		</script>
 	</netcare:header>
 	<netcare:body>
-		<h1>Välkommen</h1>
+		<netcare:content>
+			<h1>Välkommen</h1>
 		 
-		<form id="pickPatientForm">
-			<fieldset>
-				<legend><spring:message code="pickPatient" /></legend>
-			</fieldset>
-			<div class="clearfix">
-				<label for="pickPatient"><spring:message code="search" /></label>
-				<div class="input">
-					<input name="pickPatient" class="xlarge" size="30" type="text" />
+			<form id="pickPatientForm">
+				<fieldset>
+					<legend><spring:message code="pickPatient" /></legend>
+				</fieldset>
+				<div class="clearfix">
+					<label for="pickPatient"><spring:message code="search" /></label>
+					<div class="input">
+						<input name="pickPatient" class="xlarge" size="30" type="text" />
+						
+						<spring:message code="pick" var="pick" scope="page" />
+						<input name="pickSubmit" type="submit" value="${pageScope.pick}" class="btn primary"/>
+						<input name="selectedPatient" type="hidden" />
+					</div>
+				</div>
+			</form>
+			
+			<%--<form id="activityTypeForm" method="post" action="#">
+				<fieldset>
+					<legend><spring:message code="addActivityType" /></legend>
+					<div class="clearfix">
+						<label for="activityName"><spring:message code="name" /></label>
+						<div class="input">
+							<input name="activityName" class="xlarge" size="30" type="text" />
+						</div>
+					</div>
 					
-					<spring:message code="pick" var="pick" scope="page" />
-					<input name="pickSubmit" type="submit" value="${pageScope.pick}"/>
-				</div>
-			</div>
-		</form>
+					<div class="clearfix">
+						<label for="activityUnit"><spring:message code="unit" /></label>
+						<div class="input">
+							<select name="unit" class="medium">
+							</select>
+						</div>
+					</div>
+					
+				</fieldset>
+			</form>
+			 --%>
+		</netcare:content>
+		<netcare:menu>
 		
-		<%--<form id="activityTypeForm" method="post" action="#">
-			<fieldset>
-				<legend><spring:message code="addActivityType" /></legend>
-				<div class="clearfix">
-					<label for="activityName"><spring:message code="name" /></label>
-					<div class="input">
-						<input name="activityName" class="xlarge" size="30" type="text" />
-					</div>
-				</div>
-				
-				<div class="clearfix">
-					<label for="activityUnit"><spring:message code="unit" /></label>
-					<div class="input">
-						<select name="unit" class="medium">
-						</select>
-					</div>
-				</div>
-				
-			</fieldset>
-		</form>
-		 --%>
+		</netcare:menu>
+		
 	</netcare:body>	
 </netcare:page>

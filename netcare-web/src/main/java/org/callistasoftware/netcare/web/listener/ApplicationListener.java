@@ -18,9 +18,13 @@ package org.callistasoftware.netcare.web.listener;
 
 import javax.servlet.ServletContextEvent;
 
+import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ApplicationListener extends ContextLoaderListener {
 
@@ -31,6 +35,21 @@ public class ApplicationListener extends ContextLoaderListener {
 		super.contextInitialized(event);
 		
 		log.info("======== NETCARE STARTED ========");
+		
+		final WebApplicationContext wc = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+		PatientRepository bean = wc.getBean(PatientRepository.class);
+		
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198205134656");
+		bean.save(p1);
+		
+		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212");
+		bean.save(p2);
+		
+		final PatientEntity p3 = PatientEntity.newEntity("Arne Andersson", "123456789003");
+		bean.save(p3);
+		
+		final PatientEntity p4 = PatientEntity.newEntity("Anders Arnesson", "123456789004");
+		bean.save(p4);
 	}
 	
 	@Override

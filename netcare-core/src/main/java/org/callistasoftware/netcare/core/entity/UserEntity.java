@@ -40,6 +40,9 @@ public abstract class UserEntity {
 	@Column(unique=true)
 	private String email;
 	
+	UserEntity() {
+	}
+	
 	UserEntity(final String name) {
 		this.setName(name);
 	}
