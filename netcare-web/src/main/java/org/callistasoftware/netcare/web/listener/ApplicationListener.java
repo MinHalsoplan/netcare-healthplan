@@ -18,7 +18,9 @@ package org.callistasoftware.netcare.web.listener;
 
 import javax.servlet.ServletContextEvent;
 
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,13 @@ public class ApplicationListener extends ContextLoaderListener {
 		log.info("======== NETCARE STARTED ========");
 		
 		final WebApplicationContext wc = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-		PatientRepository bean = wc.getBean(PatientRepository.class);
+		final PatientRepository bean = wc.getBean(PatientRepository.class);
+		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		
+		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234");
+		
+		cgRepo.save(cg1);
+		cgRepo.flush();
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198205134656");
 		bean.save(p1);

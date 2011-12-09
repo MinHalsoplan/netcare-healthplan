@@ -31,11 +31,14 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name="id")
 public class CareGiverEntity extends UserEntity {
 
-	@Column
+	@Column(nullable=false, unique=true)
 	private String hsaId;
 	
 	@OneToMany(fetch=FetchType.LAZY)
 	private List<CareGiverDelegationEntity> careGiverDelegations;
+	
+	CareGiverEntity() {
+	}
 	
 	CareGiverEntity(final String name) {
 		super(name);

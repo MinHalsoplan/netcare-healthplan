@@ -16,18 +16,19 @@
  */
 package org.callistasoftware.netcare.web.controller;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.MinimalUser;
+import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
-import org.callistasoftware.netcare.core.api.impl.MinimalUserImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -37,49 +38,30 @@ public class HomeController extends ControllerSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 	
-	/**
-	 * This should ONLY be accessible in a pre-authentication scenario
-	 * and ONLY if the user does not already exist
-	 * @return
-	 */
-	@RequestMapping(value="/initial", method=RequestMethod.GET)
-	public String performInitialSetup(final Model m) {
-		
-		log.info("Performing initial setup of a new user from MVK.");
-		
-		m.addAttribute("user", new MinimalUserImpl());
-		return "create";
-	}
+	@Autowired
+	private MessageSource messages;
 	
-	@RequestMapping(value="/create", method=RequestMethod.POST)
-	public String createInitialUser(@ModelAttribute("user") final MinimalUser user, final BindingResult result) {
-		
-		throw new RuntimeException("A runtime exception");
-		
-		//log.info("Creating new user");
-		//return "redirect:/home";
+	@RequestMapping(value="/login", method=RequestMethod.GET)
+	public String displayLoginForm() {
+		return "login";
 	}
 	
 	@RequestMapping(value="/home", method=RequestMethod.GET)
 	public String goHome() {
 		
 		log.info("User {} is being redirected to home");
-		final MinimalUser user = this.getLoggedInUser();
+		final UserBaseView user = this.getLoggedInUser();
 		if (user == null) {
 			throw new SecurityException("User is not logged in");
 		}
 		
 		if (user.isCareGiver()) {
 			log.debug("Redirecting to admin home");
-			return "redirect:/admin/home";
+			return "redirect:admin/home";
 		}
 		
-		if (user.isPatient()) {
-			log.debug("Redirecting to user home");
-			return "redirect:/patient/home";
-		}
-		
-		throw new IllegalStateException("User is neither care giver nor patient.");
+		log.debug("Redirecting to user home");
+		return "redirect:patient/home";
 	}
 	
 	@RequestMapping(value="/admin/home", method=RequestMethod.GET)
@@ -89,11 +71,11 @@ public class HomeController extends ControllerSupport {
 	}
 	
 	@RequestMapping(value="/admin/ordination/new", method=RequestMethod.GET)
-	public String displayCreateOrdination(final Model m, final HttpSession session) {
+	public String displayCreateOrdination(final Model m, final HttpSession session, final Locale locale) {
 		log.info("Displaying create new ordination");
 		
 		if (session.getAttribute("currentPatient") == null) {
-			m.addAttribute("result", ServiceResultImpl.createFailedResult(new DefaultSystemMessage("Du arbetar för närvarande inte med någon patient. Var god välj en patient att arbeta med först.")));
+			m.addAttribute("result", ServiceResultImpl.createFailedResult(new DefaultSystemMessage(messages.getMessage("noCurrentPatientError", new Object[0], locale))));
 		}
 		
 		return "admin/ordinations";

@@ -16,12 +16,12 @@
  */
 package org.callistasoftware.netcare.web.controller;
 
-import org.callistasoftware.netcare.core.api.MinimalUser;
+import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 abstract class ControllerSupport {
 
-	protected MinimalUser getLoggedInUser() {
-		return (MinimalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	protected UserBaseView getLoggedInUser() {
+		return (UserBaseView) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 }

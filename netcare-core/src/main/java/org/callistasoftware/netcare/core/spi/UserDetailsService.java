@@ -14,17 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.repository;
+package org.callistasoftware.netcare.core.spi;
 
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+/**
+ * Defines the user details service
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {
 
-public interface CareGiverRepository extends JpaRepository<CareGiverEntity, Long>{
-	
-	/**
-	 * Find a care giver by its hsa id
-	 * @param hsaId
-	 * @return
-	 */
-	CareGiverEntity findByHsaId(final String hsaId);
 }

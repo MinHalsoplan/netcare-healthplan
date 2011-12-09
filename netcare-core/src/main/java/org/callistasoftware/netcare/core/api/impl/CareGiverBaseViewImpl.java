@@ -19,57 +19,49 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 /**
- * Implementation of a patient base view
- * 
+ * Implementation of a care giver base view
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBaseView {
+public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiverBaseView {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String civicRegistrationNumber;
-
-	public PatientBaseViewImpl() {
+	private String hsaId;
+	
+	public CareGiverBaseViewImpl() {
 		super(null, null);
 	}
 	
-	public PatientBaseViewImpl(final Long id, final String name) {
+	public CareGiverBaseViewImpl(final Long id, final String name) {
 		super(id, name);
 	}
 	
-	public void setId(final Long id) {
-		this.id = id;
+	@Override
+	public String getHsaId() {
+		return this.hsaId;
 	}
 	
-	public void setName(final String name) {
-		this.name = name;
+	public void setHsaId(final String hsaId) {
+		this.hsaId = hsaId;
 	}
 
 	@Override
 	public boolean isCareGiver() {
-		return false;
-	}
-
-	@Override
-	public String getCivicRegistrationNumber() {
-		return this.civicRegistrationNumber;
-	}
-	
-	public void setCivicRegistrationNumber(final String civicRegistrationNumber) {
-		this.civicRegistrationNumber = civicRegistrationNumber;
+		return true;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new GrantedAuthorityImpl("ROLE_USER"));
+		return Collections.singletonList(new GrantedAuthorityImpl("ROLE_ADMIN"));
 	}
+
 }

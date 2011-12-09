@@ -25,7 +25,7 @@
 
 <div class="span4">
 	<h3><spring:message code="loggedInAs" /></h3>
-	<p><a href="#"></a> | <a href="#"><spring:message code="logout" /></a>
+	<p><a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	
 	<h3><spring:message code="patient" /></h3>
 	<c:choose>
@@ -49,8 +49,8 @@
 	
 	<h3><spring:message code="workWith" /></h3>
 	<ul>
-		<c:url value="/netcare/admin/ordination/new" var="ordinationUrl" scope="page" />
-		<li><a href="${ordinationUrl}"><spring:message code="create" /> <spring:message code="ordination" /></a>
+		<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="switchPatient" /></a>
+		<li><a href="<spring:url value="/netcare/admin/ordination/new" />"><spring:message code="create" /> <spring:message code="ordination" /></a>
 	</ul>
 </div>
 	

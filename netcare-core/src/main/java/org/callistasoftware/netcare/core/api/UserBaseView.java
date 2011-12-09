@@ -18,12 +18,14 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 /**
  * Defines a base view of a user
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public interface UserBaseView extends Serializable {
+public interface UserBaseView extends UserDetails, Serializable {
 
 	/**
 	 * The id of the user

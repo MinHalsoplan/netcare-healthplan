@@ -28,20 +28,29 @@
 	<security:http security="none" pattern="/js/**" />
 	<security:http security="none" pattern="/css/**" />
 	<security:http security="none" pattern="/netcare/error/**" />
+	<security:http security="none" pattern="/netcare/login*" />
 
 	<security:http>
+		<security:intercept-url pattern="/netcare/home*" access="ROLE_USER, ROLE_ADMIN"/>
 		<security:intercept-url pattern="/netcare/user/**" access="ROLE_USER"/>
 		<security:intercept-url pattern="/netcare/admin/**" access="ROLE_ADMIN"/>
-		<security:form-login/>
+		<security:form-login login-page="/netcare/login" default-target-url="/netcare/home"/>
+		<security:logout logout-success-url="/netcare/login"/>
 	</security:http>
 	
 	<security:authentication-manager>
-		<security:authentication-provider>
-			<security:user-service>
-				<security:user name="patient" password="0000" authorities="ROLE_USER"/>
-				<security:user name="caregiver" password="0000" authorities="ROLE_ADMIN"/>
-			</security:user-service>
-		</security:authentication-provider>
+		<security:authentication-provider ref="authenticationProvider" />
 	</security:authentication-manager>
+	
+	<bean id="authenticationProvider" class="org.callistasoftware.netcare.web.security.AuthenticationProvider" />
+	
+<!-- 	<security:authentication-manager> -->
+<!-- 		<security:authentication-provider> -->
+<!-- 			<security:user-service> -->
+<!-- 				<security:user name="patient" password="0000" authorities="ROLE_USER"/> -->
+<!-- 				<security:user name="caregiver" password="0000" authorities="ROLE_ADMIN"/> -->
+<!-- 			</security:user-service> -->
+<!-- 		</security:authentication-provider> -->
+<!-- 	</security:authentication-manager> -->
 
 </beans>

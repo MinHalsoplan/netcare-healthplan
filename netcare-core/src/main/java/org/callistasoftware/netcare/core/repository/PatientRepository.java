@@ -29,5 +29,12 @@ public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	 * @param civicRegistrationNumber
 	 * @return
 	 */
-	List<PatientEntity> findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(final String name, final String email, final String civicRegistrationNumber); 
+	List<PatientEntity> findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(final String name, final String email, final String civicRegistrationNumber);
+	
+	/**
+	 * Find a patient by its civic registration number
+	 * @param civicRegistrationNumber
+	 * @return
+	 */
+	PatientEntity findByCivicRegistrationNumber(final String civicRegistrationNumber);
 }
