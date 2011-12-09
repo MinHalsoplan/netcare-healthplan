@@ -34,11 +34,10 @@ public class ApiUtil {
 		BeanProxy proxy = new BeanProxy();
 
 		for (Method m : targetClass.getDeclaredMethods()) {
-			if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
-				String s = proxy.getGetterFor(m);
-				Method ms = methodExists(source.getClass(), s);
+			if ((m.getName().startsWith("is") || m.getName().startsWith("get")) && m.getParameterTypes().length == 0) {
+				Method ms = methodExists(source.getClass(), m.getName());
 				if (ms != null) {
-					proxy.set(s, marshal(m.getParameterTypes()[0], ms.invoke(source)));
+					proxy.set(m.getName(), marshal(m.getReturnType(), ms.invoke(source)));
 				}
 			}
 		}

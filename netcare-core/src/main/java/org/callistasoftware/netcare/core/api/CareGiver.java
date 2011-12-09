@@ -18,7 +18,6 @@ package org.callistasoftware.netcare.core.api;
 
 public interface CareGiver {
 
-		void setName(String name);
 		String getName();
 		
 		void setHsaId(String hsaId);
