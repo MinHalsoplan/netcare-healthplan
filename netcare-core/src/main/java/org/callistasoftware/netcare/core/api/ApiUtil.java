@@ -29,11 +29,11 @@ public class ApiUtil {
 	private static final Map<Class<?>, Class<?>> classMap = new ConcurrentHashMap<Class<?>, Class<?>>();
 
 	@SuppressWarnings("unchecked")
-	public static <T> T copy(Object source) throws Exception {
-		Class<?> targetClass = getDtoClassFor(source.getClass());
+	public static <T> T copy(Class<T> targetInterface, Object source) throws Exception {
+		//Class<?> targetClass = getDtoClassFor(source.getClass());
 		BeanProxy proxy = new BeanProxy();
 
-		for (Method m : targetClass.getDeclaredMethods()) {
+		for (Method m : targetInterface.getDeclaredMethods()) {
 			if ((m.getName().startsWith("is") || m.getName().startsWith("get")) && m.getParameterTypes().length == 0) {
 				Method ms = methodExists(source.getClass(), m.getName());
 				if (ms != null) {
@@ -41,7 +41,7 @@ public class ApiUtil {
 				}
 			}
 		}
-		return (T)proxy.createProxy(targetClass);
+		return (T)proxy.createProxy(targetInterface);
 	}
 	
 
@@ -65,14 +65,14 @@ public class ApiUtil {
 				if (o.getClass().getSimpleName().endsWith(ENTITY_SUFFIX)) {
 					LinkedList<Object> list = new LinkedList<Object>();
 					for (Object item : theColl) {
-						list.add(copy(item));
+						list.add(copy(getDtoClassFor(item.getClass()), item));
 					}
 					return list;					
 				}
 				break;
 			}
 		} else if (returnType.getPackage().equals(PKG) && !returnType.isEnum()) {
-			return copy(value);
+			return copy(getDtoClassFor(returnType), value);
 		}
 		return value;
 	}

@@ -51,7 +51,7 @@ public class ApiUtilTest {
 		final CareGiverEntity c = CareGiverEntity.newEntity("doktor peter", "123456Id");
 		p.setPrimaryCareGiver(c);
 		
-		Patient pi = ApiUtil.copy(p);
+		Patient pi = ApiUtil.copy(Patient.class, p);
 		
 		assertEquals(pi.getName(), p.getName());
 		assertEquals(p.getProperties(), pi.getProperties());
