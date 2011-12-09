@@ -30,12 +30,10 @@ public class ApiUtil {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T copy(Class<T> targetInterface, Object source) throws Exception {
-		//Class<?> targetClass = getDtoClassFor(source.getClass());
 		BeanProxy proxy = new BeanProxy();
-
 		for (Method m : targetInterface.getDeclaredMethods()) {
 			if ((m.getName().startsWith("is") || m.getName().startsWith("get")) && m.getParameterTypes().length == 0) {
-				Method ms = methodExists(source.getClass(), m.getName());
+				Method ms = getMethodFor(source.getClass(), m.getName());
 				if (ms != null) {
 					proxy.set(m.getName(), marshal(m.getReturnType(), ms.invoke(source)));
 				}
@@ -45,7 +43,7 @@ public class ApiUtil {
 	}
 	
 
-	private static Method methodExists(Class<?> source, String methodName) {
+	private static Method getMethodFor(Class<?> source, String methodName) {
 		try {
 			return source.getMethod(methodName);
 		} catch (Exception e) {
