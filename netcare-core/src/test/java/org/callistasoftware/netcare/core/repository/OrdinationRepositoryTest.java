@@ -77,7 +77,7 @@ public class OrdinationRepositoryTest {
 		e1.setDuration(20);
 		e1.setDurationUnit(DurationUnit.WEEK);
 		e1.setStartDate(new Date());
-		e1.setName("HŠlsoplan B");
+		e1.setName("HÃ¤lsoplan B");
 		ActivityDefinitionEntity ad =  createActivityDefinition();
 		e1.getActivityDefinitions().add(ad);
 		
@@ -90,7 +90,7 @@ public class OrdinationRepositoryTest {
 		assertNotNull(all);
 		assertEquals(1, all.size());
 		OrdinationEntity e2 = all.get(0);
-		assertEquals("HŠlsoplan B", e2.getName());
+		assertEquals("HÃ¤lsoplan B", e2.getName());
 		assertEquals(DurationUnit.WEEK, e2.getDurationUnit());
 		assertEquals(20, e2.getDuration());
 		Calendar c = Calendar.getInstance();
