@@ -70,7 +70,7 @@ public class OrdinationEntity {
 		activityDefinitions = new LinkedList<ActivityDefinitionEntity>();
 	}
 	
-	
+
 	public static OrdinationEntity newEntity(String name, Date startDate, int duration, DurationUnit unit) {
 		OrdinationEntity entity = new OrdinationEntity();
 		entity.setName(name);
@@ -85,7 +85,7 @@ public class OrdinationEntity {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = EntityUtil.notNull(name);
 	}
 
 	public String getName() {
@@ -93,7 +93,7 @@ public class OrdinationEntity {
 	}
 
 	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+		this.startDate = EntityUtil.notNull(startDate);
 		calculateEnd();
 	}
 
@@ -122,6 +122,9 @@ public class OrdinationEntity {
 	}
 
 	public void setDuration(int duration) {
+		if (duration <= 0 || duration > 24) {
+			throw new IllegalArgumentException("Invalid duration: " + duration);
+		}
 		this.duration = duration;
 		calculateEnd();
 	}
@@ -131,7 +134,7 @@ public class OrdinationEntity {
 	}
 
 	public void setDurationUnit(DurationUnit durationUnit) {
-		this.durationUnit = durationUnit;
+		this.durationUnit = EntityUtil.notNull(durationUnit);
 		calculateEnd();
 	}
 

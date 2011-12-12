@@ -70,8 +70,8 @@ public class CareGiverDelegationEntity {
 		return id;
 	}
 
-	public void setCareGiverDelegatee(CareGiverEntity careGiverDelegatee) {
-		this.careGiverDelegatee = careGiverDelegatee;
+	protected void setCareGiverDelegatee(CareGiverEntity careGiverDelegatee) {
+		this.careGiverDelegatee = EntityUtil.notNull(careGiverDelegatee);
 	}
 
 	public CareGiverEntity getCareGiverDelegatee() {
@@ -79,7 +79,7 @@ public class CareGiverDelegationEntity {
 	}
 
 	public void setFromDate(Date fromDate) {
-		this.fromDate = fromDate;
+		this.fromDate = EntityUtil.notNull(fromDate);
 	}
 
 	public Date getFromDate() {
@@ -94,8 +94,8 @@ public class CareGiverDelegationEntity {
 		return toDate;
 	}
 
-	public void setCareGiver(CareGiverEntity careGiver) {
-		this.careGiver = careGiver;
+	protected void setCareGiver(CareGiverEntity careGiver) {
+		this.careGiver = EntityUtil.notNull(careGiver);
 	}
 
 	public CareGiverEntity getCareGiver() {

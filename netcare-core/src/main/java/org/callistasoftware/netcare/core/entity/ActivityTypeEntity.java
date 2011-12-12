@@ -51,7 +51,7 @@ public class ActivityTypeEntity {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = EntityUtil.notNull(name);
 	}
 
 	public String getName() {
@@ -59,7 +59,7 @@ public class ActivityTypeEntity {
 	}
 
 	public void setUnit(MeasureUnit unit) {
-		this.unit = unit;
+		this.unit = EntityUtil.notNull(unit);
 	}
 
 	public MeasureUnit getUnit() {

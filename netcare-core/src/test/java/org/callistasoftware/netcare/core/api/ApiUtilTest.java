@@ -31,20 +31,18 @@ package org.callistasoftware.netcare.core.api;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 import static org.junit.Assert.assertEquals;
 
 import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
-import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.junit.Test;
 
 public class ApiUtilTest {
 
 	@Test
 	public void testProxy() throws Exception {
-		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004", cg);
 		p.getProperties().put("prop1", "val1");
 		p.getProperties().put("prop2", "val2");
 		

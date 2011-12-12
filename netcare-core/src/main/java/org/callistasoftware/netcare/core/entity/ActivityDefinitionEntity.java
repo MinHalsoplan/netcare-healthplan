@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -51,6 +53,10 @@ public class ActivityDefinitionEntity {
 	@ManyToOne
 	@JoinColumn(name="activity_type_id")
 	private ActivityTypeEntity activityType;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private UserEntity user;
 
     @ElementCollection(fetch=FetchType.LAZY)
     @CollectionTable(name = "nc_scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
@@ -61,10 +67,10 @@ public class ActivityDefinitionEntity {
     	scheduledActivities = new TreeSet<ScheduledActivityEntity>();
 	}
     
-    public static ActivityDefinitionEntity newEntity(OrdinationEntity ordination, ActivityTypeEntity activityType, Frequency frequency) {
+    public static ActivityDefinitionEntity newEntity(UserEntity user, ActivityTypeEntity activityType, Frequency frequency) {
     	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
+    	entity.setUser(user);
     	entity.setActivityType(activityType);
-    	entity.setOrdination(ordination);
     	entity.setFrequency(frequency);
     	return entity;
     }
@@ -82,7 +88,7 @@ public class ActivityDefinitionEntity {
 	}
 
 	public void setActivityType(ActivityTypeEntity activityType) {
-		this.activityType = activityType;
+		this.activityType = EntityUtil.notNull(activityType);
 	}
 
 	public ActivityTypeEntity getActivityType() {
@@ -90,15 +96,20 @@ public class ActivityDefinitionEntity {
 	}
 
 	public void setFrequency(Frequency frequency) {
-		this.frequency = Frequency.marshal(frequency);
+		this.frequency = Frequency.marshal(EntityUtil.notNull(frequency));
 	}
 
 	public Frequency getFrequency() {
 		return Frequency.unmarshal(frequency);
 	}
 	
+	public ScheduledActivityEntity createScheduledActivityEntity(Date scheduledTime) {
+		ScheduledActivityEntity entity = ScheduledActivityEntity.newEntity(this, scheduledTime);
+		return entity;
+	}
+	
 	public Set<ScheduledActivityEntity> getScheduledActivities() {
-		return scheduledActivities;
+		return Collections.unmodifiableSet(scheduledActivities);
 	}
 
 	/**
@@ -118,5 +129,13 @@ public class ActivityDefinitionEntity {
 	 */
 	public int getActivityTarget() {
 		return activityTarget;
+	}
+
+	protected void setUser(UserEntity user) {
+		this.user = EntityUtil.notNull(user);
+	}
+
+	public UserEntity getUser() {
+		return user;
 	}
 }

@@ -22,9 +22,12 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.Frequency;
 import org.callistasoftware.netcare.core.entity.FrequencyDay;
 import org.callistasoftware.netcare.core.entity.FrequencyTime;
+import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +53,9 @@ public class ActivityDefinitionRepositoryTest {
 		fval.setHour(10);
 		fval.setMinute(0);
 		freq.getTimes().add(fval);
-		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(null, null, freq);
-		entity.setFrequency(freq);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(patient, null, freq);
 		repo.save(entity);
 		repo.flush();
 		

@@ -43,8 +43,15 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	ScheduledActivityEntity() {
 	}
 	
-	public void setScheduledTime(Date scheduledTime) {
-		this.scheduledTime = scheduledTime;
+	public static ScheduledActivityEntity newEntity(ActivityDefinitionEntity activityDefinitionEntity, Date scheduledTime) {
+		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
+		activityDefinitionEntity.getScheduledActivities().add(scheduledActivityEntity);
+		scheduledActivityEntity.setScheduledTime(scheduledTime);
+		return scheduledActivityEntity;
+	}
+	
+	protected void setScheduledTime(Date scheduledTime) {
+		this.scheduledTime = EntityUtil.notNull(scheduledTime);
 	}
 
 	public Date getScheduledTime() {

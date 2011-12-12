@@ -37,8 +37,7 @@ public class CareGiverEntity extends UserEntity {
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="careGiverDelegatee")
 	private List<CareGiverDelegationEntity> careGiverDelegations;
 	
-	CareGiverEntity() {
-	}
+	CareGiverEntity() {}
 	
 	CareGiverEntity(final String name) {
 		super(name);
@@ -59,7 +58,7 @@ public class CareGiverEntity extends UserEntity {
 	}
 
 	void setHsaId(String hsaId) {
-		this.hsaId = hsaId;
+		this.hsaId = EntityUtil.notNull(hsaId);
 	}
 
 	public List<CareGiverDelegationEntity> getCareGiverDelegations() {
