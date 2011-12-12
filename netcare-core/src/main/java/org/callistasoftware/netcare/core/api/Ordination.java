@@ -14,10 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.repository;
+package org.callistasoftware.netcare.core.api;
 
-import org.callistasoftware.netcare.core.entity.OrdinationEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.io.Serializable;
+import java.util.Date;
 
-public interface OrdinationRepsotiry extends JpaRepository<OrdinationEntity, Long> {
+/**
+ * Interface defining an ordination
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface Ordination extends Serializable {
+
+	Long getId();
+	
+	String getName();
+	
+	Date getStartDate();
+	
+	Date getEndDate();
+	
+	CareGiverBaseView getIssuedBy();
 }

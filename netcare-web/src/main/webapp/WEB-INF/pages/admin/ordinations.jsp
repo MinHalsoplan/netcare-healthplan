@@ -28,10 +28,36 @@
 		<script type="text/javascript">
 			$(function() {
 				var support = NC.Support();
-				support.loadDurations($('#createordinationform select'));
+				support.loadDurations($('#createOrdinationForm select'));
 				
 				var ordinations = NC.Ordinations($('#ordinationDescription'), $('#ordinationTable'));
 				ordinations.init();
+				
+				/*
+				 * Bind date picker to start date field
+				 */
+				$('#createOrdinationForm input[name="startDate"]').datepicker({
+					dateFormat : 'yy-mm-dd',
+					firstDay : 1,
+					minDate : +0
+				});
+				
+				support.loadMonths(function(data) {
+					$('#createOrdinationForm input[name="startDate"]').datepicker('option', 'monthNames', data);
+				});
+				
+				support.loadWeekdays(function(data) {
+					$('#createOrdinationForm input[name="startDate"]').datepicker('option', 'dayNamesMin', data);
+				});
+				
+				/*
+				 * Bind create button
+				 */
+				$('#createOrdinationForm :submit').click(function(event) {
+					console.log("Submitting form...");
+					ordinations.create('createOrdinationForm', <c:out value="${sessionScope.currentPatient.id}" />);
+					event.preventDefault();
+				});
 				
 			});
 		</script>
@@ -46,17 +72,36 @@
 			
 			<spring:message code="create" var="title" scope="page" />
 			<spring:message code="clear" var="clear" scope="page" />
+			<spring:message code="duration" var="duration" scope="page" />
 			<spring:message code="name" var="name" scope="page" />
 			<spring:message code="type" var="type" scope="page" />
+			<spring:message code="startDate" var="startDate" scope="page" />
 			
-			<netcare:form title="${title}" id="createordinationform" classes="form-stacked">
+			<netcare:form title="${title}" id="createOrdinationForm" classes="form-stacked">
 				<netcare:field name="name" label="${name}">
 					<input type="text" name="name" class="xlarge" />
 				</netcare:field>
 				
-				<netcare:field name="type" label="${type}">
-					<select name="type"></select>
+				<netcare:field name="startDate" label="${startDate}">
+					<input type="text" name="startDate" class="xlarge" />
 				</netcare:field>
+				
+				<div class="row">
+					<div class="span6">
+						<div class="row">
+							<div class="span3">
+								<netcare:field name="duration" label="${duration}">
+									<input type="number" name="duration" class="medium" />
+								</netcare:field>
+							</div>
+							<div class="span3">
+								<netcare:field name="type" label="${type}">
+									<select name="type"></select>
+								</netcare:field>
+							</div>
+						</div>
+					</div>
+				</div>
 				
 				<div class="actions">
 					<input type="submit" class="btn primary" value="${title}" />
