@@ -38,12 +38,16 @@ public class PatientRepositoryTest {
 
 	@Autowired
 	private PatientRepository repo;
+	@Autowired
+	private CareGiverRepository cgRepo;
 	
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);
 		
 		this.repo.save(p1);
@@ -59,6 +63,8 @@ public class PatientRepositoryTest {
 	@Rollback(true)
 	public void testProperties() {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+
 		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004", cg);
 		p.getProperties().put("prop1", "val1");
 		p.getProperties().put("prop2", "val2");
@@ -84,6 +90,8 @@ public class PatientRepositoryTest {
 	public void testFindByFreeText() throws Exception {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+
 		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004", cg);
 		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005", cg);
 		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006", cg);

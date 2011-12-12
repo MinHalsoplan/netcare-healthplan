@@ -27,6 +27,7 @@ import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.Frequency;
 import org.callistasoftware.netcare.core.entity.FrequencyDay;
 import org.callistasoftware.netcare.core.entity.FrequencyTime;
+import org.callistasoftware.netcare.core.entity.MeasureUnit;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActivityDefinitionRepositoryTest {
 	@Autowired
 	private ActivityDefinitionRepository repo;
+	@Autowired
+	private ActivityTypeRepository typeRepo;
+	@Autowired
+	private CareGiverRepository cgRepo;
+	@Autowired
+	private PatientRepository patientRepo;
 	
 	@Test
 	@Transactional
@@ -53,9 +60,20 @@ public class ActivityDefinitionRepositoryTest {
 		fval.setHour(10);
 		fval.setMinute(0);
 		freq.getTimes().add(fval);
+
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
-		PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
-		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(patient, null, freq);
+		cgRepo.save(cg);
+		cgRepo.flush();
+		
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		patientRepo.save(patient);
+		patientRepo.flush();
+		
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", MeasureUnit.KILOMETERS);
+		typeRepo.save(type);
+		typeRepo.flush();
+		
+		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(patient, type, freq);
 		repo.save(entity);
 		repo.flush();
 		

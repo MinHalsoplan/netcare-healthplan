@@ -23,6 +23,7 @@ import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.callistasoftware.netcare.core.entity.OrdinationEntity;
 import org.callistasoftware.netcare.core.repository.OrdinationRepository;
 import org.callistasoftware.netcare.core.spi.OrdinationService;
@@ -49,7 +50,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 
 	@Override
 	public ServiceResult<Ordination> createNewOrdination(String name, Date start) {
-		final OrdinationEntity entity = new OrdinationEntity();
+		final OrdinationEntity entity = OrdinationEntity.newEntity(name, start, 12, DurationUnit.WEEK);
 		entity.setName(name);
 		entity.setStartDate(start);
 		

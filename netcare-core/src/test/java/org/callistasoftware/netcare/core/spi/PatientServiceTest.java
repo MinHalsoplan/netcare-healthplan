@@ -26,6 +26,7 @@ import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,9 @@ public class PatientServiceTest {
 
 	@Autowired
 	private PatientRepository patientRepository;
+	@Autowired
+	private CareGiverRepository cgRepo;
+
 	
 	@Autowired
 	private PatientService service;
@@ -47,6 +51,8 @@ public class PatientServiceTest {
 	@Rollback(true)
 	public void testFindPatients() {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789001", cg);
 		final PatientEntity p2 = PatientEntity.newEntity("Peter", "123456789002", cg);
 		
@@ -68,6 +74,8 @@ public class PatientServiceTest {
 	@Rollback(true)
 	public void testLoadPatient() throws Exception {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);
 		final PatientEntity saved = this.patientRepository.save(p1);
 		
