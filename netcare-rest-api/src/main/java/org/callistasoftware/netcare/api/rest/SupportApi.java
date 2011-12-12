@@ -18,7 +18,9 @@ package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,5 +42,11 @@ public class SupportApi {
 		final ServiceResultImpl<String[]> result = ServiceResultImpl.createSuccessResult(units, new DefaultSystemMessage("Operation returned success"));
 		
 		return result;
+	}
+	
+	@RequestMapping(value="/durations/load", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<DurationUnit[]> loadDurations() {
+		return ServiceResultImpl.createSuccessResult(DurationUnit.values(), new GenericSuccessMessage());
 	}
 }

@@ -17,16 +17,15 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
-<%@ attribute name="id" required="true" %>
-<%@ attribute name="title" required="true" %>
-<%@ attribute name="classes" required="false" %>
+<%@ attribute name="name" required="true" %>
+<%@ attribute name="label" required="false" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<form id="${id}" action="#" method="post" class="${classes}">
-	<fieldset>
-		<legend>${title}</legend>
+<div class="clearfix">
+	<label for="${name}">${label}</label>
+	<div class="input">
 		<jsp:doBody />
-	</fieldset>
-</form>
+	</div>
+</div>

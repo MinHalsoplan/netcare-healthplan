@@ -27,17 +27,56 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				var support = NC.Support();
+				support.loadDurations($('#createordinationform select'));
+				
+				var ordinations = NC.Ordinations($('#ordinationDescription'), $('#ordinationTable'));
+				ordinations.init();
 				
 			});
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h1><spring:message code="ordinations" /></h1>
+			<h2><spring:message code="ordinations" /></h2>
 			<p>
 				Den här sidan låter dig skapa en ordination för en patient. Ordinationen kan sedan schemaläggas som sedan patient
 				kan rapportera på. Beskrivande text... bla bla.
 			</p>
+			
+			<spring:message code="create" var="title" scope="page" />
+			<spring:message code="clear" var="clear" scope="page" />
+			<spring:message code="name" var="name" scope="page" />
+			<spring:message code="type" var="type" scope="page" />
+			
+			<netcare:form title="${title}" id="createordinationform" classes="form-stacked">
+				<netcare:field name="name" label="${name}">
+					<input type="text" name="name" class="xlarge" />
+				</netcare:field>
+				
+				<netcare:field name="type" label="${type}">
+					<select name="type"></select>
+				</netcare:field>
+				
+				<div class="actions">
+					<input type="submit" class="btn primary" value="${title}" />
+					<input type="reset" class="btn" value="${clear}" />
+				</div>
+				
+			</netcare:form>
+			
+			<h3>Aktuella ordinationer</h3>
+			<p id="ordinationDescription"></p>
+			<table id="ordinationTable" class="bordered-table zebra-striped">
+				<thead>
+					<tr>
+						<th><spring:message code="name" /></th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			
 		</netcare:content>
 		<netcare:menu />
 	</netcare:body>

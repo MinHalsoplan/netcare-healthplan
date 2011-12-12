@@ -63,9 +63,31 @@ NC.Patient = function() {
 	}
 };
 
-NC.Units = function() {
+NC.Support = function() {
 	
-	var _baseUrl = "/netcare-web/api/support/units";
+	var _baseUrl = "/netcare-web/api/support";
+	
+	var _loadOptions = function(url, selectElem) {
+		if (selectElem === undefined) {
+			return false;
+		}
+		
+		$.ajax({
+			url : url,
+			dataType : 'json',
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("Error: " + errorThrown);
+			},
+			success : function(data, textStatus, jqXHR) {
+				console.log("Success: " + data.data);
+				
+				$.each(data.data, function(index, value) {
+					console.log("Processing index: " + index + ", data: " + value);
+					$('<option>' + value + '</option>').appendTo(selectElem);
+				});
+			}
+		});
+	};
 	
 	return {
 		/**
@@ -73,29 +95,48 @@ NC.Units = function() {
 		 * application.
 		 */
 		loadOptions : function(selectElem) {
-			
-			if (selectElem === undefined) {
-				return false;
-			}
-			
-			var url = _baseUrl + '/load';
+			var url = _baseUrl + '/units/load';
 			console.log("Loading unit options from: " + url);
 			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log("Error: " + errorThrown);
-				},
-				success : function(data, textStatus, jqXHR) {
-					console.log("Success: " + data.data);
-					
-					$.each(data.data, function(index, value) {
-						console.log("Processing index: " + index + ", data: " + value);
-						$('<option>' + value + '</option>').appendTo(selectElem);
-					});
-				}
-			});
+			_loadOptions(url, selectElem);
+		},
+	
+		loadDurations : function(selectElem) {
+			var url = _baseUrl + '/durations/load';
+			console.log("Loading durations from: " + url);
+			
+			_loadOptions(url, selectElem);
 		}
 	}
 }
+
+NC.Ordinations = function(descriptionElem, tableElem) {
+	var _baseUrl = "/netcare-web/api/ordination";
+	var _ordinationCount = 0;
+	
+	var _descriptionElem = descriptionElem;
+	var _tableElem = tableElem;
+	
+	var _updateDescription = function() {
+		console.log("Updating ordination table description");
+		if (_ordinationCount == 0) {
+			_descriptionElem.html('Inga aktuella ordinationer').show();
+			_tableElem.hide();
+		}
+	}
+	
+	return {
+		
+		init : function() {
+			_updateDescription();
+		},
+		
+		list : function(tableElem) {
+		
+		},
+	
+		create : function() {
+		
+		}
+	}
+};
