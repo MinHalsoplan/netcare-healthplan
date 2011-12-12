@@ -45,20 +45,23 @@ public class ApplicationListener extends ContextLoaderListener {
 		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234");
 		
 		cgRepo.save(cg1);
-		cgRepo.flush();
+
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198205134656", cg);
+		cgRepo.flush();
+		
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198205134656", cg1);
 		bean.save(p1);
 		
-		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212", cg);
+		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212", cg1);
 		bean.save(p2);
 		
-		final PatientEntity p3 = PatientEntity.newEntity("Arne Andersson", "123456789003", cg);
+		final PatientEntity p3 = PatientEntity.newEntity("Arne Andersson", "123456789003", cg1);
 		p3.getProperties().put("testKey", "[Test Value]");
 		bean.save(p3);
 		
-		final PatientEntity p4 = PatientEntity.newEntity("Anders Arnesson", "123456789004", cg);
+		final PatientEntity p4 = PatientEntity.newEntity("Anders Arnesson", "123456789004", cg1);
 		bean.save(p4);
 	}
 	
