@@ -52,7 +52,7 @@ public class ActivityDefinitionEntity {
 
     @ElementCollection(fetch=FetchType.LAZY)
     @CollectionTable(name = "scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
-	Set<ScheduledActivityEntity> scheduledActivities;
+	private Set<ScheduledActivityEntity> scheduledActivities;
     
     
     public ActivityDefinitionEntity() {

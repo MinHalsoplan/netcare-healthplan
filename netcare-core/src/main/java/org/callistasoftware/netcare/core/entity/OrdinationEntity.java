@@ -43,16 +43,18 @@ public class OrdinationEntity {
 	@Column
 	private String name;
 	
+	@Column(name="start_date")
 	@Temporal(TemporalType.DATE)
-	private Date start;
+	private Date startDate;
 
+	@Column(name="end_date")
 	@Temporal(TemporalType.DATE)
-	private Date end;
+	private Date endDate;
 	
 	@Column
 	private int duration;
 	
-	@Column
+	@Column(name="duration_unit")
 	private DurationUnit durationUnit;
 	
 	@ManyToOne
@@ -78,17 +80,17 @@ public class OrdinationEntity {
 		return name;
 	}
 
-	public void setStart(Date start) {
-		this.start = start;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 		calculateEnd();
 	}
 
-	public Date getStart() {
-		return start;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public Date getEnd() {
-		return end;
+	public Date getEndDate() {
+		return endDate;
 	}
 
 	public void setIssuedBy(CareGiverEntity issuedBy) {
@@ -126,13 +128,13 @@ public class OrdinationEntity {
 	}
 	
 	protected void calculateEnd() {
-		if (durationUnit != null && start != null) {
+		if (durationUnit != null && startDate != null) {
 			Calendar c = Calendar.getInstance();
-			c.setTime(start);
+			c.setTime(startDate);
 			c.add(durationUnit == DurationUnit.MONTH ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
-			end = c.getTime();
+			endDate = c.getTime();
 		} else {
-			end = null;
+			endDate = null;
 		}
 	}
 }
