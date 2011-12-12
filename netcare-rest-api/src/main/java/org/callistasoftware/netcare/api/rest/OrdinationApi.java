@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +43,7 @@ public class OrdinationApi {
 	
 	@RequestMapping(value="/{patient}/create", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
-	public ServiceResult<Ordination> createOrdination(@PathVariable(value="patient") final Long patient, final Authentication auth) {
+	public ServiceResult<Ordination> createOrdination(@PathVariable(value="patient") final Long patient, final Model m, final Authentication auth) {
 		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getName(), patient});
 		
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());

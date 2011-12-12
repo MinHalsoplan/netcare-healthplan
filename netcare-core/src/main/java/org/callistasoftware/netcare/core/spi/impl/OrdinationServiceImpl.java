@@ -49,7 +49,9 @@ public class OrdinationServiceImpl implements OrdinationService {
 
 	@Override
 	public ServiceResult<Ordination> createNewOrdination(String name, Date start) {
-		final OrdinationEntity entity = new OrdinationEntity(name, start);
+		final OrdinationEntity entity = new OrdinationEntity();
+		entity.setName(name);
+		entity.setStartDate(start);
 		
 		final OrdinationEntity saved = this.repo.save(entity);
 		try {
