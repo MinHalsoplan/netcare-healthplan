@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.core.repository;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
@@ -25,13 +24,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.callistasoftware.netcare.core.entity.Frequency;
 import org.callistasoftware.netcare.core.entity.FrequencyDay;
 import org.callistasoftware.netcare.core.entity.FrequencyTime;
+import org.callistasoftware.netcare.core.entity.MeasureUnit;
 import org.callistasoftware.netcare.core.entity.OrdinationEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
-import org.callistasoftware.netcare.core.entity.ScheduledActivityEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,14 @@ public class OrdinationRepositoryTest {
 	private OrdinationRepository repo;
 	@Autowired
 	private ActivityDefinitionRepository actRepo;
+	@Autowired
+	private ActivityTypeRepository typeRepo;
+	@Autowired
+	private CareGiverRepository cgRepo;
+	@Autowired
+	private PatientRepository patientRepo;
 	
 	ActivityDefinitionEntity createActivityDefinition() {
-		ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
 		Frequency freq = new Frequency();
 		freq.getFrequencyDay().addDay(FrequencyDay.MON);
 		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
@@ -58,13 +64,22 @@ public class OrdinationRepositoryTest {
 		fval.setHour(10);
 		fval.setMinute(0);
 		freq.getTimes().add(fval);
-		entity.setFrequency(freq);
-		ScheduledActivityEntity sa = new ScheduledActivityEntity();
-		sa.setScheduledTime(new Date());
-		entity.getScheduledActivities().add(sa);
+		
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		cgRepo.flush();
+		
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		patientRepo.save(patient);
+		patientRepo.flush();
+
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", MeasureUnit.KILOMETERS);
+		typeRepo.save(type);
+		typeRepo.flush();
+
+		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(patient, type, freq);
 		
 		return entity;
-
 	}
 	
 	@Test
@@ -72,12 +87,8 @@ public class OrdinationRepositoryTest {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		
-		final OrdinationEntity e1 = new OrdinationEntity();
+		final OrdinationEntity e1 = OrdinationEntity.newEntity("Hälsoplan B", new Date(), 20, DurationUnit.WEEK);
 		
-		e1.setDuration(20);
-		e1.setDurationUnit(DurationUnit.WEEK);
-		e1.setStartDate(new Date());
-		e1.setName("Hälsoplan B");
 		ActivityDefinitionEntity ad =  createActivityDefinition();
 		e1.getActivityDefinitions().add(ad);
 		
@@ -99,6 +110,5 @@ public class OrdinationRepositoryTest {
 		assertEquals(c.getTime(), e2.getEndDate());
 		
 		assertEquals(1, e2.getActivityDefinitions().size());
-		assertEquals(1, e2.getActivityDefinitions().get(0).getScheduledActivities().size());
 	}
 }

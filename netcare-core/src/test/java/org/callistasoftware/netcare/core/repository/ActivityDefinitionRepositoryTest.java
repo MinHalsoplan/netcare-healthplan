@@ -19,14 +19,16 @@ package org.callistasoftware.netcare.core.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.Frequency;
 import org.callistasoftware.netcare.core.entity.FrequencyDay;
 import org.callistasoftware.netcare.core.entity.FrequencyTime;
-import org.callistasoftware.netcare.core.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.core.entity.MeasureUnit;
+import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +42,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActivityDefinitionRepositoryTest {
 	@Autowired
 	private ActivityDefinitionRepository repo;
+	@Autowired
+	private ActivityTypeRepository typeRepo;
+	@Autowired
+	private CareGiverRepository cgRepo;
+	@Autowired
+	private PatientRepository patientRepo;
 	
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
 		Frequency freq = new Frequency();
 		freq.getFrequencyDay().addDay(FrequencyDay.MON);
 		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
@@ -53,10 +60,20 @@ public class ActivityDefinitionRepositoryTest {
 		fval.setHour(10);
 		fval.setMinute(0);
 		freq.getTimes().add(fval);
-		entity.setFrequency(freq);
-		ScheduledActivityEntity sa = new ScheduledActivityEntity();
-		sa.setScheduledTime(new Date());
-		entity.getScheduledActivities().add(sa);
+
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		cgRepo.flush();
+		
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		patientRepo.save(patient);
+		patientRepo.flush();
+		
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", MeasureUnit.KILOMETERS);
+		typeRepo.save(type);
+		typeRepo.flush();
+		
+		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(patient, type, freq);
 		repo.save(entity);
 		repo.flush();
 		

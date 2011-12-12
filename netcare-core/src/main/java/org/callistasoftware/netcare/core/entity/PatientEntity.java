@@ -24,11 +24,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="patient")
+@Table(name="nc_patient")
 @PrimaryKeyJoinColumn(name="id")
 public class PatientEntity extends UserEntity {
 
-	@Column(nullable=false, unique=true)
+	@Column(length=16, nullable=false, unique=true)
 	private String civicRegistrationNumber;
 	
 	@Column
@@ -38,17 +38,18 @@ public class PatientEntity extends UserEntity {
 	private CareGiverEntity primaryCareGiver;
 	
 	
-	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
-		return new PatientEntity(name, civicRegistrationNumber);
+	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber, final CareGiverEntity primaryCareGiver) {
+		return new PatientEntity(name, civicRegistrationNumber, primaryCareGiver);
 	}
 	
 	PatientEntity() {
 		super();
 	}
 	
-	PatientEntity(final String name, final String civicRegistrationNumber) {
+	PatientEntity(final String name, final String civicRegistrationNumber, final CareGiverEntity primCareGiver) {
 		super(name);
 		this.setCivicRegistrationNumber(civicRegistrationNumber);
+		this.setPrimaryCareGiver(primCareGiver);
 	}
 
 	public String getCivicRegistrationNumber() {
@@ -56,19 +57,19 @@ public class PatientEntity extends UserEntity {
 	}
 
 	void setCivicRegistrationNumber(String civicRegistrationNumber) {
-		this.civicRegistrationNumber = civicRegistrationNumber;
+		this.civicRegistrationNumber = EntityUtil.notNull(civicRegistrationNumber);
 	}
 
 	public boolean isMobile() {
 		return isMobile;
 	}
 
-	void setMobile(boolean isMobile) {
+	public void setMobile(boolean isMobile) {
 		this.isMobile = isMobile;
 	}
 
 	public void setPrimaryCareGiver(CareGiverEntity primaryCareGiver) {
-		this.primaryCareGiver = primaryCareGiver;
+		this.primaryCareGiver = EntityUtil.notNull(primaryCareGiver);
 	}
 
 	public CareGiverEntity getPrimaryCareGiver() {

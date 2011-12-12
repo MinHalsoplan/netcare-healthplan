@@ -53,13 +53,12 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<Ordination> createNewOrdination(final Ordination ordination) {
-		
+	public ServiceResult<Ordination> createNewOrdination(final Ordination ordination) {		
 		log.info("Creating new ordination {}", ordination.getName());
 		
 		final OrdinationEntity entity = new OrdinationEntity();
 		entity.setName(ordination.getName());
-		
+
 		final SimpleDateFormat sdf = new SimpleDateFormat("yy-mm-dd");
 		try {
 			entity.setStartDate(sdf.parse(ordination.getStartDate()));

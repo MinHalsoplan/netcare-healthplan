@@ -24,24 +24,34 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="activity_type")
+@Table(name="nc_activity_type")
 public class ActivityTypeEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column
+	@Column(length=64, nullable=false)
 	private String name;
 	
-	@Column
+	@Column(nullable=false)
 	private MeasureUnit unit;
+	
+	ActivityTypeEntity() {
+	}
+	
+	public static ActivityTypeEntity newEntity(String name, MeasureUnit unit) {
+		ActivityTypeEntity entity = new ActivityTypeEntity();
+		entity.setName(name);
+		entity.setUnit(unit);
+		return entity;
+	}
 
 	public Long getId() {
 		return id;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = EntityUtil.notNull(name);
 	}
 
 	public String getName() {
@@ -49,7 +59,7 @@ public class ActivityTypeEntity {
 	}
 
 	public void setUnit(MeasureUnit unit) {
-		this.unit = unit;
+		this.unit = EntityUtil.notNull(unit);
 	}
 
 	public MeasureUnit getUnit() {

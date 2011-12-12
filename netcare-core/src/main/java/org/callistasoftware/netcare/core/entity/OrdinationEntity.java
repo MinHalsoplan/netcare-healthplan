@@ -26,6 +26,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,38 +35,49 @@ import javax.persistence.TemporalType;
 
 
 @Entity
-@Table(name="ordination")
+@Table(name="nc_ordination")
 public class OrdinationEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column
+	@Column(nullable=false, length=64)
 	private String name;
 	
-	@Column(name="start_date")
+	@Column(name="start_date", nullable=false)
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
 
-	@Column(name="end_date")
+	@Column(name="end_date", nullable=false)
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	
-	@Column
+	@Column(nullable=false)
 	private int duration;
 	
-	@Column(name="duration_unit")
+	@Column(name="duration_unit", nullable=false)
 	private DurationUnit durationUnit;
 	
 	@ManyToOne
+	@JoinColumn(name="issued_by_care_giver_id")
 	private CareGiverEntity issuedBy;
 	
-	@OneToMany
+	@OneToMany(mappedBy="ordination")
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
 	
-	public OrdinationEntity() {
+	OrdinationEntity() {
 		activityDefinitions = new LinkedList<ActivityDefinitionEntity>();
+	}
+	
+
+	public static OrdinationEntity newEntity(String name, Date startDate, int duration, DurationUnit unit) {
+		OrdinationEntity entity = new OrdinationEntity();
+		entity.setName(name);
+		entity.setStartDate(startDate);
+		entity.setDurationUnit(unit);
+		entity.setDuration(duration);
+		return entity;
 	}
 
 	public Long getId() {
@@ -73,7 +85,7 @@ public class OrdinationEntity {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = EntityUtil.notNull(name);
 	}
 
 	public String getName() {
@@ -81,7 +93,7 @@ public class OrdinationEntity {
 	}
 
 	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+		this.startDate = EntityUtil.notNull(startDate);
 		calculateEnd();
 	}
 
@@ -110,6 +122,9 @@ public class OrdinationEntity {
 	}
 
 	public void setDuration(int duration) {
+		if (duration <= 0 || duration > 24) {
+			throw new IllegalArgumentException("Invalid duration: " + duration);
+		}
 		this.duration = duration;
 		calculateEnd();
 	}
@@ -119,7 +134,7 @@ public class OrdinationEntity {
 	}
 
 	public void setDurationUnit(DurationUnit durationUnit) {
-		this.durationUnit = durationUnit;
+		this.durationUnit = EntityUtil.notNull(durationUnit);
 		calculateEnd();
 	}
 

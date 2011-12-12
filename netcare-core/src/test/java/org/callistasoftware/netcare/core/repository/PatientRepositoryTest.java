@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,13 +38,17 @@ public class PatientRepositoryTest {
 
 	@Autowired
 	private PatientRepository repo;
+	@Autowired
+	private CareGiverRepository cgRepo;
 	
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);
 		
 		this.repo.save(p1);
 		
@@ -57,7 +62,10 @@ public class PatientRepositoryTest {
 	@Transactional
 	@Rollback(true)
 	public void testProperties() {
-		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+
+		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004", cg);
 		p.getProperties().put("prop1", "val1");
 		p.getProperties().put("prop2", "val2");
 		repo.save(p);
@@ -81,10 +89,13 @@ public class PatientRepositoryTest {
 	@Rollback(true)
 	public void testFindByFreeText() throws Exception {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
-		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004");
-		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005");
-		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006");
-		final PatientEntity p4 = PatientEntity.newEntity("Marcus", "123456789007");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+
+		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004", cg);
+		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005", cg);
+		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006", cg);
+		final PatientEntity p4 = PatientEntity.newEntity("Marcus", "123456789007", cg);
 		
 		ents.add(p1);
 		ents.add(p2);
@@ -114,6 +125,6 @@ public class PatientRepositoryTest {
 		search = "%Arn%";
 		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
 		assertNotNull(result);
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 	}
 }

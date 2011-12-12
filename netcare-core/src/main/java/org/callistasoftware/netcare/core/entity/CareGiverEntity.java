@@ -27,18 +27,17 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="care_giver")
+@Table(name="nc_care_giver")
 @PrimaryKeyJoinColumn(name="id")
 public class CareGiverEntity extends UserEntity {
 
-	@Column(nullable=false, unique=true)
+	@Column(length=64, nullable=false, unique=true)
 	private String hsaId;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="careGiverDelegatee")
 	private List<CareGiverDelegationEntity> careGiverDelegations;
 	
-	CareGiverEntity() {
-	}
+	CareGiverEntity() {}
 	
 	CareGiverEntity(final String name) {
 		super(name);
@@ -59,7 +58,7 @@ public class CareGiverEntity extends UserEntity {
 	}
 
 	void setHsaId(String hsaId) {
-		this.hsaId = hsaId;
+		this.hsaId = EntityUtil.notNull(hsaId);
 	}
 
 	public List<CareGiverDelegationEntity> getCareGiverDelegations() {

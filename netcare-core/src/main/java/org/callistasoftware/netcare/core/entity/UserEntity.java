@@ -30,10 +30,11 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user")
+@Table(name="nc_user")
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class UserEntity {
 
@@ -41,14 +42,16 @@ public abstract class UserEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(length=64, nullable=false)
 	private String name;
 	
-	@Column(unique=true)
+	@Column(length=256, unique=true)
 	private String email;
 	
 	@ElementCollection(fetch=FetchType.LAZY)
-    @CollectionTable(name = "user_properties", joinColumns = {@JoinColumn(name="user_id")})
+    @Column(name="value")
+    @MapKeyColumn(name="name")
+    @CollectionTable(name = "nc_user_properties", joinColumns = {@JoinColumn(name="user_id")})
 	private Map<String, String> properties;
 	
 	UserEntity() {
