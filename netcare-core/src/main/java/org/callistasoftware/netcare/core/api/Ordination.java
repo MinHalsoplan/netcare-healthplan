@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Interface defining an ordination
@@ -31,9 +30,13 @@ public interface Ordination extends Serializable {
 	
 	String getName();
 	
-	Date getStartDate();
+	String getStartDate();
 	
-	Date getEndDate();
+	String getEndDate();
+	
+	int getDuration();
+	
+	String getDurationUnit();
 	
 	CareGiverBaseView getIssuedBy();
 }

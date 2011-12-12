@@ -18,19 +18,18 @@ package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
-import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
 import org.callistasoftware.netcare.core.spi.OrdinationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 
 @Controller
 @RequestMapping(value="/ordination")
@@ -41,12 +40,11 @@ public class OrdinationApi {
 	@Autowired 
 	private OrdinationService service;
 	
-	@RequestMapping(value="/{patient}/create", method=RequestMethod.POST, produces="application/json")
+	@RequestMapping(value="/{patient}/create", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<Ordination> createOrdination(@PathVariable(value="patient") final Long patient, final Model m, final Authentication auth) {
-		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getName(), patient});
-		
-		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+	public ServiceResult<Ordination> createOrdination(@RequestBody final OrdinationImpl dto, @PathVariable(value="patient") final Long patient, final WebRequest request) {
+		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {request.getUserPrincipal().getName(), patient});
+		return this.service.createNewOrdination(dto);
 	}
 	
 	@RequestMapping(value="/{patient}/list")

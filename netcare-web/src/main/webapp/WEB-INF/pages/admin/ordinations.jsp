@@ -55,7 +55,16 @@
 				 */
 				$('#createOrdinationForm :submit').click(function(event) {
 					console.log("Submitting form...");
-					ordinations.create('createOrdinationForm', <c:out value="${sessionScope.currentPatient.id}" />);
+					
+					var formData = new Object();
+					formData.name = $('#createOrdinationForm input[name="name"]').val();
+					formData.startDate = $('#createOrdinationForm input[name="startDate"]').val();
+					formData.duration = $('#createOrdinationForm input[name="duration"]').val();
+					formData.durationUnit = $('#createOrdinationForm select').val();
+					
+					var jsonObj = JSON.stringify(formData);
+					
+					ordinations.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />);
 					event.preventDefault();
 				});
 				

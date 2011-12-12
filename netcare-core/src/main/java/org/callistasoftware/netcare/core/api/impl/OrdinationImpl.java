@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import java.util.Date;
-
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
 
@@ -36,8 +34,11 @@ public class OrdinationImpl implements Ordination {
 	
 	private Long id;
 	private String name;
-	private Date startDate;
-	private Date endDate;
+	private String startDate;
+	private String endDate;
+	private int duration;
+	private String durationUnit;
+	
 	private CareGiverBaseView issuedBy;
 
 	@Override
@@ -55,18 +56,40 @@ public class OrdinationImpl implements Ordination {
 	}
 
 	@Override
-	public Date getStartDate() {
+	public String getStartDate() {
 		return this.startDate;
+	}
+	
+	public void setStartDate(final String startDate) {
+		this.startDate = startDate;
 	}
 
 	@Override
-	public Date getEndDate() {
+	public String getEndDate() {
 		return this.endDate;
 	}
 
 	@Override
 	public CareGiverBaseView getIssuedBy() {
 		return this.issuedBy;
+	}
+
+	@Override
+	public int getDuration() {
+		return this.duration;
+	}
+	
+	void setDuration(final int duration) {
+		this.duration = duration;
+	}
+
+	@Override
+	public String getDurationUnit() {
+		return this.durationUnit;
+	}
+	
+	void setDurationUnit(final String durationUnit) {
+		this.durationUnit = durationUnit;
 	}
 
 }

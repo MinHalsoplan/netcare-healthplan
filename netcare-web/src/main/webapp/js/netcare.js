@@ -191,7 +191,7 @@ NC.Ordinations = function(descriptionElem, tableElem) {
 			});
 		},
 	
-		create : function(formId, currentPatient) {
+		create : function(formData, currentPatient) {
 			var url = _baseUrl + '/' + currentPatient + '/create';
 			console.log("Creating new ordination. Url: " + url);
 			
@@ -199,12 +199,8 @@ NC.Ordinations = function(descriptionElem, tableElem) {
 				url : url,
 				dataType : 'json',
 				type : 'post',
-				data : {
-					name : $('#' + formId + ' input[name="name"]').val(),
-					startDate : $('#' + formId + ' input[name="startDate"]').val(),
-					duration : $('#' + formId + ' input[name="duration"]').val(),
-					durationUnit : $('#' + formId + ' input[name="type"]').val()
-				},
+				data : formData,
+				contentType : 'application/json',
 				success :  function(data) {
 					if (data.success == 'true') {
 						console.log('Ordination successfully created');

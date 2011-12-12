@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
-import java.util.Date;
-
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
@@ -45,5 +43,5 @@ public interface OrdinationService {
 	 * @param end
 	 * @return
 	 */
-	ServiceResult<Ordination> createNewOrdination(final String name, final Date start);
+	ServiceResult<Ordination> createNewOrdination(final Ordination ordination);
 }

@@ -16,10 +16,9 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
-import java.util.Date;
-
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,11 @@ public class OrdinationServiceTest {
 	@Rollback(true)
 	public void testCreateOrdination() throws Exception {
 		
-		final ServiceResult<Ordination> saved = this.service.createNewOrdination("Test", new Date());
+		final OrdinationImpl o = new OrdinationImpl();
+		o.setName("Test");
+		o.setStartDate("2011-12-12");
 		
+		final ServiceResult<Ordination> saved = this.service.createNewOrdination(o);
 	}
 
 }
