@@ -17,5 +17,16 @@
 package org.callistasoftware.netcare.core.entity;
 
 public enum DurationUnit {
-	WEEK, MONTH, 
+	WEEK("weeks"),
+	MONTH("months");
+	
+	private final String code;
+	
+	private DurationUnit(final String code) {
+		this.code = code;
+	}
+	
+	public String getCode() {
+		return this.code;
+	}
 }
