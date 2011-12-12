@@ -25,20 +25,24 @@ import javax.persistence.TemporalType;
 
 @Embeddable
 public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity> {
-	@Column(nullable=false)
+
+	@Column(name="scheduled_time", nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date scheduledTime;
 	
-	@Column
+	@Column(name="reported_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date reportedTime;
 	
-	@Column
-	private int reportedValue;
+	@Column(name="actual_value")
+	private int actualValue;
 	
-	@Column
+	@Column(name="target_value", nullable=false)
 	private int targetValue;
 
+	ScheduledActivityEntity() {
+	}
+	
 	public void setScheduledTime(Date scheduledTime) {
 		this.scheduledTime = scheduledTime;
 	}
@@ -55,12 +59,12 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return reportedTime;
 	}
 
-	public void setReportedValue(int reportedValue) {
-		this.reportedValue = reportedValue;
+	public void setActualValue(int actualValue) {
+		this.actualValue = actualValue;
 	}
 
-	public int getReportedValue() {
-		return reportedValue;
+	public int getActualValue() {
+		return actualValue;
 	}
 
 	@Override

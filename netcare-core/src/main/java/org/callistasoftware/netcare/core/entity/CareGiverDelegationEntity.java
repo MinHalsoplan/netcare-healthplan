@@ -18,17 +18,19 @@ package org.callistasoftware.netcare.core.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="care_giver_delegation")
+@Table(name="nc_care_giver_delegation")
 public class CareGiverDelegationEntity {
 
 	@Id
@@ -36,14 +38,18 @@ public class CareGiverDelegationEntity {
 	private Long id;
 
 	@ManyToOne
+	@JoinColumn(name="care_giver_delegatee_id", nullable=false)
 	private CareGiverEntity careGiverDelegatee;
 	
 	@ManyToOne
+	@JoinColumn(name="care_giver_id", nullable=false)
 	private CareGiverEntity careGiver;
 	
+	@Column(name="from_date", nullable=false)
 	@Temporal(TemporalType.DATE)
 	private Date fromDate;
 	
+	@Column(name="to_date")
 	@Temporal(TemporalType.DATE)
 	private Date toDate;
 	

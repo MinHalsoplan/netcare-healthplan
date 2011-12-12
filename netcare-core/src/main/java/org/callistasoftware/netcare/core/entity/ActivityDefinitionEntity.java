@@ -32,33 +32,43 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="activity_definition")
+@Table(name="nc_activity_definition")
 public class ActivityDefinitionEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	@Column
+	@Column(length=256, nullable=false)
 	private String frequency;
 	
-	@Column
+	@Column(name="target")
 	private int activityTarget;
 
 	@ManyToOne
+	@JoinColumn(name="ordination_id")
 	private OrdinationEntity ordination;
 	
 	@ManyToOne
+	@JoinColumn(name="activity_type_id")
 	private ActivityTypeEntity activityType;
 
     @ElementCollection(fetch=FetchType.LAZY)
-    @CollectionTable(name = "scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
+    @CollectionTable(name = "nc_scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
 	private Set<ScheduledActivityEntity> scheduledActivities;
     
     
-    public ActivityDefinitionEntity() {
+    ActivityDefinitionEntity() {
     	scheduledActivities = new TreeSet<ScheduledActivityEntity>();
 	}
     
+    public static ActivityDefinitionEntity newEntity(OrdinationEntity ordination, ActivityTypeEntity activityType, Frequency frequency) {
+    	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
+    	entity.setActivityType(activityType);
+    	entity.setOrdination(ordination);
+    	entity.setFrequency(frequency);
+    	return entity;
+    }
+
 	public Long getId() {
 		return id;
 	}

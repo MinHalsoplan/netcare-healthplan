@@ -24,11 +24,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="patient")
+@Table(name="nc_patient")
 @PrimaryKeyJoinColumn(name="id")
 public class PatientEntity extends UserEntity {
 
-	@Column(nullable=false, unique=true)
+	@Column(length=16, nullable=false, unique=true)
 	private String civicRegistrationNumber;
 	
 	@Column
