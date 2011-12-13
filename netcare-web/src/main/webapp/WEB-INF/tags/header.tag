@@ -35,45 +35,6 @@
 	<c:url value="/css/netcare.css" var="netcareCss" scope="page" />
 	<link href="${netcareCss}" type="text/css" rel="stylesheet" />
 	
-	<!-- Json -->
-	<c:url value="/js/json2.js" var="json" scope="page"/>
-	<script type="text/javascript" src="${json}"></script>
-	
-	<!-- Include JQuery -->
-	<c:url value="/js/jquery-1.6.2.min.js" var="jqueryJs" scope="page" />
-	<script type="text/javascript" src="${jqueryJs}"></script>
-	
-	<!-- Include JQuery UI Widgets -->
-	<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
-	<script type="text/javascript" src="${jqueryUiJs}"></script>
-	
-	<!-- Include Twitter bootstrap js -->
-	<c:url value="/js/bootstrap-alerts.js" var="bootstrapAlerts" scope="page" />
-	<c:url value="/js/bootstrap-buttons.js" var="bootstrapButtons" scope="page" />
-	<c:url value="/js/bootstrap-dropdown.js" var="bootstrapDropdown" scope="page" />
-	<c:url value="/js/bootstrap-modal.js" var="bootstrapModal" scope="page" />
-	<c:url value="/js/bootstrap-popover.js" var="bootstrapPopover" scope="page" />
-	<c:url value="/js/bootstrap-scrollspy.js" var="bootstrapScrollspy" scope="page" />
-	<c:url value="/js/bootstrap-tabs.js" var="bootstrapTabs" scope="page" />
-	<c:url value="/js/bootstrap-twipsy.js" var="bootstrapTwipsy" scope="page" />
-	
-	<script type="text/javascript" src="${bootstrapAlerts}"></script>
-	<script type="text/javascript" src="${bootstrapButtons}"></script>
-	<script type="text/javascript" src="${bootstrapDropdown}"></script>
-	<script type="text/javascript" src="${bootstrapModal}"></script>
-	<script type="text/javascript" src="${bootstrapTwipsy}"></script>
-	<script type="text/javascript" src="${bootstrapPopover}"></script>
-	<script type="text/javascript" src="${bootstrapScrollspy}"></script>
-	<script type="text/javascript" src="${bootstrapTabs}"></script>
-	
-	<!-- Include  -->
-	<c:url value="/js/netcare.js" var="netcareJs" scope="page" />
-	<script type="text/javascript" src="${netcareJs}"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Ordination.js' />"></script>
-	
 	<style type="text/css">
 		/* Override some defaults */
       html, body {
@@ -121,6 +82,46 @@
         border-left: 1px solid #eee;
       }
 	</style>
+	
+	<!-- Json -->
+	<c:url value="/js/json2.js" var="json" scope="page"/>
+	<script type="text/javascript" src="${json}"></script>
+	
+	<!-- Include JQuery -->
+	<c:url value="/js/jquery-1.6.2.min.js" var="jqueryJs" scope="page" />
+	<script type="text/javascript" src="${jqueryJs}"></script>
+	
+	<!-- Include JQuery UI Widgets -->
+	<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
+	<script type="text/javascript" src="${jqueryUiJs}"></script>
+	
+	<!-- Include Twitter bootstrap js -->
+	<c:url value="/js/bootstrap-alerts.js" var="bootstrapAlerts" scope="page" />
+	<c:url value="/js/bootstrap-buttons.js" var="bootstrapButtons" scope="page" />
+	<c:url value="/js/bootstrap-dropdown.js" var="bootstrapDropdown" scope="page" />
+	<c:url value="/js/bootstrap-modal.js" var="bootstrapModal" scope="page" />
+	<c:url value="/js/bootstrap-popover.js" var="bootstrapPopover" scope="page" />
+	<c:url value="/js/bootstrap-scrollspy.js" var="bootstrapScrollspy" scope="page" />
+	<c:url value="/js/bootstrap-tabs.js" var="bootstrapTabs" scope="page" />
+	<c:url value="/js/bootstrap-twipsy.js" var="bootstrapTwipsy" scope="page" />
+	
+	<script type="text/javascript" src="${bootstrapAlerts}"></script>
+	<script type="text/javascript" src="${bootstrapButtons}"></script>
+	<script type="text/javascript" src="${bootstrapDropdown}"></script>
+	<script type="text/javascript" src="${bootstrapModal}"></script>
+	<script type="text/javascript" src="${bootstrapTwipsy}"></script>
+	<script type="text/javascript" src="${bootstrapPopover}"></script>
+	<script type="text/javascript" src="${bootstrapScrollspy}"></script>
+	<script type="text/javascript" src="${bootstrapTabs}"></script>
+	
+	<!-- Include NETCARE javascripts  -->
+	<c:url value="/js/netcare.js" var="netcareJs" scope="page" />
+	<script type="text/javascript" src="<c:url value='/js/netcare.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Ordination.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/ActivityTypes.js' />"></script>
 	
 	<jsp:doBody />
 </head>

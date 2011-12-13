@@ -26,5 +26,8 @@
 <netcare:page>
 	<netcare:header />
 	<netcare:body>
+		<netcare:content>
+		</netcare:content>
+		<netcare:menu />
 	</netcare:body>
 </netcare:page>
