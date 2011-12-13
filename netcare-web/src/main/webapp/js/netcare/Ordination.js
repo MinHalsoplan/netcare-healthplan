@@ -55,7 +55,7 @@ NC.Ordination = function(descriptionId, tableId) {
 						
 						var util = NC.Util();
 						var editIcon = util.createIcon('bullet_info', function() {
-							console.log("Edit icon clicked");
+							public.view(value.id, currentPatient);
 						});
 						
 						var deleteIcon = util.createIcon('bullet_delete', function() {
@@ -75,8 +75,6 @@ NC.Ordination = function(descriptionId, tableId) {
 												$('<td>').html(value.startDate)).append(
 														$('<td>').html(value.issuedBy.name)).append(
 																actionCol));
-						
-						
 					});
 					
 					console.log("Updating ordination count to: " + data.data.length);
@@ -133,6 +131,11 @@ NC.Ordination = function(descriptionId, tableId) {
 					public.list(currentPatient);
 				}
 			});
+		},
+		
+		view : function(ordinationId, currentPatient) {
+			console.log("GET to view ordination with id: " + ordinationId);
+			window.location = '/netcare-web/netcare/admin/ordination/' + ordinationId + '/view';
 		}
 	};
 	

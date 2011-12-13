@@ -27,6 +27,11 @@
 	<netcare:header />
 	<netcare:body>
 		<netcare:content>
+			<h2>Aktivitetsdefinition</h2>
+			<p>
+				Den här sidan låter dig schemalägga en ordination. Du kan ange vilka dagar samt vilka tider som aktiviteten
+				skall utföras.
+			</p>
 		</netcare:content>
 		<netcare:menu />
 	</netcare:body>
