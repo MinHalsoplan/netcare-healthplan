@@ -1,5 +1,14 @@
 .project
 .classpath
 .settings
-
 target
+*.class
+*.jar
+*.war
+*.ear
+.DS_Store
+.euml2
+.umlproject
+doc
+.DS_Storekk
+
