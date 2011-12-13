@@ -24,7 +24,23 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <netcare:page>
-	<netcare:header />
+	<netcare:header>
+		<script type="text/javascript">
+			$(function() {
+				var types = NC.ActivityTypes();
+				
+				types.load(function(data) {
+					$.each(data, function(index, value) {
+						console.log("Processing: " + value.name);
+						var opt = $('<option>', { value : value.id }).html(value.name);
+						$('#activityDefinitionForm select').append(opt);
+					})
+					
+				});
+				
+			});
+		</script>
+	</netcare:header>
 	<netcare:body>
 		<netcare:content>
 			<h2>Aktivitetsdefinition</h2>
@@ -32,6 +48,82 @@
 				Den här sidan låter dig schemalägga en ordination. Du kan ange vilka dagar samt vilka tider som aktiviteten
 				skall utföras.
 			</p>
+			
+			<netcare:form title="Schemalägg ordination för xxx" id="activityDefinitionForm" classes="form-stacked">
+			
+				<netcare:field name="activityType" label="Vad">
+					<select name="activityType"></select>
+				</netcare:field>
+				
+				<netcare:field name="activityGoal" label="Målsättning">
+					<input name="activityGoal" type="number" class="xlarge" />
+				</netcare:field>
+				
+				<div class="row">
+					<div class="span7">
+						<div class="row">
+							<spring:message code="monday" var="monday" scope="page" />
+							<spring:message code="tuesday" var="tuesday" scope="page" />
+							<spring:message code="wednesday" var="wednesday" scope="page" />
+							<spring:message code="thursday" var="thursday" scope="page" />
+							<spring:message code="friday" var="friday" scope="page" />
+							<spring:message code="saturday" var="saturday" scope="page" />
+							<spring:message code="sunday" var="sunday" scope="page" />
+						
+						
+							<div class="span1">
+								<netcare:field name="mon" label="${monday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+							<div class="span1">
+								<netcare:field name="mon" label="${tuesday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+							<div class="span1">
+								<netcare:field name="mon" label="${wednesday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+							<div class="span1">
+								<netcare:field name="mon" label="${thursday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+							<div class="span1">
+								<netcare:field name="mon" label="${friday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+							<div class="span1">
+								<netcare:field name="mon" label="${saturday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+							<div class="span1">
+								<netcare:field name="mon" label="${sunday}">
+									<input type="checkbox" name="mon" />
+								</netcare:field>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<netcare:field name="addTime" label="Lägg till tidpunkt">
+					<input type="text" name="addTime" class="xlarge" />
+				</netcare:field>
+			
+				<div class="actions">
+					<spring:message code="create" var="create" scope="page" />
+					<spring:message code="clear" var="clear" scope="page" />
+				
+					<input type="submit" class="btn primary" value="${create}"/>
+					<input type="reset" class="btn" value="${clear}"/>
+				</div>
+			
+			</netcare:form>
+			
 		</netcare:content>
 		<netcare:menu />
 	</netcare:body>

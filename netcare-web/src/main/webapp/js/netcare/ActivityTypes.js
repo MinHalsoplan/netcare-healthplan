@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011 Callista Enterprise AB <info@callistaenterprise.se>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,13 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
-
-public interface CareGiverBaseView extends UserBaseView {
-
-	/**
-	 * Get the hsa id for the care giver
-	 * @return
-	 */
-	String getHsaId();
-}
+NC.ActivityTypes = function() {
+	
+	var _baseUrl = '/netcare-web/api/activityType';
+	
+	public = {
+		load : function(callback) {
+			var url = _baseUrl + '/load';
+			console.log("Loading activity types from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					if (data.success) {
+						console.log("Activity types successfully fetched from server");
+						callback(data.data);
+					}
+				}
+			});
+		}
+	};
+	
+	return public;
+};

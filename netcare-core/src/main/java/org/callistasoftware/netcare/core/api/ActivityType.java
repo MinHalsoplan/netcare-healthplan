@@ -16,11 +16,33 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-public interface CareGiverBaseView extends UserBaseView {
+import java.io.Serializable;
+
+import org.callistasoftware.netcare.core.entity.MeasureUnit;
+
+/**
+ * Definition of an activity type
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface ActivityType extends Serializable {
 
 	/**
-	 * Get the hsa id for the care giver
+	 * Get the id of this activity type
 	 * @return
 	 */
-	String getHsaId();
+	Long getId();
+	
+	/**
+	 * Get the name of this activity type
+	 * @return
+	 */
+	String getName();
+	
+	/**
+	 * Get the unit of this activity type
+	 * @return
+	 */
+	MeasureUnit getUnit();
 }
