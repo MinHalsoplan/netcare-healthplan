@@ -30,7 +30,7 @@
 				var support = NC.Support();
 				support.loadDurations($('#createOrdinationForm select'));
 				
-				var ordinations = NC.Ordinations('ordinationDescription'
+				var ordinations = NC.Ordination('ordinationDescription'
 						, 'ordinationTable');
 				
 				ordinations.list(<c:out value="${sessionScope.currentPatient.id}" />);

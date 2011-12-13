@@ -69,6 +69,10 @@
 	<!-- Include  -->
 	<c:url value="/js/netcare.js" var="netcareJs" scope="page" />
 	<script type="text/javascript" src="${netcareJs}"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Ordination.js' />"></script>
 	
 	<style type="text/css">
 		/* Override some defaults */

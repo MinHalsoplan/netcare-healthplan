@@ -73,7 +73,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	public ServiceResult<Ordination> createNewOrdination(final Ordination o, final CareGiverBaseView careGiver) {		
 		log.info("Creating new ordination {}", o.getName());
 		
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
 			final Date start = sdf.parse(o.getStartDate());

@@ -45,7 +45,7 @@ public class OrdinationImpl implements Ordination {
 	private CareGiverBaseView issuedBy;
 	
 	public static OrdinationImpl newFromEntity(final OrdinationEntity entity) {
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		final OrdinationImpl dto = new OrdinationImpl();
 		dto.setId(entity.getId());
