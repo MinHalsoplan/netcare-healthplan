@@ -37,6 +37,7 @@ import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.junit.Test;
 
+/** Concept doesn't work. */
 public class ApiUtilTest {
 
 	@Test
