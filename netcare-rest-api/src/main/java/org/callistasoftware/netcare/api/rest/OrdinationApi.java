@@ -46,7 +46,7 @@ public class OrdinationApi {
 	public ServiceResult<Ordination> createOrdination(@RequestBody final OrdinationImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
 		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getPrincipal(), patient});
 		
-		return this.service.createNewOrdination(dto, (CareGiverBaseView) auth.getPrincipal());
+		return this.service.createNewOrdination(dto, (CareGiverBaseView) auth.getPrincipal(), patient);
 	}
 	
 	@RequestMapping(value="/{patient}/list", method=RequestMethod.GET)

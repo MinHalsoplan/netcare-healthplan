@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.entity;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,6 +63,10 @@ public class OrdinationEntity {
 	@JoinColumn(name="issued_by_care_giver_id")
 	private CareGiverEntity issuedBy;
 	
+	@ManyToOne
+	@JoinColumn(name="for_patient_id")
+	private PatientEntity forPatient;
+	
 	@OneToMany(mappedBy="ordination")
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
@@ -71,8 +76,10 @@ public class OrdinationEntity {
 	}
 	
 
-	public static OrdinationEntity newEntity(String name, Date startDate, int duration, DurationUnit unit) {
+	public static OrdinationEntity newEntity(CareGiverEntity issuedBy, PatientEntity forPatient, String name, Date startDate, int duration, DurationUnit unit) {
 		OrdinationEntity entity = new OrdinationEntity();
+		entity.setIssuedBy(issuedBy);
+		entity.setForPatient(forPatient);
 		entity.setName(name);
 		entity.setStartDate(startDate);
 		entity.setDurationUnit(unit);
@@ -105,8 +112,8 @@ public class OrdinationEntity {
 		return endDate;
 	}
 
-	public void setIssuedBy(CareGiverEntity issuedBy) {
-		this.issuedBy = issuedBy;
+	protected void setIssuedBy(CareGiverEntity issuedBy) {
+		this.issuedBy = EntityUtil.notNull(issuedBy);
 	}
 
 	public CareGiverEntity getIssuedBy() {
@@ -116,9 +123,21 @@ public class OrdinationEntity {
 	public void setActivityDefinitions(List<ActivityDefinitionEntity> activityDefinitions) {
 		this.activityDefinitions = activityDefinitions;
 	}
+	
+	
+	protected boolean addActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
+		if (!activityDefinitions.contains(activityDefinitionEntity)) {
+			return activityDefinitions.add(activityDefinitionEntity);
+		}
+		return false;
+	}
+	
+	protected boolean removeActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
+		return activityDefinitions.remove(activityDefinitionEntity);
+	}
 
 	public List<ActivityDefinitionEntity> getActivityDefinitions() {
-		return activityDefinitions;
+		return Collections.unmodifiableList(activityDefinitions);
 	}
 
 	public void setDuration(int duration) {
@@ -151,5 +170,15 @@ public class OrdinationEntity {
 		} else {
 			endDate = null;
 		}
+	}
+
+
+	protected void setForPatient(PatientEntity forPatient) {
+		this.forPatient = EntityUtil.notNull(forPatient);
+	}
+
+
+	public PatientEntity getForPatient() {
+		return forPatient;
 	}
 }

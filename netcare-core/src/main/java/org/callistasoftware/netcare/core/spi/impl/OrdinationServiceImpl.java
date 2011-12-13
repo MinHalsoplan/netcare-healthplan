@@ -30,8 +30,10 @@ import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.callistasoftware.netcare.core.entity.OrdinationEntity;
+import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.OrdinationRepository;
+import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.OrdinationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +56,13 @@ public class OrdinationServiceImpl implements OrdinationService {
 	
 	@Autowired
 	private CareGiverRepository careGiverRepository;
+	@Autowired
+	private PatientRepository patientRepository;
 	
 	@Override
-	public ServiceResult<Ordination[]> loadOrdinationsForPatient(Long patient) {
-		final List<OrdinationEntity> entities = this.repo.findAll();
+	public ServiceResult<Ordination[]> loadOrdinationsForPatient(Long patientId) {
+		final PatientEntity forPatient = patientRepository.findOne(patientId);
+		final List<OrdinationEntity> entities = this.repo.findByForPatient(forPatient);
 		
 		final Ordination[] dtos = new Ordination[entities.size()];
 		int count = 0;
@@ -70,7 +75,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<Ordination> createNewOrdination(final Ordination o, final CareGiverBaseView careGiver) {		
+	public ServiceResult<Ordination> createNewOrdination(final Ordination o, final CareGiverBaseView careGiver, final Long patientId) {		
 		log.info("Creating new ordination {}", o.getName());
 		
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -80,8 +85,10 @@ public class OrdinationServiceImpl implements OrdinationService {
 			final DurationUnit du = DurationUnit.fromCode(o.getDurationUnit());
 			
 			final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
-			final OrdinationEntity newEntity = OrdinationEntity.newEntity(o.getName(), start, o.getDuration(), du);
-			newEntity.setIssuedBy(cg);
+			
+			final PatientEntity patient = this.patientRepository.findOne(patientId);
+			
+			final OrdinationEntity newEntity = OrdinationEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
 			
 			final OrdinationEntity saved = this.repo.save(newEntity);
 			final Ordination dto = OrdinationImpl.newFromEntity(saved);
