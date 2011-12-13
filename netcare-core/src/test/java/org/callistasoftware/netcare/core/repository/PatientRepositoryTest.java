@@ -125,6 +125,6 @@ public class PatientRepositoryTest {
 		search = "%Arn%";
 		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
 		assertNotNull(result);
-		assertEquals(2, result.size());
+		assertEquals(1, result.size());
 	}
 }

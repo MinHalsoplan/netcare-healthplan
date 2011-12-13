@@ -30,8 +30,10 @@
 				var support = NC.Support();
 				support.loadDurations($('#createOrdinationForm select'));
 				
-				var ordinations = NC.Ordinations($('#ordinationDescription'), $('#ordinationTable'));
-				ordinations.init();
+				var ordinations = NC.Ordinations('ordinationDescription'
+						, 'ordinationTable');
+				
+				ordinations.list(<c:out value="${sessionScope.currentPatient.id}" />);
 				
 				/*
 				 * Bind date picker to start date field
@@ -64,7 +66,9 @@
 					
 					var jsonObj = JSON.stringify(formData);
 					
-					ordinations.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />);
+					ordinations.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
+						$('#createOrdinationForm :reset').click();
+					});
 					event.preventDefault();
 				});
 				
@@ -125,6 +129,10 @@
 				<thead>
 					<tr>
 						<th><spring:message code="name" /></th>
+						<th><spring:message code="duration" /></th>
+						<th><spring:message code="startDate" /></th>
+						<th><spring:message code="issuedBy" /></th>
+						<th>&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>

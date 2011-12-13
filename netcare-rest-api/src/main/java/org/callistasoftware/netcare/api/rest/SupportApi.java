@@ -23,6 +23,8 @@ import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -39,6 +41,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value="/support")
 public class SupportApi {
 	
+	private static final Logger log = LoggerFactory.getLogger(SupportApi.class);
+	
 	@Autowired
 	private MessageSource messageSource;
 
@@ -53,8 +57,18 @@ public class SupportApi {
 	
 	@RequestMapping(value="/durations/load", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public ServiceResult<DurationUnit[]> loadDurations() {
-		return ServiceResultImpl.createSuccessResult(DurationUnit.values(), new GenericSuccessMessage());
+	public ServiceResult<Option[]> loadDurations(final Locale locale) {
+		log.info("Loading duration units...");
+		
+		final DurationUnit[] units = DurationUnit.values();
+		final Option[] durationUnits = new Option[units.length];
+		int count = 0;
+		for (final DurationUnit du : units) {
+			log.debug("Processing {}", du.getCode());
+			durationUnits[count++] = new Option(du.getCode(), this.messageSource.getMessage(du.getCode(), null, locale));
+		}
+		
+		return ServiceResultImpl.createSuccessResult(durationUnits, new GenericSuccessMessage());
 	}
 	
 	@RequestMapping(value="/months/load", method=RequestMethod.GET, produces="application/json")

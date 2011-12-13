@@ -45,15 +45,9 @@
 							<input name="j_username" type="text" class="xlarge" />
 						</div>
 					</div>
-					<div class="clearfix">
-						<label for="j_password"><spring:message code="password" /></label>
-						<div class="input">
-							<input name="j_password" type="secret" class="xlarge" />
-						</div>
-					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" value="<spring:message code="login" />" />
+					<input class="btn primary" type="submit" value="<spring:message code="login" />" />
 				</div>
 			
 			</form>	

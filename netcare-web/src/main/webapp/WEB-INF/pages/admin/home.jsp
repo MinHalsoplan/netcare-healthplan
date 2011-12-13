@@ -80,7 +80,7 @@
 					selectPatient(event);
 				});
 				
-				var units = new NC.Units();
+				var units = new NC.Support();
 				units.loadOptions($('#activityTypeForm select[name="unit"]'));
 				
 			});

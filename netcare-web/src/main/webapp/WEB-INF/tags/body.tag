@@ -26,9 +26,10 @@
 			<div class="page-header">
 				<h1>Planerade hälsotjänster <small>Tagline text kan skrivas här</small></h1>
 			</div>
-			<c:if test="${not empty requestScope.result}">
-				<div class="row">
-					<div class="span14">
+			
+			<div class="row">
+				<div id="pageMessages" class="span14">
+					<c:if test="${not empty requestScope.result}">
 						<%--
 							Display any messages that we have
 						--%>
@@ -43,9 +44,10 @@
 						<c:forEach items="${requestScope.result.infoMessages}" var="info">
 							<netcare:message type="success" message="${info.message}" />
 						</c:forEach>
-							</div>
-						</div>
-			</c:if>
+					</c:if>
+				</div>
+			</div>
+			
 			<div class="row">
 				<jsp:doBody />
 			</div>

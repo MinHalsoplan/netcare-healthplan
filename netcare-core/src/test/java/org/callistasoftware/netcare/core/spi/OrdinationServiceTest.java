@@ -16,9 +16,15 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import static org.junit.Assert.assertEquals;
+
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
+import org.callistasoftware.netcare.core.entity.DurationUnit;
+import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +38,34 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrdinationServiceTest {
 	
 	@Autowired
-	private OrdinationService service;
+	private CareGiverRepository cgRepo;
 	
+	@Autowired
+	private OrdinationService service;
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testCreateOrdination() throws Exception {
 		
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123-id");
+		this.cgRepo.save(cg);
+		
+		final CareGiverBaseViewImpl cgDto = new CareGiverBaseViewImpl();
+		cgDto.setHsaId("hsa-123-id");
+		
 		final OrdinationImpl o = new OrdinationImpl();
 		o.setName("Test");
 		o.setStartDate("2011-12-12");
+		o.setDuration(12);
+		o.setDurationUnit(DurationUnit.WEEK.getCode());
 		
-		final ServiceResult<Ordination> saved = this.service.createNewOrdination(o);
+		final ServiceResult<Ordination> saved = this.service.createNewOrdination(o, cgDto);
+		
+		assertEquals(o.getName(), saved.getData().getName());
+		assertEquals(o.getStartDate(), saved.getData().getStartDate());
+		assertEquals(o.getDuration(), saved.getData().getDuration());
+		assertEquals(o.getDurationUnit(), saved.getData().getDurationUnit());
 	}
 
 }

@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
@@ -43,5 +44,12 @@ public interface OrdinationService {
 	 * @param end
 	 * @return
 	 */
-	ServiceResult<Ordination> createNewOrdination(final Ordination ordination);
+	ServiceResult<Ordination> createNewOrdination(final Ordination ordination, final CareGiverBaseView creator);
+	
+	/**
+	 * Delete the ordination with the specified id
+	 * @param ordinationId
+	 * @return
+	 */
+	ServiceResult<Ordination> deleteOrdination(final Long ordinationId);
 }

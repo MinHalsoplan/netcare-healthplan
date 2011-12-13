@@ -20,4 +20,5 @@ import org.callistasoftware.netcare.core.entity.OrdinationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrdinationRepository extends JpaRepository<OrdinationEntity, Long> {
+	
 }

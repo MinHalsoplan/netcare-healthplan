@@ -18,13 +18,19 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.entity.CareGiverEntity;
+import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.callistasoftware.netcare.core.entity.OrdinationEntity;
+import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.OrdinationRepository;
 import org.callistasoftware.netcare.core.spi.OrdinationService;
 import org.slf4j.Logger;
@@ -46,33 +52,53 @@ public class OrdinationServiceImpl implements OrdinationService {
 	@Autowired
 	private OrdinationRepository repo;
 	
+	@Autowired
+	private CareGiverRepository careGiverRepository;
+	
 	@Override
 	public ServiceResult<Ordination[]> loadOrdinationsForPatient(Long patient) {
-		// TODO Auto-generated method stub
-		return null;
+		final List<OrdinationEntity> entities = this.repo.findAll();
+		
+		final Ordination[] dtos = new Ordination[entities.size()];
+		int count = 0;
+		for (final OrdinationEntity ent : entities) {
+			final OrdinationImpl dto = OrdinationImpl.newFromEntity(ent);
+			dtos[count++] = dto;
+		}
+		
+		return ServiceResultImpl.createSuccessResult(dtos, new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<Ordination> createNewOrdination(final Ordination ordination) {		
-		log.info("Creating new ordination {}", ordination.getName());
+	public ServiceResult<Ordination> createNewOrdination(final Ordination o, final CareGiverBaseView careGiver) {		
+		log.info("Creating new ordination {}", o.getName());
 		
-		final OrdinationEntity entity = new OrdinationEntity();
-		entity.setName(ordination.getName());
-
-		final SimpleDateFormat sdf = new SimpleDateFormat("yy-mm-dd");
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		
 		try {
-			entity.setStartDate(sdf.parse(ordination.getStartDate()));
+			final Date start = sdf.parse(o.getStartDate());
+			final DurationUnit du = DurationUnit.fromCode(o.getDurationUnit());
+			
+			final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
+			final OrdinationEntity newEntity = OrdinationEntity.newEntity(o.getName(), start, o.getDuration(), du);
+			newEntity.setIssuedBy(cg);
+			
+			final OrdinationEntity saved = this.repo.save(newEntity);
+			final Ordination dto = OrdinationImpl.newFromEntity(saved);
+			
+			return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
+			
 		} catch (ParseException e1) {
 			throw new IllegalArgumentException("Could not parse date.", e1);
 		}
+	}
+
+	@Override
+	public ServiceResult<Ordination> deleteOrdination(Long ordinationId) {
+		log.info("Deleting ordination {}", ordinationId);
+		this.repo.delete(ordinationId);
 		
-		final OrdinationEntity saved = this.repo.save(entity);
-		final OrdinationImpl dto = new OrdinationImpl();
-		
-		dto.setName(saved.getName());
-		dto.setStartDate(sdf.format(saved.getStartDate()));
-		
-		return ServiceResultImpl.createSuccessResult((Ordination) dto, new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
 
 }

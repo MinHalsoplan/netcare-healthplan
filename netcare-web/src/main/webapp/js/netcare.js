@@ -14,11 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-NC = {};
+//var NC;
+//if (!NC) {
+	NC = {};
+//}
 
 NC.Util = function() {
-	return {
+	
+	var _displayMessages = function(type, messages) {
+		console.log('Displaying ' + type + ' messages...');
+		if (messages == null) {
+			return false;
+		}
+		
+		if (messages.length > 0) {
+			$.each(messages, function(index, value) {
+				var msg = $('<div>');
+				msg.addClass('alert-message ' + type);
+				
+				var closeLink = $('<a>', { href : '#' }).addClass('close').html('×').click(function(event){
+					event.preventDefault();
+					msg.fadeOut('slow').hide();
+				});
+				
+				msg.append(closeLink);
+				msg.append('<p><strong>' + value.message + '</strong></p>');
+				
+				msg.appendTo('#pageMessages');
+			});
+		}
+	};
+	
+	public = {
 		/**
 		 * Update the current patient shown in the menu
 		 * of the applica
@@ -28,19 +55,49 @@ NC.Util = function() {
 			$('#currentpatient a').html(name);
 			$('#nopatient').hide();
 			$('#currentpatient').show();
+		},
+	
+		displayMessages : function(infoMessages, warningMessages, errorMessages) {
+			console.log("Display page messages. Infos: " + infoMessages.length + " Warnings: " + warningMessages.length + " Errors: " + errorMessages.length);
+			
+			_displayMessages('success', infoMessages);
+			_displayMessages('warning', warningMessages);
+			_displayMessages('error', errorMessages);
+		},
+		
+		processServiceResult : function(serviceResult) {
+			console.log("Processing service results...");
+			public.displayMessages(serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
+		},
+		
+		createIcon : function(name, onClickFunction) {
+			var icon = $('<img>', {
+				src : '/netcare-web/img/icons/32/' + name + '.png'
+			}).css('width', '16px').css('height', '16px').css('padding-left', '10px').css('cursor', 'pointer');
+			
+			icon.click(onClickFunction);
+			
+			return icon;
 		}
-	}
+	};
+	
+	return public;
 }
 
 NC.Patient = function() {
 	var _baseUrl = "/netcare-web/api/user";
 	
-	return {
+	var public = {
 		/**
 		 * Called when the care giver wants to find a patient
 		 */
 		findPatients : function(searchValue, successFunction) {
-			console.log("Finding patients. Searching for: " + searchValue)
+			console.log("Finding patients. Searching for: " + searchValue);
+			
+			if (searchValue.length < 3) {
+				return false;
+			}
+			
 			$.ajax({
 				url : _baseUrl + '/find',
 				dataType : 'json',
@@ -64,7 +121,9 @@ NC.Patient = function() {
 				success : successFunction
 			});
 		}
-	}
+	};
+	
+	return public;
 };
 
 NC.Support = function() {
@@ -96,17 +155,18 @@ NC.Support = function() {
 	};
 	
 	var _createOptions = function(options, selectElem) {
-		console.log("Creating options... options array is: " + options);
 		if (selectElem === undefined) {
 			return false;
 		}
 		
 		$.each(options, function(index, value) {
-			$('<option>').html(value).appendTo(selectElem);
+			var opt = $('<option>', { value : value.code });
+			opt.html(value.value);
+			opt.appendTo(selectElem);
 		});
 	};
 	
-	return {
+	var public = {
 		/**
 		 * Load all unit options that exist in the
 		 * application.
@@ -153,45 +213,91 @@ NC.Support = function() {
 				callback(data);
 			});
 		}
-	}
+	};
+	
+	return public;
 }
 
-NC.Ordinations = function(descriptionElem, tableElem) {
+NC.Ordinations = function(descriptionId, tableId) {
+	
 	var _baseUrl = "/netcare-web/api/ordination";
 	var _ordinationCount = 0;
 	
-	var _descriptionElem = descriptionElem;
-	var _tableElem = tableElem;
+	var _descriptionId = descriptionId;
+	var _tableId = tableId;
 	
 	var _updateDescription = function() {
 		console.log("Updating ordination table description");
 		if (_ordinationCount == 0) {
-			_descriptionElem.html('Inga aktuella ordinationer').show();
-			_tableElem.hide();
+			$('#' + _descriptionId).html('Inga aktuella ordinationer').show();
+			$('#' + _tableId).hide();
+		} else {
+			$('#' + _descriptionId).hide();
+			$('#' + _tableId).show();
 		}
 	}
 	
-	return {
+	var public = {
 		
 		init : function() {
 			_updateDescription();
 		},
 		
-		list : function(tableElem, currentPatient) {
+		list : function(currentPatient) {
 			console.log("Load active ordinations for the current patient");
 			$.ajax({
 				url : _baseUrl + '/' + currentPatient + '/list',
 				dataType : 'json',
 				success : function(data) {
 					console.log("Success. Processing results...");
+					
+					/* Empty the result list */
+					$('#' + tableId + ' tbody > tr').empty();
+					
 					$.each(data.data, function(index, value) {
-						console.log("Processing: " + value);
+						console.log("Processing index " + index + " value: " + value.name);
+						
+						var util = NC.Util();
+						var editIcon = util.createIcon('bullet_info', function() {
+							console.log("Edit icon clicked");
+						});
+						
+						var deleteIcon = util.createIcon('bullet_delete', function() {
+							public.delete(value.id, currentPatient);
+						});
+						
+						var actionCol = $('<td>');
+						actionCol.css('text-align', 'right');
+						
+						editIcon.appendTo(actionCol);
+						deleteIcon.appendTo(actionCol);
+						
+						$('#' + tableId + ' tbody').append(
+								$('<tr>').append(
+									$('<td>').html(value.name)).append(
+										$('<td>').html(value.duration)).append(
+												$('<td>').html(value.startDate)).append(
+														$('<td>').html(value.issuedBy.name)).append(
+																actionCol));
+						
+						
 					});
+					
+					console.log("Updating ordination count to: " + data.data.length);
+					_ordinationCount = data.data.length;
+					
+					console.log("Updating description");
+					_updateDescription();
 				}
 			});
 		},
 	
-		create : function(formData, currentPatient) {
+		/**
+		 * Create a new ordination for the current patient.
+		 * The method accepts the form data as a json-object which is
+		 * sent to the server without any validations.
+		 */
+		create : function(formData, currentPatient, callback) {
 			var url = _baseUrl + '/' + currentPatient + '/create';
 			console.log("Creating new ordination. Url: " + url);
 			
@@ -202,11 +308,37 @@ NC.Ordinations = function(descriptionElem, tableElem) {
 				data : formData,
 				contentType : 'application/json',
 				success :  function(data) {
-					if (data.success == 'true') {
-						console.log('Ordination successfully created');
-					}
+					console.log('Ordination successfully created');
+					new NC.Util().processServiceResult(data);
+					
+					/* List messages */
+					public.list(currentPatient);
+					
+					/* Execute callback */
+					callback(data);
+				}
+			});
+		},
+		
+		/**
+		 * Delete an ordination
+		 */
+		delete : function(ordinationId, currentPatient) {
+			var url = _baseUrl + '/' + currentPatient + '/' + ordinationId + '/delete';
+			console.log("Removing ordination " + ordinationId + " using url: " + url);
+			
+			$.ajax({
+				url : url,
+				type : 'post',
+				success : function(data) {
+					console.log('Deletion of ordination succeeded.');
+					new NC.Util().processServiceResult(data);
+					
+					public.list(currentPatient);
 				}
 			});
 		}
-	}
+	};
+	
+	return public;
 };

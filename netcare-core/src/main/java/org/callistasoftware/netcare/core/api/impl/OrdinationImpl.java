@@ -16,8 +16,11 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.text.SimpleDateFormat;
+
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.entity.OrdinationEntity;
 
 /**
  * Implementation of an ordination
@@ -40,10 +43,32 @@ public class OrdinationImpl implements Ordination {
 	private String durationUnit;
 	
 	private CareGiverBaseView issuedBy;
+	
+	public static OrdinationImpl newFromEntity(final OrdinationEntity entity) {
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		
+		final OrdinationImpl dto = new OrdinationImpl();
+		dto.setId(entity.getId());
+		dto.setName(entity.getName());
+		dto.setDuration(entity.getDuration());
+		dto.setDurationUnit(entity.getDurationUnit().getCode());
+		dto.setStartDate(sdf.format(entity.getStartDate()));
+		
+		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getName());
+		cg.setHsaId(entity.getIssuedBy().getHsaId());
+		
+		dto.setIssuedBy(cg);
+		
+		return dto;
+	}
 
 	@Override
 	public Long getId() {
 		return this.id;
+	}
+	
+	public void setId(final Long id) {
+		this.id = id;
 	}
 
 	@Override
@@ -73,13 +98,17 @@ public class OrdinationImpl implements Ordination {
 	public CareGiverBaseView getIssuedBy() {
 		return this.issuedBy;
 	}
+	
+	public void setIssuedBy(final CareGiverBaseView careGiver) {
+		this.issuedBy = careGiver;
+	}
 
 	@Override
 	public int getDuration() {
 		return this.duration;
 	}
 	
-	void setDuration(final int duration) {
+	public void setDuration(final int duration) {
 		this.duration = duration;
 	}
 
@@ -88,7 +117,7 @@ public class OrdinationImpl implements Ordination {
 		return this.durationUnit;
 	}
 	
-	void setDurationUnit(final String durationUnit) {
+	public void setDurationUnit(final String durationUnit) {
 		this.durationUnit = durationUnit;
 	}
 

@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+import java.util.EnumSet;
+
 public enum DurationUnit {
 	WEEK("weeks"),
 	MONTH("months");
@@ -28,5 +30,15 @@ public enum DurationUnit {
 	
 	public String getCode() {
 		return this.code;
+	}
+	
+	public static DurationUnit fromCode(final String code) {
+		for (final DurationUnit du : EnumSet.allOf(DurationUnit.class)) {
+			if (du.getCode().equals(code)) {
+				return du;
+			}
+		}
+		
+		throw new IllegalArgumentException("Code " + code + " was not found in enum " + DurationUnit.class.getSimpleName());
 	}
 }
