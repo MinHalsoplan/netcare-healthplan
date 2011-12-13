@@ -18,8 +18,8 @@ package org.callistasoftware.netcare.core.entity;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -54,24 +54,21 @@ public class ActivityDefinitionEntity {
 	@JoinColumn(name="activity_type_id")
 	private ActivityTypeEntity activityType;
 	
-	@ManyToOne
-	@JoinColumn(name="user_id")
-	private UserEntity user;
-
     @ElementCollection(fetch=FetchType.LAZY)
     @CollectionTable(name = "nc_scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
-	private Set<ScheduledActivityEntity> scheduledActivities;
+	private List<ScheduledActivityEntity> scheduledActivities;
     
     
     ActivityDefinitionEntity() {
-    	scheduledActivities = new TreeSet<ScheduledActivityEntity>();
+    	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
 	}
     
-    public static ActivityDefinitionEntity newEntity(UserEntity user, ActivityTypeEntity activityType, Frequency frequency) {
+    public static ActivityDefinitionEntity newEntity(OrdinationEntity ordinationEntity, ActivityTypeEntity activityType, Frequency frequency) {
     	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
-    	entity.setUser(user);
+    	entity.setOrdination(ordinationEntity);
     	entity.setActivityType(activityType);
     	entity.setFrequency(frequency);
+    	ordinationEntity.addActivityDefinition(entity);
     	return entity;
     }
 
@@ -79,8 +76,8 @@ public class ActivityDefinitionEntity {
 		return id;
 	}
 	
-	public void setOrdination(OrdinationEntity ordination) {
-		this.ordination = ordination;
+	protected void setOrdination(OrdinationEntity ordination) {
+		this.ordination = EntityUtil.notNull(ordination);
 	}
 
 	public OrdinationEntity getOrdination() {
@@ -108,8 +105,19 @@ public class ActivityDefinitionEntity {
 		return entity;
 	}
 	
-	public Set<ScheduledActivityEntity> getScheduledActivities() {
-		return Collections.unmodifiableSet(scheduledActivities);
+	protected boolean addScheduledActivityEntity(ScheduledActivityEntity scheduledActivityEntity) {
+		if (!scheduledActivities.contains(scheduledActivityEntity)) {
+			return scheduledActivities.add(scheduledActivityEntity);
+		}
+		return false;
+	}
+	
+	protected boolean removeScheduledActivityEntity(ScheduledActivityEntity scheduledActivityEntity) {
+		return scheduledActivities.remove(scheduledActivityEntity);
+	}
+	
+	public List<ScheduledActivityEntity> getScheduledActivities() {
+		return Collections.unmodifiableList(scheduledActivities);
 	}
 
 	/**
@@ -129,13 +137,5 @@ public class ActivityDefinitionEntity {
 	 */
 	public int getActivityTarget() {
 		return activityTarget;
-	}
-
-	protected void setUser(UserEntity user) {
-		this.user = EntityUtil.notNull(user);
-	}
-
-	public UserEntity getUser() {
-		return user;
 	}
 }

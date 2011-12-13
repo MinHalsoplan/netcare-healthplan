@@ -24,7 +24,9 @@ import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
 import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
+import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ public class OrdinationServiceTest {
 	
 	@Autowired
 	private CareGiverRepository cgRepo;
+	@Autowired
+	private PatientRepository patientRepo;
 	
 	@Autowired
 	private OrdinationService service;
@@ -60,7 +64,10 @@ public class OrdinationServiceTest {
 		o.setDuration(12);
 		o.setDurationUnit(DurationUnit.WEEK.getCode());
 		
-		final ServiceResult<Ordination> saved = this.service.createNewOrdination(o, cgDto);
+		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "611028", cg);
+		patientRepo.save(patient);
+		
+		final ServiceResult<Ordination> saved = this.service.createNewOrdination(o, cgDto, patient.getId());
 		
 		assertEquals(o.getName(), saved.getData().getName());
 		assertEquals(o.getStartDate(), saved.getData().getStartDate());

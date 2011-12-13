@@ -37,14 +37,16 @@ public interface OrdinationService {
 	 */
 	ServiceResult<Ordination[]> loadOrdinationsForPatient(final Long patient);
 	
+
 	/**
-	 * Create a new ordination
-	 * @param name
-	 * @param starte
-	 * @param end
+	 * Creates a new ordination.
+	 * 
+	 * @param ordination
+	 * @param creator
+	 * @param patientId
 	 * @return
 	 */
-	ServiceResult<Ordination> createNewOrdination(final Ordination ordination, final CareGiverBaseView creator);
+	ServiceResult<Ordination> createNewOrdination(final Ordination ordination, final CareGiverBaseView creator, final Long patientId);
 	
 	/**
 	 * Delete the ordination with the specified id

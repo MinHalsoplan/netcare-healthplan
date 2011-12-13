@@ -56,7 +56,7 @@ public class OrdinationRepositoryTest {
 	@Autowired
 	private PatientRepository patientRepo;
 	
-	ActivityDefinitionEntity createActivityDefinition() {
+	ActivityDefinitionEntity createActivityDefinition(OrdinationEntity ordination) {
 		Frequency freq = new Frequency();
 		freq.getFrequencyDay().addDay(FrequencyDay.MON);
 		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
@@ -65,21 +65,12 @@ public class OrdinationRepositoryTest {
 		fval.setMinute(0);
 		freq.getTimes().add(fval);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
-		cgRepo.save(cg);
-		cgRepo.flush();
-		
-		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
-		patientRepo.save(patient);
-		patientRepo.flush();
 
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", MeasureUnit.KILOMETERS);
 		typeRepo.save(type);
 		typeRepo.flush();
 
-		ActivityDefinitionEntity entity = ActivityDefinitionEntity.newEntity(patient, type, freq);
-		
-		return entity;
+		return ActivityDefinitionEntity.newEntity(ordination, type, freq);
 	}
 	
 	@Test
@@ -87,10 +78,17 @@ public class OrdinationRepositoryTest {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		
-		final OrdinationEntity e1 = OrdinationEntity.newEntity("Hälsoplan B", new Date(), 20, DurationUnit.WEEK);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		cgRepo.flush();
 		
-		ActivityDefinitionEntity ad =  createActivityDefinition();
-		e1.getActivityDefinitions().add(ad);
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		patientRepo.save(patient);
+		patientRepo.flush();
+		
+		final OrdinationEntity e1 = OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK);
+		
+		ActivityDefinitionEntity ad =  createActivityDefinition(e1);
 		
 		actRepo.save(ad);
 
@@ -110,5 +108,37 @@ public class OrdinationRepositoryTest {
 		assertEquals(c.getTime(), e2.getEndDate());
 		
 		assertEquals(1, e2.getActivityDefinitions().size());
+		
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testFindByForPatient() throws Exception {
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		cgRepo.save(cg);
+		cgRepo.flush();
+		
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		patientRepo.save(patient);
+		patientRepo.flush();
+		
+		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK));
+		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTH));
+		repo.flush();
+		
+		List<OrdinationEntity> list = repo.findByForPatient(patient);
+		
+		assertEquals(2, list.size());
+		
+		assertEquals("Hälsoplan B", list.get(0).getName());
+		assertEquals(DurationUnit.WEEK, list.get(0).getDurationUnit());
+		assertEquals(20, list.get(0).getDuration());
+		assertEquals(DurationUnit.MONTH, list.get(1).getDurationUnit());
+		assertEquals(3, list.get(1).getDuration());
+		assertEquals(cg, list.get(0).getIssuedBy());
+		assertEquals(cg, list.get(1).getIssuedBy());
+		assertEquals(patient, list.get(0).getForPatient());
+		assertEquals(patient, list.get(1).getForPatient());
 	}
 }

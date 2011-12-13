@@ -43,10 +43,18 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	ScheduledActivityEntity() {
 	}
 	
+	/**
+	 * Creates a {@link ScheduledActivityEntity}.
+	 * 
+	 * @param activityDefinitionEntity the {@link ActivityDefinitionEntity}, must be not null
+	 * @param scheduledTime the scheduled timestamp (datetime)
+	 * @return a scheduled activity
+	 */
 	public static ScheduledActivityEntity newEntity(ActivityDefinitionEntity activityDefinitionEntity, Date scheduledTime) {
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
-		activityDefinitionEntity.getScheduledActivities().add(scheduledActivityEntity);
+		activityDefinitionEntity.addScheduledActivityEntity(scheduledActivityEntity);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
+		scheduledActivityEntity.setTargetValue(activityDefinitionEntity.getActivityTarget());
 		return scheduledActivityEntity;
 	}
 	
