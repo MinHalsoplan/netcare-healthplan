@@ -27,6 +27,11 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				var hideTimeContainer = function() {
+					$('#addedTimesContainer').hide();
+					$('#addTimeContainer').hide();
+				}
+				
 				var types = NC.ActivityTypes();
 				
 				var units = new Array();
@@ -74,7 +79,7 @@
 					 */ 
 					var size = $('#activityDefinitionForm input[name="day"]:checked').size();
 					if (size == 0) {
-						$('#addTimeContainer').fadeOut().hide();
+						hideTimeContainer();
 					} else {
 						$('#addTimeContainer').fadeIn().show();
 					}
@@ -113,18 +118,6 @@
 				});
 				
 				/*
-				 * Initially hide the addedTimesContainer since
-				 * no times should have been added
-				 */
-				$('#addedTimesContainer').hide();
-				
-				/*
-				 * Initially hide the addTimeContainer since
-				 * no days has been selected.
-				 */ 
-				$('#addTimeContainer').hide();
-				
-				/*
 				 * Bind the form submission and package what is going
 				 * to be sent to the server as a JSON object
 				 */
@@ -158,6 +151,8 @@
 					console.log("Times: " + times);
 					
 				});
+				
+				hideTimeContainer();
 			});
 		</script>
 	</netcare:header>
