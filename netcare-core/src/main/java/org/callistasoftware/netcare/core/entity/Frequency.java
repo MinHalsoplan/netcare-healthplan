@@ -18,7 +18,6 @@ package org.callistasoftware.netcare.core.entity;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Defines a week based frequency in days and times.
@@ -82,16 +81,17 @@ public class Frequency {
 		if (stringFrequency == null || stringFrequency.length() == 0) {
 			return null;
 		}
-		StringTokenizer tokenizer = new StringTokenizer(stringFrequency, REC_SEP);
-		String version = tokenizer.nextToken();
+		final String[] fields = stringFrequency.split(REC_SEP);
+		int n = 0;
+		String version = fields[n++];
 		if (!VERSION.equals(version)){
-			throw new IllegalArgumentException("Invalid string frequency version: " + version + ", expetced: " + VERSION);
+			throw new IllegalArgumentException("Invalid string frequency version: " + version + ", expected: " + VERSION);
 		}
 		Frequency frequency = new Frequency();
-		frequency.setFrequencyDay(FrequencyDay.unmarshal(tokenizer.nextToken()));
-		while (tokenizer.hasMoreTokens()) {
+		frequency.setFrequencyDay(FrequencyDay.unmarshal(fields[n++]));
+		for (; n < fields.length; n++) {
 			FrequencyTime time = new FrequencyTime();
-			String[] values = tokenizer.nextToken().split(VAL_SEP);
+			String[] values = fields[n].split(VAL_SEP);
 			time.setHour(Integer.valueOf(values[0]));
 			time.setMinute(Integer.valueOf(values[1]));
 			frequency.getTimes().add(time);
