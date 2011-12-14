@@ -67,6 +67,43 @@
 					
 					showUnit(selected);
 				});
+				
+				var util = new NC.Util();
+				var addTimeField = $('#activityDefinitionForm input[name="addTime"]');
+				
+				util.validateTimeField(addTimeField, function(text) {
+					var liElem = $('<li>').html(text);
+					var deleteIcon = util.createIcon('bullet_delete', function() {
+						liElem.detach();
+						
+						/*
+						 * If we dont have any times left. Don't
+						 * show the container
+						 */
+						if ($('#addedTimes li').size() == 0) {
+							$('#addedTimesContainer').hide();
+						}
+						
+					});
+					
+					liElem.append(deleteIcon);
+					
+					$('#addedTimes').append(liElem);
+					addTimeField.val('');
+					
+					/*
+					 * Show the container since we just added
+					 * a time
+					 */
+					$('#addedTimesContainer').show();
+				});
+				
+				/*
+				 * Initially hide the addedTimesContainer since
+				 * no times should have been added
+				 */
+				$('#addedTimesContainer').hide();
+				
 			});
 		</script>
 	</netcare:header>
@@ -142,6 +179,13 @@
 				<netcare:field name="addTime" label="Lägg till tidpunkt">
 					<input type="text" name="addTime" class="xlarge" /> <span><strong>(Ex: 10:15)</strong></span>
 				</netcare:field>
+				
+				<div id="addedTimesContainer" class="clearfix">
+					<p><strong>Tider</strong></p>
+					<ul id="addedTimes">
+					
+					</ul>
+				</div>
 			
 				<div class="actions">
 					<spring:message code="create" var="create" scope="page" />

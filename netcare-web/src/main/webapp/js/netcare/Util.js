@@ -73,6 +73,83 @@ NC.Util = function() {
 			icon.click(onClickFunction);
 			
 			return icon;
+		},
+		
+		/*
+		 * Check whether the char is numeric
+		 * or not.
+		 */
+		isCharAllowed : function(char, allowedCharacters) {
+			console.log("Checking if " + char + " is allowed.");
+			console.log("Allowed characters: " + allowedCharacters);
+			var numerics;
+			if (allowedCharacters == undefined) {
+				// 0-9 and :
+				numerics = [48,49,50,51,52,53,54,55,56,57];
+			} else {
+				numerics = allowedCharacters;
+			}
+			
+			console.log("Allowed characters are: " + numerics);
+			
+			var result = false;
+			$.each(numerics, function(index, value) {
+				if (!result) {
+					console.log("Processing char: " + char + " against: " + value);
+					if (char == value) {
+						console.log("Character allowed!");
+						result = true;
+					}
+				}
+			});
+			
+			return result;
+		},
+		
+		/**
+		 * Method for ensuring that the only valid input of the timeField
+		 * is in format XX:XX
+		 * @param timeField
+		 * @param callback
+		 * @returns
+		 */
+		validateTimeField : function(timeField, callback) {
+			
+			timeField.keypress(function(event) {
+				var text = timeField.val();
+				
+				console.log("Character count: " + text.length);
+				if (text.length == 0 && !public.isCharAllowed(event.which, [48,49,50])) {
+					event.preventDefault();
+				}
+				
+				if (text.length == 1 && !public.isCharAllowed(event.which)) {
+					event.preventDefault();
+				}
+				
+				if (text.length == 2 && !public.isCharAllowed(event.which, [58])) {
+					event.preventDefault();
+				}
+				
+				if (text.length == 3 && !public.isCharAllowed(event.which, [48,49,50,51,52,53])) {
+					event.preventDefault();
+				}
+				
+				if (text.length == 4 && !public.isCharAllowed(event.which)) {
+					event.preventDefault();
+				}
+				
+				if (text.length == 5) {
+					event.preventDefault();
+				}
+				
+				if (event.keyCode == 13 && text.length == 5) {
+					event.preventDefault();
+					console.log("Pressed enter in add time field. Add the time");
+					
+					callback(text);
+				}
+			});
 		}
 	};
 	
