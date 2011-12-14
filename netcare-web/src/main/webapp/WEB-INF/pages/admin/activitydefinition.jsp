@@ -104,6 +104,14 @@
 				 */
 				$('#addedTimesContainer').hide();
 				
+				/*
+				 * Bind the form submission and package what is going
+				 * to be sent to the server as a JSON object
+				 */
+				$('#activityDefinitionForm :submit').click(function(event) {
+					console.log("Form submission...");
+					event.preventDefault();
+				});
 			});
 		</script>
 	</netcare:header>
