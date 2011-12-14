@@ -165,7 +165,7 @@ public class OrdinationEntity {
 		if (durationUnit != null && startDate != null) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(startDate);
-			c.add(durationUnit == DurationUnit.MONTH ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
+			c.add(durationUnit == DurationUnit.MONTHS ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
 			endDate = c.getTime();
 		} else {
 			endDate = null;

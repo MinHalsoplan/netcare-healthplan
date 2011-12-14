@@ -67,7 +67,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 		final Ordination[] dtos = new Ordination[entities.size()];
 		int count = 0;
 		for (final OrdinationEntity ent : entities) {
-			final OrdinationImpl dto = OrdinationImpl.newFromEntity(ent);
+			final OrdinationImpl dto = OrdinationImpl.newFromEntity(ent, null);
 			dtos[count++] = dto;
 		}
 		
@@ -82,7 +82,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 		
 		try {
 			final Date start = sdf.parse(o.getStartDate());
-			final DurationUnit du = DurationUnit.fromCode(o.getDurationUnit());
+			final DurationUnit du = DurationUnit.valueOf(o.getDurationUnit().getCode());
 			
 			final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
 			
@@ -91,7 +91,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 			final OrdinationEntity newEntity = OrdinationEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
 			
 			final OrdinationEntity saved = this.repo.save(newEntity);
-			final Ordination dto = OrdinationImpl.newFromEntity(saved);
+			final Ordination dto = OrdinationImpl.newFromEntity(saved, null);
 			
 			return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 			

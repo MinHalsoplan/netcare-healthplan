@@ -86,7 +86,7 @@ public class OrdinationRepositoryTest {
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
-		final OrdinationEntity e1 = OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK);
+		final OrdinationEntity e1 = OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS);
 		
 		ActivityDefinitionEntity ad =  createActivityDefinition(e1);
 		
@@ -100,7 +100,7 @@ public class OrdinationRepositoryTest {
 		assertEquals(1, all.size());
 		OrdinationEntity e2 = all.get(0);
 		assertEquals("Hälsoplan B", e2.getName());
-		assertEquals(DurationUnit.WEEK, e2.getDurationUnit());
+		assertEquals(DurationUnit.WEEKS, e2.getDurationUnit());
 		assertEquals(20, e2.getDuration());
 		Calendar c = Calendar.getInstance();
 		c.setTime(e1.getStartDate());
@@ -123,8 +123,8 @@ public class OrdinationRepositoryTest {
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
-		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK));
-		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTH));
+		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS));
+		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTHS));
 		repo.flush();
 		
 		List<OrdinationEntity> list = repo.findByForPatient(patient);
@@ -132,9 +132,9 @@ public class OrdinationRepositoryTest {
 		assertEquals(2, list.size());
 		
 		assertEquals("Hälsoplan B", list.get(0).getName());
-		assertEquals(DurationUnit.WEEK, list.get(0).getDurationUnit());
+		assertEquals(DurationUnit.WEEKS, list.get(0).getDurationUnit());
 		assertEquals(20, list.get(0).getDuration());
-		assertEquals(DurationUnit.MONTH, list.get(1).getDurationUnit());
+		assertEquals(DurationUnit.MONTHS, list.get(1).getDurationUnit());
 		assertEquals(3, list.get(1).getDuration());
 		assertEquals(cg, list.get(0).getIssuedBy());
 		assertEquals(cg, list.get(1).getIssuedBy());

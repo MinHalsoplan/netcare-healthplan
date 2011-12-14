@@ -36,7 +36,7 @@ public interface Ordination extends Serializable {
 	
 	int getDuration();
 	
-	String getDurationUnit();
+	Option getDurationUnit();
 	
 	CareGiverBaseView getIssuedBy();
 }

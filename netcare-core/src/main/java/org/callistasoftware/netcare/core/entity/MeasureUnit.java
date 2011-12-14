@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+
 /**
  * Known units for measurements. <p>
  * 
@@ -28,5 +29,5 @@ package org.callistasoftware.netcare.core.entity;
  */
 public enum MeasureUnit {
 	MINUTES,
-	KILOMETERS,
+	KILOMETERS;
 }

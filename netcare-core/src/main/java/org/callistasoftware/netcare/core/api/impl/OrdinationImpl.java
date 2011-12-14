@@ -17,8 +17,10 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.entity.OrdinationEntity;
 
@@ -40,18 +42,18 @@ public class OrdinationImpl implements Ordination {
 	private String startDate;
 	private String endDate;
 	private int duration;
-	private String durationUnit;
+	private Option durationUnit;
 	
 	private CareGiverBaseView issuedBy;
 	
-	public static OrdinationImpl newFromEntity(final OrdinationEntity entity) {
+	public static OrdinationImpl newFromEntity(final OrdinationEntity entity, final Locale l) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		final OrdinationImpl dto = new OrdinationImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setDuration(entity.getDuration());
-		dto.setDurationUnit(entity.getDurationUnit().getCode());
+		dto.setDurationUnit(new Option(entity.getDurationUnit().name(), l));
 		dto.setStartDate(sdf.format(entity.getStartDate()));
 		
 		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getName());
@@ -113,11 +115,11 @@ public class OrdinationImpl implements Ordination {
 	}
 
 	@Override
-	public String getDurationUnit() {
+	public Option getDurationUnit() {
 		return this.durationUnit;
 	}
 	
-	public void setDurationUnit(final String durationUnit) {
+	public void setDurationUnit(final Option durationUnit) {
 		this.durationUnit = durationUnit;
 	}
 

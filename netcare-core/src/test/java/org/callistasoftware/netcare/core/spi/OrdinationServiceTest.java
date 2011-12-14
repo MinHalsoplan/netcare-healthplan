@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import static org.junit.Assert.assertEquals;
 
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
@@ -62,7 +63,7 @@ public class OrdinationServiceTest {
 		o.setName("Test");
 		o.setStartDate("2011-12-12");
 		o.setDuration(12);
-		o.setDurationUnit(DurationUnit.WEEK.getCode());
+		o.setDurationUnit(new Option(DurationUnit.WEEKS.name(), null));
 		
 		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "611028", cg);
 		patientRepo.save(patient);
@@ -72,7 +73,7 @@ public class OrdinationServiceTest {
 		assertEquals(o.getName(), saved.getData().getName());
 		assertEquals(o.getStartDate(), saved.getData().getStartDate());
 		assertEquals(o.getDuration(), saved.getData().getDuration());
-		assertEquals(o.getDurationUnit(), saved.getData().getDurationUnit());
+		assertEquals(o.getDurationUnit().getCode(), saved.getData().getDurationUnit().getCode());
 	}
 
 }

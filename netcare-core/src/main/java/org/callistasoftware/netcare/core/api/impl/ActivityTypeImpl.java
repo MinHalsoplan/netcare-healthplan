@@ -16,9 +16,11 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.Locale;
+
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.core.entity.MeasureUnit;
 
 /**
  * Implementation of an activity type
@@ -34,13 +36,13 @@ public class ActivityTypeImpl implements ActivityType {
 	
 	private Long id;
 	private String name;
-	private MeasureUnit unit;
+	private Option unit;
 	
-	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity) {
+	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
-		dto.setUnit(entity.getUnit());
+		dto.setUnit(new Option(entity.getUnit().name(), l));
 		
 		return dto;
 	}
@@ -64,12 +66,11 @@ public class ActivityTypeImpl implements ActivityType {
 	}
 
 	@Override
-	public MeasureUnit getUnit() {
+	public Option getUnit() {
 		return this.unit;
 	}
 	
-	public void setUnit(final MeasureUnit unit) {
+	public void setUnit(final Option unit) {
 		this.unit = unit;
 	}
-
 }

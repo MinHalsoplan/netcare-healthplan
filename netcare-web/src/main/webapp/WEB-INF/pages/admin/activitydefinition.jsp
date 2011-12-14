@@ -29,15 +29,44 @@
 			$(function() {
 				var types = NC.ActivityTypes();
 				
+				var units = new Array();
+				var select = $('#activityDefinitionForm select[name="activityType"]');
+				
+				var showUnit = function(optionElem) {
+					console.log("Selected element: " + optionElem.val());
+					$.each(units, function(index, value) {
+						if (optionElem.html() === units[index].name) {
+							$('span.unit').html('<strong>(' + units[index].unit.value + ')</strong>');
+						}
+					});
+				}
+				
 				types.load(function(data) {
+					var firstOption;
 					$.each(data, function(index, value) {
 						console.log("Processing: " + value.name);
+						units[index] = value;
+						
 						var opt = $('<option>', { value : value.id }).html(value.name);
-						$('#activityDefinitionForm select').append(opt);
-					})
+						if (index == 0) {
+							firstOption = opt;
+						}
+						
+						select.append(opt);
+					});
 					
+					/*
+					 * Display unit on the currently selected option
+					 */
+					showUnit(firstOption);
 				});
 				
+				select.change(function() {
+					var selected = $('#activityDefinitionForm select option:selected');
+					console.log("Selected element is: " + selected.html());
+					
+					showUnit(selected);
+				});
 			});
 		</script>
 	</netcare:header>
@@ -52,11 +81,11 @@
 			<netcare:form title="Schemalägg ordination för xxx" id="activityDefinitionForm" classes="form-stacked">
 			
 				<netcare:field name="activityType" label="Vad">
-					<select name="activityType"></select>
+					<select name="activityType" class="xlarge"></select>
 				</netcare:field>
 				
 				<netcare:field name="activityGoal" label="Målsättning">
-					<input name="activityGoal" type="number" class="xlarge" />
+					<input name="activityGoal" type="number" class="xlarge" /> <span class="unit"></span>
 				</netcare:field>
 				
 				<div class="row">
@@ -111,7 +140,7 @@
 				</div>
 				
 				<netcare:field name="addTime" label="Lägg till tidpunkt">
-					<input type="text" name="addTime" class="xlarge" />
+					<input type="text" name="addTime" class="xlarge" /> <span><strong>(Ex: 10:15)</strong></span>
 				</netcare:field>
 			
 				<div class="actions">

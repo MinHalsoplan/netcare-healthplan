@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.api.rest;
 
 import java.util.Locale;
 
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
@@ -64,8 +65,8 @@ public class SupportApi {
 		final Option[] durationUnits = new Option[units.length];
 		int count = 0;
 		for (final DurationUnit du : units) {
-			log.debug("Processing {}", du.getCode());
-			durationUnits[count++] = new Option(du.getCode(), this.messageSource.getMessage(du.getCode(), null, locale));
+			log.debug("Processing {}", du.name());
+			durationUnits[count++] = new Option(du.name(), locale);
 		}
 		
 		return ServiceResultImpl.createSuccessResult(durationUnits, new GenericSuccessMessage());

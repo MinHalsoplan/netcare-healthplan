@@ -16,7 +16,10 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import java.util.Locale;
+
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
@@ -37,18 +40,18 @@ public class ActivityTypeApi extends ApiSupport {
 	
 	@RequestMapping(value="/load", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityType[]> loadActivityTypes() {
+	public ServiceResult<ActivityType[]> loadActivityTypes(final Locale l) {
 		log.info("User {} (care giver: {}) is loading activity types", getUser().getName(), getUser().isCareGiver());
 		
 		final ActivityTypeImpl ac1 = new ActivityTypeImpl();
 		ac1.setId(1L);
 		ac1.setName("Simma");
-		ac1.setUnit(MeasureUnit.KILOMETERS);
+		ac1.setUnit(new Option(MeasureUnit.KILOMETERS.name(), l));
 		
 		final ActivityTypeImpl ac2 = new ActivityTypeImpl();
 		ac2.setId(2L);
 		ac2.setName("Yoga");
-		ac2.setUnit(MeasureUnit.MINUTES);
+		ac2.setUnit(new Option(MeasureUnit.MINUTES.name(), l));
 		
 		final ActivityType[] arr = new ActivityTypeImpl[] { ac1, ac2 };
 		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());

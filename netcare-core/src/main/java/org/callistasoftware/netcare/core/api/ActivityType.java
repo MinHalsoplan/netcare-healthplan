@@ -18,8 +18,6 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
-import org.callistasoftware.netcare.core.entity.MeasureUnit;
-
 /**
  * Definition of an activity type
  * 
@@ -44,5 +42,5 @@ public interface ActivityType extends Serializable {
 	 * Get the unit of this activity type
 	 * @return
 	 */
-	MeasureUnit getUnit();
+	Option getUnit();
 }

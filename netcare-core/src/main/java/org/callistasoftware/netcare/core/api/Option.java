@@ -14,23 +14,45 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.api.rest;
+package org.callistasoftware.netcare.core.api;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+/**
+ * This class represents a simple option that
+ * can be used from the UI. The code must exist
+ * in a message bundle to lookup the calue
+ * @author marcuskrantz
+ *
+ */
 public class Option {
 
 	private String code;
 	private String value;
 	
-	public Option(final String code, final String value) {
+	public Option() {}
+	
+	public Option(final String code, final Locale l) {
 		this.code = code;
-		this.value = value;
+		
+		final ResourceBundle bundle = ResourceBundle.getBundle("messages");
+		this.value = (l != null) ? bundle.getString(this.getCode()) : null;
 	}
 	
 	public String getCode() {
 		return code;
 	}
 	
+	public void setCode(final String code) {
+		this.code = code;
+	}
+	
 	public String getValue() {
 		return value;
+	}
+	
+	public void setValue(final String value) {
+		this.value = value;
 	}
 }

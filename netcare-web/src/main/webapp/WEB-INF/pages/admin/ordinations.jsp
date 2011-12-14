@@ -57,19 +57,22 @@
 				 */
 				$('#createOrdinationForm :submit').click(function(event) {
 					console.log("Submitting form...");
+					event.preventDefault();
 					
 					var formData = new Object();
 					formData.name = $('#createOrdinationForm input[name="name"]').val();
 					formData.startDate = $('#createOrdinationForm input[name="startDate"]').val();
 					formData.duration = $('#createOrdinationForm input[name="duration"]').val();
-					formData.durationUnit = $('#createOrdinationForm select').val();
+					formData.durationUnit = new Object();
+					formData.durationUnit.code = $('#createOrdinationForm select option:selected').attr('value');
+					formData.durationUnit.value = $('#createOrdinationForm select option:selected').val();
 					
 					var jsonObj = JSON.stringify(formData);
+					console.log("JSON: " + jsonObj.toString());
 					
 					ordinations.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
 						$('#createOrdinationForm :reset').click();
 					});
-					event.preventDefault();
 				});
 				
 			});
@@ -123,7 +126,7 @@
 				
 			</netcare:form>
 			
-			<h3>Aktuella ordinationer</h3>
+			<h3><spring:message code="currentOrdinations" /></h3>
 			<p id="ordinationDescription"></p>
 			<table id="ordinationTable" class="bordered-table zebra-striped">
 				<thead>
