@@ -68,11 +68,24 @@
 					showUnit(selected);
 				});
 				
+				$('#activityDefinitionForm input[name="day"]').click(function(event) {
+					/*
+					 * Is any day checked?
+					 */ 
+					var size = $('#activityDefinitionForm input[name="day"]:checked').size();
+					if (size == 0) {
+						$('#addTimeContainer').fadeOut().hide();
+					} else {
+						$('#addTimeContainer').fadeIn().show();
+					}
+				});
+				
 				var util = new NC.Util();
 				var addTimeField = $('#activityDefinitionForm input[name="addTime"]');
 				
 				util.validateTimeField(addTimeField, function(text) {
-					var liElem = $('<li>').html(text);
+					var liElem = $('<li>');
+					var spanElem = $('<span>').html(text);
 					var deleteIcon = util.createIcon('bullet_delete', function() {
 						liElem.detach();
 						
@@ -86,6 +99,7 @@
 						
 					});
 					
+					liElem.append(spanElem);
 					liElem.append(deleteIcon);
 					
 					$('#addedTimes').append(liElem);
@@ -105,12 +119,44 @@
 				$('#addedTimesContainer').hide();
 				
 				/*
+				 * Initially hide the addTimeContainer since
+				 * no days has been selected.
+				 */ 
+				$('#addTimeContainer').hide();
+				
+				/*
 				 * Bind the form submission and package what is going
 				 * to be sent to the server as a JSON object
 				 */
 				$('#activityDefinitionForm :submit').click(function(event) {
 					console.log("Form submission...");
 					event.preventDefault();
+					
+					var activityType = $('#activityDefinitionForm select option:selected').val();
+					var goal = $('#activityDefinitionForm input[name="activityGoal"]').val();
+					
+					var selectedDays = $('#activityDefinitionForm input[name="day"]:checked');
+					var days = new Array();
+					$.each(selectedDays, function(index, value) {
+						days[index] = value.value;
+					});
+					
+					var addedTimes = $('#addedTimes > li > span');
+					console.log("Added times size: " + addedTimes.size());
+					var times = new Array();
+					$.each(addedTimes, function(index, value) {
+						/*
+						 * Note: we get the native htmlspanelement object
+						 * here so we need to wrap it within a jquery object
+						 */
+						times[index] = $(value).html();
+					});
+					
+					console.log("Activity type: " + activityType);
+					console.log("Activity goal: " + goal);
+					console.log("Days: " + days);
+					console.log("Times: " + times);
+					
 				});
 			});
 		</script>
@@ -146,50 +192,51 @@
 						
 						
 							<div class="span1">
-								<netcare:field name="mon" label="${monday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${monday}">
+									<input type="checkbox" name="day" value="0"/>
 								</netcare:field>
 							</div>
 							<div class="span1">
-								<netcare:field name="mon" label="${tuesday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${tuesday}">
+									<input type="checkbox" name="day" value="1"/>
 								</netcare:field>
 							</div>
 							<div class="span1">
-								<netcare:field name="mon" label="${wednesday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${wednesday}">
+									<input type="checkbox" name="day" value="2"/>
 								</netcare:field>
 							</div>
 							<div class="span1">
-								<netcare:field name="mon" label="${thursday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${thursday}">
+									<input type="checkbox" name="day" value="3"/>
 								</netcare:field>
 							</div>
 							<div class="span1">
-								<netcare:field name="mon" label="${friday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${friday}">
+									<input type="checkbox" name="day" value="4"/>
 								</netcare:field>
 							</div>
 							<div class="span1">
-								<netcare:field name="mon" label="${saturday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${saturday}">
+									<input type="checkbox" name="day" value="5"/>
 								</netcare:field>
 							</div>
 							<div class="span1">
-								<netcare:field name="mon" label="${sunday}">
-									<input type="checkbox" name="mon" />
+								<netcare:field name="day" label="${sunday}">
+									<input type="checkbox" name="day" value="6"/>
 								</netcare:field>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-				<netcare:field name="addTime" label="Lägg till tidpunkt">
+				<spring:message code="addTime" var="addTime" scope="page" />
+				<netcare:field containerId="addTimeContainer" name="addTime" label="${addTime}">
 					<input type="text" name="addTime" class="xlarge" /> <span><strong>(Ex: 10:15)</strong></span>
 				</netcare:field>
 				
 				<div id="addedTimesContainer" class="clearfix">
-					<p><strong>Tider</strong></p>
+					<p><strong><spring:message code="times" /></strong></p>
 					<ul id="addedTimes">
 					
 					</ul>

@@ -133,9 +133,19 @@ NC.Ordination = function(descriptionId, tableId) {
 			});
 		},
 		
+		/**
+		 * View a single ordination
+		 */
 		view : function(ordinationId, currentPatient) {
 			console.log("GET to view ordination with id: " + ordinationId);
 			window.location = '/netcare-web/netcare/admin/ordination/' + ordinationId + '/view';
+		},
+		
+		/**
+		 * Load a single ordination
+		 */
+		load : function(ordinationId, callback) {
+			
 		}
 	};
 	

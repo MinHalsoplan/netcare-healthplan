@@ -17,13 +17,14 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ attribute name="containerId" required="false" %>
 <%@ attribute name="name" required="true" %>
 <%@ attribute name="label" required="false" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="clearfix">
+<div id="${containerId}" class="clearfix">
 	<label for="${name}">${label}</label>
 	<div class="input">
 		<jsp:doBody />
