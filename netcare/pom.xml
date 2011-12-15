@@ -11,6 +11,7 @@
   </description>
   
   <modules>
+  	<module>../netcare-model</module>
   	<module>../netcare-core</module>
   	<module>../netcare-rest-api</module>
   	<module>../netcare-web</module>
