@@ -150,6 +150,19 @@ NC.Util = function() {
 					callback(text);
 				}
 			});
+		},
+		
+		bindNotEmptyField : function(containerDiv, inputField) {
+			console.log("Binding " + inputField.attr('name') + " as a not empty field");
+			inputField.blur(function(event) {
+				console.log("Input field" + inputField.attr('name') + " lost focus. Current value is: " + inputField.val());
+				var val = inputField.val();
+				if (val.length == 0) {
+					containerDiv.addClass('error');
+				} else {
+					containerDiv.removeClass('error');
+				}
+			});
 		}
 	};
 	

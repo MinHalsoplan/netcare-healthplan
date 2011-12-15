@@ -14,21 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.web.controller;
+package org.callistasoftware.netcare.core.api.messages;
 
-import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.PatientBaseView;
-import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-abstract class ControllerSupport {
+public class EntityNotFoundMessage extends DefaultSystemMessage {
 
-	protected UserBaseView getLoggedInUser() {
-		return (UserBaseView) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
-	protected PatientBaseView getCurrentPatient(final HttpSession session) {
-		return (PatientBaseView) session.getAttribute("currentPatient");
+	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
+		super(entityClass.getSimpleName(), "EntityNotFound", id);
 	}
+
 }

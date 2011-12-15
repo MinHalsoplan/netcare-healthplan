@@ -19,6 +19,8 @@ package org.callistasoftware.netcare.core.api;
 import java.io.Serializable;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.messages.SystemMessage;
+
 /**
  * Defines a result of a service operation
  * 

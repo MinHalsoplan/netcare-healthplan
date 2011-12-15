@@ -14,16 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.impl;
+package org.callistasoftware.netcare.core.api.messages;
 
-public class GenericSuccessMessage extends DefaultSystemMessage {
+import java.io.Serializable;
+
+/**
+ * Defines a system message
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface SystemMessage extends Serializable {
 
 	/**
-	 * 
+	 * The system message code
+	 * @return
 	 */
-	private static final long serialVersionUID = 1L;
-
-	public GenericSuccessMessage() {
-		super("Åtgärden lyckades");
-	}
+	String getCode();
+	
+	/**
+	 * The message
+	 * @return
+	 */
+	String getMessage();
 }

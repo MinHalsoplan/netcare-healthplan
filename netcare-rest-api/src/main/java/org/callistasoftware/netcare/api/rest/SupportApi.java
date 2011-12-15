@@ -20,9 +20,9 @@ import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
-import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

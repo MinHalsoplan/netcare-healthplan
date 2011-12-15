@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.SystemMessage;
+import org.callistasoftware.netcare.core.api.messages.SystemMessage;
 
 /**
  * Default implementation of a service result
@@ -66,7 +66,7 @@ public class ServiceResultImpl<T extends Serializable> implements ServiceResult<
 	
 	@Override
 	public boolean isSuccess() {
-		if (!this.getErrorMessages().isEmpty()) {
+		if (this.success == true && !this.getErrorMessages().isEmpty()) {
 			throw new IllegalStateException("Service result is marked as successful, but it has error messages attached to it.");
 		}
 		

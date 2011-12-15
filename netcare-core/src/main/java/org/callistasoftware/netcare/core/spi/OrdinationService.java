@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
 /**
@@ -37,7 +38,6 @@ public interface OrdinationService {
 	 */
 	ServiceResult<Ordination[]> loadOrdinationsForPatient(final Long patient);
 	
-
 	/**
 	 * Creates a new ordination.
 	 * 
@@ -54,4 +54,12 @@ public interface OrdinationService {
 	 * @return
 	 */
 	ServiceResult<Ordination> deleteOrdination(final Long ordinationId);
+	
+	/**
+	 * Load a specific ordination
+	 * @param ordinationId
+	 * @param patient
+	 * @return
+	 */
+	ServiceResult<Ordination> loadOrdination(final Long ordinationId, final PatientBaseView patient);
 }

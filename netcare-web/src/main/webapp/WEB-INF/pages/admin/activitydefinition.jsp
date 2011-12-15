@@ -30,8 +30,9 @@
 				var hideTimeContainer = function() {
 					$('#addedTimesContainer').hide();
 					$('#addTimeContainer').hide();
-				}
+				};
 				
+				var ordination = <c:out value="${requestScope.result.data.id}" />
 				var types = NC.ActivityTypes();
 				
 				var units = new Array();
@@ -44,7 +45,7 @@
 							$('span.unit').html('<strong>(' + units[index].unit.value + ')</strong>');
 						}
 					});
-				}
+				};
 				
 				types.load(function(data) {
 					var firstOption;
@@ -95,6 +96,15 @@
 				});
 				
 				var util = new NC.Util();
+				
+				/*
+				 * When the user leaves the goal without enter
+				 * any value we need to decorate the field
+				 * as erronous
+				 */
+				util.bindNotEmptyField($('#activityGoal'), $('#activityGoal input[name="activityGoal"]'));
+				util.bindNotEmptyField($('#addTimeContainer'), $('#addTimeContainer input[name="addTime"]'));
+				
 				var addTimeField = $('#activityDefinitionForm input[name="addTime"]');
 				
 				util.validateTimeField(addTimeField, function(text) {
@@ -154,11 +164,11 @@
 						times[index] = $(value).html();
 					});
 					
+					console.log("Ordination " + ordination);
 					console.log("Activity type: " + activityType);
 					console.log("Activity goal: " + goal);
 					console.log("Days: " + days);
 					console.log("Times: " + times);
-					
 				});
 				
 				hideTimeContainer();
@@ -173,13 +183,13 @@
 				skall utföras.
 			</p>
 			
-			<netcare:form title="Schemalägg ordination för xxx" id="activityDefinitionForm" classes="form-stacked">
+			<netcare:form title="Ordination" id="activityDefinitionForm" classes="form-stacked">
 			
 				<netcare:field name="activityType" label="Vad">
 					<select name="activityType" class="xlarge"></select>
 				</netcare:field>
 				
-				<netcare:field name="activityGoal" label="Målsättning">
+				<netcare:field containerId="activityGoal" name="activityGoal" label="Målsättning">
 					<input name="activityGoal" type="number" class="xlarge" /> <span class="unit"></span>
 				</netcare:field>
 				

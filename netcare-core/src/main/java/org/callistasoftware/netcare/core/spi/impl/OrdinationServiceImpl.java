@@ -23,10 +23,13 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
 import org.callistasoftware.netcare.core.entity.OrdinationEntity;
@@ -56,6 +59,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	
 	@Autowired
 	private CareGiverRepository careGiverRepository;
+	
 	@Autowired
 	private PatientRepository patientRepository;
 	
@@ -77,7 +81,6 @@ public class OrdinationServiceImpl implements OrdinationService {
 	@Override
 	public ServiceResult<Ordination> createNewOrdination(final Ordination o, final CareGiverBaseView careGiver, final Long patientId) {		
 		log.info("Creating new ordination {}", o.getName());
-		
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
@@ -106,6 +109,22 @@ public class OrdinationServiceImpl implements OrdinationService {
 		this.repo.delete(ordinationId);
 		
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<Ordination> loadOrdination(Long ordinationId,
+			PatientBaseView patient) {
+		final OrdinationEntity entity = this.repo.findOne(ordinationId);
+		if (entity == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(OrdinationEntity.class, ordinationId));
+		}
+		
+		if (!entity.getForPatient().getId().equals(patient.getId())) {
+			return ServiceResultImpl.createFailedResult(new DefaultSystemMessage("Du har inte behörigheten att se denna ordination"));
+		}
+		
+		final Ordination dto = OrdinationImpl.newFromEntity(entity, null);
+		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 
 }

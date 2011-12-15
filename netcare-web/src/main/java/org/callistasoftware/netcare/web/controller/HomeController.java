@@ -20,9 +20,12 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
+import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.impl.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.spi.OrdinationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class HomeController extends ControllerSupport {
 	
 	@Autowired
 	private MessageSource messages;
+	
+	@Autowired
+	private OrdinationService service;
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String displayLoginForm() {
@@ -83,7 +89,15 @@ public class HomeController extends ControllerSupport {
 	}
 	
 	@RequestMapping(value="/admin/ordination/{ordination}/view", method=RequestMethod.GET)
-	public String displayNewActivityDefinition(@PathVariable(value="ordination") final Long ordination) {
+	public String displayNewActivityDefinition(@PathVariable(value="ordination") final Long ordination, final HttpSession session, final Model m) {
+		log.info("Getting ordination {}", ordination);
+		
+		final ServiceResult<Ordination> result = this.service.loadOrdination(ordination, this.getCurrentPatient(session));
+		m.addAttribute("result", result);
+		if (result.isSuccess()) {
+			m.addAttribute("hideMessages", Boolean.TRUE);
+		}
+		
 		return "admin/activitydefinition";
 	}
 	

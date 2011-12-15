@@ -14,9 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.impl;
+package org.callistasoftware.netcare.core.api.messages;
 
-import org.callistasoftware.netcare.core.api.SystemMessage;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.springframework.context.i18n.LocaleContextHolder;
+
 
 /**
  * Default implementation of a system message
@@ -33,9 +38,17 @@ public class DefaultSystemMessage implements SystemMessage {
 	private String code;
 	private String message;
 	
-	public DefaultSystemMessage(final String code, final String message) {
-		this.code = code;
-		this.message = message;
+	public DefaultSystemMessage(final String entityCode, final String type, final Object...args) {
+		final Locale l = LocaleContextHolder.getLocaleContext().getLocale();
+		final ResourceBundle bundle = ResourceBundle.getBundle("messages", l);
+		
+		this.code = bundle.getString(entityCode);
+		
+		/*
+		 * Format message
+		 */
+		final MessageFormat frm = new MessageFormat(bundle.getString(type), l);
+		this.message = new StringBuilder().append(code).append(" ").append(frm.format(args)).toString();
 	}
 	
 	public DefaultSystemMessage(final String message) {
