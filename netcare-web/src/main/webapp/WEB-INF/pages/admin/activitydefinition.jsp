@@ -134,6 +134,7 @@
 					 * a time
 					 */
 					$('#addedTimesContainer').show();
+					$('#addTimeContainer').removeClass('error');
 				});
 				
 				/*
@@ -169,6 +170,9 @@
 					console.log("Activity goal: " + goal);
 					console.log("Days: " + days);
 					console.log("Times: " + times);
+					
+					
+					
 				});
 				
 				hideTimeContainer();

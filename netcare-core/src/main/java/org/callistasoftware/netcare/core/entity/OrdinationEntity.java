@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -67,7 +68,7 @@ public class OrdinationEntity {
 	@JoinColumn(name="for_patient_id")
 	private PatientEntity forPatient;
 	
-	@OneToMany(mappedBy="ordination")
+	@OneToMany(mappedBy="ordination", cascade=CascadeType.PERSIST)
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
 	
@@ -120,19 +121,18 @@ public class OrdinationEntity {
 		return issuedBy;
 	}
 
-	public void setActivityDefinitions(List<ActivityDefinitionEntity> activityDefinitions) {
+	void setActivityDefinitions(List<ActivityDefinitionEntity> activityDefinitions) {
 		this.activityDefinitions = activityDefinitions;
 	}
 	
-	
-	protected boolean addActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
+	public boolean addActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
 		if (!activityDefinitions.contains(activityDefinitionEntity)) {
 			return activityDefinitions.add(activityDefinitionEntity);
 		}
 		return false;
 	}
 	
-	protected boolean removeActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
+	public boolean removeActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
 		return activityDefinitions.remove(activityDefinitionEntity);
 	}
 

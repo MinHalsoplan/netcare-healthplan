@@ -109,8 +109,8 @@ NC.Util = function() {
 		/**
 		 * Method for ensuring that the only valid input of the timeField
 		 * is in format XX:XX
-		 * @param timeField
-		 * @param callback
+		 * @param timeField - The input field to bind
+		 * @param callback - Executed when the user presses enter in the timeField.
 		 * @returns
 		 */
 		validateTimeField : function(timeField, callback) {
@@ -152,6 +152,10 @@ NC.Util = function() {
 			});
 		},
 		
+		/**
+		 * Bind inputField to not accept empty input. The field and its
+		 * container will be marked red when field is empty and loses focus.
+		 */
 		bindNotEmptyField : function(containerDiv, inputField) {
 			console.log("Binding " + inputField.attr('name') + " as a not empty field");
 			inputField.blur(function(event) {

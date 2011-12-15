@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value="/ordination")
-public class OrdinationApi {
+public class OrdinationApi extends ApiSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(OrdinationApi.class);
 	
@@ -64,5 +64,13 @@ public class OrdinationApi {
 	public ServiceResult<Ordination> deleteOrdination(@PathVariable(value="patient") final Long patient, @PathVariable(value="ordination") final Long ordination) {
 		log.info("Deleting ordination {} for patient {}", ordination, patient);
 		return this.service.deleteOrdination(ordination);
+	}
+	
+	@RequestMapping(value="/{ordination}/activitydefinition/create", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<Ordination> createActivityDefintion(@PathVariable(value="ordination") final Long ordination) {
+		log.info("User {} is adding a new activity defintion for ordination {}", new Object[] {this.getUser(), ordination});
+		
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 }

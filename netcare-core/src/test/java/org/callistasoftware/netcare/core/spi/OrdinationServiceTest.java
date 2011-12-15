@@ -18,15 +18,30 @@ package org.callistasoftware.netcare.core.spi;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Date;
+import java.util.List;
+
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
+import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.core.entity.CareGiverEntity;
 import org.callistasoftware.netcare.core.entity.DurationUnit;
+import org.callistasoftware.netcare.core.entity.Frequency;
+import org.callistasoftware.netcare.core.entity.FrequencyDay;
+import org.callistasoftware.netcare.core.entity.FrequencyTime;
+import org.callistasoftware.netcare.core.entity.MeasureUnit;
+import org.callistasoftware.netcare.core.entity.OrdinationEntity;
 import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.OrdinationRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +51,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.Assert.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
 public class OrdinationServiceTest {
@@ -44,6 +61,10 @@ public class OrdinationServiceTest {
 	private CareGiverRepository cgRepo;
 	@Autowired
 	private PatientRepository patientRepo;
+	@Autowired
+	private OrdinationRepository ordinationRepo;
+	@Autowired
+	private ActivityTypeRepository typeRepo;
 	
 	@Autowired
 	private OrdinationService service;
@@ -74,6 +95,61 @@ public class OrdinationServiceTest {
 		assertEquals(o.getStartDate(), saved.getData().getStartDate());
 		assertEquals(o.getDuration(), saved.getData().getDuration());
 		assertEquals(o.getDurationUnit().getCode(), saved.getData().getDurationUnit().getCode());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testAddActivityDefintion() throws Exception {
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", MeasureUnit.KILOMETERS);
+		final ActivityTypeEntity savedType = typeRepo.save(type);
+		
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123");
+		final CareGiverEntity savedCg = this.cgRepo.save(cg);
+		
+		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "123456789004", savedCg);
+		final PatientEntity savedPatient = this.patientRepo.save(patient);
+		
+		final OrdinationEntity ord = OrdinationEntity.newEntity(savedCg, savedPatient, "Test", new Date(), 12, DurationUnit.WEEKS);
+		final OrdinationEntity savedOrd = this.ordinationRepo.save(ord);
+		
+		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
+		typeImpl.setId(savedType.getId());
+		typeImpl.setName("Löpning");
+		typeImpl.setUnit(new Option(MeasureUnit.KILOMETERS.name(), null));
+		
+		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
+		// Monday and wednesday
+		impl.setDays(new int[]{0, 2});
+		impl.setGoal(12);
+		impl.setTimes(new String[] { "12:15", "18:45"});
+		impl.setType(typeImpl);
+		
+		final ServiceResult<Ordination> result = this.service.addActivityDefintionToOrdination(savedOrd.getId(), (ActivityDefinition) impl);
+		assertTrue(result.isSuccess());
+		
+		final OrdinationEntity after = this.ordinationRepo.findOne(savedOrd.getId());
+		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
+		
+		assertEquals(MeasureUnit.KILOMETERS, ent.getActivityType().getUnit());
+		assertEquals("Löpning", ent.getActivityType().getName());
+		assertEquals(12, ent.getActivityTarget());
+		
+		final Frequency fr = ent.getFrequency();
+		final List<FrequencyTime> times = fr.getTimes();
+		assertEquals(2, times.size());
+		
+		assertEquals(12, times.get(0).getHour());
+		assertEquals(15, times.get(0).getMinute());
+		
+		assertEquals(18, times.get(1).getHour());
+		assertEquals(45, times.get(1).getMinute());
+		
+		final FrequencyDay frDay = fr.getFrequencyDay();
+		assertTrue(frDay.isMonday());
+		assertTrue(frDay.isWedbesday());
+		
+		assertEquals("101", FrequencyDay.marshal(frDay));
 	}
 
 }

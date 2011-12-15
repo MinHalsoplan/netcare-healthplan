@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Ordination;
@@ -45,6 +46,7 @@ public class OrdinationImpl implements Ordination {
 	private Option durationUnit;
 	
 	private CareGiverBaseView issuedBy;
+	private ActivityDefinition[] activityDefintions;
 	
 	public static OrdinationImpl newFromEntity(final OrdinationEntity entity, final Locale l) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -60,6 +62,11 @@ public class OrdinationImpl implements Ordination {
 		cg.setHsaId(entity.getIssuedBy().getHsaId());
 		
 		dto.setIssuedBy(cg);
+		
+		/*
+		 * Process defintions
+		 */
+		
 		
 		return dto;
 	}
@@ -121,6 +128,11 @@ public class OrdinationImpl implements Ordination {
 	
 	public void setDurationUnit(final Option durationUnit) {
 		this.durationUnit = durationUnit;
+	}
+
+	@Override
+	public ActivityDefinition[] getActivityDefintions() {
+		return this.activityDefintions;
 	}
 
 }

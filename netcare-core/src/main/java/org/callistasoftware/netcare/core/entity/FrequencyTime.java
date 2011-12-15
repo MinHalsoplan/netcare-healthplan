@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.entity;
 
+
 /**
  * Keeps track of time in hours and minutes.
  * 
@@ -26,8 +27,31 @@ public class FrequencyTime {
 	private int hour;
 	private int minute;
 	
+	/**
+	 * Create a frequence time from the give string
+	 * @param time
+	 * @return
+	 */
+	public static FrequencyTime fromTimeString(final String time) {
+		final FrequencyTime fr = new FrequencyTime();
+		
+		if (time.length() != 5) {
+			throw new IllegalArgumentException("Invalid time format. Requires: XX:XX but was: " + time);
+		}
+		
+		if (!time.contains(":")) {
+			throw new IllegalArgumentException("Invalid time format. Requires: XX:XX but was: " + time);
+		}
+		
+		final String[] parts = time.split(":");
+		
+		fr.setHour(Integer.valueOf(parts[0]));
+		fr.setMinute(Integer.valueOf(parts[1]));
+		
+		return fr;
+	}
 	
-	public void setHour(int hour) {
+	void setHour(int hour) {
 		if (hour < 0 || hour > 23) {
 			throw new IllegalArgumentException("Invalid hour: " + hour);
 		}
@@ -38,7 +62,7 @@ public class FrequencyTime {
 		return hour;
 	}
 	
-	public void setMinute(int minute) {
+	void setMinute(int minute) {
 		if (minute < 0 || minute > 59) {
 			throw new IllegalArgumentException("Invalid minute: " + minute);
 		}

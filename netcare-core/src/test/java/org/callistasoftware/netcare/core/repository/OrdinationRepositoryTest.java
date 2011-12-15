@@ -60,9 +60,7 @@ public class OrdinationRepositoryTest {
 		Frequency freq = new Frequency();
 		freq.getFrequencyDay().addDay(FrequencyDay.MON);
 		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
-		FrequencyTime fval = new FrequencyTime();
-		fval.setHour(10);
-		fval.setMinute(0);
+		FrequencyTime fval = FrequencyTime.fromTimeString("10:00");
 		freq.getTimes().add(fval);
 		
 

@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Ordination;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -62,4 +63,11 @@ public interface OrdinationService {
 	 * @return
 	 */
 	ServiceResult<Ordination> loadOrdination(final Long ordinationId, final PatientBaseView patient);
+	
+	/**
+	 * Adds an activity defintion to an existing ordination specified by its id
+	 * @param ordinationId
+	 * @return
+	 */
+	ServiceResult<Ordination> addActivityDefintionToOrdination(final Long ordinationId, final ActivityDefinition dto);
 }

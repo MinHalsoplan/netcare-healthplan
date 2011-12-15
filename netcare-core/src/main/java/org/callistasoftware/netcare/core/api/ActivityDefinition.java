@@ -16,29 +16,41 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.io.Serializable;
-
 /**
- * Interface defining an ordination
+ * Defines an activity definition how it is represented
+ * in the UI.
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public interface Ordination extends Serializable {
+public interface ActivityDefinition {
 
-	Long getId();
+	/**
+	 * The desired goal of this definition
+	 * @return
+	 */
+	int getGoal();
 	
-	String getName();
+	/**
+	 * The activity's type
+	 * @return
+	 */
+	ActivityType getType();
 	
-	String getStartDate();
+	/**
+	 * The days of week the activity should be
+	 * performed.
+	 * 
+	 * Valid values are: 0-6 (where 0 = monday)
+	 * 
+	 * @return
+	 */
+	int[] getDays();
 	
-	String getEndDate();
-	
-	int getDuration();
-	
-	Option getDurationUnit();
-	
-	CareGiverBaseView getIssuedBy();
-	
-	ActivityDefinition[] getActivityDefintions();
+	/**
+	 * The times when the activity should be performed.
+	 * The format of the times are "XX:XX"
+	 * @return
+	 */
+	String[] getTimes();
 }
