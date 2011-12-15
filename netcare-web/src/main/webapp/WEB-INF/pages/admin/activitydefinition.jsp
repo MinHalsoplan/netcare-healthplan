@@ -82,6 +82,15 @@
 						hideTimeContainer();
 					} else {
 						$('#addTimeContainer').fadeIn().show();
+						
+						/*
+						 * Have we added any times?
+						 */
+						var timeCount = $('#addedTimes li').size();
+						console.log("Times count: " + timeCount);
+						if (timeCount > 0) {
+							$('#addedTimesContainer').fadeIn().show();
+						}
 					}
 				});
 				
