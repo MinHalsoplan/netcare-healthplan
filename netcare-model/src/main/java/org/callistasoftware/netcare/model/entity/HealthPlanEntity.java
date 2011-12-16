@@ -65,6 +65,9 @@ public class HealthPlanEntity {
 	private CareGiverEntity issuedBy;
 	
 	@ManyToOne
+	private CareUnitEntity careUnit;
+	
+	@ManyToOne
 	@JoinColumn(name="for_patient_id")
 	private PatientEntity forPatient;
 	
@@ -85,6 +88,7 @@ public class HealthPlanEntity {
 		entity.setStartDate(startDate);
 		entity.setDurationUnit(unit);
 		entity.setDuration(duration);
+		entity.setCareUnit(issuedBy.getCareUnit());
 		return entity;
 	}
 
@@ -119,6 +123,14 @@ public class HealthPlanEntity {
 
 	public CareGiverEntity getIssuedBy() {
 		return issuedBy;
+	}
+	
+	public CareUnitEntity getCareUnit() {
+		return this.careUnit;
+	}
+	
+	void setCareUnit(final CareUnitEntity careUnit) {
+		this.careUnit = careUnit;
 	}
 
 	void setActivityDefinitions(List<ActivityDefinitionEntity> activityDefinitions) {
