@@ -46,6 +46,7 @@ public class ApplicationListener extends ContextLoaderListener {
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
+		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
 		cuRepo.flush();
 		

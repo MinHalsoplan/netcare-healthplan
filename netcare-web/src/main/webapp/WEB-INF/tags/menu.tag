@@ -26,7 +26,8 @@
 <div class="span4">
 	<h3><spring:message code="loggedInAs" /></h3>
 	<p><a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
-	
+	<p><strong><spring:message code="careUnit" />:</strong><br />
+	<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
 	<h3><spring:message code="patient" /></h3>
 	<c:choose>
 		<c:when test="${not empty sessionScope.currentPatient}">
@@ -50,7 +51,7 @@
 	<h3><spring:message code="workWith" /></h3>
 	<ul>
 		<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="switchPatient" /></a>
-		<li><a href="<spring:url value="/netcare/admin/ordination/new" />"><spring:message code="create" /> <spring:message code="ordination" /></a>
+		<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="create" /> <spring:message code="healthPlan" /></a>
 	</ul>
 </div>
 	
