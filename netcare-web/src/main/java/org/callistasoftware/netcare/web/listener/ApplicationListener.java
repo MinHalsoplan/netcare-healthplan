@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.web.listener;
 import javax.servlet.ServletContextEvent;
 
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
@@ -42,8 +43,9 @@ public class ApplicationListener extends ContextLoaderListener {
 		final WebApplicationContext wc = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		
-		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
+		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("care-unit-hsa-123"));
 		
 		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234", cu);
 		
