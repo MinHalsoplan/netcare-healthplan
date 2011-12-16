@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
-import org.callistasoftware.netcare.core.entity.FrequencyTime;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.FrequencyTime;
 
 /**
  * Implementation of an activity defintion

@@ -16,7 +16,7 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CareGiverRepository extends JpaRepository<CareGiverEntity, Long>{

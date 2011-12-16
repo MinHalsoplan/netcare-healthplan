@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.model.entity;
 
 import java.util.Date;
 

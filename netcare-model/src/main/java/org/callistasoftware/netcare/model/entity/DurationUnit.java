@@ -14,15 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
- package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.model.entity;
 
-public class EntityUtil {
-	
-	public static <T> T notNull(T o) {
-		if (o == null) {
-			throw new IllegalArgumentException("Invalid value: null");
-		}
-		return o;
-	}
-	
+
+public enum DurationUnit {
+	WEEKS,
+	MONTHS;
 }

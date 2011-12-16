@@ -23,16 +23,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
-import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.callistasoftware.netcare.core.entity.DurationUnit;
-import org.callistasoftware.netcare.core.entity.Frequency;
-import org.callistasoftware.netcare.core.entity.FrequencyDay;
-import org.callistasoftware.netcare.core.entity.FrequencyTime;
-import org.callistasoftware.netcare.core.entity.MeasureUnit;
-import org.callistasoftware.netcare.core.entity.OrdinationEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.Frequency;
+import org.callistasoftware.netcare.model.entity.FrequencyDay;
+import org.callistasoftware.netcare.model.entity.FrequencyTime;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class OrdinationRepositoryTest {
 	@Autowired
 	private PatientRepository patientRepo;
 	
-	ActivityDefinitionEntity createActivityDefinition(OrdinationEntity ordination) {
+	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity ordination) {
 		Frequency freq = new Frequency();
 		freq.getFrequencyDay().addDay(FrequencyDay.MON);
 		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
@@ -75,8 +76,8 @@ public class OrdinationRepositoryTest {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		cgRepo.flush();
 		
@@ -84,7 +85,7 @@ public class OrdinationRepositoryTest {
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
-		final OrdinationEntity e1 = OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS);
+		final HealthPlanEntity e1 = HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS);
 		
 		ActivityDefinitionEntity ad =  createActivityDefinition(e1);
 		
@@ -93,10 +94,10 @@ public class OrdinationRepositoryTest {
 		repo.save(e1);
 		repo.flush();
 		
-		final List<OrdinationEntity> all = repo.findAll();
+		final List<HealthPlanEntity> all = repo.findAll();
 		assertNotNull(all);
 		assertEquals(1, all.size());
-		OrdinationEntity e2 = all.get(0);
+		HealthPlanEntity e2 = all.get(0);
 		assertEquals("Hälsoplan B", e2.getName());
 		assertEquals(DurationUnit.WEEKS, e2.getDurationUnit());
 		assertEquals(20, e2.getDuration());
@@ -113,7 +114,8 @@ public class OrdinationRepositoryTest {
 	@Transactional
 	@Rollback(true)
 	public void testFindByForPatient() throws Exception {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		cgRepo.flush();
 		
@@ -121,11 +123,11 @@ public class OrdinationRepositoryTest {
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
-		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS));
-		repo.save(OrdinationEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTHS));
+		repo.save(HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS));
+		repo.save(HealthPlanEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTHS));
 		repo.flush();
 		
-		List<OrdinationEntity> list = repo.findByForPatient(patient);
+		List<HealthPlanEntity> list = repo.findByForPatient(patient);
 		
 		assertEquals(2, list.size());
 		

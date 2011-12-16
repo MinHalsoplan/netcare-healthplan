@@ -18,12 +18,12 @@ package org.callistasoftware.netcare.core.repository;
 
 import java.util.List;
 
-import org.callistasoftware.netcare.core.entity.OrdinationEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrdinationRepository extends JpaRepository<OrdinationEntity, Long> {
+public interface OrdinationRepository extends JpaRepository<HealthPlanEntity, Long> {
 	
-	List<OrdinationEntity> findByForPatient(PatientEntity forPatient);
+	List<HealthPlanEntity> findByForPatient(PatientEntity forPatient);
 	
 }

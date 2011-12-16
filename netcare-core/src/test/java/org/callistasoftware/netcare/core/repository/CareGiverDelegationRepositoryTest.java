@@ -21,8 +21,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-import org.callistasoftware.netcare.core.entity.CareGiverDelegationEntity;
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverDelegationEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +49,14 @@ public class CareGiverDelegationRepositoryTest {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		CareGiverEntity cd1 =  CareGiverEntity.newEntity("doctor peter", "2-14");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		CareGiverEntity cd1 =  CareGiverEntity.newEntity("doctor peter", "2-14", cu);
 		cr.save(cd1);
 
-		CareGiverEntity cd2 =  CareGiverEntity.newEntity("doctor mikael", "32-14");
+		CareGiverEntity cd2 =  CareGiverEntity.newEntity("doctor mikael", "32-14", cu);
 		cr.save(cd2);
 
-		CareGiverEntity cn =  CareGiverEntity.newEntity("nurse emma", "63-14");
+		CareGiverEntity cn =  CareGiverEntity.newEntity("nurse emma", "63-14", cu);
 		cr.save(cn);
 		cr.flush();
 		

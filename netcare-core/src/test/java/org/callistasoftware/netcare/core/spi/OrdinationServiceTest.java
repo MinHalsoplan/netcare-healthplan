@@ -29,20 +29,21 @@ import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
-import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
-import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.callistasoftware.netcare.core.entity.DurationUnit;
-import org.callistasoftware.netcare.core.entity.Frequency;
-import org.callistasoftware.netcare.core.entity.FrequencyDay;
-import org.callistasoftware.netcare.core.entity.FrequencyTime;
-import org.callistasoftware.netcare.core.entity.MeasureUnit;
-import org.callistasoftware.netcare.core.entity.OrdinationEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.OrdinationRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.Frequency;
+import org.callistasoftware.netcare.model.entity.FrequencyDay;
+import org.callistasoftware.netcare.model.entity.FrequencyTime;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +74,8 @@ public class OrdinationServiceTest {
 	@Transactional
 	@Rollback(true)
 	public void testCreateOrdination() throws Exception {
-		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123-id");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123-id", cu);
 		this.cgRepo.save(cg);
 		
 		final CareGiverBaseViewImpl cgDto = new CareGiverBaseViewImpl();
@@ -103,15 +104,16 @@ public class OrdinationServiceTest {
 	public void testAddActivityDefintion() throws Exception {
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", MeasureUnit.KILOMETERS);
 		final ActivityTypeEntity savedType = typeRepo.save(type);
-		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123");
+
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		
 		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "123456789004", savedCg);
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 		
-		final OrdinationEntity ord = OrdinationEntity.newEntity(savedCg, savedPatient, "Test", new Date(), 12, DurationUnit.WEEKS);
-		final OrdinationEntity savedOrd = this.ordinationRepo.save(ord);
+		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", new Date(), 12, DurationUnit.WEEKS);
+		final HealthPlanEntity savedOrd = this.ordinationRepo.save(ord);
 		
 		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
 		typeImpl.setId(savedType.getId());
@@ -128,7 +130,7 @@ public class OrdinationServiceTest {
 		final ServiceResult<Ordination> result = this.service.addActivityDefintionToOrdination(savedOrd.getId(), (ActivityDefinition) impl);
 		assertTrue(result.isSuccess());
 		
-		final OrdinationEntity after = this.ordinationRepo.findOne(savedOrd.getId());
+		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
 		
 		assertEquals(MeasureUnit.KILOMETERS, ent.getActivityType().getUnit());

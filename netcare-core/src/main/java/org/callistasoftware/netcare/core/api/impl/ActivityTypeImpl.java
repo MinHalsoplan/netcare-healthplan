@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.Option;
-import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 
 /**
  * Implementation of an activity type

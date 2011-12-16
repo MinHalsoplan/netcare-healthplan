@@ -18,10 +18,11 @@ package org.callistasoftware.netcare.web.listener;
 
 import javax.servlet.ServletContextEvent;
 
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
@@ -42,11 +43,13 @@ public class ApplicationListener extends ContextLoaderListener {
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
 		
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
+		
+		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234", cu);
 		
 		cgRepo.save(cg1);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
 		cgRepo.flush();

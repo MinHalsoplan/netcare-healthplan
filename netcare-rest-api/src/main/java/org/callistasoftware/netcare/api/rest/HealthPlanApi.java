@@ -34,9 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value="/ordination")
-public class OrdinationApi extends ApiSupport {
+public class HealthPlanApi extends ApiSupport {
 
-	private static final Logger log = LoggerFactory.getLogger(OrdinationApi.class);
+	private static final Logger log = LoggerFactory.getLogger(HealthPlanApi.class);
 	
 	@Autowired 
 	private OrdinationService service;

@@ -31,21 +31,21 @@ import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
-import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
-import org.callistasoftware.netcare.core.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.callistasoftware.netcare.core.entity.DurationUnit;
-import org.callistasoftware.netcare.core.entity.Frequency;
-import org.callistasoftware.netcare.core.entity.FrequencyDay;
-import org.callistasoftware.netcare.core.entity.FrequencyTime;
-import org.callistasoftware.netcare.core.entity.OrdinationEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.OrdinationRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.OrdinationService;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.Frequency;
+import org.callistasoftware.netcare.model.entity.FrequencyDay;
+import org.callistasoftware.netcare.model.entity.FrequencyTime;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,11 +81,11 @@ public class OrdinationServiceImpl implements OrdinationService {
 	@Override
 	public ServiceResult<Ordination[]> loadOrdinationsForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<OrdinationEntity> entities = this.repo.findByForPatient(forPatient);
+		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 		
 		final Ordination[] dtos = new Ordination[entities.size()];
 		int count = 0;
-		for (final OrdinationEntity ent : entities) {
+		for (final HealthPlanEntity ent : entities) {
 			final OrdinationImpl dto = OrdinationImpl.newFromEntity(ent, null);
 			dtos[count++] = dto;
 		}
@@ -106,9 +106,9 @@ public class OrdinationServiceImpl implements OrdinationService {
 			
 			final PatientEntity patient = this.patientRepository.findOne(patientId);
 			
-			final OrdinationEntity newEntity = OrdinationEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
+			final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
 			
-			final OrdinationEntity saved = this.repo.save(newEntity);
+			final HealthPlanEntity saved = this.repo.save(newEntity);
 			final Ordination dto = OrdinationImpl.newFromEntity(saved, null);
 			
 			return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
@@ -129,9 +129,9 @@ public class OrdinationServiceImpl implements OrdinationService {
 	@Override
 	public ServiceResult<Ordination> loadOrdination(Long ordinationId,
 			PatientBaseView patient) {
-		final OrdinationEntity entity = this.repo.findOne(ordinationId);
+		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(OrdinationEntity.class, ordinationId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, ordinationId));
 		}
 		
 		if (!entity.getForPatient().getId().equals(patient.getId())) {
@@ -146,9 +146,9 @@ public class OrdinationServiceImpl implements OrdinationService {
 	public ServiceResult<Ordination> addActivityDefintionToOrdination(
 			Long ordinationId, final ActivityDefinition dto) {
 		log.info("Adding activity defintion to existing ordination with id {}", ordinationId);
-		final OrdinationEntity entity = this.repo.findOne(ordinationId);
+		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(OrdinationEntity.class, ordinationId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, ordinationId));
 		}
 		
 		log.debug("Ordination entity found and resolved.");
@@ -199,7 +199,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 		log.debug("Activity defintion saved.");
 		
 		entity.addActivityDefinition(savedEntity);
-		final OrdinationEntity savedOrdination = this.repo.save(entity);
+		final HealthPlanEntity savedOrdination = this.repo.save(entity);
 		log.debug("Ordination saved");
 		
 		log.debug("Creating result. Success!");

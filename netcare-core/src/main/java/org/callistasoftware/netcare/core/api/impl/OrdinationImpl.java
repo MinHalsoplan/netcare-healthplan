@@ -23,7 +23,7 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Ordination;
-import org.callistasoftware.netcare.core.entity.OrdinationEntity;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 
 /**
  * Implementation of an ordination
@@ -48,7 +48,7 @@ public class OrdinationImpl implements Ordination {
 	private CareGiverBaseView issuedBy;
 	private ActivityDefinition[] activityDefintions;
 	
-	public static OrdinationImpl newFromEntity(final OrdinationEntity entity, final Locale l) {
+	public static OrdinationImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		final OrdinationImpl dto = new OrdinationImpl();

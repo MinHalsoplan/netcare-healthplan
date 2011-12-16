@@ -24,10 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,7 +51,8 @@ public class PatientServiceTest {
 	@Transactional
 	@Rollback(true)
 	public void testFindPatients() {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789001", cg);
@@ -73,7 +75,8 @@ public class PatientServiceTest {
 	@Transactional
 	@Rollback(true)
 	public void testLoadPatient() throws Exception {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);

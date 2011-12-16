@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.model.entity;
 
 import java.util.Collections;
 import java.util.Date;
@@ -48,7 +48,7 @@ public class ActivityDefinitionEntity {
 
 	@ManyToOne
 	@JoinColumn(name="ordination_id")
-	private OrdinationEntity ordination;
+	private HealthPlanEntity ordination;
 	
 	@ManyToOne
 	@JoinColumn(name="activity_type_id")
@@ -63,7 +63,7 @@ public class ActivityDefinitionEntity {
     	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
 	}
     
-    public static ActivityDefinitionEntity newEntity(OrdinationEntity ordinationEntity, ActivityTypeEntity activityType, Frequency frequency) {
+    public static ActivityDefinitionEntity newEntity(HealthPlanEntity ordinationEntity, ActivityTypeEntity activityType, Frequency frequency) {
     	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
     	entity.setOrdination(ordinationEntity);
     	entity.setActivityType(activityType);
@@ -76,11 +76,11 @@ public class ActivityDefinitionEntity {
 		return id;
 	}
 	
-	protected void setOrdination(OrdinationEntity ordination) {
+	protected void setOrdination(HealthPlanEntity ordination) {
 		this.ordination = EntityUtil.notNull(ordination);
 	}
 
-	public OrdinationEntity getOrdination() {
+	public HealthPlanEntity getOrdination() {
 		return ordination;
 	}
 

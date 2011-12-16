@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,45 +24,48 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_activity_type")
-public class ActivityTypeEntity {
+@Table(name="health_care_unit")
+public class CareUnitEntity {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length=64, nullable=false)
+	@Column(unique=true, nullable=false)
+	private String hsaId;
+	
+	@Column
 	private String name;
 	
-	@Column(nullable=false)
-	private MeasureUnit unit;
-	
-	ActivityTypeEntity() {
-	}
-	
-	public static ActivityTypeEntity newEntity(String name, MeasureUnit unit) {
-		ActivityTypeEntity entity = new ActivityTypeEntity();
-		entity.setName(name);
-		entity.setUnit(unit);
-		return entity;
+	CareUnitEntity(final String hsaId) {
+		this.setHsaId(hsaId);
 	}
 
+	public static CareUnitEntity newEntity(final String hsaId) {
+		return new CareUnitEntity(hsaId);
+	}
+	
 	public Long getId() {
 		return id;
 	}
 
-	public void setName(String name) {
-		this.name = EntityUtil.notNull(name);
+	void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getHsaId() {
+		return hsaId;
+	}
+
+	void setHsaId(String hsaId) {
+		this.hsaId = hsaId;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setUnit(MeasureUnit unit) {
-		this.unit = EntityUtil.notNull(unit);
-	}
-
-	public MeasureUnit getUnit() {
-		return unit;
+	public void setName(String name) {
+		this.name = name;
 	}
 }

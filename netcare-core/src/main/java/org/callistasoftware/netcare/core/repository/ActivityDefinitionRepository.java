@@ -16,7 +16,7 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import org.callistasoftware.netcare.core.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ActivityDefinitionRepository extends JpaRepository<ActivityDefinitionEntity, Long> {

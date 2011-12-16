@@ -18,8 +18,8 @@ package org.callistasoftware.netcare.core.repository;
 
 import java.util.List;
 
-import org.callistasoftware.netcare.core.entity.CareGiverDelegationEntity;
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverDelegationEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CareGiverDelegationRepository extends JpaRepository<CareGiverDelegationEntity, Long> {

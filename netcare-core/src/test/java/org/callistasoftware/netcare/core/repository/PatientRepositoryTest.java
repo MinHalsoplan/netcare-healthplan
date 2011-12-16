@@ -22,8 +22,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.callistasoftware.netcare.core.entity.CareGiverEntity;
-import org.callistasoftware.netcare.core.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,8 @@ public class PatientRepositoryTest {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);
@@ -62,7 +64,8 @@ public class PatientRepositoryTest {
 	@Transactional
 	@Rollback(true)
 	public void testProperties() {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 
 		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004", cg);
@@ -89,7 +92,8 @@ public class PatientRepositoryTest {
 	@Rollback(true)
 	public void testFindByFreeText() throws Exception {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 
 		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004", cg);

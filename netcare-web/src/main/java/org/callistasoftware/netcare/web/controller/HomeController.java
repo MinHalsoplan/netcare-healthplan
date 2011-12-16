@@ -85,7 +85,7 @@ public class HomeController extends ControllerSupport {
 			m.addAttribute("result", ServiceResultImpl.createFailedResult(new DefaultSystemMessage(messages.getMessage("noCurrentPatientError", new Object[0], locale))));
 		}
 		
-		return "admin/ordinations";
+		return "admin/healthplan";
 	}
 	
 	@RequestMapping(value="/admin/ordination/{ordination}/view", method=RequestMethod.GET)
@@ -98,7 +98,7 @@ public class HomeController extends ControllerSupport {
 			m.addAttribute("hideMessages", Boolean.TRUE);
 		}
 		
-		return "admin/activitydefinition";
+		return "admin/activity";
 	}
 	
 	@RequestMapping(value="/user/home", method=RequestMethod.GET)

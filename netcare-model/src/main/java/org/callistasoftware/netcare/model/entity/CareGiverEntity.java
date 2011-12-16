@@ -14,14 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.model.entity;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -37,6 +39,9 @@ public class CareGiverEntity extends UserEntity {
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="careGiverDelegatee")
 	private List<CareGiverDelegationEntity> careGiverDelegations;
 	
+	@ManyToOne(optional=false, cascade=CascadeType.PERSIST)
+	private CareUnitEntity careUnit;
+	
 	CareGiverEntity() {}
 	
 	CareGiverEntity(final String name) {
@@ -44,13 +49,14 @@ public class CareGiverEntity extends UserEntity {
 		careGiverDelegations = new LinkedList<CareGiverDelegationEntity>();
 	}
 	
-	CareGiverEntity(final String name, final String hsaId) {
+	CareGiverEntity(final String name, final String hsaId, final CareUnitEntity careUnit) {
 		this(name);
 		this.setHsaId(hsaId);
+		this.setCareUnit(careUnit);
 	}
 
-	public static CareGiverEntity newEntity(final String name, final String hsaId) {
-		return new CareGiverEntity(name, hsaId);
+	public static CareGiverEntity newEntity(final String name, final String hsaId, final CareUnitEntity careUnit) {
+		return new CareGiverEntity(name, hsaId, careUnit);
 	}
 
 	public String getHsaId() {
@@ -61,7 +67,16 @@ public class CareGiverEntity extends UserEntity {
 		this.hsaId = EntityUtil.notNull(hsaId);
 	}
 
+	@Deprecated
 	public List<CareGiverDelegationEntity> getCareGiverDelegations() {
 		return careGiverDelegations;
+	}
+	
+	public CareUnitEntity getCareUnit() {
+		return this.careUnit;
+	}
+	
+	void setCareUnit(final CareUnitEntity careUnit) {
+		this.careUnit = careUnit;
 	}
 }

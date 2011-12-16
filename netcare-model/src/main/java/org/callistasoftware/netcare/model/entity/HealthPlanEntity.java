@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.entity;
+package org.callistasoftware.netcare.model.entity;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_ordination")
-public class OrdinationEntity {
+public class HealthPlanEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -72,13 +72,13 @@ public class OrdinationEntity {
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
 	
-	OrdinationEntity() {
+	HealthPlanEntity() {
 		activityDefinitions = new LinkedList<ActivityDefinitionEntity>();
 	}
 	
 
-	public static OrdinationEntity newEntity(CareGiverEntity issuedBy, PatientEntity forPatient, String name, Date startDate, int duration, DurationUnit unit) {
-		OrdinationEntity entity = new OrdinationEntity();
+	public static HealthPlanEntity newEntity(CareGiverEntity issuedBy, PatientEntity forPatient, String name, Date startDate, int duration, DurationUnit unit) {
+		HealthPlanEntity entity = new HealthPlanEntity();
 		entity.setIssuedBy(issuedBy);
 		entity.setForPatient(forPatient);
 		entity.setName(name);
