@@ -24,7 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="health_care_unit")
+@Table(name="care_unit")
 public class CareUnitEntity {
 
 	@Id
@@ -37,7 +37,11 @@ public class CareUnitEntity {
 	@Column
 	private String name;
 	
+	CareUnitEntity() {
+	}
+	
 	CareUnitEntity(final String hsaId) {
+		this();
 		this.setHsaId(hsaId);
 	}
 

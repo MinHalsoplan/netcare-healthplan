@@ -31,6 +31,7 @@ import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.OrdinationRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
@@ -66,6 +67,8 @@ public class OrdinationServiceTest {
 	private OrdinationRepository ordinationRepo;
 	@Autowired
 	private ActivityTypeRepository typeRepo;
+	@Autowired
+	private CareUnitRepository cuRepo;
 	
 	@Autowired
 	private OrdinationService service;
@@ -75,6 +78,8 @@ public class OrdinationServiceTest {
 	@Rollback(true)
 	public void testCreateOrdination() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
+		
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123-id", cu);
 		this.cgRepo.save(cg);
 		
@@ -106,6 +111,8 @@ public class OrdinationServiceTest {
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
+		
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		

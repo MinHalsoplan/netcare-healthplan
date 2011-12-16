@@ -45,10 +45,11 @@ public class ApplicationListener extends ContextLoaderListener {
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		
-		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("care-unit-hsa-123"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
+		cuRepo.save(cu);
+		cuRepo.flush();
 		
 		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234", cu);
-		
 		cgRepo.save(cg1);
 
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);

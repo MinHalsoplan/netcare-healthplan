@@ -56,6 +56,8 @@ public class OrdinationRepositoryTest {
 	private CareGiverRepository cgRepo;
 	@Autowired
 	private PatientRepository patientRepo;
+	@Autowired
+	private CareUnitRepository cuRepo;
 	
 	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity ordination) {
 		Frequency freq = new Frequency();
@@ -77,6 +79,7 @@ public class OrdinationRepositoryTest {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		cgRepo.flush();
@@ -115,6 +118,7 @@ public class OrdinationRepositoryTest {
 	@Rollback(true)
 	public void testFindByForPatient() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		cgRepo.flush();

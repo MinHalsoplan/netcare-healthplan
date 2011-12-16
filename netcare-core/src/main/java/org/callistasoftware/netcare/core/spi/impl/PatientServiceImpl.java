@@ -27,7 +27,6 @@ import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.PatientService;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +47,7 @@ public class PatientServiceImpl implements PatientService {
 		
 		final List<PatientBaseView> dtos = new ArrayList<PatientBaseView>(hits.size());
 		for (final PatientEntity ent : hits) {
-			final PatientBaseViewImpl dto = new PatientBaseViewImpl();
-			BeanUtils.copyProperties(ent, dto);
-			
-			dtos.add(dto); 
+			dtos.add(PatientBaseViewImpl.newFromEntity(ent)); 
 		}
 		
 		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]), new DefaultSystemMessage("Found " + dtos.size() + " patients that matched your critera."));
@@ -60,11 +56,7 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public ServiceResult<PatientBaseView> loadPatient(Long id) {
 		final PatientEntity ent = this.patientRepository.findOne(id);
-		final PatientBaseView dto = new PatientBaseViewImpl();
-		
-		BeanUtils.copyProperties(ent, dto);
-		
-		return ServiceResultImpl.createSuccessResult(dto, null);
+		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(ent), null);
 	}
 
 }

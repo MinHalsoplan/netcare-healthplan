@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
@@ -38,19 +39,24 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	
 	private String civicRegistrationNumber;
 
-	public PatientBaseViewImpl() {
+	PatientBaseViewImpl() {
 		super(null, null);
 	}
 	
-	public PatientBaseViewImpl(final Long id, final String name) {
+	PatientBaseViewImpl(final Long id, final String name, final String civicRegistrationNumber) {
 		super(id, name);
+		this.setCivicRegistrationNumber(civicRegistrationNumber);
 	}
 	
-	public void setId(final Long id) {
+	public static PatientBaseView newFromEntity(final PatientEntity entity) {
+		return new PatientBaseViewImpl(entity.getId(), entity.getName(), entity.getCivicRegistrationNumber());
+	}
+	
+	void setId(final Long id) {
 		this.id = id;
 	}
 	
-	public void setName(final String name) {
+	void setName(final String name) {
 		this.name = name;
 	}
 
@@ -64,7 +70,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return this.civicRegistrationNumber;
 	}
 	
-	public void setCivicRegistrationNumber(final String civicRegistrationNumber) {
+	void setCivicRegistrationNumber(final String civicRegistrationNumber) {
 		this.civicRegistrationNumber = civicRegistrationNumber;
 	}
 

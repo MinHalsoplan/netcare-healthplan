@@ -39,6 +39,8 @@ public class CareGiverDelegationRepositoryTest {
 	private CareGiverDelegationRepository dr;
 	@Autowired
 	private CareGiverRepository cr;
+	@Autowired
+	private CareUnitRepository cuRepo;
 	
 	/**
 	 * 2 doctors delegates to the same nurse.
@@ -50,6 +52,8 @@ public class CareGiverDelegationRepositoryTest {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
+		
 		CareGiverEntity cd1 =  CareGiverEntity.newEntity("doctor peter", "2-14", cu);
 		cr.save(cd1);
 

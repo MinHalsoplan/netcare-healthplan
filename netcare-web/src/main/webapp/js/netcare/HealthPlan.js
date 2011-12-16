@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-NC.Ordination = function(descriptionId, tableId) {
+NC.HealthPlan = function(descriptionId, tableId) {
 	
-	var _baseUrl = "/netcare-web/api/ordination";
+	var _baseUrl = "/netcare-web/api/healthplan";
 	var _ordinationCount = 0;
 	
 	var _descriptionId = descriptionId;

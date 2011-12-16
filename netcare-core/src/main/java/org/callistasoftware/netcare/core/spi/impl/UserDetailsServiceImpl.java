@@ -25,11 +25,11 @@ import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of a user details service
@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
+@Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
@@ -65,16 +66,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			if (cg == null) {
 				log.debug("Could not find any care giver matching {}", username);
 			} else {
-				final CareGiverBaseViewImpl bv = new CareGiverBaseViewImpl(cg.getId(), cg.getName());
-				BeanUtils.copyProperties(cg, bv);
-				
-				return bv;
+				return CareGiverBaseViewImpl.newFromEntity(cg);
 			}
 		} else {
-			final PatientBaseViewImpl bv = new PatientBaseViewImpl(patient.getId(), patient.getName());
-			BeanUtils.copyProperties(patient, bv);
-			
-			return bv;
+			return PatientBaseViewImpl.newFromEntity(patient);
 		}
 		
 		throw new UsernameNotFoundException("Please check your credentials");

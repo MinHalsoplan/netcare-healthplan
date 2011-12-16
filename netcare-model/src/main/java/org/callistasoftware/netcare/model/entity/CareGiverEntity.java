@@ -19,7 +19,6 @@ package org.callistasoftware.netcare.model.entity;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +38,7 @@ public class CareGiverEntity extends UserEntity {
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="careGiverDelegatee")
 	private List<CareGiverDelegationEntity> careGiverDelegations;
 	
-	@ManyToOne(optional=false, cascade=CascadeType.PERSIST)
+	@ManyToOne(optional=false, fetch=FetchType.LAZY)
 	private CareUnitEntity careUnit;
 	
 	CareGiverEntity() {}

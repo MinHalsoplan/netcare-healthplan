@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
@@ -42,6 +43,8 @@ public class PatientServiceTest {
 	private PatientRepository patientRepository;
 	@Autowired
 	private CareGiverRepository cgRepo;
+	@Autowired
+	private CareUnitRepository cuRepo;
 
 	
 	@Autowired
@@ -52,6 +55,8 @@ public class PatientServiceTest {
 	@Rollback(true)
 	public void testFindPatients() {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
+		
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
@@ -76,6 +81,8 @@ public class PatientServiceTest {
 	@Rollback(true)
 	public void testLoadPatient() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
+		
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
