@@ -16,17 +16,29 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-public interface CareGiverBaseView extends UserBaseView {
+import java.io.Serializable;
 
-	/**
-	 * Get the hsa id for the care giver
-	 * @return
-	 */
-	String getHsaId();
+/**
+ * Interface defining an ordination
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface HealthPlan extends Serializable {
+
+	Long getId();
 	
-	/**
-	 * Get the care unit for this care giver
-	 * @return
-	 */
-	CareUnit getCareUnit();
+	String getName();
+	
+	String getStartDate();
+	
+	String getEndDate();
+	
+	int getDuration();
+	
+	Option getDurationUnit();
+	
+	CareGiverBaseView getIssuedBy();
+	
+	ActivityDefinition[] getActivityDefintions();
 }

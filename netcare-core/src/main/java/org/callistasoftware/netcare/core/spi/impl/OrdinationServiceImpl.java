@@ -23,10 +23,10 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
-import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
+import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
@@ -79,14 +79,14 @@ public class OrdinationServiceImpl implements OrdinationService {
 	private ActivityDefinitionRepository activityDefintionRepository;
 	
 	@Override
-	public ServiceResult<Ordination[]> loadOrdinationsForPatient(Long patientId) {
+	public ServiceResult<HealthPlan[]> loadOrdinationsForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
 		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 		
-		final Ordination[] dtos = new Ordination[entities.size()];
+		final HealthPlan[] dtos = new HealthPlan[entities.size()];
 		int count = 0;
 		for (final HealthPlanEntity ent : entities) {
-			final OrdinationImpl dto = OrdinationImpl.newFromEntity(ent, null);
+			final HealthPlanImpl dto = HealthPlanImpl.newFromEntity(ent, null);
 			dtos[count++] = dto;
 		}
 		
@@ -94,7 +94,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<Ordination> createNewOrdination(final Ordination o, final CareGiverBaseView careGiver, final Long patientId) {		
+	public ServiceResult<HealthPlan> createNewOrdination(final HealthPlan o, final CareGiverBaseView careGiver, final Long patientId) {		
 		log.info("Creating new ordination {}", o.getName());
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -109,7 +109,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 			final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
 			
 			final HealthPlanEntity saved = this.repo.save(newEntity);
-			final Ordination dto = OrdinationImpl.newFromEntity(saved, null);
+			final HealthPlan dto = HealthPlanImpl.newFromEntity(saved, null);
 			
 			return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 			
@@ -119,7 +119,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<Ordination> deleteOrdination(Long ordinationId) {
+	public ServiceResult<HealthPlan> deleteOrdination(Long ordinationId) {
 		log.info("Deleting ordination {}", ordinationId);
 		this.repo.delete(ordinationId);
 		
@@ -127,7 +127,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<Ordination> loadOrdination(Long ordinationId,
+	public ServiceResult<HealthPlan> loadOrdination(Long ordinationId,
 			PatientBaseView patient) {
 		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
 		if (entity == null) {
@@ -138,12 +138,12 @@ public class OrdinationServiceImpl implements OrdinationService {
 			return ServiceResultImpl.createFailedResult(new DefaultSystemMessage("Du har inte behörigheten att se denna ordination"));
 		}
 		
-		final Ordination dto = OrdinationImpl.newFromEntity(entity, null);
+		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, null);
 		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<Ordination> addActivityDefintionToOrdination(
+	public ServiceResult<HealthPlan> addActivityDefintionToOrdination(
 			Long ordinationId, final ActivityDefinition dto) {
 		log.info("Adding activity defintion to existing ordination with id {}", ordinationId);
 		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
@@ -203,7 +203,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 		log.debug("Ordination saved");
 		
 		log.debug("Creating result. Success!");
-		final Ordination result = OrdinationImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());
+		final HealthPlan result = HealthPlanImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
 	}
 

@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
@@ -37,12 +39,22 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	
 	private String hsaId;
 	
+	private CareUnit careUnit;
+	
 	public CareGiverBaseViewImpl() {
 		super(null, null);
 	}
 	
 	public CareGiverBaseViewImpl(final Long id, final String name) {
 		super(id, name);
+	}
+	
+	public static CareGiverBaseView newFromEntity(final CareGiverEntity entity) {
+		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getId(), entity.getName());
+		cg.setHsaId(entity.getHsaId());
+		cg.setCareUnit(CareUnitImpl.newFromEntity(entity.getCareUnit()));
+
+		return cg;
 	}
 	
 	@Override
@@ -55,6 +67,15 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	}
 
 	@Override
+	public CareUnit getCareUnit() {
+		return careUnit;
+	}
+
+	public void setCareUnit(CareUnit careUnit) {
+		this.careUnit = careUnit;
+	}
+
+	@Override
 	public boolean isCareGiver() {
 		return true;
 	}
@@ -63,5 +84,4 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singletonList(new GrantedAuthorityImpl("ROLE_ADMIN"));
 	}
-
 }

@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
@@ -92,7 +92,7 @@ public class HomeController extends ControllerSupport {
 	public String displayNewActivityDefinition(@PathVariable(value="ordination") final Long ordination, final HttpSession session, final Model m) {
 		log.info("Getting ordination {}", ordination);
 		
-		final ServiceResult<Ordination> result = this.service.loadOrdination(ordination, this.getCurrentPatient(session));
+		final ServiceResult<HealthPlan> result = this.service.loadOrdination(ordination, this.getCurrentPatient(session));
 		m.addAttribute("result", result);
 		if (result.isSuccess()) {
 			m.addAttribute("hideMessages", Boolean.TRUE);

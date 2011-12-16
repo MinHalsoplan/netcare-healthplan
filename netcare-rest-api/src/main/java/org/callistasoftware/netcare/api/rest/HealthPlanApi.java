@@ -17,9 +17,9 @@
 package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
-import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.OrdinationImpl;
+import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.spi.OrdinationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/ordination")
+@RequestMapping(value="/healthplan")
 public class HealthPlanApi extends ApiSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanApi.class);
@@ -43,7 +43,7 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/create", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<Ordination> createOrdination(@RequestBody final OrdinationImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
+	public ServiceResult<HealthPlan> createOrdination(@RequestBody final HealthPlanImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
 		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getPrincipal(), patient});
 		
 		return this.service.createNewOrdination(dto, (CareGiverBaseView) auth.getPrincipal(), patient);
@@ -51,9 +51,9 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/list", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Ordination[]> listOrdinations(@PathVariable(value="patient") final Long patient, final Authentication auth) {
+	public ServiceResult<HealthPlan[]> listOrdinations(@PathVariable(value="patient") final Long patient, final Authentication auth) {
 		log.info("Care giver {} is listing ordinations for patient {}", ((CareGiverBaseView) auth.getPrincipal()).getHsaId(), patient);
-		final ServiceResult<Ordination[]> ordinations = this.service.loadOrdinationsForPatient(patient);
+		final ServiceResult<HealthPlan[]> ordinations = this.service.loadOrdinationsForPatient(patient);
 		
 		log.debug("Found {} for patient {}", ordinations.getData().length, patient);
 		return ordinations;
@@ -61,14 +61,14 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/{ordination}/delete", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<Ordination> deleteOrdination(@PathVariable(value="patient") final Long patient, @PathVariable(value="ordination") final Long ordination) {
+	public ServiceResult<HealthPlan> deleteOrdination(@PathVariable(value="patient") final Long patient, @PathVariable(value="ordination") final Long ordination) {
 		log.info("Deleting ordination {} for patient {}", ordination, patient);
 		return this.service.deleteOrdination(ordination);
 	}
 	
 	@RequestMapping(value="/{ordination}/activitydefinition/create", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<Ordination> createActivityDefintion(@PathVariable(value="ordination") final Long ordination) {
+	public ServiceResult<HealthPlan> createActivityDefintion(@PathVariable(value="ordination") final Long ordination) {
 		log.info("User {} is adding a new activity defintion for ordination {}", new Object[] {this.getUser(), ordination});
 		
 		throw new UnsupportedOperationException("Not yet implemented");

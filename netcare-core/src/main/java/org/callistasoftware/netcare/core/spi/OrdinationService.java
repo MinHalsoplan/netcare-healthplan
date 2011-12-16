@@ -18,7 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
-import org.callistasoftware.netcare.core.api.Ordination;
+import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
@@ -37,7 +37,7 @@ public interface OrdinationService {
 	 * @param patient
 	 * @return
 	 */
-	ServiceResult<Ordination[]> loadOrdinationsForPatient(final Long patient);
+	ServiceResult<HealthPlan[]> loadOrdinationsForPatient(final Long patient);
 	
 	/**
 	 * Creates a new ordination.
@@ -47,14 +47,14 @@ public interface OrdinationService {
 	 * @param patientId
 	 * @return
 	 */
-	ServiceResult<Ordination> createNewOrdination(final Ordination ordination, final CareGiverBaseView creator, final Long patientId);
+	ServiceResult<HealthPlan> createNewOrdination(final HealthPlan ordination, final CareGiverBaseView creator, final Long patientId);
 	
 	/**
 	 * Delete the ordination with the specified id
 	 * @param ordinationId
 	 * @return
 	 */
-	ServiceResult<Ordination> deleteOrdination(final Long ordinationId);
+	ServiceResult<HealthPlan> deleteOrdination(final Long ordinationId);
 	
 	/**
 	 * Load a specific ordination
@@ -62,12 +62,12 @@ public interface OrdinationService {
 	 * @param patient
 	 * @return
 	 */
-	ServiceResult<Ordination> loadOrdination(final Long ordinationId, final PatientBaseView patient);
+	ServiceResult<HealthPlan> loadOrdination(final Long ordinationId, final PatientBaseView patient);
 	
 	/**
 	 * Adds an activity defintion to an existing ordination specified by its id
 	 * @param ordinationId
 	 * @return
 	 */
-	ServiceResult<Ordination> addActivityDefintionToOrdination(final Long ordinationId, final ActivityDefinition dto);
+	ServiceResult<HealthPlan> addActivityDefintionToOrdination(final Long ordinationId, final ActivityDefinition dto);
 }

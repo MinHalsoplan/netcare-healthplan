@@ -16,29 +16,17 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.io.Serializable;
+public interface CareUnit {
 
-/**
- * Interface defining an ordination
- * 
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public interface Ordination extends Serializable {
-
-	Long getId();
+	/**
+	 * Get the hsa id of the care unit
+	 * @return
+	 */
+	String getHsaId();
 	
+	/**
+	 * Get the name of the care unit
+	 * @return
+	 */
 	String getName();
-	
-	String getStartDate();
-	
-	String getEndDate();
-	
-	int getDuration();
-	
-	Option getDurationUnit();
-	
-	CareGiverBaseView getIssuedBy();
-	
-	ActivityDefinition[] getActivityDefintions();
 }
