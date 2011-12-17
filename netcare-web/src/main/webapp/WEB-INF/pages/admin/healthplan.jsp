@@ -80,7 +80,7 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="ordinations" /></h2>
+			<h2><spring:message code="healthPlans" /></h2>
 			<p>
 				Den här sidan låter dig skapa en ordination för en patient. Ordinationen kan sedan schemaläggas som sedan patient
 				kan rapportera på. Beskrivande text... bla bla.
@@ -126,7 +126,7 @@
 				
 			</netcare:form>
 			
-			<h3><spring:message code="currentOrdinations" /></h3>
+			<h3><spring:message code="currentHealthPlans" /></h3>
 			<p id="ordinationDescription"></p>
 			<table id="ordinationTable" class="bordered-table zebra-striped">
 				<thead>

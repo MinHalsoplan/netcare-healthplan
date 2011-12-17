@@ -44,10 +44,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
-public class OrdinationRepositoryTest {
+public class HealthPlanRepositoryTest {
 
 	@Autowired
-	private OrdinationRepository repo;
+	private HealthPlanRepository repo;
 	@Autowired
 	private ActivityDefinitionRepository actRepo;
 	@Autowired

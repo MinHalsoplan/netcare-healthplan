@@ -138,7 +138,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		view : function(ordinationId, currentPatient) {
 			console.log("GET to view ordination with id: " + ordinationId);
-			window.location = '/netcare-web/netcare/admin/ordination/' + ordinationId + '/view';
+			window.location = '/netcare-web/netcare/admin/healthplan/' + ordinationId + '/view';
 		},
 		
 		/**

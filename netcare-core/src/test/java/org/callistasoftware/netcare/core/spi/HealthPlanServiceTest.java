@@ -32,7 +32,7 @@ import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
-import org.callistasoftware.netcare.core.repository.OrdinationRepository;
+import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -57,21 +57,21 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
-public class OrdinationServiceTest {
+public class HealthPlanServiceTest {
 	
 	@Autowired
 	private CareGiverRepository cgRepo;
 	@Autowired
 	private PatientRepository patientRepo;
 	@Autowired
-	private OrdinationRepository ordinationRepo;
+	private HealthPlanRepository ordinationRepo;
 	@Autowired
 	private ActivityTypeRepository typeRepo;
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
 	@Autowired
-	private OrdinationService service;
+	private HealthPlanService service;
 
 	@Test
 	@Transactional
@@ -95,7 +95,7 @@ public class OrdinationServiceTest {
 		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "611028", cg);
 		patientRepo.save(patient);
 		
-		final ServiceResult<HealthPlan> saved = this.service.createNewOrdination(o, cgDto, patient.getId());
+		final ServiceResult<HealthPlan> saved = this.service.createNewHealthPlan(o, cgDto, patient.getId());
 		
 		assertEquals(o.getName(), saved.getData().getName());
 		assertEquals(o.getStartDate(), saved.getData().getStartDate());
@@ -134,7 +134,7 @@ public class OrdinationServiceTest {
 		impl.setTimes(new String[] { "12:15", "18:45"});
 		impl.setType(typeImpl);
 		
-		final ServiceResult<HealthPlan> result = this.service.addActivityDefintionToOrdination(savedOrd.getId(), (ActivityDefinition) impl);
+		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), (ActivityDefinition) impl);
 		assertTrue(result.isSuccess());
 		
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());

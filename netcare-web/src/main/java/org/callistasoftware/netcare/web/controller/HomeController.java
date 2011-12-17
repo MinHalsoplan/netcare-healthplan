@@ -25,7 +25,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
-import org.callistasoftware.netcare.core.spi.OrdinationService;
+import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class HomeController extends ControllerSupport {
 	private MessageSource messages;
 	
 	@Autowired
-	private OrdinationService service;
+	private HealthPlanService service;
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String displayLoginForm() {
@@ -77,7 +77,7 @@ public class HomeController extends ControllerSupport {
 		return "admin/home";
 	}
 	
-	@RequestMapping(value="/admin/ordination/new", method=RequestMethod.GET)
+	@RequestMapping(value="/admin/healthplan/new", method=RequestMethod.GET)
 	public String displayCreateOrdination(final Model m, final HttpSession session, final Locale locale) {
 		log.info("Displaying create new ordination");
 		
@@ -88,11 +88,11 @@ public class HomeController extends ControllerSupport {
 		return "admin/healthplan";
 	}
 	
-	@RequestMapping(value="/admin/ordination/{ordination}/view", method=RequestMethod.GET)
-	public String displayNewActivityDefinition(@PathVariable(value="ordination") final Long ordination, final HttpSession session, final Model m) {
-		log.info("Getting ordination {}", ordination);
+	@RequestMapping(value="/admin/healthplan/{healthplanId}/view", method=RequestMethod.GET)
+	public String displayNewActivityDefinition(@PathVariable(value="healthplanId") final Long healthPlan, final HttpSession session, final Model m) {
+		log.info("Getting ordination {}", healthPlan);
 		
-		final ServiceResult<HealthPlan> result = this.service.loadOrdination(ordination, this.getCurrentPatient(session));
+		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan, this.getCurrentPatient(session));
 		m.addAttribute("result", result);
 		if (result.isSuccess()) {
 			m.addAttribute("hideMessages", Boolean.TRUE);

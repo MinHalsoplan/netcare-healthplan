@@ -34,9 +34,9 @@ import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
-import org.callistasoftware.netcare.core.repository.OrdinationRepository;
+import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
-import org.callistasoftware.netcare.core.spi.OrdinationService;
+import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
@@ -59,12 +59,12 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class OrdinationServiceImpl implements OrdinationService {
+public class HealthPlanServiceImpl implements HealthPlanService {
 
-	private static final Logger log = LoggerFactory.getLogger(OrdinationServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
 	@Autowired
-	private OrdinationRepository repo;
+	private HealthPlanRepository repo;
 	
 	@Autowired
 	private ActivityTypeRepository activityTypeRepository;
@@ -79,7 +79,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	private ActivityDefinitionRepository activityDefintionRepository;
 	
 	@Override
-	public ServiceResult<HealthPlan[]> loadOrdinationsForPatient(Long patientId) {
+	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
 		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 		
@@ -94,7 +94,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> createNewOrdination(final HealthPlan o, final CareGiverBaseView careGiver, final Long patientId) {		
+	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareGiverBaseView careGiver, final Long patientId) {		
 		log.info("Creating new ordination {}", o.getName());
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -119,7 +119,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> deleteOrdination(Long ordinationId) {
+	public ServiceResult<HealthPlan> deleteHealthPlan(Long ordinationId) {
 		log.info("Deleting ordination {}", ordinationId);
 		this.repo.delete(ordinationId);
 		
@@ -127,7 +127,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> loadOrdination(Long ordinationId,
+	public ServiceResult<HealthPlan> loadHealthPlan(Long ordinationId,
 			PatientBaseView patient) {
 		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
 		if (entity == null) {
@@ -143,7 +143,7 @@ public class OrdinationServiceImpl implements OrdinationService {
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> addActivityDefintionToOrdination(
+	public ServiceResult<HealthPlan> addActvitiyToHealthPlan(
 			Long ordinationId, final ActivityDefinition dto) {
 		log.info("Adding activity defintion to existing ordination with id {}", ordinationId);
 		final HealthPlanEntity entity = this.repo.findOne(ordinationId);

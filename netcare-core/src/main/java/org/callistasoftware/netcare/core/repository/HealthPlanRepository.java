@@ -22,7 +22,7 @@ import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrdinationRepository extends JpaRepository<HealthPlanEntity, Long> {
+public interface HealthPlanRepository extends JpaRepository<HealthPlanEntity, Long> {
 	
 	List<HealthPlanEntity> findByForPatient(PatientEntity forPatient);
 	
