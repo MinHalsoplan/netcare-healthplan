@@ -71,7 +71,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
 									$('<td>').html(value.name)).append(
-										$('<td>').html(value.duration)).append(
+										$('<td>').html(value.duration + ' ' + value.durationUnit.value)).append(
 												$('<td>').html(value.startDate)).append(
 														$('<td>').html(value.issuedBy.name)).append(
 																actionCol));
@@ -148,6 +148,40 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			
 		},
 		
+		/**
+		 * List all activities that exist on a health plan
+		 */
+		listActivities : function(currentPatientId, healthPlanId, tableId, activityInfoFunction) {
+			var url = _baseUrl + '/' + healthPlanId + '/activity/list';
+			console.log("Loading activities for health plan " + healthPlanId + " from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					console.log("Successfully call to rest service");
+					console.log("Emptying the activity table");
+					$('#' + tableId + ' tbody > tr').empty();
+					
+					var util = new NC.Util();
+					
+					$.each(data.data, function(index, value) {
+						var infoIcon = util.createIcon('bullet_info', function() {
+							activityInfoFunction(data.data.id, currentPatientId);
+						});
+						
+						var deleteIcon = util.createIcon('bullet_delete', function() {
+							console.log("Delete icon clicked");
+							public.deleteActivity(currentPatientId, data.data.id);
+						})
+					});
+				}
+			});
+		},
+		
+		/**
+		 * Add an activity to a health plan
+		 */
 		addActivity : function(healthPlanId, formData, callback) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/new';
 			console.log("Adding new activity using url: " + url);
@@ -163,6 +197,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					callback(data);
 				}
 			});
+		},
+		
+		/**
+		 * Delete an activity that is attached to a health
+		 * plan.
+		 */
+		deleteActivity : function(currentPatientId, activityId) {
+			console.log("Deleting activity " + activityId + " for patient " + currentPatientId);
 		}
 	};
 	

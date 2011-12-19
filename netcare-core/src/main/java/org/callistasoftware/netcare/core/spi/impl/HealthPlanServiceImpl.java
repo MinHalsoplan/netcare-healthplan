@@ -88,7 +88,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		final HealthPlan[] dtos = new HealthPlan[entities.size()];
 		int count = 0;
 		for (final HealthPlanEntity ent : entities) {
-			final HealthPlanImpl dto = HealthPlanImpl.newFromEntity(ent, null);
+			final HealthPlanImpl dto = HealthPlanImpl.newFromEntity(ent, LocaleContextHolder.getLocale());
 			dtos[count++] = dto;
 		}
 		

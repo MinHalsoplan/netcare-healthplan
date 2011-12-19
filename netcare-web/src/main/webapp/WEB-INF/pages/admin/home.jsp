@@ -40,24 +40,42 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h1>Välkommen</h1>
+			
+			<section id="dashboard">
+				<h2>:Start</h2>
+				<p>
+					Välkommen till planerade hälsotjänster. I menyn till höger anges vem du är
+					inloggad som, vilken patient du för närvarande arbetar med samt en meny där
+					du anger vad du vill arbeta med.
+				</p>
+				<p>
+					<span class="label important">Viktigt!</span>
+					Du måste ha valt en patient att arbeta med innan du kan utföra andra
+					aktiviteter i systemet.
+				</p>
+				
+			</section>
+			
+			<section id="aktiviteter">
+				<h2>:Genomförda aktiviteter</h2>
+				<p>
+					<span class="label notice">Information</span>
+					Nedan visas en översikt över de patienter som har rapporterat och genomfört
+					aktiviteter det senaste dygnet.
+				</p>
+			</section>
+			
+			<section id="alarms">
+				<h2>:Larmöversikt</h2>
+				<p>
+					<span class="label notice">Information</span>
+					Nedan visas en översikt över de patienter som har rapporterat en aktivitet
+					och fallit utan för de rekommenderade värdena.
+				</p>
+			</section>
+			
 		 
-			<%--<form id="pickPatientForm">
-				<fieldset>
-					<legend><spring:message code="pickPatient" /></legend>
-				</fieldset>
-				<div class="clearfix">
-					<label for="pickPatient"><spring:message code="search" /></label>
-					<div class="input">
-						<input name="pickPatient" class="xlarge" size="30" type="text" />
-						
-						<spring:message code="pick" var="pick" scope="page" />
-						<input name="pickSubmit" type="submit" value="${pageScope.pick}" class="btn primary"/>
-						<input name="selectedPatient" type="hidden" />
-					</div>
-				</div>
-			</form>
-			 --%>
+			
 			<%--<form id="activityTypeForm" method="post" action="#">
 				<fieldset>
 					<legend><spring:message code="addActivityType" /></legend>

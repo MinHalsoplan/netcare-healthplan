@@ -86,36 +86,35 @@
 		$('#pickPatientForm').submit(function(event) {
 			selectPatient(event);
 		});
+		
+		var currentPatient = "<c:out value="${sessionScope.currentPatient.name}" />"
+		if (currentPatient.length == 0) {
+			$('#workWith').hide();
+		}
 	});
 </script>
 
 <div class="span4">
 	<h3><spring:message code="loggedInAs" /></h3>
-	<p><a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
-	<p><strong><spring:message code="careUnit" />:</strong><br />
-	<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
+	<p>
+		<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
+	</p>
+	<p>
+		<strong><spring:message code="careUnit" />:</strong><br />
+		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
+	</p>
+		
 	<h3><spring:message code="patient" /></h3>
-	<c:choose>
-		<c:when test="${not empty sessionScope.currentPatient}">
-			<p id="nopatient" style="display: none;">
-				<spring:message code="noCurrentPatient" /> <a href="#" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" /><br />
-			</p>
-			<p id="currentpatient" style="display: block;">
-				<spring:message code="currentPatient" /> <a href="#"><c:out value="${sessionScope.currentPatient.name}" /></a>
-			</p>
-		</c:when>
-		<c:otherwise>
-			<p id="nopatient" style="display: block;">
-				<spring:message code="noCurrentPatient" /> <a href="#" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" />
-			</p>
-			<p id="currentpatient" style="display: none;">
-				<spring:message code="currentPatient" /> <a href="#"><c:out value="${sessionScope.currentPatient.name}" /></a>
-			</p>
-		</c:otherwise>
-	</c:choose>
+	<c:if test="${not empty sessionScope.currentPatient}">
+		<p id="currentpatient" style="display: block;">
+			<spring:message code="currentPatient" /> <a href="#"><c:out value="${sessionScope.currentPatient.name}" /></a>
+		</p>
+	</c:if>
+	<p>
+		<a href="#" data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" /><br />
+	</p>
 	
-<!-- 	<div class="modal-backdrop fade in"></div> -->
-	<div id="modal-from-dom" class="modal hide fade in" style="display: none;">
+	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
 		<form id="pickPatientForm" class="form-stacked">
 			<div class="modal-header">
 				<a href="#" class="close">x</a>
@@ -136,11 +135,11 @@
 		</form>
 	</div>
 	
-	<h3><spring:message code="workWith" /></h3>
-	<ul>
-		<li><a href="#" data-controls-modal="modal-from-dom"><spring:message code="switchPatient" /></a>
-		<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="create" /> <spring:message code="healthPlan" /></a>
-	</ul>
+	<div id="workWith">
+		<h3><spring:message code="workWith" /></h3>
+		<ul>
+			<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a>
+		</ul>
+	</div>
 </div>
-	
 </body>

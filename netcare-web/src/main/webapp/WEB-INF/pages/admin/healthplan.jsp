@@ -28,72 +28,84 @@
 		<script type="text/javascript">
 			$(function() {
 				var support = NC.Support();
-				support.loadDurations($('#createOrdinationForm select'));
+				support.loadDurations($('#createHealthPlanForm select'));
 				
-				var ordinations = NC.HealthPlan('ordinationDescription'
+				var healthPlans = NC.HealthPlan('ordinationDescription'
 						, 'ordinationTable');
 				
-				ordinations.list(<c:out value="${sessionScope.currentPatient.id}" />);
+				healthPlans.list(<c:out value="${sessionScope.currentPatient.id}" />);
 				
 				/*
 				 * Bind date picker to start date field
 				 */
-				$('#createOrdinationForm input[name="startDate"]').datepicker({
+				$('#createHealthPlanForm input[name="startDate"]').datepicker({
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0
 				});
 				
 				support.loadMonths(function(data) {
-					$('#createOrdinationForm input[name="startDate"]').datepicker('option', 'monthNames', data);
+					$('#createHealthPlanForm input[name="startDate"]').datepicker('option', 'monthNames', data);
 				});
 				
 				support.loadWeekdays(function(data) {
-					$('#createOrdinationForm input[name="startDate"]').datepicker('option', 'dayNamesMin', data);
+					$('#createHealthPlanForm input[name="startDate"]').datepicker('option', 'dayNamesMin', data);
 				});
 				
 				/*
 				 * Bind create button
 				 */
-				$('#createOrdinationForm :submit').click(function(event) {
+				$('#createHealthPlanForm :submit').click(function(event) {
 					console.log("Submitting form...");
 					event.preventDefault();
 					
 					var formData = new Object();
-					formData.name = $('#createOrdinationForm input[name="name"]').val();
-					formData.startDate = $('#createOrdinationForm input[name="startDate"]').val();
-					formData.duration = $('#createOrdinationForm input[name="duration"]').val();
+					formData.name = $('#createHealthPlanForm input[name="name"]').val();
+					formData.startDate = $('#createHealthPlanForm input[name="startDate"]').val();
+					formData.duration = $('#createHealthPlanForm input[name="duration"]').val();
 					formData.durationUnit = new Object();
-					formData.durationUnit.code = $('#createOrdinationForm select option:selected').attr('value');
-					formData.durationUnit.value = $('#createOrdinationForm select option:selected').val();
+					formData.durationUnit.code = $('#createHealthPlanForm select option:selected').attr('value');
+					formData.durationUnit.value = $('#createHealthPlanForm select option:selected').val();
 					
 					var jsonObj = JSON.stringify(formData);
 					console.log("JSON: " + jsonObj.toString());
 					
-					ordinations.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
-						$('#createOrdinationForm :reset').click();
+					healthPlans.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
+						$('#createHealthPlanForm :reset').click();
 					});
+					
+					$('#createHealthPlanForm').hide();
 				});
+			
+				$('#showCreateForm').click(function(even) {
+					$('#createHealthPlanForm').toggle();
+				});
+				
+				$('#createHealthPlanForm').hide();
 				
 			});
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="healthPlans" /></h2>
+			<h2><spring:message code="healthPlans" /> för <c:out value="${sessionScope.currentPatient.name}" /></h2>
 			<p>
-				Den här sidan låter dig skapa en ordination för en patient. Ordinationen kan sedan schemaläggas som sedan patient
-				kan rapportera på. Beskrivande text... bla bla.
+				<span class="label notice">Information</span>
+				Den här sidan visar hälsoplaner för <c:out value="${sessionScope.currentPatient.name}" />. Du kan även skapa
+				till en ny hälsoplan genom att klicka på "Skapa hälsoplan" länken nedan.
 			</p>
 			
-			<spring:message code="create" var="title" scope="page" />
+			<spring:message code="newHealthPlan" var="title" scope="page"/>
 			<spring:message code="clear" var="clear" scope="page" />
 			<spring:message code="duration" var="duration" scope="page" />
 			<spring:message code="name" var="name" scope="page" />
 			<spring:message code="type" var="type" scope="page" />
 			<spring:message code="startDate" var="startDate" scope="page" />
 			
-			<netcare:form title="${title}" id="createOrdinationForm" classes="form-stacked">
+			<p style="text-align: right; padding-right: 20px;">
+				<a id="showCreateForm" class="btn"><netcare:image name="bullet_add" /> <c:out value="${title}" /></a>
+			</p>
+			<netcare:form title="${title}" id="createHealthPlanForm" classes="form-stacked">
 				<netcare:field name="name" label="${name}">
 					<input type="text" name="name" class="xlarge" />
 				</netcare:field>
@@ -126,8 +138,6 @@
 				
 			</netcare:form>
 			
-			<h3><spring:message code="currentHealthPlans" /></h3>
-			<p id="ordinationDescription"></p>
 			<table id="ordinationTable" class="bordered-table zebra-striped">
 				<thead>
 					<tr>

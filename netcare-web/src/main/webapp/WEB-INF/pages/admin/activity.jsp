@@ -27,6 +27,12 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				
+				/*
+				 * Start by loading existing activites
+				 * and fill the table
+				 */
+				
 				var clearErrors = function() {
 					$('#addTimeContainer').removeClass('error');
 					$('#activityGoal').removeClass('error');
@@ -43,14 +49,14 @@
 					clearErrors();
 					
 					$('#addedTimes ul').empty();
-					$('#activityDefinitionForm input[type="reset"]').click();
+					$('#activityForm input[type="reset"]').click();
 				};
 				
 				var healthPlan = <c:out value="${requestScope.result.data.id}" />
 				var types = NC.ActivityTypes();
 				
 				var units = new Array();
-				var select = $('#activityDefinitionForm select[name="activityType"]');
+				var select = $('#activityForm select[name="activityType"]');
 				
 				var showUnit = function(optionElem) {
 					console.log("Selected element: " + optionElem.val());
@@ -82,17 +88,17 @@
 				});
 				
 				select.change(function() {
-					var selected = $('#activityDefinitionForm select option:selected');
+					var selected = $('#activityForm select option:selected');
 					console.log("Selected element is: " + selected.html());
 					
 					showUnit(selected);
 				});
 				
-				$('#activityDefinitionForm input[name="day"]').click(function(event) {
+				$('#activityForm input[name="day"]').click(function(event) {
 					/*
 					 * Is any day checked?
 					 */ 
-					var size = $('#activityDefinitionForm input[name="day"]:checked').size();
+					var size = $('#activityForm input[name="day"]:checked').size();
 					if (size == 0) {
 						hideTimeContainer();
 					} else {
@@ -119,7 +125,7 @@
 				util.bindNotEmptyField($('#activityGoal'), $('#activityGoal input[name="activityGoal"]'));
 				util.bindNotEmptyField($('#addTimeContainer'), $('#addTimeContainer input[name="addTime"]'));
 				
-				var addTimeField = $('#activityDefinitionForm input[name="addTime"]');
+				var addTimeField = $('#activityForm input[name="addTime"]');
 				
 				util.validateTimeField(addTimeField, function(text) {
 					var liElem = $('<li>');
@@ -155,14 +161,14 @@
 				 * Bind the form submission and package what is going
 				 * to be sent to the server as a JSON object
 				 */
-				$('#activityDefinitionForm :submit').click(function(event) {
+				$('#activityForm :submit').click(function(event) {
 					console.log("Form submission...");
 					event.preventDefault();
 					
-					var activityType = $('#activityDefinitionForm select option:selected').val();
-					var goal = $('#activityDefinitionForm input[name="activityGoal"]').val();
+					var activityType = $('#activityForm select option:selected').val();
+					var goal = $('#activityForm input[name="activityGoal"]').val();
 					
-					var selectedDays = $('#activityDefinitionForm input[name="day"]:checked');
+					var selectedDays = $('#activityForm input[name="day"]:checked');
 					var days = new Array();
 					$.each(selectedDays, function(index, value) {
 						days[index] = value.value;
@@ -205,7 +211,16 @@
 						resetForm();
 					});
 					
+					$('#activityForm').hide();
+					
 				});
+				
+				$('#showActivityForm').click(function(event) {
+					console.log("Displaying new activity form");
+					$('#activityForm').toggle();
+				});
+				
+				$('#activityForm').hide();
 				
 				hideTimeContainer();
 			});
@@ -213,13 +228,22 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2>Aktivitetsdefinition</h2>
+			<h2><c:out value="${requestScope.result.data.name}" /> : <spring:message code="activities" /></h2>
 			<p>
-				Den här sidan låter dig schemalägga en hälsoplan. Du kan ange vilka dagar samt vilka tider som aktiviteten
-				skall utföras.
+				<span class="label notice">Information</span>
+				Den här sidan låter dig schemalägga aktiviteter som ingår i hälsoplanen. Du anger
+				dagar samt tider som aktiviteten skall utföras.
 			</p>
 			
-			<netcare:form title="Ordination" id="activityDefinitionForm" classes="form-stacked">
+			<spring:message code="newActivity" var="title" scope="page" />
+			
+			<p style="text-align: right; padding-right: 20px">
+				<a id="showActivityForm" class="btn">
+					<netcare:image name="bullet_add"/> <c:out value="${title}" />
+				</a>
+			</p>
+			
+			<netcare:form title="${title}" id="activityForm" classes="form-stacked">
 			
 				<netcare:field name="activityType" label="Vad">
 					<select name="activityType" class="xlarge"></select>
@@ -301,6 +325,17 @@
 				</div>
 			
 			</netcare:form>
+			
+			<table id="activitiesTable" class="bordered-table zebra-striped">
+				<thead>
+					<tr>
+						<th><spring:message code="type" /></th>
+						<th><spring:message code="goal" /></th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
 			
 		</netcare:content>
 		<netcare:menu />
