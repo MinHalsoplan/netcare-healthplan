@@ -16,16 +16,46 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
 <netcare:page>
-	<netcare:header />
+	<netcare:header>
+			<script type="text/javascript">
+			$(function() {
+				var schema = NC.PatientSchema('schemaDescription', 'schemaTable');
+				schema.list();
+			});
+		</script>
+	</netcare:header>
 	<netcare:body>
-		<h1>Välkommen till user!</h1>
+		<netcare:content>
+			<h1>Mitt Schema</h1>
+			<p id="schemaDescription"></p>
+			<table id="schemaTable" class="bordered-table zebra-striped">
+				<thead>
+					<tr>
+						<th><spring:message code="time" />
+						</th>
+						<th><spring:message code="name" />
+						</th>
+						<th><spring:message code="value" />
+						</th>						
+						<th><spring:message code="report"/>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+
+		</netcare:content>
+		<netcare:patient-menu>
+		</netcare:patient-menu>
 	</netcare:body>
 </netcare:page>

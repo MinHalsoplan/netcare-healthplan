@@ -33,8 +33,6 @@ package org.callistasoftware.netcare.core.api;
  */
 import static org.junit.Assert.assertEquals;
 
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
-import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 
@@ -43,19 +41,14 @@ public class ApiUtilTest {
 
 	@Test
 	public void testProxy() throws Exception {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
-		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004", cg);
+		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
 		p.getProperties().put("prop1", "val1");
 		p.getProperties().put("prop2", "val2");
 		
-		final CareGiverEntity c = CareGiverEntity.newEntity("doktor peter", "123456Id", cu);
-		p.setPrimaryCareGiver(c);
 		
 		Patient pi = ApiUtil.copy(Patient.class, p);
 		
 		assertEquals(pi.getName(), p.getName());
 		assertEquals(p.getProperties(), pi.getProperties());
-		assertEquals(p.getPrimaryCareGiver().getHsaId(), pi.getPrimaryCareGiver().getHsaId());
 	}
 }

@@ -24,17 +24,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="care_unit")
+@Table(name="nc_care_unit")
 public class CareUnitEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique=true, nullable=false)
+	@Column(length=64, unique=true, nullable=false)
 	private String hsaId;
 	
-	@Column
+	@Column(length=64)
 	private String name;
 	
 	CareUnitEntity() {

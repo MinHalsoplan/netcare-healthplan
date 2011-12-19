@@ -54,7 +54,7 @@ public class PatientRepositoryTest {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
 		
 		this.repo.save(p1);
 		
@@ -74,7 +74,7 @@ public class PatientRepositoryTest {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 
-		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004", cg);
+		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
 		p.getProperties().put("prop1", "val1");
 		p.getProperties().put("prop2", "val2");
 		repo.save(p);
@@ -103,10 +103,10 @@ public class PatientRepositoryTest {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 
-		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004", cg);
-		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005", cg);
-		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006", cg);
-		final PatientEntity p4 = PatientEntity.newEntity("Marcus", "123456789007", cg);
+		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004");
+		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005");
+		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006");
+		final PatientEntity p4 = PatientEntity.newEntity("Marcus", "123456789007");
 		
 		ents.add(p1);
 		ents.add(p2);

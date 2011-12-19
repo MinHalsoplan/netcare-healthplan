@@ -18,18 +18,10 @@ package org.callistasoftware.netcare.core.repository;
 
 import java.util.List;
 
-import org.callistasoftware.netcare.model.entity.CareGiverDelegationEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CareGiverDelegationRepository extends JpaRepository<CareGiverDelegationEntity, Long> {
-	
-	/**
-	 * Returns a delegatee's all delegations.
-	 * 
-	 * @param careGiverDelegatee the delegatee, i.e. a nurse working on behalf of a doctor.
-	 * 
-	 * @return all matching delegations.
-	 */
-	List<CareGiverDelegationEntity> findByCareGiverDelegatee(CareGiverEntity careGiverDelegatee);
+public interface ScheduledActivityRepository extends JpaRepository<ScheduledActivityEntity, Long> {
+	List<ScheduledActivityEntity> findByActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity);
 }

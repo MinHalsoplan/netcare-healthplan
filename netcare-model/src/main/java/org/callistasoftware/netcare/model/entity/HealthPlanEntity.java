@@ -65,13 +65,14 @@ public class HealthPlanEntity {
 	private CareGiverEntity issuedBy;
 	
 	@ManyToOne
+	@JoinColumn(name="owned_by_care_unit_id")
 	private CareUnitEntity careUnit;
 	
 	@ManyToOne
 	@JoinColumn(name="for_patient_id")
 	private PatientEntity forPatient;
 	
-	@OneToMany(mappedBy="ordination", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="healthPlan", cascade=CascadeType.PERSIST)
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
 	

@@ -68,7 +68,7 @@ public class HomeController extends ControllerSupport {
 		}
 		
 		log.debug("Redirecting to user home");
-		return "redirect:patient/home";
+		return "redirect:user/home";
 	}
 	
 	@RequestMapping(value="/admin/home", method=RequestMethod.GET)
