@@ -73,6 +73,13 @@ public interface HealthPlanService {
 	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long ordinationId, final ActivityDefinition dto);
 	
 	/**
+	 * Load all activities for a specific health plan
+	 * @param healthPlanId
+	 * @return
+	 */
+	ServiceResult<ActivityDefinition[]> loadActivitiesForHealthPlan(final Long healthPlanId);
+	
+	/**
 	 * Returns scheduled activities for a patient.
 	 * 
 	 * @param patient the patient.

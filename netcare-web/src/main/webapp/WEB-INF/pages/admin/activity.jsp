@@ -32,6 +32,13 @@
 				 * Start by loading existing activites
 				 * and fill the table
 				 */
+				var healthPlan = <c:out value="${requestScope.result.data.id}" />
+				var patientId = <c:out value="${sessionScope.currentPatient.id}" />
+				var hp = new NC.HealthPlan();
+				
+				hp.listActivities(patientId, healthPlan, 'activitiesTable', function(data) {
+					console.log("Callback executing...");
+				});
 				
 				var clearErrors = function() {
 					$('#addTimeContainer').removeClass('error');
@@ -52,7 +59,7 @@
 					$('#activityForm input[type="reset"]').click();
 				};
 				
-				var healthPlan = <c:out value="${requestScope.result.data.id}" />
+				
 				var types = NC.ActivityTypes();
 				
 				var units = new Array();
@@ -209,7 +216,7 @@
 						/* Success, clear form */
 						console.log("Resetting form");
 						resetForm();
-					});
+					}, 'activitiesTable');
 					
 					$('#activityForm').hide();
 					

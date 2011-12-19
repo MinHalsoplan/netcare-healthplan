@@ -18,6 +18,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	
 	var _baseUrl = "/netcare-web/api/healthplan";
 	var _ordinationCount = 0;
+	var _activityCount = 0;
 	
 	var _descriptionId = descriptionId;
 	var _tableId = tableId;
@@ -31,7 +32,16 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$('#' + _descriptionId).hide();
 			$('#' + _tableId).show();
 		}
-	}
+	};
+	
+	var _updateActivityTable = function(tableId) {
+		console.log("Updating activity table");
+		if (_activityCount != 0) {
+			$('#' + tableId).show();
+		} else {
+			$('#' + tableId).hide();
+		}
+	};
 	
 	var public = {
 		
@@ -151,9 +161,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		/**
 		 * List all activities that exist on a health plan
 		 */
-		listActivities : function(currentPatientId, healthPlanId, tableId, activityInfoFunction) {
+		listActivities : function(healthPlanId, tableId, activityInfoFunction) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/list';
 			console.log("Loading activities for health plan " + healthPlanId + " from url: " + url);
+			
+			_updateActivityTable(tableId);
 			
 			$.ajax({
 				url : url,
@@ -166,23 +178,46 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					var util = new NC.Util();
 					
 					$.each(data.data, function(index, value) {
+						
+						console.log("Processing id: " + value.id);
+						
 						var infoIcon = util.createIcon('bullet_info', function() {
-							activityInfoFunction(data.data.id, currentPatientId);
+							activityInfoFunction(value.id, currentPatientId);
 						});
 						
 						var deleteIcon = util.createIcon('bullet_delete', function() {
 							console.log("Delete icon clicked");
-							public.deleteActivity(currentPatientId, data.data.id);
-						})
+							public.deleteActivity(currentPatientId, value.id);
+						});
+						
+						var actionCol = $('<td>');
+						actionCol.css('text-align', 'right');
+						
+						infoIcon.appendTo(actionCol);
+						deleteIcon.appendTo(actionCol);
+						
+						var tr = $('<tr>');
+						var type = $('<td>' + value.type.name + '</td>');
+						var goal = $('<td>' + value.goal + ' ' + value.type.unit.value + '</td>');
+						
+						tr.append(type);
+						tr.append(goal);
+						tr.append(actionCol);
+						
+						$('#' + tableId + ' tbody').append(tr);
 					});
+					
+					_activityCount = data.data.length;
+					_updateActivityTable(tableId);
 				}
 			});
+			
 		},
 		
 		/**
 		 * Add an activity to a health plan
 		 */
-		addActivity : function(healthPlanId, formData, callback) {
+		addActivity : function(healthPlanId, formData, callback, activityTableId) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/new';
 			console.log("Adding new activity using url: " + url);
 			$.ajax({
@@ -195,6 +230,9 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					new NC.Util().processServiceResult(data);
 					
 					callback(data);
+					
+					/* List messages */
+					public.listActivities(healthPlanId, activityTableId);
 				}
 			});
 		},

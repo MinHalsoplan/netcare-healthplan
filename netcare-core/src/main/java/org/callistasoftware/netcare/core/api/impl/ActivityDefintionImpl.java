@@ -22,6 +22,7 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * Implementation of an activity defintion
@@ -37,8 +38,19 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int[] days;
 	private String[] times;
 	
+	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
+		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			dtos[i] = ActivityDefintionImpl.newFromEntity(entities.get(i));
+		}
+		
+		return dtos;
+	}
+	
 	public static ActivityDefinition newFromEntity(final ActivityDefinitionEntity entity) {
 		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
+		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
+		dto.setGoal(entity.getActivityTarget());
 		
 		final List<FrequencyTime> frTimes = entity.getFrequency().getTimes();
 		final String[] times = new String[frTimes.size()];
@@ -48,8 +60,9 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 			times[i] = new StringBuilder().append(time.getHour()).append(":").append(time.getMinute()).toString();
 		}
 		
+		// FIXME - Implement full support
 		dto.setTimes(times);
-		throw new UnsupportedOperationException("Not yet fully implemented");
+		return dto;
 	}
 	
 	@Override

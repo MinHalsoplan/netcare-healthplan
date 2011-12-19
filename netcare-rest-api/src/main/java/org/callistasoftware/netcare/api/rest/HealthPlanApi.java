@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -73,5 +74,12 @@ public class HealthPlanApi extends ApiSupport {
 		log.info("User {} is adding a new activity defintion for health plan {}", new Object[] {this.getUser(), healthPlanId});
 		
 		return this.service.addActvitiyToHealthPlan(healthPlanId, activity);
+	}
+	
+	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(@PathVariable(value="healthPlanId") final Long healthPlan) {
+		log.info("User {} is listing activity defintions for health plan {}", new Object[] {this.getUser(), healthPlan});
+		return this.service.loadActivitiesForHealthPlan(healthPlan);
 	}
 }
