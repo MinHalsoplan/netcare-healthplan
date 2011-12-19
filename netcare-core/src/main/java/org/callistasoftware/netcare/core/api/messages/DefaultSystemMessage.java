@@ -39,7 +39,7 @@ public class DefaultSystemMessage implements SystemMessage {
 	private String message;
 	
 	public DefaultSystemMessage(final String entityCode, final String type, final Object...args) {
-		final Locale l = LocaleContextHolder.getLocaleContext().getLocale();
+		final Locale l = LocaleContextHolder.getLocale();
 		final ResourceBundle bundle = ResourceBundle.getBundle("messages", l);
 		
 		this.code = bundle.getString(entityCode);
@@ -48,7 +48,7 @@ public class DefaultSystemMessage implements SystemMessage {
 		 * Format message
 		 */
 		final MessageFormat frm = new MessageFormat(bundle.getString(type), l);
-		this.message = new StringBuilder().append(code).append(" ").append(frm.format(args)).toString();
+		this.message = new StringBuilder().append(frm.format(args)).toString();
 	}
 	
 	public DefaultSystemMessage(final String message) {

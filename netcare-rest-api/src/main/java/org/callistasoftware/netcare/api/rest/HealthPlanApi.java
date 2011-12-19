@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.api.rest;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
@@ -66,11 +67,11 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.deleteHealthPlan(ordination);
 	}
 	
-	@RequestMapping(value="/{ordination}/activitydefinition/create", method=RequestMethod.POST)
+	@RequestMapping(value="/{healthPlanId}/activity/new", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlan> createActivityDefintion(@PathVariable(value="ordination") final Long ordination) {
-		log.info("User {} is adding a new activity defintion for ordination {}", new Object[] {this.getUser(), ordination});
+	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefintionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
+		log.info("User {} is adding a new activity defintion for health plan {}", new Object[] {this.getUser(), healthPlanId});
 		
-		throw new UnsupportedOperationException("Not yet implemented");
+		return this.service.addActvitiyToHealthPlan(healthPlanId, activity);
 	}
 }

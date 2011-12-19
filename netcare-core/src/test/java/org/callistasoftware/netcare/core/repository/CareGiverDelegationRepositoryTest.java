@@ -16,25 +16,21 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
+import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.CareGiverDelegationEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="classpath:/netcare-config.xml")
-public class CareGiverDelegationRepositoryTest {
+public class CareGiverDelegationRepositoryTest extends TestSupport {
 	@Autowired
 	private CareGiverDelegationRepository dr;
 	@Autowired

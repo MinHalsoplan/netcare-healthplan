@@ -17,13 +17,14 @@
 package org.callistasoftware.netcare.core.spi;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
@@ -34,6 +35,7 @@ import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
@@ -42,22 +44,15 @@ import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="classpath:/netcare-config.xml")
-public class HealthPlanServiceTest {
+public class HealthPlanServiceTest extends TestSupport {
 	
 	@Autowired
 	private CareGiverRepository cgRepo;

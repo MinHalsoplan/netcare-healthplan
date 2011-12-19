@@ -18,11 +18,14 @@ package org.callistasoftware.netcare.web.listener;
 
 import javax.servlet.ServletContextEvent;
 
+import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +47,11 @@ public class ApplicationListener extends ContextLoaderListener {
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
+		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
+		
+		atRepo.save(ActivityTypeEntity.newEntity("Löpning", MeasureUnit.KILOMETERS));
+		atRepo.save(ActivityTypeEntity.newEntity("Yoga", MeasureUnit.MINUTES));
+		
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");

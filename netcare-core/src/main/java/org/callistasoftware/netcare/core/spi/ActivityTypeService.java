@@ -14,19 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.messages;
+package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.ServiceResult;
 
-
-public class EntityNotFoundMessage extends DefaultSystemMessage {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+/**
+ * Interface defining service methods for
+ * managing activity types
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface ActivityTypeService {
 	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
-		super(entityClass.getSimpleName(), "EntityNotFound", entityClass.getSimpleName(), id);
-	}
-
+	/**
+	 * Load all activity types that exist in
+	 * the system
+	 * @return
+	 */
+	ServiceResult<ActivityType[]> loadAllActivityTypes();
 }

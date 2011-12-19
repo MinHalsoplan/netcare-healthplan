@@ -27,12 +27,26 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				var clearErrors = function() {
+					$('#addTimeContainer').removeClass('error');
+					$('#activityGoal').removeClass('error');
+				};
+				
 				var hideTimeContainer = function() {
 					$('#addedTimesContainer').hide();
 					$('#addTimeContainer').hide();
 				};
 				
-				var ordination = <c:out value="${requestScope.result.data.id}" />
+				var resetForm = function() {
+					/* Remove times */
+					hideTimeContainer();
+					clearErrors();
+					
+					$('#addedTimes ul').empty();
+					$('#activityDefinitionForm input[type="reset"]').click();
+				};
+				
+				var healthPlan = <c:out value="${requestScope.result.data.id}" />
 				var types = NC.ActivityTypes();
 				
 				var units = new Array();
@@ -134,7 +148,7 @@
 					 * a time
 					 */
 					$('#addedTimesContainer').show();
-					$('#addTimeContainer').removeClass('error');
+					clearErrors();
 				});
 				
 				/*
@@ -165,13 +179,31 @@
 						times[index] = $(value).html();
 					});
 					
-					console.log("Ordination " + ordination);
+					console.log("healthPlan " + healthPlan);
 					console.log("Activity type: " + activityType);
 					console.log("Activity goal: " + goal);
 					console.log("Days: " + days);
 					console.log("Times: " + times);
 					
+					var at = new Object();
+					at.id = activityType;
 					
+					var activity = new Object();
+					activity.goal = goal;
+					activity.type = at;
+					activity.days = days;
+					activity.times = times;
+					
+					var jsonObj = JSON.stringify(activity);
+					console.log("JSON: " + jsonObj.toString());
+					
+					var hp = new NC.HealthPlan();
+					hp.addActivity(healthPlan, jsonObj, function(data) {
+						console.log("Success callback is executing...");
+						/* Success, clear form */
+						console.log("Resetting form");
+						resetForm();
+					});
 					
 				});
 				
@@ -183,7 +215,7 @@
 		<netcare:content>
 			<h2>Aktivitetsdefinition</h2>
 			<p>
-				Den här sidan låter dig schemalägga en ordination. Du kan ange vilka dagar samt vilka tider som aktiviteten
+				Den här sidan låter dig schemalägga en hälsoplan. Du kan ange vilka dagar samt vilka tider som aktiviteten
 				skall utföras.
 			</p>
 			

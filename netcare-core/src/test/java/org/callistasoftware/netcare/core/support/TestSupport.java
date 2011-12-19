@@ -14,19 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.messages;
+package org.callistasoftware.netcare.core.support;
 
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
-public class EntityNotFoundMessage extends DefaultSystemMessage {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
-		super(entityClass.getSimpleName(), "EntityNotFound", entityClass.getSimpleName(), id);
-	}
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:/netcare-config.xml")
+public abstract class TestSupport {
 
 }

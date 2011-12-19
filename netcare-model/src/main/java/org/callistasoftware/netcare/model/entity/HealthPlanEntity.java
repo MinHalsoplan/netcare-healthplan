@@ -22,9 +22,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -71,7 +71,7 @@ public class HealthPlanEntity {
 	@JoinColumn(name="for_patient_id")
 	private PatientEntity forPatient;
 	
-	@OneToMany(mappedBy="ordination", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="ordination", fetch=FetchType.LAZY)
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
 	
@@ -138,7 +138,7 @@ public class HealthPlanEntity {
 	}
 	
 	public boolean addActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity) {
-		if (!activityDefinitions.contains(activityDefinitionEntity)) {
+		if (!getActivityDefinitions().contains(activityDefinitionEntity)) {
 			return activityDefinitions.add(activityDefinitionEntity);
 		}
 		return false;
