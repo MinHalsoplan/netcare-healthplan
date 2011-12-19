@@ -21,6 +21,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpSession;
 
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
@@ -72,8 +73,16 @@ public class HomeController extends ControllerSupport {
 	}
 	
 	@RequestMapping(value="/admin/home", method=RequestMethod.GET)
-	public String displayAdminHome() {
+	public String displayAdminHome(final HttpSession session) {
 		log.info("Displaying home for admin");
+		final PatientBaseView pbv = this.getCurrentPatient(session);
+		if (pbv == null) {
+			log.debug("No patient in session.");
+		} else {
+			log.debug("Current patient in session is: " + this.getCurrentPatient(session).getName());
+		}
+		
+		
 		return "admin/home";
 	}
 	
