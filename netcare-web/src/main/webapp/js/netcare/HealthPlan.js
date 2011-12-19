@@ -146,6 +146,23 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		load : function(ordinationId, callback) {
 			
+		},
+		
+		addActivity : function(healthPlanId, formData, callback) {
+			var url = _baseUrl + '/' + healthPlanId + '/activity/new';
+			console.log("Adding new activity using url: " + url);
+			$.ajax({
+				url : url,
+				type : 'post',
+				data : formData,
+				contentType : 'application/json',
+				success : function(data) {
+					console.log("Call was successful!");
+					new NC.Util().processServiceResult(data);
+					
+					callback(data);
+				}
+			});
 		}
 	};
 	

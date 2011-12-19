@@ -16,17 +16,14 @@
  */
 package org.callistasoftware.netcare.core.api.messages;
 
-
-
-public class EntityNotFoundMessage extends DefaultSystemMessage {
+public class ListEntitiesMessage extends DefaultSystemMessage {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
-		super(entityClass.getSimpleName(), "EntityNotFound", entityClass.getSimpleName(), id);
+	public ListEntitiesMessage(final Class<?> entityClass, final int size) {
+		super(entityClass.getSimpleName(), "EntitiesListed", size, entityClass.getSimpleName());
 	}
-
 }

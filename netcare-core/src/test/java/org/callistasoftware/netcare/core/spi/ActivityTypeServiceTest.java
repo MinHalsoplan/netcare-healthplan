@@ -14,34 +14,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.api.rest;
-
-import java.util.Locale;
+package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.spi.ActivityTypeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
-@Controller
-@RequestMapping(value="/activityType")
-public class ActivityTypeApi extends ApiSupport {
+import static org.junit.Assert.*;
 
-	private static final Logger log = LoggerFactory.getLogger(ActivityTypeApi.class);
+public class ActivityTypeServiceTest extends TestSupport {
+
+	@Autowired
+	private ActivityTypeRepository repo;
 	
 	@Autowired
 	private ActivityTypeService service;
 	
-	@RequestMapping(value="/load", method=RequestMethod.GET)
-	@ResponseBody
-	public ServiceResult<ActivityType[]> loadActivityTypes(final Locale l) {
-		log.info("User {} (care giver: {}) is loading activity types", getUser().getName(), getUser().isCareGiver());
-		return this.service.loadAllActivityTypes();
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testLoadAllActivityTypes() throws Exception {
+		for (int i = 0; i < 10; i++) {
+			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, MeasureUnit.KILOMETERS));
+		}
+		
+		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();
+		assertTrue(result.isSuccess());
+		assertEquals(10, result.getData().length);
 	}
 }

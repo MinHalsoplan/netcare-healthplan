@@ -27,62 +27,14 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
-				var util = new NC.Util();
-				var patient = new NC.Patient();
-				var patientSearchInput = $('#pickPatientForm input[name="pickPatient"]'); 
 				
-				patientSearchInput.autocomplete({
-					source : function(request, response) {
-						
-						/*
-						 * Call find patients. Pass in the search value as well as
-						 * a function that should be executed upon success.
-						 */
-						patient.findPatients(request.term, function(data) {
-							console.log("Found " + data.data.length + " patients.");
-							response($.map(data.data, function(item) {
-								console.log("Processing item: " + item.name);
-								return { label : item.name, value : item.name, patientId : item.id };
-							}));
-						});
-					},
-					select : function(event, ui) {
-						console.log("Setting hidden field value to: " + ui.item.patientId);
-						$('#pickPatientForm input[name="selectedPatient"]').attr('value', ui.item.patientId);
-					}
-				});
-				
-				var selectPatientSuccess = function(data) {
-					var name = data.data.name;
-					util.updateCurrentPatient(name);
-				};
-				
-				var selectPatient = function(event) {
-					patient.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
-					event.preventDefault();
+				var name = "<c:out value="${sessionScope.currentPatient.name}" />";
+				if (name.length != 0) {
+					new NC.Util().updateCurrentPatient(name);
 				}
-				
-				/*
-				 * When the user presses enter in the search field will cause
-				 * the form to submit
-				 */
-				patientSearchInput.keypress(function(e) {
-					if (e.which == 13) {
-						selectPatient(e);
-					}
-				});
-				
-				/*
-				 * When the user clicks on the submit button, we perform
-				 * an ajax call that selects the patient in the session.
-				 */
-				$('#pickPatientForm').submit(function(event) {
-					selectPatient(event);
-				});
 				
 				var units = new NC.Support();
 				units.loadOptions($('#activityTypeForm select[name="unit"]'));
-				
 			});
 		</script>
 	</netcare:header>
@@ -90,7 +42,7 @@
 		<netcare:content>
 			<h1>Välkommen</h1>
 		 
-			<form id="pickPatientForm">
+			<%--<form id="pickPatientForm">
 				<fieldset>
 					<legend><spring:message code="pickPatient" /></legend>
 				</fieldset>
@@ -105,7 +57,7 @@
 					</div>
 				</div>
 			</form>
-			
+			 --%>
 			<%--<form id="activityTypeForm" method="post" action="#">
 				<fieldset>
 					<legend><spring:message code="addActivityType" /></legend>

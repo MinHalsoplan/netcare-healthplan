@@ -69,6 +69,7 @@ public class UserApi {
 				}
 			} else {
 				log.debug("Replacing patient {} with {} as current patient in session scope", currentPatient.getName(), result.getData().getName());
+				session.setAttribute("currentPatient", result.getData());
 			}
 		}
 				

@@ -32,7 +32,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyTime;
 public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	private int goal;
-	private ActivityType type;
+	private ActivityTypeImpl type;
 	
 	private int[] days;
 	private String[] times;
@@ -66,7 +66,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		return this.type;
 	}
 	
-	public void setType(final ActivityType type) {
+	public void setType(final ActivityTypeImpl type) {
 		this.type = type;
 	}
 
