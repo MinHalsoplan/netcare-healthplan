@@ -87,7 +87,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		o.setDuration(12);
 		o.setDurationUnit(new Option(DurationUnit.WEEKS.name(), null));
 		
-		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "611028", cg);
+		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "611028");
 		patientRepo.save(patient);
 		
 		final ServiceResult<HealthPlan> saved = this.service.createNewHealthPlan(o, cgDto, patient.getId());
@@ -111,7 +111,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		
-		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "123456789004", savedCg);
+		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "123456789004");
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 		
 		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", new Date(), 12, DurationUnit.WEEKS);

@@ -18,8 +18,6 @@ package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -32,24 +30,19 @@ public class PatientEntity extends UserEntity {
 	private String civicRegistrationNumber;
 	
 	@Column
-	private boolean isMobile;
+	private boolean isMobile;	
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	private CareGiverEntity primaryCareGiver;
-	
-	
-	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber, final CareGiverEntity primaryCareGiver) {
-		return new PatientEntity(name, civicRegistrationNumber, primaryCareGiver);
+	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
+		return new PatientEntity(name, civicRegistrationNumber);
 	}
 	
 	PatientEntity() {
 		super();
 	}
 	
-	PatientEntity(final String name, final String civicRegistrationNumber, final CareGiverEntity primCareGiver) {
+	PatientEntity(final String name, final String civicRegistrationNumber) {
 		super(name);
 		this.setCivicRegistrationNumber(civicRegistrationNumber);
-		this.setPrimaryCareGiver(primCareGiver);
 	}
 
 	public String getCivicRegistrationNumber() {
@@ -66,13 +59,5 @@ public class PatientEntity extends UserEntity {
 
 	public void setMobile(boolean isMobile) {
 		this.isMobile = isMobile;
-	}
-
-	public void setPrimaryCareGiver(CareGiverEntity primaryCareGiver) {
-		this.primaryCareGiver = EntityUtil.notNull(primaryCareGiver);
-	}
-
-	public CareGiverEntity getPrimaryCareGiver() {
-		return primaryCareGiver;
 	}
 }

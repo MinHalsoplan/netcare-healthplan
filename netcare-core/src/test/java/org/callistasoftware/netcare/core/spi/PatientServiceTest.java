@@ -57,8 +57,8 @@ public class PatientServiceTest extends TestSupport {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789001", cg);
-		final PatientEntity p2 = PatientEntity.newEntity("Peter", "123456789002", cg);
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789001");
+		final PatientEntity p2 = PatientEntity.newEntity("Peter", "123456789002");
 		
 		this.patientRepository.save(p1);
 		this.patientRepository.save(p2);
@@ -83,7 +83,7 @@ public class PatientServiceTest extends TestSupport {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004", cg);
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
 		final PatientEntity saved = this.patientRepository.save(p1);
 		
 		final ServiceResult<PatientBaseView> bv = this.service.loadPatient(saved.getId());

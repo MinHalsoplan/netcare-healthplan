@@ -16,16 +16,10 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,20 +41,14 @@ public class ActivityDefinitionEntity {
 	private int activityTarget;
 
 	@ManyToOne
-	@JoinColumn(name="ordination_id")
-	private HealthPlanEntity ordination;
+	@JoinColumn(name="health_plan_id")
+	private HealthPlanEntity healthPlan;
 	
 	@ManyToOne
 	@JoinColumn(name="activity_type_id")
-	private ActivityTypeEntity activityType;
-	
-    @ElementCollection(fetch=FetchType.LAZY)
-    @CollectionTable(name = "nc_scheduled_acitivty", joinColumns = {@JoinColumn(name="activity_def_id")})
-	private List<ScheduledActivityEntity> scheduledActivities;
-    
+	private ActivityTypeEntity activityType;    
     
     ActivityDefinitionEntity() {
-    	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
 	}
     
     public static ActivityDefinitionEntity newEntity(HealthPlanEntity ordinationEntity, ActivityTypeEntity activityType, Frequency frequency) {
@@ -77,11 +65,11 @@ public class ActivityDefinitionEntity {
 	}
 	
 	protected void setOrdination(HealthPlanEntity ordination) {
-		this.ordination = EntityUtil.notNull(ordination);
+		this.healthPlan = EntityUtil.notNull(ordination);
 	}
 
 	public HealthPlanEntity getOrdination() {
-		return ordination;
+		return healthPlan;
 	}
 
 	public void setActivityType(ActivityTypeEntity activityType) {
@@ -105,21 +93,7 @@ public class ActivityDefinitionEntity {
 		return entity;
 	}
 	
-	protected boolean addScheduledActivityEntity(ScheduledActivityEntity scheduledActivityEntity) {
-		if (!scheduledActivities.contains(scheduledActivityEntity)) {
-			return scheduledActivities.add(scheduledActivityEntity);
-		}
-		return false;
-	}
 	
-	protected boolean removeScheduledActivityEntity(ScheduledActivityEntity scheduledActivityEntity) {
-		return scheduledActivities.remove(scheduledActivityEntity);
-	}
-	
-	public List<ScheduledActivityEntity> getScheduledActivities() {
-		return Collections.unmodifiableList(scheduledActivities);
-	}
-
 	/**
 	 * Sets the target for this activity (for each execution), which will be used during follow up.
 	 * 

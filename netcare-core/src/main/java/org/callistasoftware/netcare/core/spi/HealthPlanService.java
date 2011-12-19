@@ -20,6 +20,7 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
 /**
@@ -70,4 +71,12 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long ordinationId, final ActivityDefinition dto);
+	
+	/**
+	 * Returns scheduled activities for a patient.
+	 * 
+	 * @param patient the patient.
+	 * @return the result.
+	 */
+	ServiceResult<ScheduledActivity[]> getActivitiesForPatient(final PatientBaseView patient);
 }

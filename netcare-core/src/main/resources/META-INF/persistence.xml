@@ -26,7 +26,6 @@
 	<persistence-unit name="netcare-pu" transaction-type="RESOURCE_LOCAL">
 		<class>org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.ActivityTypeEntity</class>
-		<class>org.callistasoftware.netcare.model.entity.CareGiverDelegationEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.CareGiverEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.CareUnitEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.HealthPlanEntity</class>

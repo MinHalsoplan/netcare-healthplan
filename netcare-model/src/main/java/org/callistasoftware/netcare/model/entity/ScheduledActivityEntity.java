@@ -19,12 +19,23 @@ package org.callistasoftware.netcare.model.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Embeddable
+@Entity
+@Table(name="nc_scheduled_activity")
 public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity> {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
 
 	@Column(name="scheduled_time", nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -39,25 +50,32 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	
 	@Column(name="target_value", nullable=false)
 	private int targetValue;
-
+	
+	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	private ActivityDefinitionEntity activityDefinition;
+	
 	ScheduledActivityEntity() {
 	}
 	
 	/**
 	 * Creates a {@link ScheduledActivityEntity}.
 	 * 
-	 * @param activityDefinitionEntity the {@link ActivityDefinitionEntity}, must be not null
+	 * @param activityDefinition the {@link ActivityDefinitionEntity}, must be not null
 	 * @param scheduledTime the scheduled timestamp (datetime)
 	 * @return a scheduled activity
 	 */
-	public static ScheduledActivityEntity newEntity(ActivityDefinitionEntity activityDefinitionEntity, Date scheduledTime) {
+	public static ScheduledActivityEntity newEntity(ActivityDefinitionEntity activityDefinition, Date scheduledTime) {
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
-		activityDefinitionEntity.addScheduledActivityEntity(scheduledActivityEntity);
+		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
-		scheduledActivityEntity.setTargetValue(activityDefinitionEntity.getActivityTarget());
+		scheduledActivityEntity.setTargetValue(activityDefinition.getActivityTarget());
 		return scheduledActivityEntity;
 	}
 	
+	public Long getId() {
+		return id;
+	}
+
 	protected void setScheduledTime(Date scheduledTime) {
 		this.scheduledTime = EntityUtil.notNull(scheduledTime);
 	}
@@ -103,5 +121,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	 */
 	public int getTargetValue() {
 		return targetValue;
+	}
+
+	protected void setActivityDefinitionEntity(ActivityDefinitionEntity activityDefinition) {
+		this.activityDefinition = activityDefinition;
+	}
+
+	public ActivityDefinitionEntity getActivityDefinitionEntity() {
+		return activityDefinition;
 	}
 }

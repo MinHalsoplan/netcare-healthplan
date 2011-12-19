@@ -18,15 +18,19 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
@@ -93,6 +97,26 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		}
 		
 		return ServiceResultImpl.createSuccessResult(dtos, new GenericSuccessMessage());
+	}
+	
+	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient(PatientBaseView patient) {
+		List<ScheduledActivity> list = new LinkedList<ScheduledActivity>();
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.HOUR, -6);
+		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 0, "Springa"));
+		c.add(Calendar.HOUR, 6);		
+		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 0, "Springa"));
+		c.add(Calendar.HOUR, 6);
+		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 2, "Gå"));
+		c.add(Calendar.HOUR, 12);
+		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 50, "Gå"));
+
+		ScheduledActivity[] arr = new ScheduledActivity[list.size()];
+		int i = 0;
+		for (ScheduledActivity s : list) {
+			arr[i++] = s;
+		}
+		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
 	}
 
 	@Override

@@ -80,7 +80,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		cgRepo.save(cg);
 		cgRepo.flush();
 		
-		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456");
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
@@ -119,7 +119,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		cgRepo.save(cg);
 		cgRepo.flush();
 		
-		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456", cg);
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456");
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
