@@ -70,7 +70,7 @@ NC.PatientSchema = function(descriptionId, tableId) {
 						
 						if (value.definition.type.code != 'NONE') {
 							inputValue = $('<input>');
-							inputValue.val((value.reported != null) ? value.actual : value.definition.goal);
+							inputValue.val((value.reported != null) ? value.actual : '');
 							inputValue.attr('size', 4);
 							inputValue.attr('id', 'rep-' + value.id);
 							if (today == value.date) {
@@ -78,9 +78,9 @@ NC.PatientSchema = function(descriptionId, tableId) {
 							} else {
 								inputValue.css('background', (!value.due) ? 'lightpink' : 'lightyellow');
 //								XXX: Disable up-coming days.	
-//								if (value.due) {
-//									inputValue.attr('disabled', true);
-//								}
+								if (value.due) {
+									inputValue.attr('disabled', true);
+								}
 							}
 							inputValue.change(function() {
 								public.accept(value.id, inputValue.val());
