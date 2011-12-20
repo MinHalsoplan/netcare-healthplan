@@ -101,7 +101,11 @@ NC.PatientSchema = function(descriptionId, tableId) {
 						
 						if (curDay != value.day.value) {
 							curDay = value.day.value;
-							dayField = curDay + '<br/>' + value.date;
+							if (value.day.value == today) {
+								dayField = '<b>' + curDay + '<br/>' + value.date + '</b>';								
+							} else {
+								dayField = curDay + '<br/>' + value.date;
+							}
 						} else {
 							dayField = '-&nbsp;"&nbsp;-';
 						}
