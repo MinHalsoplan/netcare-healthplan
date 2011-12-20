@@ -40,7 +40,7 @@
 					console.log("Found " + data.data.length + " patients.");
 					response($.map(data.data, function(item) {
 						console.log("Processing item: " + item.name);
-						return { label : item.name, value : item.name, patientId : item.id };
+						return { label : item.name + ' (' + item.civicRegistrationNumber + ')', value : item.name, patientId : item.id };
 					}));
 				});
 			},

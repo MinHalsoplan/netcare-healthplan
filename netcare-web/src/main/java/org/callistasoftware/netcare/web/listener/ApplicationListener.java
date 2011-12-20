@@ -66,7 +66,7 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		cgRepo.flush();
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198205134656");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198212121213");
 		bean.save(p1);
 		
 		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212");
