@@ -21,9 +21,10 @@ NC.PatientSchema = function(descriptionId, tableId) {
 	
 	var _descriptionId = descriptionId;
 	var _tableId = tableId;
+	var _lastUpdatedId = -1;
 	
 	var _updateDescription = function() {
-		console.log("Updating ordination table description");
+		console.log("Updating schema table description");
 		if (_schemaCount == 0) {
 			$('#' + _descriptionId).html('Inga aktuella aktiviteter').show();
 			$('#' + _tableId).hide();
@@ -39,8 +40,19 @@ NC.PatientSchema = function(descriptionId, tableId) {
 			_updateDescription();
 		},
 		
+		focus : function() {
+			console.log('set focus : ' + _lastUpdatedId);
+			if (_lastUpdatedId != -1) {
+				$('#rep-' + _lastUpdatedId).focus();
+			}
+		},
+		
 		list : function() {
 			console.log("Load activitues for the patient");
+			var today = $.datepicker.formatDate( 'yy-m-d', new Date(), null );
+			var curDay = '';
+			var curActivity = '';
+			var util = NC.Util();
 			$.ajax({
 				url : _baseUrl + 'schema',
 				dataType : 'json',
@@ -51,40 +63,58 @@ NC.PatientSchema = function(descriptionId, tableId) {
 					$('#' + tableId + ' tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.name);
-						
-						var util = NC.Util();
-						var inputCol = $('<td>');
+						console.log("Processing index " + index + " value: " + value.reported + ", " + value.actual);
+												
+						var reportField = $('<div>');
 						var inputValue;
-						if (value.targetValue > 0) {
+						
+						if (value.definition.type.code != 'NONE') {
 							inputValue = $('<input>');
-							inputValue.val(value.targetValue);
+							inputValue.val((value.reported != null) ? value.actual : value.definition.goal);
+							inputValue.attr('size', 4);
+							inputValue.attr('id', 'rep-' + value.id);
+							if (today == value.date) {
+								inputValue.css('background', 'lightgreen');
+							} else {
+								inputValue.css('background', (!value.due) ? 'lightpink' : 'lightyellow');
+//								XXX: Disable up-coming days.	
+//								if (value.due) {
+//									inputValue.attr('disabled', true);
+//								}
+							}
+							inputValue.change(function() {
+								public.accept(value.id, inputValue.val());
+							});
+							var editIcon = util.createIcon('bullet_accept', null);
+							editIcon.css('align', 'right');
+							inputValue.appendTo(reportField);
+							reportField.append(editIcon);
 						} else {
-							inputValue = '&nbsp;'
+							inputValue = '&nbsp;';
+							inputValue.appendTo(reportField);
+						}						
+						
+						if (curDay != value.day.value) {
+							curDay = value.day.value;
+							dayField = curDay + '<br/>' + value.date;
+						} else {
+							dayField = '-&nbsp;"&nbsp;-';
 						}
 						
-						
-						var editIcon = util.createIcon('bullet_accept', function() {
-							public.accept(value.id, inputValue.val());
-						});						
-						var denyIcon = util.createIcon("bullet_deny", null);
-						
-						var actionCol = $('<td>');
-						actionCol.css('text-align', 'right');
-						
-						if (value.due) {
-							editIcon.appendTo(actionCol);
+						var activity = value.definition.type.name + "<br/>" + value.definition.goal + '&nbsp;' + value.definition.type.unit.value;
+						if (curActivity != activity) {
+							curActivity = activity;
+							activityField = curActivity;
 						} else {
-							denyIcon.appendTo(actionCol);
-						}						
-						inputCol.html(inputValue);
-
+							activityField = '-&nbsp;"&nbsp;-';
+						}
+						
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
-										$('<td>').html(value.scheduledTime)).append(
-												$('<td>').html(value.name)).append(
-														inputCol).append(
-																actionCol));
+										$('<td>').html(dayField)).append(
+												$('<td>').html(value.time)).append(
+														$('<td>').css('text-align', 'center').html(activityField)).append(
+																$('<td>').html(reportField)));
 					});
 					
 					console.log("Updating ordination count to: " + data.data.length);
@@ -101,9 +131,9 @@ NC.PatientSchema = function(descriptionId, tableId) {
 		 * View a single ordination
 		 */
 		accept : function(id, value) {
-			console.log("GET accept activity with id: " + id + ', value: ' + value);
-			var url = _baseUrl + id + '/accept/' + value;
-			
+			console.log("POST accept activity with id: " + id + ', value: ' + value);
+			var url = _baseUrl + "schema/" + id + '/accept/' + value;
+			_lastUpdatedId = id;
 			$.ajax({
 				url : url,
 				type : 'post',
@@ -111,6 +141,7 @@ NC.PatientSchema = function(descriptionId, tableId) {
 					console.log('Accept of activity succeeded.');
 					new NC.Util().processServiceResult(data);
 					public.list();
+					public.focus();
 				}
 			});
 		},

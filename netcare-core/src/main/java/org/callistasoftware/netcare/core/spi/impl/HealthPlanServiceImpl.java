@@ -114,7 +114,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		Calendar c = Calendar.getInstance();
 		c.setFirstDayOfWeek(1);
 		
-		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
@@ -123,7 +123,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		
 		Date startDate = c.getTime();
 
-		c.add(Calendar.WEEK_OF_YEAR, 2);
+		c.add(Calendar.WEEK_OF_YEAR, 3);
 		Date endDate = c.getTime();
 		List<ScheduledActivityEntity> scheduledActivities= new LinkedList<ScheduledActivityEntity>();
 
@@ -273,14 +273,18 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);	
 		Frequency freq = activityDefinition.getFrequency();
+		log.debug("Schedule activities for: {}", activityDefinition);
 		while (cal.getTime().getTime() <= activityDefinition.getHealthPlan().getEndDate().getTime()) {
+			log.debug("Schedule day: {}", cal.getTime());
 			if (freq.getFrequencyDay().isSet(cal)) {
+				log.debug("Perform schedule: {}", cal.getTime());
 				for (FrequencyTime time : freq.getTimes()) {
-					cal.set(Calendar.HOUR, time.getHour());
+					cal.set(Calendar.HOUR_OF_DAY, time.getHour());
 					cal.set(Calendar.MINUTE, time.getMinute());
 					ScheduledActivityEntity scheduledActivity = activityDefinition.createScheduledActivityEntity(cal.getTime());
 					scheduledActivity.setTargetValue(activityDefinition.getActivityTarget());
 					scheduledActivityRepository.save(scheduledActivity);
+					log.debug("Save scheduled activity day: {}", cal.getTime());
 				}
 			}
 			cal.add(Calendar.DATE, 1);
@@ -298,5 +302,16 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		
 		log.debug("Found {} health plan activities for health plan {}", entity.getActivityDefinitions().size(), healthPlanId);
 		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntities(entity.getActivityDefinitions()), new ListEntitiesMessage(ActivityDefinitionEntity.class, entity.getActivityDefinitions().size()));
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> reportReady(
+			Long scheduledActivityId, int value) {
+		log.info("Report done for scheduled activity {} value {}", scheduledActivityId, value);
+		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(scheduledActivityId);
+		entity.setReportedTime(new Date());
+		entity.setActualValue(value);
+		scheduledActivityRepository.save(entity);
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(entity), new GenericSuccessMessage());
 	}
 }

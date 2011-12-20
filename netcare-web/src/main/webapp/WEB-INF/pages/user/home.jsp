@@ -40,14 +40,12 @@
 			<table id="schemaTable" class="bordered-table zebra-striped">
 				<thead>
 					<tr>
-						<th><spring:message code="time" />
+						<th colspan='2'><spring:message code="time" />
 						</th>
-						<th><spring:message code="name" />
+						<th><spring:message code="ActivityDefinitionEntity" />
 						</th>
-						<th><spring:message code="value" />
+						<th><spring:message code="reportValue" />
 						</th>						
-						<th><spring:message code="report"/>
-						</th>
 					</tr>
 				</thead>
 				<tbody>

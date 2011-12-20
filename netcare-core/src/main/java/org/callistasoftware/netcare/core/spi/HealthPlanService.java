@@ -86,4 +86,13 @@ public interface HealthPlanService {
 	 * @return the result.
 	 */
 	ServiceResult<ScheduledActivity[]> getActivitiesForPatient(final PatientBaseView patient);
+	
+	/**
+	 * Reports on an activity and retruns the update.
+	 * 
+	 * @param scheduledActivityId the id.
+	 * @param value the value.
+	 * @return an updated {@link ScheduledActivity}
+	 */
+	ServiceResult<ScheduledActivity> reportReady(final Long scheduledActivityId, final int value);
 }

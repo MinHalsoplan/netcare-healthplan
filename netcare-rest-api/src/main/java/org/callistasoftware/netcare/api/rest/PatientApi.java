@@ -56,4 +56,11 @@ public class PatientApi {
 		PatientBaseView pv = (PatientBaseView)auth.getPrincipal();
 		return planService.getActivitiesForPatient(pv);
 	}
+	
+	@RequestMapping(value="/schema/{id}/accept/{value}", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ScheduledActivity> report(@PathVariable(value="id") final Long id,
+			@PathVariable(value="value") final int value, final Authentication auth) {
+		return planService.reportReady(id, value);
+	}
 }

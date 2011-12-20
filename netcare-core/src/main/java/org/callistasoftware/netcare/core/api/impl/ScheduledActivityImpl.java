@@ -23,11 +23,16 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 public class ScheduledActivityImpl implements ScheduledActivity {
 
+	private static final long serialVersionUID = 1L;
+	
 	private long id;
 	private boolean due;
+	private int actual;
+	private String reported;
 	private String scheduledDate;
 	private String scheduledTime;
 	private Option scheduledDay;
@@ -44,10 +49,14 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		a.due = time.after(new Date());
 		a.scheduledDate = formatDate(time);
 		a.scheduledTime = formatTime(time);
+		if (entity.getReportedTime() != null) {
+			a.reported = formatDate(entity.getReportedTime()) + " " + formatTime(entity.getReportedTime());
+		}
+		a.actual = entity.getActualValue();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(time);
 		int day = cal.get(Calendar.DAY_OF_WEEK);
-		a.scheduledDay = new Option("weekday." + day, null);
+		a.scheduledDay = new Option("weekday." + day, LocaleContextHolder.getLocale());
 		
 		a.week = cal.get(Calendar.WEEK_OF_YEAR);
 		
@@ -70,7 +79,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public String getScheduledTime() {
+	public String getTime() {
 		// TODO Auto-generated method stub
 		return scheduledTime;
 	}
@@ -82,18 +91,18 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return due;
 	}
 
-	public String getScheduledDate() {
+	public String getDate() {
 		return scheduledDate;
 	}
 
 	@Override
-	public ActivityDefinition getActivityDefinition() {
+	public ActivityDefinition getDefinition() {
 		// TODO Auto-generated method stub
 		return activityDefinition;
 	}
 
 	@Override
-	public Option getScheduledDay() {
+	public Option getDay() {
 		// TODO Auto-generated method stub
 		return scheduledDay;
 	}
@@ -103,5 +112,13 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		// TODO Auto-generated method stub
 		return week;
 	}
-	
+
+	public int getActual() {
+		return actual;
+	}
+
+	public String getReported() {
+		return reported;
+	}
+
 }

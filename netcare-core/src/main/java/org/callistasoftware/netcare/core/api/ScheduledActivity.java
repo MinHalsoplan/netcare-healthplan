@@ -16,13 +16,21 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
-public interface ScheduledActivity {
+/**
+ * 
+ * @author Peter
+ *
+ */
+public interface ScheduledActivity extends Serializable {
 	long getId();
-	Option getScheduledDay();
-	String getScheduledTime();
-	String getScheduledDate();
-	ActivityDefinition getActivityDefinition();
+	Option getDay();
+	String getTime();
+	String getDate();
+	ActivityDefinition getDefinition();
 	boolean isDue();
 	int getWeek();
+	int getActual();
+	String getReported();
 }
