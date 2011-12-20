@@ -73,6 +73,7 @@ NC.PatientSchema = function(descriptionId, tableId) {
 							inputValue.val((value.reported != null) ? value.actual : '');
 							inputValue.attr('size', 4);
 							inputValue.attr('id', 'rep-' + value.id);
+
 							if (today == value.date) {
 								inputValue.css('background', 'lightgreen');
 							} else {
@@ -82,13 +83,17 @@ NC.PatientSchema = function(descriptionId, tableId) {
 									inputValue.attr('disabled', true);
 								}
 							}
+							
 							inputValue.change(function() {
 								public.accept(value.id, inputValue.val());
 							});
-							var editIcon = util.createIcon('bullet_accept', null);
-							editIcon.css('align', 'right');
 							inputValue.appendTo(reportField);
-							reportField.append(editIcon);
+
+							if (!value.due) {
+								var editIcon = util.createIcon('bullet_accept', null);
+								editIcon.css('align', 'right');
+								reportField.append(editIcon);
+							}
 						} else {
 							inputValue = '&nbsp;';
 							inputValue.appendTo(reportField);
