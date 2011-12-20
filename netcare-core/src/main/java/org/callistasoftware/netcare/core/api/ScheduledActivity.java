@@ -19,9 +19,10 @@ package org.callistasoftware.netcare.core.api;
 
 public interface ScheduledActivity {
 	long getId();
+	Option getScheduledDay();
 	String getScheduledTime();
-	int getTargetValue();
-//	ActivityDefinition getActivityDefinition();
-	String getName();
+	String getScheduledDate();
+	ActivityDefinition getActivityDefinition();
 	boolean isDue();
+	int getWeek();
 }

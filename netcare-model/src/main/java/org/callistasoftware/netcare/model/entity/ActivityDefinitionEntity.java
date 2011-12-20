@@ -53,7 +53,7 @@ public class ActivityDefinitionEntity {
     
     public static ActivityDefinitionEntity newEntity(HealthPlanEntity ordinationEntity, ActivityTypeEntity activityType, Frequency frequency) {
     	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
-    	entity.setOrdination(ordinationEntity);
+    	entity.setHealthPlan(ordinationEntity);
     	entity.setActivityType(activityType);
     	entity.setFrequency(frequency);
     	ordinationEntity.addActivityDefinition(entity);
@@ -64,11 +64,11 @@ public class ActivityDefinitionEntity {
 		return id;
 	}
 	
-	protected void setOrdination(HealthPlanEntity ordination) {
-		this.healthPlan = EntityUtil.notNull(ordination);
+	protected void setHealthPlan(HealthPlanEntity healthPlan) {
+		this.healthPlan = EntityUtil.notNull(healthPlan);
 	}
 
-	public HealthPlanEntity getOrdination() {
+	public HealthPlanEntity getHealthPlan() {
 		return healthPlan;
 	}
 

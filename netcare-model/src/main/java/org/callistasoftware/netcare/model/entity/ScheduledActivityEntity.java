@@ -24,6 +24,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -52,6 +53,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	private int targetValue;
 	
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	@JoinColumn(name="activity_def_id")
 	private ActivityDefinitionEntity activityDefinition;
 	
 	ScheduledActivityEntity() {
@@ -103,6 +105,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Override
 	public int compareTo(ScheduledActivityEntity r) {
 		return scheduledTime.compareTo(r.getScheduledTime());
+	}
+	
+	public boolean equals(ScheduledActivityEntity o) {
+		if (o == null) {
+			return false;
+		}
+		return (this == o) || o.getId().equals(this.id); 
 	}
 
 	/**

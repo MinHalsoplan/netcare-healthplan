@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.model.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -32,6 +33,7 @@ public class CareGiverEntity extends UserEntity {
 	private String hsaId;
 		
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	@JoinColumn(name="care_unit_id")
 	private CareUnitEntity careUnit;
 	
 	CareGiverEntity() {}

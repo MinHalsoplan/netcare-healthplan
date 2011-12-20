@@ -26,10 +26,10 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name="id")
 public class PatientEntity extends UserEntity {
 
-	@Column(length=16, nullable=false, unique=true)
+	@Column(name="civic_reg_number", length=16, nullable=false, unique=true)
 	private String civicRegistrationNumber;
 	
-	@Column
+	@Column(name="is_mobile")
 	private boolean isMobile;	
 	
 	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {

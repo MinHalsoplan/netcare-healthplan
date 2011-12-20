@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.Calendar;
+
 /**
  * Keeps track of days using a bitmask datatype.
  * 
@@ -53,6 +55,16 @@ public class FrequencyDay {
 	 */
 	public int getDays() {
 		return dayMask;
+	}
+	
+	/**
+	 * Returns if date is set.
+	 * 
+	 * @param calendar the date.
+	 * @return true if set, otherwise false.
+	 */
+	public boolean isSet(Calendar calendar) {
+		return isSet(toDay(calendar));
 	}
 	
 	/**
@@ -187,4 +199,26 @@ public class FrequencyDay {
 		f.setDays(Integer.parseInt(frequencyDay, 2));
 		return f;
 	}
+	
+	
+	private static int toDay(Calendar calendar) {
+		int day = calendar.get(Calendar.DAY_OF_WEEK);
+		switch (day) {
+		case Calendar.MONDAY:
+			return MON;
+		case Calendar.TUESDAY:
+			return TUE;
+		case Calendar.WEDNESDAY:
+			return WED;
+		case Calendar.THURSDAY:
+			return THU;
+		case Calendar.FRIDAY:
+			return FRI;
+		case Calendar.SATURDAY:
+			return SAT;
+		case Calendar.SUNDAY:
+			return SUN;
+		}
+		throw new IllegalArgumentException("Invalid day: " + day);
+	}	
 }

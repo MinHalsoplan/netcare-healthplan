@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
@@ -24,4 +25,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScheduledActivityRepository extends JpaRepository<ScheduledActivityEntity, Long> {
 	List<ScheduledActivityEntity> findByActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity);
+	List<ScheduledActivityEntity> findByActivityDefinitionAndScheduledTimeBetween(ActivityDefinitionEntity activityDefinitionEntity, Date start, Date end);
 }

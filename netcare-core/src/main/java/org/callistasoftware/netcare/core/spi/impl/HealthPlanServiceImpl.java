@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.spi.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +41,7 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -50,6 +52,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +87,12 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	@Autowired
 	private ActivityDefinitionRepository activityDefintionRepository;
 	
+	@Autowired
+	private ScheduledActivityRepository scheduledActivityRepository;
+	
+	@Autowired
+	private HealthPlanRepository healthPlanRepository;
+	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
@@ -100,21 +109,37 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	}
 	
 	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient(PatientBaseView patient) {
-		List<ScheduledActivity> list = new LinkedList<ScheduledActivity>();
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.HOUR, -6);
-		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 0, "Springa"));
-		c.add(Calendar.HOUR, 6);		
-		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 0, "Springa"));
-		c.add(Calendar.HOUR, 6);
-		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 2, "Gå"));
-		c.add(Calendar.HOUR, 12);
-		list.add(ScheduledActivityImpl.newBean(1, c.getTime(), 50, "Gå"));
+		c.setFirstDayOfWeek(1);
+		
+		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		c.add(Calendar.WEEK_OF_YEAR, -1);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		
+		Date startDate = c.getTime();
 
-		ScheduledActivity[] arr = new ScheduledActivity[list.size()];
-		int i = 0;
-		for (ScheduledActivity s : list) {
-			arr[i++] = s;
+		c.add(Calendar.WEEK_OF_YEAR, 2);
+		Date endDate = c.getTime();
+		List<ScheduledActivityEntity> scheduledActivities= new LinkedList<ScheduledActivityEntity>();
+
+		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+		
+		List<HealthPlanEntity> healthPlans = healthPlanRepository.findByForPatient(forPatient);
+		
+		for (HealthPlanEntity plan : healthPlans) {
+			for (ActivityDefinitionEntity activityDefinition : plan.getActivityDefinitions()) {
+				scheduledActivities.addAll(scheduledActivityRepository.findByActivityDefinitionAndScheduledTimeBetween(activityDefinition, startDate, endDate));				
+			}
+		}
+		
+		Collections.sort(scheduledActivities);
+		
+		ScheduledActivity[] arr = new ScheduledActivity[scheduledActivities.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = ScheduledActivityImpl.newFromEntity(scheduledActivities.get(i));
 		}
 		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
 	}
@@ -224,6 +249,8 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		final ActivityDefinitionEntity savedEntity = this.activityDefintionRepository.save(newEntity);
 		log.debug("Activity defintion saved.");
 		
+		scheduleActivities(savedEntity);
+		
 		entity.addActivityDefinition(savedEntity);
 		final HealthPlanEntity savedOrdination = this.repo.save(entity);
 		log.debug("Ordination saved");
@@ -231,6 +258,31 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		log.debug("Creating result. Success!");
 		final HealthPlan result = HealthPlanImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
+	}
+	
+	/**
+	 * Schedules activities.
+	 * 
+	 * @param activityDefinition the activity defintion.
+	 */
+	private void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(activityDefinition.getHealthPlan().getStartDate());
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);	
+		Frequency freq = activityDefinition.getFrequency();
+		while (cal.getTime().getTime() <= activityDefinition.getHealthPlan().getEndDate().getTime()) {
+			if (freq.getFrequencyDay().isSet(cal)) {
+				for (FrequencyTime time : freq.getTimes()) {
+					cal.set(Calendar.HOUR, time.getHour());
+					cal.set(Calendar.MINUTE, time.getMinute());
+					ScheduledActivityEntity scheduledActivity = activityDefinition.createScheduledActivityEntity(cal.getTime());
+					scheduledActivity.setTargetValue(activityDefinition.getActivityTarget());
+					scheduledActivityRepository.save(scheduledActivity);
+				}
+			}
+			cal.add(Calendar.DATE, 1);
+		}
 	}
 
 }

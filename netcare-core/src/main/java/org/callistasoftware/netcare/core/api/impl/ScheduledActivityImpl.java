@@ -16,34 +16,51 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 
 public class ScheduledActivityImpl implements ScheduledActivity {
 
 	private long id;
-	private  String name;
-	private int targetValue;
 	private boolean due;
+	private String scheduledDate;
 	private String scheduledTime;
+	private Option scheduledDay;
+	private int week;
+	private ActivityDefinition activityDefinition;
 	
-	/** For test only */
-	public static ScheduledActivity newBean(long id, Date time, int target, String name) {
+	
+	public static ScheduledActivity newFromEntity(ScheduledActivityEntity entity) {
 		ScheduledActivityImpl a = new ScheduledActivityImpl();
 		
-		a.id = id;
-		a.targetValue = target;
-		a.name = name;
+		a.id = entity.getId();
+		a.activityDefinition = ActivityDefintionImpl.newFromEntity(entity.getActivityDefinitionEntity());
+		Date time = entity.getScheduledTime();
 		a.due = time.after(new Date());
-		a.scheduledTime = format(time);
+		a.scheduledDate = formatDate(time);
+		a.scheduledTime = formatTime(time);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(time);
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		a.scheduledDay = new Option("weekday." + day, null);
+		
+		a.week = cal.get(Calendar.WEEK_OF_YEAR);
 		
 		return a;
 	}
 	
 	//
-	static String format(Date time) {
-		return String.format("%1$tF %1$tR", time);
+	static String formatDate(Date time) {
+		return String.format("%1$tF", time);
+	}
+	
+	static String formatTime(Date time) {
+		return String.format("%1$tR", time);		
 	}
 	
 	@Override
@@ -58,22 +75,33 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return scheduledTime;
 	}
 
-	@Override
-	public int getTargetValue() {
-		// TODO Auto-generated method stub
-		return targetValue;
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return name;
-	}
-
+	
 	@Override
 	public boolean isDue() {
 		// TODO Auto-generated method stub
 		return due;
+	}
+
+	public String getScheduledDate() {
+		return scheduledDate;
+	}
+
+	@Override
+	public ActivityDefinition getActivityDefinition() {
+		// TODO Auto-generated method stub
+		return activityDefinition;
+	}
+
+	@Override
+	public Option getScheduledDay() {
+		// TODO Auto-generated method stub
+		return scheduledDay;
+	}
+
+	@Override
+	public int getWeek() {
+		// TODO Auto-generated method stub
+		return week;
 	}
 	
 }

@@ -31,7 +31,7 @@ public class CareUnitEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length=64, unique=true, nullable=false)
+	@Column(name="hsa_id", length=64, unique=true, nullable=false)
 	private String hsaId;
 	
 	@Column(length=64)

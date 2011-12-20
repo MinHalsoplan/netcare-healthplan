@@ -37,7 +37,7 @@ import javax.persistence.TemporalType;
 
 
 @Entity
-@Table(name="nc_ordination")
+@Table(name="nc_health_plan")
 public class HealthPlanEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
