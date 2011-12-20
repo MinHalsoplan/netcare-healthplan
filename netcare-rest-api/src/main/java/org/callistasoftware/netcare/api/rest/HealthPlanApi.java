@@ -45,7 +45,7 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/create", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlan> createOrdination(@RequestBody final HealthPlanImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
+	public ServiceResult<HealthPlan> createHealthPlan(@RequestBody final HealthPlanImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
 		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getPrincipal(), patient});
 		
 		return this.service.createNewHealthPlan(dto, (CareGiverBaseView) auth.getPrincipal(), patient);
@@ -53,7 +53,7 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/list", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<HealthPlan[]> listOrdinations(@PathVariable(value="patient") final Long patient, final Authentication auth) {
+	public ServiceResult<HealthPlan[]> listHealthPlans(@PathVariable(value="patient") final Long patient, final Authentication auth) {
 		log.info("Care giver {} is listing ordinations for patient {}", ((CareGiverBaseView) auth.getPrincipal()).getHsaId(), patient);
 		final ServiceResult<HealthPlan[]> ordinations = this.service.loadHealthPlansForPatient(patient);
 		
@@ -63,7 +63,7 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/{ordination}/delete", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<HealthPlan> deleteOrdination(@PathVariable(value="patient") final Long patient, @PathVariable(value="ordination") final Long ordination) {
+	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="patient") final Long patient, @PathVariable(value="ordination") final Long ordination) {
 		log.info("Deleting ordination {} for patient {}", ordination, patient);
 		return this.service.deleteHealthPlan(ordination);
 	}

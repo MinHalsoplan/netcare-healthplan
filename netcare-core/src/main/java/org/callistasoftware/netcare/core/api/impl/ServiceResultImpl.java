@@ -66,10 +66,6 @@ public class ServiceResultImpl<T extends Serializable> implements ServiceResult<
 	
 	@Override
 	public boolean isSuccess() {
-		if (this.success == true && !this.getErrorMessages().isEmpty()) {
-			throw new IllegalStateException("Service result is marked as successful, but it has error messages attached to it.");
-		}
-		
 		return this.success;
 	}
 
@@ -80,9 +76,6 @@ public class ServiceResultImpl<T extends Serializable> implements ServiceResult<
 
 	@Override
 	public T getData() {
-		if (!this.isSuccess()) {
-			throw new UnsupportedOperationException("The service operation was not successful. This method must only be invoked when the service operation was successful");
-		}
 		return this.data;
 	}
 

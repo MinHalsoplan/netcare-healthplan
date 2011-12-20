@@ -36,7 +36,7 @@
 				var patientId = <c:out value="${sessionScope.currentPatient.id}" />
 				var hp = new NC.HealthPlan();
 				
-				hp.listActivities(patientId, healthPlan, 'activitiesTable', function(data) {
+				hp.listActivities(healthPlan, 'activitiesTable', function(data) {
 					console.log("Callback executing...");
 				});
 				

@@ -107,6 +107,8 @@ public class HomeController extends ControllerSupport {
 			m.addAttribute("hideMessages", Boolean.TRUE);
 		}
 		
+		log.debug("Returning health plan with id: {}", result.getData().getId());
+		
 		return "admin/activity";
 	}
 	

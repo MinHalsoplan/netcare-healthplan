@@ -35,10 +35,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	};
 	
 	var _updateActivityTable = function(tableId) {
-		console.log("Updating activity table");
+		console.log("Updating activity table. Activity count = " + _activityCount);
 		if (_activityCount != 0) {
+			console.log("Show activity table");
 			$('#' + tableId).show();
 		} else {
+			console.log("Hide activity table");
 			$('#' + tableId).hide();
 		}
 	};
@@ -172,43 +174,46 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				dataType : 'json',
 				success : function(data) {
 					console.log("Successfully call to rest service");
-					console.log("Emptying the activity table");
-					$('#' + tableId + ' tbody > tr').empty();
-					
 					var util = new NC.Util();
-					
-					$.each(data.data, function(index, value) {
+					if (data.success) {
+						console.log("Emptying the activity table");
+						$('#' + tableId + ' tbody > tr').empty();
 						
-						console.log("Processing id: " + value.id);
-						
-						var infoIcon = util.createIcon('bullet_info', function() {
-							activityInfoFunction(value.id, currentPatientId);
+						$.each(data.data, function(index, value) {
+							
+							console.log("Processing id: " + value.id);
+							
+							var infoIcon = util.createIcon('bullet_info', function() {
+								activityInfoFunction(value.id, currentPatientId);
+							});
+							
+							var deleteIcon = util.createIcon('bullet_delete', function() {
+								console.log("Delete icon clicked");
+								public.deleteActivity(currentPatientId, value.id);
+							});
+							
+							var actionCol = $('<td>');
+							actionCol.css('text-align', 'right');
+							
+							infoIcon.appendTo(actionCol);
+							deleteIcon.appendTo(actionCol);
+							
+							var tr = $('<tr>');
+							var type = $('<td>' + value.type.name + '</td>');
+							var goal = $('<td>' + value.goal + ' ' + value.type.unit.value + '</td>');
+							
+							tr.append(type);
+							tr.append(goal);
+							tr.append(actionCol);
+							
+							$('#' + tableId + ' tbody').append(tr);
 						});
 						
-						var deleteIcon = util.createIcon('bullet_delete', function() {
-							console.log("Delete icon clicked");
-							public.deleteActivity(currentPatientId, value.id);
-						});
-						
-						var actionCol = $('<td>');
-						actionCol.css('text-align', 'right');
-						
-						infoIcon.appendTo(actionCol);
-						deleteIcon.appendTo(actionCol);
-						
-						var tr = $('<tr>');
-						var type = $('<td>' + value.type.name + '</td>');
-						var goal = $('<td>' + value.goal + ' ' + value.type.unit.value + '</td>');
-						
-						tr.append(type);
-						tr.append(goal);
-						tr.append(actionCol);
-						
-						$('#' + tableId + ' tbody').append(tr);
-					});
-					
-					_activityCount = data.data.length;
-					_updateActivityTable(tableId);
+						_activityCount = data.data.length;
+						_updateActivityTable(tableId);
+					} else {
+						util.processServiceResult(data);
+					}
 				}
 			});
 			
