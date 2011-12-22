@@ -40,7 +40,7 @@
 					console.log("Found " + data.data.length + " patients.");
 					response($.map(data.data, function(item) {
 						console.log("Processing item: " + item.name);
-						return { label : item.name + ' (' + item.civicRegistrationNumber + ')', value : item.name, patientId : item.id };
+						return { label : item.name + ' (' + util.formatCnr(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
 					}));
 				});
 			},
@@ -91,6 +91,13 @@
 		if (currentPatient.length == 0) {
 			$('#workWith').hide();
 		}
+		
+		var cnr = '<c:out value="${sessionScope.currentPatient.civicRegistrationNumber}" />';
+		console.log("Current patient cnr is: " + cnr);
+		if (cnr.length != 0) {
+			console.log("Displaying patient cnr");
+			$('#cnr').html('<strong>Personnummer:</strong> ' + util.formatCnr(cnr));
+		}
 	});
 </script>
 
@@ -109,9 +116,12 @@
 		<p id="currentpatient" style="display: block;">
 			<spring:message code="currentPatient" /> <a href="#"><c:out value="${sessionScope.currentPatient.name}" /></a>
 		</p>
+		<p>
+			<span id="cnr"></span>
+		</p>
 	</c:if>
 	<p>
-		<a href="#" data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" /><br />
+		<a data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" /><br />
 	</p>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">

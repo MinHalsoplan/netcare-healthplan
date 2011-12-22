@@ -167,6 +167,13 @@ NC.Util = function() {
 					containerDiv.removeClass('error');
 				}
 			});
+		},
+		
+		formatCnr : function(cnr) {
+			var first = cnr.substring(0, 8);
+			var last = cnr.substring(8, 12);
+			
+			return first + '-' + last;
 		}
 	};
 	
