@@ -35,6 +35,8 @@
 				
 				var units = new NC.Support();
 				units.loadOptions($('#activityTypeForm select[name="unit"]'));
+				
+				units.loadLatestReportedActivities('reportedActivities');
 			});
 		</script>
 	</netcare:header>
@@ -63,6 +65,21 @@
 					Nedan visas en översikt över de patienter som har rapporterat och genomfört
 					aktiviteter det senaste dygnet.
 				</p>
+				
+				<div id="reportedActivities">
+					<p id="noReportedActivities" style="display: none;"><spring:message code="noReportedActivities" /></p>
+					<table class="bordered-table zebra-striped" style="display: none">
+						<thead>
+							<th><spring:message code="patient" /></th>
+							<th><spring:message code="type" /></th>
+							<th><spring:message code="goal" /></th>
+							<th><spring:message code="reportedValue" /></th>
+							<th><spring:message code="when" /></th>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				
 			</section>
 			
 			<section id="alarms">

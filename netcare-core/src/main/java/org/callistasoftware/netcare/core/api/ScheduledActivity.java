@@ -33,4 +33,10 @@ public interface ScheduledActivity extends Serializable {
 	int getWeek();
 	int getActual();
 	String getReported();
+	
+	/**
+	 * Get the patient for this activity
+	 * @return
+	 */
+	PatientBaseView getPatient();
 }

@@ -28,7 +28,7 @@
 			</div>
 			
 			<div class="row">
-				<div id="pageMessages" class="span14">
+				<div id="pageMessages" class="span16">
 					<c:if test="${not empty requestScope.result and empty requestScope.hideMessages}">
 						<%--
 							Display any messages that we have

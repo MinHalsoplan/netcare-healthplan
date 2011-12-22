@@ -100,6 +100,69 @@ NC.Support = function() {
 				console.log("Got result: " + data);
 				callback(data);
 			});
+		},
+		
+		/**
+		 * Load the latest reported activities
+		 */
+		loadLatestReportedActivities : function(containerId) {
+			var url = _baseUrl + '/reported/latest';
+			console.log("Loading latest reported activities from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					var util = new NC.Util();
+					if (data.success) {
+						
+						$.each(data.data, function(index, value) {
+							console.log("Processing value: " + value);
+							
+							var patient = value.patient.name + ' (' + value.patient.civicRegistrationNumber + ')';
+							var unit = value.definition.type.unit.value;
+							var typeName = value.definition.type.name;
+							var goalString = value.definition.goal + ' ' + unit;
+							var reportedString = value.actual + ' ' + unit;
+							var reportedAt = value.reported;
+							
+							var tr = $('<tr>');
+							
+							var name = $('<td>' + patient + '</td>');
+							var type = $('<td>' + typeName + '</td>');
+							var goal = $('<td>' + goalString + '</td>');
+							var reported = $('<td>' + reportedString + '</td>');
+							var at = $('<td>' + reportedAt + '</td>');
+							
+							if (value.actual !== value.definition.goal) {
+								console.log("Value diff. Mark yellow");
+								reported.css('background-color', 'lightyellow');
+							}	
+							
+							tr.append(name);
+							tr.append(type);
+							tr.append(goal);
+							tr.append(reported);
+							tr.append(at);
+							
+							$('#' + containerId + ' table tbody').append(tr);
+							console.log("Appended to table body");
+						});
+						
+						var count = $('#' + containerId + ' table tbody tr').size();
+						if(count > 0) {
+							$('#' + containerId + ' table').show();
+							$('#' + containerId + ' p').hide();
+						} else {
+							$('#' + containerId + ' table').hide();
+							$('#' + containerId + ' p').show();
+						}
+						
+					} else {
+						util.processServiceResult(data);
+					}
+				}
+			});
 		}
 	};
 	

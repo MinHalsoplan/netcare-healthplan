@@ -18,10 +18,13 @@ package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -38,7 +41,16 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private Option scheduledDay;
 	private int week;
 	private ActivityDefinition activityDefinition;
+	private PatientBaseView patient;
 	
+	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
+		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			dtos[i] = ScheduledActivityImpl.newFromEntity(entities.get(i));
+		}
+		
+		return dtos;
+	}
 	
 	public static ScheduledActivity newFromEntity(ScheduledActivityEntity entity) {
 		ScheduledActivityImpl a = new ScheduledActivityImpl();
@@ -59,6 +71,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		a.scheduledDay = new Option("weekday." + day, LocaleContextHolder.getLocale());
 		
 		a.week = cal.get(Calendar.WEEK_OF_YEAR);
+		
+		a.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity().getHealthPlan().getForPatient());
 		
 		return a;
 	}
@@ -119,6 +133,11 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 
 	public String getReported() {
 		return reported;
+	}
+
+	@Override
+	public PatientBaseView getPatient() {
+		return this.patient;
 	}
 
 }

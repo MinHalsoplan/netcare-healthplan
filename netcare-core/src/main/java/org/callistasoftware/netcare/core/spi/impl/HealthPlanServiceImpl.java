@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -41,6 +42,7 @@ import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
@@ -48,6 +50,7 @@ import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
@@ -82,6 +85,9 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	
 	@Autowired
 	private CareGiverRepository careGiverRepository;
+	
+	@Autowired
+	private CareUnitRepository careUnitRepository;
 	
 	@Autowired
 	private PatientRepository patientRepository;
@@ -313,5 +319,18 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		entity.setActualValue(value);
 		scheduledActivityRepository.save(entity);
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(entity), new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit) {
+		log.info("Loading latest reported activities for all patients belonging to care unit {}", careUnit.getHsaId());
+		
+		final CareUnitEntity entity = this.careUnitRepository.findByHsaId(careUnit.getHsaId());
+		if (entity == null) {
+			ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, -1L));
+		}
+		
+		final List<ScheduledActivityEntity> activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
 	}
 }

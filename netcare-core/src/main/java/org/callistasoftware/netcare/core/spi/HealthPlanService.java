@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -95,4 +96,11 @@ public interface HealthPlanService {
 	 * @return an updated {@link ScheduledActivity}
 	 */
 	ServiceResult<ScheduledActivity> reportReady(final Long scheduledActivityId, final int value);
+	
+	/**
+	 * Load the latest reported activities for all patients that
+	 * has health plans belonging to the caller's care unit
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit);
 }
