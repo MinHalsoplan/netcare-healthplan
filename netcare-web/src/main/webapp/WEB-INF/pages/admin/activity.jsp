@@ -193,6 +193,7 @@
 					
 					var activityType = $('#activityForm select option:selected').val();
 					var goal = $('#activityForm input[name="activityGoal"]').val();
+					var startDate = $('input[name="startDate"]').val();
 					
 					var dayTimes = new Array();
 					$.each($('#activityForm input[name="day"]:checked'), function(index, value) {
@@ -219,6 +220,7 @@
 					var activity = new Object();
 					activity.goal = goal;
 					activity.type = at;
+					activity.startDate = startDate;
 					activity.dayTimes = dayTimes;
 					
 					var jsonObj = JSON.stringify(activity);
