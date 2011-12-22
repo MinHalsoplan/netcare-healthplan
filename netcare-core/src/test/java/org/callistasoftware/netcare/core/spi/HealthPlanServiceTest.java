@@ -29,6 +29,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.DayTimeImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
@@ -123,11 +124,22 @@ public class HealthPlanServiceTest extends TestSupport {
 		typeImpl.setUnit(new Option(MeasureUnit.KILOMETERS.name(), null));
 		
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
+		
 		// Monday and wednesday
-		impl.setDays(new int[]{0, 2});
-		impl.setGoal(12);
-		impl.setTimes(new String[] { "12:15", "18:45"});
-		impl.setType(typeImpl);
+		final DayTimeImpl dt = new DayTimeImpl();
+		dt.setDay("monday");
+		dt.setTimes(new String[]{"12:15", "18:45"});
+		
+		final DayTimeImpl dt2 = new DayTimeImpl();
+		dt.setDay("wednesday");
+		
+		dt2.setTimes(new String[]{"12:15", "18:45"});
+		
+		final DayTimeImpl[] dts = new DayTimeImpl[2];
+		dts[0] = dt;
+		dts[1] = dt2;
+		
+		impl.setDayTimes(dts);
 		
 		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), (ActivityDefinition) impl);
 		assertTrue(result.isSuccess());

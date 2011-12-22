@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -35,8 +36,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int goal;
 	private ActivityTypeImpl type;
 	
-	private int[] days;
-	private String[] times;
+	private DayTimeImpl[] dayTimes;
 	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
@@ -53,15 +53,15 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setGoal(entity.getActivityTarget());
 		
 		final List<FrequencyTime> frTimes = entity.getFrequency().getTimes();
-		final String[] times = new String[frTimes.size()];
-		
-		for (int i = 0; i < frTimes.size(); i++) {
-			final FrequencyTime time = frTimes.get(i);
-			times[i] = new StringBuilder().append(time.getHour()).append(":").append(time.getMinute()).toString();
-		}
-		
-		// FIXME - Implement full support
-		dto.setTimes(times);
+//		final String[] times = new String[frTimes.size()];
+//		
+//		for (int i = 0; i < frTimes.size(); i++) {
+//			final FrequencyTime time = frTimes.get(i);
+//			times[i] = new StringBuilder().append(time.getHour()).append(":").append(time.getMinute()).toString();
+//		}
+//		
+//		// FIXME - Implement full support
+//		dto.setTimes(times);
 		return dto;
 	}
 	
@@ -84,20 +84,11 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	}
 
 	@Override
-	public int[] getDays() {
-		return this.days;
+	public DayTime[] getDayTimes() {
+		return this.dayTimes;
 	}
 	
-	public void setDays(final int[] days) {
-		this.days = days;
-	}
-
-	@Override
-	public String[] getTimes() {
-		return this.times;
-	}
-	
-	public void setTimes(final String[] times) {
-		this.times = times;
+	public void setDayTimes(final DayTimeImpl[] dayTimes) {
+		this.dayTimes = dayTimes;
 	}
 }

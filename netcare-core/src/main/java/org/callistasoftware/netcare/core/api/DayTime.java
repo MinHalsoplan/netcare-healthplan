@@ -17,33 +17,22 @@
 package org.callistasoftware.netcare.core.api;
 
 /**
- * Defines an activity definition how it is represented
- * in the UI.
- * 
+ * Defines a day with times
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public interface ActivityDefinition {
+public interface DayTime {
 
 	/**
-	 * The desired goal of this definition
+	 * The week day
 	 * @return
 	 */
-	int getGoal();
+	String getDay();
 	
 	/**
-	 * The activity's type
+	 * Get the times in a string array, the format of each
+	 * element is HH:MM
 	 * @return
 	 */
-	ActivityType getType();
-	
-	/**
-	 * The days of week the activity should be
-	 * performed.
-	 * 
-	 * Valid values are: 0-6 (where 0 = monday)
-	 * 
-	 * @return
-	 */
-	DayTime[] getDayTimes();
+	String[] getTimes();
 }

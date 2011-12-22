@@ -14,36 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.core.api.impl;
 
-/**
- * Defines an activity definition how it is represented
- * in the UI.
- * 
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public interface ActivityDefinition {
+import org.callistasoftware.netcare.core.api.DayTime;
 
-	/**
-	 * The desired goal of this definition
-	 * @return
-	 */
-	int getGoal();
+public class DayTimeImpl implements DayTime {
+
+	private String day;
 	
-	/**
-	 * The activity's type
-	 * @return
-	 */
-	ActivityType getType();
-	
-	/**
-	 * The days of week the activity should be
-	 * performed.
-	 * 
-	 * Valid values are: 0-6 (where 0 = monday)
-	 * 
-	 * @return
-	 */
-	DayTime[] getDayTimes();
+	private String[] times;
+
+	@Override
+	public String getDay() {
+		return this.day;
+	}
+
+	@Override
+	public String[] getTimes() {
+		return this.times;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
+
+	public void setTimes(String[] times) {
+		this.times = times;
+	}
 }

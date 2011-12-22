@@ -105,31 +105,34 @@
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn"><netcare:image name="bullet_add" /> <c:out value="${title}" /></a>
 			</p>
-			<netcare:form title="${title}" id="createHealthPlanForm" classes="form-stacked">
-				<netcare:field name="name" label="${name}">
-					<input type="text" name="name" class="xlarge" />
-				</netcare:field>
-				
-				<netcare:field name="startDate" label="${startDate}">
-					<input type="text" name="startDate" class="xlarge" />
-				</netcare:field>
-				
-				<div class="row">
-					<div class="span6">
-						<div class="row">
-							<div class="span3">
-								<netcare:field name="duration" label="${duration}">
-									<input type="number" name="duration" class="medium" />
-								</netcare:field>
-							</div>
-							<div class="span3">
-								<netcare:field name="type" label="${type}">
-									<select name="type"></select>
-								</netcare:field>
+			<netcare:form id="createHealthPlanForm" classes="form-stacked">
+				<fieldset>
+					<legend>${title}</legend>
+					<netcare:field name="name" label="${name}">
+						<input type="text" name="name" class="xlarge" />
+					</netcare:field>
+					
+					<netcare:field name="startDate" label="${startDate}">
+						<input type="text" name="startDate" class="xlarge" />
+					</netcare:field>
+					
+					<div class="row">
+						<div class="span6">
+							<div class="row">
+								<div class="span3">
+									<netcare:field name="duration" label="${duration}">
+										<input type="number" name="duration" class="medium" />
+									</netcare:field>
+								</div>
+								<div class="span3">
+									<netcare:field name="type" label="${type}">
+										<select name="type"></select>
+									</netcare:field>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</fieldset>
 				
 				<div class="actions">
 					<input type="submit" class="btn primary" value="${title}" />

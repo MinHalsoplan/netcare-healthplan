@@ -27,6 +27,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -223,33 +224,20 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		 * Create the day frequence based on what the user
 		 * selected.
 		 */
-		log.debug("Processing the day frequence...");
+		log.debug("Processing the day and time frequence...");
 		final FrequencyDay dayFrequence = new FrequencyDay();
-		dayLoop:for (final int d : dto.getDays()) {
-			switch (d) {
-			case 0: dayFrequence.addDay(FrequencyDay.MON); continue dayLoop;
-			case 1: dayFrequence.addDay(FrequencyDay.TUE); continue dayLoop;
-			case 2: dayFrequence.addDay(FrequencyDay.WED); continue dayLoop;
-			case 3: dayFrequence.addDay(FrequencyDay.THU); continue dayLoop;
-			case 4: dayFrequence.addDay(FrequencyDay.FRI); continue dayLoop;
-			case 5: dayFrequence.addDay(FrequencyDay.SAT); continue dayLoop;
-			case 6: dayFrequence.addDay(FrequencyDay.SUN); continue dayLoop;
-			default:
-				throw new IllegalArgumentException("Value " + d + " is not a valid day");
-			} 
+		for (final DayTime dt : dto.getDayTimes()) {
+			
+			
+			/*
+			 * FIXME: PETER PERSISTERA
+			 */
+			throw new UnsupportedOperationException("IMPLEMENT PETER :)");
+			
 		}
-		
-		log.debug("Day frequence resolved to: {}", dayFrequence.getDays());
 		
 		final Frequency frequence = new Frequency();
 		frequence.setFrequencyDay(dayFrequence);
-		
-		log.debug("Processing the time frequency...");
-		for (final String time : dto.getTimes()) {
-			frequence.getTimes().add(FrequencyTime.fromTimeString(time));
-		}
-		
-		log.debug("Time frequence resolved to: {}", frequence.getTimes());
 		
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequence);
 		newEntity.setActivityTarget(dto.getGoal());
