@@ -35,6 +35,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	private int goal;
 	private ActivityTypeImpl type;
+	private String startDate;
 	
 	private DayTimeImpl[] dayTimes;
 	
@@ -90,5 +91,14 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	public void setDayTimes(final DayTimeImpl[] dayTimes) {
 		this.dayTimes = dayTimes;
+	}
+
+	@Override
+	public String getStartDate() {
+		return this.startDate;
+	}
+	
+	public void setStartDate(final String startDate) {
+		this.startDate = startDate;
 	}
 }

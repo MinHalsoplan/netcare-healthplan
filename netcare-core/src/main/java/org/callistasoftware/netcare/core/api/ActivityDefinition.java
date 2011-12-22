@@ -46,4 +46,10 @@ public interface ActivityDefinition {
 	 * @return
 	 */
 	DayTime[] getDayTimes();
+	
+	/**
+	 * Get the start date of this activity
+	 * @return
+	 */
+	String getStartDate();
 }
