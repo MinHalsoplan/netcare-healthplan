@@ -60,5 +60,5 @@ public interface ActivityDefinition {
 	 * 
 	 * @return the week frequency.
 	 */
-	int getWeekFrequency();
+	int getActivityRepeat();
 }

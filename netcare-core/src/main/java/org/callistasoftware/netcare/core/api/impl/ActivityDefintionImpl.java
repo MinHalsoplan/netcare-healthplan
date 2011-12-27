@@ -23,12 +23,13 @@ import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
- * Implementation of an activity defintion
+ * Implementation of an activity definition
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
@@ -38,7 +39,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int goal;
 	private ActivityTypeImpl type;
 	private String startDate;
-	private int weekFrequency;
+	private int activityRepeat;
 	
 	private DayTimeImpl[] dayTimes;
 	
@@ -55,8 +56,11 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
 		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
 		dto.setGoal(entity.getActivityTarget());
+		Frequency frequency = entity.getFrequency();
+		dto.setActivityRepeat(frequency.getWeekFrequency());
+		dto.setStartDate(ApiUtil.toString(entity.getStartDate()));
 		
-		final List<FrequencyDay> frDays = entity.getFrequency().getDays();
+		final List<FrequencyDay> frDays = frequency.getDays();
 		DayTime[] dayTimes = new DayTime[frDays.size()];
 		for (int i = 0; i < dayTimes.length; i++) {
 			DayTimeImpl dt = new DayTimeImpl();
@@ -108,13 +112,13 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		this.startDate = startDate;
 	}
 
-	public void setWeekFrequency(int weekFrequency) {
-		this.weekFrequency = weekFrequency;
+	public void setActivityRepeat(int weekFrequency) {
+		this.activityRepeat = weekFrequency;
 	}
 
 	@Override
-	public int getWeekFrequency() {
-		return weekFrequency;
+	public int getActivityRepeat() {
+		return activityRepeat;
 	}
 
 }

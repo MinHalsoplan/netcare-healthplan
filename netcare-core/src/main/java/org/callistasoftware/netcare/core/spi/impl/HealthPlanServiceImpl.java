@@ -125,7 +125,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		
 		Date startDate = ApiUtil.floor(c).getTime();
 
-		c.add(Calendar.DATE, 3*7);
+		c.add(Calendar.DATE, 4*7);
 		Date endDate = ApiUtil.ceil(c).getTime();
 
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
@@ -207,13 +207,13 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		log.debug("Activity type entity found and resolved");
 		
 		/*
-		 * Create the day frequence based on what the user
+		 * Create the day frequency based on what the user
 		 * selected.
 		 */
 		log.debug("Processing the day and time frequence...");
 		
 		final Frequency frequency = new Frequency();
-		frequency.setWeekFrequency(dto.getWeekFrequency());
+		frequency.setWeekFrequency(dto.getActivityRepeat());
 		for (final DayTime dt : dto.getDayTimes()) {
 			FrequencyDay fd = FrequencyDay.newFrequencyDay(ApiUtil.toIntDay(dt.getDay()));
 			for (String time : dt.getTimes()) {
@@ -221,6 +221,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 			}
 			frequency.addDay(fd);
 		}
+		log.debug("Frequency: {}", Frequency.marshal(frequency));
 		
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency);
 		newEntity.setActivityTarget(dto.getGoal());

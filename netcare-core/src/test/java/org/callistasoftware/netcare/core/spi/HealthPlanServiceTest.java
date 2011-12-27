@@ -147,9 +147,9 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		impl.setType(typeImpl);
 		impl.setGoal(12);
-		impl.setWeekFrequency(2);
+		impl.setActivityRepeat(2);
 		
-		// Monday and wednesday
+		// Monday and saturday
 		final DayTimeImpl dt = new DayTimeImpl();
 		dt.setDay("monday");
 		dt.setTimes(new String[]{"12:15", "18:45"});
@@ -170,7 +170,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityDefintionImpl impl2 = new ActivityDefintionImpl();
 		impl2.setType(typeImpl);
 		impl2.setGoal(10);
-		impl2.setWeekFrequency(0);
+		impl2.setActivityRepeat(0);
 		impl2.setStartDate("2013-01-30");
 		
 		// Wednesday (1 time activity)
