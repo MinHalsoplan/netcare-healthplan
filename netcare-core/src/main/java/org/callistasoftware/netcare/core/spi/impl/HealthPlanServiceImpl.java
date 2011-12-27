@@ -120,12 +120,12 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		Calendar c = Calendar.getInstance();
 		c.setFirstDayOfWeek(1);
 		
-		c.add(Calendar.WEEK_OF_YEAR, -1);
+		c.add(Calendar.DATE, -7);
 		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		
 		Date startDate = ApiUtil.floor(c).getTime();
 
-		c.add(Calendar.WEEK_OF_YEAR, 3);
+		c.add(Calendar.DATE, 3*7);
 		Date endDate = ApiUtil.ceil(c).getTime();
 
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
@@ -250,9 +250,6 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	private void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(activityDefinition.getStartDate());
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);	
 		Frequency freq = activityDefinition.getFrequency();
 		log.debug("Schedule activities for: {}, frequency {}", activityDefinition, Frequency.marshal(freq));
 		while (cal.getTime().compareTo(activityDefinition.getHealthPlan().getEndDate()) <= 0) {

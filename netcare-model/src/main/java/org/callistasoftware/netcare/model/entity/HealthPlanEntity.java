@@ -108,11 +108,7 @@ public class HealthPlanEntity {
 	public void setStartDate(Date startDate) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(EntityUtil.notNull(startDate));
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
-		this.startDate = c.getTime();
+		this.startDate = EntityUtil.floor(c).getTime();
 		calculateEnd();
 	}
 
@@ -185,11 +181,7 @@ public class HealthPlanEntity {
 			Calendar c = Calendar.getInstance();
 			c.setTime(startDate);
 			c.add(durationUnit == DurationUnit.MONTHS ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
-			c.set(Calendar.HOUR_OF_DAY, 23);
-			c.set(Calendar.MINUTE, 59);
-			c.set(Calendar.SECOND, 59);
-			c.set(Calendar.MILLISECOND, 999);
-			endDate = c.getTime();
+			endDate = EntityUtil.ceil(c).getTime();
 		} else {
 			endDate = null;
 		}

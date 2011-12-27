@@ -16,8 +16,22 @@
  */
  package org.callistasoftware.netcare.model.entity;
 
+import java.util.Calendar;
+
+/**
+ * Utility functions.
+ * 
+ * @author Peter
+ */
 public class EntityUtil {
 	
+	/**
+	 * Returns a non null object.
+	 * 
+	 * @param o the object.
+	 * @return the object if not null, otherwise an exception is raised.
+	 * @throws IllegalArgumentException
+	 */
 	public static <T> T notNull(T o) {
 		if (o == null) {
 			throw new IllegalArgumentException("Invalid value: null");
@@ -25,4 +39,32 @@ public class EntityUtil {
 		return o;
 	}
 	
+	/**
+	 * Truncates time to zero, keeps date.
+	 * 
+	 * @param cal the calendar to truncate.
+	 * @return the altered  calendar.
+	 */
+	public static Calendar floor(Calendar cal) {
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
+
+	/**
+	 * Sets time to 23:59:59:999, at en of day, keeps date.
+	 * 
+	 * @param cal the calendar to set to end of day.
+	 * @return the altered calendar.
+	 */
+	public static Calendar ceil(Calendar cal) {
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal;
+	}
+
 }

@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -128,6 +129,10 @@ public class ActivityDefinitionEntity {
 	 * @param startDate the start date, must be in the interval of the health plan.
 	 */
 	public void setStartDate(Date startDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(EntityUtil.notNull(startDate));
+		startDate = EntityUtil.floor(cal).getTime();
+		
 		Date min = getHealthPlan().getStartDate();
 		Date max = getHealthPlan().getEndDate();
 		if (startDate.compareTo(min) < 0 || startDate.compareTo(max) > 0) {
