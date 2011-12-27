@@ -24,7 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-//
+/**
+ * Various utility & conversion functions.
+ * 
+ * @author Peter
+ */
 public class ApiUtil {
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -43,6 +47,12 @@ public class ApiUtil {
 		}
 	}
 
+	/**
+	 * Returns the corresponding day as an integer.
+	 * 
+	 * @param day the string as specified in message properties (key)
+	 * @return the corresponding integer as specified in {@link Calendar}
+	 */
 	public static int toIntDay(String day) {
 		Integer d = intDay.get(day);
 		if (d == null) {
@@ -51,6 +61,12 @@ public class ApiUtil {
 		return d;
 	}
 	
+	/**
+	 * Returns the corresponing day as string.
+	 * 
+	 * @param day the day as specified in {@link Calendar}
+	 * @return the corresponfing string representation as specified in message.properties (key)
+	 */
 	public static String toStringDay(int day) {
 		String s = stringDay.get(day);
 		if (s == null) {
@@ -83,7 +99,12 @@ public class ApiUtil {
 		return (date == null) ? null : dateFormat.format(date);
 	}
 	
-	//
+	/**
+	 * Truncates time to zero, keeps date.
+	 * 
+	 * @param cal the calendar to truncate.
+	 * @return the altered  calendar.
+	 */
 	public static Calendar floor(Calendar cal) {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -92,7 +113,12 @@ public class ApiUtil {
 		return cal;
 	}
 
-	//
+	/**
+	 * Sets time to 23:59:59:999, at en of day, keeps date.
+	 * 
+	 * @param cal the calendar to set to end of day.
+	 * @return the altered calendar.
+	 */
 	public static Calendar ceil(Calendar cal) {
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
