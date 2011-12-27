@@ -89,7 +89,7 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity[]> getActivitiesForPatient(final PatientBaseView patient);
 	
 	/**
-	 * Reports on an activity and retruns the update.
+	 * Reports on an activity and returns the update.
 	 * 
 	 * @param scheduledActivityId the id.
 	 * @param value the value.

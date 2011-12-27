@@ -20,8 +20,10 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -36,6 +38,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int goal;
 	private ActivityTypeImpl type;
 	private String startDate;
+	private int weekFrequency;
 	
 	private DayTimeImpl[] dayTimes;
 	
@@ -53,16 +56,19 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
 		dto.setGoal(entity.getActivityTarget());
 		
-		final List<FrequencyTime> frTimes = entity.getFrequency().getTimes();
-//		final String[] times = new String[frTimes.size()];
-//		
-//		for (int i = 0; i < frTimes.size(); i++) {
-//			final FrequencyTime time = frTimes.get(i);
-//			times[i] = new StringBuilder().append(time.getHour()).append(":").append(time.getMinute()).toString();
-//		}
-//		
-//		// FIXME - Implement full support
-//		dto.setTimes(times);
+		final List<FrequencyDay> frDays = entity.getFrequency().getDays();
+		DayTime[] dayTimes = new DayTime[frDays.size()];
+		for (int i = 0; i < dayTimes.length; i++) {
+			DayTimeImpl dt = new DayTimeImpl();
+			dt.setDay(ApiUtil.toStringDay(frDays.get(i).getDay()));
+			List<FrequencyTime> frTimes = frDays.get(i).getTimes();
+			String[] times = new String[frTimes.size()];
+			for (int j = 0; j < times.length; j++) {
+				times[j] = FrequencyTime.marshal(frTimes.get(j));
+			}
+			dt.setTimes(times);
+		}
+		
 		return dto;
 	}
 	
@@ -101,4 +107,14 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public void setStartDate(final String startDate) {
 		this.startDate = startDate;
 	}
+
+	public void setWeekFrequency(int weekFrequency) {
+		this.weekFrequency = weekFrequency;
+	}
+
+	@Override
+	public int getWeekFrequency() {
+		return weekFrequency;
+	}
+
 }

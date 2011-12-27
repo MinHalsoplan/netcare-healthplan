@@ -24,37 +24,48 @@ package org.callistasoftware.netcare.model.entity;
  *
  */
 public class FrequencyTime {
+	static final String REC_SEP = ":";
+	/** hour 0-23 */
 	private int hour;
+	/** minute 0-59 */
 	private int minute;
 	
-	/**
-	 * Create a frequence time from the give string
-	 * @param time
-	 * @return
-	 */
-	public static FrequencyTime fromTimeString(final String time) {
-		final FrequencyTime fr = new FrequencyTime();
-		
-		if (time.length() != 5) {
-			throw new IllegalArgumentException("Invalid time format. Requires: XX:XX but was: " + time);
-		}
-		
-		if (!time.contains(":")) {
-			throw new IllegalArgumentException("Invalid time format. Requires: XX:XX but was: " + time);
-		}
-		
-		final String[] parts = time.split(":");
-		
-		fr.setHour(Integer.valueOf(parts[0]));
-		fr.setMinute(Integer.valueOf(parts[1]));
-		
-		return fr;
+	
+	private FrequencyTime() {}
+	
+	FrequencyTime(int hour, int minute) {
+		this.hour = hour;
+		this.minute = minute;
 	}
 	
-	void setHour(int hour) {
-		if (hour < 0 || hour > 23) {
-			throw new IllegalArgumentException("Invalid hour: " + hour);
+	public static FrequencyTime newFrequencyTime(int hour, int minute) {
+		return new FrequencyTime(hour, minute);
+	}
+	
+	public static String marshal(final FrequencyTime frequencyTime) {
+		return String.format("%d%s%d", frequencyTime.getHour(), REC_SEP, frequencyTime.getMinute());
+	}
+	
+	public static FrequencyTime unmarshal(final String frequencyTime) {
+		FrequencyTime ft = new FrequencyTime();
+		String[] arr = frequencyTime.split(REC_SEP);
+		if (arr.length != 2) {
+			throw new IllegalArgumentException("Invalid frequency format, expected [hour,minute]: " + frequencyTime);
 		}
+		ft.setHour(Integer.valueOf(arr[0]));
+		ft.setMinute(Integer.valueOf(arr[1]));
+
+		return ft;
+	}
+
+	static void validate(int value, int min, int max) {
+		if (value < 0 || value > max) {
+			throw new IllegalArgumentException(String.format("Number argument %d is out of range (%d-%d)", value, min, max));			
+		}
+	}
+	
+	private void setHour(int hour) {
+		validate(hour, 0, 23);
 		this.hour = hour;
 	}
 	
@@ -62,14 +73,28 @@ public class FrequencyTime {
 		return hour;
 	}
 	
-	void setMinute(int minute) {
-		if (minute < 0 || minute > 59) {
-			throw new IllegalArgumentException("Invalid minute: " + minute);
-		}
+	private void setMinute(int minute) {
+		validate(minute, 0, 59);
 		this.minute = minute;
 	}
 	
 	public int getMinute() {
 		return minute;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("FrequencyTime [ hour: %d, minute: %d ]", hour, minute);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof FrequencyTime)) {
+			return false;
+		} else if (this == o) {
+			return true;
+		}
+		FrequencyTime r = (FrequencyTime)o;
+		return (this.getHour() == r.getHour() && this.getMinute() == r.getMinute());
 	}
 }

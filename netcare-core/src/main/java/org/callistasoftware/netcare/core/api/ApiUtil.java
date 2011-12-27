@@ -16,77 +16,88 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
+//
 public class ApiUtil {
-	static final Package PKG = ApiUtil.class.getPackage();
-	static final String ENTITY_SUFFIX = "Entity";
-	private static final Map<Class<?>, Class<?>> classMap = new ConcurrentHashMap<Class<?>, Class<?>>();
+	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	@SuppressWarnings("unchecked")
-	public static <T> T copy(Class<T> targetInterface, Object source) throws Exception {
-		BeanProxy proxy = new BeanProxy();
-		for (Method m : targetInterface.getDeclaredMethods()) {
-			if ((m.getName().startsWith("is") || m.getName().startsWith("get")) && m.getParameterTypes().length == 0) {
-				Method ms = getMethodFor(source.getClass(), m.getName());
-				if (ms != null) {
-					proxy.set(m.getName(), marshal(m.getReturnType(), ms.invoke(source)));
-				}
-			}
+	static Map<String, Integer> intDay = new HashMap<String, Integer>();
+	static Map<Integer, String> stringDay = new HashMap<Integer, String>();
+	static {
+		intDay.put("monday", Calendar.MONDAY);
+		intDay.put("tuesday", Calendar.TUESDAY);
+		intDay.put("wednesday", Calendar.WEDNESDAY);
+		intDay.put("thursday", Calendar.THURSDAY);
+		intDay.put("friday", Calendar.FRIDAY);
+		intDay.put("saturday", Calendar.SATURDAY);
+		intDay.put("sunday", Calendar.SUNDAY);
+		for (Map.Entry<String, Integer> entry : intDay.entrySet()) {
+			stringDay.put(entry.getValue(), entry.getKey());
 		}
-		return (T)proxy.createProxy(targetInterface);
+	}
+
+	public static int toIntDay(String day) {
+		Integer d = intDay.get(day);
+		if (d == null) {
+			throw new IllegalArgumentException("No such day: " + day);
+		}
+		return d;
 	}
 	
-
-	private static Method getMethodFor(Class<?> source, String methodName) {
-		try {
-			return source.getMethod(methodName);
-		} catch (Exception e) {
-			return null;
+	public static String toStringDay(int day) {
+		String s = stringDay.get(day);
+		if (s == null) {
+			throw new IllegalArgumentException("No such day: " + day);
 		}
-	}
-
-
-	// XXX: shallow support only.                                                                                          
-	private static Object marshal(Class<?> returnType, Object value) throws Exception {
-		if (value == null) {
-			return null;
-		}
-		if (Collection.class.isAssignableFrom(returnType)) {
-			Collection<?> theColl = (Collection<?>)value;
-			for (Object o : theColl) {
-				if (o.getClass().getSimpleName().endsWith(ENTITY_SUFFIX)) {
-					LinkedList<Object> list = new LinkedList<Object>();
-					for (Object item : theColl) {
-						list.add(copy(getDtoClassFor(item.getClass()), item));
-					}
-					return list;					
-				}
-				break;
-			}
-		} else if (returnType.getPackage().equals(PKG) && !returnType.isEnum()) {
-			return copy(getDtoClassFor(returnType), value);
-		}
-		return value;
-	}
-
-	//                                                                                                                     
-	private static Class<?> getDtoClassFor(Class<?> source) throws ClassNotFoundException {
-		Class<?> t = classMap.get(source);
-		if (t == null) {
-			String name = source.getSimpleName();
-			if (name.endsWith(ENTITY_SUFFIX)) {
-				name = name.replace(ENTITY_SUFFIX, "");
-			}
-			t = Class.forName(PKG.getName() + "." + name);
-			classMap.put(source, t);
-		}
-		return t;
+		return s;
 	}	
+	
+	/**
+	 * Returns a date from a string date in the format yyyy-MM-dd
+	 * 
+	 * @param date the string according to yyyy-MM-dd
+	 * @return the date or null if input date is null
+	 */
+	public static Date toDate(String date) {
+		try {
+			return (date == null) ? null : dateFormat.parse(date);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+	
+	/**
+	 * Returns a string from a date.
+	 * 
+	 * @param date the date.
+	 * @return the string representation as 'yyyy-MM-dd' or null
+	 */
+	public static String toString(Date date) {
+		return (date == null) ? null : dateFormat.format(date);
+	}
+	
+	//
+	public static Calendar floor(Calendar cal) {
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
 
+	//
+	public static Calendar ceil(Calendar cal) {
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		return cal;
+	}
 }

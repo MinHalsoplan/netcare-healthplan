@@ -33,22 +33,39 @@ package org.callistasoftware.netcare.core.api;
  */
 import static org.junit.Assert.assertEquals;
 
-import org.callistasoftware.netcare.model.entity.PatientEntity;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Test;
 
-/** Concept doesn't work. */
+//
 public class ApiUtilTest {
 
 	@Test
-	public void testProxy() throws Exception {
-		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
-		p.getProperties().put("prop1", "val1");
-		p.getProperties().put("prop2", "val2");
-		
-		
-		Patient pi = ApiUtil.copy(Patient.class, p);
-		
-		assertEquals(pi.getName(), p.getName());
-		assertEquals(p.getProperties(), pi.getProperties());
+	public void testIntDays() throws Exception {
+		assertEquals(Calendar.MONDAY, ApiUtil.toIntDay("monday"));
+		assertEquals(Calendar.TUESDAY, ApiUtil.toIntDay("tuesday"));
+		assertEquals(Calendar.WEDNESDAY, ApiUtil.toIntDay("wednesday"));
+		assertEquals(Calendar.THURSDAY, ApiUtil.toIntDay("thursday"));
+		assertEquals(Calendar.FRIDAY, ApiUtil.toIntDay("friday"));
+		assertEquals(Calendar.SATURDAY, ApiUtil.toIntDay("saturday"));
+		assertEquals(Calendar.SUNDAY, ApiUtil.toIntDay("sunday"));
+	}
+	
+	@Test
+	public void testStringDays() throws Exception {
+		assertEquals("monday", ApiUtil.toStringDay(Calendar.MONDAY));
+		assertEquals("tuesday", ApiUtil.toStringDay(Calendar.TUESDAY));
+		assertEquals("wednesday", ApiUtil.toStringDay(Calendar.WEDNESDAY));
+		assertEquals("thursday", ApiUtil.toStringDay(Calendar.THURSDAY));
+		assertEquals("friday", ApiUtil.toStringDay(Calendar.FRIDAY));
+		assertEquals("saturday", ApiUtil.toStringDay(Calendar.SATURDAY));
+		assertEquals("sunday", ApiUtil.toStringDay(Calendar.SUNDAY));		
+	}
+	
+	@Test
+	public void dateTest() {
+		final String d = "2012-12-29";
+		assertEquals(d, ApiUtil.toString(ApiUtil.toDate(d)));
 	}
 }
