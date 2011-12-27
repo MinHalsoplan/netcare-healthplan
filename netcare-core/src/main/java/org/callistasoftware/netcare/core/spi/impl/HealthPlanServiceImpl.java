@@ -100,9 +100,6 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	@Autowired
 	private ScheduledActivityRepository scheduledActivityRepository;
 	
-	@Autowired
-	private HealthPlanRepository healthPlanRepository;
-
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {

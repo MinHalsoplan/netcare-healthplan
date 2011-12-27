@@ -46,11 +46,14 @@ public class FrequencyTime {
 		return String.format("%d%s%d", frequencyTime.getHour(), REC_SEP, frequencyTime.getMinute());
 	}
 	
-	public static FrequencyTime unmarshal(final String frequencyTime) {
+	public static FrequencyTime unmarshal(String frequencyTime) {
 		FrequencyTime ft = new FrequencyTime();
+		if (frequencyTime.indexOf(REC_SEP) == -1) {
+			frequencyTime += REC_SEP + "0";
+		}
 		String[] arr = frequencyTime.split(REC_SEP);
 		if (arr.length != 2) {
-			throw new IllegalArgumentException("Invalid frequency format, expected [hour,minute]: " + frequencyTime);
+			throw new IllegalArgumentException("Invalid frequency format, expected [hour:minute]: " + frequencyTime);
 		}
 		ft.setHour(Integer.valueOf(arr[0]));
 		ft.setMinute(Integer.valueOf(arr[1]));
