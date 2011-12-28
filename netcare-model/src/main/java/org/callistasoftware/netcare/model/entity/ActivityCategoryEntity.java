@@ -29,17 +29,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="activity_category")
+@Table(name="nc_activity_category")
 public class ActivityCategoryEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(nullable=false, unique=true)
+	@Column(length=64, nullable=false, unique=true)
 	private String name;
-	
-	@OneToMany(fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy="category", fetch=FetchType.LAZY)
 	private List<ActivityTypeEntity> activityTypes;
 	
 	ActivityCategoryEntity() {
