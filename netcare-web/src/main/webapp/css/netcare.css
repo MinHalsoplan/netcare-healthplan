@@ -19,3 +19,7 @@
 a:hover {
 	cursor: pointer;
 }
+
+.spinner {
+	background: url('/netcare-web/img/icons/ajax-loader.gif') no-repeat right;
+}

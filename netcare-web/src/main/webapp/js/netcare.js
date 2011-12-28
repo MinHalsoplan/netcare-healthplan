@@ -14,7 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 NC = {};
+
+$(function() {
+	
+	
+	/*
+	 * Bind all autocomplete boxes
+	 */
+	console.log("Bind autocomplete fields...");
+	$('.nc-autocomplete').autocomplete({
+		search : function(event, ui) {
+			$(this).addClass('spinner');
+		},
+		open : function(event, ui) {
+			$(this).removeClass('spinner');
+		}
+	});
+	console.log("done.");
+});
+
 
 
 

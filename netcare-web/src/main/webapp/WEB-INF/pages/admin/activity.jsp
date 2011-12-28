@@ -157,7 +157,7 @@
 				/*
 				 * Auto complete activity type field
 				 */
-				$('input[name="activityType"]').autocomplete({
+				$('input[name="activityType"]').autocomplete('option', {
 					source : function(request, response) {
 						types.search(request.term, function(data) {
 							console.log("Found " + data.data.length + " activity types");
@@ -345,7 +345,7 @@
 								<div class="span3">
 									<spring:message code="what" var="what" scope="page" />
 									<netcare:field name="activityType" label="${what}">
-										<input type="text" name="activityType" class="medium" />
+										<input type="text" name="activityType" class="medium nc-autocomplete" />
 										<input type="hidden" name="activityTypeId" />	
 										<a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a>
 									</netcare:field>

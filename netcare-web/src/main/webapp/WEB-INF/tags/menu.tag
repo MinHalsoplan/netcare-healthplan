@@ -29,6 +29,13 @@
 		var patient = new NC.Patient();
 		var patientSearchInput = $('#pickPatientForm input[name="pickPatient"]'); 
 		
+		/*
+		 *
+		 */
+		$('#modal-from-dom').bind('shown', function() {
+			patientSearchInput.focus();
+		});
+		
 		patientSearchInput.autocomplete({
 			source : function(request, response) {
 				
@@ -134,7 +141,7 @@
 				<div class="clearfix">
 					<label for="pickPatient"><spring:message code="search" /></label>
 					<div class="input">
-						<input name="pickPatient" class="xlarge" size="30" type="text" />
+						<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
 						<input name="selectedPatient" type="hidden" />
 					</div>
 				</div>
