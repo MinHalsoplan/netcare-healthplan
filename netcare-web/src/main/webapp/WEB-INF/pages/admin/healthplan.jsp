@@ -72,6 +72,7 @@
 					
 					healthPlans.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
 						$('#createHealthPlanForm :reset').click();
+						healthPlans.view(data.data.id);
 					});
 					
 					$('#createHealthPlanForm').hide();

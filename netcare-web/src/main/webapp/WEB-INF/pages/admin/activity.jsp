@@ -52,6 +52,7 @@
 				 * Disable time input field
 				 */
 				$('input[name $= "TimeField"]').attr('disabled', 'disabled');
+				$('input[name $= "TimeField"]').next().hide();
 				
 				/*
 				 * If the user clicks a day checkbox, enable that time field
@@ -60,13 +61,18 @@
 					var value = $(this).val() + 'TimeField';
 					var enable = $(this).attr('checked');
 					var elem = $('input[name="'+ value +'"]');
+					var icon = elem.next();
 					
 					if (enable == "checked") {
 						// Enable add time field
 						elem.removeAttr('disabled');
-						elem.focus();	
+						elem.focus();
+						
+						// Show icon
+						icon.show();
 					} else {
 						elem.attr('disabled', 'disabled');
+						icon.hide();
 					}
 				});
 				
@@ -239,12 +245,11 @@
 				$('#addNewType').bind('show', function() {
 					console.log("Showing modal... fill form.");
 					
+					$('#addNewType select[name="unit"]').empty();
 					new NC.Support().loadUnits($('#addNewType select[name="unit"]'));
 					
-					var categories = new NC.ActivityCategories();
-					console.log(categories);
-					
-					categories.loadAsOptions($('#addNewType select[name="category"]'));
+					$('#addNewType select[name="category"]').empty();
+					new NC.ActivityCategories().loadAsOptions($('#addNewType select[name="category"]'));
 				});
 				
 				/*
@@ -273,6 +278,12 @@
 					
 					var jsonObj = JSON.stringify(formData);
 					new NC.ActivityTypes().create(jsonObj, function(data) {
+						
+						showUnit(data.data.unit.value);
+						$('input[name="activityType"]').attr('value', data.data.name);
+						$('input[name="activityTypeId"]').attr('value', data.data.id);
+						$('input[name="activityGoal"]').focus();
+						
 						$('#addNewType').modal('hide');
 					});
 				});

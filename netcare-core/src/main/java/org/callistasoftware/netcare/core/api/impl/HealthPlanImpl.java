@@ -23,6 +23,7 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 
 /**
@@ -46,6 +47,7 @@ public class HealthPlanImpl implements HealthPlan {
 	private Option durationUnit;
 	
 	private CareGiverBaseView issuedBy;
+	private PatientBaseView patient;
 	private ActivityDefinition[] activityDefintions;
 	
 	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
@@ -62,6 +64,7 @@ public class HealthPlanImpl implements HealthPlan {
 		cg.setHsaId(entity.getIssuedBy().getHsaId());
 		
 		dto.setIssuedBy(cg);
+		dto.setPatient(PatientBaseViewImpl.newFromEntity(entity.getForPatient()));
 		
 		/*
 		 * Process defintions
@@ -133,6 +136,15 @@ public class HealthPlanImpl implements HealthPlan {
 	@Override
 	public ActivityDefinition[] getActivityDefintions() {
 		return this.activityDefintions;
+	}
+
+	@Override
+	public PatientBaseView getPatient() {
+		return this.patient;
+	}
+	
+	public void setPatient(final PatientBaseView patient) {
+		this.patient = patient;
 	}
 
 }

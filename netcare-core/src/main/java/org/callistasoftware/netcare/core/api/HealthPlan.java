@@ -40,5 +40,7 @@ public interface HealthPlan extends Serializable {
 	
 	CareGiverBaseView getIssuedBy();
 	
+	PatientBaseView getPatient();
+	
 	ActivityDefinition[] getActivityDefintions();
 }
