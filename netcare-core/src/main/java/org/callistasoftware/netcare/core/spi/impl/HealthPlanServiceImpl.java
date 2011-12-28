@@ -33,6 +33,7 @@ import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
@@ -60,6 +61,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,10 +125,10 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		c.add(Calendar.DATE, -7);
 		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		
-		Date startDate = ApiUtil.floor(c).getTime();
+		Date startDate = ApiUtil.dayBegin(c).getTime();
 
 		c.add(Calendar.DATE, 4*7);
-		Date endDate = ApiUtil.ceil(c).getTime();
+		Date endDate = ApiUtil.dayEnd(c).getTime();
 
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
 		List<ScheduledActivityEntity> scheduledActivities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(forPatient, startDate, endDate);
@@ -190,11 +192,11 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 
 	@Override
 	public ServiceResult<HealthPlan> addActvitiyToHealthPlan(
-			Long ordinationId, final ActivityDefinition dto) {
-		log.info("Adding activity defintion to existing ordination with id {}", ordinationId);
-		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
+			final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user) {
+		log.info("Adding activity defintion to existing ordination with id {}", healthPlanId);
+		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, ordinationId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 		
 		log.debug("Ordination entity found and resolved.");
@@ -222,11 +224,12 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 			frequency.addDay(fd);
 		}
 		log.debug("Frequency: {}", Frequency.marshal(frequency));
-		
-		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency);
+
+		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId()) : patientRepository.findOne(user.getId());
+		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency, userEntity);
 		newEntity.setActivityTarget(dto.getGoal());
 		if (dto.getStartDate() != null) {
-			newEntity.setStartDate(ApiUtil.toDate(dto.getStartDate()));		
+			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));		
 		}
 		ActivityDefinitionEntity savedEntity = activityDefintionRepository.save(newEntity);
 		

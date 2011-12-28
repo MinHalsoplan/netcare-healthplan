@@ -17,13 +17,11 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 /**
  * Implementation of a care giver base view
@@ -82,6 +80,6 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singletonList(new GrantedAuthorityImpl("ROLE_ADMIN"));
+		return Role.ROLE_ADMIN;
 	}
 }

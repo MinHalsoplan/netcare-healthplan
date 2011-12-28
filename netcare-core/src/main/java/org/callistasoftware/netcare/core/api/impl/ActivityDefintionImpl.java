@@ -58,7 +58,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setGoal(entity.getActivityTarget());
 		Frequency frequency = entity.getFrequency();
 		dto.setActivityRepeat(frequency.getWeekFrequency());
-		dto.setStartDate(ApiUtil.toString(entity.getStartDate()));
+		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
 		
 		final List<FrequencyDay> frDays = frequency.getDays();
 		DayTime[] dayTimes = new DayTime[frDays.size()];

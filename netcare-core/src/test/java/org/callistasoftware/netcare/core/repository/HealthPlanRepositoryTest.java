@@ -36,6 +36,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -56,7 +57,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
-	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity ordination) {
+	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity healthPlan, UserEntity user) {
 		Frequency freq = new Frequency();
 		freq.setWeekFrequency(1);
 		FrequencyDay day = FrequencyDay.newFrequencyDay(Calendar.MONDAY);
@@ -67,7 +68,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		typeRepo.save(type);
 		typeRepo.flush();
 
-		return ActivityDefinitionEntity.newEntity(ordination, type, freq);
+		return ActivityDefinitionEntity.newEntity(healthPlan, type, freq, user);
 	}
 	
 	@Test
@@ -86,7 +87,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		
 		final HealthPlanEntity e1 = HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS);
 		
-		ActivityDefinitionEntity ad =  createActivityDefinition(e1);
+		ActivityDefinitionEntity ad =  createActivityDefinition(e1, cg);
 		
 		actRepo.save(ad);
 
@@ -105,7 +106,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		Calendar c = Calendar.getInstance();
 		c.setTime(e2.getStartDate());
 		c.add(Calendar.WEEK_OF_YEAR, e2.getDuration());
-		assertEquals(ApiUtil.ceil(c).getTime(), e2.getEndDate());
+		assertEquals(ApiUtil.dayEnd(c).getTime(), e2.getEndDate());
 		
 		assertEquals(1, e2.getActivityDefinitions().size());
 	}

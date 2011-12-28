@@ -82,7 +82,7 @@ public class ApiUtil {
 	 * @param date the string according to yyyy-MM-dd
 	 * @return the date or null if input date is null
 	 */
-	public static Date toDate(String date) {
+	public static Date parseDate(String date) {
 		try {
 			return (date == null) ? null : dateFormat.parse(date);
 		} catch (ParseException e) {
@@ -96,9 +96,20 @@ public class ApiUtil {
 	 * @param date the date.
 	 * @return the string representation as 'yyyy-MM-dd' or null
 	 */
-	public static String toString(Date date) {
+	public static String formatDate(Date date) {
 		return (date == null) ? null : dateFormat.format(date);
 	}
+	
+	/**
+	 * Returns a string time from a date.
+	 * 
+	 * @param time the time.
+	 * @return the string formatted as as HH24:MM
+	 */
+	public static String formatTime(Date time) {
+		return String.format("%1$tR", time);		
+	}
+
 	
 	/**
 	 * Truncates time to zero, keeps date.
@@ -106,17 +117,17 @@ public class ApiUtil {
 	 * @param cal the calendar to truncate.
 	 * @return the altered  calendar.
 	 */
-	public static Calendar floor(Calendar cal) {
-		return EntityUtil.floor(cal);
+	public static Calendar dayBegin(Calendar cal) {
+		return EntityUtil.dayBegin(cal);
 	}
 
 	/**
-	 * Sets time to 23:59:59:999, at en of day, keeps date.
+	 * Sets time to 23:59:59:999, at end of day, keeps date.
 	 * 
 	 * @param cal the calendar to set to end of day.
 	 * @return the altered calendar.
 	 */
-	public static Calendar ceil(Calendar cal) {
-		return EntityUtil.ceil(cal);
+	public static Calendar dayEnd(Calendar cal) {
+		return EntityUtil.dayEnd(cal);
 	}
 }

@@ -80,7 +80,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTHS);
 		final HealthPlanEntity savedHp = this.hpRepo.save(hp);
 		
-		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt, Frequency.unmarshal("1;1"));
+		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt, Frequency.unmarshal("1;1"), cg);
 		final ActivityDefinitionEntity savedDef = this.adRepo.save(def);
 		
 		final ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(savedDef, new Date());

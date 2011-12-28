@@ -66,6 +66,6 @@ public class ApiUtilTest {
 	@Test
 	public void dateTest() {
 		final String d = "2012-12-29";
-		assertEquals(d, ApiUtil.toString(ApiUtil.toDate(d)));
+		assertEquals(d, ApiUtil.formatDate(ApiUtil.parseDate(d)));
 	}
 }
