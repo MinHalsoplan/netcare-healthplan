@@ -279,7 +279,7 @@
 								<div class="span5">
 									<spring:message code="goal" var="goal" scope="page"/>
 									<netcare:field containerId="activityGoal" name="activityGoal" label="${goal}">
-										<input name="activityGoal" type="number" class="medium" required/> <span class="unit"></span>
+										<input name="activityGoal" type="number" min="0" max="52" class="medium" required/> <span class="unit"></span>
 									</netcare:field>
 								</div>
 							</div>
