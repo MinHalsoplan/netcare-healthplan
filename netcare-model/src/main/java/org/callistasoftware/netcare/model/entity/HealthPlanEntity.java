@@ -108,7 +108,7 @@ public class HealthPlanEntity {
 	public void setStartDate(Date startDate) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(EntityUtil.notNull(startDate));
-		this.startDate = EntityUtil.floor(c).getTime();
+		this.startDate = EntityUtil.dayBegin(c).getTime();
 		calculateEnd();
 	}
 
@@ -156,7 +156,7 @@ public class HealthPlanEntity {
 	}
 
 	public void setDuration(int duration) {
-		if (duration <= 0 || duration > 24) {
+		if (duration <= 0 || duration > 48) {
 			throw new IllegalArgumentException("Invalid duration: " + duration);
 		}
 		this.duration = duration;
@@ -181,7 +181,7 @@ public class HealthPlanEntity {
 			Calendar c = Calendar.getInstance();
 			c.setTime(startDate);
 			c.add(durationUnit == DurationUnit.MONTHS ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
-			endDate = EntityUtil.ceil(c).getTime();
+			endDate = EntityUtil.dayEnd(c).getTime();
 		} else {
 			endDate = null;
 		}

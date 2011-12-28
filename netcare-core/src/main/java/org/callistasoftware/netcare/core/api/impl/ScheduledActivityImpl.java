@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
-import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -59,10 +59,10 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		a.activityDefinition = ActivityDefintionImpl.newFromEntity(entity.getActivityDefinitionEntity());
 		Date time = entity.getScheduledTime();
 		a.due = time.after(new Date());
-		a.scheduledDate = formatDate(time);
-		a.scheduledTime = formatTime(time);
+		a.scheduledDate = ApiUtil.formatDate(time);
+		a.scheduledTime = ApiUtil.formatTime(time);
 		if (entity.getReportedTime() != null) {
-			a.reported = formatDate(entity.getReportedTime()) + " " + formatTime(entity.getReportedTime());
+			a.reported = ApiUtil.formatDate(entity.getReportedTime()) + " " + ApiUtil.formatTime(entity.getReportedTime());
 		}
 		a.actual = entity.getActualValue();
 		Calendar cal = Calendar.getInstance();
@@ -76,15 +76,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		
 		return a;
 	}
-	
-	//
-	static String formatDate(Date time) {
-		return String.format("%1$tF", time);
-	}
-	
-	static String formatTime(Date time) {
-		return String.format("%1$tR", time);		
-	}
+		
 	
 	@Override
 	public long getId() {

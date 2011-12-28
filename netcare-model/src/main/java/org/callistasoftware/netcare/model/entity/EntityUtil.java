@@ -45,7 +45,7 @@ public class EntityUtil {
 	 * @param cal the calendar to truncate.
 	 * @return the altered  calendar.
 	 */
-	public static Calendar floor(Calendar cal) {
+	public static Calendar dayBegin(Calendar cal) {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -54,12 +54,12 @@ public class EntityUtil {
 	}
 
 	/**
-	 * Sets time to 23:59:59:999, at en of day, keeps date.
+	 * Sets time to 23:59:59:999, at end of day, keeps date.
 	 * 
 	 * @param cal the calendar to set to end of day.
 	 * @return the altered calendar.
 	 */
-	public static Calendar ceil(Calendar cal) {
+	public static Calendar dayEnd(Calendar cal) {
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);

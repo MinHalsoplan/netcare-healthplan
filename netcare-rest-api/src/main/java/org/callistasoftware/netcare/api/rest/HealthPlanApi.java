@@ -73,7 +73,7 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefintionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
 		log.info("User {} is adding a new activity defintion for health plan {}", new Object[] {this.getUser(), healthPlanId});
 		
-		return this.service.addActvitiyToHealthPlan(healthPlanId, activity);
+		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
 	}
 	
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")

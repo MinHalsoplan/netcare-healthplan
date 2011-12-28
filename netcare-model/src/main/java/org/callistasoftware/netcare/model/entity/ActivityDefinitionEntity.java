@@ -53,20 +53,25 @@ public class ActivityDefinitionEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="activity_type_id")
-	private ActivityTypeEntity activityType;    
+	private ActivityTypeEntity activityType;
+	
+	@ManyToOne
+	@JoinColumn(name="created_by_id")
+	private UserEntity createdBy;
     
     ActivityDefinitionEntity() {
 	}
     
-    public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency) {
+    public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency, UserEntity createdBy) {
     	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
     	entity.setHealthPlan(healthPlanEntity);
     	entity.setActivityType(activityType);
     	entity.setFrequency(frequency);
-    	
     	entity.setStartDate(healthPlanEntity.getStartDate());
+    	entity.setCreatedBy(createdBy);
     	
     	healthPlanEntity.addActivityDefinition(entity);
+    	
     	return entity;
     }
 
@@ -131,7 +136,7 @@ public class ActivityDefinitionEntity {
 	public void setStartDate(Date startDate) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(EntityUtil.notNull(startDate));
-		startDate = EntityUtil.floor(cal).getTime();
+		startDate = EntityUtil.dayBegin(cal).getTime();
 		
 		Date min = getHealthPlan().getStartDate();
 		Date max = getHealthPlan().getEndDate();
@@ -148,5 +153,19 @@ public class ActivityDefinitionEntity {
 	 */
 	public Date getStartDate() {
 		return startDate;
+	}
+
+
+	void setCreatedBy(UserEntity createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	/**
+	 * Returns the user who created this.
+	 * 
+	 * @return created by.
+	 */
+	public UserEntity getCreatedBy() {
+		return createdBy;
 	}
 }

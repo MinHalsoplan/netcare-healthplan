@@ -17,12 +17,10 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 /**
  * Implementation of a patient base view
@@ -76,6 +74,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new GrantedAuthorityImpl("ROLE_USER"));
+		return Role.ROLE_USER;
 	}
 }

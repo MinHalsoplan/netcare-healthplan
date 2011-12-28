@@ -23,6 +23,7 @@ import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.UserBaseView;
 
 /**
  * Defines the ordination service that will provide
@@ -67,11 +68,14 @@ public interface HealthPlanService {
 	ServiceResult<HealthPlan> loadHealthPlan(final Long ordinationId, final PatientBaseView patient);
 	
 	/**
-	 * Adds an activity defintion to an existing ordination specified by its id
-	 * @param ordinationId
-	 * @return
+	 * Adds an activity definition to an existing ordination specified by its id
+	 * @param healthPlanId
+	 * @param dto the activity definition.
+	 * @param user the user.
+	 * 
+	 * @return the result.
 	 */
-	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long ordinationId, final ActivityDefinition dto);
+	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user);
 	
 	/**
 	 * Load all activities for a specific health plan

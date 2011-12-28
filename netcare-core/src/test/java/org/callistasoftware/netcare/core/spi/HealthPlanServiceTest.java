@@ -141,7 +141,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 
 		// the date and duration can't be changed without breaking the test, see further below.
-		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", ApiUtil.toDate("2012-12-01"), 12, DurationUnit.WEEKS);
+		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", ApiUtil.parseDate("2012-12-01"), 12, DurationUnit.WEEKS);
 		final HealthPlanEntity savedOrd = this.ordinationRepo.save(ord);
 		
 		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
@@ -170,7 +170,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		impl.setDayTimes(dts);
 		
-		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl);
+		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, CareGiverBaseViewImpl.newFromEntity(cg));
 		assertTrue(result.isSuccess());
 		
 		final ActivityDefintionImpl impl2 = new ActivityDefintionImpl();
@@ -184,7 +184,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		dt3.setDay("wednesday");
 		dt3.setTimes(new String[] { "07:15", "12:00", "22:45"});
 		impl2.setDayTimes(new DayTimeImpl[] { dt3 });		
-		final ServiceResult<HealthPlan> result2 = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl2);
+		final ServiceResult<HealthPlan> result2 = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl2, CareGiverBaseViewImpl.newFromEntity(cg));
 		assertTrue(result2.isSuccess());
 		
 		this.schedRepo.flush();
@@ -201,7 +201,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final List<FrequencyTime> times = fr.getDay(Calendar.MONDAY).getTimes();
 		assertEquals(2, times.size());
 		
-		assertEquals("2012-12-01", ApiUtil.toString(after.getStartDate()));
+		assertEquals("2012-12-01", ApiUtil.formatDate(after.getStartDate()));
 		assertEquals(12, times.get(0).getHour());
 		assertEquals(15, times.get(0).getMinute());
 		
@@ -224,7 +224,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		int n = scheduledActivities.size();
 		// 26 (every other week * 2) + 3 (single day * 3)
 		assertEquals(29, n);
-		assertEquals("2013-02-23", ApiUtil.toString(scheduledActivities.get(n-1).getScheduledTime()));
+		assertEquals("2013-02-23", ApiUtil.formatDate(scheduledActivities.get(n-1).getScheduledTime()));
 	}
 
 }
