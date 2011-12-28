@@ -36,14 +36,18 @@ public class ActivityCategoryEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String name;
 	
 	@OneToMany(fetch=FetchType.LAZY)
 	private List<ActivityTypeEntity> activityTypes;
 	
-	ActivityCategoryEntity(final String name) {
+	ActivityCategoryEntity() {
 		this.setActivityTypes(new ArrayList<ActivityTypeEntity>());
+	}
+	
+	ActivityCategoryEntity(final String name) {
+		this();
 		this.setName(name);
 	}
 	

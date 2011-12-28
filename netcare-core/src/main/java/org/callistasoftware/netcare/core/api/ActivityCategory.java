@@ -14,19 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.messages;
+package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
-
-public class EntityNotFoundMessage extends DefaultSystemMessage {
+/**
+ * Defines an activity category
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface ActivityCategory extends Serializable {
 
 	/**
-	 * 
+	 * The id of this category
+	 * @return
 	 */
-	private static final long serialVersionUID = 1L;
+	Long getId();
 	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
-		super("EntityNotFound", false, entityClass.getSimpleName(), id);
-	}
-
+	/**
+	 * The name of this category
+	 * @return
+	 */
+	String getName();
 }

@@ -18,13 +18,19 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
+import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +52,9 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 	private static final Logger log = LoggerFactory.getLogger(ActivityTypeServiceImpl.class);
 	
 	@Autowired
+	private ActivityCategoryRepository catRepo;
+	
+	@Autowired
 	private ActivityTypeRepository repo;
 	
 	@Override
@@ -61,6 +70,40 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 		}
 		
 		return ServiceResultImpl.createSuccessResult(types, new ListEntitiesMessage(ActivityTypeEntity.class, types.length));
+	}
+
+	@Override
+	public ServiceResult<ActivityCategory[]> loadAllActivityCategories() {
+		log.info("Load all activity categories from repository...");
+		final List<ActivityCategoryEntity> cats = this.catRepo.findAll();
+		
+		log.debug("Found {} activity categories in repository. Converting to dtos", cats.size());
+		final ActivityCategory[] dtos = new ActivityCategory[cats.size()];
+		for (int i = 0; i < cats.size(); i++) {
+			dtos[i] = ActivityCategoryImpl.newFromEntity(cats.get(i));
+		}
+		
+		return ServiceResultImpl.createSuccessResult(dtos, new ListEntitiesMessage(ActivityCategoryEntity.class, dtos.length));
+	}
+
+	@Override
+	public ServiceResult<ActivityCategory> createActivityCategory(
+			ActivityCategory dto) {
+		
+		log.info("Creating new activity category: {}", dto.getName());
+		
+		log.debug("Checking if there already exist a category with the name {}", dto.getName());
+		final ActivityCategoryEntity existing = this.catRepo.findByName(dto.getName().trim());
+		if (existing != null) {
+			log.debug("The name already exists... Abort.");
+			return ServiceResultImpl.createFailedResult(new EntityNotUniqueMessage(ActivityCategoryEntity.class, "name"));
+		}
+		
+		log.debug("No category with the specified name... creating new entity.");
+		final ActivityCategoryEntity ent = ActivityCategoryEntity.newEntity(dto.getName());
+		final ActivityCategoryEntity savedEntity = this.catRepo.save(ent);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityCategoryImpl.newFromEntity(savedEntity), new GenericSuccessMessage());
 	}
 
 }

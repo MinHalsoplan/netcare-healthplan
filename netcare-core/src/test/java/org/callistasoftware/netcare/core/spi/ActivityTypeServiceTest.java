@@ -16,8 +16,11 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
+import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
@@ -56,5 +59,34 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();
 		assertTrue(result.isSuccess());
 		assertEquals(10, result.getData().length);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testCreateNewActivityCategory() throws Exception {
+		
+		final ActivityCategory impl = ActivityCategoryImpl.createNewDto("Fysisk aktivitet");
+		final ServiceResult<ActivityCategory> result = this.service.createActivityCategory(impl);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(impl.getName(), result.getData().getName());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testCreateDuplicateActivityCategory() throws Exception {
+		
+		final ActivityCategory i1 = ActivityCategoryImpl.createNewDto("Fysisk aktivitet");
+		final ServiceResult<ActivityCategory> result = this.service.createActivityCategory(i1);
+		
+		assertTrue(result.isSuccess());
+		
+		final ServiceResult<ActivityCategory> result2 = this.service.createActivityCategory(i1);
+		assertFalse(result2.isSuccess());
+		assertEquals(1, result2.getErrorMessages().size());
+		assertTrue(result2.getErrorMessages().get(0) instanceof EntityNotUniqueMessage);
+		
 	}
 }

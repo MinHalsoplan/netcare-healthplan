@@ -40,7 +40,11 @@ public class ActivityTypeEntity {
 	@ManyToOne
 	private ActivityCategoryEntity category;
 	
+	ActivityTypeEntity() {
+	}
+	
 	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final MeasureUnit unit) {
+		this();
 		this.setName(name);
 		this.setCategory(category);
 		this.setUnit(unit);

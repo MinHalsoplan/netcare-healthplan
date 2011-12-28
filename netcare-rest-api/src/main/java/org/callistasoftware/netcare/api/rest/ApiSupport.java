@@ -51,6 +51,10 @@ public abstract class ApiSupport {
 		return !this.getUser().isCareGiver();
 	}
 	
+	protected void logAccess(final String action, final String what) {
+		log.info("User {}, Action: {}->{}", new Object[] {this.getUser().getUsername(), action, what});
+	}
+	
 	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareGiverBaseView careGiver) {
 		log.info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
 				, new Object[] {careGiver.getName()

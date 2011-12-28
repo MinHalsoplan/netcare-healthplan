@@ -16,17 +16,15 @@
  */
 package org.callistasoftware.netcare.core.api.messages;
 
-
-
-public class EntityNotFoundMessage extends DefaultSystemMessage {
+public class EntityNotUniqueMessage extends DefaultSystemMessage {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
-		super("EntityNotFound", false, entityClass.getSimpleName(), id);
+	public EntityNotUniqueMessage(final Class<?> entityClass, final String constraintName) {
+		super("EntityNotUnique", true, entityClass.getSimpleName(), constraintName);
 	}
 
 }

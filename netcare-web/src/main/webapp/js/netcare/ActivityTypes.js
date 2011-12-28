@@ -14,6 +14,51 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+NC.ActivityCategories = function() {
+	var _baseUrl = '/netcare-web/api/activityCategory';
+	
+	public = {
+		load : function(callback) {
+			var url = _baseUrl + '/load';
+			console.log("Loading activity categories from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					if (data.success) {
+						console.log("Activity categories successfully fetched from server");
+						callback(data);
+					}
+				}
+			});
+		},
+		
+		create : function(formData, callback) {
+			var url = _baseUrl + '/create';
+			console.log("Creating new activity category using url " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				type : 'post',
+				data : formData,
+				contentType : 'application/json',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					
+					if (data.success) {
+						callback(data);
+					}
+				}
+			})
+		}
+	};
+	
+	return public;
+};
+
 NC.ActivityTypes = function() {
 	
 	var _baseUrl = '/netcare-web/api/activityType';
