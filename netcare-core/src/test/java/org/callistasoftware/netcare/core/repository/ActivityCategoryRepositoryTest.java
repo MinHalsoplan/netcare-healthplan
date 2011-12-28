@@ -16,10 +16,10 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.List;
+
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
-import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -27,27 +27,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
 
-public class ActivityTypeRepositoryTest extends TestSupport {
+public class ActivityCategoryRepositoryTest extends TestSupport {
 
 	@Autowired
-	private ActivityCategoryRepository catRepo;
-	
-	@Autowired
-	private ActivityTypeRepository repo;
+	private ActivityCategoryRepository repo;
 	
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		
-		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+		final ActivityCategoryEntity c1 = ActivityCategoryEntity.newEntity("Fysiska aktiviteter");
+		this.repo.save(c1);
 		
-		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS);
-		final ActivityTypeEntity savedEnt = this.repo.save(ent);
+		final ActivityCategoryEntity c2 = ActivityCategoryEntity.newEntity("Övriga aktiviteter");
+		this.repo.save(c2);
 		
-		assertNotNull(savedEnt);
-		assertNotNull(savedEnt.getId());
-		assertEquals(ent.getName(), savedEnt.getName());
-		assertEquals(ent.getUnit(), savedEnt.getUnit());
+		final List<ActivityCategoryEntity> all = this.repo.findAll();
+		assertNotNull(all);
+		assertEquals(2, all.size());
 	}
 }

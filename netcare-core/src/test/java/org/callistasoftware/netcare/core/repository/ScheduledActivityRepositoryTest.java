@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
@@ -49,6 +50,9 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 	private PatientRepository pRepo;
 	
 	@Autowired
+	private ActivityCategoryRepository catRepo;
+	
+	@Autowired
 	private ActivityTypeRepository atRepo;
 	
 	@Autowired
@@ -74,7 +78,9 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final PatientEntity p = PatientEntity.newEntity("Marcus", "123456789002");
 		final PatientEntity savedPatient = this.pRepo.save(p);
 		
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", MeasureUnit.KILOMETERS);
+		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+		
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
 		
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTHS);
