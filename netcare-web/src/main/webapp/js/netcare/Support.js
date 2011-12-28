@@ -34,6 +34,7 @@ NC.Support = function() {
 			success : function(data, textStatus, jqXHR) {
 				var arr = new Array();
 				$.each(data.data, function(index, value) {
+					console.log("Processing " + value.value + "...");
 					arr[index] = value;
 				});
 				
@@ -43,11 +44,14 @@ NC.Support = function() {
 	};
 	
 	var _createOptions = function(options, selectElem) {
+		console.log("Creating options...");
 		if (selectElem === undefined) {
+			console.log("Select element is undefined.");
 			return false;
 		}
 		
 		$.each(options, function(index, value) {
+			console.log("Creating option: " + value.code);
 			var opt = $('<option>', { value : value.code });
 			opt.html(value.value);
 			opt.appendTo(selectElem);
@@ -59,7 +63,7 @@ NC.Support = function() {
 		 * Load all unit options that exist in the
 		 * application.
 		 */
-		loadOptions : function(selectElem) {
+		loadUnits : function(selectElem) {
 			var url = _baseUrl + '/units/load';
 			
 			_loadOptions(url, function(data) {

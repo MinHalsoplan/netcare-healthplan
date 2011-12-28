@@ -48,5 +48,5 @@ public interface ActivityType extends Serializable {
 	 * Get the name of the category where this type belongs
 	 * @return
 	 */
-	String getCategoryName();
+	ActivityCategory getCategory();
 }

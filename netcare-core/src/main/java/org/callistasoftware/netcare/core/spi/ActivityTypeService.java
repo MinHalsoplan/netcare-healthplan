@@ -30,6 +30,13 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 public interface ActivityTypeService {
 	
 	/**
+	 * Create a new activity type
+	 * @param dto
+	 * @return
+	 */
+	ServiceResult<ActivityType> createActivityType(final ActivityType dto);
+	
+	/**
 	 * Searches for activity types
 	 * @param searchString
 	 * @return

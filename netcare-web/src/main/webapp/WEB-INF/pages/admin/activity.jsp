@@ -156,7 +156,7 @@
 						types.search(request.term, function(data) {
 							console.log("Found " + data.data.length + " activity types");
 							response($.map(data.data, function(item) {
-								return { label : item.name + ' (' + item.categoryName + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
+								return { label : item.name + ' (' + item.category.name + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
 							}));
 						});
 					},
@@ -229,6 +229,53 @@
 				});
 				
 				$('#activityForm').hide();
+				
+				/*
+				 * Bind modal show event,
+				 * When the modal is shown we want to download units as
+				 * well as activity categories and fill the modal
+				 * form
+				 */
+				$('#addNewType').bind('show', function() {
+					console.log("Showing modal... fill form.");
+					
+					new NC.Support().loadUnits($('#addNewType select[name="unit"]'));
+					
+					var categories = new NC.ActivityCategories();
+					console.log(categories);
+					
+					categories.loadAsOptions($('#addNewType select[name="category"]'));
+				});
+				
+				/*
+				 * Save activity type when user submits the form
+				 */
+				$('#addNewType :submit').click(function(event) {
+					console.log("User submitted new activity type form...");
+					event.preventDefault();
+					
+					var name = $('#addNewType input[name="name"]').val();
+					
+					var category = new Object();
+					category.id = $('#addNewType select[name="category"] option:selected').val();
+					
+					var unit = new Object();
+					unit.code = $('#addNewType select[name="unit"] option:selected').val();
+					
+					console.log("Name: " + name);
+					console.log("Category: " + category.id);
+					console.log("Unit: " + unit.code);
+					
+					var formData = new Object();
+					formData.name = name;
+					formData.category = category;
+					formData.unit = unit;
+					
+					var jsonObj = JSON.stringify(formData);
+					new NC.ActivityTypes().create(jsonObj, function(data) {
+						$('#addNewType').modal('hide');
+					});
+				});
 			});
 		</script>
 	</netcare:header>
@@ -248,6 +295,34 @@
 					<netcare:image name="bullet_add"/> <c:out value="${title}" />
 				</a>
 			</p>
+			
+			<div id="addNewType" class="modal hide fade" style="display: none;">
+				<form id="addNewActivityTypeForm" class="form-stacked">
+					<div class="modal-header">
+						<a href="#" class="close">x</a>
+						<h3><spring:message code="addActivityType" /></h3>
+					</div>
+					<div class="modal-body">
+						<spring:message code="activityCategory" var="cat" scope="page" />
+						<netcare:field name="category" label="${cat}">
+							<select name="category" class="xlarge"></select>
+						</netcare:field>
+						
+						<spring:message code="name" var="name" scope="page" />
+						<netcare:field name="name" label="${name}">
+							<input type="text" name="name" class="xlarge"/>
+						</netcare:field>
+						
+						<spring:message code="unit" var="unit" scope="page" />
+						<netcare:field name="unit" label="${unit}">
+							<select name="unit" class="xlarge"></select>
+						</netcare:field>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" value="<spring:message code="create" />" class="btn primary"/>
+					</div>
+				</form>
+			</div>
 			
 			<netcare:form id="activityForm" classes="form-stacked">
 			
@@ -274,7 +349,6 @@
 						</div>
 					</div>
 				</fieldset>
-				
 				
 				<fieldset>
 					<legend><spring:message code="schedule" /></legend>

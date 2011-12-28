@@ -18,11 +18,13 @@ package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,5 +51,12 @@ public class ActivityTypeApi extends ApiSupport {
 	public ServiceResult<ActivityType[]> searchActivityTypes(@RequestParam(value="text") final String text) {
 		this.logAccess("search", "activity types");
 		return this.service.searchForActivityTypes(text);
+	}
+	
+	@RequestMapping(value="/create", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ActivityType> createNewActivityType(@RequestBody final ActivityTypeImpl activityType) {
+		this.logAccess("create", "activity type");
+		return this.service.createActivityType(activityType);
 	}
 }

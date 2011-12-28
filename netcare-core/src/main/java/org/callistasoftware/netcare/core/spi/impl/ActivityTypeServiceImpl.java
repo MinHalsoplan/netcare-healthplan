@@ -24,6 +24,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
@@ -32,6 +33,7 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +115,22 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 		final List<ActivityTypeEntity> result = this.repo.findByNameLike(new StringBuilder().append("%").append(searchString).append("%").toString());
 		
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(result, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, result.size()));
+	}
+
+	@Override
+	public ServiceResult<ActivityType> createActivityType(ActivityType dto) {
+		log.info("Creating new activity type. Name: {}", dto.getName());
+		
+		final ActivityCategoryEntity category = this.catRepo.findOne(dto.getCategory().getId());
+		if (category == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCategoryEntity.class, dto.getCategory().getId()));
+		}
+		
+		final MeasureUnit unit = MeasureUnit.valueOf(dto.getUnit().getCode());
+		
+		
+		final ActivityTypeEntity savedEntity = this.repo.save(ActivityTypeEntity.newEntity(dto.getName(), category, unit));
+		return ServiceResultImpl.createSuccessResult((ActivityType) ActivityTypeImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
 
 }

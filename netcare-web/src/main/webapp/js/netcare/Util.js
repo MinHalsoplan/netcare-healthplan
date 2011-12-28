@@ -169,11 +169,57 @@ NC.Util = function() {
 			});
 		},
 		
+		/**
+		 * Format a civic registration number
+		 */
 		formatCnr : function(cnr) {
 			var first = cnr.substring(0, 8);
 			var last = cnr.substring(8, 12);
 			
 			return first + '-' + last;
+		},
+		
+		/**
+		 * Create option elements from a set of options
+		 */
+		createOptions : function(options, selectElem) {
+			console.log("Creating options...");
+			if (selectElem === undefined) {
+				console.log("Select element is undefined.");
+				return false;
+			}
+			
+			$.each(options, function(index, value) {
+				console.log("Creating option: " + value.code);
+				var opt = $('<option>', { value : value.code });
+				opt.html(value.value);
+				opt.appendTo(selectElem);
+			});
+		},
+		
+		/**
+		 * Method that will make call to the server, if the call was
+		 * successful, the onDataLoaded()-function will be executed
+		 * with the array of values
+		 */
+		loadOptions : function(url, onDataLoaded) {
+			console.log("Loading support data from url: " + url);
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("Error: " + errorThrown);
+				},
+				success : function(data, textStatus, jqXHR) {
+					var arr = new Array();
+					$.each(data.data, function(index, value) {
+						console.log("Processing " + value.value + "...");
+						arr[index] = value;
+					});
+					
+					onDataLoaded(arr);
+				}
+			});
 		}
 	};
 	
