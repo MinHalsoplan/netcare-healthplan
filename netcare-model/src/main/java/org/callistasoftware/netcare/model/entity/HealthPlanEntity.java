@@ -106,7 +106,9 @@ public class HealthPlanEntity {
 	}
 
 	public void setStartDate(Date startDate) {
-		this.startDate = EntityUtil.notNull(startDate);
+		Calendar c = Calendar.getInstance();
+		c.setTime(EntityUtil.notNull(startDate));
+		this.startDate = EntityUtil.floor(c).getTime();
 		calculateEnd();
 	}
 
@@ -179,7 +181,7 @@ public class HealthPlanEntity {
 			Calendar c = Calendar.getInstance();
 			c.setTime(startDate);
 			c.add(durationUnit == DurationUnit.MONTHS ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
-			endDate = c.getTime();
+			endDate = EntityUtil.ceil(c).getTime();
 		} else {
 			endDate = null;
 		}

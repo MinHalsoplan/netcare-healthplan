@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,6 +27,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_activity_definition")
@@ -39,6 +42,10 @@ public class ActivityDefinitionEntity {
 	
 	@Column(name="target")
 	private int activityTarget;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="start_date")
+	private Date startDate;
 
 	@ManyToOne
 	@JoinColumn(name="health_plan_id")
@@ -51,12 +58,15 @@ public class ActivityDefinitionEntity {
     ActivityDefinitionEntity() {
 	}
     
-    public static ActivityDefinitionEntity newEntity(HealthPlanEntity ordinationEntity, ActivityTypeEntity activityType, Frequency frequency) {
+    public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency) {
     	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
-    	entity.setHealthPlan(ordinationEntity);
+    	entity.setHealthPlan(healthPlanEntity);
     	entity.setActivityType(activityType);
     	entity.setFrequency(frequency);
-    	ordinationEntity.addActivityDefinition(entity);
+    	
+    	entity.setStartDate(healthPlanEntity.getStartDate());
+    	
+    	healthPlanEntity.addActivityDefinition(entity);
     	return entity;
     }
 
@@ -111,5 +121,32 @@ public class ActivityDefinitionEntity {
 	 */
 	public int getActivityTarget() {
 		return activityTarget;
+	}
+
+	/**
+	 * Sets the start date of this activity.
+	 * 
+	 * @param startDate the start date, must be in the interval of the health plan.
+	 */
+	public void setStartDate(Date startDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(EntityUtil.notNull(startDate));
+		startDate = EntityUtil.floor(cal).getTime();
+		
+		Date min = getHealthPlan().getStartDate();
+		Date max = getHealthPlan().getEndDate();
+		if (startDate.compareTo(min) < 0 || startDate.compareTo(max) > 0) {
+			throw new IllegalArgumentException("Invalid start date, out of health plan range: " + startDate);
+		}		
+		this.startDate = startDate;
+	}
+
+	/**
+	 * Returns the start date.
+	 * 
+	 * @return start date.
+	 */
+	public Date getStartDate() {
+		return startDate;
 	}
 }

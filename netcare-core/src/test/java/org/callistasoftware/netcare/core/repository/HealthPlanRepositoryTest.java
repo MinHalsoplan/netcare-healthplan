@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -57,12 +58,11 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	
 	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity ordination) {
 		Frequency freq = new Frequency();
-		freq.getFrequencyDay().addDay(FrequencyDay.MON);
-		freq.getFrequencyDay().addDay(FrequencyDay.FRI);
-		FrequencyTime fval = FrequencyTime.fromTimeString("10:00");
-		freq.getTimes().add(fval);
+		freq.setWeekFrequency(1);
+		FrequencyDay day = FrequencyDay.newFrequencyDay(Calendar.MONDAY);
+		FrequencyTime time = FrequencyTime.unmarshal("10:00");
+		day.addTime(time);
 		
-
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", MeasureUnit.KILOMETERS);
 		typeRepo.save(type);
 		typeRepo.flush();
@@ -96,17 +96,18 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		final List<HealthPlanEntity> all = repo.findAll();
 		assertNotNull(all);
 		assertEquals(1, all.size());
+		
 		HealthPlanEntity e2 = all.get(0);
 		assertEquals("Hälsoplan B", e2.getName());
 		assertEquals(DurationUnit.WEEKS, e2.getDurationUnit());
 		assertEquals(20, e2.getDuration());
+		
 		Calendar c = Calendar.getInstance();
-		c.setTime(e1.getStartDate());
-		c.add(Calendar.WEEK_OF_YEAR, e1.getDuration());
-		assertEquals(c.getTime(), e2.getEndDate());
+		c.setTime(e2.getStartDate());
+		c.add(Calendar.WEEK_OF_YEAR, e2.getDuration());
+		assertEquals(ApiUtil.ceil(c).getTime(), e2.getEndDate());
 		
 		assertEquals(1, e2.getActivityDefinitions().size());
-		
 	}
 	
 	@Test

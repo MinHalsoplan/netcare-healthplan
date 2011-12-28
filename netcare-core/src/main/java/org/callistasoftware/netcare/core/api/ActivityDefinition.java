@@ -52,4 +52,13 @@ public interface ActivityDefinition {
 	 * @return
 	 */
 	String getStartDate();
+	
+	/**
+	 * Returns week frequency. <p>
+	 * 
+	 * A value of 0 indicates single occurrence, otherwise repeating each N week.
+	 * 
+	 * @return the week frequency.
+	 */
+	int getActivityRepeat();
 }

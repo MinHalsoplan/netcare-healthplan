@@ -52,6 +52,12 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Column(name="target_value", nullable=false)
 	private int targetValue;
 	
+	@Column(name="comment", length=128)
+	private String comment;
+	
+	@Column(name="perceived_sense")
+	private int perceivedSense;
+	
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
 	@JoinColumn(name="activity_def_id")
 	private ActivityDefinitionEntity activityDefinition;
@@ -138,5 +144,21 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	public ActivityDefinitionEntity getActivityDefinitionEntity() {
 		return activityDefinition;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setPerceivedSense(int perceivedSense) {
+		this.perceivedSense = perceivedSense;
+	}
+
+	public int getPerceivedSense() {
+		return perceivedSense;
 	}
 }

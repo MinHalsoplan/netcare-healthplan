@@ -16,7 +16,9 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.util.Calendar;
 
 import org.junit.Test;
 
@@ -24,35 +26,30 @@ public class FrequencyTest {
 	
 	static Frequency createFrequency() {
 		Frequency f = new Frequency();
+		f.setWeekFrequency(1);
+		FrequencyDay day1 = FrequencyDay.newFrequencyDay(Calendar.MONDAY);
 		
-		f.getFrequencyDay().addDay(FrequencyDay.TUE);
-		f.getFrequencyDay().addDay(FrequencyDay.WED);
-		f.getFrequencyDay().addDay(FrequencyDay.FRI);
-		f.getFrequencyDay().addDay(FrequencyDay.SAT);
+		day1.addTime(FrequencyTime.newFrequencyTime(7, 0));
+		day1.addTime(FrequencyTime.newFrequencyTime(12, 0));
+		day1.addTime(FrequencyTime.newFrequencyTime(18, 0));
+		f.addDay(day1);
 
-		FrequencyTime v = new FrequencyTime();
-		v.setHour(14);
-		v.setMinute(00);
-		f.getTimes().add(v);
+		FrequencyDay day2 = FrequencyDay.newFrequencyDay(Calendar.SATURDAY);
+		day2.addTime(FrequencyTime.newFrequencyTime(9, 0));
+		day2.addTime(FrequencyTime.newFrequencyTime(18, 15));
+		f.addDay(day2);
 		
-		v = new FrequencyTime();
-		v.setHour(8);
-		v.setMinute(30);
-		f.getTimes().add(v);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 		
-		v = new FrequencyTime();
-		v.setHour(21);
-		v.setMinute(30);
-		f.getTimes().add(v);
-		
-		assertEquals(3, f.getTimes().size());
-		
-		assertEquals(true, f.getFrequencyDay().isTuesday());
-		assertEquals(false, f.getFrequencyDay().isSunday());
-		
-		f.getFrequencyDay().removeDay(FrequencyDay.TUE);
-		assertEquals(false, f.getFrequencyDay().isTuesday());
-		assertEquals(true, f.getFrequencyDay().isWedbesday());
+		assertEquals(true, f.isDaySet(Calendar.MONDAY));
+		assertEquals(true, f.isDaySet(Calendar.SATURDAY));
+		assertEquals(true, f.isDaySet(cal));
+		assertEquals(false, f.isDaySet(Calendar.TUESDAY));
+		assertEquals(false, f.isDaySet(Calendar.WEDNESDAY));
+		assertEquals(false, f.isDaySet(Calendar.THURSDAY));
+		assertEquals(false, f.isDaySet(Calendar.FRIDAY));
+		assertEquals(false, f.isDaySet(Calendar.SUNDAY));
 
 		return f;
 	}
@@ -67,14 +64,14 @@ public class FrequencyTest {
 	public void testMarshal() {
 		Frequency f = createFrequency();
 		String s = Frequency.marshal(f);
+		System.out.println(s);
 		Frequency r = Frequency.unmarshal(s);
-		assertEquals(f.getTimes().size(),r.getTimes().size());
-		assertEquals(f.getFrequencyDay().getDays(), f.getFrequencyDay().getDays());
-		for (int i = 0; i < f.getTimes().size(); i++) {
-			FrequencyTime lv = f.getTimes().get(i);
-			FrequencyTime rv = r.getTimes().get(i);
-			assertEquals(lv.getHour(), rv.getHour());
-			assertEquals(lv.getMinute(), rv.getMinute());
+		assertEquals(f.getDays().size(), f.getDays().size());
+		for (int i = 0; i < f.getDays().size(); i++) {
+			FrequencyDay lv = f.getDays().get(i);
+			FrequencyDay rv = r.getDays().get(i);
+			assertEquals(lv.getTimes().get(0).getHour(), rv.getTimes().get(0).getHour());
+			assertEquals(lv.getTimes().get(0).getMinute(), rv.getTimes().get(0).getMinute());
 		}
 	}
 }
