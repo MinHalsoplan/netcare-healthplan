@@ -24,6 +24,6 @@ public class ListEntitiesMessage extends DefaultSystemMessage {
 	private static final long serialVersionUID = 1L;
 	
 	public ListEntitiesMessage(final Class<?> entityClass, final int size) {
-		super(entityClass.getSimpleName(), "EntitiesListed", size, entityClass.getSimpleName());
+		super("EntitiesListed", false, size, entityClass.getSimpleName());
 	}
 }

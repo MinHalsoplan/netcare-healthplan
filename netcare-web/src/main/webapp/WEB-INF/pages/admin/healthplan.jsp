@@ -121,7 +121,7 @@
 							<div class="row">
 								<div class="span3">
 									<netcare:field name="duration" label="${duration}">
-										<input type="number" name="duration" class="medium" />
+										<input type="number" min="1" name="duration" class="medium" />
 									</netcare:field>
 								</div>
 								<div class="span3">

@@ -33,6 +33,7 @@ import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.DayTimeImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
@@ -40,6 +41,7 @@ import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
@@ -66,6 +68,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	private PatientRepository patientRepo;
 	@Autowired
 	private HealthPlanRepository ordinationRepo;
+	@Autowired
+	private ActivityCategoryRepository catRepo;
 	@Autowired
 	private ActivityTypeRepository typeRepo;
 	@Autowired
@@ -122,7 +126,9 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testAddActivityDefintion() throws Exception {
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", MeasureUnit.KILOMETERS);
+		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+		
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS);
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");

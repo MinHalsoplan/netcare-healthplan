@@ -28,10 +28,12 @@ import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,11 +58,18 @@ public class SupportApi extends ApiSupport {
 
 	@RequestMapping(value="/units/load", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public ServiceResult<String[]> loadUnits() {
-		final String[] units = {"min", "km"};
-		final ServiceResultImpl<String[]> result = ServiceResultImpl.createSuccessResult(units, new DefaultSystemMessage("Operation returned success"));
+	public ServiceResult<Option[]> loadUnits() {
 		
-		return result;
+		log.info("Loading measure units...");
+		
+		final MeasureUnit[] units = MeasureUnit.values();
+		final Option[] opts = new Option[units.length];
+		for (int i = 0; i < units.length; i++) {
+			log.debug("Processing {}", units[i].name());
+			opts[i] = new Option(units[i].name(), LocaleContextHolder.getLocale());
+		}
+		
+		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
 	}
 	
 	@RequestMapping(value="/durations/load", method=RequestMethod.GET, produces="application/json")

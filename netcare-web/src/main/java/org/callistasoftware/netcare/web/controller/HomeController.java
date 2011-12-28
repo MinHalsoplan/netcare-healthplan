@@ -112,6 +112,11 @@ public class HomeController extends ControllerSupport {
 		return "admin/activity";
 	}
 	
+	@RequestMapping(value="/admin/categories", method=RequestMethod.GET)
+	public String displayActivityCategories() {
+		return "admin/categories";
+	}
+	
 	@RequestMapping(value="/user/home", method=RequestMethod.GET)
 	public String displayUserHome() {
 		log.info("Displaying home for user");

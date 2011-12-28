@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
@@ -49,6 +50,8 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	@Autowired
 	private ActivityDefinitionRepository actRepo;
 	@Autowired
+	private ActivityCategoryRepository catRepo;
+	@Autowired
 	private ActivityTypeRepository typeRepo;
 	@Autowired
 	private CareGiverRepository cgRepo;
@@ -64,7 +67,9 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		FrequencyTime time = FrequencyTime.unmarshal("10:00");
 		day.addTime(time);
 		
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", MeasureUnit.KILOMETERS);
+		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+		
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, MeasureUnit.KILOMETERS);
 		typeRepo.save(type);
 		typeRepo.flush();
 

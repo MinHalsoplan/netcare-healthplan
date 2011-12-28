@@ -18,10 +18,12 @@ package org.callistasoftware.netcare.web.listener;
 
 import javax.servlet.ServletContextEvent;
 
+import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
@@ -47,11 +49,13 @@ public class ApplicationListener extends ContextLoaderListener {
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
+		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
 		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
 		
-		atRepo.save(ActivityTypeEntity.newEntity("Löpning", MeasureUnit.KILOMETERS));
-		atRepo.save(ActivityTypeEntity.newEntity("Yoga", MeasureUnit.MINUTES));
+		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
+		atRepo.save(ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS));
+		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTES));
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");

@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
@@ -27,6 +28,33 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
  *
  */
 public interface ActivityTypeService {
+	
+	/**
+	 * Create a new activity type
+	 * @param dto
+	 * @return
+	 */
+	ServiceResult<ActivityType> createActivityType(final ActivityType dto);
+	
+	/**
+	 * Searches for activity types
+	 * @param searchString
+	 * @return
+	 */
+	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString);
+	
+	/**
+	 * Load all activity categories
+	 * @return
+	 */
+	ServiceResult<ActivityCategory[]> loadAllActivityCategories();
+	
+	/**
+	 * Creates a new activity category
+	 * @param dto
+	 * @return
+	 */
+	ServiceResult<ActivityCategory> createActivityCategory(final ActivityCategory dto);
 	
 	/**
 	 * Load all activity types that exist in

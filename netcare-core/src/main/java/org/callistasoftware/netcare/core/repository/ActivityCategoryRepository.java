@@ -14,19 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.messages;
+package org.callistasoftware.netcare.core.repository;
 
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-
-public class EntityNotFoundMessage extends DefaultSystemMessage {
+/**
+ * 
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface ActivityCategoryRepository extends JpaRepository<ActivityCategoryEntity, Long> {
 
 	/**
-	 * 
+	 * Find an activity category by name
+	 * @param name
 	 */
-	private static final long serialVersionUID = 1L;
-	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
-		super("EntityNotFound", false, entityClass.getSimpleName(), id);
-	}
-
+	ActivityCategoryEntity findByName(final String name);
 }

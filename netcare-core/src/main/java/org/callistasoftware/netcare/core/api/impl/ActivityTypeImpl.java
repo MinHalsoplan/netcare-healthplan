@@ -16,8 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.List;
 import java.util.Locale;
 
+import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -37,14 +39,24 @@ public class ActivityTypeImpl implements ActivityType {
 	private Long id;
 	private String name;
 	private Option unit;
+	private ActivityCategoryImpl category;
 	
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setUnit(new Option(entity.getUnit().name(), l));
-		
+		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		return dto;
+	}
+	
+	public static ActivityType[] newFromEntities(final List<ActivityTypeEntity> entities, final Locale l) {
+		final ActivityType[] dtos = new ActivityTypeImpl[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			dtos[i] = ActivityTypeImpl.newFromEntity(entities.get(i), l);
+		}
+		
+		return dtos;
 	}
 	
 	@Override
@@ -72,5 +84,14 @@ public class ActivityTypeImpl implements ActivityType {
 	
 	public void setUnit(final Option unit) {
 		this.unit = unit;
+	}
+
+	@Override
+	public ActivityCategory getCategory() {
+		return this.category;
+	}
+	
+	public void setCategory(final ActivityCategoryImpl category) {
+		this.category = category;
 	}
 }

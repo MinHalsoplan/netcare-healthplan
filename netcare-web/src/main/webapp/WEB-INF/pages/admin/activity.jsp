@@ -143,44 +143,28 @@
 				});
 				
 				var types = NC.ActivityTypes();
+				var showUnit = function(name) {
+					console.log("Selected " + name);
+					$('span.unit').html('<strong>(' + name + ')</strong>');
+				}
 				
-				var units = new Array();
-				var select = $('#activityForm select[name="activityType"]');
-				
-				var showUnit = function(optionElem) {
-					console.log("Selected element: " + optionElem.val());
-					$.each(units, function(index, value) {
-						if (optionElem.html() === units[index].name) {
-							$('span.unit').html('<strong>(' + units[index].unit.value + ')</strong>');
-						}
-					});
-				};
-				
-				types.load(function(data) {
-					var firstOption;
-					$.each(data, function(index, value) {
-						console.log("Processing: " + value.name);
-						units[index] = value;
-						
-						var opt = $('<option>', { value : value.id }).html(value.name);
-						if (index == 0) {
-							firstOption = opt;
-						}
-						
-						select.append(opt);
-					});
-					
-					/*
-					 * Display unit on the currently selected option
-					 */
-					showUnit(firstOption);
-				});
-				
-				select.change(function() {
-					var selected = $('#activityForm select option:selected');
-					console.log("Selected element is: " + selected.html());
-					
-					showUnit(selected);
+				/*
+				 * Auto complete activity type field
+				 */
+				$('input[name="activityType"]').autocomplete({
+					source : function(request, response) {
+						types.search(request.term, function(data) {
+							console.log("Found " + data.data.length + " activity types");
+							response($.map(data.data, function(item) {
+								return { label : item.name + ' (' + item.category.name + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
+							}));
+						});
+					},
+					select : function(event, ui) {
+						showUnit(ui.item.unit);
+						$('input[name="activityTypeId"]').attr('value', ui.item.id);
+						$('input[name="activityGoal"]').focus();
+					}
 				});
 				
 				/*
@@ -191,7 +175,7 @@
 					console.log("Form submission...");
 					event.preventDefault();
 					
-					var activityType = $('#activityForm select option:selected').val();
+					var activityType = $('input[name="activityTypeId"]').val();
 					var goal = $('#activityForm input[name="activityGoal"]').val();
 					var startDate = $('input[name="startDate"]').val();
 					var activityRepeat = $('input[name="activityRepeat"]').val();
@@ -232,7 +216,7 @@
 					hp.addActivity(healthPlan, jsonObj, function(data) {
 						console.log("Success callback is executing...");
 						console.log("Resetting form");
-						resetForm();
+						$('input :reset').click();
 					}, 'activitiesTable');
 					
 					$('#activityForm').hide();
@@ -245,6 +229,53 @@
 				});
 				
 				$('#activityForm').hide();
+				
+				/*
+				 * Bind modal show event,
+				 * When the modal is shown we want to download units as
+				 * well as activity categories and fill the modal
+				 * form
+				 */
+				$('#addNewType').bind('show', function() {
+					console.log("Showing modal... fill form.");
+					
+					new NC.Support().loadUnits($('#addNewType select[name="unit"]'));
+					
+					var categories = new NC.ActivityCategories();
+					console.log(categories);
+					
+					categories.loadAsOptions($('#addNewType select[name="category"]'));
+				});
+				
+				/*
+				 * Save activity type when user submits the form
+				 */
+				$('#addNewType :submit').click(function(event) {
+					console.log("User submitted new activity type form...");
+					event.preventDefault();
+					
+					var name = $('#addNewType input[name="name"]').val();
+					
+					var category = new Object();
+					category.id = $('#addNewType select[name="category"] option:selected').val();
+					
+					var unit = new Object();
+					unit.code = $('#addNewType select[name="unit"] option:selected').val();
+					
+					console.log("Name: " + name);
+					console.log("Category: " + category.id);
+					console.log("Unit: " + unit.code);
+					
+					var formData = new Object();
+					formData.name = name;
+					formData.category = category;
+					formData.unit = unit;
+					
+					var jsonObj = JSON.stringify(formData);
+					new NC.ActivityTypes().create(jsonObj, function(data) {
+						$('#addNewType').modal('hide');
+					});
+				});
 			});
 		</script>
 	</netcare:header>
@@ -265,6 +296,34 @@
 				</a>
 			</p>
 			
+			<div id="addNewType" class="modal hide fade" style="display: none;">
+				<form id="addNewActivityTypeForm" class="form-stacked">
+					<div class="modal-header">
+						<a href="#" class="close">x</a>
+						<h3><spring:message code="addActivityType" /></h3>
+					</div>
+					<div class="modal-body">
+						<spring:message code="activityCategory" var="cat" scope="page" />
+						<netcare:field name="category" label="${cat}">
+							<select name="category" class="xlarge"></select>
+						</netcare:field>
+						
+						<spring:message code="name" var="name" scope="page" />
+						<netcare:field name="name" label="${name}">
+							<input type="text" name="name" class="xlarge"/>
+						</netcare:field>
+						
+						<spring:message code="unit" var="unit" scope="page" />
+						<netcare:field name="unit" label="${unit}">
+							<select name="unit" class="xlarge"></select>
+						</netcare:field>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" value="<spring:message code="create" />" class="btn primary"/>
+					</div>
+				</form>
+			</div>
+			
 			<netcare:form id="activityForm" classes="form-stacked">
 			
 				<fieldset>
@@ -275,20 +334,21 @@
 								<div class="span3">
 									<spring:message code="what" var="what" scope="page" />
 									<netcare:field name="activityType" label="${what}">
-										<select name="activityType" class="medium"></select>
+										<input type="text" name="activityType" class="medium" />
+										<input type="hidden" name="activityTypeId" />	
+										<a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a>
 									</netcare:field>
 								</div>
 								<div class="span5">
 									<spring:message code="goal" var="goal" scope="page"/>
 									<netcare:field containerId="activityGoal" name="activityGoal" label="${goal}">
-										<input name="activityGoal" type="number" class="medium" required/> <span class="unit"></span>
+										<input name="activityGoal" type="number" min="0" max="52" class="medium" required/> <span class="unit"></span>
 									</netcare:field>
 								</div>
 							</div>
 						</div>
 					</div>
 				</fieldset>
-				
 				
 				<fieldset>
 					<legend><spring:message code="schedule" /></legend>

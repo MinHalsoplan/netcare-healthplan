@@ -43,4 +43,10 @@ public interface ActivityType extends Serializable {
 	 * @return
 	 */
 	Option getUnit();
+	
+	/**
+	 * Get the name of the category where this type belongs
+	 * @return
+	 */
+	ActivityCategory getCategory();
 }

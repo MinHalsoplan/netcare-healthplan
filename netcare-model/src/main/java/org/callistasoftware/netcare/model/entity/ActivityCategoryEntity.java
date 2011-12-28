@@ -16,73 +16,66 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_activity_type")
-public class ActivityTypeEntity {
+@Table(name="activity_category")
+public class ActivityCategoryEntity {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length=64, nullable=false)
+	@Column(nullable=false, unique=true)
 	private String name;
 	
-	@Column(nullable=false)
-	private MeasureUnit unit;
+	@OneToMany(fetch=FetchType.LAZY)
+	private List<ActivityTypeEntity> activityTypes;
 	
-	@ManyToOne
-	private ActivityCategoryEntity category;
-	
-	ActivityTypeEntity() {
+	ActivityCategoryEntity() {
+		this.setActivityTypes(new ArrayList<ActivityTypeEntity>());
 	}
 	
-	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final MeasureUnit unit) {
+	ActivityCategoryEntity(final String name) {
 		this();
 		this.setName(name);
-		this.setCategory(category);
-		this.setUnit(unit);
 	}
 	
-	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category, MeasureUnit unit) {
-		return new ActivityTypeEntity(name, category, unit);
+	public static ActivityCategoryEntity newEntity(final String name) {
+		return new ActivityCategoryEntity(name);
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
-
-	void setName(String name) {
-		this.name = EntityUtil.notNull(name);
+	
+	void setId(Long id) {
+		this.id = id;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
-
-	void setUnit(MeasureUnit unit) {
-		this.unit = EntityUtil.notNull(unit);
+	
+	void setName(String name) {
+		this.name = name;
 	}
 
-	public MeasureUnit getUnit() {
-		return unit;
+	public List<ActivityTypeEntity> getActivityTypes() {
+		return activityTypes;
 	}
 
-	public ActivityCategoryEntity getCategory() {
-		return category;
-	}
-
-	void setCategory(ActivityCategoryEntity category) {
-		this.category = category;
-	}
-
-	void setId(Long id) {
-		this.id = id;
+	void setActivityTypes(List<ActivityTypeEntity> activityTypes) {
+		this.activityTypes = activityTypes;
 	}
 }

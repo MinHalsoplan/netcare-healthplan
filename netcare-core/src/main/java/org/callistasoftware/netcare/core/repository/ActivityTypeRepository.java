@@ -16,8 +16,18 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.List;
+
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long> {
+	
+	/**
+	 * Find activity types by name
+	 * @param name
+	 * @return
+	 */
+	List<ActivityTypeEntity> findByNameLike(final String name);
+	
 }

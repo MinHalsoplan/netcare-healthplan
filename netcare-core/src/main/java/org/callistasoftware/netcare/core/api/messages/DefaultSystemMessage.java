@@ -38,17 +38,26 @@ public class DefaultSystemMessage implements SystemMessage {
 	private String code;
 	private String message;
 	
-	public DefaultSystemMessage(final String entityCode, final String type, final Object...args) {
+	public DefaultSystemMessage(final String type, final boolean lowerCase, final Object...args) {
 		final Locale l = LocaleContextHolder.getLocale();
 		final ResourceBundle bundle = ResourceBundle.getBundle("messages", l);
 		
-		this.code = bundle.getString(entityCode);
+		this.code = bundle.getString(type);
+		
+		final String[] messages = new String[args.length];
+		for (int i = 0; i < args.length; i++) {
+			if (args[i] instanceof Number) {
+				messages[i] = args[i].toString();
+			} else {
+				messages[i] = lowerCase ? bundle.getString(args[i].toString()).toLowerCase() : bundle.getString(args[i].toString());;
+			}
+		}
 		
 		/*
 		 * Format message
 		 */
 		final MessageFormat frm = new MessageFormat(bundle.getString(type), l);
-		this.message = new StringBuilder().append(frm.format(args)).toString();
+		this.message = new StringBuilder().append(frm.format(messages)).toString();
 	}
 	
 	public DefaultSystemMessage(final String message) {

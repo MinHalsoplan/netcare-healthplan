@@ -34,8 +34,6 @@
 				}
 				
 				var units = new NC.Support();
-				units.loadOptions($('#activityTypeForm select[name="unit"]'));
-				
 				units.loadLatestReportedActivities('reportedActivities');
 			});
 		</script>
