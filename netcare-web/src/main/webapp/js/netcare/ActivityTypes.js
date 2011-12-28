@@ -78,6 +78,25 @@ NC.ActivityTypes = function() {
 					}
 				}
 			});
+		},
+		
+		search : function(searchString, callback) {
+			var url = _baseUrl + '/search';
+			console.log("Searching for activity types with name like " + searchString + " from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				data : { text : searchString },
+				success : function(data) {
+					if (data.success) {
+						console.log("Successfully searched for activity types...");
+						callback(data);
+					} else {
+						console.log("Error searching for activity types...");
+					}
+				}
+			});
 		}
 	};
 	

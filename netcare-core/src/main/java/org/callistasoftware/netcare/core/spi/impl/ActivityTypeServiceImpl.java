@@ -106,4 +106,13 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 		return ServiceResultImpl.createSuccessResult(ActivityCategoryImpl.newFromEntity(savedEntity), new GenericSuccessMessage());
 	}
 
+	@Override
+	public ServiceResult<ActivityType[]> searchForActivityTypes(
+			String searchString) {
+		log.info("Finding activity types. Search string is: " + searchString);
+		final List<ActivityTypeEntity> result = this.repo.findByNameLike(new StringBuilder().append("%").append(searchString).append("%").toString());
+		
+		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(result, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, result.size()));
+	}
+
 }

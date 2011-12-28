@@ -30,6 +30,13 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 public interface ActivityTypeService {
 	
 	/**
+	 * Searches for activity types
+	 * @param searchString
+	 * @return
+	 */
+	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString);
+	
+	/**
 	 * Load all activity categories
 	 * @return
 	 */

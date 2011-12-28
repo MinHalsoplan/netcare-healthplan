@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import java.util.Locale;
-
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
@@ -27,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -40,8 +39,15 @@ public class ActivityTypeApi extends ApiSupport {
 	
 	@RequestMapping(value="/load", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityType[]> loadActivityTypes(final Locale l) {
+	public ServiceResult<ActivityType[]> loadActivityTypes() {
 		log.info("User {} (care giver: {}) is loading activity types", getUser().getName(), getUser().isCareGiver());
 		return this.service.loadAllActivityTypes();
+	}
+	
+	@RequestMapping(value="/search", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityType[]> searchActivityTypes(@RequestParam(value="text") final String text) {
+		this.logAccess("search", "activity types");
+		return this.service.searchForActivityTypes(text);
 	}
 }

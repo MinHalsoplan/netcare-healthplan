@@ -143,44 +143,28 @@
 				});
 				
 				var types = NC.ActivityTypes();
+				var showUnit = function(name) {
+					console.log("Selected " + name);
+					$('span.unit').html('<strong>(' + name + ')</strong>');
+				}
 				
-				var units = new Array();
-				var select = $('#activityForm select[name="activityType"]');
-				
-				var showUnit = function(optionElem) {
-					console.log("Selected element: " + optionElem.val());
-					$.each(units, function(index, value) {
-						if (optionElem.html() === units[index].name) {
-							$('span.unit').html('<strong>(' + units[index].unit.value + ')</strong>');
-						}
-					});
-				};
-				
-				types.load(function(data) {
-					var firstOption;
-					$.each(data, function(index, value) {
-						console.log("Processing: " + value.name);
-						units[index] = value;
-						
-						var opt = $('<option>', { value : value.id }).html(value.name);
-						if (index == 0) {
-							firstOption = opt;
-						}
-						
-						select.append(opt);
-					});
-					
-					/*
-					 * Display unit on the currently selected option
-					 */
-					showUnit(firstOption);
-				});
-				
-				select.change(function() {
-					var selected = $('#activityForm select option:selected');
-					console.log("Selected element is: " + selected.html());
-					
-					showUnit(selected);
+				/*
+				 * Auto complete activity type field
+				 */
+				$('input[name="activityType"]').autocomplete({
+					source : function(request, response) {
+						types.search(request.term, function(data) {
+							console.log("Found " + data.data.length + " activity types");
+							response($.map(data.data, function(item) {
+								return { label : item.name + ' (' + item.categoryName + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
+							}));
+						});
+					},
+					select : function(event, ui) {
+						showUnit(ui.item.unit);
+						$('input[name="activityTypeId"]').attr('value', ui.item.id);
+						$('input[name="activityGoal"]').focus();
+					}
 				});
 				
 				/*
@@ -191,7 +175,7 @@
 					console.log("Form submission...");
 					event.preventDefault();
 					
-					var activityType = $('#activityForm select option:selected').val();
+					var activityType = $('input[name="activityTypeId"]').val();
 					var goal = $('#activityForm input[name="activityGoal"]').val();
 					var startDate = $('input[name="startDate"]').val();
 					var activityRepeat = $('input[name="activityRepeat"]').val();
@@ -232,7 +216,7 @@
 					hp.addActivity(healthPlan, jsonObj, function(data) {
 						console.log("Success callback is executing...");
 						console.log("Resetting form");
-						resetForm();
+						$('input :reset').click();
 					}, 'activitiesTable');
 					
 					$('#activityForm').hide();
@@ -275,7 +259,9 @@
 								<div class="span3">
 									<spring:message code="what" var="what" scope="page" />
 									<netcare:field name="activityType" label="${what}">
-										<select name="activityType" class="medium"></select>
+										<input type="text" name="activityType" class="medium" />
+										<input type="hidden" name="activityTypeId" />	
+										<a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a>
 									</netcare:field>
 								</div>
 								<div class="span5">
