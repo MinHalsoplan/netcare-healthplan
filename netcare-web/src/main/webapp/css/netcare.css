@@ -16,3 +16,6 @@
  */
 @CHARSET "UTF-8";
 
+a:hover {
+	cursor: pointer;
+}

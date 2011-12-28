@@ -49,7 +49,7 @@
 				});
 				
 				/*
-				 * Disable time input field
+				 * Disable time input field as well as "add" icon next to it
 				 */
 				$('input[name $= "TimeField"]').attr('disabled', 'disabled');
 				$('input[name $= "TimeField"]').next().hide();
