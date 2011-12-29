@@ -104,7 +104,7 @@
 			<spring:message code="startDate" var="startDate" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px;">
-				<a id="showCreateForm" class="btn"><netcare:image name="bullet_add" /> <c:out value="${title}" /></a>
+				<a id="showCreateForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			<netcare:form id="createHealthPlanForm" classes="form-stacked">
 				<fieldset>
