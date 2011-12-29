@@ -157,6 +157,7 @@
 		<ul>
 			<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a>
 			<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
+			<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="patients" /></a>
 		</ul>
 	</div>
 </div>
