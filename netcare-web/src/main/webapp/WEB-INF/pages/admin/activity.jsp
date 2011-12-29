@@ -92,7 +92,7 @@
 					
 					var addedTimeContainer = $('<div>').css('padding-right', '10px').css('float', 'left');
 					var addedTime = $('<span>' + text + '</span>');
-					var removeTime = util.createIcon('bullet_delete', function() {
+					var removeTime = util.createIcon('trash', 16, function() {
 						console.log("Delete time");
 						addedTimeContainer.remove();
 						

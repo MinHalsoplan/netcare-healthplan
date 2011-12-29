@@ -90,7 +90,7 @@ NC.PatientSchema = function(descriptionId, tableId) {
 							inputValue.appendTo(reportField);
 
 							if (!value.due) {
-								var editIcon = util.createIcon('bullet_accept', null);
+								var editIcon = util.createIcon('bullet_accept', 32, null);
 								editIcon.css('align', 'right');
 								reportField.append(editIcon);
 							}

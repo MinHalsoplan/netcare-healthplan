@@ -66,11 +66,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 						console.log("Processing index " + index + " value: " + value.name);
 						
 						var util = NC.Util();
-						var editIcon = util.createIcon('bullet_info', function() {
+						var editIcon = util.createIcon('edit', 24, function() {
 							public.view(value.id, currentPatient);
 						});
 						
-						var deleteIcon = util.createIcon('bullet_delete', function() {
+						var deleteIcon = util.createIcon('trash', 24, function() {
 							public.delete(value.id, currentPatient);
 						});
 						
@@ -183,11 +183,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							
 							console.log("Processing id: " + value.id);
 							
-							var infoIcon = util.createIcon('bullet_info', function() {
+							var infoIcon = util.createIcon('edit', 24, function() {
 								activityInfoFunction(value.id, currentPatientId);
 							});
 							
-							var deleteIcon = util.createIcon('bullet_delete', function() {
+							var deleteIcon = util.createIcon('trash', 24, function() {
 								console.log("Delete icon clicked");
 								public.deleteActivity(currentPatientId, value.id);
 							});
