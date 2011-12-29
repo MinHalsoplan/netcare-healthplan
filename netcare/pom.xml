@@ -181,7 +181,7 @@
   			<artifactId>maven-license-plugin</artifactId>
   			<configuration>
   				<properties>
-  					<year>2011</year>
+  					<year>2011,2012</year>
   				</properties>
   				<strictCheck>true</strictCheck>
   				<header>src/license/agpl_v3/header.txt</header>

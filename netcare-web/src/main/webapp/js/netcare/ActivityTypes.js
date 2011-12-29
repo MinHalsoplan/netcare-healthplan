@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 NC.ActivityCategories = function() {
 	var _baseUrl = '/netcare-web/api/activityCategory';
 	var _this = this;

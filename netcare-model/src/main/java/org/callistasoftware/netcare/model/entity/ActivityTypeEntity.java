@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -38,6 +39,7 @@ public class ActivityTypeEntity {
 	private MeasureUnit unit;
 	
 	@ManyToOne
+	@JoinColumn(name="category_id")
 	private ActivityCategoryEntity category;
 	
 	ActivityTypeEntity() {
