@@ -65,10 +65,10 @@ NC.Util = function() {
 			public.displayMessages(serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
 		},
 		
-		createIcon : function(name, onClickFunction) {
+		createIcon : function(name, size, onClickFunction) {
 			var icon = $('<img>', {
-				src : '/netcare-web/img/icons/32/' + name + '.png'
-			}).css('width', '16px').css('height', '16px').css('padding-left', '10px').css('cursor', 'pointer');
+				src : '/netcare-web/img/icons/' + size + '/' + name + '.png'
+			}).css('padding-left', '10px').css('cursor', 'pointer');
 			
 			icon.click(onClickFunction);
 			

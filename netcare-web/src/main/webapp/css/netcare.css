@@ -19,3 +19,12 @@
 a:hover {
 	cursor: pointer;
 }
+
+.spinner {
+	background: url('/netcare-web/img/icons/16/ajax-loader.gif') no-repeat right;
+}
+
+.addButton, .addButton:hover {
+	padding-left: 24px;
+	background: url('/netcare-web/img/icons/16/add.png') no-repeat 3px;
+}

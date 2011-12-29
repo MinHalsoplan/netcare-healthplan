@@ -92,7 +92,7 @@
 					
 					var addedTimeContainer = $('<div>').css('padding-right', '10px').css('float', 'left');
 					var addedTime = $('<span>' + text + '</span>');
-					var removeTime = util.createIcon('bullet_delete', function() {
+					var removeTime = util.createIcon('trash', 16, function() {
 						console.log("Delete time");
 						addedTimeContainer.remove();
 						
@@ -157,7 +157,7 @@
 				/*
 				 * Auto complete activity type field
 				 */
-				$('input[name="activityType"]').autocomplete({
+				$('input[name="activityType"]').autocomplete('option', {
 					source : function(request, response) {
 						types.search(request.term, function(data) {
 							console.log("Found " + data.data.length + " activity types");
@@ -302,9 +302,7 @@
 			<spring:message code="newActivity" var="title" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px">
-				<a id="showActivityForm" class="btn">
-					<netcare:image name="bullet_add"/> <c:out value="${title}" />
-				</a>
+				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			
 			<div id="addNewType" class="modal hide fade" style="display: none;">
@@ -345,9 +343,9 @@
 								<div class="span3">
 									<spring:message code="what" var="what" scope="page" />
 									<netcare:field name="activityType" label="${what}">
-										<input type="text" name="activityType" class="medium" />
+										<input type="text" name="activityType" class="medium nc-autocomplete" />
 										<input type="hidden" name="activityTypeId" />	
-										<a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a>
+										<p><a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a></p>
 									</netcare:field>
 								</div>
 								<div class="span5">
@@ -401,7 +399,7 @@
 								<div class="span5">
 									<netcare:field name="mondayTimeField" label="${addTime}">
 										<input type="text" name="mondayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true" cursor="pointer"/>
+										<netcare:image name="add" icon="true" cursor="pointer"/>
 									</netcare:field>
 								</div>
 								<div id="mondayAddedTimes" class="span6" style="display: none">
@@ -424,7 +422,7 @@
 								<div class="span5">
 									<netcare:field name="tuesdayTimeField" label="${addTime}">
 										<input type="text" name="tuesdayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true"/>
+										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
 								<div id="tuesdayAddedTimes" class="span6" style="display: none">
@@ -447,7 +445,7 @@
 								<div class="span5">
 									<netcare:field name="wednesdayTimeField" label="${addTime}">
 										<input type="text" name="wednesdayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true"/>
+										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
 								<div id="wednesdayAddedTimes" class="span6" style="display: none">
@@ -470,7 +468,7 @@
 								<div class="span5">
 									<netcare:field name="thursdayTimeField" label="${addTime}">
 										<input type="text" name="thursdayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true"/>
+										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
 								<div id="thursdayAddedTimes" class="span6" style="display: none">
@@ -493,7 +491,7 @@
 								<div class="span5">
 									<netcare:field name="fridayTimeField" label="${addTime}">
 										<input type="text" name="fridayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true"/>
+										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
 								<div id="fridayAddedTimes" class="span6" style="display: none">
@@ -516,7 +514,7 @@
 								<div class="span5">
 									<netcare:field name="saturdayTimeField" label="${addTime}">
 										<input type="text" name="saturdayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true"/>
+										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
 								<div id="saturdayAddedTimes" class="span6" style="display: none">
@@ -539,7 +537,7 @@
 								<div class="span5">
 									<netcare:field name="sundayTimeField" label="${addTime}">
 										<input type="text" name="sundayTimeField" class="medium" />
-										<netcare:image name="bullet_add" icon="true"/>
+										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
 								<div id="sundayAddedTimes" class="span6" style="display: none">

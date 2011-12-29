@@ -18,15 +18,25 @@
 --%>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="empty" %>
 <%@ attribute name="name" required="true" %>
+<%@ attribute name="size" required="false" %>
 <%@ attribute name="icon" required="false" %>
 <%@ attribute name="cursor" required="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<c:url value="/img/icons/32/${name}.png" var="url" scope="page"/>
+<c:choose>
+	<c:when test="${not empty size}">
+		<c:set var="iconSize" value="${size}" scope="page" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="iconSize" value="16" scope="page" />
+	</c:otherwise>
+</c:choose>
+
+<c:url value="/img/icons/${iconSize}/${name}.png" var="url" scope="page"/>
 <c:choose>
 	<c:when test="${not empty icon}">
-		<img src="${url}" style="widht: 16px; height: 16px; cursor: ${cursor};"/>
+		<img src="${url}" style="background: url('${url}'); vertical-align: middle; cursor: ${cursor};"/>
 	</c:when>
 	<c:otherwise>
 		<img src="${url}" />
