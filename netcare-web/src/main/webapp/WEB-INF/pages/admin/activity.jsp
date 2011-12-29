@@ -345,7 +345,7 @@
 									<netcare:field name="activityType" label="${what}">
 										<input type="text" name="activityType" class="medium nc-autocomplete" />
 										<input type="hidden" name="activityTypeId" />	
-										<a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a>
+										<p><a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a></p>
 									</netcare:field>
 								</div>
 								<div class="span5">
