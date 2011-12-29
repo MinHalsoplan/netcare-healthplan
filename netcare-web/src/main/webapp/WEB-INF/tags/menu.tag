@@ -131,6 +131,10 @@
 		<a data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" /><br />
 	</p>
 	
+	<p>
+		<a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="clickHere" /></a> <spring:message code="toViewPatients" />
+	</p>
+	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
 		<form id="pickPatientForm" class="form-stacked">
 			<div class="modal-header">
@@ -157,7 +161,6 @@
 		<ul>
 			<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a>
 			<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
-			<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="patients" /></a>
 		</ul>
 	</div>
 </div>
