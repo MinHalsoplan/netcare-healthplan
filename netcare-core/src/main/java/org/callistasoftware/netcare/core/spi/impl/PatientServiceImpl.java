@@ -19,20 +19,34 @@ package org.callistasoftware.netcare.core.spi.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
+import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
+import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.PatientService;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PatientServiceImpl implements PatientService {
 
+	private static Logger log = LoggerFactory.getLogger(PatientServiceImpl.class);
+	
+	@Autowired
+	private CareUnitRepository cuRepo;
+	
 	@Autowired
 	private PatientRepository patientRepository;
 	
@@ -59,4 +73,30 @@ public class PatientServiceImpl implements PatientService {
 		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(ent), null);
 	}
 
+	@Override
+	public ServiceResult<PatientBaseView[]> loadPatientsOnCareUnit(final CareUnit careUnit) {
+		log.info("Loading patients on care unit {}", careUnit.getHsaId());
+		
+		final CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit.getHsaId());
+		if (cu == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, careUnit.getHsaId()));
+		}
+		
+		final List<PatientEntity> patients = this.patientRepository.findByCareUnit(cu.getHsaId());
+		log.debug("Found {} patients with health plans at care unit {}", patients.size(), cu.getHsaId());
+		
+		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntities(patients), new ListEntitiesMessage(PatientEntity.class, patients.size()));
+	}
+
+	@Override
+	public ServiceResult<PatientBaseView> createPatient(PatientBaseView patient) {
+		log.info("Creating new patient {}", patient.getCivicRegistrationNumber());
+		final PatientEntity ent = this.patientRepository.findByCivicRegistrationNumber(patient.getCivicRegistrationNumber());
+		if (ent != null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotUniqueMessage(PatientEntity.class, "cnr"));
+		}
+		
+		final PatientEntity p = this.patientRepository.save(PatientEntity.newEntity(patient.getName(), patient.getCivicRegistrationNumber()));
+		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(p), new GenericSuccessMessage());
+	}
 }

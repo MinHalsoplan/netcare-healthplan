@@ -29,13 +29,16 @@ NC.Util = function() {
 				
 				var closeLink = $('<a>', { href : '#' }).addClass('close').html('×').click(function(event){
 					event.preventDefault();
-					msg.fadeOut('slow').hide();
+					msg.slideUp('slow');
 				});
 				
 				msg.append(closeLink);
 				msg.append('<p><strong>' + value.message + '</strong></p>');
-				
 				msg.appendTo('#pageMessages');
+				
+				setTimeout(function() {
+					msg.slideUp('slow');
+				}, 5000);
 			});
 		}
 	};
@@ -167,6 +170,22 @@ NC.Util = function() {
 					containerDiv.removeClass('error');
 				}
 			});
+		},
+		
+		/**
+		 * Mark error if the lenght is invalid
+		 */
+		bindLengthField : function(containerDiv, inputField, size) {
+			console.log("Binding " + inputField.attr('name') + " as a length specific field");
+			inputField.blur(function(event) {
+				var val = inputField.val();
+				console.log("Lenght of input is: " + val.length);
+				if (val.length < size) {
+					containerDiv.addClass('error');
+				} else {
+					containerDiv.removeClass('error');
+				}
+			})
 		},
 		
 		/**

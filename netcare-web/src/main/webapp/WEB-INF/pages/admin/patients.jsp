@@ -27,82 +27,112 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
-				var categories = new NC.ActivityCategories();
-				var loadCallback = function(data) {
-					
-					$('#patientsTable tbody').empty();
-					
-					$.each(data.data, function(index, value) {
-						console.log("Processing " + value.name + "...");
-						
-						var tr = $('<tr>');
-						var id = $('<td>' + value.id + '</td>');
-						var name = $('<td>' + value.name + '</td>');
-						
-						tr.append(id).append(name);
-						
-						$('#patientsTable tbody').append(tr);
-					});
-				}
 				
-				categories.load(loadCallback);
+				var util = new NC.Util();
 				
-				$(':submit').click(function(event) {
-					console.log("Form submitted");
+				util.bindNotEmptyField($('#nameContainer'), $('input[name="name"]'));
+				util.bindNotEmptyField($('#cnrContainer'), $('input[name="cnr"]'));
+				util.bindLengthField($('#cnrContainer'), $('input[name="cnr"]'), 12);
+				
+				var patients = new NC.Patient();
+				
+				var updatePatientTable = function(data) {
+					
+					if (data.length == 0) {
+						$('#patientsTable').hide();
+					} else {
+						$('#patientsTable tbody').empty();
+						
+						$.each(data, function(index, value) {
+							var tr = $('<tr>');
+							
+							var id = $('<td>' + value.id + '</td>');
+							var name = $('<td>' + value.name + '</td>');
+							var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
+							
+							tr.append(id).append(name).append(cnr);
+							
+							$('#patientsTable tbody').append(tr);
+						});
+						
+						$('#patientsTable').show();
+					}
+				};
+				
+				patients.load(updatePatientTable);
+				
+				$('#patientForm :submit').click(function(event) {
+					console.log("Submitting form...");
 					event.preventDefault();
 					
 					var formData = new Object();
 					formData.name = $('input[name="name"]').val();
+					formData.civicRegistrationNumber = $('input[name="cnr"]').val();
 					
 					var jsonObj = JSON.stringify(formData);
-					categories.create(jsonObj, function(data) {
-						categories.load(loadCallback);
-					});
+					patients.create(jsonObj, updatePatientTable);
 					
-					$('input[name="name"]').val('');
+					$('#patientForm :reset').click();
 				});
+				
+				$('#showCreateForm').click(function(event) {
+					$('#patientForm').toggle();
+				});
+				
+				$('#patientForm').hide();
 				
 			});
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="activityCategories" /></h2>
+			<h2><spring:message code="patients" /></h2>
 			<p>På den här sidan lägger du till nya patienter. Etc...</p>
 			
-			<form id="activityCategoryForm" class="form-stacked">
+			<p style="text-align: right; padding-right: 20px;">
+				<a id="showCreateForm" class="btn addButton">
+					<spring:message code="newPatient" />
+				</a>
+			</p>
+			
+			<form id="patientForm" class="form-stacked">
 				<fieldset>
-					<legend><spring:message code="create" /></legend>
+					<legend><spring:message code="newPatient" /></legend>
 				</fieldset>
 				
-				<netcare:field name="name">
+				<spring:message code="name" var="name" scope="page"/>
+				<netcare:field containerId="nameContainer" name="name" label="${name}">
 					<input type="text" name="name" />
-					
-					<spring:message code="create" var="create" scope="page" />
-					<input type="submit" class="btn primary" value="${create}" />
 				</netcare:field>
 				
-				<netcare:field name="cnr">
+				<spring:message code="cnr" var="cnr" scope="page" />
+				<netcare:field containerId="cnrContainer" name="cnr" label="${cnr}">
 					<input type="text" name="cnr" />
 				</netcare:field>
 				
 				<div class="actions">
-					<input type="submit" class="btn primary addButton" value="<spring:message code="create" />" />
+					<input type="submit" class="btn primary" value="<spring:message code="create" />" />
 					<input type="reset" class="btn" value="<spring:message code="reset" />" />
 				</div>
 				
 			</form>
 			
-			<table id="patientsTable" class="bordered-table zebra-striped">
-				<thead>
-					<th>Id</th>
-					<th>Namn</th>
-					<th>Personnummer</th>
-				</thead>
-				<tbody>
-				
-				</tbody>
-			</table>
+			<section id="patients">
+				<h3><spring:message code="patients" /></h3>
+				<p>
+					<spring:message code="patientsDescription" />
+				</p>
+				<table id="patientsTable" class="bordered-table zebra-striped">
+					<thead>
+						<th>Id</th>
+						<th>Namn</th>
+						<th>Personnummer</th>
+					</thead>
+					<tbody>
+					
+					</tbody>
+				</table>
+			</section>
 		</netcare:content>
 		<netcare:menu />
 		

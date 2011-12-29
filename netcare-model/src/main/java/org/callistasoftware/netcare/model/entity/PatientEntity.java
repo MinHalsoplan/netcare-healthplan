@@ -16,8 +16,14 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -30,7 +36,10 @@ public class PatientEntity extends UserEntity {
 	private String civicRegistrationNumber;
 	
 	@Column(name="is_mobile")
-	private boolean isMobile;	
+	private boolean isMobile;
+	
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="forPatient")
+	private List<HealthPlanEntity> healthPlans;
 	
 	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
 		return new PatientEntity(name, civicRegistrationNumber);
@@ -38,6 +47,7 @@ public class PatientEntity extends UserEntity {
 	
 	PatientEntity() {
 		super();
+		this.setHealthPlans(new ArrayList<HealthPlanEntity>());
 	}
 	
 	PatientEntity(final String name, final String civicRegistrationNumber) {
@@ -59,5 +69,13 @@ public class PatientEntity extends UserEntity {
 
 	public void setMobile(boolean isMobile) {
 		this.isMobile = isMobile;
+	}
+
+	public List<HealthPlanEntity> getHealthPlans() {
+		return healthPlans;
+	}
+
+	void setHealthPlans(List<HealthPlanEntity> healthPlans) {
+		this.healthPlans = healthPlans;
 	}
 }
