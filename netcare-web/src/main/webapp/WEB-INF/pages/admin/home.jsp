@@ -88,30 +88,6 @@
 					och fallit utan för de rekommenderade värdena.
 				</p>
 			</section>
-			
-		 
-			
-			<%--<form id="activityTypeForm" method="post" action="#">
-				<fieldset>
-					<legend><spring:message code="addActivityType" /></legend>
-					<div class="clearfix">
-						<label for="activityName"><spring:message code="name" /></label>
-						<div class="input">
-							<input name="activityName" class="xlarge" size="30" type="text" />
-						</div>
-					</div>
-					
-					<div class="clearfix">
-						<label for="activityUnit"><spring:message code="unit" /></label>
-						<div class="input">
-							<select name="unit" class="medium">
-							</select>
-						</div>
-					</div>
-					
-				</fieldset>
-			</form>
-			 --%>
 		</netcare:content>
 		<netcare:menu>
 		

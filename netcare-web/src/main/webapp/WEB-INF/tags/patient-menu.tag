@@ -28,6 +28,10 @@
 	<p><small>
 	<sec:authentication property="principal.civicRegistrationNumber" />
 	</small></p>
+	
+	<ul>
+		<li><a href="<spring:url value="/netcare/user/results" />">Mina resultat</a></li>
+	</ul>
 </div>
 	
 </body>

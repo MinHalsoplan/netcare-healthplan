@@ -87,6 +87,9 @@
 	<c:url value="/js/json2.js" var="json" scope="page"/>
 	<script type="text/javascript" src="${json}"></script>
 	
+	<!-- Google Javascript API -->
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	
 	<!-- Include JQuery -->
 	<c:url value="/js/jquery-1.6.2.min.js" var="jqueryJs" scope="page" />
 	<script type="text/javascript" src="${jqueryJs}"></script>

@@ -24,6 +24,7 @@ import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 
 /**
  * Defines the ordination service that will provide
@@ -107,4 +108,20 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit);
+	
+	/**
+	 * Get reported activities for a certain activity definition within a specific time interval
+	 * @param activityDefintionId
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(final Long healthPlanId);
+	
+	/**
+	 * Get statistical information from a health plan
+	 * @param healthPlanId
+	 * @return
+	 */
+	ServiceResult<HealthPlanStatistics> getStatisticsForHealthPlan(final Long healthPlanId);
 }

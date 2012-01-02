@@ -122,6 +122,11 @@ public class HomeController extends ControllerSupport {
 		return "admin/patients";
 	}
 	
+	@RequestMapping(value="/user/results", method=RequestMethod.GET)
+	public String displayPatientResults() {
+		return "user/results";
+	}
+	
 	@RequestMapping(value="/user/home", method=RequestMethod.GET)
 	public String displayUserHome() {
 		log.info("Displaying home for user");

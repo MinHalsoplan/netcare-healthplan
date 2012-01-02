@@ -22,6 +22,7 @@ import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,11 +62,11 @@ public class HealthPlanApi extends ApiSupport {
 		return ordinations;
 	}
 	
-	@RequestMapping(value="/{patient}/{ordination}/delete", method=RequestMethod.POST)
+	@RequestMapping(value="/{patient}/{healthPlan}/delete", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="patient") final Long patient, @PathVariable(value="ordination") final Long ordination) {
-		log.info("Deleting ordination {} for patient {}", ordination, patient);
-		return this.service.deleteHealthPlan(ordination);
+	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="patient") final Long patient, @PathVariable(value="healthPlan") final Long healthPlan) {
+		log.info("Deleting ordination {} for patient {}", healthPlan, patient);
+		return this.service.deleteHealthPlan(healthPlan);
 	}
 	
 	@RequestMapping(value="/{healthPlanId}/activity/new", method=RequestMethod.POST, consumes="application/json", produces="application/json")
@@ -79,7 +80,14 @@ public class HealthPlanApi extends ApiSupport {
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(@PathVariable(value="healthPlanId") final Long healthPlan) {
-		log.info("User {} is listing activity defintions for health plan {}", new Object[] {this.getUser(), healthPlan});
+		this.logAccess("list", "activity definitions");
 		return this.service.loadActivitiesForHealthPlan(healthPlan);
+	}
+	
+	@RequestMapping(value="/{healthPlanId}/scheduledActivities", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<HealthPlanStatistics> loadReportedActivitites(@PathVariable(value="healthPlanId") final Long healthPlanId) {
+		this.logAccess("list", "scheduled activities");
+		return this.service.getStatisticsForHealthPlan(healthPlanId);
 	}
 }

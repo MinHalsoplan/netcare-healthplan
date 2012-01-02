@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.Pair;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -42,6 +44,9 @@ import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
+import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
+import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
+import org.callistasoftware.netcare.core.api.statistics.ReportedActivity;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
@@ -330,5 +335,103 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		
 		final List<ScheduledActivityEntity> activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(
+			Long healthPlanId) {
+		log.info("Get scheduled activities for health plan {}", healthPlanId);
+		final HealthPlanEntity ad = this.repo.findOne(healthPlanId);
+		if (ad == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+		}
+		
+		final List<ScheduledActivityEntity> entities = this.scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
+		log.debug("Found {} scheduled activities", entities.size());
+		
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(entities), new ListEntitiesMessage(ScheduledActivityEntity.class, entities.size()));
+	}
+
+	@Override
+	public ServiceResult<HealthPlanStatistics> getStatisticsForHealthPlan(
+			Long healthPlanId) {
+		log.info("Getting statistics for health plans...");
+		
+		final HealthPlanStatistics stats = new HealthPlanStatistics();
+		
+		final HealthPlanEntity healthPlan = this.repo.findOne(healthPlanId);
+		if (healthPlan == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+		}
+		
+		log.debug("Calculating health plan overview...");
+		final ScheduledActivity[] activities = this.getScheduledActivitiesForHealthPlan(healthPlanId).getData();
+		final List<ActivityCount> activityCount = new ArrayList<ActivityCount>();
+		
+		for(final ScheduledActivity ac : activities) {
+			final String name = ac.getDefinition().getType().getName();
+			final ActivityCount act = new ActivityCount(name);
+			final ActivityCount existing = this.findActivityCount(name, activityCount);
+			
+			if (existing == null) {
+				log.debug("Activity count not in list. Adding {}", act.getName());
+				activityCount.add(act);
+			}
+			
+			log.debug("Increasing activity count on {}", act.getName());
+			this.findActivityCount(name, activityCount).increaseCount();
+		}
+		stats.setActivities(activityCount);
+		log.debug("Health plan overview calculated.");
+		
+		
+		/*
+		 * Get all reported activities
+		 */
+		log.debug("Calculating reported activities...");
+		final List<ReportedActivity> reportedActivities = new ArrayList<ReportedActivity>();
+		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository.findReportedActivitiesForHealthPlan(healthPlanId, healthPlan.getStartDate(), new Date());
+		for (final ScheduledActivityEntity e : ents) {
+			
+			final String name = e.getActivityDefinitionEntity().getActivityType().getName();
+			final ReportedActivity existing = this.findReportedActivity(name, reportedActivities);
+			
+			if (existing == null) {
+				final ReportedActivity ra = new ReportedActivity();
+				ra.setName(name);
+				ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
+				
+				reportedActivities.add(ra);
+			}
+			
+			final Pair<String, Float> pair = new Pair<String, Float>();
+			pair.setFirst(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
+			pair.setSecond((float) e.getActualValue());
+			
+			this.findReportedActivity(name, reportedActivities).getReportedValues().add(pair);
+		}
+		stats.setReportedActivities(reportedActivities);
+		
+		return ServiceResultImpl.createSuccessResult(stats, new GenericSuccessMessage());
+	}
+	
+	private ActivityCount findActivityCount(final String name, final List<ActivityCount> list) {
+		for (final ActivityCount a : list) {
+			if (a.getName().equals(name)) {
+				return a;
+			}
+		}
+		
+		return null;
+	}
+	
+	private ReportedActivity findReportedActivity(final String name, final List<ReportedActivity> list) {
+		for (final ReportedActivity act : list) {
+			if (act.getName().equals(name)) {
+				return act;
+			}
+		}
+		
+		return null;
 	}
 }

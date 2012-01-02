@@ -54,6 +54,7 @@ import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -226,5 +227,4 @@ public class HealthPlanServiceTest extends TestSupport {
 		assertEquals(29, n);
 		assertEquals("2013-02-23", ApiUtil.formatDate(scheduledActivities.get(n-1).getScheduledTime()));
 	}
-
 }
