@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
@@ -48,6 +49,15 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	
 	public static PatientBaseView newFromEntity(final PatientEntity entity) {
 		return new PatientBaseViewImpl(entity.getId(), entity.getName(), entity.getCivicRegistrationNumber());
+	}
+	
+	public static PatientBaseView[] newFromEntities(final List<PatientEntity> entities) {
+		final PatientBaseView[] dtos = new PatientBaseViewImpl[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			dtos[i] = PatientBaseViewImpl.newFromEntity(entities.get(i));
+		}
+		
+		return dtos;
 	}
 	
 	void setId(final Long id) {

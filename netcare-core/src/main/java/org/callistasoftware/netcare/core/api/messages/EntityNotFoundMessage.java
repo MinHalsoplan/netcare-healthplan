@@ -25,7 +25,7 @@ public class EntityNotFoundMessage extends DefaultSystemMessage {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public EntityNotFoundMessage(final Class<?> entityClass, final Long id) {
+	public EntityNotFoundMessage(final Class<?> entityClass, final Object id) {
 		super("EntityNotFound", false, entityClass.getSimpleName(), id);
 	}
 

@@ -219,6 +219,22 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			
 		},
 		
+		listScheduledActivities : function(healthPlanId, callback) {
+			var url = _baseUrl + '/' + healthPlanId + '/scheduledActivities';
+			console.log("Loading scheduled activities from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					if (data.success) {
+						callback(data);
+					}
+				}
+			});
+		},
+		
 		/**
 		 * Add an activity to a health plan
 		 */

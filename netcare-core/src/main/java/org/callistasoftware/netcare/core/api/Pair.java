@@ -14,16 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.messages;
+package org.callistasoftware.netcare.core.api;
 
-public class ListEntitiesMessage extends DefaultSystemMessage {
+public class Pair<T extends Object, I extends Object> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private T first;
 	
-	public ListEntitiesMessage(final Class<?> entityClass, final int size) {
-		super("EntitiesListed", true, size, size == 1 ? entityClass.getSimpleName() : entityClass.getSimpleName() + "_plural");
+	private I second;
+
+	public T getFirst() {
+		return first;
+	}
+
+	public void setFirst(T first) {
+		this.first = first;
+	}
+
+	public I getSecond() {
+		return second;
+	}
+
+	public void setSecond(I second) {
+		this.second = second;
 	}
 }

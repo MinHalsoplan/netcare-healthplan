@@ -27,6 +27,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ScheduledActivityRepository extends JpaRepository<ScheduledActivityEntity, Long> {
+	
 	List<ScheduledActivityEntity> findByActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity);
 	
 	@Query("select e from ScheduledActivityEntity as e inner join " +
@@ -34,7 +35,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"ad.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
 			"e.scheduledTime between :start and :end")
-	public List<ScheduledActivityEntity> findByPatientAndScheduledTimeBetween(
+	List<ScheduledActivityEntity> findByPatientAndScheduledTimeBetween(
 			@Param("patient") final PatientEntity patient,
 			@Param("start") final Date start,
 			@Param("end") final Date end);
@@ -44,5 +45,26 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"ad.healthPlan as hp inner join " +
 			"hp.careUnit as c where c.hsaId = :careUnit " +
 			"and e.reportedTime != null")
-	public List<ScheduledActivityEntity> findByCareUnit(@Param("careUnit") final String careUnit);
+	List<ScheduledActivityEntity> findByCareUnit(@Param("careUnit") final String careUnit);
+	
+	/**
+	 * Find reported activities for a certain activity defintion within a specified interval
+	 * @param activityDefintionId
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp where " +
+			"hp.id = :healthPlanId and e.reportedTime != null and e.scheduledTime between :start and :end")
+	List<ScheduledActivityEntity> findReportedActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId
+			, @Param("start") final Date start
+			, @Param("end") final Date end);
+	
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp where " +
+			"hp.id = :healthPlanId")
+	List<ScheduledActivityEntity> findScheduledActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId);
 }

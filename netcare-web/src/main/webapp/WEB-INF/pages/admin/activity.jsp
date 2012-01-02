@@ -130,7 +130,7 @@
 				/*
 				 * Add the time when user presses the image icon
 				 */
-				$('img[src*="bullet_add"]').click(function(event) {
+				$('img[src*="add"]').click(function(event) {
 					console.log("Icon clicked");
 					var timeField = $(this).parent().children('input[name$="TimeField"]');
 					addTime(timeField, timeField.val());

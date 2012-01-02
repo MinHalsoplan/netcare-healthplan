@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	/**
@@ -37,4 +39,7 @@ public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	 * @return
 	 */
 	PatientEntity findByCivicRegistrationNumber(final String civicRegistrationNumber);
+	
+	@Query("select e from PatientEntity as e inner join e.healthPlans as hp inner join hp.careUnit as cu where cu.hsaId = :hsaId")
+	List<PatientEntity> findByCareUnit(@Param("hsaId") final String hsaId);
 }

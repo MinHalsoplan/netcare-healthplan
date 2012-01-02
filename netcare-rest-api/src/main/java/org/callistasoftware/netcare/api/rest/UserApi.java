@@ -18,14 +18,18 @@ package org.callistasoftware.netcare.api.rest;
 
 import javax.servlet.http.HttpSession;
 
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.spi.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,24 +37,45 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value="/user")
-public class UserApi {
+public class UserApi extends ApiSupport {
 	
 	private static final Logger log = LoggerFactory.getLogger(UserApi.class);
 	
 	@Autowired
 	private PatientService patientService;
-
-	@RequestMapping(value="/create", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public String createUser() {
-		return "hello world";
-	}
 	
 	@RequestMapping(value = "/find", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<PatientBaseView[]> findUsers(@RequestParam(value="search", required=true) final String search) {
 		log.info("Finding patients... Search string is: {}", search);
 		return this.patientService.findPatients(search);
+	}
+	
+	@RequestMapping(value="/load", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<PatientBaseView[]> loadPatients() throws IllegalAccessException {
+		this.logAccess("load", "patients");
+		
+		final UserBaseView user = this.getUser();
+		if (user.isCareGiver()) {
+			final CareGiverBaseView cg = (CareGiverBaseView) user;
+			return this.patientService.loadPatientsOnCareUnit(cg.getCareUnit());
+		} else {
+			throw new IllegalAccessException();
+		}
+	}
+	
+	@RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@ResponseBody
+	public ServiceResult<PatientBaseView> createNewPatient(@RequestBody final PatientBaseViewImpl patient) throws IllegalAccessException {
+		this.logAccess("create", "patient");
+		
+		final UserBaseView user = this.getUser();
+		if (user.isCareGiver()) {
+			return this.patientService.createPatient(patient);
+		} else {
+			throw new IllegalAccessException();
+		}
 	}
 	
 	@RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")

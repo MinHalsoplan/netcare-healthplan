@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
@@ -29,9 +30,22 @@ public interface PatientService {
 	ServiceResult<PatientBaseView[]> findPatients(final String freeTextSearch);
 	
 	/**
+	 * Load all patients
+	 * @return
+	 */
+	ServiceResult<PatientBaseView[]> loadPatientsOnCareUnit(final CareUnit careUnit);
+	
+	/**
 	 * Load a patient with a specific id
 	 * @param id
 	 * @return
 	 */
 	ServiceResult<PatientBaseView> loadPatient(final Long id);
+	
+	/**
+	 * Create a new patient
+	 * @param patient
+	 * @return
+	 */
+	ServiceResult<PatientBaseView> createPatient(final PatientBaseView patient);
 }

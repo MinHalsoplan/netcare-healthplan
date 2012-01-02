@@ -21,11 +21,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,8 @@ public class PatientRepositoryTest extends TestSupport {
 	private PatientRepository repo;
 	@Autowired
 	private CareGiverRepository cgRepo;
+	@Autowired
+	private HealthPlanRepository hpRepo;
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
@@ -134,5 +139,23 @@ public class PatientRepositoryTest extends TestSupport {
 		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
 		assertNotNull(result);
 		assertEquals(1, result.size());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void findPatientsWithHealthPlansAtCareUnit() throws Exception {
+		
+		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
+		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Test", "hsa-2", cu));
+		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus", "123456789004"));
+		final PatientEntity patient2 = this.repo.save(PatientEntity.newEntity("Peter", "123456789005"));
+		
+		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient, "Testplan", new Date(), 12, DurationUnit.WEEK));
+		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient2, "Testplan", new Date(), 12, DurationUnit.WEEK));
+		
+		final List<PatientEntity> patients = this.repo.findByCareUnit("hsa-id");
+		assertNotNull(patients);
+		assertEquals(2, patients.size());
 	}
 }

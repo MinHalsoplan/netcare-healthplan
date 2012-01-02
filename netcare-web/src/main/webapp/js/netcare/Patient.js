@@ -18,6 +18,44 @@ NC.Patient = function() {
 	var _baseUrl = "/netcare-web/api/user";
 	
 	var public = {
+			
+		load : function(callback) {
+			var url = _baseUrl + '/load';
+			console.log("Loading patients from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					console.log("Service returned success. Processing result");
+					new NC.Util().processServiceResult(data);
+					if (data.success) {
+						console.log("Operation was successful.");
+						callback(data.data);
+					}
+				}
+			});
+		},
+		
+		create : function(formData, successCallback) {
+			var url = _baseUrl + '/create';
+			console.log("Creating new patient using url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				type : 'post',
+				data : formData,
+				contentType : 'application/json',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					if (data.success) {
+						successCallback(data);
+					}
+				}
+			});
+		},
+			
 		/**
 		 * Called when the care giver wants to find a patient
 		 */

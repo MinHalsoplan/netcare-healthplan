@@ -14,16 +14,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.messages;
+package org.callistasoftware.netcare.core.api.statistics;
 
-public class ListEntitiesMessage extends DefaultSystemMessage {
+import java.io.Serializable;
+import java.util.List;
+
+public class HealthPlanStatistics implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public ListEntitiesMessage(final Class<?> entityClass, final int size) {
-		super("EntitiesListed", true, size, size == 1 ? entityClass.getSimpleName() : entityClass.getSimpleName() + "_plural");
+	private List<ActivityCount> activities;
+	
+	private List<ReportedActivity> reportedActivities;
+
+	public List<ReportedActivity> getReportedActivities() {
+		return this.reportedActivities;
 	}
+	
+	public void setReportedActivities(final List<ReportedActivity> reportedActivities) {
+		this.reportedActivities = reportedActivities;
+	}
+	
+	public List<ActivityCount> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(List<ActivityCount> activities) {
+		this.activities = activities;
+	}
+	
 }
