@@ -16,8 +16,10 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
@@ -44,10 +46,19 @@ public class PatientApi {
 	@ResponseBody
 	public ServiceResult<HealthPlan[]> listOrdinations(final Authentication auth) {
 		Long patientId = ((PatientBaseView) auth.getPrincipal()).getId();
-		log.info("Care giver {} is listing ordinations for patient {}", patientId);
+		log.info("User {} list health plans", patientId);
 		final ServiceResult<HealthPlan[]> plans = planService.loadHealthPlansForPatient(patientId);
 		log.debug("Found # plans {} for patient {}", plans.getData().length, patientId);
 		return plans;
+	}
+	
+	@RequestMapping(value="/activities", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityDefinition[]> listActivities(final Authentication auth) {
+		log.info("User {} list activities", auth);
+		ServiceResult<ActivityDefinition[]> sr = planService.getPlannedActivitiesForPatient((PatientBaseView)auth.getPrincipal());
+		log.debug("Found # activities {} for patient {}", sr.getData().length, auth);
+		return sr;
 	}
 	
 	@RequestMapping(value="/schema", method=RequestMethod.GET, produces="application/json")
@@ -63,4 +74,10 @@ public class PatientApi {
 			@PathVariable(value="value") final int value, final Authentication auth) {
 		return planService.reportReady(id, value);
 	}
+	
+	@RequestMapping(value="/event", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<PatientEvent> event(final Authentication auth) {
+		return planService.getActualEventsForPatient((PatientBaseView)auth.getPrincipal());
+	}	
 }

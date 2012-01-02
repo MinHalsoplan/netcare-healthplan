@@ -16,8 +16,22 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Date;
+import java.util.List;
+
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ActivityDefinitionRepository extends JpaRepository<ActivityDefinitionEntity, Long> {
+	
+	@Query("select e from ActivityDefinitionEntity as e inner join " +
+			"e.healthPlan as hp " +
+			"where hp.forPatient = :patient and " +
+			"hp.endDate > :now order by e.startDate")
+	List<ActivityDefinitionEntity> findByPatientAndNow(
+			@Param("patient") final PatientEntity patient,
+			@Param("now") final Date now);
 }

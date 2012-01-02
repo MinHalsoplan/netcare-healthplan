@@ -14,21 +14,50 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
 /**
- * Known units for measurements. <p>
+ * Keeps information about an activity report. <p>
  * 
- * Please Note: this unit has to be well known with a well defined semantics in order to provide
- * more qualified user-experience down the road. As an example can the mobile device be used as 
- * a measurement device.
+ * Used when reporting back.
  * 
  * @author Peter
- *
  */
-public enum MeasureUnit {
-	MINUTE,
-	METER,
-	STEP
+public interface ActivityReport extends Serializable{
+	/**
+	 * Returns the reported value.
+	 * 
+	 * @return the actual value reported.
+	 */
+	int getActualValue();
+	
+	/**
+	 * Returns the actual date when the activity was performed.
+	 * 
+	 * @return the date as (yyyy-mm-dd), or null.
+	 */
+	String getActualDate();
+	
+	/**
+	 * Return the actual time when the activity was performed.
+	 * 
+	 * @return the time as (hh:mm)
+	 */
+	String getActualTime();
+	
+	/**
+	 * Returns the perceived sense.
+	 * 
+	 * @return the sense.
+	 */
+	int getSense();
+	
+	/**
+	 * Returns a note.
+	 * 
+	 * @return the note, or null if not set.
+	 */
+	String getNote();
 }

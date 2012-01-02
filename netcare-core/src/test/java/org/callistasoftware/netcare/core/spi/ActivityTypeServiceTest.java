@@ -53,7 +53,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
 		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, MeasureUnit.KILOMETERS));
+			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, MeasureUnit.METER));
 		}
 		
 		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();

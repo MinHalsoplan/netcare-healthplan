@@ -61,4 +61,44 @@ public interface ActivityDefinition {
 	 * @return the week frequency.
 	 */
 	int getActivityRepeat();
+	
+	/**
+	 * Returns end date.
+	 * 
+	 * @return the end date (yyyy-mm-dd)
+	 */
+	String getEndDate();
+	
+	
+	/**
+	 * Returns health plan name.
+	 * 
+	 * @return the health plan name.
+	 */
+	String getHealthPlanName();
+	
+	/**
+	 * Returns number of activities.
+	 */
+	int getNumTotal();
+	
+	/**
+	 * Returns number of done activities
+	 */
+	int getNumDone();
+	
+	/**
+	 * Returns the target sum of work, i.e. goal until now.
+	 */
+	int getSumTarget();
+	
+	/**
+	 * Returns total sum of work.
+	 */
+	int getSumTotal();
+
+	/**
+	 * Returns done sum of work.
+	 */
+	int getSumDone();
 }

@@ -31,11 +31,13 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
@@ -127,17 +129,15 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		
 		Date startDate = ApiUtil.dayBegin(c).getTime();
 
-		c.add(Calendar.DATE, 4*7);
+		c.add(Calendar.DATE, 3*7);
 		Date endDate = ApiUtil.dayEnd(c).getTime();
 
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-		List<ScheduledActivityEntity> scheduledActivities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(forPatient, startDate, endDate);
-		Collections.sort(scheduledActivities);
+		List<ScheduledActivityEntity> entities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(forPatient, startDate, endDate);
+		Collections.sort(entities);
 		
-		ScheduledActivity[] arr = new ScheduledActivity[scheduledActivities.size()];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = ScheduledActivityImpl.newFromEntity(scheduledActivities.get(i));
-		}
+		ScheduledActivity[] arr = ScheduledActivityImpl.newFromEntities(entities);
+		
 		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
 	}
 
@@ -288,7 +288,6 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 			day.set(Calendar.HOUR_OF_DAY, t.getHour());
 			day.set(Calendar.MINUTE, t.getMinute());
 			ScheduledActivityEntity scheduledActivity = entity.createScheduledActivityEntity(day.getTime());
-			scheduledActivity.setTargetValue(entity.getActivityTarget());
 			list.add(scheduledActivity);
 		}
 		log.debug("{} activities scheduled: {}", list.size());
@@ -330,5 +329,42 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		
 		final List<ScheduledActivityEntity> activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(
+			PatientBaseView patient) {
+		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+		Date now = new Date();
+		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
+		ActivityDefinition[] arr = ActivityDefintionImpl.newFromEntities(defs);
+		return ServiceResultImpl.createSuccessResult(arr,new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<PatientEvent> getActualEventsForPatient(PatientBaseView patientView) {
+		PatientEntity patient = patientRepository.findOne(patientView.getId());
+		Calendar cal = Calendar.getInstance();
+		Date today = ApiUtil.dayBegin(cal).getTime();
+		cal.add(Calendar.DATE, -14);
+		Date start = ApiUtil.dayBegin(cal).getTime();
+		cal.add(Calendar.DATE, 14);
+		Date end = ApiUtil.dayEnd(cal).getTime();
+		final List<ScheduledActivityEntity> activities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(patient, start, end);
+		int num = 0;
+		int due = 0;
+		for (ScheduledActivityEntity sc : activities) {
+			if (!sc.isRejected() && sc.getReportedTime() != null) {
+				if (sc.getScheduledTime().compareTo(today) < 0) {
+					due++;
+				} else {
+					num++;
+				}
+			}
+		}
+		PatientEvent event = PatientEventImpl.newPatientEvent(num, due);
+		ServiceResult<PatientEvent> sr;
+		sr = ServiceResultImpl.createSuccessResult(event, new GenericSuccessMessage());
+		return sr;
 	}
 }

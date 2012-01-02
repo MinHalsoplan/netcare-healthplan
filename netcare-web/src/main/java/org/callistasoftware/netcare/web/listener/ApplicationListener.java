@@ -54,8 +54,8 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		atRepo.save(ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS));
-		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTES));
+		atRepo.save(ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER));
+		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE));
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");

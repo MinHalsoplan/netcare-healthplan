@@ -28,3 +28,20 @@ a:hover {
 	padding-left: 24px;
 	background: url('/netcare-web/img/icons/16/add.png') no-repeat 3px;
 }
+
+.cool .shadow {
+	color: black;
+	background-color: #eeeeee;
+	border-radius: 10px;
+}
+
+.cool {
+	position: relative;
+	border-radius: 10px;
+	padding: 15px;
+	color: black;
+	margin: 20px;
+	box-shadow: 2px 2px 5px #333;
+	background-color: lightgray;
+	text-align: center;
+}

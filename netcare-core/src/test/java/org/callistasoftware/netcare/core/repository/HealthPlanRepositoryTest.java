@@ -69,7 +69,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, MeasureUnit.KILOMETERS);
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, MeasureUnit.METER);
 		typeRepo.save(type);
 		typeRepo.flush();
 
@@ -90,7 +90,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
-		final HealthPlanEntity e1 = HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS);
+		final HealthPlanEntity e1 = HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK);
 		
 		ActivityDefinitionEntity ad =  createActivityDefinition(e1, cg);
 		
@@ -105,7 +105,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		
 		HealthPlanEntity e2 = all.get(0);
 		assertEquals("Hälsoplan B", e2.getName());
-		assertEquals(DurationUnit.WEEKS, e2.getDurationUnit());
+		assertEquals(DurationUnit.WEEK, e2.getDurationUnit());
 		assertEquals(20, e2.getDuration());
 		
 		Calendar c = Calendar.getInstance();
@@ -130,8 +130,8 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
-		repo.save(HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEKS));
-		repo.save(HealthPlanEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTHS));
+		repo.save(HealthPlanEntity.newEntity(cg, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK));
+		repo.save(HealthPlanEntity.newEntity(cg, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTH));
 		repo.flush();
 		
 		List<HealthPlanEntity> list = repo.findByForPatient(patient);
@@ -139,9 +139,9 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		assertEquals(2, list.size());
 		
 		assertEquals("Hälsoplan B", list.get(0).getName());
-		assertEquals(DurationUnit.WEEKS, list.get(0).getDurationUnit());
+		assertEquals(DurationUnit.WEEK, list.get(0).getDurationUnit());
 		assertEquals(20, list.get(0).getDuration());
-		assertEquals(DurationUnit.MONTHS, list.get(1).getDurationUnit());
+		assertEquals(DurationUnit.MONTH, list.get(1).getDurationUnit());
 		assertEquals(3, list.get(1).getDuration());
 		assertEquals(cg, list.get(0).getIssuedBy());
 		assertEquals(cg, list.get(1).getIssuedBy());

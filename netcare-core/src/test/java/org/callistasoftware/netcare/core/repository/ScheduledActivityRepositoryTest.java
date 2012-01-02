@@ -80,10 +80,10 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS);
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
 		
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTHS);
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTH);
 		final HealthPlanEntity savedHp = this.hpRepo.save(hp);
 		
 		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt, Frequency.unmarshal("1;1"), cg);

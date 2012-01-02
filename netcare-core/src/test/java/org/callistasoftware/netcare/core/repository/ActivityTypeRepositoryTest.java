@@ -42,7 +42,7 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS);
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
 		final ActivityTypeEntity savedEnt = this.repo.save(ent);
 		
 		assertNotNull(savedEnt);

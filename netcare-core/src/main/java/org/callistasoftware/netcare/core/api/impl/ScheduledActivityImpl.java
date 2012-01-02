@@ -34,14 +34,17 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	
 	private long id;
 	private boolean due;
-	private int actual;
+	private int actualValue;
 	private String reported;
-	private String scheduledDate;
-	private String scheduledTime;
-	private Option scheduledDay;
-	private int week;
+	private String date;
+	private String time;
+	private Option today;
 	private ActivityDefinition activityDefinition;
 	private PatientBaseView patient;
+	private String actualTime;
+	private int sense;
+	private String note;
+	private boolean rejected;
 	
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
@@ -57,22 +60,28 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		
 		a.id = entity.getId();
 		a.activityDefinition = ActivityDefintionImpl.newFromEntity(entity.getActivityDefinitionEntity());
+		
+		Calendar cal = Calendar.getInstance();
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		a.today = new Option("weekday." + day, LocaleContextHolder.getLocale());		
+		
+		cal.add(Calendar.HOUR_OF_DAY, 3);
 		Date time = entity.getScheduledTime();
-		a.due = time.after(new Date());
-		a.scheduledDate = ApiUtil.formatDate(time);
-		a.scheduledTime = ApiUtil.formatTime(time);
+		a.due = (time.compareTo(cal.getTime()) < 0);
+		a.date = ApiUtil.formatDate(time);
+		a.time = ApiUtil.formatTime(time);
 		if (entity.getReportedTime() != null) {
 			a.reported = ApiUtil.formatDate(entity.getReportedTime()) + " " + ApiUtil.formatTime(entity.getReportedTime());
 		}
-		a.actual = entity.getActualValue();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(time);
-		int day = cal.get(Calendar.DAY_OF_WEEK);
-		a.scheduledDay = new Option("weekday." + day, LocaleContextHolder.getLocale());
+		if (entity.getActualTime() != null) {
+			a.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " " + ApiUtil.formatTime(entity.getActualTime());
+		}
 		
-		a.week = cal.get(Calendar.WEEK_OF_YEAR);
-		
+		a.rejected = entity.isRejected();
+		a.actualValue = entity.getActualValue();
 		a.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity().getHealthPlan().getForPatient());
+		a.sense = entity.getPerceivedSense();
+		a.note = entity.getNote();
 		
 		return a;
 	}
@@ -86,8 +95,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 
 	@Override
 	public String getTime() {
-		// TODO Auto-generated method stub
-		return scheduledTime;
+		return time;
 	}
 
 	
@@ -97,10 +105,6 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return due;
 	}
 
-	public String getDate() {
-		return scheduledDate;
-	}
-
 	@Override
 	public ActivityDefinition getDefinition() {
 		// TODO Auto-generated method stub
@@ -108,28 +112,48 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public Option getDay() {
-		// TODO Auto-generated method stub
-		return scheduledDay;
+	public Option getToday() {
+		return today;
 	}
 
 	@Override
-	public int getWeek() {
-		// TODO Auto-generated method stub
-		return week;
+	public int getActualValue() {
+		return actualValue;
 	}
 
-	public int getActual() {
-		return actual;
+	@Override
+	public String getDate() {
+		return date;
 	}
 
+	@Override
 	public String getReported() {
 		return reported;
 	}
 
 	@Override
+	public String getActualTime() {
+		return actualTime;
+	}
+
+	@Override
 	public PatientBaseView getPatient() {
-		return this.patient;
+		return patient;
+	}
+
+	@Override
+	public int getSense() {
+		return sense;
+	}
+
+	@Override
+	public String getNote() {
+		return note;
+	}
+
+	@Override
+	public boolean isRejected() {
+		return rejected;
 	}
 
 }
