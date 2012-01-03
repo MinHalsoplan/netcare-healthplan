@@ -46,7 +46,6 @@
 							item[0] = value.name;
 							item[1] = value.count;
 							
-							console.log("Adding item: " + item);
 							arr.push(item);
 						});
 						
@@ -61,6 +60,8 @@
 					
 						var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
 						chart.draw(dataOverview, options);
+						
+						$('#pieChart').show();
 						
 						$.each(data.data.reportedActivities, function(index, value) {
 							console.log("Processing " + value.name + " ...");
@@ -93,11 +94,10 @@
 						});
 					};
 					
-					var healthPlanId;
 					hp.list(<sec:authentication property="principal.id" />, function(data) {
 						$.each(data.data, function(index, value) {
 							healthPlanId = value.id;
-							hp.listScheduleActivities(healthPlanId, statisticsCallback);
+							hp.listScheduledActivities(healthPlanId, statisticsCallback);
 						});
 					});
 				};
@@ -117,12 +117,11 @@
 			<div id="pieChart" style="display: none;"></div>
 			
 			<h2>Rapporterade Resultat</h2>
-			<div id="activityCharts" style="display: none;">
-				<p>
-					<span class="label notice">Information</span>
-					Diagrammen nedan visar dina rapporterade resultat i förhållande till ditt uppsatta målvärde per aktivitet.
-				</p>
-			</div>
+			<p>
+				<span class="label notice">Information</span>
+				Diagrammen nedan visar dina rapporterade resultat i förhållande till ditt uppsatta målvärde per aktivitet.
+			</p>
+			<div id="activityCharts" style="display: none;"></div>
 		</netcare:content>
 		<netcare:patient-menu />
 		
