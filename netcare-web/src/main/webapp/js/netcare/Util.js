@@ -71,9 +71,12 @@ NC.Util = function() {
 		createIcon : function(name, size, onClickFunction) {
 			var icon = $('<img>', {
 				src : '/netcare-web/img/icons/' + size + '/' + name + '.png'
-			}).css('padding-left', '10px').css('cursor', 'pointer');
+			}).css('padding-left', '10px');
 			
-			icon.click(onClickFunction);
+			if (onClickFunction != null) {
+				icon.css('cursor', 'pointer');
+				icon.click(onClickFunction);
+			}
 			
 			return icon;
 		},
@@ -170,6 +173,49 @@ NC.Util = function() {
 					containerDiv.removeClass('error');
 				}
 			});
+		},
+		
+		
+		/**
+		 * Formats a frequency.
+		 */
+		formatFrequency : function (activityDefinition) {
+			var text = '';
+			
+			$.each(activityDefinition.dayTimes, function (index1, day) {
+				text += day.dayCaption.value;
+				$.each(day.times, function(index2, time) {
+					if (index2 > 0) {
+						text += ',';
+					}
+					text += '&nbsp;' + time;
+				});
+				text += '<br/>';				
+			});
+			
+			var caption = [ 'engångsaktivitet', '', 'varannan vecka', 'var tredje vecka', 'var fjärde vecka', 'var femte vecka' ];
+			text += '<i>';
+			if (activityDefinition.activityRepeat > 5) {
+				text += 'var ' + activityDefinition.activityRepeat + ' vecka';
+			} else {
+				text += caption[activityDefinition.activityRepeat];
+			}
+			text += '</i>';
+			
+			return text;
+		}, 
+		
+		formatUnit : function (unitOption) {
+			if (unitOption.code == 'METER') {
+				return 'm';
+			}
+			if (unitOption.code == 'MINUTE') {
+				return 'min';
+			}
+			if (unitOption.code == 'STEP') {
+				return 'steg';
+			}
+			return unitOption.code;
 		},
 		
 		/**

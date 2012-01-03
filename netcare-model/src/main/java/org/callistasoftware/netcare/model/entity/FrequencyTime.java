@@ -43,7 +43,7 @@ public class FrequencyTime {
 	}
 	
 	public static String marshal(final FrequencyTime frequencyTime) {
-		return String.format("%d%s%d", frequencyTime.getHour(), REC_SEP, frequencyTime.getMinute());
+		return String.format("%02d%s%02d", frequencyTime.getHour(), REC_SEP, frequencyTime.getMinute());
 	}
 	
 	public static FrequencyTime unmarshal(String frequencyTime) {
@@ -99,5 +99,5 @@ public class FrequencyTime {
 		}
 		FrequencyTime r = (FrequencyTime)o;
 		return (this.getHour() == r.getHour() && this.getMinute() == r.getMinute());
-	}
+	}	
 }

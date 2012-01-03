@@ -16,37 +16,43 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import org.callistasoftware.netcare.core.api.DayTime;
-import org.callistasoftware.netcare.core.api.Option;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.callistasoftware.netcare.core.api.PatientEvent;
 
-public class DayTimeImpl implements DayTime {
-	private String day;
-	private String[] times;
+/**
+ * Implements {@link PatientEvent}.
+ * 
+ * @author Peter
+ *
+ */
+public class PatientEventImpl implements PatientEvent {
+	private static final long serialVersionUID = 1L;
+	private int numReports;
+	private int dueReports;
 	
-	public void setDay(String day) {
-		this.day = day;
-	}
+	private PatientEventImpl() {}
 
-
-	@Override
-	public String getDay() {
-		return this.day;
+	//
+	private PatientEventImpl(int numReports, int dueReports) {
+		this();
+		this.numReports = numReports;
+		this.dueReports = dueReports;
 	}
 	
-
-	public void setTimes(String[] times) {
-		this.times = times;
+	/** Creates a PatientEvent object. */
+	public static PatientEvent newPatientEvent(int numReports, int dueReports) {
+		PatientEvent pe = new PatientEventImpl(numReports, dueReports);
+		return pe;
+	}
+	
+	@Override
+	public int getNumReports() {
+		return numReports;
 	}
 
 	@Override
-	public String[] getTimes() {
-		return this.times;
+	public int getDueReports() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
-
-	@Override
-	public Option getDayCaption() {
-		return new Option(getDay(), LocaleContextHolder.getLocale());
-	}
 }

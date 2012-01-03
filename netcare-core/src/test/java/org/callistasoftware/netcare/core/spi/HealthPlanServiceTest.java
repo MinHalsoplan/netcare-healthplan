@@ -113,7 +113,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testCreateHealthPlan() throws Exception {
 		
-		final HealthPlanImpl o = createHealthPlan("Test", "2011-12-12", 12, DurationUnit.WEEKS.name());
+		final HealthPlanImpl o = createHealthPlan("Test", "2011-12-12", 12, DurationUnit.WEEK.name());
 
 		final ServiceResult<HealthPlan> saved = createHealthPlan(o);
 		
@@ -129,7 +129,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	public void testAddActivityDefintion() throws Exception {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.KILOMETERS);
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
@@ -142,13 +142,13 @@ public class HealthPlanServiceTest extends TestSupport {
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 
 		// the date and duration can't be changed without breaking the test, see further below.
-		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", ApiUtil.parseDate("2012-12-01"), 12, DurationUnit.WEEKS);
+		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", ApiUtil.parseDate("2012-12-01"), 12, DurationUnit.WEEK);
 		final HealthPlanEntity savedOrd = this.ordinationRepo.save(ord);
 		
 		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
 		typeImpl.setId(savedType.getId());
 		typeImpl.setName("Löpning");
-		typeImpl.setUnit(new Option(MeasureUnit.KILOMETERS.name(), LocaleContextHolder.getLocale()));
+		typeImpl.setUnit(new Option(MeasureUnit.METER.name(), LocaleContextHolder.getLocale()));
 		
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
 		
@@ -194,7 +194,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
 		
-		assertEquals(MeasureUnit.KILOMETERS, ent.getActivityType().getUnit());
+		assertEquals(MeasureUnit.METER, ent.getActivityType().getUnit());
 		assertEquals("Löpning", ent.getActivityType().getName());
 		assertEquals(12, ent.getActivityTarget());
 		

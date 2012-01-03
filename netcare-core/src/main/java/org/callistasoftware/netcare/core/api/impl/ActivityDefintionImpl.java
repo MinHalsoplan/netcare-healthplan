@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
@@ -26,6 +27,7 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
@@ -42,6 +44,13 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int activityRepeat;
 	
 	private DayTimeImpl[] dayTimes;
+	private String endDate;
+	private String healthPlanName;
+	private int sumDone;
+	private int sumTotal;
+	private int numTotal;
+	private int numDone;
+	private int sumTarget;
 	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
@@ -56,22 +65,13 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
 		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
 		dto.setGoal(entity.getActivityTarget());
-		Frequency frequency = entity.getFrequency();
-		dto.setActivityRepeat(frequency.getWeekFrequency());
+		dto.setFrequency(entity.getFrequency());
 		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
+		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));
+		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		
-		final List<FrequencyDay> frDays = frequency.getDays();
-		DayTime[] dayTimes = new DayTime[frDays.size()];
-		for (int i = 0; i < dayTimes.length; i++) {
-			DayTimeImpl dt = new DayTimeImpl();
-			dt.setDay(ApiUtil.toStringDay(frDays.get(i).getDay()));
-			List<FrequencyTime> frTimes = frDays.get(i).getTimes();
-			String[] times = new String[frTimes.size()];
-			for (int j = 0; j < times.length; j++) {
-				times[j] = FrequencyTime.marshal(frTimes.get(j));
-			}
-			dt.setTimes(times);
-		}
+		dto.calcCompletion(entity.getScheduledActivities());
+		
 		
 		return dto;
 	}
@@ -119,6 +119,120 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	@Override
 	public int getActivityRepeat() {
 		return activityRepeat;
+	}
+
+	@Override
+	public String getEndDate() {
+		return endDate;
+	}
+	
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	@Override
+	public String getHealthPlanName() {
+		return healthPlanName;
+	}
+
+	public void setHealthPlanName(String healthPlanMame) {
+		this.healthPlanName = healthPlanMame;
+	}
+	
+	//
+	private void setFrequency(Frequency frequency) {
+		setActivityRepeat(frequency.getWeekFrequency());
+		final List<FrequencyDay> frDays = frequency.getDays();
+		DayTimeImpl[] dayTimes = new DayTimeImpl[frDays.size()];
+		for (int i = 0; i < dayTimes.length; i++) {
+			DayTimeImpl dt = new DayTimeImpl();
+			dt.setDay(ApiUtil.toStringDay(frDays.get(i).getDay()));
+			List<FrequencyTime> frTimes = frDays.get(i).getTimes();
+			String[] times = new String[frTimes.size()];
+			for (int j = 0; j < times.length; j++) {
+				times[j] = FrequencyTime.marshal(frTimes.get(j));
+			}
+			dt.setTimes(times);
+			dayTimes[i] = dt;
+		}
+		setDayTimes(dayTimes);	
+	}
+	
+	//
+	private void calcCompletion(List<ScheduledActivityEntity> list) {
+		int numDone = 0;
+		int numTotal = 0;
+		int sumDone = 0;
+		int sumTotal = 0;
+		int sumTarget = 0;	
+
+		Calendar cal = Calendar.getInstance();
+		ApiUtil.dayEnd(cal);
+		
+		for (ScheduledActivityEntity a : list) {
+			if (a.getReportedTime() != null) {
+				sumDone += a.getActualValue();
+				numDone++;
+			}
+			
+			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
+				sumTarget += getGoal();
+			}
+			
+			sumTotal += getGoal();
+			numTotal++;
+		}
+
+		setNumDone(numDone);
+		setNumTotal(numTotal);
+		setSumDone(sumDone);
+		setSumTotal(sumTotal);
+		setSumTarget(sumTarget);
+	}
+
+	private void setSumDone(int sumDone) {
+		this.sumDone = sumDone;
+	}
+
+	private void setSumTotal(int sumTotal) {
+		this.sumTotal = sumTotal;
+	}
+
+	private void setNumTotal(int numTotal) {
+		this.numTotal = numTotal;
+	}
+
+	private void setNumDone(int numDone) {
+		this.numDone = numDone;
+	}
+
+	private void setSumTarget(int sumTarget) {
+		this.sumTarget = sumTarget;
+	}
+	
+	@Override
+	public int getNumTotal() {
+		return numTotal;
+	}
+
+	@Override
+	public int getNumDone() {
+		return numDone;
+	}
+
+	@Override
+	public int getSumTotal() {
+		return sumTotal;
+	}
+
+	@Override
+	public int getSumDone() {
+		return sumDone;
+	}
+
+	@Override
+	public int getSumTarget() {
+		return sumTarget;
 	}
 
 }

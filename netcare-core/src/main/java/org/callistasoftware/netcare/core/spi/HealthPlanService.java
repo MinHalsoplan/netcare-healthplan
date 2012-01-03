@@ -21,6 +21,7 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
@@ -110,6 +111,21 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit);
 	
 	/**
+<<<<<<< HEAD
+	 * Returns actual activity definitions.
+	 * 
+	 * @return the result with actual activity definitions.
+	 */
+	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final PatientBaseView patient);
+	
+	/**
+	 * Returns events for a patient.
+	 * 
+	 * @return the events for the patient.
+	 */
+	ServiceResult<PatientEvent> getActualEventsForPatient(final PatientBaseView patient);
+
+	/*
 	 * Get reported activities for a certain activity definition within a specific time interval
 	 * @param activityDefintionId
 	 * @param start

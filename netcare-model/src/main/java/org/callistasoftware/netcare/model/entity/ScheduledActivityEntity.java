@@ -46,14 +46,18 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date reportedTime;
 	
+	@Column(name="actual_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date actualTime;
+	
+	@Column(name="rejected")
+	private boolean rejected;
+	
 	@Column(name="actual_value")
 	private int actualValue;
-	
-	@Column(name="target_value", nullable=false)
-	private int targetValue;
-	
-	@Column(name="comment", length=128)
-	private String comment;
+		
+	@Column(name="note", length=128)
+	private String note;
 	
 	@Column(name="perceived_sense")
 	private int perceivedSense;
@@ -63,6 +67,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	private ActivityDefinitionEntity activityDefinition;
 	
 	ScheduledActivityEntity() {
+		rejected = false;
 	}
 	
 	/**
@@ -76,7 +81,6 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
 		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
-		scheduledActivityEntity.setTargetValue(activityDefinition.getActivityTarget());
 		return scheduledActivityEntity;
 	}
 	
@@ -120,23 +124,6 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return (this == o) || o.getId().equals(this.id); 
 	}
 
-	/**
-	 * The target value as it was defined when this activity was scheduled.
-	 * 
-	 * @param targetValue the origin target value to measure against.
-	 */
-	public void setTargetValue(int targetValue) {
-		this.targetValue = targetValue;
-	}
-
-	/**
-	 * Returns the target value as it was defined when this activity was scheduled.
-	 * 
-	 * @return the origin target value.
-	 */
-	public int getTargetValue() {
-		return targetValue;
-	}
 
 	protected void setActivityDefinitionEntity(ActivityDefinitionEntity activityDefinition) {
 		this.activityDefinition = activityDefinition;
@@ -146,12 +133,12 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return activityDefinition;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setNote(String note) {
+		this.note = note;
 	}
 
-	public String getComment() {
-		return comment;
+	public String getNote() {
+		return note;
 	}
 
 	public void setPerceivedSense(int perceivedSense) {
@@ -160,5 +147,21 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	public int getPerceivedSense() {
 		return perceivedSense;
+	}
+
+	public void setActualTime(Date actualTime) {
+		this.actualTime = actualTime;
+	}
+
+	public Date getActualTime() {
+		return actualTime;
+	}
+
+	public void setRejected(boolean rejected) {
+		this.rejected = rejected;
+	}
+
+	public boolean isRejected() {
+		return rejected;
 	}
 }

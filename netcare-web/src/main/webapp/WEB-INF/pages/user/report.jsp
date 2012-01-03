@@ -1,5 +1,4 @@
-
-<%--
+	<%--
 
     Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
 
@@ -22,45 +21,37 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
 <netcare:page>
 	<netcare:header>
-		<script type="text/javascript">
-		$(function() {
-			var home = NC.PatientHome('planDescription', 'planTable', 'eventHead', 'eventBody');
-			home.list();
-			home.status();
-		});
+			<script type="text/javascript">
+			$(function() {
+				var report = NC.PatientReport('schemaDescription', 'schemaTable');
+				report.list();
+			});
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<div class="cool">
-				<h3 class="shadow">Min Hälsoplan</h3>
-				<p id="planDescription"></p>
-				<table id="planTable" class="condensed-table">
-					<thead>
-						<th>&nbsp;</th>
-						<th>Aktivitet</th>
-						<th>Pågår till</th>
-						<th colspan='2'>Avklarat (antal, mängd)</th>
-						<th>Tider</th>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-				<div style="text-align: right">
-					<a href="resultat">Mina Resultat</a>
-				</div>
-			</div>
-			<div class="cool">
-				<h3 id="eventHead" class="shadow">Nya Händelser</h3>
-				<div id="eventBody" style="margin: 10px"></div>
-				<div style="text-align: right">
-					<a href="report">Mitt Schema</a>
-				</div>
-			</div>
+			<h1>Mitt Schema</h1>
+			<p id="schemaDescription"></p>
+			<table id="schemaTable" class="bordered-table zebra-striped">
+				<thead>
+					<tr>
+						<th colspan='2'><spring:message code="time" />
+						</th>
+						<th><spring:message code="ActivityDefinitionEntity" />
+						</th>
+						<th><spring:message code="reportValue" />
+						</th>						
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+
 		</netcare:content>
 		<netcare:patient-menu>
 		</netcare:patient-menu>

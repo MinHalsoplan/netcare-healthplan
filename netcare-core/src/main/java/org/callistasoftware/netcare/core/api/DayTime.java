@@ -24,10 +24,18 @@ package org.callistasoftware.netcare.core.api;
 public interface DayTime {
 
 	/**
-	 * The week day
+	 * The week day.
+	 * 
 	 * @return
 	 */
 	String getDay();
+	
+	/**
+	 * The localized week day.
+	 * 
+	 * @return the localized week day.
+	 */
+	Option getDayCaption();
 	
 	/**
 	 * Get the times in a string array, the format of each

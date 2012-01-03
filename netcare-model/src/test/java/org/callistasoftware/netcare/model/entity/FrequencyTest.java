@@ -39,6 +39,8 @@ public class FrequencyTest {
 		day2.addTime(FrequencyTime.newFrequencyTime(18, 15));
 		f.addDay(day2);
 		
+		assertEquals(FrequencyTime.marshal(day2.getTimes().get(0)), "09:00");
+		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 		

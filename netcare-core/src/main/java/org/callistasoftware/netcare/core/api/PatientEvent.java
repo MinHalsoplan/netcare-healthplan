@@ -14,21 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
 /**
- * Known units for measurements. <p>
- * 
- * Please Note: this unit has to be well known with a well defined semantics in order to provide
- * more qualified user-experience down the road. As an example can the mobile device be used as 
- * a measurement device.
+ * Used to indicate up-coming events or alarms.
  * 
  * @author Peter
- *
  */
-public enum MeasureUnit {
-	MINUTE,
-	METER,
-	STEP
+public interface PatientEvent extends Serializable {
+	
+	/**
+	 * Returns number of reports valid for today.
+	 * 
+	 * @return num daily reports.
+	 */
+	int getNumReports();
+	
+	/**
+	 * Returns number of due reports.
+	 * 
+	 * @return due reports.
+	 */
+	int getDueReports();
 }

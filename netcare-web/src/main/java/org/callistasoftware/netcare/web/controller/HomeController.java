@@ -133,5 +133,9 @@ public class HomeController extends ControllerSupport {
 		return "user/home";
 	}
 	
-	
+	@RequestMapping(value="/user/report", method=RequestMethod.GET)
+	public String displayUserReport() {
+		log.info("Displaying home for user");
+		return "user/report";
+	}
 }

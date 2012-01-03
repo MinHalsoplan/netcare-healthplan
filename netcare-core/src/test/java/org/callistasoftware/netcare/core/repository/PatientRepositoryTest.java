@@ -151,8 +151,8 @@ public class PatientRepositoryTest extends TestSupport {
 		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus", "123456789004"));
 		final PatientEntity patient2 = this.repo.save(PatientEntity.newEntity("Peter", "123456789005"));
 		
-		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient, "Testplan", new Date(), 12, DurationUnit.WEEKS));
-		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient2, "Testplan", new Date(), 12, DurationUnit.WEEKS));
+		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient, "Testplan", new Date(), 12, DurationUnit.WEEK));
+		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient2, "Testplan", new Date(), 12, DurationUnit.WEEK));
 		
 		final List<PatientEntity> patients = this.repo.findByCareUnit("hsa-id");
 		assertNotNull(patients);

@@ -17,7 +17,12 @@
 package org.callistasoftware.netcare.model.entity;
 
 
+/**
+ * Known units for duration.
+ * 
+ * @author Peter
+ */
 public enum DurationUnit {
-	WEEKS,
-	MONTHS;
+	WEEK,
+	MONTH
 }

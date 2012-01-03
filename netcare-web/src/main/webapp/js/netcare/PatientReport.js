@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-NC.PatientSchema = function(descriptionId, tableId) {
+NC.PatientReport = function(descriptionId, tableId) {
 	
 	var _baseUrl = "/netcare-web/api/patient/";
 	var _schemaCount = 0;
@@ -99,8 +99,8 @@ NC.PatientSchema = function(descriptionId, tableId) {
 							inputValue.appendTo(reportField);
 						}						
 						
-						if (curDay != value.day.value) {
-							curDay = value.day.value;
+						if (curDay != value.today.value) {
+							curDay = value.today.value;
 							if (today == value.date) {
 								dayField = '<b>' + curDay + '<br/>' + value.date + '</b>';								
 							} else {

@@ -19,24 +19,99 @@ package org.callistasoftware.netcare.core.api;
 import java.io.Serializable;
 
 /**
+ * Keeps scheduled activity information, used to display a list of activities.
  * 
  * @author Peter
- *
  */
 public interface ScheduledActivity extends Serializable {
+	/**
+	 * Returns the id.
+	 * 
+	 * @return the system unique id.
+	 */
 	long getId();
-	Option getDay();
+	
+	/**
+	 * Returns the day in week (monday, ...)
+	 * 
+	 * @return the day as an option.
+	 */
+	Option getToday();
+	
+	/**
+	 * Returns if this activity has been rejected by the user.
+	 * 
+	 * @return true if rejected, otherwise false.
+	 */
+	boolean isRejected();
+	
+	/**
+	 * Returns the scheduled time (hh:mm)
+	 * 
+	 * @return the time.
+	 */
 	String getTime();
+
+	/**
+	 * Returns the scheduled date (yyyy-mm-dd)
+	 *
+	 * @return the date.
+	 */
 	String getDate();
+	
+	/**
+	 * Returns the associated {@link ActivityDefinition}
+	 * 
+	 * @return the definition.
+	 */
 	ActivityDefinition getDefinition();
+	
+	/**
+	 * Returns if this activity is due.
+	 * 
+	 * @return true if due, otherwise false.
+	 */
 	boolean isDue();
-	int getWeek();
-	int getActual();
+	
+	/**
+	 * Returns the reported value.
+	 * 
+	 * @return the actual value reported.
+	 */
+	int getActualValue();
+	
+	/**
+	 * Returns the date and time this was reported (yyyy-mm-dd hh:mm).
+	 * 
+	 * @return the reported time, or null if none.
+	 */
 	String getReported();
 	
 	/**
-	 * Get the patient for this activity
-	 * @return
+	 * Returns the actual time this activity was carried out (yyyy-dd-dd hh:mm).
+	 * 
+	 * @return the actual time, or null if not yet reported.
+	 */
+	String getActualTime();
+	
+	/**
+	 * Returns the patient for this activity.
+	 * 
+	 * @return the patient.
 	 */
 	PatientBaseView getPatient();
+	
+	/**
+	 * Returns the perceived sense.
+	 * 
+	 * @return the sense.
+	 */
+	int getSense();
+	
+	/**
+	 * Returns the associated patient notice.
+	 * 
+	 * @return the patient note.
+	 */
+	String getNote();
 }
