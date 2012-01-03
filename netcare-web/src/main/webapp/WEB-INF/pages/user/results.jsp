@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
@@ -37,7 +38,7 @@
 					
 					var hp = new NC.HealthPlan();
 					
-					hp.listScheduledActivities(1, function(data) {
+					var statisticsCallback = function(data) {
 						var arr = new Array();
 						
 						$.each(data.data.activities, function(index, value) {
@@ -45,7 +46,6 @@
 							item[0] = value.name;
 							item[1] = value.count;
 							
-							console.log("Adding item: " + item);
 							arr.push(item);
 						});
 						
@@ -60,6 +60,8 @@
 					
 						var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
 						chart.draw(dataOverview, options);
+						
+						$('#pieChart').show();
 						
 						$.each(data.data.reportedActivities, function(index, value) {
 							console.log("Processing " + value.name + " ...");
@@ -90,10 +92,15 @@
 							$('#pieChart').show();
 							$('#activityCharts').show();
 						});
-						
+					};
+					
+					hp.list(<sec:authentication property="principal.id" />, function(data) {
+						$.each(data.data, function(index, value) {
+							healthPlanId = value.id;
+							hp.listScheduledActivities(healthPlanId, statisticsCallback);
+						});
 					});
 				};
-
 								
 				google.setOnLoadCallback(drawOverview);
 			});
@@ -101,7 +108,7 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2>Min statistik<%--<spring:message code="myStatistics" /> --%></h2>
+			<h2><spring:message code="myStatistics" /></h2>
 			<p>
 				<span class="label notice">Information</span>
 				Nedan visas hur din hälsoplan är fördelad. Din hälsoplan innehåller aktiviteter och diagrammet visar hur stor del
@@ -110,12 +117,11 @@
 			<div id="pieChart" style="display: none;"></div>
 			
 			<h2>Rapporterade Resultat</h2>
-			<div id="activityCharts" style="display: none;">
-				<p>
-					<span class="label notice">Information</span>
-					Diagrammen nedan visar dina rapporterade resultat i förhållande till ditt uppsatta målvärde per aktivitet.
-				</p>
-			</div>
+			<p>
+				<span class="label notice">Information</span>
+				Diagrammen nedan visar dina rapporterade resultat i förhållande till ditt uppsatta målvärde per aktivitet.
+			</p>
+			<div id="activityCharts" style="display: none;"></div>
 		</netcare:content>
 		<netcare:patient-menu />
 		

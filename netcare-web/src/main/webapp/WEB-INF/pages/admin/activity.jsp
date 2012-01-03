@@ -32,6 +32,29 @@
 				var support = new NC.Support();
 				
 				/*
+				 * Disable the weekdays as well as its
+				 * add icon
+				 */
+				var disableWeekdays = function() {
+					$('input[name $= "TimeField"]').attr('disabled', 'disabled');
+					$('input[name $= "TimeField"]').next().hide();
+				}
+				
+				/*
+				 * Method that will completely reset the
+				 * new schedule activity form
+				 */ 
+				var resetForm = function() {
+					console.log("Disabling weekdays");
+					disableWeekdays();
+					
+					console.log("Remove added times");
+					var rootId = 'div[id$=AddedTimes]';
+					$(rootId + ' div').remove();
+					$(rootId).hide();
+				}
+				
+				/*
 				 * Create date picker for start date
 				 */
 				$('#startDate input[name="startDate"]').datepicker({
@@ -51,8 +74,7 @@
 				/*
 				 * Disable time input field as well as "add" icon next to it
 				 */
-				$('input[name $= "TimeField"]').attr('disabled', 'disabled');
-				$('input[name $= "TimeField"]').next().hide();
+				disableWeekdays();
 				
 				/*
 				 * If the user clicks a day checkbox, enable that time field
@@ -222,7 +244,11 @@
 					hp.addActivity(healthPlan, jsonObj, function(data) {
 						console.log("Success callback is executing...");
 						console.log("Resetting form");
-						$('input :reset').click();
+						
+						$('input:reset').click();
+						
+						resetForm();
+						
 					}, 'activitiesTable');
 					
 					$('#activityForm').hide();
