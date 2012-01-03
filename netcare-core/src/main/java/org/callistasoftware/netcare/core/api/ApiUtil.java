@@ -32,6 +32,7 @@ import org.callistasoftware.netcare.model.entity.EntityUtil;
  */
 public class ApiUtil {
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd H:m");
 
 	static Map<String, Integer> intDay = new HashMap<String, Integer>();
 	static Map<Integer, String> stringDay = new HashMap<Integer, String>();
@@ -75,6 +76,22 @@ public class ApiUtil {
 		}
 		return s;
 	}	
+	
+	/**
+	 * Returns a date from a string date and time.
+	 * 
+	 * @param date the date as (yyyy-mm-dd)
+	 * @param time (hh:mi)
+	 * @return the date.
+	 */
+	public static Date parseDateTime(String date, String time) {
+		try {
+			String dateTime = String.format("%s %s", date, time);
+			return (date == null) ? null : dateTimeFormat.parse(dateTime);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
 	
 	/**
 	 * Returns a date from a string date in the format yyyy-MM-dd

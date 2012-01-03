@@ -16,17 +16,27 @@
  */
 package org.callistasoftware.netcare.web.listener;
 
+import java.util.Calendar;
+
 import javax.servlet.ServletContextEvent;
 
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
+import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.spi.HealthPlanService;
+import org.callistasoftware.netcare.core.spi.impl.HealthPlanServiceImpl;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.Frequency;
+import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
@@ -51,6 +61,9 @@ public class ApplicationListener extends ContextLoaderListener {
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
 		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
+		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
+		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
+		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
@@ -82,6 +95,20 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		final PatientEntity p4 = PatientEntity.newEntity("Anders Arnesson", "123456789004");
 		bean.save(p4);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -30);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		hpRepo.save(hp);
+		
+		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		atRepo.save(at);
+		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
+		ad.setActivityTarget(1200);
+		adRepo.save(ad);
+		hps.scheduleActivities(ad);
+		
 	}
 	
 	@Override

@@ -71,6 +71,11 @@ NC.Support = function() {
 			});
 			
 		},
+		
+		//
+		setSelectOptions : function(selectElement, options) {
+			_createOptions(options, selectElement);
+		},
 	
 		/**
 		 * Load all durations as options that exist in the

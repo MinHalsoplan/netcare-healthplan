@@ -22,13 +22,16 @@ import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityReportImpl;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,11 +71,11 @@ public class PatientApi {
 		return planService.getActivitiesForPatient(pv);
 	}
 	
-	@RequestMapping(value="/schema/{id}/accept/{value}", method=RequestMethod.POST, produces="application/json")
+	@RequestMapping(value="/schema/{id}/accept", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> report(@PathVariable(value="id") final Long id,
-			@PathVariable(value="value") final int value, final Authentication auth) {
-		return planService.reportReady(id, value);
+			@RequestBody final ActivityReportImpl dto, final Authentication auth) {
+		return planService.reportReady(id, dto);
 	}
 	
 	@RequestMapping(value="/event", method=RequestMethod.GET, produces="application/json")
