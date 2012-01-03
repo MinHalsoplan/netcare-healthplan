@@ -30,10 +30,62 @@
 				var support = NC.Support();
 				support.loadDurations($('#createHealthPlanForm select'));
 				
-				var healthPlans = NC.HealthPlan('ordinationDescription'
-						, 'ordinationTable');
+				var updateDescription = function(count) {
+					console.log("Updating ordination table description");
+					if (count == 0) {
+						$('#ordinationDescription').html('Inga aktuella ordinationer').show();
+						$('#ordinationTable').hide();
+					} else {
+						$('#ordinationDescription').hide();
+						$('#ordinationTable').show();
+					}
+				};
 				
-				healthPlans.list(<c:out value="${sessionScope.currentPatient.id}" />);
+				var healthPlans = NC.HealthPlan();
+				var listCallback = function(data) {
+					console.log("Success. Processing results...");
+					
+					/* Empty the result list */
+					$('#ordinationTable tbody > tr').empty();
+					
+					$.each(data.data, function(index, value) {
+						console.log("Processing index " + index + " value: " + value.name);
+						
+						var util = NC.Util();
+						var editIcon = util.createIcon('edit', 24, function() {
+							healthPlans.view(value.id);
+						});
+						
+						var deleteIcon = util.createIcon('trash', 24, function() {
+							healthPlans.delete(value.id, value.patient.id, function(data) {
+								healthPlans.list(value.patient.id, listCallback);
+							});
+						});
+						
+						var actionCol = $('<td>');
+						actionCol.css('text-align', 'right');
+						
+						editIcon.appendTo(actionCol);
+						deleteIcon.appendTo(actionCol);
+						
+						$('#ordinationTable tbody').append(
+								$('<tr>').append(
+									$('<td>').html(value.name)).append(
+										$('<td>').html(value.duration + ' ' + value.durationUnit.value)).append(
+												$('<td>').html(value.startDate)).append(
+														$('<td>').html(value.issuedBy.name)).append(
+																actionCol));
+					});
+					
+					console.log("Updating description");
+					updateDescription(data.data.length);
+				}
+				
+				healthPlans.list(<c:out value="${sessionScope.currentPatient.id}" />, function(data) {
+					listCallback(data);
+				});
+				
+				updateDescription(0);
 				
 				/*
 				 * Bind date picker to start date field

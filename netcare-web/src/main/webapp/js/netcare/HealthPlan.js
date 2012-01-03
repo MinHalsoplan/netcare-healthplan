@@ -17,22 +17,7 @@
 NC.HealthPlan = function(descriptionId, tableId) {
 	
 	var _baseUrl = "/netcare-web/api/healthplan";
-	var _ordinationCount = 0;
 	var _activityCount = 0;
-	
-	var _descriptionId = descriptionId;
-	var _tableId = tableId;
-	
-	var _updateDescription = function() {
-		console.log("Updating ordination table description");
-		if (_ordinationCount == 0) {
-			$('#' + _descriptionId).html('Inga aktuella ordinationer').show();
-			$('#' + _tableId).hide();
-		} else {
-			$('#' + _descriptionId).hide();
-			$('#' + _tableId).show();
-		}
-	};
 	
 	var _updateActivityTable = function(tableId) {
 		console.log("Updating activity table. Activity count = " + _activityCount);
@@ -47,53 +32,13 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	
 	var public = {
 		
-		init : function() {
-			_updateDescription();
-		},
-		
-		list : function(currentPatient) {
+		list : function(currentPatient, callback) {
 			console.log("Load active ordinations for the current patient");
 			$.ajax({
 				url : _baseUrl + '/' + currentPatient + '/list',
 				dataType : 'json',
 				success : function(data) {
-					console.log("Success. Processing results...");
-					
-					/* Empty the result list */
-					$('#' + tableId + ' tbody > tr').empty();
-					
-					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.name);
-						
-						var util = NC.Util();
-						var editIcon = util.createIcon('edit', 24, function() {
-							public.view(value.id, currentPatient);
-						});
-						
-						var deleteIcon = util.createIcon('trash', 24, function() {
-							public.delete(value.id, currentPatient);
-						});
-						
-						var actionCol = $('<td>');
-						actionCol.css('text-align', 'right');
-						
-						editIcon.appendTo(actionCol);
-						deleteIcon.appendTo(actionCol);
-						
-						$('#' + tableId + ' tbody').append(
-								$('<tr>').append(
-									$('<td>').html(value.name)).append(
-										$('<td>').html(value.duration + ' ' + value.durationUnit.value)).append(
-												$('<td>').html(value.startDate)).append(
-														$('<td>').html(value.issuedBy.name)).append(
-																actionCol));
-					});
-					
-					console.log("Updating ordination count to: " + data.data.length);
-					_ordinationCount = data.data.length;
-					
-					console.log("Updating description");
-					_updateDescription();
+					callback(data);
 				}
 			});
 		},
@@ -129,7 +74,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		/**
 		 * Delete an ordination
 		 */
-		delete : function(ordinationId, currentPatient) {
+		delete : function(ordinationId, currentPatient, callback) {
 			var url = _baseUrl + '/' + currentPatient + '/' + ordinationId + '/delete';
 			console.log("Removing ordination " + ordinationId + " using url: " + url);
 			
@@ -139,8 +84,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				success : function(data) {
 					console.log('Deletion of ordination succeeded.');
 					new NC.Util().processServiceResult(data);
-					
-					public.list(currentPatient);
+					callback(data);					
 				}
 			});
 		},
@@ -151,13 +95,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		view : function(healthPlanId) {
 			console.log("GET to view ordination with id: " + healthPlanId);
 			window.location = '/netcare-web/netcare/admin/healthplan/' + healthPlanId + '/view';
-		},
-		
-		/**
-		 * Load a single ordination
-		 */
-		load : function(ordinationId, callback) {
-			
 		},
 		
 		/**

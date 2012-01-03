@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
@@ -37,7 +38,7 @@
 					
 					var hp = new NC.HealthPlan();
 					
-					hp.listScheduledActivities(1, function(data) {
+					var statisticsCallback = function(data) {
 						var arr = new Array();
 						
 						$.each(data.data.activities, function(index, value) {
@@ -90,10 +91,16 @@
 							$('#pieChart').show();
 							$('#activityCharts').show();
 						});
-						
+					};
+					
+					var healthPlanId;
+					hp.list(<sec:authentication property="principal.id" />, function(data) {
+						$.each(data.data, function(index, value) {
+							healthPlanId = value.id;
+							hp.listScheduleActivities(healthPlanId, statisticsCallback);
+						});
 					});
 				};
-
 								
 				google.setOnLoadCallback(drawOverview);
 			});
@@ -101,7 +108,7 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2>Min statistik<%--<spring:message code="myStatistics" /> --%></h2>
+			<h2><spring:message code="myStatistics" /></h2>
 			<p>
 				<span class="label notice">Information</span>
 				Nedan visas hur din hälsoplan är fördelad. Din hälsoplan innehåller aktiviteter och diagrammet visar hur stor del

@@ -55,7 +55,7 @@ public class HealthPlanApi extends ApiSupport {
 	@RequestMapping(value="/{patient}/list", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<HealthPlan[]> listHealthPlans(@PathVariable(value="patient") final Long patient, final Authentication auth) {
-		log.info("Care giver {} is listing ordinations for patient {}", ((CareGiverBaseView) auth.getPrincipal()).getHsaId(), patient);
+		this.logAccess("list", "healthplan");
 		final ServiceResult<HealthPlan[]> ordinations = this.service.loadHealthPlansForPatient(patient);
 		
 		log.debug("Found {} for patient {}", ordinations.getData().length, patient);
@@ -65,7 +65,7 @@ public class HealthPlanApi extends ApiSupport {
 	@RequestMapping(value="/{patient}/{healthPlan}/delete", method=RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="patient") final Long patient, @PathVariable(value="healthPlan") final Long healthPlan) {
-		log.info("Deleting ordination {} for patient {}", healthPlan, patient);
+		this.logAccess("delete", "health plan");
 		return this.service.deleteHealthPlan(healthPlan);
 	}
 	
