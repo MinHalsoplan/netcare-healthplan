@@ -23,7 +23,7 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 	var _descriptionId = descriptionId;
 	var _eventHeadId = eventHeadId;
 	var _eventBodyId = eventBodyId;
-	var _tableId = tableId;
+	var _tableId = tableId;	   
 	
 	var _updateDescription = function() {
 		console.log("Updating schema table description");
@@ -35,6 +35,30 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 			$('#' + _tableId).show();
 		}
 	}
+	
+	var _createGauge = function(element) {
+	    // Create and populate the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Label');
+        data.addColumn('number', 'Value');
+        data.addRows(1);
+        data.setValue(0, 0, 'Meter');
+        data.setValue(0, 1, 850);
+        var options = new Object();
+        options.max = 1000;
+        options.min = 0;
+        options.redFrom = 0;
+        options.redTo = 100;
+        options.yellowFrom = 100;
+        options.yellowTo = 600;
+        options.greenFrom = 600;
+        options.greenTo = options.max;
+        options.majorTicks = [ '0', '200', '400', '600', '800', '1000' ];
+        options.minorTicks = 0;
+        
+        // Create and draw the visualization.
+        new google.visualization.Gauge(element).draw(data, options);
+      }    
 	
 	var public = {
 		
@@ -58,7 +82,7 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 					$('#' + tableId + ' tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.reported + ", " + value.actual);
+						console.log("Processing index " + index + " value: " + value.reported + ", " + value.actualValue);
 							
 						var period;
 						if (value.activityRepeat == 0) {
@@ -86,20 +110,21 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 						} else {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
-						
+												
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
 										$('<td>').html(icon)).append(
 												$('<td>').html(value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit))).append(
 														$('<td>').html(period)).append(
 																$('<td>').css('text-align', 'right').html(pctNum+ '<br/>' + pctSum)).append(
+//																		$('<td>').attr('id', index)).append(
 																		$('<td>').html(numText + '<br/>' + sumText)).append(
 																				$('<td>').html(util.formatFrequency(value))));
 					});
-
 					_schemaCount = data.data.length;
 					
 					_updateDescription();
+					_createGauge(document.getElementById('g1'));
 				}
 			});
 		},
@@ -113,7 +138,8 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 				success : function(data) {
 					console.log('Success.');
 					var event = data.data;
-					var _eventCount = event.numReports + event.dueReports;
+					_eventCount = event.numReports + event.dueReports;
+					console.log('event count: ' + _eventCount);
 					var msg = '';
 					if (_eventCount > 0) {
 						msg = '<a href="report">[' + _eventCount + ']</a>';

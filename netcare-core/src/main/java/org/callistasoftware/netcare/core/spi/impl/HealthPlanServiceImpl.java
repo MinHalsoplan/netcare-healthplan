@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
@@ -256,7 +257,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	 * 
 	 * @param activityDefinition the activity defintion.
 	 */
-	private void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
+	public void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(activityDefinition.getStartDate());
 		Frequency freq = activityDefinition.getFrequency();
@@ -314,11 +315,16 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 
 	@Override
 	public ServiceResult<ScheduledActivity> reportReady(
-			Long scheduledActivityId, int value) {
-		log.info("Report done for scheduled activity {} value {}", scheduledActivityId, value);
+			Long scheduledActivityId, ActivityReport report) {
+		log.info("Report done for scheduled activity {}", scheduledActivityId);
 		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(scheduledActivityId);
 		entity.setReportedTime(new Date());
-		entity.setActualValue(value);
+		entity.setRejected(report.isRejected());
+		entity.setNote(report.getNote());
+		entity.setPerceivedSense(report.getSense());
+		entity.setActualValue(report.getActualValue());
+		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
+		entity.setActualTime(d);
 		scheduledActivityRepository.save(entity);
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(entity), new GenericSuccessMessage());
 	}

@@ -60,4 +60,11 @@ public interface ActivityReport extends Serializable{
 	 * @return the note, or null if not set.
 	 */
 	String getNote();
+	
+	/**
+	 * Returns if this activity has been rejected.
+	 * 
+	 * @return true if rejected, otherwise false.
+	 */
+	boolean isRejected();
 }

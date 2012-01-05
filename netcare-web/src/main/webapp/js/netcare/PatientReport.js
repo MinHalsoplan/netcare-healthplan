@@ -34,22 +34,113 @@ NC.PatientReport = function(descriptionId, tableId) {
 		}
 	}
 	
+	
+	var createButton = function(type, value, cls) {
+		var btn = $('<input>').attr('type', type).attr('value', value).attr('class', cls);
+		return btn;
+	}
+	
+	var createButtons = function(act) {
+		var div = $('<div>');
+		var rbtn;
+		if (act.reported == null) {
+			rbtn = createButton('submit', 'Rapportera', 'btn small primary');			
+		} else {
+			rbtn = createButton('submit', 'Ändra', 'btn small success');
+		}
+		rbtn.css('margin', '5px');
+		div.append(rbtn);
+		div.append($('<br>'));
+		var cbtn = createButton('submit', 'Ej Utförd', 'btn small danger');
+		cbtn.css('margin', '5px');
+		div.append(cbtn);
+		cbtn.attr('disabled', (act.rejected || act.reported != null));
+		
+		rbtn.click(function(event) {
+			var value = (act.actualValue == 0) ? act.definition.goal : act.actualValue;
+			console.log("value = " + value);
+
+			$('#reportFormDiv input[name="activityId"]').attr('value', act.id);
+			$('#reportFormDiv input[name="value"]').attr('value', value);
+			$('#reportFormDiv select[name="sense"]').attr('value', act.sense);
+			$('#reportFormDiv input[name="note"]').attr('value', act.note);
+			$('#unitId').html(act.definition.type.unit.value);
+
+			var planned = act.definition.type.name + '&nbsp;' + act.definition.goal 
+			+ '&nbsp;' 
+			+ act.definition.type.unit.value
+			+ ',&nbsp;' + act.day.value + '&nbsp;' + act.date + '&nbsp;' + act.time;
+
+			$('#plannedId').html(planned);
+			
+			var date;
+			var time;
+			if (act.actualTime == null) {
+				date = act.date;
+				time = act.time;
+			} else {
+				var str = act.actualTime.split(' ');
+				date = str[0];
+				time = str[1];
+			}
+			$('#reportFormDiv input[name="date"]').datepicker( "option", "defaultDate", date);
+			$('#reportFormDiv input[name="date"]').attr('value', date);
+			$('#reportFormDiv input[name="time"]').attr('value', time);
+			$('#reportFormDiv').modal('show');
+			$('#reportFormDiv input[name="value"]').focus();		
+		});
+		
+		cbtn.click(function(event) {
+			event.preventDefault();
+			var id = act.id;
+			var rep = new Object();
+			rep.actualValue = 0;
+			rep.actualDate = null;
+			rep.actualTime = null;
+			rep.sense = 0;
+			rep.note = null;
+			rep.rejected = true;
+
+			var jsonObj = JSON.stringify(rep);
+
+			console.log("JSON: " + jsonObj.toString());
+
+			public.performReport(id, jsonObj, function(data) {
+			});
+		});
+		
+		return div;
+	}
+	
+
+	
 	var public = {
 		
 		init : function() {
 			_updateDescription();
 		},
 		
-		focus : function() {
-			console.log('set focus : ' + _lastUpdatedId);
-			if (_lastUpdatedId != -1) {
-				$('#rep-' + _lastUpdatedId).focus();
-			}
+		performReport : function(activityId, formData, callback) {
+			var url = _baseUrl + 'schema/' + activityId + '/accept';
+			console.log('!!!!!!report ' + url);
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				type : 'post',
+				data : formData,
+				contentType : 'application/json',
+				success :  function(data) {
+					console.log('Report successfully done');
+					new NC.Util().processServiceResult(data);
+					callback(data);		
+					public.list();
+				}
+			});		
 		},
-		
+				
 		list : function() {
 			console.log("Load activitues for the patient");
-			var today = $.datepicker.formatDate( 'yy-m-d', new Date(), null );
+			var today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
 			var curDay = '';
 			var curActivity = '';
 			var util = NC.Util();
@@ -63,51 +154,20 @@ NC.PatientReport = function(descriptionId, tableId) {
 					$('#' + tableId + ' tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.reported + ", " + value.actual);
-												
-						var reportField = $('<div>');
-						var inputValue;
+						console.log("Processing index " + index + " value: " + value.reported + ", " + value.date);	
 						
-						if (value.definition.type.code != 'NONE') {
-							inputValue = $('<input>');
-							inputValue.val((value.reported != null) ? value.actual : '');
-							inputValue.attr('size', 4);
-							inputValue.attr('id', 'rep-' + value.id);
-
-							if (today == value.date) {
-								inputValue.css('background', 'lightgreen');
-							} else {
-								inputValue.css('background', (!value.due) ? 'lightpink' : 'lightyellow');
-//								XXX: Disable up-coming days.	
-								if (value.due) {
-									inputValue.attr('disabled', true);
-								}
-							}
-							
-							inputValue.change(function() {
-								public.accept(value.id, inputValue.val());
-							});
-							inputValue.appendTo(reportField);
-
-							if (!value.due) {
-								var editIcon = util.createIcon('bullet_accept', 32, null);
-								editIcon.css('align', 'right');
-								reportField.append(editIcon);
-							}
-						} else {
-							inputValue = '&nbsp;';
-							inputValue.appendTo(reportField);
-						}						
-						
-						if (curDay != value.today.value) {
-							curDay = value.today.value;
-							if (today == value.date) {
-								dayField = '<b>' + curDay + '<br/>' + value.date + '</b>';								
-							} else {
-								dayField = curDay + '<br/>' + value.date;
-							}
+						if (curDay != value.day.value) {
+							curDay = value.day.value;
+							dayField = curDay + '<br/>' + value.date;
 						} else {
 							dayField = '-&nbsp;"&nbsp;-';
+						}
+						
+						var reportField;
+						if (value.due || today == value.date) {
+							reportField = createButtons(value);
+						} else {
+							reportField = '&nbsp;';
 						}
 						
 						var activity = value.definition.type.name + "<br/>" + value.definition.goal + '&nbsp;' + value.definition.type.unit.value;
@@ -117,13 +177,30 @@ NC.PatientReport = function(descriptionId, tableId) {
 						} else {
 							activityField = '-&nbsp;"&nbsp;-';
 						}
-						
+
+						var lineColor;
+						if (value.due) {
+							lineColor = 'red';
+						} else if (today == value.date) {
+							lineColor = 'blue';
+						} else {
+							lineColor = 'gray';
+						}
+
+						var reported;
+						if (value.reported != null) {
+							reported =  ((value.rejected) ? 'Ej Utförd' : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
+							+ '<br/>' + value.reported;
+						} else {
+							reported = '&nbsp;';
+						}
 						$('#' + tableId + ' tbody').append(
-								$('<tr>').append(
+								$('<tr>').css('color', lineColor).append(
 										$('<td>').html(dayField)).append(
 												$('<td>').html(value.time)).append(
 														$('<td>').css('text-align', 'center').html(activityField)).append(
-																$('<td>').html(reportField)));
+																$('<td>').css('text-align', 'left').html(reportField)).append(
+																		$('<td>').html(reported)));
 					});
 					
 					console.log("Updating ordination count to: " + data.data.length);
@@ -134,27 +211,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 				}
 			});
 		},
-	
-		
-		/**
-		 * View a single ordination
-		 */
-		accept : function(id, value) {
-			console.log("POST accept activity with id: " + id + ', value: ' + value);
-			var url = _baseUrl + "schema/" + id + '/accept/' + value;
-			_lastUpdatedId = id;
-			$.ajax({
-				url : url,
-				type : 'post',
-				success : function(data) {
-					console.log('Accept of activity succeeded.');
-					new NC.Util().processServiceResult(data);
-					public.list();
-					public.focus();
-				}
-			});
-		},
-		
+			
 	};
 	
 	return public;

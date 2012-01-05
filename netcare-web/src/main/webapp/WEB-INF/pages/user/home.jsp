@@ -27,18 +27,26 @@
 <netcare:page>
 	<netcare:header>
 		<script type="text/javascript">
-		$(function() {
-			var home = NC.PatientHome('planDescription', 'planTable', 'eventHead', 'eventBody');
-			home.list();
-			home.status();
-		});
+			$(function() {
+				var home = NC.PatientHome('planDescription', 'planTable',
+						'eventHead', 'eventBody');
+				home.list();
+				home.status();
+			});
 		</script>
+		
+				<script type="text/javascript">
+			google.load('visualization', '1', {
+				packages : [ 'gauge' ]
+			});
+		</script>
+		
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
 			<div class="cool">
 				<h3 class="shadow">Min Hälsoplan</h3>
-				<p id="planDescription"></p>
+				<div id="planDescription" style="margin: 10px"></div>
 				<table id="planTable" class="condensed-table">
 					<thead>
 						<th>&nbsp;</th>
@@ -51,14 +59,14 @@
 					</tbody>
 				</table>
 				<div style="text-align: right">
-					<a href="resultat">Mina Resultat</a>
+					<a href="results">Mina Resultat</a>
 				</div>
 			</div>
 			<div class="cool">
-				<h3 id="eventHead" class="shadow">Nya Händelser</h3>
+				<h3 id="eventHead" class="shadow"></h3>
 				<div id="eventBody" style="margin: 10px"></div>
 				<div style="text-align: right">
-					<a href="report">Mitt Schema</a>
+					<a href="report">Mina Händelser</a>
 				</div>
 			</div>
 		</netcare:content>

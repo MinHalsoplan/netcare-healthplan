@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
@@ -26,6 +27,7 @@ import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 
 /**
  * Defines the ordination service that will provide
@@ -109,7 +111,7 @@ public interface HealthPlanService {
 	 * @param value the value.
 	 * @return an updated {@link ScheduledActivity}
 	 */
-	ServiceResult<ScheduledActivity> reportReady(final Long scheduledActivityId, final int value);
+	ServiceResult<ScheduledActivity> reportReady(final Long scheduledActivityId, final ActivityReport report);
 	
 	/**
 	 * Load the latest reported activities for all patients that
@@ -148,4 +150,6 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<HealthPlanStatistics> getStatisticsForHealthPlan(final Long healthPlanId);
+	
+	void scheduleActivities(ActivityDefinitionEntity activityDefinition) ;
 }

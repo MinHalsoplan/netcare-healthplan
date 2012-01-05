@@ -36,7 +36,7 @@ public interface ScheduledActivity extends Serializable {
 	 * 
 	 * @return the day as an option.
 	 */
-	Option getToday();
+	Option getDay();
 	
 	/**
 	 * Returns if this activity has been rejected by the user.

@@ -38,7 +38,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private String reported;
 	private String date;
 	private String time;
-	private Option today;
+	private Option day;
 	private ActivityDefinition activityDefinition;
 	private PatientBaseView patient;
 	private String actualTime;
@@ -62,9 +62,11 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		a.activityDefinition = ActivityDefintionImpl.newFromEntity(entity.getActivityDefinitionEntity());
 		
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(entity.getScheduledTime());
 		int day = cal.get(Calendar.DAY_OF_WEEK);
-		a.today = new Option("weekday." + day, LocaleContextHolder.getLocale());		
-		
+		a.day = new Option("weekday." + day, LocaleContextHolder.getLocale());		
+
+		cal.setTime(new Date());
 		cal.add(Calendar.HOUR_OF_DAY, 3);
 		Date time = entity.getScheduledTime();
 		a.due = (time.compareTo(cal.getTime()) < 0);
@@ -89,7 +91,6 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	
 	@Override
 	public long getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 
@@ -101,19 +102,17 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	
 	@Override
 	public boolean isDue() {
-		// TODO Auto-generated method stub
 		return due;
 	}
 
 	@Override
 	public ActivityDefinition getDefinition() {
-		// TODO Auto-generated method stub
 		return activityDefinition;
 	}
 
 	@Override
-	public Option getToday() {
-		return today;
+	public Option getDay() {
+		return day;
 	}
 
 	@Override
