@@ -31,7 +31,6 @@ a:hover {
 
 .cool .shadow {
 	color: black;
-	background-color: #eeeeee;
 	border-radius: 10px;
 }
 
@@ -42,6 +41,6 @@ a:hover {
 	color: black;
 	margin: 20px;
 	box-shadow: 2px 2px 5px #333;
-	background-color: lightgray;
+	background-color: white;
 	text-align: center;
 }

@@ -28,46 +28,40 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
-				var home = NC.PatientHome('planDescription', 'planTable',
-						'eventHead', 'eventBody');
+				var home = NC.PatientHome('planDescription', 'planTable', 'eventBody');
 				home.list();
 				home.status();
 			});
 		</script>
-		
-				<script type="text/javascript">
+
+		<script type="text/javascript">
 			google.load('visualization', '1', {
 				packages : [ 'gauge' ]
 			});
 		</script>
-		
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<div class="cool">
-				<h3 class="shadow">Min Hälsoplan</h3>
-				<div id="planDescription" style="margin: 10px"></div>
-				<table id="planTable" class="condensed-table">
-					<thead>
-						<th>&nbsp;</th>
-						<th>Aktivitet</th>
-						<th>Pågår till</th>
-						<th colspan='2'>Avklarat (antal, mängd)</th>
-						<th>Tider</th>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-				<div style="text-align: right">
-					<a href="results">Mina Resultat</a>
-				</div>
-			</div>
-			<div class="cool">
-				<h3 id="eventHead" class="shadow"></h3>
-				<div id="eventBody" style="margin: 10px"></div>
-				<div style="text-align: right">
-					<a href="report">Mina Händelser</a>
-				</div>
+			<h1>Min Hälsoplan</h1>
+			<div id="eventBody" class="alert-message"></div>
+			<div id="planDescription" style="margin: 10px"></div>
+			<table id="planTable"
+				style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
+				class="condensed-table">
+				<thead>
+					<th>&nbsp;</th>
+					<th>Aktivitet</th>
+					<th>Pågår till</th>
+					<th colspan='2'>Avklarat (antal, mängd)</th>
+					<th>Tider</th>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div style="text-align: right">
+				<a href="results">Mina Resultat</a>&nbsp;|&nbsp; <a
+					href="/netcare-web/api/patient/schema/min-halso-plan">Hämta
+					Kalenderdata</a>
 			</div>
 		</netcare:content>
 		<netcare:patient-menu>

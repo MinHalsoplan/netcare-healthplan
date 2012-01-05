@@ -44,9 +44,9 @@ NC.PatientReport = function(descriptionId, tableId) {
 		var div = $('<div>');
 		var rbtn;
 		if (act.reported == null) {
-			rbtn = createButton('submit', 'Rapportera', 'btn small primary');			
+			rbtn = createButton('submit', 'Rapportera', 'btn small success');			
 		} else {
-			rbtn = createButton('submit', 'Ändra', 'btn small success');
+			rbtn = createButton('submit', 'Ändra', 'btn small primary');
 		}
 		rbtn.css('margin', '5px');
 		div.append(rbtn);
@@ -54,7 +54,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 		var cbtn = createButton('submit', 'Ej Utförd', 'btn small danger');
 		cbtn.css('margin', '5px');
 		div.append(cbtn);
-		cbtn.attr('disabled', (act.rejected || act.reported != null));
+		cbtn.attr('disabled', act.rejected);
 		
 		rbtn.click(function(event) {
 			var value = (act.actualValue == 0) ? act.definition.goal : act.actualValue;
@@ -122,7 +122,6 @@ NC.PatientReport = function(descriptionId, tableId) {
 		
 		performReport : function(activityId, formData, callback) {
 			var url = _baseUrl + 'schema/' + activityId + '/accept';
-			console.log('!!!!!!report ' + url);
 			$.ajax({
 				url : url,
 				dataType : 'json',
@@ -198,9 +197,9 @@ NC.PatientReport = function(descriptionId, tableId) {
 								$('<tr>').css('color', lineColor).append(
 										$('<td>').html(dayField)).append(
 												$('<td>').html(value.time)).append(
-														$('<td>').css('text-align', 'center').html(activityField)).append(
-																$('<td>').css('text-align', 'left').html(reportField)).append(
-																		$('<td>').html(reported)));
+														$('<td>').css('text-align', 'left').html(activityField)).append(
+																$('<td>').css('text-align', 'center').html(reportField)).append(
+																		$('<td>').css('text-align', 'left').html(reported)));
 					});
 					
 					console.log("Updating ordination count to: " + data.data.length);

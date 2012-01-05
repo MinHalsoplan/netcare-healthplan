@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
+NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	
 	var _baseUrl = "/netcare-web/api/patient/";
 	var _schemaCount = 0;
 	var _eventCount = 0;
 	
 	var _descriptionId = descriptionId;
-	var _eventHeadId = eventHeadId;
 	var _eventBodyId = eventBodyId;
 	var _tableId = tableId;	   
 	
@@ -124,7 +123,7 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 					_schemaCount = data.data.length;
 					
 					_updateDescription();
-					_createGauge(document.getElementById('g1'));
+					//_createGauge(document.getElementById('g1'));
 				}
 			});
 		},
@@ -140,24 +139,19 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 					var event = data.data;
 					_eventCount = event.numReports + event.dueReports;
 					console.log('event count: ' + _eventCount);
-					var msg = '';
-					if (_eventCount > 0) {
-						msg = '<a href="report">[' + _eventCount + ']</a>';
+					if (_eventCount == 0) {
+						$('#' + _eventBodyId).hide();
 					} else {
-						msg = '[' + _eventCount + ']';
+						var msg = '';
+						if (_eventCount > 0) {
+							msg = '<a href="report">[' + _eventCount + ']</a>';
+						} else {
+							msg = '[' + _eventCount + ']';
+						}
+						$('#' + _eventBodyId).html('Du har ' + msg + ' nya händelser');
+						$('#' + _eventBodyId).show();
+						$('#' + _eventBodyId).addClass((event.dueReports > 0) ? "warning" : "success");
 					}
-					$('#' + _eventHeadId).html('Nya Händelser ' + msg);
-					msg = '';
-					if (_eventCount == 0) {
-						msg = '<br/>Inga nya händelser';
-					}
-					if (event.numReports > 0) {
-						msg += '<br/>Aktuella händelser ' + event.numReports; 
-					}
-					if (event.dueReports > 0) {
-						msg += '<br/>Gamla händelser ' + event.dueReports;
-					}					
-					$('#' + _eventBodyId).html(msg);
 				}
 			});
 		},

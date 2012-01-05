@@ -67,7 +67,9 @@ public interface ScheduledActivity extends Serializable {
 	ActivityDefinition getDefinition();
 	
 	/**
-	 * Returns if this activity is due.
+	 * Returns if this activity is due. <p>
+	 * 
+	 * An activity is marked as due if it's not reported on during the same day (date) as scheduled.
 	 * 
 	 * @return true if due, otherwise false.
 	 */

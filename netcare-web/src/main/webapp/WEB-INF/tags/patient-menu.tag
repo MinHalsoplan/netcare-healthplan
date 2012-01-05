@@ -30,7 +30,7 @@
 	</small></p>
 	
 	<ul>
-		<li><a href="<spring:url value="/netcare/user/home" />">Hem</a></li>
+		<li><a href="<spring:url value="/netcare/user/home" />">Min Hälsoplan</a></li>
 		<li><a href="<spring:url value="/netcare/user/report" />">Mina Händelser</a></li>
 		<li><a href="<spring:url value="/netcare/user/results" />">Mina Resultat</a></li>
 	</ul>

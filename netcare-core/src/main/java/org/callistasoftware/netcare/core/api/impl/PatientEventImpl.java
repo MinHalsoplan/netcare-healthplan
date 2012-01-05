@@ -51,8 +51,7 @@ public class PatientEventImpl implements PatientEvent {
 
 	@Override
 	public int getDueReports() {
-		// TODO Auto-generated method stub
-		return 0;
+		return dueReports;
 	}
 
 }

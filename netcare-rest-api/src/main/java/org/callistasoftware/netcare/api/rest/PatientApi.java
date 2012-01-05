@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
@@ -27,7 +28,6 @@ import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,5 +82,12 @@ public class PatientApi {
 	@ResponseBody
 	public ServiceResult<PatientEvent> event(final Authentication auth) {
 		return planService.getActualEventsForPatient((PatientBaseView)auth.getPrincipal());
-	}	
+	}
+	
+	@RequestMapping(value="/schema/min-halso-plan", method=RequestMethod.GET, produces="text/calendar")
+	@ResponseBody
+	public String getCalendar(final Authentication auth) {
+		return planService.getICalendarEvents((PatientBaseView)auth.getPrincipal());
+	}
+	
 }

@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.callistasoftware.netcare.model.entity.EntityUtil;
 
@@ -126,7 +127,7 @@ public class ApiUtil {
 	public static String formatTime(Date time) {
 		return String.format("%1$tR", time);		
 	}
-
+	
 	
 	/**
 	 * Truncates time to zero, keeps date.

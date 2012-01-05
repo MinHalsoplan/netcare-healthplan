@@ -16,7 +16,9 @@
  */
  package org.callistasoftware.netcare.model.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Utility functions.
@@ -24,6 +26,7 @@ import java.util.Calendar;
  * @author Peter
  */
 public class EntityUtil {
+	static SimpleDateFormat iCalTimeFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
 	
 	/**
 	 * Returns a non null object.
@@ -65,6 +68,16 @@ public class EntityUtil {
 		cal.set(Calendar.SECOND, 59);
 		cal.set(Calendar.MILLISECOND, 999);
 		return cal;
+	}
+
+	/**
+	 * Returns a string from a date.
+	 * 
+	 * @param time the time.
+	 * @return the formatted string (yyyy-mm-ddThh:mmZ)
+	 */
+	public static String formatCalTime(Date time) {
+		return iCalTimeFormat.format(time);
 	}
 
 }
