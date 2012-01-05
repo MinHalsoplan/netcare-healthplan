@@ -468,4 +468,13 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		}
 		return null;
 	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> removeActivity(
+			Long activityDefinitionId) {
+		log.info("Deleteing activity definition {}", activityDefinitionId);
+		final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
+		
+		throw new UnsupportedOperationException("Not yet implemented.");
+	}
 }

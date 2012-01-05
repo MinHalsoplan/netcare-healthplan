@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
+
 /**
  * Defines an activity definition how it is represented
  * in the UI.
@@ -23,7 +25,7 @@ package org.callistasoftware.netcare.core.api;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public interface ActivityDefinition {
+public interface ActivityDefinition extends Serializable {
 
 	/**
 	 * The desired goal of this definition

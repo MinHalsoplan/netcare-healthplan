@@ -156,8 +156,8 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			
 		},
 		
-		listScheduledActivities : function(healthPlanId, callback) {
-			var url = _baseUrl + '/' + healthPlanId + '/scheduledActivities';
+		loadStatistics : function(healthPlanId, callback) {
+			var url = _baseUrl + '/' + healthPlanId + '/statistics';
 			console.log("Loading scheduled activities from url: " + url);
 			
 			$.ajax({
@@ -188,9 +188,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					new NC.Util().processServiceResult(data);
 					
 					callback(data);
-					
-					/* List messages */
-					public.listActivities(healthPlanId, activityTableId);
 				}
 			});
 		},
