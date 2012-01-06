@@ -96,15 +96,15 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 						
 						var perfText = value.numDone + '&nbsp;av&nbsp;' + value.numTotal + '&nbsp;ggr<br/>' 
 							+ pctSum;
-									
+						var actText = value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit);
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
 										$('<td>').html(icon)).append(
-												$('<td>').html(value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit))).append(
+												$('<td>').html(actText)).append(
 														$('<td>').html(period)).append(
-																$('<td>').css('text-align', 'right').html(perfText)).append(
-																		$('<td>').attr('id', pdata.id).css('height', '100px').css('width', '100px').html('&nbsp;')).append(
-																				$('<td>').html(util.formatFrequency(value))));
+																$('<td>').html(util.formatFrequency(value))).append(
+																		$('<td>').css('text-align', 'right').html(perfText)).append(
+																				$('<td>').attr('id', pdata.id).css('height', '100px').css('width', '100px').html('&nbsp;')));
 					});
 					_schemaCount = data.data.length;
 					

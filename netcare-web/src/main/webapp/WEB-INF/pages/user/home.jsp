@@ -81,8 +81,8 @@
 					<th>&nbsp;</th>
 					<th>Aktivitet</th>
 					<th>Pågår till</th>
+					<th>Planerade tider</th>
 					<th colspan='2'>Avklarat (antal, mängd)</th>
-					<th>Tider</th>
 				</thead>
 				<tbody>
 				</tbody>
