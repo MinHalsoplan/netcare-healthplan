@@ -77,7 +77,8 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 						
 						//console.log('done: ' + pdata.sumDone + ', target: ' + pdata.sumTarget + ', total: ' + pdata.sumTotal);
 						
-						var pctSum = ((value.sumDone / value.sumTotal)*100).toFixed(0) + '%';
+						var pctSum = ((value.sumDone / value.sumTotal)*100).toFixed(0);
+						var pctTarget = ((value.sumTarget/ value.sumTotal)*100).toFixed(0);
 						var result = (value.sumTarget > 0) ? (value.sumDone / value.sumTarget) * 100 : -1;
 						var icon;
 						if (result == -1) {
@@ -94,8 +95,8 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
 						
-						var perfText = value.numDone + '&nbsp;av&nbsp;' + value.numTotal + '&nbsp;ggr<br/>' 
-							+ pctSum;
+						var perfText = value.numDone + '&nbsp;(' + value.numTotal + ')&nbsp;ggr<br/>' 
+							+ pctSum + '&nbsp;(' + pctTarget + ')&nbsp;%';
 						var actText = value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit);
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
