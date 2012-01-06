@@ -31,6 +31,7 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Pair;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
@@ -87,6 +88,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class HealthPlanServiceImpl implements HealthPlanService {
+	
+	/**
+	 * Days back when fetching patient plan (schema).
+	 */
+	private static int SCHEMA_HISTORY_DAYS = 7;
+	/**
+	 * Days forward when fetching patient plan (schema).
+	 */
+	private static int SCHEMA_FUTURE_DAYS  = (2*SCHEMA_HISTORY_DAYS);
+	/**
+	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
+	 */
+	private static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
@@ -131,12 +145,12 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		Calendar c = Calendar.getInstance();
 		c.setFirstDayOfWeek(1);
 		
-		c.add(Calendar.DATE, -7);
-		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		c.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
+		c.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
 		
 		Date startDate = ApiUtil.dayBegin(c).getTime();
 
-		c.add(Calendar.DATE, 3*7);
+		c.add(Calendar.DATE, SCHEMA_HISTORY_DAYS + SCHEMA_FUTURE_DAYS);
 		Date endDate = ApiUtil.dayEnd(c).getTime();
 
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
@@ -315,8 +329,8 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		PatientEntity patient = patientRepository.findOne(patientView.getId());
 		Calendar cal = Calendar.getInstance();
 		Date today = ApiUtil.dayBegin(cal).getTime();
-		cal.add(Calendar.DATE, -7);
-		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		cal.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
+		cal.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
 		Date start = ApiUtil.dayBegin(cal).getTime();
 		cal.setTime(today);
 		Date end = ApiUtil.dayEnd(cal).getTime();
@@ -456,25 +470,28 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 			+ "TRANSP:TRANSPARENT\r\n"
 			+ "CLASS:CONFIDENTIAL\r\n"
 			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-			+ "RRULE:%s\r\n"
+			+ "%s"
 			+ "END:VEVENT\r\n";
 		
 		StringBuffer events = new StringBuffer();
 		for (ActivityDefinitionEntity ad : defs) {
 			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
-			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + ad.getActivityType().getUnit().name();
+			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
+			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + unit;
 			Frequency fr = ad.getFrequency();
-			String duration = toDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
+			String duration = toICalDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
 			for (FrequencyDay day : fr.getDays()) {
 				StringBuffer rrule = new StringBuffer();
-				rrule.append("FREQ=WEEKLY");
+				String wday = toICalDay(day);
+
 				if (fr.getWeekFrequency() > 0) {
+					rrule.append("RRULE:FREQ=WEEKLY");
 					rrule.append(";INTERVAL=").append(ad.getFrequency().getWeekFrequency());
+					rrule.append(";WKST=MO");
+					rrule.append(";BYDAY=").append(wday);
+					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
+					rrule.append("\r\n");
 				}
-				rrule.append(";WKST=MO");
-				String wday = toCalendarDay(day);
-				rrule.append(";BYDAY=").append(wday);
-				rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
 				
 				int timeIndex = 0;
 				for (FrequencyTime time : day.getTimes()) {
@@ -503,7 +520,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	 * @param amount the amount.
 	 * @return the ical duration.
 	 */
-	private static String toDuration(MeasureUnit unit, int amount) {
+	private static String toICalDuration(MeasureUnit unit, int amount) {
 		int minutes;
 		switch (unit) {
 		case STEP: 
@@ -530,7 +547,7 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	}
 	
 	//
-	private static String toCalendarDay(FrequencyDay day) {
+	private static String toICalDay(FrequencyDay day) {
 		switch (day.getDay()) {
 		case Calendar.MONDAY:
 			return "MO";

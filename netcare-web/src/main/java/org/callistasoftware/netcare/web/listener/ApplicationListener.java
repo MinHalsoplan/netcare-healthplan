@@ -109,6 +109,14 @@ public class ApplicationListener extends ContextLoaderListener {
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
 		
+		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE);
+		atRepo.save(at2);
+		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
+		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);
+		ad2.setActivityTarget(60);
+		adRepo.save(ad2);
+		hps.scheduleActivities(ad2);
+
 	}
 	
 	@Override

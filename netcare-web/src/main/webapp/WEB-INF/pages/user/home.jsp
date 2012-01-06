@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
@@ -27,27 +26,57 @@
 <netcare:page>
 	<netcare:header>
 		<script type="text/javascript">
-			$(function() {
-				var home = NC.PatientHome('planDescription', 'planTable', 'eventBody');
-				home.list();
-				home.status();
-			});
-		</script>
-
-		<script type="text/javascript">
 			google.load('visualization', '1', {
 				packages : [ 'gauge' ]
 			});
+		</script>
+		
+		<script type="text/javascript">
+			 function createGauge(pd) {
+			    // Create and populate the data table.
+		        var data = new google.visualization.DataTable();
+		        data.addColumn('string', 'Label');
+		        data.addColumn('number', 'Value');
+		        data.addRows(1);
+		        data.setValue(0, 0, pd.unit);
+		        data.setValue(0, 1, pd.sumDone);
+		        var options = new Object();
+		        options.max = pd.sumTotal;
+		        options.min = 0;
+		        options.redFrom = 0;
+		        options.redTo = pd.sumTarget * 0.6;
+		        options.yellowFrom = options.redTo;
+		        options.yellowTo =  pd.sumTarget * 0.9;
+		        options.greenFrom = options.yellowTo;
+		        options.greenTo = options.max;
+		        
+		        // Create and draw the visualization.
+		        new google.visualization.Gauge($('#' + pd.id).get(0)).draw(data, options);
+			}
+			
+			google.setOnLoadCallback(function() {
+				$(function() {
+					var home = NC.PatientHome('planDescription', 'planTable',
+							'eventBody');
+					home.status();
+					home.list(function() {
+						$.each(home.perfData(), function(index, pd) {
+							createGauge(pd);
+						});
+					});
+				});
+			});
+
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
 			<h1>Min Hälsoplan</h1>
-			<div id="eventBody" class="alert-message"></div>
+			<div id="eventBody" style="border-radius: 10px" class="alert-message"></div>
 			<div id="planDescription" style="margin: 10px"></div>
 			<table id="planTable"
 				style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
-				class="condensed-table">
+				class="condensed zebra-striped">
 				<thead>
 					<th>&nbsp;</th>
 					<th>Aktivitet</th>
