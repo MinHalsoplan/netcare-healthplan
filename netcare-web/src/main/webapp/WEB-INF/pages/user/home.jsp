@@ -41,7 +41,7 @@
 		        data.setValue(0, 0, pd.unit);
 		        data.setValue(0, 1, pd.sumDone);
 		        var options = new Object();
-		        options.max = pd.sumTotal;
+		        options.max = Math.max(pd.sumTotal, pd.sumDone);
 		        options.min = 0;
 		        options.redFrom = 0;
 		        options.redTo = pd.sumTarget * 0.6;
