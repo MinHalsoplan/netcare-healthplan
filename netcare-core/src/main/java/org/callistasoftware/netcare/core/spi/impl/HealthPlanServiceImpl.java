@@ -88,7 +88,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class HealthPlanServiceImpl implements HealthPlanService {
+public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanService {
 	
 	/**
 	 * Days back when fetching patient plan (schema).
@@ -125,7 +125,6 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	
 	@Autowired
 	private ScheduledActivityRepository scheduledActivityRepository;
-	
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -452,12 +451,15 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	@Override
 	public ServiceResult<ActivityDefinition> deleteActivity(
 			Long activityDefinitionId) {
+		
 		log.info("Deleteing activity definition {}", activityDefinitionId);
 		final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
 		if (ent == null) {
 			log.warn("The activity definition {} could not be found.", activityDefinitionId);
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, activityDefinitionId));
 		}
+		
+		this.verifyWriteAccess(ent);
 		
 		for (final ScheduledActivityEntity sae : ent.getScheduledActivities()) {
 			log.debug("Removing scheduled activity on defintion. Scheduled activity id is {}", sae.getId());

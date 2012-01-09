@@ -67,4 +67,9 @@ public class CareGiverEntity extends UserEntity {
 	void setCareUnit(final CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
 	}
+
+	@Override
+	public boolean isCareGiver() {
+		return true;
+	}
 }
