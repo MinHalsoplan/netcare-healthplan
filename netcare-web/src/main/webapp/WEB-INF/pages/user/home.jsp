@@ -71,7 +71,7 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h1>Min Hälsoplan</h1>
+			<h1><spring:message code="phome.title" /></h1>
 			<div id="eventBody" style="border-radius: 10px" class="alert-message"></div>
 			<div id="planDescription" style="margin: 10px"></div>
 			<table id="planTable"
@@ -79,18 +79,17 @@
 				class="condensed zebra-striped">
 				<thead>
 					<th>&nbsp;</th>
-					<th>Aktivitet</th>
-					<th>Pågår till</th>
-					<th>Planerade tider</th>
-					<th colspan='2'>Avklarat (antal, mängd)</th>
+					<th><spring:message code="phome.activity" /></th>
+					<th><spring:message code="phome.until" /></th>
+					<th><spring:message code="phome.frequency" /></th>
+					<th colspan='2'><spring:message code="phome.done" /></th>
 				</thead>
 				<tbody>
 				</tbody>
 			</table>
 			<div style="text-align: right">
-				<a href="results">Mina Resultat</a>&nbsp;|&nbsp; <a
-					href="/netcare-web/api/patient/schema/min-halso-plan">Hämta
-					Kalenderdata</a>
+				<a href="results"><spring:message code="phome.resultLink" /></a>&nbsp;|&nbsp; <a
+					href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 			</div>
 		</netcare:content>
 		<netcare:patient-menu>

@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -136,5 +137,20 @@ public class SupportApi extends ApiSupport {
 		
 		log.info("User {} is loading latest reported activities", user.getUsername());
 		return this.service.loadLatestReportedForAllPatients(cbv.getCareUnit());
+	}
+	
+	@RequestMapping(value="/caption", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@ResponseBody
+	public ServiceResult<String> loadCaptions(@RequestBody final String[] codes, final Locale locale) {
+		StringBuffer sb = new StringBuffer("{");
+		for (int i = 0; i < codes.length; i++) {
+			Option option = new Option(codes[i], locale);
+			if (i > 0) {
+				sb.append(",");
+			}
+			sb.append(String.format("\"%s\":\"%s\"", codes[i], option.getValue()));
+		}
+		sb.append("}");
+		return ServiceResultImpl.createSuccessResult(sb.toString(), new GenericSuccessMessage());	
 	}
 }

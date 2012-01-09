@@ -55,6 +55,7 @@
 					$('#reportFormDiv input[name="date"]').datepicker('option', 'dayNamesMin', data);
 				});
 				
+				
 				var arr = new Array();
 				arr.push(createOption(1, 'Väldigt lätt'));
 				arr.push(createOption(2, 'Lätt'));
@@ -63,7 +64,7 @@
 				arr.push(createOption(5, 'Utmattad'));
 				
 				support.setSelectOptions($('#reportFormDiv select[name="sense"]'), arr);
-				
+								
 				$('#reportFormId :submit').click(function(event) {
 					event.preventDefault();
 					var id = $('#reportFormDiv input[name="activityId"]').val();
@@ -135,7 +136,6 @@
 					</div>
 				</form>
 			</div>
-
 
 			<table id="schemaTable" style="width: 98%; border-radius: 10px; box-shadow: 2px 2px 5px #333;" class="bordered-table zebra-striped">
 				<thead>

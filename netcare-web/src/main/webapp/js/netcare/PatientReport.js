@@ -153,7 +153,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 					$('#' + tableId + ' tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.reported + ", " + value.date);	
+						console.log("Processing index " + index + " value: " + value.id);	
 						
 						if (curDay != value.day.value) {
 							curDay = value.day.value;
