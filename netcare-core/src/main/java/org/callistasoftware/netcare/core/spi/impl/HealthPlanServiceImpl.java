@@ -44,6 +44,7 @@ import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.messages.EntityDeletedMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
@@ -87,7 +88,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class HealthPlanServiceImpl implements HealthPlanService {
+public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanService {
 	
 	/**
 	 * Days back when fetching patient plan (schema).
@@ -124,7 +125,6 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	
 	@Autowired
 	private ScheduledActivityRepository scheduledActivityRepository;
-	
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -446,6 +446,30 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> deleteActivity(
+			Long activityDefinitionId) {
+		
+		log.info("Deleteing activity definition {}", activityDefinitionId);
+		final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
+		if (ent == null) {
+			log.warn("The activity definition {} could not be found.", activityDefinitionId);
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, activityDefinitionId));
+		}
+		
+		this.verifyWriteAccess(ent);
+		
+		for (final ScheduledActivityEntity sae : ent.getScheduledActivities()) {
+			log.debug("Removing scheduled activity on defintion. Scheduled activity id is {}", sae.getId());
+			this.scheduledActivityRepository.delete(sae);
+		}
+		
+		log.debug("Removing activity definition with id {}", activityDefinitionId);
+		this.activityDefintionRepository.delete(ent);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(ent), new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId)); 
 	}
 	
 	@Override

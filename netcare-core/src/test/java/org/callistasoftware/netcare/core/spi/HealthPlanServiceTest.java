@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
@@ -322,5 +324,78 @@ public class HealthPlanServiceTest extends TestSupport {
 		Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 		assertEquals(true, (event.getNumReports() > 0 && (day == 2 || day == 5)) || event.getNumReports() == 0);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void deleteActivityDefintion() throws Exception {
+		
+		final PatientEntity p = this.createPatient(null);
+		final PatientBaseView pb = PatientBaseViewImpl.newFromEntity(p);
+		
+		this.runAs(pb);
+		
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(), p, "Health Plan", new Date(), 6, DurationUnit.MONTH);
+		this.ordinationRepo.save(hp);
+		
+		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		
+		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(), frequency, hp.getIssuedBy());
+		
+		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
+		this.schedRepo.save(saved.scheduleActivities());
+		
+		this.service.deleteActivity(saved.getId());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testDeleteActivityDefintionWithNoAccess() throws Exception {
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(), this.createPatient(null), "Health Plan", new Date(), 6, DurationUnit.MONTH);
+		this.ordinationRepo.save(hp);
+		
+		final PatientBaseView pb = PatientBaseViewImpl.newFromEntity(this.patientRepo.save(this.createPatient("198205133333")));
+		this.runAs(pb);
+		
+		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		
+		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(), frequency, hp.getIssuedBy());
+		
+		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
+		this.schedRepo.save(saved.scheduleActivities());
+		
+		try {
+			this.service.deleteActivity(saved.getId());
+			fail("Should not be possible to delete as another patient.");
+		} catch (Exception e) {
+			assertTrue(e instanceof SecurityException);
+		}
+	}
+	
+	private ActivityCategoryEntity createActivityCategory() {
+		final ActivityCategoryEntity ac = ActivityCategoryEntity.newEntity("Fysisk aktivitet");
+		return this.catRepo.save(ac);
+	}
+	
+	private ActivityTypeEntity createActivityType() {
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), MeasureUnit.MINUTE);
+		return this.typeRepo.save(at);
+	}
+	
+	private PatientEntity createPatient(final String cnr) {
+		final PatientEntity p = PatientEntity.newEntity("Kalle Anka", cnr == null ? "191212121212" : cnr);
+		return this.patientRepo.save(p);
+	}
+	
+	private CareUnitEntity createCareUnit() {
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-123");
+		return this.cuRepo.save(cu);
+	}
+	
+	private CareGiverEntity createCareGiver() {
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "hsa-id-123", this.createCareUnit());
+		return this.cgRepo.save(cg);
 	}
 }

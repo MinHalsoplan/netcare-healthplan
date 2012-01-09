@@ -100,7 +100,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		/**
 		 * List all activities that exist on a health plan
 		 */
-		listActivities : function(healthPlanId, tableId, activityInfoFunction) {
+		listActivities : function(healthPlanId, tableId) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/list';
 			console.log("Loading activities for health plan " + healthPlanId + " from url: " + url);
 			
@@ -120,19 +120,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							
 							console.log("Processing id: " + value.id);
 							
-							var infoIcon = util.createIcon('edit', 24, function() {
-								activityInfoFunction(value.id, currentPatientId);
-							});
-							
 							var deleteIcon = util.createIcon('trash', 24, function() {
 								console.log("Delete icon clicked");
-								public.deleteActivity(currentPatientId, value.id);
+								public.deleteActivity(tableId, healthPlanId, value.id);
 							});
 							
 							var actionCol = $('<td>');
 							actionCol.css('text-align', 'right');
 							
-							infoIcon.appendTo(actionCol);
 							deleteIcon.appendTo(actionCol);
 							
 							var tr = $('<tr>');
@@ -156,8 +151,8 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			
 		},
 		
-		listScheduledActivities : function(healthPlanId, callback) {
-			var url = _baseUrl + '/' + healthPlanId + '/scheduledActivities';
+		loadStatistics : function(healthPlanId, callback) {
+			var url = _baseUrl + '/' + healthPlanId + '/statistics';
 			console.log("Loading scheduled activities from url: " + url);
 			
 			$.ajax({
@@ -188,9 +183,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					new NC.Util().processServiceResult(data);
 					
 					callback(data);
-					
-					/* List messages */
-					public.listActivities(healthPlanId, activityTableId);
 				}
 			});
 		},
@@ -199,8 +191,20 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * Delete an activity that is attached to a health
 		 * plan.
 		 */
-		deleteActivity : function(currentPatientId, activityId) {
-			console.log("Deleting activity " + activityId + " for patient " + currentPatientId);
+		deleteActivity : function(tableId, healthPlanId, activityId) {
+			var url = _baseUrl + '/' + healthPlanId + '/activity/' + activityId + '/delete';
+			console.log("Deleting activity using url: " + url);
+			
+			$.ajax({
+				url : url,
+				type : 'post',
+				contentType : 'application/json',
+				success : function(data) {
+					console.log("Delete activity service call successfully executed.");
+					new NC.Util().processServiceResult(data);
+					public.listActivities(healthPlanId, tableId);
+				}
+			});
 		}
 	};
 	

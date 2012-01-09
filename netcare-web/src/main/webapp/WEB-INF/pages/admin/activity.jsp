@@ -249,7 +249,10 @@
 						
 						resetForm();
 						
-					}, 'activitiesTable');
+						/* List activities */
+						hp.listActivities(healthPlan, 'activitiesTable')
+						
+					});
 					
 					$('#activityForm').hide();
 					

@@ -4,6 +4,7 @@
     <artifactId>netcare</artifactId>
     <groupId>org.callistasoftware.netcare</groupId>
     <version>1.0-SNAPSHOT</version>
+    <relativePath>../netcare</relativePath>
   </parent>
   <artifactId>netcare-rest-api</artifactId>
   <name>Netcare REST API</name>

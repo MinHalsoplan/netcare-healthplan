@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_activity_definition")
-public class ActivityDefinitionEntity {
+public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -257,6 +257,26 @@ public class ActivityDefinitionEntity {
 			ScheduledActivityEntity scheduledActivity = createScheduledActivityEntity(day.getTime());
 			list.add(scheduledActivity);
 		}
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		if (user.isCareGiver()) {
+			final CareGiverEntity cg = (CareGiverEntity) user;
+			return cg.getCareUnit().getId().equals(this.getHealthPlan().getCareUnit().getId());
+		}
+		
+		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		if (user.isCareGiver()) {
+			final CareGiverEntity cg = (CareGiverEntity) user;
+			return cg.getId().equals(this.getCreatedBy().getId());
+		}
+		
+		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
 	}
 
 }

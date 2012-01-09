@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+
 /**
  * Defines the user details service
  * 

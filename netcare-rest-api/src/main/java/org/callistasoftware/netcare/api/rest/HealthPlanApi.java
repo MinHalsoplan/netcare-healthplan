@@ -77,6 +77,13 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
 	}
 	
+	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/delete", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
+		this.logAccess("delete", "activity definition");
+		return this.service.deleteActivity(activityDefinitionId);
+	}
+	
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(@PathVariable(value="healthPlanId") final Long healthPlan) {
@@ -84,7 +91,7 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadActivitiesForHealthPlan(healthPlan);
 	}
 	
-	@RequestMapping(value="/{healthPlanId}/scheduledActivities", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/{healthPlanId}/statistics", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlanStatistics> loadReportedActivitites(@PathVariable(value="healthPlanId") final Long healthPlanId) {
 		this.logAccess("list", "scheduled activities");

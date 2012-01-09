@@ -77,4 +77,9 @@ public class PatientEntity extends UserEntity {
 	void setHealthPlans(List<HealthPlanEntity> healthPlans) {
 		this.healthPlans = healthPlans;
 	}
+
+	@Override
+	public boolean isCareGiver() {
+		return false;
+	}
 }

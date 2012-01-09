@@ -89,4 +89,6 @@ public abstract class UserEntity {
 	public Map<String, String> getProperties() {
 		return properties;
 	}
+	
+	public abstract boolean isCareGiver();
 }

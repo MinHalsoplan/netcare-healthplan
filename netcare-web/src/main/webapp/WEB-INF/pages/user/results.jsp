@@ -97,7 +97,7 @@
 					hp.list(<sec:authentication property="principal.id" />, function(data) {
 						$.each(data.data, function(index, value) {
 							healthPlanId = value.id;
-							hp.listScheduledActivities(healthPlanId, statisticsCallback);
+							hp.loadStatistics(healthPlanId, statisticsCallback);
 						});
 					});
 				};

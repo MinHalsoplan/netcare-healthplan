@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
+
 /**
  * Defines an activity definition how it is represented
  * in the UI.
@@ -23,7 +25,12 @@ package org.callistasoftware.netcare.core.api;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public interface ActivityDefinition {
+public interface ActivityDefinition extends Serializable {
+	/**
+	 * The id of this activity definition
+	 * @return
+	 */
+	Long getId();
 
 	/**
 	 * The desired goal of this definition
@@ -68,7 +75,6 @@ public interface ActivityDefinition {
 	 * @return the end date (yyyy-mm-dd)
 	 */
 	String getEndDate();
-	
 	
 	/**
 	 * Returns health plan name.

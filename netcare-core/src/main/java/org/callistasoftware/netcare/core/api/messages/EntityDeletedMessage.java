@@ -14,20 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.support;
+package org.callistasoftware.netcare.core.api.messages;
 
-import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.junit.runner.RunWith;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+public class EntityDeletedMessage extends DefaultSystemMessage {
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="classpath:/netcare-config.xml")
-public abstract class TestSupport {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	protected void runAs(final UserBaseView user) {
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null));
+	public EntityDeletedMessage(final Class<?> entityClass, final Long id) {
+		super("EntityDeleted", false, entityClass.getSimpleName(), id);
 	}
 }
