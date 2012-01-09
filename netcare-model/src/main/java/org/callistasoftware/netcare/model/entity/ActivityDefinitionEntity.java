@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,12 +43,19 @@ public class ActivityDefinitionEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
+	@Column(name="uuid", length=40, nullable=false)
+	private String uuid;
+	
 	@Column(length=256, nullable=false)
 	private String frequency;
 	
 	@Column(name="target")
 	private int activityTarget;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="created_time", nullable=false)
+	private Date createdTime;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="start_date")
 	private Date startDate;
@@ -69,6 +77,8 @@ public class ActivityDefinitionEntity {
 
     ActivityDefinitionEntity() {
     	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
+    	uuid = UUID.randomUUID().toString();
+    	createdTime = new Date();
 	}
     
     public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency, UserEntity createdBy) {
@@ -177,7 +187,25 @@ public class ActivityDefinitionEntity {
 	public UserEntity getCreatedBy() {
 		return createdBy;
 	}
-	
+
+	/**
+	 * Returns the globally unique identifier.
+	 * 
+	 * @return the globally unique identifier.
+	 */
+	public String getUUID() {
+		return uuid;
+	}
+
+	/**
+	 * Returns the creation timestamp.
+	 * 
+	 * @return the timestamp.
+	 */
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
 	/**
 	 * Returns the list of {@link ScheduledActivityEntity}
 	 * 
@@ -187,4 +215,48 @@ public class ActivityDefinitionEntity {
 		Collections.sort(scheduledActivities);
 		return Collections.unmodifiableList(scheduledActivities);
 	}
+	
+	/**
+	 * Returns scheduled activities.
+	 * 
+	 */
+	public List<ScheduledActivityEntity> scheduleActivities() {	
+		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getStartDate());
+		Frequency freq = getFrequency();
+		while (cal.getTime().compareTo(getHealthPlan().getEndDate()) <= 0) {
+			if (freq.isDaySet(cal)) {
+				scheduleActivity(list, cal, freq.getDay(cal.get(Calendar.DAY_OF_WEEK)));
+				// single event.
+				if (freq.getWeekFrequency() == 0) {
+					break;
+				}
+			}
+			if (freq.getWeekFrequency() > 1 && cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY &&
+					cal.getTime().compareTo(getStartDate()) > 0) {
+				cal.add(Calendar.DATE, 8*(freq.getWeekFrequency()-1));
+			} else {
+				cal.add(Calendar.DATE, 1);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * Appends scheduled activities to a list.
+	 * 
+	 * @param list the list to append activities to.
+	 * @param day the actual day.
+	 * @return a list of scheduled activities, empty if none is applicable.
+	 */
+	private void scheduleActivity(List<ScheduledActivityEntity> list, Calendar day, FrequencyDay fday) {
+		for (FrequencyTime t : fday.getTimes()) {
+			day.set(Calendar.HOUR_OF_DAY, t.getHour());
+			day.set(Calendar.MINUTE, t.getMinute());
+			ScheduledActivityEntity scheduledActivity = createScheduledActivityEntity(day.getTime());
+			list.add(scheduledActivity);
+		}
+	}
+
 }

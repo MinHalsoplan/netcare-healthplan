@@ -87,7 +87,7 @@ public interface HealthPlanService {
 	 * @param activityDefinitionId
 	 * @return
 	 */
-	ServiceResult<ActivityDefinition> removeActivity(final Long activityDefinitionId);
+	ServiceResult<ActivityDefinition> deleteActivity(final Long activityDefinitionId);
 	
 	/**
 	 * Load all activities for a specific health plan
@@ -121,7 +121,6 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit);
 	
 	/**
-<<<<<<< HEAD
 	 * Returns actual activity definitions.
 	 * 
 	 * @return the result with actual activity definitions.
@@ -151,5 +150,20 @@ public interface HealthPlanService {
 	 */
 	ServiceResult<HealthPlanStatistics> getStatisticsForHealthPlan(final Long healthPlanId);
 	
+	/**
+	 * Schedules activities.
+	 * 
+	 * @param activityDefinition the activity defintion.
+	 */
 	void scheduleActivities(ActivityDefinitionEntity activityDefinition) ;
+	
+	/**
+	 * Returns the iCalendar definition. <p>
+	 * 
+	 * @see <a href="linkplain http://tools.ietf.org/html/rfc5545>RFC-5545"</a>
+	 * 
+	 * @param patient the patient.
+	 * @return the iCalendar object as a string.
+	 */
+	String getICalendarEvents(PatientBaseView patient);
 }

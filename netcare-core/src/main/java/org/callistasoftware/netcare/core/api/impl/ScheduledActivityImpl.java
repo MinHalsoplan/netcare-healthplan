@@ -67,7 +67,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		a.day = new Option("weekday." + day, LocaleContextHolder.getLocale());		
 
 		cal.setTime(new Date());
-		cal.add(Calendar.HOUR_OF_DAY, 3);
+		ApiUtil.dayBegin(cal);
 		Date time = entity.getScheduledTime();
 		a.due = (time.compareTo(cal.getTime()) < 0);
 		a.date = ApiUtil.formatDate(time);

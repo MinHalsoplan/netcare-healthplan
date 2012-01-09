@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
@@ -27,47 +26,71 @@
 <netcare:page>
 	<netcare:header>
 		<script type="text/javascript">
-			$(function() {
-				var home = NC.PatientHome('planDescription', 'planTable',
-						'eventHead', 'eventBody');
-				home.list();
-				home.status();
-			});
-		</script>
-		
-				<script type="text/javascript">
 			google.load('visualization', '1', {
 				packages : [ 'gauge' ]
 			});
 		</script>
 		
+		<script type="text/javascript">
+			 function createGauge(pd) {
+			    // Create and populate the data table.
+		        var data = new google.visualization.DataTable();
+		        data.addColumn('string', 'Label');
+		        data.addColumn('number', 'Value');
+		        data.addRows(1);
+		        data.setValue(0, 0, pd.unit);
+		        data.setValue(0, 1, pd.sumDone);
+		        var options = new Object();
+		        options.max = Math.max(pd.sumTotal, pd.sumDone);
+		        options.min = 0;
+		        options.redFrom = 0;
+		        options.redTo = pd.sumTarget * 0.6;
+		        options.yellowFrom = options.redTo;
+		        options.yellowTo =  pd.sumTarget * 0.9;
+		        options.greenFrom = options.yellowTo;
+		        options.greenTo = options.max;
+		        
+		        // Create and draw the visualization.
+		        new google.visualization.Gauge($('#' + pd.id).get(0)).draw(data, options);
+			}
+			
+			google.setOnLoadCallback(function() {
+				$(function() {
+					var home = NC.PatientHome('planDescription', 'planTable',
+							'eventBody');
+					home.status();
+					home.list(function() {
+						$.each(home.perfData(), function(index, pd) {
+							createGauge(pd);
+						});
+					});
+				});
+			});
+
+		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<div class="cool">
-				<h3 class="shadow">Min Hälsoplan</h3>
-				<div id="planDescription" style="margin: 10px"></div>
-				<table id="planTable" class="condensed-table">
-					<thead>
-						<th>&nbsp;</th>
-						<th>Aktivitet</th>
-						<th>Pågår till</th>
-						<th colspan='2'>Avklarat (antal, mängd)</th>
-						<th>Tider</th>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-				<div style="text-align: right">
-					<a href="results">Mina Resultat</a>
-				</div>
-			</div>
-			<div class="cool">
-				<h3 id="eventHead" class="shadow"></h3>
-				<div id="eventBody" style="margin: 10px"></div>
-				<div style="text-align: right">
-					<a href="report">Mina Händelser</a>
-				</div>
+			<h1>Min Hälsoplan</h1>
+			<div id="eventBody" style="border-radius: 10px" class="alert-message"></div>
+			<div id="planDescription" style="margin: 10px"></div>
+			<table id="planTable"
+				style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
+				class="condensed zebra-striped">
+				<thead>
+					<th>&nbsp;</th>
+					<th>Aktivitet</th>
+					<th>Pågår till</th>
+					<th>Planerade tider</th>
+					<th colspan='2'>Avklarat (antal, mängd)</th>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div style="text-align: right">
+				<a href="results">Mina Resultat</a>&nbsp;|&nbsp; <a
+					href="/netcare-web/api/patient/schema/min-halso-plan">Hämta
+					Kalenderdata</a>
 			</div>
 		</netcare:content>
 		<netcare:patient-menu>

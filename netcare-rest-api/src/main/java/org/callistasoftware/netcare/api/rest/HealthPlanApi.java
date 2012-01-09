@@ -81,7 +81,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
 		this.logAccess("delete", "activity definition");
-		return null;
+		return this.service.deleteActivity(activityDefinitionId);
 	}
 	
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")

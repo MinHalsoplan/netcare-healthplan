@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
+NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	
 	var _baseUrl = "/netcare-web/api/patient/";
 	var _schemaCount = 0;
 	var _eventCount = 0;
 	
 	var _descriptionId = descriptionId;
-	var _eventHeadId = eventHeadId;
 	var _eventBodyId = eventBodyId;
-	var _tableId = tableId;	   
+	var _tableId = tableId;
+	var _perfData;
 	
 	var _updateDescription = function() {
 		console.log("Updating schema table description");
@@ -36,37 +36,13 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 		}
 	}
 	
-	var _createGauge = function(element) {
-	    // Create and populate the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Label');
-        data.addColumn('number', 'Value');
-        data.addRows(1);
-        data.setValue(0, 0, 'Meter');
-        data.setValue(0, 1, 850);
-        var options = new Object();
-        options.max = 1000;
-        options.min = 0;
-        options.redFrom = 0;
-        options.redTo = 100;
-        options.yellowFrom = 100;
-        options.yellowTo = 600;
-        options.greenFrom = 600;
-        options.greenTo = options.max;
-        options.majorTicks = [ '0', '200', '400', '600', '800', '1000' ];
-        options.minorTicks = 0;
-        
-        // Create and draw the visualization.
-        new google.visualization.Gauge(element).draw(data, options);
-      }    
-	
 	var public = {
 		
 		init : function() {
 			_updateDescription();
 		},
 		
-		list : function() {
+		list : function(callback) {
 			var curDay = '';
 			var curActivity = '';
 			var util = NC.Util();
@@ -81,9 +57,9 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 					/* Empty the result list */
 					$('#' + tableId + ' tbody > tr').empty();
 					
-					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.reported + ", " + value.actualValue);
-							
+					_perfData = new Array();
+					
+					$.each(data.data, function(index, value) {							
 						var period;
 						if (value.activityRepeat == 0) {
 							period = value.startDate;
@@ -91,10 +67,18 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 							period = value.endDate;
 						}
 						
-						var pctSum = ((value.sumDone / value.sumTotal)*100).toFixed(0) + '%';
-						var pctNum = ((value.numDone / value.numTotal)*100).toFixed(0) + '%';
-						var sumText = value.sumDone + '&nbsp;av&nbsp;' + value.sumTotal + '&nbsp;' + util.formatUnit(value.type.unit);
-						var numText = value.numDone + '&nbsp;av&nbsp;' + value.numTotal + '&nbsp;ggr';
+						var pdata = new Object();
+						pdata.id = 'gauge-' + index;
+						pdata.sumDone = value.sumDone;
+						pdata.sumTotal = value.sumTotal;
+						pdata.sumTarget =  value.sumTarget;
+						pdata.unit = value.type.unit.value;
+						_perfData.push(pdata);
+						
+						//console.log('done: ' + pdata.sumDone + ', target: ' + pdata.sumTarget + ', total: ' + pdata.sumTotal);
+						
+						var pctSum = ((value.sumDone / value.sumTotal)*100).toFixed(0);
+						var pctTarget = ((value.sumTarget/ value.sumTotal)*100).toFixed(0);
 						var result = (value.sumTarget > 0) ? (value.sumDone / value.sumTarget) * 100 : -1;
 						var icon;
 						if (result == -1) {
@@ -110,21 +94,24 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 						} else {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
-												
+						
+						var perfText = value.numDone + '&nbsp;(' + value.numTotal + ')&nbsp;ggr<br/>' 
+							+ pctSum + '&nbsp;(' + pctTarget + ')&nbsp;%';
+						var actText = value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit);
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
 										$('<td>').html(icon)).append(
-												$('<td>').html(value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit))).append(
+												$('<td>').html(actText)).append(
 														$('<td>').html(period)).append(
-																$('<td>').css('text-align', 'right').html(pctNum+ '<br/>' + pctSum)).append(
-//																		$('<td>').attr('id', index)).append(
-																		$('<td>').html(numText + '<br/>' + sumText)).append(
-																				$('<td>').html(util.formatFrequency(value))));
+																$('<td>').html(util.formatFrequency(value))).append(
+																		$('<td>').css('text-align', 'right').html(perfText)).append(
+																				$('<td>').attr('id', pdata.id).css('height', '100px').css('width', '100px').html('&nbsp;')));
 					});
 					_schemaCount = data.data.length;
 					
 					_updateDescription();
-					_createGauge(document.getElementById('g1'));
+					
+					callback();
 				}
 			});
 		},
@@ -140,30 +127,33 @@ NC.PatientHome = function(descriptionId, tableId, eventHeadId, eventBodyId) {
 					var event = data.data;
 					_eventCount = event.numReports + event.dueReports;
 					console.log('event count: ' + _eventCount);
-					var msg = '';
-					if (_eventCount > 0) {
-						msg = '<a href="report">[' + _eventCount + ']</a>';
+					if (_eventCount == 0) {
+						$('#' + _eventBodyId).hide();
 					} else {
-						msg = '[' + _eventCount + ']';
+						var msg = '';
+						if (_eventCount > 0) {
+							msg = '<a href="report">[' + _eventCount + ']</a>';
+						} else {
+							msg = '[' + _eventCount + ']';
+						}
+						$('#' + _eventBodyId).html('Du har ' + msg + ' nya händelser');
+						$('#' + _eventBodyId).show();
+						$('#' + _eventBodyId).addClass((event.dueReports > 0) ? "warning" : "success");
 					}
-					$('#' + _eventHeadId).html('Nya Händelser ' + msg);
-					msg = '';
-					if (_eventCount == 0) {
-						msg = '<br/>Inga nya händelser';
-					}
-					if (event.numReports > 0) {
-						msg += '<br/>Aktuella händelser ' + event.numReports; 
-					}
-					if (event.dueReports > 0) {
-						msg += '<br/>Gamla händelser ' + event.dueReports;
-					}					
-					$('#' + _eventBodyId).html(msg);
 				}
 			});
 		},
 		
+		createGauge : function() {
+			_createGauge($('#g1'));
+		},
+		
 		eventCount : function() {
 			return _eventCount;
+		},
+		
+		perfData : function() {
+			return _perfData;
 		},
 		
 		

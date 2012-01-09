@@ -38,6 +38,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  */
 public class ActivityDefintionImpl implements ActivityDefinition {
 	
+	private Long id;
 	private int goal;
 	private ActivityTypeImpl type;
 	private String startDate;
@@ -63,6 +64,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	public static ActivityDefinition newFromEntity(final ActivityDefinitionEntity entity) {
 		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
+		dto.setId(entity.getId());
 		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
 		dto.setGoal(entity.getActivityTarget());
 		dto.setFrequency(entity.getFrequency());
@@ -233,6 +235,15 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	@Override
 	public int getSumTarget() {
 		return sumTarget;
+	}
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+	
+	public void setId(final Long id) {
+		this.id = id;
 	}
 
 }

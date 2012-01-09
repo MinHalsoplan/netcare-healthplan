@@ -26,6 +26,11 @@ import java.io.Serializable;
  *
  */
 public interface ActivityDefinition extends Serializable {
+	/**
+	 * The id of this activity definition
+	 * @return
+	 */
+	Long getId();
 
 	/**
 	 * The desired goal of this definition
@@ -70,7 +75,6 @@ public interface ActivityDefinition extends Serializable {
 	 * @return the end date (yyyy-mm-dd)
 	 */
 	String getEndDate();
-	
 	
 	/**
 	 * Returns health plan name.

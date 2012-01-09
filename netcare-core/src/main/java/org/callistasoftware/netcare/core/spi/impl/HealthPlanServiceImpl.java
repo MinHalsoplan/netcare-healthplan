@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
@@ -32,6 +31,7 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Pair;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
@@ -44,6 +44,7 @@ import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.messages.EntityDeletedMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
@@ -63,10 +64,12 @@ import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
@@ -86,6 +89,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class HealthPlanServiceImpl implements HealthPlanService {
+	
+	/**
+	 * Days back when fetching patient plan (schema).
+	 */
+	private static int SCHEMA_HISTORY_DAYS = 7;
+	/**
+	 * Days forward when fetching patient plan (schema).
+	 */
+	private static int SCHEMA_FUTURE_DAYS  = (2*SCHEMA_HISTORY_DAYS);
+	/**
+	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
+	 */
+	private static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
@@ -130,12 +146,12 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		Calendar c = Calendar.getInstance();
 		c.setFirstDayOfWeek(1);
 		
-		c.add(Calendar.DATE, -7);
-		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		c.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
+		c.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
 		
 		Date startDate = ApiUtil.dayBegin(c).getTime();
 
-		c.add(Calendar.DATE, 3*7);
+		c.add(Calendar.DATE, SCHEMA_HISTORY_DAYS + SCHEMA_FUTURE_DAYS);
 		Date endDate = ApiUtil.dayEnd(c).getTime();
 
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
@@ -252,52 +268,9 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	}
 	
 	
-	/**
-	 * Schedules activities.
-	 * 
-	 * @param activityDefinition the activity defintion.
-	 */
+	@Override
 	public void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(activityDefinition.getStartDate());
-		Frequency freq = activityDefinition.getFrequency();
-		log.debug("Schedule activities for: {}, frequency {}", activityDefinition, Frequency.marshal(freq));
-		while (cal.getTime().compareTo(activityDefinition.getHealthPlan().getEndDate()) <= 0) {
-			if (freq.isDaySet(cal)) {
-				log.debug("Schedule day: {}", cal.getTime());
-				List<ScheduledActivityEntity> list = scheduleActivity(activityDefinition, cal, freq.getDay(cal.get(Calendar.DAY_OF_WEEK)));
-				scheduledActivityRepository.save(list);
-				// single event.
-				if (freq.getWeekFrequency() == 0) {
-					break;
-				}
-			}
-			if (freq.getWeekFrequency() > 1 && cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY &&
-					cal.getTime().compareTo(activityDefinition.getStartDate()) > 0) {
-				cal.add(Calendar.DATE, 8*(freq.getWeekFrequency()-1));
-			} else {
-				cal.add(Calendar.DATE, 1);
-			}
-		}
-	}
-
-	/**
-	 * Returns a list with scheduled activities, might be empty if none is applicable.
-	 * 
-	 * @param entity the acitivty definiton to schedule.
-	 * @param day the actual day.
-	 * @return a list of scheduled activities, empty if none is applicable.
-	 */
-	private List<ScheduledActivityEntity> scheduleActivity(ActivityDefinitionEntity entity, Calendar day, FrequencyDay fday) {
-		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
-		for (FrequencyTime t : fday.getTimes()) {
-			day.set(Calendar.HOUR_OF_DAY, t.getHour());
-			day.set(Calendar.MINUTE, t.getMinute());
-			ScheduledActivityEntity scheduledActivity = entity.createScheduledActivityEntity(day.getTime());
-			list.add(scheduledActivity);
-		}
-		log.debug("{} activities scheduled: {}", list.size());
-		return list;
+		scheduledActivityRepository.save(activityDefinition.scheduleActivities());
 	}
 
 	@Override
@@ -357,15 +330,16 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 		PatientEntity patient = patientRepository.findOne(patientView.getId());
 		Calendar cal = Calendar.getInstance();
 		Date today = ApiUtil.dayBegin(cal).getTime();
-		cal.add(Calendar.DATE, -14);
+		cal.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
+		cal.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
 		Date start = ApiUtil.dayBegin(cal).getTime();
-		cal.add(Calendar.DATE, 14);
+		cal.setTime(today);
 		Date end = ApiUtil.dayEnd(cal).getTime();
 		final List<ScheduledActivityEntity> activities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(patient, start, end);
 		int num = 0;
 		int due = 0;
 		for (ScheduledActivityEntity sc : activities) {
-			if (!sc.isRejected() && sc.getReportedTime() != null) {
+			if (sc.getReportedTime() == null) {
 				if (sc.getScheduledTime().compareTo(today) < 0) {
 					due++;
 				} else {
@@ -476,11 +450,142 @@ public class HealthPlanServiceImpl implements HealthPlanService {
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition> removeActivity(
+	public ServiceResult<ActivityDefinition> deleteActivity(
 			Long activityDefinitionId) {
 		log.info("Deleteing activity definition {}", activityDefinitionId);
 		final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
+		if (ent == null) {
+			log.warn("The activity definition {} could not be found.", activityDefinitionId);
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, activityDefinitionId));
+		}
 		
-		throw new UnsupportedOperationException("Not yet implemented.");
+		for (final ScheduledActivityEntity sae : ent.getScheduledActivities()) {
+			log.debug("Removing scheduled activity on defintion. Scheduled activity id is {}", sae.getId());
+			this.scheduledActivityRepository.delete(sae);
+		}
+		
+		log.debug("Removing activity definition with id {}", activityDefinitionId);
+		this.activityDefintionRepository.delete(ent);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(ent), new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId)); 
+	}
+	
+	@Override
+	public String getICalendarEvents(PatientBaseView patient) {
+		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+		Date now = new Date();
+		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
+		final String calPattern =
+			"BEGIN:VCALENDAR\r\n"
+			+ "VERSION:2.0\r\n"
+			+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
+			+ "%s"
+			+ "END:VCALENDAR\r\n";
+		
+		final String eventPattern = 
+			"BEGIN:VEVENT\r\n"
+			+ "UID:%s@%s.%d\r\n"
+			+ "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
+			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
+			+ "DURATION:%s\r\n"
+			+ "SUMMARY:%s\r\n"
+			+ "TRANSP:TRANSPARENT\r\n"
+			+ "CLASS:CONFIDENTIAL\r\n"
+			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+			+ "%s"
+			+ "END:VEVENT\r\n";
+		
+		StringBuffer events = new StringBuffer();
+		for (ActivityDefinitionEntity ad : defs) {
+			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
+			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
+			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + unit;
+			Frequency fr = ad.getFrequency();
+			String duration = toICalDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
+			for (FrequencyDay day : fr.getDays()) {
+				StringBuffer rrule = new StringBuffer();
+				String wday = toICalDay(day);
+
+				if (fr.getWeekFrequency() > 0) {
+					rrule.append("RRULE:FREQ=WEEKLY");
+					rrule.append(";INTERVAL=").append(ad.getFrequency().getWeekFrequency());
+					rrule.append(";WKST=MO");
+					rrule.append(";BYDAY=").append(wday);
+					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
+					rrule.append("\r\n");
+				}
+				
+				int timeIndex = 0;
+				for (FrequencyTime time : day.getTimes()) {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(ad.getStartDate());
+					cal.set(Calendar.HOUR, time.getHour());
+					cal.set(Calendar.MINUTE, time.getMinute());
+					String start = EntityUtil.formatCalTime(cal.getTime());
+					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration, summary, rrule.toString()));
+				}
+			}
+		}
+		String r = String.format(calPattern, events.toString());
+		return r;
+	}
+	
+	
+	/**
+	 * Converts amount and units into minutes. <p>
+	 * 
+	 * Steps are converted into slow walking, and meter into slow jog. <p>
+	 * 
+	 * Minutes are rounded to half-hour precision.
+	 * 
+	 * @param unit the unit.
+	 * @param amount the amount.
+	 * @return the ical duration.
+	 */
+	private static String toICalDuration(MeasureUnit unit, int amount) {
+		int minutes;
+		switch (unit) {
+		case STEP: 
+			minutes = (amount / 50);
+			break;
+		case METER:
+			minutes = (amount / 80);
+			break;
+		default:
+			minutes = amount;
+			break;
+		}
+		String dur = "PT";
+		if (minutes > 60) {
+			int hours = minutes / 60;
+			dur += (hours + "H");
+			minutes = (minutes % 60);
+		}
+		minutes = (minutes < 30) ? 30 : 60;
+
+		dur += (minutes + "M");
+
+		return dur;
+	}
+	
+	//
+	private static String toICalDay(FrequencyDay day) {
+		switch (day.getDay()) {
+		case Calendar.MONDAY:
+			return "MO";
+		case Calendar.TUESDAY:
+			return "TU";
+		case Calendar.WEDNESDAY:
+			return "WE";
+		case Calendar.THURSDAY:
+			return "TH";
+		case Calendar.FRIDAY:
+			return "FR";
+		case Calendar.SATURDAY:
+			return "SA";
+		case Calendar.SUNDAY:
+			return "SU";
+		}
+		throw new IllegalArgumentException("Invalid day: " + day.getDay());
 	}
 }

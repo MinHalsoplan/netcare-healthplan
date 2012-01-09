@@ -27,13 +27,16 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.DayTimeImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
+import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
@@ -54,7 +57,6 @@ import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -77,6 +79,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	private CareUnitRepository cuRepo;
 	@Autowired
 	private ScheduledActivityRepository schedRepo;
+	@Autowired
+	private ActivityDefinitionRepository defRepo;
 	
 	@Autowired
 	private HealthPlanService service;
@@ -88,6 +92,36 @@ public class HealthPlanServiceTest extends TestSupport {
 		o.setDuration(duration);
 		o.setDurationUnit(new Option(unit,  LocaleContextHolder.getLocale()));		
 		return o;
+	}
+	
+	private ActivityDefinitionEntity createActivityDefinitionEntity() {
+		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
+		cu.setName("Jönköpings vårdcentral");
+		cuRepo.save(cu);
+		cuRepo.flush();
+		
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		cgRepo.save(cg);
+
+		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212");
+		patientRepo.save(p2);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -30);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		ordinationRepo.save(hp);
+		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+
+		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		typeRepo.save(at);
+		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
+		ad.setActivityTarget(1200);
+		defRepo.save(ad);
+		
+		schedRepo.save(ad.scheduleActivities());
+		
+		return ad;
 	}
 	
 	private ServiceResult<HealthPlan> createHealthPlan(HealthPlan o) {
@@ -226,5 +260,110 @@ public class HealthPlanServiceTest extends TestSupport {
 		// 26 (every other week * 2) + 3 (single day * 3)
 		assertEquals(29, n);
 		assertEquals("2013-02-23", ApiUtil.formatDate(scheduledActivities.get(n-1).getScheduledTime()));
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void iCalendar() {
+		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
+		String cal = service.getICalendarEvents(PatientBaseViewImpl.newFromEntity(ad.getHealthPlan().getForPatient()));
+		final String expect = "BEGIN:VCALENDAR\r\n"
+		      + "VERSION:2.0\r\n"
+		      + "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
+		      + "BEGIN:VEVENT\r\n"
+		      + "UID:cae745bc-1278-4828-96f5-86b221af99db@MO.0\r\n"
+		      + "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
+		      + "DTSTART;TZID=Europe/Stockholm:20111206T181500\r\n"
+		      + "DURATION:PT30M\r\n"
+		      + "SUMMARY:Löpning 1200 METER\r\n"
+		      + "TRANSP:TRANSPARENT\r\n"
+		      + "CLASS:CONFIDENTIAL\r\n"
+		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=MO;UNTIL=20120606T235959\r\n"
+		      + "END:VEVENT\r\n"
+		      + "BEGIN:VEVENT\r\n"
+		      + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.0\r\n"
+		      + "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
+		      + "DTSTART;TZID=Europe/Stockholm:20111206T070000\r\n"
+		      + "DURATION:PT30M\r\n"
+		      + "SUMMARY:Löpning 1200 METER\r\n"
+		      + "TRANSP:TRANSPARENT\r\n"
+		      + "CLASS:CONFIDENTIAL\r\n"
+		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n"
+		      + "END:VEVENT\r\n"
+		      + "BEGIN:VEVENT\r\n"
+		      + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.1\r\n"
+		      + "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
+		      + "DTSTART;TZID=Europe/Stockholm:20111206T190000\r\n"
+		      + "DURATION:PT30M\r\n"
+		      + "SUMMARY:Löpning 1200 METER\r\n"
+		      + "TRANSP:TRANSPARENT\r\n"
+		      + "CLASS:CONFIDENTIAL\r\n"
+		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n"
+		      + "END:VEVENT\r\n"
+		      + "END:VCALENDAR\r\n";
+		
+		// FIXME: better test needed! The generated UID makes it impossible to make a straight comparison.
+		assertEquals(expect.split("\r\n").length, cal.split("\r\n").length);
+		
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void events() {
+		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
+		ServiceResult<PatientEvent> sr = service.getActualEventsForPatient(PatientBaseViewImpl.newFromEntity(ad.getHealthPlan().getForPatient()));
+		PatientEvent event = sr.getData();
+		assertEquals(true, event.getDueReports() > 0);
+		Calendar cal = Calendar.getInstance();
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		assertEquals(true, (event.getNumReports() > 0 && (day == 2 || day == 5)) || event.getNumReports() == 0);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void deleteActivityDefintion() throws Exception {
+		
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(), this.createPatient(), "Health Plan", new Date(), 6, DurationUnit.MONTH);
+		this.ordinationRepo.save(hp);
+		
+		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		
+		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(), frequency, hp.getIssuedBy());
+		
+		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
+		this.schedRepo.save(saved.scheduleActivities());
+		
+		this.service.deleteActivity(saved.getId());
+	}
+	
+	private ActivityCategoryEntity createActivityCategory() {
+		final ActivityCategoryEntity ac = ActivityCategoryEntity.newEntity("Fysisk aktivitet");
+		return this.catRepo.save(ac);
+	}
+	
+	private ActivityTypeEntity createActivityType() {
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), MeasureUnit.MINUTE);
+		return this.typeRepo.save(at);
+	}
+	
+	private PatientEntity createPatient() {
+		final PatientEntity p = PatientEntity.newEntity("Kalle Anka", "191212121212");
+		return this.patientRepo.save(p);
+	}
+	
+	private CareUnitEntity createCareUnit() {
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-123");
+		return this.cuRepo.save(cu);
+	}
+	
+	private CareGiverEntity createCareGiver() {
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "hsa-id-123", this.createCareUnit());
+		return this.cgRepo.save(cg);
 	}
 }

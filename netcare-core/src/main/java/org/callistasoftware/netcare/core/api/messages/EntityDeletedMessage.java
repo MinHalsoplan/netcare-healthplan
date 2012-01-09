@@ -14,44 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.impl;
+package org.callistasoftware.netcare.core.api.messages;
 
-import org.callistasoftware.netcare.core.api.PatientEvent;
+public class EntityDeletedMessage extends DefaultSystemMessage {
 
-/**
- * Implements {@link PatientEvent}.
- * 
- * @author Peter
- *
- */
-public class PatientEventImpl implements PatientEvent {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	private int numReports;
-	private int dueReports;
-	
-	private PatientEventImpl() {}
 
-	//
-	private PatientEventImpl(int numReports, int dueReports) {
-		this();
-		this.numReports = numReports;
-		this.dueReports = dueReports;
+	public EntityDeletedMessage(final Class<?> entityClass, final Long id) {
+		super("EntityDeleted", false, entityClass.getSimpleName(), id);
 	}
-	
-	/** Creates a PatientEvent object. */
-	public static PatientEvent newPatientEvent(int numReports, int dueReports) {
-		PatientEvent pe = new PatientEventImpl(numReports, dueReports);
-		return pe;
-	}
-	
-	@Override
-	public int getNumReports() {
-		return numReports;
-	}
-
-	@Override
-	public int getDueReports() {
-		return dueReports;
-	}
-
 }
