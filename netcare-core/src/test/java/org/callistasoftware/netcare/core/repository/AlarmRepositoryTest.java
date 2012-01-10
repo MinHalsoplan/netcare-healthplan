@@ -40,13 +40,13 @@ public class AlarmRepositoryTest extends TestSupport {
 		
 		e = repo.save(e);
 		
-		assertEquals(0, repo.findByResolvedTimeIsNotNull().size());
+		assertEquals(0, repo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike("hsa-123").size());
 
 		e.resolve("peter");
 		
 		e = repo.save(e);
 		repo.flush();
 		
-		assertEquals(1, repo.findByResolvedTimeIsNotNull().size());
+		assertEquals(1, repo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike("hsa-123").size());
 	}
 }

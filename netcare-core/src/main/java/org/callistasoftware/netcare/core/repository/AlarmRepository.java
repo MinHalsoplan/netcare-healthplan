@@ -22,5 +22,11 @@ import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
-	List<AlarmEntity> findByResolvedTimeIsNotNull();
+	
+	/**
+	 * Find all unresolved alarms for a given care unit
+	 * @param careUnit
+	 * @return
+	 */
+	List<AlarmEntity> findByResolvedTimeIsNotNullAndCareUnitHsaIdLike(final String careUnitHsaId);
 }

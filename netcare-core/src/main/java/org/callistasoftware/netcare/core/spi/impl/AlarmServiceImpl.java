@@ -21,6 +21,7 @@ import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
+import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.AlarmService;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
@@ -30,9 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
+	
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
+	@Autowired
+	private AlarmRepository alarmRepo;
 	
 	@Transactional
 	@Override
@@ -44,6 +48,8 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 		}
 		
 		this.verifyReadAccess(cu);
+		
+		
 		
 		return null;
 		
