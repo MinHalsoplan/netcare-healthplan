@@ -84,8 +84,7 @@
 				<h2>:Larmöversikt</h2>
 				<p>
 					<span class="label notice">Information</span>
-					Nedan visas en översikt över de patienter som har rapporterat en aktivitet
-					och fallit utan för de rekommenderade värdena.
+					Nedan visas en översikt över de aktiviteter som ej har blivit rapporterade den senaste veckan.
 				</p>
 			</section>
 		</netcare:content>

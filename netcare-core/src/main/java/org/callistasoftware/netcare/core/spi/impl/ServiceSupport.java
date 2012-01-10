@@ -43,13 +43,29 @@ public abstract class ServiceSupport {
 	}
 	
 	protected void verifyWriteAccess(final PermissionRestrictedEntity object) {
+		this.verifyAccess(getCurrentUser(), object, true);
+	}
+	
+	protected void verifyReadAccess(final PermissionRestrictedEntity object) {
+		this.verifyAccess(getCurrentUser(), object, false);
+	}
+	
+	private void verifyAccess(final UserEntity entity, final PermissionRestrictedEntity object, final boolean write) {
 		final UserEntity user = this.getCurrentUser();
 		if (user != null) {
-			if (!object.isWriteAllowed(user)) {
+			
+			final boolean access;
+			if (write) {
+				access = object.isWriteAllowed(user);
+			} else {
+				access = object.isReadAllowed(user);
+			}
+			
+			if (!access) {
 				throw new SecurityException("Not allowed");
 			}
 		} else {
-			throw new IllegalAccessError("Anonymous access not allowed.");
+			throw new SecurityException("Anonymous access not allowed.");
 		}
 	}
 }
