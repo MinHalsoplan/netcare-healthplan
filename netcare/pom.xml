@@ -186,7 +186,7 @@
 	  					<year>2011,2012</year>
 	  				</properties>
 	  				<strictCheck>true</strictCheck>
-	  				<header>src/license/agpl_v3/header.txt</header>
+	  				<header>../netcare/src/license/agpl_v3/header.txt</header>
 	  				<encoding>UTF-8</encoding>
 	  				<includes>
 	  					<include>src/main/**</include>

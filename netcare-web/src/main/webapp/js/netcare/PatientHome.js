@@ -95,7 +95,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
 						
-						var perfText = value.numDone + '&nbsp;(' + value.numTotal + ')&nbsp;ggr<br/>' 
+						var perfText = value.numDone + '&nbsp;(' + value.numTarget + ')&nbsp;ggr<br/>' 
 							+ pctSum + '&nbsp;(' + pctTarget + ')&nbsp;%';
 						var actText = value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit);
 						$('#' + tableId + ' tbody').append(

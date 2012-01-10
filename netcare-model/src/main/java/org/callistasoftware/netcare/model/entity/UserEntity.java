@@ -89,6 +89,15 @@ public abstract class UserEntity {
 	public Map<String, String> getProperties() {
 		return properties;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof UserEntity) && equals((UserEntity)o);
+	}
+	
+	private boolean equals(UserEntity o) {
+		return (this == o) || o.getId().equals(id); 
+	}
 	
 	public abstract boolean isCareGiver();
 }

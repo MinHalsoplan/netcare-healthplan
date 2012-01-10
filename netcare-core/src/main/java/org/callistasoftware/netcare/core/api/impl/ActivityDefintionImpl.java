@@ -37,7 +37,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  *
  */
 public class ActivityDefintionImpl implements ActivityDefinition {
-	
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private int goal;
 	private ActivityTypeImpl type;
@@ -52,6 +52,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int numTotal;
 	private int numDone;
 	private int sumTarget;
+	private int numTarget;
 	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
@@ -164,6 +165,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private void calcCompletion(List<ScheduledActivityEntity> list) {
 		int numDone = 0;
 		int numTotal = 0;
+		int numTarget = 0;
 		int sumDone = 0;
 		int sumTotal = 0;
 		int sumTarget = 0;	
@@ -179,6 +181,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 			
 			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
 				sumTarget += getGoal();
+				numTarget++;
 			}
 			
 			sumTotal += getGoal();
@@ -190,6 +193,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		setSumDone(sumDone);
 		setSumTotal(sumTotal);
 		setSumTarget(sumTarget);
+		setNumTarget(numTarget);
 	}
 
 	private void setSumDone(int sumDone) {
@@ -244,6 +248,15 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	private void setNumTarget(int numTarget) {
+		this.numTarget = numTarget;
+	}
+
+	@Override
+	public int getNumTarget() {
+		return numTarget;
 	}
 
 }

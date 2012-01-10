@@ -34,11 +34,36 @@ NC.Support = function() {
 			success : function(data, textStatus, jqXHR) {
 				var arr = new Array();
 				$.each(data.data, function(index, value) {
-					console.log("Processing " + value.value + "...");
+					console.log("Processing " + value + "...");
 					arr[index] = value;
 				});
 				
 				onDataLoaded(arr);
+			}
+		});
+	};
+	
+	/**
+	 * Loads captions from an array of message properties.
+	 * 
+	 * Callback is called with an obejct containing the actual fields (property name) and values (property value).
+	 */
+	var _loadCaptions = function(url, record, fields, onLoaded) {
+		console.log("Loading support captions from url: " + url);
+		var data = new Object();
+		data.record = record;
+		data.fields = fields;		
+		$.ajax({
+			url : url,
+			dataType : 'json',
+			type : 'post',
+			data : JSON.stringify(data),
+			contentType : 'application/json',
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("Error: " + errorThrown);
+			},
+			success : function(data) {
+				onLoaded(JSON.parse(data.data, null));
 			}
 		});
 	};
@@ -86,6 +111,13 @@ NC.Support = function() {
 			
 			_loadOptions(url, function(data) {
 				_createOptions(data, selectElem);
+			});
+		},
+		
+		loadCaptions : function(record, fields, callback) {
+			var url = _baseUrl + '/caption';
+			_loadCaptions(url, record, fields, function(data) {
+				callback(data);
 			});
 		},
 		

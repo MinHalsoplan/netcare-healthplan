@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.core.api.MessageFields;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -136,5 +138,30 @@ public class SupportApi extends ApiSupport {
 		
 		log.info("User {} is loading latest reported activities", user.getUsername());
 		return this.service.loadLatestReportedForAllPatients(cbv.getCareUnit());
+	}
+	
+	/**
+	 * Returns localized messages.
+	 * 
+	 * @param record the message record, i.e. for report.title is report the record. null if none.
+	 * @param fields the properties for that record.
+	 * @param locale the locale (set by system).
+	 * @return a JSON pbject as a string representation, with all fields and values.
+	 */
+	@RequestMapping(value="/caption", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@ResponseBody
+	public ServiceResult<String> getLocalizedMessage(@RequestBody final MessageFields fields, final Locale locale) {
+		String prefix = (fields.getRecord() != null && fields.getRecord().length() > 0) ? (fields.getRecord() + ".") : "";
+		StringBuffer sb = new StringBuffer("{");
+		for (int i = 0; i < fields.getFields().length; i++) {
+			String field = fields.getFields()[i];
+			Option option = new Option(prefix + field, locale);
+			if (i > 0) {
+				sb.append(",");
+			}
+			sb.append(String.format("\"%s\":\"%s\"", field, option.getValue()));
+		}
+		sb.append("}");
+		return ServiceResultImpl.createSuccessResult(sb.toString(), new GenericSuccessMessage());	
 	}
 }
