@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value="/patient")
 
-public class PatientApi {
+public class PatientApi extends ApiSupport {
 	private static final Logger log = LoggerFactory.getLogger(PatientApi.class);
 	
 	@Autowired

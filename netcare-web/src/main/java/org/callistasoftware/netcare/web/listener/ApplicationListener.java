@@ -20,6 +20,7 @@ import java.util.Calendar;
 
 import javax.servlet.ServletContextEvent;
 
+import org.callistasoftware.netcare.core.job.SystemAlarmJob;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
@@ -28,7 +29,6 @@ import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
-import org.callistasoftware.netcare.core.spi.impl.HealthPlanServiceImpl;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -48,7 +48,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class ApplicationListener extends ContextLoaderListener {
 
 	private static final Logger log = LoggerFactory.getLogger(ApplicationListener.class);
-	
+
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		super.contextInitialized(event);
@@ -64,9 +64,9 @@ public class ApplicationListener extends ContextLoaderListener {
 		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
-		
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		
+		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
+
 		atRepo.save(ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER));
 		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE));
 		
@@ -116,7 +116,9 @@ public class ApplicationListener extends ContextLoaderListener {
 		ad2.setActivityTarget(60);
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
-
+		
+		// start background house-keeping task
+		job.init();
 	}
 	
 	@Override

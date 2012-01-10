@@ -36,6 +36,7 @@
 	<jpa:repositories base-package="org.callistasoftware.netcare.core.repository" />
 	
 	<tx:annotation-driven />
+
 	<tx:advice id="txAdvice" transaction-manager="transactionManager"/>
 	
 	<task:annotation-driven />
