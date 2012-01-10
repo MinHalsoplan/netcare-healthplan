@@ -31,15 +31,14 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="org.callistasoftware.netcare.core.spi.impl" />
+	<context:component-scan base-package="org.callistasoftware.netcare.core.spi.impl, org.callistasoftware.netcare.core.job" />
 	
 	<jpa:repositories base-package="org.callistasoftware.netcare.core.repository" />
 	
 	<tx:annotation-driven />
 	<tx:advice id="txAdvice" transaction-manager="transactionManager"/>
 	
-	<task:annotation-driven scheduler="systemScheduler"/>
-	<task:scheduler id="systemScheduler" />
+	<task:annotation-driven />
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${database.driver}" />

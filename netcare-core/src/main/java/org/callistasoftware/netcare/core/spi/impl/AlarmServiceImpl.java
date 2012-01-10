@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -40,13 +41,10 @@ import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 
 	private static Logger log = LoggerFactory.getLogger(AlarmServiceImpl.class);
@@ -68,8 +66,6 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 		this.run();
 	}
 	
-	@Async
-	@Scheduled(fixedRate=3600000)
 	@Override
 	public void run() {
 		log.info("======== ALARM JOB STARTED =========");
@@ -117,7 +113,8 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 			alRepo.save(al);
 		}		
 	}
-
+	
+	@Transactional
 	@Override
 	public ServiceResult<Alarm[]> getCareUnitAlarms(String hsaId) {
 		

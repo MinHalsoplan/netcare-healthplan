@@ -14,17 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.spi;
+package org.callistasoftware.netcare.core.job;
 
-import org.callistasoftware.netcare.core.api.Alarm;
-import org.callistasoftware.netcare.core.api.ServiceResult;
+import javax.annotation.PostConstruct;
 
-public interface AlarmService {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+@Component
+public class SystemAlarmJob {
+
+	private static Logger log = LoggerFactory.getLogger(SystemAlarmJob.class);
 	
-	/**
-	 * Get alarms that has been triggered on a specific care unit
-	 * @param hsaId
-	 * @return
-	 */
-	ServiceResult<Alarm[]> getCareUnitAlarms(final String hsaId);
+	@PostConstruct
+	public void init() {
+		this.run();
+	}
+	
+	@Scheduled(fixedRate=3600000)
+	@Transactional
+	public void run() {
+		log.info("======== ALARM JOB STARTED =========");
+		
+		log.info("======== ALARM JOB COMPLETED =========");
+	}
 }
