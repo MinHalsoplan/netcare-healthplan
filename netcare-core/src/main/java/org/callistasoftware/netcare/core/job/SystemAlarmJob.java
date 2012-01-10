@@ -30,6 +30,7 @@ import org.callistasoftware.netcare.core.spi.impl.HealthPlanServiceImpl;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class SystemAlarmJob {
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		List<ScheduledActivityEntity> saSave = new LinkedList<ScheduledActivityEntity>();
 		for (ScheduledActivityEntity sae : sal) {
-			al.add(AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, 
+			al.add(AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, sae.getActivityDefinitionEntity().getHealthPlan().getForPatient(),
 					sae.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), 
 					sae.getId()));
 			sae.setRejected(true);
@@ -93,6 +94,7 @@ public class SystemAlarmJob {
 			alRepo.save(al);
 			saRepo.save(saSave);
 		}		
+		log.info("Alarm activity job: {} new activity alarms!", al.size());
 	}
 	
 	//
@@ -100,10 +102,11 @@ public class SystemAlarmJob {
 		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThan(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
-			al.add(AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getCareUnit().getHsaId(), hpe.getId()));
+			al.add(AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId()));
 		}
 		if (al.size() > 0) {
 			alRepo.save(al);
 		}		
+		log.info("Alarm plan job ready: {} new plan alarms!", al.size());
 	}
 }

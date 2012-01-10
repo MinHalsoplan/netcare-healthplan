@@ -21,6 +21,9 @@ import static org.junit.Assert.assertEquals;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -29,20 +32,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmRepositoryTest extends TestSupport {
 
 	@Autowired
-	private AlarmRepository repo;
-	
-	
+	private AlarmRepository repo;	
+	@Autowired
+	private CareGiverRepository cgRepo;
+	@Autowired
+	private PatientRepository patientRepo;
+	@Autowired
+	private CareUnitRepository cuRepo;
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void findByReportedTimeIsNotNull() {
-		AlarmEntity e = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, "hsa-123", 42L);
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456");
+		patientRepo.save(patient);
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		cuRepo.save(cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		cgRepo.save(cg);
+		
+		AlarmEntity e = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, patient, "hsa-123", 42L);
 		
 		e = repo.save(e);
 		
 		assertEquals(0, repo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike("hsa-123").size());
 
-		e.resolve("peter");
+		e.resolve(cg);
 		
 		e = repo.save(e);
 		repo.flush();

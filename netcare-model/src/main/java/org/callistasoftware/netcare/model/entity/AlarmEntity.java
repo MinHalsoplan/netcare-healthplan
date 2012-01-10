@@ -23,6 +23,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,18 +54,25 @@ public class AlarmEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date resolvedTime;
 	
-	@Column(name="resolved_by_name")
-	private String resolvedByName;
+	@ManyToOne
+	@JoinColumn(name="resolved_by_id")
+	private CareGiverEntity resolvedBy;
+	
+	@ManyToOne
+	@JoinColumn(name="patient_id")
+	private PatientEntity patient;
+
 
 	AlarmEntity() {
 		createdTime = new Date();
 	}
 	
-	public static AlarmEntity newEntity(AlarmCause cause, String careUnitHsaId, Long refEntityId) {
+	public static AlarmEntity newEntity(AlarmCause cause, PatientEntity patient, String careUnitHsaId, Long refEntityId) {
 		AlarmEntity entity = new AlarmEntity();
 		entity.cause = cause;
 		entity.careUnitHsaId = careUnitHsaId;
 		entity.refEntityId = refEntityId;
+		entity.patient = patient;
 		return entity;
 	}
 	
@@ -98,21 +107,27 @@ public class AlarmEntity {
 		return resolvedTime;
 	}
 
-	public void setResolvedByName(String resolvedByName) {
-		this.resolvedByName = resolvedByName;
+	
+	public PatientEntity getPatient() {
+		return patient;
 	}
 
-	public String getResolvedByName() {
-		return resolvedByName;
+	public void setResolvedBy(CareGiverEntity resolvedBy) {
+		this.resolvedBy = resolvedBy;
 	}
-	
+
+	public CareGiverEntity getResolvedBy() {
+		return resolvedBy;
+	}
+
 	/**
 	 * Convenience method to resolve and set timestamp.
 	 * 
-	 * @param byName the name of the user  resolving this alarm.
+	 * @param resolvedBy the user  resolving this alarm.
 	 */
-	public void resolve(String byName) {
-		setResolvedByName(byName);
+	public void resolve(CareGiverEntity resolvedBy) {
+		setResolvedBy(resolvedBy);
 		setResolvedTime(new Date());
 	}
+
 }
