@@ -36,7 +36,7 @@
 					return option;
 				}
 
-				var support = NC.Support();
+				var support = new NC.Support();
 
 				var report = NC.PatientReport('schemaDescription', 'schemaTable');
 				report.list();
@@ -55,6 +55,8 @@
 					$('#reportFormDiv input[name="date"]').datepicker('option', 'dayNamesMin', data);
 				});
 				
+				var util = new NC.Util();
+				util.validateTimeField($('#reportFormDiv input[name="time"]'));
 				
 				var arr = new Array();
 				arr.push(createOption(1, 'Väldigt lätt'));
@@ -76,10 +78,7 @@
 					rep.note = $('#reportFormDiv input[name="note"]').val();
 					rep.rejected = false;
 					
-					var jsonObj = JSON.stringify(rep);
-					
-					console.log("JSON: " + jsonObj.toString());
-					
+					var jsonObj = JSON.stringify(rep);					
 					report.performReport(id, jsonObj, function(data) {
 						$('#reportFormDiv').modal('hide');
 					});

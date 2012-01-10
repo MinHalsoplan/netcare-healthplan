@@ -16,7 +16,9 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Option;
@@ -150,18 +152,13 @@ public class SupportApi extends ApiSupport {
 	 */
 	@RequestMapping(value="/caption", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<String> getLocalizedMessage(@RequestBody final MessageFields fields, final Locale locale) {
-		String prefix = (fields.getRecord() != null && fields.getRecord().length() > 0) ? (fields.getRecord() + ".") : "";
-		StringBuffer sb = new StringBuffer("{");
-		for (int i = 0; i < fields.getFields().length; i++) {
-			String field = fields.getFields()[i];
-			Option option = new Option(prefix + field, locale);
-			if (i > 0) {
-				sb.append(",");
-			}
-			sb.append(String.format("\"%s\":\"%s\"", field, option.getValue()));
+	public ServiceResult<HashMap<String, String>> getLocalizedMessage(@RequestBody final MessageFields fields, final Locale locale) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		String prefix = (fields.getRecord() == null || fields.getRecord().length() == 0) ? "" : (fields.getRecord() + ".");
+		for (String field : fields.getFields()) {
+			Option o = new Option(prefix + field, locale);
+			map.put(field, o.getValue());
 		}
-		sb.append("}");
-		return ServiceResultImpl.createSuccessResult(sb.toString(), new GenericSuccessMessage());	
+		return ServiceResultImpl.createSuccessResult(map, new GenericSuccessMessage());	
 	}
 }

@@ -46,7 +46,7 @@ NC.Support = function() {
 	/**
 	 * Loads captions from an array of message properties.
 	 * 
-	 * Callback is called with an obejct containing the actual fields (property name) and values (property value).
+	 * Callback is called with an object containing the actual fields (property name) and values (property value).
 	 */
 	var _loadCaptions = function(url, record, fields, onLoaded) {
 		console.log("Loading support captions from url: " + url);
@@ -63,7 +63,7 @@ NC.Support = function() {
 				console.log("Error: " + errorThrown);
 			},
 			success : function(data) {
-				onLoaded(JSON.parse(data.data, null));
+				onLoaded(data.data, null);
 			}
 		});
 	};
