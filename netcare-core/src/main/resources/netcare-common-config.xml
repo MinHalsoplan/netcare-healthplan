@@ -38,8 +38,8 @@
 	<tx:annotation-driven />
 	<tx:advice id="txAdvice" transaction-manager="transactionManager"/>
 	
-	<task:annotation-driven />
-	
+	<task:annotation-driven scheduler="systemScheduler"/>
+	<task:scheduler id="systemScheduler" />
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${database.driver}" />
