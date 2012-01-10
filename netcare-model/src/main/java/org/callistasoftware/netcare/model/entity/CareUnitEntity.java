@@ -25,7 +25,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="nc_care_unit")
-public class CareUnitEntity {
+public class CareUnitEntity implements PermissionRestrictedEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -71,5 +71,22 @@ public class CareUnitEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		if (user instanceof CareGiverEntity) {
+			final CareGiverEntity cg = (CareGiverEntity) user;
+			if (cg.getCareUnit().getId().equals(this.getId())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		return this.isReadAllowed(user);
 	}
 }
