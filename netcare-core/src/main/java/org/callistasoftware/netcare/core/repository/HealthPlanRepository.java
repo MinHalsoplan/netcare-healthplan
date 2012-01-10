@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
@@ -25,5 +26,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HealthPlanRepository extends JpaRepository<HealthPlanEntity, Long> {
 	
 	List<HealthPlanEntity> findByForPatient(PatientEntity forPatient);
+	
+	List<HealthPlanEntity> findByEndDateLessThan(final Date endDate);
 	
 }

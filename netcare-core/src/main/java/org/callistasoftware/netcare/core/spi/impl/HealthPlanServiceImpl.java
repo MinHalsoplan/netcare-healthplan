@@ -93,15 +93,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	/**
 	 * Days back when fetching patient plan (schema).
 	 */
-	private static int SCHEMA_HISTORY_DAYS = 7;
+	public static int SCHEMA_HISTORY_DAYS = 7;
 	/**
 	 * Days forward when fetching patient plan (schema).
 	 */
-	private static int SCHEMA_FUTURE_DAYS  = (2*SCHEMA_HISTORY_DAYS);
+	public static int SCHEMA_FUTURE_DAYS  = (2*SCHEMA_HISTORY_DAYS);
 	/**
 	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
 	 */
-	private static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
+	public static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	

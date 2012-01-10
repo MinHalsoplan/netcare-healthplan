@@ -106,6 +106,11 @@ public class AlarmEntity {
 		return resolvedByName;
 	}
 	
+	/**
+	 * Convenience method to resolve and set timestamp.
+	 * 
+	 * @param byName the name of the user  resolving this alarm.
+	 */
 	public void resolve(String byName) {
 		setResolvedByName(byName);
 		setResolvedTime(new Date());

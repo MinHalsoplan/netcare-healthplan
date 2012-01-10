@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -89,13 +90,27 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt, Frequency.unmarshal("1;1"), cg);
 		final ActivityDefinitionEntity savedDef = this.adRepo.save(def);
 		
-		final ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(savedDef, new Date());
+		ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(savedDef, new Date());
 		e.setReportedTime(new Date());
-		this.repo.save(e);
+		e = this.repo.save(e);
 		
 		final List<ScheduledActivityEntity> result = this.repo.findByCareUnit("hsa-id-4321");
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId());
+
+		e.setReportedTime(null);
+		e = this.repo.save(e);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 2);
+		assertEquals(1, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
+		e.setReportedTime(new Date());	
+		
+		this.repo.save(e);
+		
+		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
+		
 	}
+	
 }
