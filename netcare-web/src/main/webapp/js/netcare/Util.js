@@ -152,8 +152,8 @@ NC.Util = function() {
 				if (event.keyCode == 13 && text.length == 5) {
 					event.preventDefault();
 					console.log("Pressed enter in add time field. Add the time");
-					
-					callback(text);
+					if (callback !== undefined)
+						callback(text);
 				}
 			});
 		},
