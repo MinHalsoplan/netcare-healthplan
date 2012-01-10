@@ -48,4 +48,11 @@ public interface PatientService {
 	 * @return
 	 */
 	ServiceResult<PatientBaseView> createPatient(final PatientBaseView patient);
+	
+	/**
+	 * Delete a patient with the given id
+	 * @param id
+	 * @return
+	 */
+	ServiceResult<PatientBaseView> deletePatient(final Long id);
 }

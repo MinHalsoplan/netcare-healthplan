@@ -29,6 +29,7 @@
 			$(function() {
 				
 				var util = new NC.Util();
+				var support = new NC.Support();
 				
 				util.bindNotEmptyField($('#nameContainer'), $('input[name="name"]'));
 				util.bindNotEmptyField($('#cnrContainer'), $('input[name="cnr"]'));
@@ -46,11 +47,28 @@
 						$.each(data, function(index, value) {
 							var tr = $('<tr>');
 							
-							var id = $('<td>' + value.id + '</td>');
 							var name = $('<td>' + value.name + '</td>');
 							var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 							
-							tr.append(id).append(name).append(cnr);
+							var deleteIcon = util.createIcon('trash', 24, function() {
+								console.log("Delete patient.");
+								
+								support.loadCaptions(null, ['patientDelete'], function(data) {
+									var result = confirm(data.patientDelete);
+									if (result) {
+										console.log("Deleting patient...");
+										patients.deletePatient(value.id, function(data) {
+											console.log("Patient deleted. Reload patients...");
+											patients.load(updatePatientTable);
+										});
+									}
+								});
+							});
+							
+							var actionCol = $('<td>').css('text-align', 'right');
+							actionCol.append(deleteIcon);
+							
+							tr.append(name).append(cnr).append(actionCol);
 							
 							$('#patientsTable tbody').append(tr);
 						});
@@ -124,9 +142,9 @@
 				</p>
 				<table id="patientsTable" class="bordered-table zebra-striped">
 					<thead>
-						<th>Id</th>
 						<th>Namn</th>
 						<th>Personnummer</th>
+						<th>&nbsp;</th>
 					</thead>
 					<tbody>
 					

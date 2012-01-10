@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PatientServiceImpl implements PatientService {
+public class PatientServiceImpl extends ServiceSupport implements PatientService {
 
 	private static Logger log = LoggerFactory.getLogger(PatientServiceImpl.class);
 	
@@ -98,5 +98,20 @@ public class PatientServiceImpl implements PatientService {
 		
 		final PatientEntity p = this.patientRepository.save(PatientEntity.newEntity(patient.getName(), patient.getCivicRegistrationNumber()));
 		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(p), new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<PatientBaseView> deletePatient(Long id) {
+		log.info("Deleting patient {}", id);
+		final PatientEntity patient = this.patientRepository.findOne(id);
+		if (patient == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(PatientEntity.class, id));
+		}
+		
+		this.verifyWriteAccess(patient);
+		
+		this.patientRepository.delete(patient);
+		
+		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(patient), new GenericSuccessMessage());
 	}
 }

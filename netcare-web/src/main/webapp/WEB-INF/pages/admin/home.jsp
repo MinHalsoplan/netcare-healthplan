@@ -101,7 +101,7 @@
 				<h2>:Larmöversikt</h2>
 				<p>
 					<span class="label notice">Information</span>
-					Nedan visas en översikt över de aktiviteter som ej har blivit rapporterade den senaste veckan.
+					<spring:message code="alarm.information" />
 				</p>
 				
 				<div id="missedActivities">
