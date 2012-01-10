@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_health_plan")
-public class HealthPlanEntity {
+public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -195,5 +195,17 @@ public class HealthPlanEntity {
 
 	public PatientEntity getForPatient() {
 		return forPatient;
+	}
+
+
+	@Override
+	public boolean isReadAllowed(UserEntity userId) {
+		return userId.isCareGiver() && ((CareGiverEntity)userId).getHsaId().equals(getCareUnit().getHsaId());
+	}
+
+
+	@Override
+	public boolean isWriteAllowed(UserEntity userId) {
+		return userId.isCareGiver() && ((CareGiverEntity)userId).getHsaId().equals(getCareUnit().getHsaId());
 	}
 }

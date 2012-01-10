@@ -117,11 +117,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return scheduledTime.compareTo(r.getScheduledTime());
 	}
 	
-	public boolean equals(ScheduledActivityEntity o) {
-		if (o == null) {
-			return false;
-		}
-		return (this == o) || o.getId().equals(this.id); 
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof ScheduledActivityEntity) && equals((ScheduledActivityEntity)o);
+	}
+	
+	private boolean equals(ScheduledActivityEntity o) {
+		return (this == o) || o.getId().equals(id); 
 	}
 
 

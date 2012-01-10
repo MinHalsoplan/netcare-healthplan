@@ -266,7 +266,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 			return cg.getCareUnit().getId().equals(this.getHealthPlan().getCareUnit().getId());
 		}
 		
-		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
+		return getCreatedBy().equals(user);
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 			return cg.getId().equals(this.getCreatedBy().getId());
 		}
 		
-		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
+		return getCreatedBy().equals(user);
 	}
 
 }
