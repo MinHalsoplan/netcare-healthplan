@@ -32,6 +32,7 @@ import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,14 +49,19 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 	@Override
 	public ServiceResult<Alarm[]> getCareUnitAlarms(String hsaId) {
 		
+		this.getLog().info("Get alarms for care unit {}", hsaId);
+		
 		final CareUnitEntity cu = this.cuRepo.findByHsaId(hsaId);
 		if (cu == null) {
+			this.getLog().warn("Care unit {} was not found in the system.", hsaId);
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, hsaId));
 		}
 		
 		this.verifyReadAccess(cu);
 		
-		final List<AlarmEntity> alarms = this.alarmRepo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike(hsaId);
+		final List<AlarmEntity> alarms = this.alarmRepo.findByResolvedTimeIsNullAndCareUnitHsaIdLike(hsaId, new Sort(Sort.Direction.DESC, "createdTime"));
+		this.getLog().debug("Found {} alarms for care unit {}", alarms.size(), hsaId);
+		
 		return ServiceResultImpl.createSuccessResult(AlarmImpl.newFromEntities(alarms, LocaleContextHolder.getLocale()), new ListEntitiesMessage(AlarmEntity.class, alarms.size()));
 	}
 

@@ -48,6 +48,8 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 		final StringWriter sw = new StringWriter();
 		ex.printStackTrace(new PrintWriter(sw));
 		
+		log.error("Internal error", ex);
+		
 		this.emailService.sendEmail(sw.toString(), "Netcare Exception", email);
 		
 		return super.resolveException(request, response, handler, ex);

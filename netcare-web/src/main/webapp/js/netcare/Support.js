@@ -164,7 +164,7 @@ NC.Support = function() {
 							var unit = value.definition.type.unit.value;
 							var typeName = value.definition.type.name;
 							var goalString = value.definition.goal + ' ' + unit;
-							var reportedString = value.actual + ' ' + unit;
+							var reportedString = value.actualValue + ' ' + unit;
 							var reportedAt = value.reported;
 							
 							var tr = $('<tr>');

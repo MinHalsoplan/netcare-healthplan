@@ -26,6 +26,7 @@ import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,13 +56,13 @@ public class AlarmRepositoryTest extends TestSupport {
 		
 		e = repo.save(e);
 		
-		assertEquals(0, repo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike("hsa-123").size());
+		assertEquals(1, repo.findByResolvedTimeIsNullAndCareUnitHsaIdLike("hsa-123", new Sort(Sort.Direction.DESC, "createdTime")).size());
 
 		e.resolve(cg);
 		
 		e = repo.save(e);
 		repo.flush();
 		
-		assertEquals(1, repo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike("hsa-123").size());
+		assertEquals(0, repo.findByResolvedTimeIsNullAndCareUnitHsaIdLike("hsa-123", new Sort(Sort.Direction.DESC, "createdTime")).size());
 	}
 }

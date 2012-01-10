@@ -16,7 +16,7 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,8 +31,8 @@ public class AlarmImpl implements Alarm {
 	private Long id;
 	private String careUnitHsaId;
 	private PatientBaseView patient;
-	private Date createdTime;
-	private Date resolvedTime;
+	private String createdTime;
+	private String resolvedTime;
 	private CareGiverBaseView resolvedBy;
 	private Option cause;
 	private Long entityReferenceId;
@@ -47,15 +47,25 @@ public class AlarmImpl implements Alarm {
 	}
 	
 	public static Alarm newFromEntity(final AlarmEntity entity, final Locale l) {
+		
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
 		final AlarmImpl alarm = new AlarmImpl();
 		alarm.setCareUnitHsaId(entity.getCareUnitHsaId());
 		alarm.setCause(new Option(entity.getCause().name(), l));
-		alarm.setCreatedTime(entity.getCreatedTime());
-		alarm.setResolvedTime(entity.getResolvedTime());
+		alarm.setCreatedTime(sdf.format(entity.getCreatedTime()));
+		
+		if (entity.getResolvedTime() != null) {
+			alarm.setResolvedTime(sdf.format(entity.getResolvedTime()));
+		}
+		
 		alarm.setEntityReferenceId(entity.getRefEntityId());
 		alarm.setId(entity.getId());
 		alarm.setPatient(PatientBaseViewImpl.newFromEntity(entity.getPatient()));
-		alarm.setResolvedBy(CareGiverBaseViewImpl.newFromEntity(entity.getResolvedBy()));
+		
+		if (entity.getResolvedBy() != null) {
+			alarm.setResolvedBy(CareGiverBaseViewImpl.newFromEntity(entity.getResolvedBy()));
+		}
 		
 		return alarm;
 	}
@@ -72,11 +82,11 @@ public class AlarmImpl implements Alarm {
 		this.patient = patient;
 	}
 
-	public void setCreatedTime(Date createdTime) {
+	public void setCreatedTime(String createdTime) {
 		this.createdTime = createdTime;
 	}
 
-	public void setResolvedTime(Date resolvedTime) {
+	public void setResolvedTime(String resolvedTime) {
 		this.resolvedTime = resolvedTime;
 	}
 
@@ -108,12 +118,12 @@ public class AlarmImpl implements Alarm {
 	}
 
 	@Override
-	public Date getCreatedTime() {
+	public String getCreatedTime() {
 		return this.createdTime;
 	}
 
 	@Override
-	public Date getResolvedTime() {
+	public String getResolvedTime() {
 		return this.resolvedTime;
 	}
 

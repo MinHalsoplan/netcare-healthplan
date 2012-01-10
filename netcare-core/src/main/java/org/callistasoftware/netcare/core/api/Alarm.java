@@ -42,13 +42,13 @@ public interface Alarm {
 	 * The date the alarm was created
 	 * @return
 	 */
-	Date getCreatedTime();
+	String getCreatedTime();
 	
 	/**
 	 * The date when the alarm was resolved
 	 * @return
 	 */
-	Date getResolvedTime();
+	String getResolvedTime();
 	
 	/**
 	 * The care giver who resolved the alarm

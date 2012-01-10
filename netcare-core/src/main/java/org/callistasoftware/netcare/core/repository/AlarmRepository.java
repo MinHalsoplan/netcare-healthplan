@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.repository;
 import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
@@ -28,5 +29,5 @@ public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
 	 * @param careUnit
 	 * @return
 	 */
-	List<AlarmEntity> findByResolvedTimeIsNotNullAndCareUnitHsaIdLike(final String careUnitHsaId);
+	List<AlarmEntity> findByResolvedTimeIsNullAndCareUnitHsaIdLike(final String careUnitHsaId, final Sort sort);
 }
