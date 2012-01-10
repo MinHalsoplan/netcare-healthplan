@@ -14,24 +14,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
-public interface PermissionRestrictedEntity {
-
+/**
+ * Defines message keys to get localized messages (captions) from server.
+ * 
+ * @author Peter
+ *
+ */
+public class MessageFields implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private String record;
+	private String[] fields;
 	/**
-	 * Whether the user is allowed to view information
-	 * on this restricted object
-	 * @param user - The user who is trying to read
-	 * @return
+	 * Returns the message record, i.e. prefix to key as in [record].[field].
+	 * @return the message record name or null if none.
 	 */
-	boolean isReadAllowed(final UserEntity userId);
+	public String getRecord() {
+		return record;
+	}
 	
 	/**
-	 * Whether the user is allowed to modify information
-	 * on the restricted object.
-	 * @param user - The user who is trying to write
-	 * @return
+	 * Returns message field names.
+	 * 
+	 * @return the field names, must be defined in message.properties.
 	 */
-	boolean isWriteAllowed(final UserEntity userId);
+	public String[] getFields() {
+		return fields;
+	}
 }

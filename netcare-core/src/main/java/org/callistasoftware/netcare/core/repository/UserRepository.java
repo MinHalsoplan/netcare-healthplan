@@ -14,24 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.repository;
 
+import org.callistasoftware.netcare.model.entity.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PermissionRestrictedEntity {
+/**
+ * User repository
+ * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
+ *
+ */
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-	/**
-	 * Whether the user is allowed to view information
-	 * on this restricted object
-	 * @param user - The user who is trying to read
-	 * @return
-	 */
-	boolean isReadAllowed(final UserEntity userId);
-	
-	/**
-	 * Whether the user is allowed to modify information
-	 * on the restricted object.
-	 * @param user - The user who is trying to write
-	 * @return
-	 */
-	boolean isWriteAllowed(final UserEntity userId);
 }
