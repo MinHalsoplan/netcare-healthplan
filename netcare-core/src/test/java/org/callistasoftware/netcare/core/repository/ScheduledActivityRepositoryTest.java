@@ -103,12 +103,14 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		e = this.repo.save(e);
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 2);
 		assertEquals(1, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
+		cal.add(Calendar.DATE, -1);
+		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
+		
 		e.setReportedTime(new Date());	
 		
 		this.repo.save(e);
-		
+		cal.add(Calendar.DATE, 1);		
 		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
 		
 	}

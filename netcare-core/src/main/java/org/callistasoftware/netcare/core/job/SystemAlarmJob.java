@@ -18,11 +18,11 @@ package org.callistasoftware.netcare.core.job;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
+import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
@@ -40,6 +40,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class SystemAlarmJob {
 
 	private static Logger log = LoggerFactory.getLogger(SystemAlarmJob.class);
@@ -53,19 +54,18 @@ public class SystemAlarmJob {
 	@Autowired
 	private AlarmRepository alRepo;
 
-	@PostConstruct
 	public void init() {
 		this.run();
 	}
 	
 	@Scheduled(fixedRate=3600000)
-	@Transactional
 	public void run() {
 		log.info("======== ALARM JOB STARTED =========");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -(HealthPlanServiceImpl.SCHEMA_HISTORY_DAYS));
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		cal.add(Calendar.DATE, -1);
+		ApiUtil.dayEnd(cal);
 		
 		plans(cal.getTime());
 		
@@ -78,23 +78,29 @@ public class SystemAlarmJob {
 	//
 	private void activities(Date endDate) {
 		List<ScheduledActivityEntity> sal = saRepo.findByScheduledTimeLessThanAndReportedTimeIsNull(endDate);
+		log.info("Alarm activity job: {} activities over due ({})", sal.size(), endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		List<ScheduledActivityEntity> saSave = new LinkedList<ScheduledActivityEntity>();
+		HashSet<Long> patients = new HashSet<Long>();
 		for (ScheduledActivityEntity sae : sal) {
-			al.add(AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, sae.getActivityDefinitionEntity().getHealthPlan().getForPatient(),
-					sae.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), 
-					sae.getId()));
-			sae.setRejected(true);
-			sae.setReportedTime(new Date());
-			sae.setNote("Stängd automatiskt.");
-			sae.setActualValue(0);
-			saSave.add(sae);
+			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
+			if (!patients.contains(patient.getId())) {
+				al.add(AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, patient,
+						sae.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), 
+						sae.getId()));
+				sae.setRejected(true);
+				sae.setReportedTime(new Date());
+				sae.setNote("Stängd per automatik.");
+				sae.setActualValue(0);
+				saSave.add(sae);
+				patients.add(patient.getId());
+			}
 		}
+		log.info("Alarm activity job: {} new activity alarms!", al.size());
 		if (al.size() > 0) {
 			alRepo.save(al);
 			saRepo.save(saSave);
 		}		
-		log.info("Alarm activity job: {} new activity alarms!", al.size());
 	}
 	
 	//
@@ -104,9 +110,9 @@ public class SystemAlarmJob {
 		for (HealthPlanEntity hpe : hpl) {
 			al.add(AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId()));
 		}
+		log.info("Alarm plan job ready: {} new plan alarms!", al.size());
 		if (al.size() > 0) {
 			alRepo.save(al);
 		}		
-		log.info("Alarm plan job ready: {} new plan alarms!", al.size());
 	}
 }
