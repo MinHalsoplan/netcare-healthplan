@@ -18,8 +18,6 @@ package org.callistasoftware.netcare.core.api;
 
 import java.util.Date;
 
-import org.callistasoftware.netcare.model.entity.AlarmCause;
-
 public interface Alarm {
 
 	/**
@@ -38,7 +36,7 @@ public interface Alarm {
 	 * Get for which patient the alarm was triggered
 	 * @return
 	 */
-	Patient getPatient();
+	PatientBaseView getPatient();
 	
 	/**
 	 * The date the alarm was created
@@ -56,13 +54,13 @@ public interface Alarm {
 	 * The care giver who resolved the alarm
 	 * @return
 	 */
-	CareGiver getResolvedBy();
+	CareGiverBaseView getResolvedBy();
 	
 	/**
 	 * The cause of the alarm
 	 * @return
 	 */
-	AlarmCause getCause();
+	Option getCause();
 	
 	/**
 	 * The entity this alarm refers to

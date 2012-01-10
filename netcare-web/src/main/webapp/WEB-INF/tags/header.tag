@@ -118,10 +118,10 @@
 	<script type="text/javascript" src="${bootstrapTabs}"></script>
 	
 	<!-- Include NETCARE javascripts  -->
-	<c:url value="/js/netcare.js" var="netcareJs" scope="page" />
 	<script type="text/javascript" src="<c:url value='/js/netcare.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Alarm.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/ActivityTypes.js' />"></script>

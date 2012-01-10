@@ -17,33 +17,45 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.Alarm;
-import org.callistasoftware.netcare.core.api.CareGiver;
-import org.callistasoftware.netcare.core.api.Patient;
-import org.callistasoftware.netcare.model.entity.AlarmCause;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
 
 public class AlarmImpl implements Alarm {
 
 	private Long id;
 	private String careUnitHsaId;
-	private Patient patient;
+	private PatientBaseView patient;
 	private Date createdTime;
 	private Date resolvedTime;
-	private CareGiver resolvedBy;
-	private AlarmCause cause;
+	private CareGiverBaseView resolvedBy;
+	private Option cause;
 	private Long entityReferenceId;
 	
-	public static Alarm newFromEntity(final AlarmEntity entity) {
+	public static Alarm[] newFromEntities(final List<AlarmEntity> entities, final Locale l) {
+		final Alarm[] dtos = new Alarm[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			dtos[i] = AlarmImpl.newFromEntity(entities.get(i), l);
+		}
+		
+		return dtos;
+	}
+	
+	public static Alarm newFromEntity(final AlarmEntity entity, final Locale l) {
 		final AlarmImpl alarm = new AlarmImpl();
 		alarm.setCareUnitHsaId(entity.getCareUnitHsaId());
-		alarm.setCause(entity.getCause());
+		alarm.setCause(new Option(entity.getCause().name(), l));
 		alarm.setCreatedTime(entity.getCreatedTime());
 		alarm.setResolvedTime(entity.getResolvedTime());
 		alarm.setEntityReferenceId(entity.getRefEntityId());
 		alarm.setId(entity.getId());
-		
+		alarm.setPatient(PatientBaseViewImpl.newFromEntity(entity.getPatient()));
+		alarm.setResolvedBy(CareGiverBaseViewImpl.newFromEntity(entity.getResolvedBy()));
 		
 		return alarm;
 	}
@@ -56,7 +68,7 @@ public class AlarmImpl implements Alarm {
 		this.careUnitHsaId = careUnitHsaId;
 	}
 
-	public void setPatient(Patient patient) {
+	public void setPatient(PatientBaseView patient) {
 		this.patient = patient;
 	}
 
@@ -68,11 +80,11 @@ public class AlarmImpl implements Alarm {
 		this.resolvedTime = resolvedTime;
 	}
 
-	public void setResolvedBy(CareGiver resolvedBy) {
+	public void setResolvedBy(CareGiverBaseView resolvedBy) {
 		this.resolvedBy = resolvedBy;
 	}
 
-	public void setCause(AlarmCause cause) {
+	public void setCause(Option cause) {
 		this.cause = cause;
 	}
 
@@ -91,7 +103,7 @@ public class AlarmImpl implements Alarm {
 	}
 
 	@Override
-	public Patient getPatient() {
+	public PatientBaseView getPatient() {
 		return this.patient;
 	}
 
@@ -106,12 +118,12 @@ public class AlarmImpl implements Alarm {
 	}
 
 	@Override
-	public CareGiver getResolvedBy() {
+	public CareGiverBaseView getResolvedBy() {
 		return this.resolvedBy;
 	}
 
 	@Override
-	public AlarmCause getCause() {
+	public Option getCause() {
 		return this.cause;
 	}
 

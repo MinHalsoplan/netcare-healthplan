@@ -35,6 +35,23 @@
 				
 				var units = new NC.Support();
 				units.loadLatestReportedActivities('reportedActivities');
+				
+				var alarms = new NC.Alarm();
+				alarms.loadAlarms(function(data) {
+					$.each(data.data, function(index, value) {
+						var created = $('<td>' + value.createdTime + '</td>');
+						var patient = $('<td>' + value.patient.name + '</td>');
+						var cause = $('<td>' + value.cause.value + '</td>');
+						
+						var table = $('#missedActivities table tbody');
+						table.append(created);
+						table.append(patient);
+						table.append(cause);
+						
+						table.show();
+						
+					});
+				});
 			});
 		</script>
 	</netcare:header>
@@ -86,6 +103,21 @@
 					<span class="label notice">Information</span>
 					Nedan visas en översikt över de aktiviteter som ej har blivit rapporterade den senaste veckan.
 				</p>
+				
+				<div id="missedActivities">
+					<p id="noMissedActivities" style="display: none;"><spring:message code="alarm.noAlarms" /></p>
+					<div class="alert-message info" style="display:none;">
+						<a class="close">x</a>
+					</div>
+					<table class="bordered-table zebra-striped" style="display: none;">
+						<thead>
+							<th><spring:message code="alarm.created" /></th>
+							<th><spring:message code="name" /></th>
+							<th><spring:message code="alarm.cause" /></th>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
 			</section>
 		</netcare:content>
 		<netcare:menu>

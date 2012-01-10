@@ -17,15 +17,21 @@
 package org.callistasoftware.netcare.core.spi.impl;
 
 
+import java.util.List;
+
 import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.AlarmImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
+import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.AlarmService;
+import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +55,8 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 		
 		this.verifyReadAccess(cu);
 		
-		
-		
-		return null;
-		
+		final List<AlarmEntity> alarms = this.alarmRepo.findByResolvedTimeIsNotNullAndCareUnitHsaIdLike(hsaId);
+		return ServiceResultImpl.createSuccessResult(AlarmImpl.newFromEntities(alarms, LocaleContextHolder.getLocale()), new ListEntitiesMessage(AlarmEntity.class, alarms.size()));
 	}
 
 }
