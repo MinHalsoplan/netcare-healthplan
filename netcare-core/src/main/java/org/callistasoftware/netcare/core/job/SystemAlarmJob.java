@@ -93,6 +93,7 @@ public class SystemAlarmJob {
 			alRepo.save(al);
 			saRepo.save(saSave);
 		}		
+		log.info("Alarm activity job: {} new activity alarms!", al.size());
 	}
 	
 	//
@@ -105,5 +106,6 @@ public class SystemAlarmJob {
 		if (al.size() > 0) {
 			alRepo.save(al);
 		}		
+		log.info("Alarm plan job ready: {} new plan alarms!", al.size());
 	}
 }
