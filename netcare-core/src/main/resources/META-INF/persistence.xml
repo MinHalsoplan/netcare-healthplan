@@ -33,6 +33,7 @@
 		<class>org.callistasoftware.netcare.model.entity.PatientEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.ScheduledActivityEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.UserEntity</class>
+		<class>org.callistasoftware.netcare.model.entity.AlarmEntity</class>
 	</persistence-unit>
 
 </persistence>
