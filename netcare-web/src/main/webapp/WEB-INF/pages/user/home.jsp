@@ -71,7 +71,7 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h1><spring:message code="phome.title" /></h1>
+			<h1><spring:message code="phome.header" /></h1>
 			<div id="eventBody" style="border-radius: 10px" class="alert-message"></div>
 			<div id="planDescription" style="margin: 10px"></div>
 			<table id="planTable"

@@ -16,6 +16,16 @@
  */
 NC.Util = function() {
 	
+	var _support = new NC.Support();
+	
+	var _captions;
+	_support.loadCaptions(null, ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
+	                             'freq4', 'freq5', 'every', 'meter', 'minute', 'step'], 
+	                             function(data) {
+		_captions = data;
+		console.log('Localized captions for util loaded.');
+	});
+	
 	var _displayMessages = function(type, messages) {
 		console.log('Displaying ' + type + ' messages...');
 		if (messages == null) {
@@ -193,13 +203,19 @@ NC.Util = function() {
 				text += '<br/>';				
 			});
 			
-			var caption = [ 'engångsaktivitet', '', 'varannan vecka', 'var tredje vecka', 'var fjärde vecka', 'var femte vecka' ];
 			text += '<i>';
-			if (activityDefinition.activityRepeat > 5) {
-				text += 'var ' + activityDefinition.activityRepeat + ' vecka';
-			} else {
-				text += caption[activityDefinition.activityRepeat];
+			switch (activityDefinition.activityRepeat) {
+				case 0: text += _captions.freq0; break;
+				case 1: text += _captions.freq1; break;
+				case 2: text +=_captions.freq2; break;
+				case 3: text += _captions.freq3; break;
+				case 4: text += _captions.freq4; break;
+				case 5: text += _captions.freq5; break;
+				default:
+					text += _captions.every + activityDefinition.activityRepeat + ' ' + _captions.week;
+				break;
 			}
+
 			text += '</i>';
 			
 			return text;
@@ -207,13 +223,13 @@ NC.Util = function() {
 		
 		formatUnit : function (unitOption) {
 			if (unitOption.code == 'METER') {
-				return 'm';
+				return _captions.meter;
 			}
 			if (unitOption.code == 'MINUTE') {
-				return 'min';
+				return _captions.minute;
 			}
 			if (unitOption.code == 'STEP') {
-				return 'steg';
+				return _captions.step;
 			}
 			return unitOption.code;
 		},
