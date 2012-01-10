@@ -84,6 +84,11 @@ public interface ActivityDefinition extends Serializable {
 	String getHealthPlanName();
 	
 	/**
+	 * Returns number of times an activity should have been carried out.
+	 */
+	int getNumTarget();
+
+	/**
 	 * Returns number of activities.
 	 */
 	int getNumTotal();
@@ -107,4 +112,5 @@ public interface ActivityDefinition extends Serializable {
 	 * Returns done sum of work.
 	 */
 	int getSumDone();
+
 }
