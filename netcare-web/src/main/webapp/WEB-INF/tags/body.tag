@@ -24,7 +24,7 @@
 	<div class="container">
 		<div class="content">
 			<div class="page-header">
-				<h1>Planerade hälsotjänster <small>Tagline text kan skrivas här</small></h1>
+				<h1>Planerade hälsoaktiviteter <small>Tagline text kan skrivas här</small></h1>
 			</div>
 			
 			<div class="row">

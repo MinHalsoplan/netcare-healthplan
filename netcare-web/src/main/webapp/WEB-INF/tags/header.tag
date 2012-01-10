@@ -21,7 +21,7 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>NetCare</title>
+	<title>Planerade Hälsoaktiviteter</title>
 	
 	<!-- Include Twitter bootstrap -->
 	<c:url value="/css/bootstrap.min.css" var="bootstrapCss" scope="page" />
