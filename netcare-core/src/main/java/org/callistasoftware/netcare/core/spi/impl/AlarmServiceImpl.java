@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
-import javax.annotation.PostConstruct;
-
 import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
@@ -28,36 +26,18 @@ import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 
 	private static Logger log = LoggerFactory.getLogger(AlarmServiceImpl.class);
 	
 	@Autowired
 	private CareUnitRepository cuRepo;
-	
-	@PostConstruct
-	public void initialize() {
-		this.run();
-	}
-	
-	@Async
-	@Scheduled(fixedRate=3600000)
-	@Override
-	public void run() {
-		log.info("======== ALARM JOB STARTED =========");
-		
-		
-		
-		log.info("======== ALARM JOB COMPLETED =========");
-	}
 
+	@Transactional
 	@Override
 	public ServiceResult<Alarm[]> getCareUnitAlarms(String hsaId) {
 		
