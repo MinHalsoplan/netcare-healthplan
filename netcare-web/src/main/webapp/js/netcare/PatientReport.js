@@ -23,6 +23,13 @@ NC.PatientReport = function(descriptionId, tableId) {
 	var _tableId = tableId;
 	var _lastUpdatedId = -1;
 	
+	var _captions;
+	var support = new NC.Support();
+	
+	support.loadCaptions('report', ['report', 'change', 'reject'], function(data) {
+		_captions = data;
+	});
+
 	var _updateDescription = function() {
 		console.log("Updating schema table description");
 		if (_schemaCount == 0) {
@@ -44,14 +51,14 @@ NC.PatientReport = function(descriptionId, tableId) {
 		var div = $('<div>');
 		var rbtn;
 		if (act.reported == null) {
-			rbtn = createButton('submit', 'Rapportera', 'btn small success');			
+			rbtn = createButton('submit', _captions.report, 'btn small success');			
 		} else {
-			rbtn = createButton('submit', 'Ändra', 'btn small primary');
+			rbtn = createButton('submit', _captions.change, 'btn small primary');
 		}
 		rbtn.css('margin', '5px');
 		div.append(rbtn);
 		div.append($('<br>'));
-		var cbtn = createButton('submit', 'Ej Utförd', 'btn small danger');
+		var cbtn = createButton('submit', _captions.reject, 'btn small danger');
 		cbtn.css('margin', '5px');
 		div.append(cbtn);
 		cbtn.attr('disabled', act.rejected);
@@ -188,7 +195,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 
 						var reported;
 						if (value.reported != null) {
-							reported =  ((value.rejected) ? 'Ej Utförd' : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
+							reported =  ((value.rejected) ? _captions.reject : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
 							+ '<br/>' + value.reported;
 						} else {
 							reported = '&nbsp;';

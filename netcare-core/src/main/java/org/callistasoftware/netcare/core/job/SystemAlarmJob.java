@@ -88,19 +88,21 @@ public class SystemAlarmJob {
 				al.add(AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, patient,
 						sae.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), 
 						sae.getId()));
-				sae.setRejected(true);
-				sae.setReportedTime(new Date());
-				sae.setNote("Stängd per automatik.");
-				sae.setActualValue(0);
-				saSave.add(sae);
 				patients.add(patient.getId());
 			}
+			sae.setRejected(true);
+			sae.setReportedTime(new Date());
+			sae.setNote("Stängd per automatik.");
+			sae.setActualValue(0);
+			saSave.add(sae);
 		}
 		log.info("Alarm activity job: {} new activity alarms!", al.size());
 		if (al.size() > 0) {
 			alRepo.save(al);
-			saRepo.save(saSave);
-		}		
+		}
+		if (saSave.size() > 0) {
+			saRepo.save(saSave);			
+		}
 	}
 	
 	//
