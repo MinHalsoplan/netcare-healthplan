@@ -35,7 +35,6 @@
 					option.value = value;
 					return option;
 				}
-
 				var support = new NC.Support();
 
 				var report = NC.PatientReport('schemaDescription', 'schemaTable');
