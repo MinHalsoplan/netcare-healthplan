@@ -65,17 +65,18 @@ NC.Util = function() {
 			$('#currentpatient').show();
 		},
 	
-		displayMessages : function(infoMessages, warningMessages, errorMessages) {
-			console.log("Display page messages. Infos: " + infoMessages.length + " Warnings: " + warningMessages.length + " Errors: " + errorMessages.length);
+		displayMessages : function(successMessages, infoMessages, warningMessages, errorMessages) {
+			console.log("Display page messages. Success: " + successMessages.length + " Infos: " + infoMessages.length + " Warnings: " + warningMessages.length + " Errors: " + errorMessages.length);
 			
-			_displayMessages('success', infoMessages);
+			_displayMessages('success', successMessages);
+			_displayMessages('info', infoMessages);
 			_displayMessages('warning', warningMessages);
 			_displayMessages('error', errorMessages);
 		},
 		
 		processServiceResult : function(serviceResult) {
 			console.log("Processing service results...");
-			public.displayMessages(serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
+			public.displayMessages(serviceResult.successMessages, serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
 		},
 		
 		createIcon : function(name, size, onClickFunction) {

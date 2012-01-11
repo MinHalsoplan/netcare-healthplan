@@ -55,11 +55,9 @@ $(function() {
 			500 : function() {
 				return handleErrorCode(500);
 			}
-		},
-		success : function(data) {
-			new NC.Util().processServiceResult(data);
 		}
 	});
+	
 	console.log("done.");
 });
 

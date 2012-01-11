@@ -27,4 +27,9 @@ public class EntityNotUniqueMessage extends DefaultSystemMessage {
 		super("EntityNotUnique", true, entityClass.getSimpleName(), constraintName);
 	}
 
+	@Override
+	public MessageType getType() {
+		return MessageType.ERROR;
+	}
+
 }

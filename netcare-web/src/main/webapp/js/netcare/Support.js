@@ -155,6 +155,14 @@ NC.Support = function() {
 				dataType : 'json',
 				success : function(data) {
 					var util = new NC.Util();
+					
+					console.log(data.successMessages.length);
+					console.log(data.infoMessages.length);
+					console.log(data.warningMessages.length);
+					console.log(data.errorMessages.length);
+					
+					util.processServiceResult(data);
+					
 					if (data.success) {
 						
 						$.each(data.data, function(index, value) {

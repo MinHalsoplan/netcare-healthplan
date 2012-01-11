@@ -29,4 +29,9 @@ public class EntityNotFoundMessage extends DefaultSystemMessage {
 		super("EntityNotFound", false, entityClass.getSimpleName(), id);
 	}
 
+	@Override
+	public MessageType getType() {
+		return MessageType.ERROR;
+	}
+
 }

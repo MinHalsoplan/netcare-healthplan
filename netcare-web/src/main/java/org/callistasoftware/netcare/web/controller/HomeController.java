@@ -25,12 +25,11 @@ import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
+import org.callistasoftware.netcare.core.api.messages.NoCurrentPatientMessage;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +41,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController extends ControllerSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
-	
-	@Autowired
-	private MessageSource messages;
 	
 	@Autowired
 	private HealthPlanService service;
@@ -91,7 +87,7 @@ public class HomeController extends ControllerSupport {
 		log.info("Displaying create new ordination");
 		
 		if (session.getAttribute("currentPatient") == null) {
-			m.addAttribute("result", ServiceResultImpl.createFailedResult(new DefaultSystemMessage(messages.getMessage("noCurrentPatientError", new Object[0], locale))));
+			m.addAttribute("result", ServiceResultImpl.createFailedResult(new NoCurrentPatientMessage()));
 		}
 		
 		return "admin/healthplan";

@@ -37,4 +37,10 @@ public interface SystemMessage extends Serializable {
 	 * @return
 	 */
 	String getMessage();
+	
+	/**
+	 * The type of the message
+	 * @return
+	 */
+	MessageType getType();
 }

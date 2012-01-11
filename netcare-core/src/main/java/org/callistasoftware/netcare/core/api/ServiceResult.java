@@ -69,4 +69,10 @@ public interface ServiceResult<T extends Serializable> {
 	 * @return
 	 */
 	List<SystemMessage> getInfoMessages();
+	
+	/**
+	 * Get success messages
+	 * @return
+	 */
+	List<SystemMessage> getSuccessMessages();
 }

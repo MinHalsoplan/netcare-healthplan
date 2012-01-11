@@ -28,9 +28,7 @@ NC.Alarm = function() {
 				dataType : 'json',
 				success : function(data) {
 					
-					if (data.data.length > 0) {
-						new NC.Util().processServiceResult(data);
-					}
+					new NC.Util().processServiceResult(data);
 					
 					if (data.success && successCallback !== undefined) {
 						successCallback(data);

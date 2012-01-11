@@ -16,7 +16,6 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.util.Date;
 
 public interface Alarm {
 

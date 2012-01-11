@@ -26,4 +26,9 @@ public class EntityDeletedMessage extends DefaultSystemMessage {
 	public EntityDeletedMessage(final Class<?> entityClass, final Long id) {
 		super("EntityDeleted", false, entityClass.getSimpleName(), id);
 	}
+
+	@Override
+	public MessageType getType() {
+		return MessageType.SUCCESS;
+	}
 }

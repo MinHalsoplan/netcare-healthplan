@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,8 +38,11 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="is_mobile")
 	private boolean isMobile;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="forPatient")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="forPatient", cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<HealthPlanEntity> healthPlans;
+	
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="patient", cascade=CascadeType.REMOVE, orphanRemoval=true)
+	private List<AlarmEntity> alarms;
 	
 	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
 		return new PatientEntity(name, civicRegistrationNumber);
@@ -76,6 +80,14 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 
 	void setHealthPlans(List<HealthPlanEntity> healthPlans) {
 		this.healthPlans = healthPlans;
+	}
+	
+	public List<AlarmEntity> getAlarms() {
+		return this.alarms;
+	}
+	
+	void setAlarms(final List<AlarmEntity> alarms) {
+		this.alarms = alarms;
 	}
 
 	@Override

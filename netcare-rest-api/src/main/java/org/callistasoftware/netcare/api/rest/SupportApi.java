@@ -18,16 +18,13 @@ package org.callistasoftware.netcare.api.rest;
 
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
-import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.MessageFields;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
@@ -131,15 +128,8 @@ public class SupportApi extends ApiSupport {
 	@RequestMapping(value="/reported/latest", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
-		final UserBaseView user = this.getUser();
-		if (!user.isCareGiver()) {
-			return ServiceResultImpl.createFailedResult(new DefaultSystemMessage("Unauthorized"));
-		}
-		
-		final CareGiverBaseView cbv = (CareGiverBaseView) user;
-		
-		log.info("User {} is loading latest reported activities", user.getUsername());
-		return this.service.loadLatestReportedForAllPatients(cbv.getCareUnit());
+		this.logAccess("load", "reported activities");
+		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
 	}
 	
 	/**

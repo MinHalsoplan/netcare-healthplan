@@ -24,7 +24,6 @@ import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
@@ -38,8 +37,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class PatientServiceImpl extends ServiceSupport implements PatientService {
 
 	private static Logger log = LoggerFactory.getLogger(PatientServiceImpl.class);
@@ -64,13 +65,13 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 			dtos.add(PatientBaseViewImpl.newFromEntity(ent)); 
 		}
 		
-		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]), new DefaultSystemMessage("Found " + dtos.size() + " patients that matched your critera."));
+		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]), new ListEntitiesMessage(PatientEntity.class, dtos.size()));
 	}
 
 	@Override
 	public ServiceResult<PatientBaseView> loadPatient(Long id) {
 		final PatientEntity ent = this.patientRepository.findOne(id);
-		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(ent), null);
+		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(ent), new GenericSuccessMessage());
 	}
 
 	@Override

@@ -38,6 +38,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				url : _baseUrl + '/' + currentPatient + '/list',
 				dataType : 'json',
 				success : function(data) {
+					new NC.Util().processServiceResult(data);
 					callback(data);
 				}
 			});

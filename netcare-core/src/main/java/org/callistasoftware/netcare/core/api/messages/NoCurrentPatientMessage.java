@@ -16,19 +16,19 @@
  */
 package org.callistasoftware.netcare.core.api.messages;
 
-public class GenericSuccessMessage extends DefaultSystemMessage {
-
+public class NoCurrentPatientMessage extends DefaultSystemMessage {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public GenericSuccessMessage() {
-		super("operationSuccess");
+	public NoCurrentPatientMessage() {
+		super("noCurrentPatientError");
 	}
-
+	
 	@Override
 	public MessageType getType() {
-		return MessageType.SUCCESS;
+		return MessageType.WARNING;
 	}
+
 }

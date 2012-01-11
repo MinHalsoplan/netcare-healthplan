@@ -137,7 +137,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			dtos[count++] = dto;
 		}
 		
-		return ServiceResultImpl.createSuccessResult(dtos, new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult(dtos, new ListEntitiesMessage(HealthPlanEntity.class, dtos.length));
 	}
 	
 	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient(PatientBaseView patient) {

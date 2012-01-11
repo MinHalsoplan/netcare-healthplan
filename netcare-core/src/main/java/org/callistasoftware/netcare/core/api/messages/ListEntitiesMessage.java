@@ -26,4 +26,9 @@ public class ListEntitiesMessage extends DefaultSystemMessage {
 	public ListEntitiesMessage(final Class<?> entityClass, final int size) {
 		super("EntitiesListed", true, size, size == 1 ? entityClass.getSimpleName() : entityClass.getSimpleName() + "_plural");
 	}
+
+	@Override
+	public MessageType getType() {
+		return MessageType.INFO;
+	}
 }
