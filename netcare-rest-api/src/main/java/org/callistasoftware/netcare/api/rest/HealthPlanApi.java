@@ -62,9 +62,9 @@ public class HealthPlanApi extends ApiSupport {
 		return ordinations;
 	}
 	
-	@RequestMapping(value="/{patient}/{healthPlan}/delete", method=RequestMethod.POST)
+	@RequestMapping(value="/{healthPlan}/delete", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="patient") final Long patient, @PathVariable(value="healthPlan") final Long healthPlan) {
+	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
 		this.logAccess("delete", "health plan");
 		return this.service.deleteHealthPlan(healthPlan);
 	}

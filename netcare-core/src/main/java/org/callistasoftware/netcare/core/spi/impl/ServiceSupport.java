@@ -77,7 +77,7 @@ public abstract class ServiceSupport {
 			}
 			
 			if (!access) {
-				throw new SecurityException("Not allowed");
+				throw new SecurityException("User " + user.getName() + "(" + user.getId() + ") does not have write permissions on this item.");
 			}
 		} else {
 			throw new SecurityException("Anonymous access not allowed.");

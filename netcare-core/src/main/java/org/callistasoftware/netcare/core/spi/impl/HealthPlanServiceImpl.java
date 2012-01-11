@@ -43,7 +43,6 @@ import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.DefaultSystemMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityDeletedMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
@@ -188,9 +187,16 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> deleteHealthPlan(Long ordinationId) {
-		log.info("Deleting ordination {}", ordinationId);
-		this.repo.delete(ordinationId);
+	public ServiceResult<HealthPlan> deleteHealthPlan(Long healthPlanId) {
+		log.info("Deleting health plan {}", healthPlanId);
+		final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
+		if (hp == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+		}
+		
+		this.verifyWriteAccess(hp);
+		
+		this.repo.delete(healthPlanId);
 		
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
@@ -203,9 +209,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, ordinationId));
 		}
 		
-		if (!entity.getForPatient().getId().equals(patient.getId())) {
-			return ServiceResultImpl.createFailedResult(new DefaultSystemMessage("Du har inte behörigheten att se denna ordination"));
-		}
+		this.verifyReadAccess(entity);
 		
 		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, null);
 		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
@@ -220,7 +224,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 		
-		log.debug("Ordination entity found and resolved.");
+		this.verifyWriteAccess(entity);
+		
+		log.debug("Health plan entity found and resolved.");
 
 		final ActivityTypeEntity typeEntity = this.activityTypeRepository.findOne(dto.getType().getId());
 		if (typeEntity == null) {
@@ -281,6 +287,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 		
+		this.verifyReadAccess(entity);
+		
 		log.debug("Found {} health plan activities for health plan {}", entity.getActivityDefinitions().size(), healthPlanId);
 		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntities(entity.getActivityDefinitions()), new ListEntitiesMessage(ActivityDefinitionEntity.class, entity.getActivityDefinitions().size()));
 	}
@@ -309,6 +317,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		if (entity == null) {
 			ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, -1L));
 		}
+		
+		this.verifyReadAccess(entity);
 		
 		final List<ScheduledActivityEntity> activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
@@ -360,6 +370,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 		
+		this.verifyReadAccess(ad);
+		
 		final List<ScheduledActivityEntity> entities = this.scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
 		log.debug("Found {} scheduled activities", entities.size());
 		
@@ -377,6 +389,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		if (healthPlan == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
+		
+		this.verifyReadAccess(healthPlan);
 		
 		log.debug("Calculating health plan overview...");
 		final ScheduledActivity[] activities = this.getScheduledActivitiesForHealthPlan(healthPlanId).getData();

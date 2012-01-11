@@ -62,9 +62,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					console.log('Ordination successfully created');
 					new NC.Util().processServiceResult(data);
 					
-					/* List messages */
-					public.list(currentPatient);
-					
 					/* Execute callback */
 					callback(data);
 				}
@@ -74,9 +71,9 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		/**
 		 * Delete an ordination
 		 */
-		delete : function(ordinationId, currentPatient, callback) {
-			var url = _baseUrl + '/' + currentPatient + '/' + ordinationId + '/delete';
-			console.log("Removing ordination " + ordinationId + " using url: " + url);
+		delete : function(healthPlanId, callback) {
+			var url = _baseUrl + '/' + healthPlanId + '/delete';
+			console.log("Removing health plan " + healthPlanId + " using url: " + url);
 			
 			$.ajax({
 				url : url,

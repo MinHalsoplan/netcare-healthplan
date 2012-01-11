@@ -33,6 +33,34 @@ $(function() {
 		}
 	});
 	console.log("done.");
+	
+	var handleErrorCode = function(code) {
+		window.location.href = '/netcare-web/netcare/error/' + code;
+		return false;
+	};
+	
+	/*
+	 * Setup ajax status mappings
+	 */
+	console.log("Setting upp ajax...");
+	$.ajaxSetup({
+		dataType : 'json',
+		statusCode : {
+			404 : function() {
+				return handleErrorCode(404);
+			},
+			403 : function() {
+				return handleErrorCode(403);
+			},
+			500 : function() {
+				return handleErrorCode(500);
+			}
+		},
+		success : function(data) {
+			new NC.Util().processServiceResult(data);
+		}
+	});
+	console.log("done.");
 });
 
 

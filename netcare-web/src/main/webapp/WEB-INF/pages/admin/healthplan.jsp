@@ -57,7 +57,7 @@
 						});
 						
 						var deleteIcon = util.createIcon('trash', 24, function() {
-							healthPlans.delete(value.id, value.patient.id, function(data) {
+							healthPlans.delete(value.id, function(data) {
 								healthPlans.list(value.patient.id, listCallback);
 							});
 						});

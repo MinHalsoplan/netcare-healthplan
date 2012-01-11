@@ -41,6 +41,7 @@
 	<bean id="exceptionResolver" class="org.callistasoftware.netcare.web.ExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
+				<prop key="java.lang.SecurityException">error/denied</prop>
 				<prop key="java.lang.RuntimeException">error/error</prop>
 				<prop key="java.lang.Exception">error/error</prop>
 			</props>

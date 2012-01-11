@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ApiUtil;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -207,7 +208,10 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		impl.setDayTimes(dts);
 		
-		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, CareGiverBaseViewImpl.newFromEntity(cg));
+		final CareGiverBaseView cgbv = CareGiverBaseViewImpl.newFromEntity(savedCg);
+		this.runAs(cgbv);
+		
+		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, cgbv);
 		assertTrue(result.isSuccess());
 		
 		final ActivityDefintionImpl impl2 = new ActivityDefintionImpl();
@@ -336,7 +340,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		this.runAs(pb);
 		
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(), p, "Health Plan", new Date(), 6, DurationUnit.MONTH);
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null), p, "Health Plan", new Date(), 6, DurationUnit.MONTH);
 		this.ordinationRepo.save(hp);
 		
 		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
@@ -353,14 +357,13 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testDeleteActivityDefintionWithNoAccess() throws Exception {
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(), this.createPatient(null), "Health Plan", new Date(), 6, DurationUnit.MONTH);
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null), this.createPatient(null), "Health Plan", new Date(), 6, DurationUnit.MONTH);
 		this.ordinationRepo.save(hp);
 		
 		final PatientBaseView pb = PatientBaseViewImpl.newFromEntity(this.patientRepo.save(this.createPatient("198205133333")));
 		this.runAs(pb);
 		
 		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		
 		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(), frequency, hp.getIssuedBy());
 		
 		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
@@ -369,6 +372,67 @@ public class HealthPlanServiceTest extends TestSupport {
 		try {
 			this.service.deleteActivity(saved.getId());
 			fail("Should not be possible to delete as another patient.");
+		} catch (Exception e) {
+			assertTrue(e instanceof SecurityException);
+		}
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testDeleteHealthPlan() throws Exception {
+		
+		final CareGiverEntity cg = this.createCareGiver(null, null);
+		final PatientEntity p = this.createPatient("123");
+		
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p, "Test", new Date(), 12, DurationUnit.MONTH);
+		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
+		
+		final ActivityTypeEntity at = this.createActivityType();
+		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
+		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
+		
+		this.runAs(CareGiverBaseViewImpl.newFromEntity(cg));
+		
+		this.service.deleteHealthPlan(saved.getId());
+		
+		assertEquals(null, this.ordinationRepo.findOne(saved.getId()));
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testDeleteHealthPlanAsUnathorized() throws Exception {
+		final CareGiverEntity cg = this.createCareGiver("hsa", null);
+		final PatientEntity p = this.createPatient("123");
+		final PatientEntity p2 = this.createPatient("345");
+		
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p, "Test", new Date(), 12, DurationUnit.MONTH);
+		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
+		
+		final ActivityTypeEntity at = this.createActivityType();
+		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
+		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
+		
+		this.runAs(PatientBaseViewImpl.newFromEntity(p2));
+		
+		try {
+			this.service.deleteHealthPlan(saved.getId());
+			fail("Patients' must not be able to delete each others health plans.");
+		} catch (Exception e) {
+			assertTrue(e instanceof SecurityException);
+		}
+		
+		final CareUnitEntity cu = this.createCareUnit("another-hsa");
+		final CareGiverEntity cg2 = this.createCareGiver("another-hsa-2", cu);
+		
+		this.runAs(CareGiverBaseViewImpl.newFromEntity(cg2));
+		
+		try {
+			this.service.deleteHealthPlan(saved.getId());
+			fail("Patients' must not be able to delete each others health plans.");
 		} catch (Exception e) {
 			assertTrue(e instanceof SecurityException);
 		}
@@ -389,13 +453,13 @@ public class HealthPlanServiceTest extends TestSupport {
 		return this.patientRepo.save(p);
 	}
 	
-	private CareUnitEntity createCareUnit() {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-123");
+	private CareUnitEntity createCareUnit(final String hsaId) {
+		final CareUnitEntity cu = CareUnitEntity.newEntity(hsaId == null ? "hsa-cu-123" : hsaId);
 		return this.cuRepo.save(cu);
 	}
 	
-	private CareGiverEntity createCareGiver() {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "hsa-id-123", this.createCareUnit());
+	private CareGiverEntity createCareGiver(final String hsaId, final CareUnitEntity careUnit) {
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", hsaId == null ? "hsa-id-123" : hsaId, careUnit == null ? this.createCareUnit(null) : careUnit);
 		return this.cgRepo.save(cg);
 	}
 }

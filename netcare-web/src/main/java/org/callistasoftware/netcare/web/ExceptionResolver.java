@@ -52,8 +52,9 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 		
 		this.emailService.sendEmail(sw.toString(), "Netcare Exception", email);
 		
-		return super.resolveException(request, response, handler, ex);
+		final ModelAndView mav = super.resolveException(request, response, handler, ex);
+		mav.setViewName("error/error");
+		
+		return mav;	
 	}
-	
-	
 }

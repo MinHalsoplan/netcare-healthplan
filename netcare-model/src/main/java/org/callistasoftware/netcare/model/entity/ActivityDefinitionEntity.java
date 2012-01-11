@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -72,7 +73,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@JoinColumn(name="created_by_id")
 	private UserEntity createdBy;
     
-	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<ScheduledActivityEntity> scheduledActivities;
 
     ActivityDefinitionEntity() {

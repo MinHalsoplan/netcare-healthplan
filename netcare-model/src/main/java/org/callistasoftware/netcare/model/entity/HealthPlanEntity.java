@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,10 +36,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
 @Table(name="nc_health_plan")
 public class HealthPlanEntity implements PermissionRestrictedEntity {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -72,7 +73,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@JoinColumn(name="for_patient_id")
 	private PatientEntity forPatient;
 	
-	@OneToMany(mappedBy="healthPlan", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="healthPlan", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<ActivityDefinitionEntity> activityDefinitions;
 	
 	
@@ -200,12 +201,17 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isReadAllowed(UserEntity userId) {
-		return userId.isCareGiver() && ((CareGiverEntity)userId).getHsaId().equals(getCareUnit().getHsaId());
+		return this.isWriteAllowed(userId);
 	}
 
 
 	@Override
 	public boolean isWriteAllowed(UserEntity userId) {
-		return userId.isCareGiver() && ((CareGiverEntity)userId).getHsaId().equals(getCareUnit().getHsaId());
+		final boolean careGiver = userId.isCareGiver();
+		if (careGiver) {
+			return ((CareGiverEntity) userId).getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId());
+		}
+		
+		return this.getForPatient().getId().equals(userId.getId());
 	}
 }
