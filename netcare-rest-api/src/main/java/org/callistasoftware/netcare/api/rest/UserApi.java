@@ -78,6 +78,13 @@ public class UserApi extends ApiSupport {
 		}
 	}
 	
+	@RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<PatientBaseView> deletePatient(@PathVariable(value="patient") final Long patient) {
+		this.logAccess("delete", "patient");
+		return this.patientService.deletePatient(patient);
+	}
+	
 	@RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<PatientBaseView> selectPatient(@PathVariable(value="patient") final Long patientId, final HttpSession session) {

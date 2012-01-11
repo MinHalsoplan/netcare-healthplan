@@ -29,7 +29,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="nc_patient")
 @PrimaryKeyJoinColumn(name="id")
-public class PatientEntity extends UserEntity {
+public class PatientEntity extends UserEntity implements PermissionRestrictedEntity {
 
 	@Column(name="civic_reg_number", length=16, nullable=false, unique=true)
 	private String civicRegistrationNumber;
@@ -81,5 +81,26 @@ public class PatientEntity extends UserEntity {
 	@Override
 	public boolean isCareGiver() {
 		return false;
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		return this.isReadAllowed(user);
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		if (user.isCareGiver()) {
+			final CareGiverEntity cg = (CareGiverEntity) user;
+			final List<HealthPlanEntity> hps = this.getHealthPlans();
+			
+			for (final HealthPlanEntity ent : hps) {
+				if (ent.getCareUnit().getId().equals(cg.getCareUnit().getId())) {
+					return true;
+				}
+			}
+		}
+		
+		return user.getId().equals(this.getId());
 	}
 }

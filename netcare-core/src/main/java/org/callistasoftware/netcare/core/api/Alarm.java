@@ -16,11 +16,55 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.util.Date;
+
 public interface Alarm {
 
+	/**
+	 * The id of this alarm
+	 * @return
+	 */
+	Long getId();
+	
+	/**
+	 * Get the care unit hsa id
+	 * @return
+	 */
+	String getCareUnitHsaId();
+	
 	/**
 	 * Get for which patient the alarm was triggered
 	 * @return
 	 */
-	Patient getPatient();
+	PatientBaseView getPatient();
+	
+	/**
+	 * The date the alarm was created
+	 * @return
+	 */
+	String getCreatedTime();
+	
+	/**
+	 * The date when the alarm was resolved
+	 * @return
+	 */
+	String getResolvedTime();
+	
+	/**
+	 * The care giver who resolved the alarm
+	 * @return
+	 */
+	CareGiverBaseView getResolvedBy();
+	
+	/**
+	 * The cause of the alarm
+	 * @return
+	 */
+	Option getCause();
+	
+	/**
+	 * The entity this alarm refers to
+	 * @return
+	 */
+	Long getEntityReferenceId();
 }

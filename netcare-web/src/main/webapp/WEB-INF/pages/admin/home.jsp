@@ -35,6 +35,30 @@
 				
 				var units = new NC.Support();
 				units.loadLatestReportedActivities('reportedActivities');
+				
+				var alarms = new NC.Alarm();
+				alarms.loadAlarms(function(data) {
+					
+					if (data.data.length == 0) {
+						$('#alarmContainer table').hide();
+						$('#noAlarms').show();
+					}
+					
+					$.each(data.data, function(index, value) {
+						console.log("Processing " + value.id + "...");
+						var created = $('<td>' + value.createdTime + '</td>');
+						var patient = $('<td>' + value.patient.name + '</td>');
+						var cause = $('<td>' + value.cause.value + '</td>');
+						
+						var table = $('#alarmContainer table tbody');
+						table.append(patient);
+						table.append(cause);
+						table.append(created);
+						
+						$('#alarmContainer table').show();
+						
+					});
+				});
 			});
 		</script>
 	</netcare:header>
@@ -84,8 +108,23 @@
 				<h2>:Larmöversikt</h2>
 				<p>
 					<span class="label notice">Information</span>
-					Nedan visas en översikt över de aktiviteter som ej har blivit rapporterade den senaste veckan.
+					<spring:message code="alarm.information" />
 				</p>
+				
+				<div id="alarmContainer">
+					<p id="noAlarms" style="display: none;"><spring:message code="alarm.noAlarms" /></p>
+					<div class="alert-message info" style="display:none;">
+						<a class="close">x</a>
+					</div>
+					<table class="bordered-table zebra-striped" style="display: none;">
+						<thead>
+							<th><spring:message code="patient" /></th>
+							<th><spring:message code="alarm.cause" /></th>
+							<th><spring:message code="alarm.created" /></th>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
 			</section>
 		</netcare:content>
 		<netcare:menu>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,20 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.repository;
-
-import java.util.List;
-
-import org.callistasoftware.netcare.model.entity.AlarmEntity;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
+NC.Alarm = function() {
 	
-	/**
-	 * Find all unresolved alarms for a given care unit
-	 * @param careUnit
-	 * @return
-	 */
-	List<AlarmEntity> findByResolvedTimeIsNullAndCareUnitHsaIdLike(final String careUnitHsaId, final Sort sort);
-}
+	var _baseUrl = "/netcare-web/api/alarm";
+	
+	public = {
+		loadAlarms : function(successCallback) {
+			var url = _baseUrl + '/list';
+			console.log("Loading alarms from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					
+					if (data.data.length > 0) {
+						new NC.Util().processServiceResult(data);
+					}
+					
+					if (data.success && successCallback !== undefined) {
+						successCallback(data);
+					}
+				}
+			});
+		}	
+	};
+	
+	return public;
+};

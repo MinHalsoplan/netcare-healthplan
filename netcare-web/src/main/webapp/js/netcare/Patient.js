@@ -88,6 +88,26 @@ NC.Patient = function() {
 				type : 'post',
 				success : successFunction
 			});
+		},
+		
+		/**
+		 * Deletes a patient from the system
+		 */
+		deletePatient : function(patientId, successFunction) {
+			var url = _baseUrl + '/' + patientId + '/delete';
+			console.log("Deleting patient with id " + patientId + " using url: " + url);
+			
+			$.ajax({
+				url : url,
+				type : 'post',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					
+					if (data.success) {
+						successFunction(data);
+					}
+				}
+			});
 		}
 	};
 	
