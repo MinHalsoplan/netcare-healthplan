@@ -33,10 +33,10 @@
 				var updateDescription = function(count) {
 					console.log("Updating ordination table description");
 					if (count == 0) {
-						$('#ordinationDescription').html('Inga aktuella ordinationer').show();
+						$('#healthPlanContainer div').show();
 						$('#ordinationTable').hide();
 					} else {
-						$('#ordinationDescription').hide();
+						$('#healthPlanContainer div').hide();
 						$('#ordinationTable').show();
 					}
 				};
@@ -200,20 +200,24 @@
 				
 			</netcare:form>
 			
-			<table id="ordinationTable" class="bordered-table zebra-striped">
-				<thead>
-					<tr>
-						<th><spring:message code="name" /></th>
-						<th><spring:message code="duration" /></th>
-						<th><spring:message code="startDate" /></th>
-						<th><spring:message code="issuedBy" /></th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			
+			<div id="healthPlanContainer">
+				<div style="display: none;" class="alert-message info">
+					<p><spring:message code="noHealthPlans" /></p>
+				</div>
+				<table id="ordinationTable" class="bordered-table zebra-striped shadow-box">
+					<thead>
+						<tr>
+							<th><spring:message code="name" /></th>
+							<th><spring:message code="duration" /></th>
+							<th><spring:message code="startDate" /></th>
+							<th><spring:message code="issuedBy" /></th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 		</netcare:content>
 	</netcare:body>
 </netcare:page>

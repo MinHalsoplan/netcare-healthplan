@@ -587,17 +587,21 @@
 			
 			</netcare:form>
 			
-			<table id="activitiesTable" class="bordered-table zebra-striped">
-				<thead>
-					<tr>
-						<th><spring:message code="type" /></th>
-						<th><spring:message code="goal" /></th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-			
+			<div id="activityContainer">
+				<div class="alert-message info" style="display: none;">
+					<p><spring:message code="noActivities" />
+				</div>
+				<table id="activitiesTable" class="bordered-table zebra-striped shadow-box">
+					<thead>
+						<tr>
+							<th><spring:message code="type" /></th>
+							<th><spring:message code="goal" /></th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
 		</netcare:content>
 	</netcare:body>
 </netcare:page>

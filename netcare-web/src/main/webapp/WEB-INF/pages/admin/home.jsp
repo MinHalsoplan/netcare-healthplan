@@ -89,8 +89,10 @@
 				</p>
 				
 				<div id="reportedActivities">
-					<p id="noReportedActivities" style="display: none;"><spring:message code="noReportedActivities" /></p>
-					<table class="bordered-table zebra-striped" style="display: none">
+					<div id="noReportedActivities" style="display: none;" class="alert-message info">
+						<p><spring:message code="noReportedActivities" /></p>
+					</div>
+					<table class="bordered-table zebra-striped shadow-box" style="display: none">
 						<thead>
 							<th><spring:message code="patient" /></th>
 							<th><spring:message code="type" /></th>
@@ -116,7 +118,7 @@
 					<div class="alert-message info" style="display:none;">
 						<a class="close">x</a>
 					</div>
-					<table class="bordered-table zebra-striped" style="display: none;">
+					<table class="bordered-table zebra-striped shadow-box" style="display: none;">
 						<thead>
 							<th><spring:message code="patient" /></th>
 							<th><spring:message code="alarm.cause" /></th>

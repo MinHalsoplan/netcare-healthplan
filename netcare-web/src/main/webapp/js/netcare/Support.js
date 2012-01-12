@@ -198,10 +198,10 @@ NC.Support = function() {
 						var count = $('#' + containerId + ' table tbody tr').size();
 						if(count > 0) {
 							$('#' + containerId + ' table').show();
-							$('#' + containerId + ' p').hide();
+							$('#' + containerId + ' div').hide();
 						} else {
 							$('#' + containerId + ' table').hide();
-							$('#' + containerId + ' p').show();
+							$('#' + containerId + ' div').show();
 						}
 						
 					} else {

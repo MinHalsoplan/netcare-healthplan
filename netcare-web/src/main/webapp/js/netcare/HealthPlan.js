@@ -23,9 +23,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		console.log("Updating activity table. Activity count = " + _activityCount);
 		if (_activityCount != 0) {
 			console.log("Show activity table");
+			$('#activityContainer div').hide();
 			$('#' + tableId).show();
 		} else {
 			console.log("Hide activity table");
+			$('#activityContainer div').show();
 			$('#' + tableId).hide();
 		}
 	};
