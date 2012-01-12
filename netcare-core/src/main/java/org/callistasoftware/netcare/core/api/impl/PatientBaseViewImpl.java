@@ -84,6 +84,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Role.ROLE_USER;
+		return Role.getPatientRoleSet();
 	}
 }

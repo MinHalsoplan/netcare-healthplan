@@ -50,6 +50,14 @@
 							var name = $('<td>' + value.name + '</td>');
 							var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 							
+							var loginAsIcon = util.createIcon('loginAs', 24, function() {
+								new NC.Patient().selectPatient(value.id, function(data) {
+									util.updateCurrentPatient(data.data.name);
+									
+									window.location = '/netcare-web/netcare/home';
+								});
+							});
+							
 							var deleteIcon = util.createIcon('trash', 24, function() {
 								console.log("Delete patient.");
 								
@@ -66,6 +74,7 @@
 							});
 							
 							var actionCol = $('<td>').css('text-align', 'right');
+							actionCol.append(loginAsIcon);
 							actionCol.append(deleteIcon);
 							
 							tr.append(name).append(cnr).append(actionCol);
@@ -152,7 +161,5 @@
 				</table>
 			</section>
 		</netcare:content>
-		<netcare:menu />
-		
 	</netcare:body>	
 </netcare:page>

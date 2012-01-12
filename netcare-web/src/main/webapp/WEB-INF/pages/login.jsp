@@ -28,6 +28,7 @@
 		<script type="text/javascript">
 			$(function() {
 				$('#modal-from-dom').modal('show');
+				$('input[name="j_username"]').focus();
 			});
 		</script>
 	</netcare:header>

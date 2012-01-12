@@ -80,6 +80,6 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Role.ROLE_ADMIN;
+		return Role.getCareGiverRoleSet();
 	}
 }

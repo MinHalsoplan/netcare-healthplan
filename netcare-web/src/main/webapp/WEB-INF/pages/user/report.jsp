@@ -153,7 +153,5 @@
 			</table>
 
 		</netcare:content>
-		<netcare:patient-menu>
-		</netcare:patient-menu>
 	</netcare:body>
 </netcare:page>

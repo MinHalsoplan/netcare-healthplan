@@ -25,3 +25,5 @@
 <div class="span12">
 	<jsp:doBody />
 </div>
+
+<netcare:menu />

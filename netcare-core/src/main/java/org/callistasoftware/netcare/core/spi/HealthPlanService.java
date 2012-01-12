@@ -69,7 +69,7 @@ public interface HealthPlanService {
 	 * @param patient
 	 * @return
 	 */
-	ServiceResult<HealthPlan> loadHealthPlan(final Long ordinationId, final PatientBaseView patient);
+	ServiceResult<HealthPlan> loadHealthPlan(final Long healthPlanId);
 	
 	/**
 	 * Adds an activity definition to an existing ordination specified by its id

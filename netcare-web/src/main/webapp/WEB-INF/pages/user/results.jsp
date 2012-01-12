@@ -56,7 +56,7 @@
 						console.log("Add rows: " + arr);
 						dataOverview.addRows(arr);
 						
-						var options = {'width' : 700, 'height' : 300};
+						var options = {'width' : 600, 'height' : 300};
 					
 						var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
 						chart.draw(dataOverview, options);
@@ -73,9 +73,15 @@
 							var items = new Array();
 							$.each(value.reportedValues, function(index, val) {
 								var arr = new Array();
-								arr[0] = val.first;
-								arr[1] = val.second;
-								arr[2] = value.goal;
+								
+								if (val.newWeek || index == 0 || value.reportedValues.length -1 == index) {
+									arr[0] = val.label;
+								} else {
+									arr[0] = null;
+								}
+								
+								arr[1] = val.reportedValue;
+								arr[2] = val.targetValue;
 								
 								items.push(arr);
 							});
@@ -83,23 +89,36 @@
 							console.log("Adding rows: " + items);
 							chartData.addRows(items);
 							
-							var chartDiv = $('<div>', { id: 'activity-' + index});
-							$('#activityCharts').append(chartDiv);
+							var chartDiv = $('<div>', { id: 'activity-' + index}).addClass('shadow-box');
+							$('#activityCharts').append('<br />').append(chartDiv);
+							
+							var opts = {
+									width: 600,
+									height: 300,
+									title: value.name
+							}
 							
 							var chart = new google.visualization.LineChart(document.getElementById('activity-' + index));
-							chart.draw(chartData, { width: 700, height: 300, title: value.name});
+							chart.draw(chartData, opts);
 							
 							$('#pieChart').show();
 							$('#activityCharts').show();
 						});
 					};
 					
-					hp.list(<sec:authentication property="principal.id" />, function(data) {
-						$.each(data.data, function(index, value) {
-							healthPlanId = value.id;
-							hp.loadStatistics(healthPlanId, statisticsCallback);
-						});
-					});
+					
+					var healthPlanId = "<c:out value="${param.healthPlan}" />";
+					console.log("Health plan parameter resolved to: " + healthPlanId);
+					if (healthPlanId == "")  {
+						hp.list(<sec:authentication property="principal.id" />, function(data) {
+							$.each(data.data, function(index, value) {
+								healthPlanId = value.id;
+								hp.loadStatistics(healthPlanId, statisticsCallback);
+							});
+						});	
+					} else {
+						hp.loadStatistics(healthPlanId, statisticsCallback);	
+					}
 				};
 								
 				google.setOnLoadCallback(drawOverview);
@@ -114,7 +133,7 @@
 				Nedan visas hur din hälsoplan är fördelad. Din hälsoplan innehåller aktiviteter och diagrammet visar hur stor del
 				dessa aktiviteter utgör av hälsoplanen.
 			</p>
-			<div id="pieChart" style="display: none;"></div>
+			<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
 			
 			<h2>Rapporterade Resultat</h2>
 			<p>
@@ -123,7 +142,6 @@
 			</p>
 			<div id="activityCharts" style="display: none;"></div>
 		</netcare:content>
-		<netcare:patient-menu />
 		
 	</netcare:body>	
 </netcare:page>

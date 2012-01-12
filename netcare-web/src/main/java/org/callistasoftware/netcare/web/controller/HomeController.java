@@ -93,11 +93,11 @@ public class HomeController extends ControllerSupport {
 		return "admin/healthplan";
 	}
 	
-	@RequestMapping(value="/admin/healthplan/{healthplanId}/view", method=RequestMethod.GET)
+	@RequestMapping(value="/user/healthplan/{healthplanId}/view", method=RequestMethod.GET)
 	public String displayNewActivityDefinition(@PathVariable(value="healthplanId") final Long healthPlan, final HttpSession session, final Model m) {
 		log.info("Getting ordination {}", healthPlan);
 		
-		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan, this.getCurrentPatient(session));
+		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan);
 		m.addAttribute("result", result);
 		if (result.isSuccess()) {
 			m.addAttribute("hideMessages", Boolean.TRUE);
@@ -105,7 +105,7 @@ public class HomeController extends ControllerSupport {
 		
 		log.debug("Returning health plan with id: {}", result.getData().getId());
 		
-		return "admin/activity";
+		return "user/activity";
 	}
 	
 	@RequestMapping(value="/admin/categories", method=RequestMethod.GET)

@@ -32,7 +32,6 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
-import org.callistasoftware.netcare.core.api.Pair;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -50,6 +49,7 @@ import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.statistics.ReportedActivity;
+import org.callistasoftware.netcare.core.api.statistics.ReportedValue;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
@@ -75,7 +75,9 @@ import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,6 +126,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ScheduledActivityRepository scheduledActivityRepository;
+	
+	@Autowired
+	private MessageSource messages;
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -202,16 +207,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> loadHealthPlan(Long ordinationId,
-			PatientBaseView patient) {
-		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
+	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
+		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, ordinationId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 		
 		this.verifyReadAccess(entity);
 		
-		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, null);
+		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 
@@ -406,7 +410,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				activityCount.add(act);
 			}
 			
-			log.debug("Increasing activity count on {}", act.getName());
 			this.findActivityCount(name, activityCount).increaseCount();
 		}
 		stats.setActivities(activityCount);
@@ -418,8 +421,26 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		 */
 		log.debug("Calculating reported activities...");
 		final List<ReportedActivity> reportedActivities = new ArrayList<ReportedActivity>();
-		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository.findReportedActivitiesForHealthPlan(healthPlanId, healthPlan.getStartDate(), new Date());
+		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository.findReportedActivitiesForHealthPlan(
+				healthPlanId
+				, healthPlan.getStartDate()
+				, new Date()
+				, new Sort(Sort.Direction.ASC, "scheduledTime"));
+		
+		int currentWeek = -1;
 		for (final ScheduledActivityEntity e : ents) {
+			final Calendar c = Calendar.getInstance();
+			c.setTime(e.getScheduledTime());
+		
+			final boolean newWeek;
+			log.debug("Current week is: " + currentWeek);
+			log.debug("Activity week is: " + c.get(Calendar.WEEK_OF_YEAR));
+			if (currentWeek != c.get(Calendar.WEEK_OF_YEAR)) {
+				currentWeek = c.get(Calendar.WEEK_OF_YEAR);
+				newWeek = true;
+			} else {
+				newWeek = false;
+			}
 			
 			final String name = e.getActivityDefinitionEntity().getActivityType().getName();
 			final ReportedActivity existing = this.findReportedActivity(name, reportedActivities);
@@ -432,15 +453,31 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				reportedActivities.add(ra);
 			}
 			
-			final Pair<String, Float> pair = new Pair<String, Float>();
-			pair.setFirst(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-			pair.setSecond((float) e.getActualValue());
+			final ReportedValue value = new ReportedValue();
+			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
+			value.setReportedValue((float) e.getActualValue());
+			value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
+			value.setNewWeek(newWeek);
+			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
 			
-			this.findReportedActivity(name, reportedActivities).getReportedValues().add(pair);
+			log.debug("ADD: " + value);
+			this.findReportedActivity(name, reportedActivities).getReportedValues().add(value);
 		}
 		stats.setReportedActivities(reportedActivities);
 		
 		return ServiceResultImpl.createSuccessResult(stats, new GenericSuccessMessage());
+	}
+	
+	private String formatLabel(final int week, final int year) {
+		final StringBuilder label = new StringBuilder();
+		label.append(messages.getMessage("week", null, LocaleContextHolder.getLocale()));
+		label.append(" ");
+		label.append(week);
+		label.append(", ");
+		label.append(year);
+		
+		return label.toString();
+		
 	}
 	
 	private ActivityCount findActivityCount(final String name, final List<ActivityCount> list) {

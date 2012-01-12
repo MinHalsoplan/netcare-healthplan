@@ -22,6 +22,7 @@ import java.util.List;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -62,7 +63,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"hp.id = :healthPlanId and e.reportedTime != null and e.scheduledTime between :start and :end")
 	List<ScheduledActivityEntity> findReportedActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId
 			, @Param("start") final Date start
-			, @Param("end") final Date end);
+			, @Param("end") final Date end, final Sort sort);
 	
 	@Query("select e from ScheduledActivityEntity as e inner join " +
 			"e.activityDefinition as ad inner join " +

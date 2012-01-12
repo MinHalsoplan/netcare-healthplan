@@ -92,7 +92,5 @@
 					href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 			</div>
 		</netcare:content>
-		<netcare:patient-menu>
-		</netcare:patient-menu>
 	</netcare:body>
 </netcare:page>
