@@ -55,7 +55,10 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	
 	@Column(name="actual_value")
 	private int actualValue;
-		
+	
+	@Column(name="target_value")
+	private int targetValue;
+	
 	@Column(name="note", length=128)
 	private String note;
 	
@@ -81,6 +84,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
 		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
+		scheduledActivityEntity.setTargetValue(activityDefinition.getActivityTarget());
 		return scheduledActivityEntity;
 	}
 	
@@ -165,5 +169,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	public boolean isRejected() {
 		return rejected;
+	}
+
+	public int getTargetValue() {
+		return targetValue;
+	}
+
+	private void setTargetValue(int targetValue) {
+		this.targetValue = targetValue;
 	}
 }

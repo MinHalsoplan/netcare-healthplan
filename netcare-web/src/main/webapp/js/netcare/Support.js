@@ -57,6 +57,7 @@ NC.Support = function() {
 			url : url,
 			dataType : 'json',
 			type : 'post',
+			async : false,
 			data : JSON.stringify(data),
 			contentType : 'application/json',
 			error : function(jqXHR, textStatus, errorThrown) {
