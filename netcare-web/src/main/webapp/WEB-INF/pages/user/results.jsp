@@ -56,7 +56,7 @@
 						console.log("Add rows: " + arr);
 						dataOverview.addRows(arr);
 						
-						var options = {'width' : 700, 'height' : 300};
+						var options = {'width' : 600, 'height' : 300};
 					
 						var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
 						chart.draw(dataOverview, options);
@@ -73,9 +73,15 @@
 							var items = new Array();
 							$.each(value.reportedValues, function(index, val) {
 								var arr = new Array();
-								arr[0] = val.first;
-								arr[1] = val.second;
-								arr[2] = value.goal;
+								
+								if (val.newWeek || index == 0) {
+									arr[0] = val.label;
+								} else {
+									arr[0] = '';
+								}
+								
+								arr[1] = val.reportedValue;
+								arr[2] = val.targetValue;
 								
 								items.push(arr);
 							});
@@ -83,11 +89,11 @@
 							console.log("Adding rows: " + items);
 							chartData.addRows(items);
 							
-							var chartDiv = $('<div>', { id: 'activity-' + index});
-							$('#activityCharts').append(chartDiv);
+							var chartDiv = $('<div>', { id: 'activity-' + index}).addClass('shadow-box');
+							$('#activityCharts').append('<br />').append(chartDiv);
 							
 							var chart = new google.visualization.LineChart(document.getElementById('activity-' + index));
-							chart.draw(chartData, { width: 700, height: 300, title: value.name});
+							chart.draw(chartData, { width: 600, height: 300, title: value.name});
 							
 							$('#pieChart').show();
 							$('#activityCharts').show();
@@ -114,7 +120,7 @@
 				Nedan visas hur din hälsoplan är fördelad. Din hälsoplan innehåller aktiviteter och diagrammet visar hur stor del
 				dessa aktiviteter utgör av hälsoplanen.
 			</p>
-			<div id="pieChart" style="display: none;"></div>
+			<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
 			
 			<h2>Rapporterade Resultat</h2>
 			<p>

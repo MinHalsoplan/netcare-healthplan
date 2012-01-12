@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.callistasoftware.netcare.core.api.Pair;
-
 public class ReportedActivity implements Serializable {
 
 	/**
@@ -33,10 +31,10 @@ public class ReportedActivity implements Serializable {
 	
 	private Float goal;
 
-	private List<Pair<String, Float>> reportedValues;
+	private List<ReportedValue> reportedValues;
 
 	public ReportedActivity() {
-		this.setReportedValues(new ArrayList<Pair<String,Float>>());
+		this.setReportedValues(new ArrayList<ReportedValue>());
 	}
 	
 	public Float getGoal() {
@@ -55,11 +53,11 @@ public class ReportedActivity implements Serializable {
 		this.name = name;
 	}
 
-	public List<Pair<String, Float>> getReportedValues() {
+	public List<ReportedValue> getReportedValues() {
 		return reportedValues;
 	}
 
-	public void setReportedValues(List<Pair<String, Float>> reportedValues) {
+	public void setReportedValues(List<ReportedValue> reportedValues) {
 		this.reportedValues = reportedValues;
 	}
 }
