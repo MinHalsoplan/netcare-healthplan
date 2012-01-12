@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <c:url value="/netcare/admin/home" var="adminHome" scope="page" />
 
@@ -109,7 +110,7 @@
 </script>
 
 <div class="span4">
-	<h3><spring:message code="loggedInAs" /></h3>
+	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
 		<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	</p>
@@ -118,7 +119,7 @@
 		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
 	</p>
 		
-	<h3><spring:message code="patient" /></h3>
+	<h3><netcare:image name="user" size="16"/><spring:message code="patient" /></h3>
 	<c:if test="${not empty sessionScope.currentPatient}">
 		<p id="currentpatient" style="display: block;">
 			<spring:message code="currentPatient" /> <a href="#"><c:out value="${sessionScope.currentPatient.name}" /></a>

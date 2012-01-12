@@ -20,15 +20,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <c:url value="/netcare/user/home" var="userHome" scope="page" />
 
+<script type="text/javascript">
+	$(function() {
+		var cnr = "<sec:authentication property="principal.civicRegistrationNumber" />";
+		var format = new NC.Util().formatCnr(cnr);
+		
+		$('#cnr').html(format);
+	});
+</script>
+
 <div class="span4">
-	<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" />
-	<p><small>
-	<sec:authentication property="principal.civicRegistrationNumber" />
-	</small></p>
+	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
+	<p>
+		<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
+	</p>
+	<p>
+		<strong><spring:message code="cnr" />:</strong> <span id="cnr"></span>
+	</p>
 	
+	<h3><spring:message code="workWith" /></h3>
 	<ul>
 		<li><a id="homeLink" href="<spring:url value="/netcare/user/home" />"><spring:message code="phome.header" /></a></li>
 		<li><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="report.header" /></a></li>
