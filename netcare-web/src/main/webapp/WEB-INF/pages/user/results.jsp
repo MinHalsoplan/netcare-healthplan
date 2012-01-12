@@ -94,7 +94,7 @@
 							
 							var opts = {
 									width: 600,
-									height: 600,
+									height: 300,
 									title: value.name
 							}
 							
