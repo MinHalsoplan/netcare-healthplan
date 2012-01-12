@@ -37,7 +37,7 @@
 				}
 				var support = new NC.Support();
 
-				var report = NC.PatientReport('schemaDescription', 'schemaTable');
+				var report = new NC.PatientReport('schemaDescription', 'schemaTable');
 				report.list();
 
 				$('#reportFormDiv input[name="date"]').datepicker({
@@ -58,11 +58,13 @@
 				util.validateTimeField($('#reportFormDiv input[name="time"]'));
 				
 				var arr = new Array();
-				arr.push(createOption(1, 'Väldigt lätt'));
-				arr.push(createOption(2, 'Lätt'));
-				arr.push(createOption(3, 'Andfådd'));
-				arr.push(createOption(4, 'Flåsande'));
-				arr.push(createOption(5, 'Utmattad'));
+				var caps = report.getCaptions();
+				console.log('...... easy: ' + caps.easy);
+				arr.push(createOption(1, caps.easy));
+				arr.push(createOption(2, caps.medium));
+				arr.push(createOption(3, caps.middle));
+				arr.push(createOption(4, caps.more));
+				arr.push(createOption(5, caps.heavy));
 				
 				support.setSelectOptions($('#reportFormDiv select[name="sense"]'), arr);
 								
