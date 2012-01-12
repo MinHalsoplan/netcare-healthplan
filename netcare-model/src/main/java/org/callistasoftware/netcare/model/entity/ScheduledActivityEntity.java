@@ -44,14 +44,14 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	
 	@Column(name="reported_time")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date reportedTime;
+	private Date reportedTime = null;
 	
 	@Column(name="actual_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date actualTime;
 	
 	@Column(name="rejected")
-	private boolean rejected;
+	private boolean rejected = false;
 	
 	@Column(name="actual_value")
 	private int actualValue;

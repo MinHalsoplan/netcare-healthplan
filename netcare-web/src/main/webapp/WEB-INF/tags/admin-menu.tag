@@ -159,6 +159,7 @@
 	<div id="workWith">
 		<h3><spring:message code="workWith" /></h3>
 		<ul>
+			<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="startPage" /></a></li>
 			<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a>
 			<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
 		</ul>

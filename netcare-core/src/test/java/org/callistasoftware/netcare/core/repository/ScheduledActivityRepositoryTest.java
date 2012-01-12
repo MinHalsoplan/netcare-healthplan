@@ -16,6 +16,9 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +39,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.Assert.*;
 
 public class ScheduledActivityRepositoryTest extends TestSupport {
 
@@ -88,9 +89,9 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final HealthPlanEntity savedHp = this.hpRepo.save(hp);
 		
 		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt, Frequency.unmarshal("1;1"), cg);
-		final ActivityDefinitionEntity savedDef = this.adRepo.save(def);
+		final ActivityDefinitionEntity saved = this.adRepo.save(def);
 		
-		ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(savedDef, new Date());
+		ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(saved, new Date());
 		e.setReportedTime(new Date());
 		e = this.repo.save(e);
 		
@@ -112,7 +113,6 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		this.repo.save(e);
 		cal.add(Calendar.DATE, 1);		
 		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
-		
 	}
 	
 }

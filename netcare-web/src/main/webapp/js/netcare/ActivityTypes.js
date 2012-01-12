@@ -27,6 +27,9 @@ NC.ActivityCategories = function() {
 				url : url,
 				dataType : 'json',
 				success : function(data) {
+					
+					new NC.Util().processServiceResult(data);
+					
 					if (data.success) {
 						console.log("Activity categories successfully fetched from server");
 						callback(data);

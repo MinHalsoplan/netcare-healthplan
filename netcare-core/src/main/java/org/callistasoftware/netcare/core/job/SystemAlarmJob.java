@@ -91,7 +91,7 @@ public class SystemAlarmJob {
 				patients.add(patient.getId());
 			}
 			sae.setRejected(true);
-			sae.setReportedTime(new Date());
+			//sae.setReportedTime(new Date());
 			sae.setNote("Stängd per automatik.");
 			sae.setActualValue(0);
 			saSave.add(sae);

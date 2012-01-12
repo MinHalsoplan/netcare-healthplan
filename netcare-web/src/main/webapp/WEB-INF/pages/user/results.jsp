@@ -34,7 +34,25 @@
 		
 			$(function() {
 				
+				var activityType = '';
+				var numberOfActivities = '';
+				
+				var date = '';
+				var reportedValue = '';
+				var targetValue = '';
+				
+				var support = new NC.Support();
+				support.loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue'], function(data) {
+					activityType = data.data.activityType;
+					numberOfActivities = data.data.numberOfActivities;
+					date = data.data.date;
+					reportedValue = data.data.reportedValue;
+					targetValue = data.data.targetValue;
+				});
+				
+				
 				var drawOverview = function() {
+					
 					
 					var hp = new NC.HealthPlan();
 					
@@ -50,8 +68,8 @@
 						});
 						
 						var dataOverview = new google.visualization.DataTable();
-						dataOverview.addColumn('string',  'Aktivitetstyp');
-						dataOverview.addColumn('number', 'Antal aktiviteter');
+						dataOverview.addColumn('string',  activityType);
+						dataOverview.addColumn('number', numberOfActivities);
 						
 						console.log("Add rows: " + arr);
 						dataOverview.addRows(arr);
@@ -66,9 +84,9 @@
 						$.each(data.data.reportedActivities, function(index, value) {
 							console.log("Processing " + value.name + " ...");
 							var chartData = new google.visualization.DataTable();
-							chartData.addColumn('string', 'Datum');
-							chartData.addColumn('number', 'Rapporterat värde');
-							chartData.addColumn('number', 'Uppsatt  målvärde');
+							chartData.addColumn('string', date);
+							chartData.addColumn('number', reportedValue);
+							chartData.addColumn('number', targetValue);
 							
 							var items = new Array();
 							$.each(value.reportedValues, function(index, val) {

@@ -157,11 +157,6 @@ NC.Support = function() {
 				success : function(data) {
 					var util = new NC.Util();
 					
-					console.log(data.successMessages.length);
-					console.log(data.infoMessages.length);
-					console.log(data.warningMessages.length);
-					console.log(data.errorMessages.length);
-					
 					util.processServiceResult(data);
 					
 					if (data.success) {
@@ -169,7 +164,7 @@ NC.Support = function() {
 						$.each(data.data, function(index, value) {
 							console.log("Processing value: " + value);
 							
-							var patient = value.patient.name + ' (' + value.patient.civicRegistrationNumber + ')';
+							var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
 							var unit = value.definition.type.unit.value;
 							var typeName = value.definition.type.name;
 							var goalString = value.definition.goal + ' ' + unit;
