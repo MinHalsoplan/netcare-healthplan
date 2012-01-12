@@ -24,6 +24,9 @@ $(function() {
 	 * Bind all autocomplete boxes
 	 */
 	console.log("Bind autocomplete fields...");
+	
+	var spinner = $('<span>').addClass('spinner');
+	
 	$('.nc-autocomplete').autocomplete({
 		search : function(event, ui) {
 			$(this).addClass('spinner');

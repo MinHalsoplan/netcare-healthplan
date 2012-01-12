@@ -52,3 +52,12 @@ a:hover {
 	border-radius: 10px; 
 	box-shadow: 2px 2px 5px #333;
 }
+
+li.ui-menu-item,
+a.ui-state-default,
+a.ui-state-highlight {
+	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size:13px;
+	font-weight:normal;
+}
+
