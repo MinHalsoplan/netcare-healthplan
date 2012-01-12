@@ -163,7 +163,6 @@
 				 * and fill the table
 				 */
 				var healthPlan = <c:out value="${requestScope.result.data.id}" />;
-				var patientId = <c:out value="${sessionScope.currentPatient.id}" />;
 				var hp = new NC.HealthPlan();
 				
 				hp.listActivities(healthPlan, 'activitiesTable', function(data) {

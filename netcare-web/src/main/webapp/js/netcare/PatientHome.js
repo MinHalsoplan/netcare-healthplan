@@ -24,7 +24,9 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	var _eventBodyId = eventBodyId;
 	var _tableId = tableId;
 	var _perfData;
-	
+
+	var util = new NC.Util();
+
 	var _updateDescription = function() {
 		console.log("Updating schema table description");
 		if (_schemaCount == 0) {
@@ -45,7 +47,6 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 		list : function(callback) {
 			var curDay = '';
 			var curActivity = '';
-			var util = NC.Util();
 			var _url = _baseUrl + 'activities';
 			console.log("Load activitues for the patient: " + _url);
 			$.ajax({
@@ -130,15 +131,17 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 					if (_eventCount == 0) {
 						$('#' + _eventBodyId).hide();
 					} else {
-						var msg = '';
-						if (_eventCount > 0) {
-							msg = '<a href="report">[' + _eventCount + ']</a>';
-						} else {
-							msg = '[' + _eventCount + ']';
+						var msg = $('<a>');
+						msg.css('color', 'white');
+						var caps = util.getCaptions();
+						var text = caps.youhave + ' ' + _eventCount + ' ' + caps.events;
+						if (event.numReports > 0) {
+							text += ' (' + event.numReports + ' ' + caps.today + ')';							
 						}
-						$('#' + _eventBodyId).html('Du har ' + msg + ' nya händelser');
+						msg.text(text);
+						msg.attr('href', 'report');
+						$('#' + _eventBodyId).append(msg);
 						$('#' + _eventBodyId).show();
-						$('#' + _eventBodyId).addClass((event.dueReports > 0) ? "warning" : "success");
 					}
 				}
 			});

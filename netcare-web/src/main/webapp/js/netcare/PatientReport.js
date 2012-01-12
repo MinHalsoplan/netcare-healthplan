@@ -26,7 +26,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 	var _captions;
 	var support = new NC.Support();
 	
-	support.loadCaptions('report', ['report', 'change', 'reject'], function(data) {
+	support.loadCaptions('report', ['report', 'change', 'reject', 'easy', 'medium', 'middle', 'more', 'heavy'], function(data) {
 		_captions = data;
 	});
 
@@ -217,6 +217,10 @@ NC.PatientReport = function(descriptionId, tableId) {
 				}
 			});
 		},
+		
+		getCaptions : function() {
+			return _captions;
+		}
 			
 	};
 	

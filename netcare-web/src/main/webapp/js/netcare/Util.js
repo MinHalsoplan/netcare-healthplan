@@ -15,17 +15,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.Util = function() {
-	
-	var _support = new NC.Support();
-	
+	/** loadCaptions must be used prior to use functions with captions required. */
 	var _captions;
-	_support.loadCaptions(null, ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
-	                             'freq4', 'freq5', 'every', 'meter', 'minute', 'step'], 
-	                             function(data) {
-		_captions = data;
-		console.log('Localized captions for util loaded.');
-	});
-	
+
+	/**
+	 * Loads captions used by util.
+	 */
+	var _loadCaptions = function() {
+		var _support = new NC.Support();
+		
+		_support.loadCaptions('util', ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
+		                             'freq4', 'freq5', 'every', 'meter', 'minute', 
+		                             'step', 'events', 'today', 'youhave'], 
+		                             function(data) {
+			_captions = data;
+			console.log('Localized captions for util loaded.');
+		});
+	}
+
 	var _displayMessages = function(type, messages) {
 		console.log('Displaying ' + type + ' messages...');
 		if (messages == null) {
@@ -191,6 +198,9 @@ NC.Util = function() {
 		 * Formats a frequency.
 		 */
 		formatFrequency : function (activityDefinition) {
+			if (_captions === undefined) {
+				_loadCaptions();
+			}
 			var text = '';
 			
 			$.each(activityDefinition.dayTimes, function (index1, day) {
@@ -223,6 +233,9 @@ NC.Util = function() {
 		}, 
 		
 		formatUnit : function (unitOption) {
+			if (_captions === undefined) {
+				_loadCaptions();
+			}
 			if (unitOption.code == 'METER') {
 				return _captions.meter;
 			}
@@ -302,7 +315,14 @@ NC.Util = function() {
 					onDataLoaded(arr);
 				}
 			});
-		}
+		},
+		
+		getCaptions : function() {
+			if (_captions === undefined) {
+				_loadCaptions();
+			}
+			return _captions;
+		}	
 	};
 	
 	return public;

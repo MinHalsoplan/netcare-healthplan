@@ -72,7 +72,7 @@
 	<netcare:body>
 		<netcare:content>
 			<h1><spring:message code="phome.header" /></h1>
-			<div id="eventBody" style="border-radius: 10px" class="alert-message"></div>
+			<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
 			<div id="planDescription" style="margin: 10px"></div>
 			<table id="planTable"
 				style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
