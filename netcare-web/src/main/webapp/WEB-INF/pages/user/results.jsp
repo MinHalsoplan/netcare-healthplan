@@ -74,10 +74,10 @@
 							$.each(value.reportedValues, function(index, val) {
 								var arr = new Array();
 								
-								if (val.newWeek || index == 0) {
+								if (val.newWeek || index == 0 || value.reportedValues.length -1 == index) {
 									arr[0] = val.label;
 								} else {
-									arr[0] = '';
+									arr[0] = null;
 								}
 								
 								arr[1] = val.reportedValue;
@@ -92,20 +92,33 @@
 							var chartDiv = $('<div>', { id: 'activity-' + index}).addClass('shadow-box');
 							$('#activityCharts').append('<br />').append(chartDiv);
 							
+							var opts = {
+									width: 600,
+									height: 600,
+									title: value.name
+							}
+							
 							var chart = new google.visualization.LineChart(document.getElementById('activity-' + index));
-							chart.draw(chartData, { width: 600, height: 300, title: value.name});
+							chart.draw(chartData, opts);
 							
 							$('#pieChart').show();
 							$('#activityCharts').show();
 						});
 					};
 					
-					hp.list(<sec:authentication property="principal.id" />, function(data) {
-						$.each(data.data, function(index, value) {
-							healthPlanId = value.id;
-							hp.loadStatistics(healthPlanId, statisticsCallback);
-						});
-					});
+					
+					var healthPlanId = "<c:out value="${param.healthPlan}" />";
+					console.log("Health plan parameter resolved to: " + healthPlanId);
+					if (healthPlanId == "")  {
+						hp.list(<sec:authentication property="principal.id" />, function(data) {
+							$.each(data.data, function(index, value) {
+								healthPlanId = value.id;
+								hp.loadStatistics(healthPlanId, statisticsCallback);
+							});
+						});	
+					} else {
+						hp.loadStatistics(healthPlanId, statisticsCallback);	
+					}
 				};
 								
 				google.setOnLoadCallback(drawOverview);
@@ -129,7 +142,6 @@
 			</p>
 			<div id="activityCharts" style="display: none;"></div>
 		</netcare:content>
-		<netcare:patient-menu />
 		
 	</netcare:body>	
 </netcare:page>

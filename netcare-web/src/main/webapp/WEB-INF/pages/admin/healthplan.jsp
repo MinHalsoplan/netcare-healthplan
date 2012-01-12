@@ -52,6 +52,11 @@
 						console.log("Processing index " + index + " value: " + value.name);
 						
 						var util = NC.Util();
+						
+						var resultIcon = util.createIcon('results', 24, function() {
+							healthPlans.results(value.id);
+						});
+						
 						var editIcon = util.createIcon('edit', 24, function() {
 							healthPlans.view(value.id);
 						});
@@ -65,6 +70,7 @@
 						var actionCol = $('<td>');
 						actionCol.css('text-align', 'right');
 						
+						resultIcon.appendTo(actionCol);
 						editIcon.appendTo(actionCol);
 						deleteIcon.appendTo(actionCol);
 						
@@ -209,6 +215,5 @@
 			</table>
 			
 		</netcare:content>
-		<netcare:menu />
 	</netcare:body>
 </netcare:page>

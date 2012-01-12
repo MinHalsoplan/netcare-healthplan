@@ -127,9 +127,5 @@
 				</div>
 			</section>
 		</netcare:content>
-		<netcare:menu>
-		
-		</netcare:menu>
-		
 	</netcare:body>	
 </netcare:page>

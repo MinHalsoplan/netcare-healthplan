@@ -207,16 +207,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> loadHealthPlan(Long ordinationId,
-			PatientBaseView patient) {
-		final HealthPlanEntity entity = this.repo.findOne(ordinationId);
+	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
+		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, ordinationId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 		
 		this.verifyReadAccess(entity);
 		
-		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, null);
+		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 

@@ -16,8 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -28,15 +30,6 @@ import org.springframework.security.core.GrantedAuthority;
  *
  */
 public class Role implements GrantedAuthority {
-	/**
-	 * User role.
-	 */
-	public static Collection<? extends GrantedAuthority> ROLE_USER = Collections.singleton(new Role("ROLE_USER"));
-	/**
-	 * Admin role.
-	 */
-	public static Collection<? extends GrantedAuthority> ROLE_ADMIN = Collections.singleton(new Role("ROLE_ADMIN"));
-	
 	
 	private static final long serialVersionUID = 1L;
 	private String authority;
@@ -55,5 +48,17 @@ public class Role implements GrantedAuthority {
 	@Override
 	public String getAuthority() {
 		return authority;
+	}
+	
+	public static Collection<? extends GrantedAuthority> getCareGiverRoleSet() {
+		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+		auths.add(new Role("ROLE_USER"));
+		auths.add(new Role("ROLE_ADMIN"));
+		
+		return auths;
+	}
+	
+	public static Collection<? extends GrantedAuthority> getPatientRoleSet() {
+		return Collections.singleton(new Role("ROLE_USER"));
 	}
 }

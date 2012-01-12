@@ -152,7 +152,5 @@
 				</table>
 			</section>
 		</netcare:content>
-		<netcare:menu />
-		
 	</netcare:body>	
 </netcare:page>

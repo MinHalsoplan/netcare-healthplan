@@ -97,7 +97,7 @@ public class HomeController extends ControllerSupport {
 	public String displayNewActivityDefinition(@PathVariable(value="healthplanId") final Long healthPlan, final HttpSession session, final Model m) {
 		log.info("Getting ordination {}", healthPlan);
 		
-		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan, this.getCurrentPatient(session));
+		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan);
 		m.addAttribute("result", result);
 		if (result.isSuccess()) {
 			m.addAttribute("hideMessages", Boolean.TRUE);

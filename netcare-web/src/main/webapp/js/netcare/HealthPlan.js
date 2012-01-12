@@ -31,6 +31,20 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	};
 	
 	var public = {
+			
+		load : function(healthPlanId, callback) {
+			var url = _baseUrl + '/' + healthPlanId + '/load';
+			console.log("Loading health plan from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					new NC.Util().processServiceResult();
+					callback(data);
+				}
+			});
+		},
 		
 		list : function(currentPatient, callback) {
 			console.log("Load active ordinations for the current patient");
@@ -93,6 +107,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		view : function(healthPlanId) {
 			console.log("GET to view ordination with id: " + healthPlanId);
 			window.location = '/netcare-web/netcare/admin/healthplan/' + healthPlanId + '/view';
+		},
+		
+		results : function(healthPlanId) {
+				console.log("GET to view health plan results. Health plan id: " + healthPlanId);
+				window.location = '/netcare-web/netcare/user/results?healthPlan=' + healthPlanId;
 		},
 		
 		/**
