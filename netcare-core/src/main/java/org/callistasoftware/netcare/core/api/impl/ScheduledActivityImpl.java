@@ -35,6 +35,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private long id;
 	private boolean due;
 	private int actualValue;
+	private int targetValue;
 	private String reported;
 	private String date;
 	private String time;
@@ -155,4 +156,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return rejected;
 	}
 
+	@Override
+	public int getTargetValue() {
+		return targetValue;
+	}
 }

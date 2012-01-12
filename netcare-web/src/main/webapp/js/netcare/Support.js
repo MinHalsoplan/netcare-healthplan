@@ -52,7 +52,8 @@ NC.Support = function() {
 		console.log("Loading support captions from url: " + url);
 		var data = new Object();
 		data.record = record;
-		data.fields = fields;		
+		data.fields = fields;
+		
 		$.ajax({
 			url : url,
 			dataType : 'json',

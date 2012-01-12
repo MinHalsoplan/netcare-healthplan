@@ -180,11 +180,11 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 			}
 			
 			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
-				sumTarget += getGoal();
+				sumTarget += a.getTargetValue();
 				numTarget++;
 			}
 			
-			sumTotal += getGoal();
+			sumTotal += a.getTargetValue();
 			numTotal++;
 		}
 

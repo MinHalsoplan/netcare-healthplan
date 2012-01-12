@@ -112,5 +112,4 @@ public interface ActivityDefinition extends Serializable {
 	 * Returns done sum of work.
 	 */
 	int getSumDone();
-
 }

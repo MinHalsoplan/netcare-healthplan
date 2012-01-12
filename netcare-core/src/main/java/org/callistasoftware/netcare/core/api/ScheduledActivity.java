@@ -83,6 +83,14 @@ public interface ScheduledActivity extends Serializable {
 	int getActualValue();
 	
 	/**
+	 * Returns the target value.
+	 * 
+	 * @return the target value.
+	 */
+	int getTargetValue();
+
+	
+	/**
 	 * Returns the date and time this was reported (yyyy-mm-dd hh:mm).
 	 * 
 	 * @return the reported time, or null if none.
