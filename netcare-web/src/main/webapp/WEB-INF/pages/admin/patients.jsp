@@ -149,7 +149,7 @@
 				<p>
 					<spring:message code="patientsDescription" />
 				</p>
-				<table id="patientsTable" class="bordered-table zebra-striped">
+				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<th>Namn</th>
 						<th>Personnummer</th>

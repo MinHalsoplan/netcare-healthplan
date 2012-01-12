@@ -71,7 +71,7 @@
       }
 
       /* Styles you shouldn't keep as they are for displaying this base example only */
-      .content .span10,
+      .content .span12,
       .content .span4 {
         min-height: 500px;
       }

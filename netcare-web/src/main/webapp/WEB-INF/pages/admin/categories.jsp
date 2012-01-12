@@ -84,7 +84,7 @@
 				
 			</form>
 			
-			<table id="categoryTable" class="bordered-table zebra-striped">
+			<table id="categoryTable" class="bordered-table zebra-striped shadow-box">
 				<thead>
 					<th>Id</th>
 					<th>Namn</th>

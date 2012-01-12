@@ -16,25 +16,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8"%>
-
+<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
-<c:choose>
-	<c:when test="${isAdmin}">
-		<netcare:admin-menu />
-	</c:when>
-	<c:otherwise>
-		<netcare:patient-menu />
-	</c:otherwise>
-</c:choose>
 
-<sec:authorize access="hasRole('ROLE_SYSTEM_ADMINISTRATOR')">
-	<netcare:system-administrator-menu />
-</sec:authorize>
-
-
+<h3><spring:message code="systemAdministration" /></h3>
+<ul>
+	<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
+</ul>
