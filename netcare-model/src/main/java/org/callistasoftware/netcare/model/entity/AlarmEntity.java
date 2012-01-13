@@ -132,12 +132,12 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isReadAllowed(UserEntity userId) {
-		return userId.isCareGiver();
+		return this.isWriteAllowed(userId);
 	}
 
 	@Override
 	public boolean isWriteAllowed(UserEntity userId) {
-		return userId.isCareGiver();
+		return userId.isCareGiver() && this.getPatient().isWriteAllowed(userId);
 	}
 
 }
