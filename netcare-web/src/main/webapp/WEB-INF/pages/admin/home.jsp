@@ -46,14 +46,17 @@
 					
 					$.each(data.data, function(index, value) {
 						console.log("Processing " + value.id + "...");
+						var tr = $('<tr>');
 						var created = $('<td>' + value.createdTime + '</td>');
 						var patient = $('<td>' + value.patient.name + '</td>');
 						var cause = $('<td>' + value.cause.value + '</td>');
 						
 						var table = $('#alarmContainer table tbody');
-						table.append(patient);
-						table.append(cause);
-						table.append(created);
+						tr.append(patient);
+						tr.append(cause);
+						tr.append(created);
+						
+						table.append(tr);
 						
 						$('#alarmContainer table').show();
 						
@@ -105,6 +108,8 @@
 				</div>
 				
 			</section>
+			
+			<br />
 			
 			<section id="alarms">
 				<h2>:Larmöversikt</h2>

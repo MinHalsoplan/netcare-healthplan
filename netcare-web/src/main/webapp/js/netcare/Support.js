@@ -180,10 +180,13 @@ NC.Support = function() {
 							var reported = $('<td>' + reportedString + '</td>');
 							var at = $('<td>' + reportedAt + '</td>');
 							
-							if (value.actual !== value.definition.goal) {
+							console.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
+							if (value.actualValue !== value.definition.goal) {
 								console.log("Value diff. Mark yellow");
 								reported.css('background-color', 'lightyellow');
-							}	
+							} else if (value.actualValue == value.definition.goal) {
+								reported.css('background-color', 'lightgreen');
+							}
 							
 							tr.append(name);
 							tr.append(type);
