@@ -21,6 +21,7 @@ public class ReportedValue {
 	private String label;
 	
 	private String reportedAt;
+	private String note;
 	
 	private Float reportedValue;
 	private Float targetValue;
@@ -67,6 +68,14 @@ public class ReportedValue {
 		this.label = label;
 	}
 	
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
 	@Override
 	public String toString() {
 		return "== REPORTED VALUE | " + label + " | " + reportedAt + " | " + reportedValue + " | " + targetValue + " | " + newWeek;

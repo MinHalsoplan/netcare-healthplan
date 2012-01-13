@@ -75,8 +75,9 @@
 							console.log("Processing " + value.name + " ...");
 							var chartData = new google.visualization.DataTable();
 							chartData.addColumn('string', captions.date);
-							chartData.addColumn('number', captions.reportedValue);
 							chartData.addColumn('number', captions.targetValue);
+							chartData.addColumn('number', captions.reportedValue);
+							chartData.addColumn({type:'string', role:'tooltip'});
 							
 							var items = new Array();
 							$.each(value.reportedValues, function(index, val) {
@@ -88,8 +89,9 @@
 									arr[0] = null;
 								}
 								
-								arr[1] = val.reportedValue;
-								arr[2] = val.targetValue;
+								arr[1] = val.targetValue;
+								arr[2] = val.reportedValue;
+								arr[3] = captions.reportedValue + ': ' + val.reportedValue + '\n"' + val.note + '"';
 								
 								items.push(arr);
 							});
@@ -108,12 +110,11 @@
 							
 							var chart = new google.visualization.LineChart(document.getElementById('activity-' + index));
 							chart.draw(chartData, opts);
-							
+						
 							$('#pieChart').show();
 							$('#activityCharts').show();
 						});
 					};
-					
 					
 					var healthPlanId = "<c:out value="${param.healthPlan}" />";
 					console.log("Health plan parameter resolved to: " + healthPlanId);

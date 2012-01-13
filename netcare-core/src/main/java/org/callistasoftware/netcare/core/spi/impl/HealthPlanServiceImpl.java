@@ -459,6 +459,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
 			value.setNewWeek(newWeek);
 			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
+			value.setNote(e.getNote());
 			
 			log.debug("ADD: " + value);
 			this.findReportedActivity(name, reportedActivities).getReportedValues().add(value);
