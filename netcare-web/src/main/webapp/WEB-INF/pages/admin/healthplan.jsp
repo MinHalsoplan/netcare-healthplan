@@ -99,7 +99,9 @@
 				$('#createHealthPlanForm input[name="startDate"]').datepicker({
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
-					minDate : +0
+					minDate : +0,
+					buttonImage : '/netcare-web/img/icons/16/date.png',
+					buttonImageOnly : true
 				});
 				
 				support.loadMonths(function(data) {
@@ -172,7 +174,7 @@
 					</netcare:field>
 					
 					<netcare:field name="startDate" label="${startDate}">
-						<input type="text" name="startDate" class="xlarge" />
+						<input type="text" name="startDate" class="xlarge"/>
 					</netcare:field>
 					
 					<div class="row">

@@ -24,6 +24,10 @@ a:hover {
 	background: url('/netcare-web/img/icons/16/ajax-loader.gif') no-repeat right;
 }
 
+.date {
+	background: url('/netcare-web/img/icons/16/date.png') no-repeat right;
+}
+
 .addButton, .addButton:hover {
 	padding-left: 24px;
 	background: url('/netcare-web/img/icons/16/add.png') no-repeat 3px;

@@ -60,7 +60,8 @@
 				$('#startDate input[name="startDate"]').datepicker({
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
-					minDate : +0
+					minDate : +0,
+					buttonImage : '/netcare-web/img/icons/16/date.png'
 				});
 				
 				support.loadMonths(function(data) {

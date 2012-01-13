@@ -154,6 +154,7 @@
 				<spring:message code="patient.name" var="name" scope="page"/>
 				<netcare:field containerId="nameContainer" name="name" label="${name}">
 					<input type="text" name="name" />
+					<span class="holder"><spring:message code="patient.name" /></span>
 				</netcare:field>
 				
 				<spring:message code="patient.cnr" var="cnr" scope="page" />
