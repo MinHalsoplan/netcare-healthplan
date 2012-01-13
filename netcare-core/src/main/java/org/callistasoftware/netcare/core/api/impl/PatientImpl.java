@@ -31,6 +31,10 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 	private String phoneNumber;
 	private boolean mobile;
 	
+	PatientImpl() {
+		super();
+	}
+	
 	PatientImpl(final PatientEntity entity) {
 		super(entity);
 		
