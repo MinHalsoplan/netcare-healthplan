@@ -33,29 +33,19 @@
 			console.log("done.");
 		
 			$(function() {
-				
-				var activityType = '';
-				var numberOfActivities = '';
-				
-				var date = '';
-				var reportedValue = '';
-				var targetValue = '';
-				
-				var support = new NC.Support();
-				support.loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue'], function(data) {
-					activityType = data.data.activityType;
-					numberOfActivities = data.data.numberOfActivities;
-					date = data.data.date;
-					reportedValue = data.data.reportedValue;
-					targetValue = data.data.targetValue;
-				});
-				
-				
 				var drawOverview = function() {
 					
+					console.log("Drawing overview...");
+					
+					var captions = null;
+					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue'], function(data) {
+						console.log("Load captions returned success...");
+						captions = data;
+					});
+					
+					console.log("Captions are: " + captions);
 					
 					var hp = new NC.HealthPlan();
-					
 					var statisticsCallback = function(data) {
 						var arr = new Array();
 						
@@ -68,8 +58,8 @@
 						});
 						
 						var dataOverview = new google.visualization.DataTable();
-						dataOverview.addColumn('string',  activityType);
-						dataOverview.addColumn('number', numberOfActivities);
+						dataOverview.addColumn('string',  captions.activityType);
+						dataOverview.addColumn('number', captions.numberOfActivities);
 						
 						console.log("Add rows: " + arr);
 						dataOverview.addRows(arr);
@@ -84,9 +74,9 @@
 						$.each(data.data.reportedActivities, function(index, value) {
 							console.log("Processing " + value.name + " ...");
 							var chartData = new google.visualization.DataTable();
-							chartData.addColumn('string', date);
-							chartData.addColumn('number', reportedValue);
-							chartData.addColumn('number', targetValue);
+							chartData.addColumn('string', captions.date);
+							chartData.addColumn('number', captions.reportedValue);
+							chartData.addColumn('number', captions.targetValue);
 							
 							var items = new Array();
 							$.each(value.reportedValues, function(index, val) {
