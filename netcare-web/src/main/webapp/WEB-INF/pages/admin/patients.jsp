@@ -39,54 +39,77 @@
 				
 				var updatePatientTable = function(data) {
 					
-					if (data.length == 0) {
-						$('#patientsTable').hide();
-					} else {
-						$('#patientsTable tbody').empty();
-						
-						$.each(data, function(index, value) {
-							var tr = $('<tr>');
-							
-							var name = $('<td>' + value.name + '</td>');
-							var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
-							
-							var loginAsIcon = util.createIcon('loginAs', 24, function() {
-								new NC.Patient().selectPatient(value.id, function(data) {
-									util.updateCurrentPatient(data.data.name);
-									
-									window.location = '/netcare-web/netcare/home';
-								});
+					if (data != null) {
+						if (data.success) {
+							/*
+							 * Select the patient and navigate to home
+							 */
+							patients.selectPatient(data.data.id, function(data) {
+								console.log("Created patient selected. Go to home...");
+								window.location = '/netcare-web/netcare/home';
 							});
-							
-							var deleteIcon = util.createIcon('trash', 24, function() {
-								console.log("Delete patient.");
-								
-								support.loadCaptions(null, ['patientDelete'], function(data) {
-									var result = confirm(data.patientDelete);
-									if (result) {
-										console.log("Deleting patient...");
-										patients.deletePatient(value.id, function(data) {
-											console.log("Patient deleted. Reload patients...");
-											patients.load(updatePatientTable);
-										});
-									}
-								});
-							});
-							
-							var actionCol = $('<td>').css('text-align', 'right');
-							actionCol.append(loginAsIcon);
-							actionCol.append(deleteIcon);
-							
-							tr.append(name).append(cnr).append(actionCol);
-							
-							$('#patientsTable tbody').append(tr);
-						});
-						
-						$('#patientsTable').show();
+						}
 					}
+					
+					
+					patients.load(function(data) {
+						if (data.data.length == 0) {
+							$('#patients div').show();
+							$('#patientsTable').hide();
+						} else {
+							$('#patients div').hide();
+							$('#patientsTable tbody').empty();
+							
+							$.each(data.data, function(index, value) {
+								
+								console.log("Processing patient " + value.name + "...");
+								
+								var tr = $('<tr>');
+								
+								var name = $('<td>' + value.name + '</td>');
+								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
+								
+								var loginAsIcon = util.createIcon('loginAs', 24, function() {
+									new NC.Patient().selectPatient(value.id, function(data) {
+										util.updateCurrentPatient(data.data.name);
+										
+										window.location = '/netcare-web/netcare/home';
+									});
+								});
+								
+								var deleteIcon = util.createIcon('trash', 24, function() {
+									console.log("Delete patient.");
+									
+									support.loadCaptions(null, ['patientDelete'], function(data) {
+										var result = confirm(data.patientDelete);
+										if (result) {
+											console.log("Deleting patient...");
+											patients.deletePatient(value.id, function(data) {
+												console.log("Patient deleted. Reload patients...");
+												patients.load(updatePatientTable);
+											});
+										}
+									});
+								});
+								
+								var actionCol = $('<td>').css('text-align', 'right');
+								actionCol.append(loginAsIcon);
+								actionCol.append(deleteIcon);
+								
+								tr.append(name).append(cnr).append(actionCol);
+								
+								$('#patientsTable tbody').append(tr);
+							});
+							
+							$('#patientsTable').show();
+						}
+					});
 				};
 				
-				patients.load(updatePatientTable);
+				/*
+				 * Load patients
+				 */
+				updatePatientTable(null);
 				
 				$('#patientForm :submit').click(function(event) {
 					console.log("Submitting form...");
@@ -146,9 +169,9 @@
 			
 			<section id="patients">
 				<h3><spring:message code="patients" /></h3>
-				<p>
-					<spring:message code="patientsDescription" />
-				</p>
+				<div class="alert-message info" style="display: none;">
+					<p><spring:message code="noPatients" /></p>
+				</div>
 				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<th>Namn</th>

@@ -31,7 +31,7 @@ NC.Patient = function() {
 					new NC.Util().processServiceResult(data);
 					if (data.success) {
 						console.log("Operation was successful.");
-						callback(data.data);
+						callback(data);
 					}
 				}
 			});
