@@ -47,8 +47,13 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		this.setCivicRegistrationNumber(civicRegistrationNumber);
 	}
 	
+	PatientBaseViewImpl(final PatientEntity entity) {
+		super(entity.getId(), entity.getName());
+		this.setCivicRegistrationNumber(entity.getCivicRegistrationNumber());
+	}
+	
 	public static PatientBaseView newFromEntity(final PatientEntity entity) {
-		return new PatientBaseViewImpl(entity.getId(), entity.getName(), entity.getCivicRegistrationNumber());
+		return new PatientBaseViewImpl(entity);
 	}
 	
 	public static PatientBaseView[] newFromEntities(final List<PatientEntity> entities) {

@@ -19,10 +19,10 @@ package org.callistasoftware.netcare.api.rest;
 import javax.servlet.http.HttpSession;
 
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.spi.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class UserApi extends ApiSupport {
 	
 	@RequestMapping(value="/load", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public ServiceResult<PatientBaseView[]> loadPatients() throws IllegalAccessException {
+	public ServiceResult<Patient[]> loadPatients() throws IllegalAccessException {
 		this.logAccess("load", "patients");
 		
 		final UserBaseView user = this.getUser();
@@ -67,7 +67,7 @@ public class UserApi extends ApiSupport {
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
-	public ServiceResult<PatientBaseView> createNewPatient(@RequestBody final PatientBaseViewImpl patient) throws IllegalAccessException {
+	public ServiceResult<Patient> createNewPatient(@RequestBody final Patient patient) throws IllegalAccessException {
 		this.logAccess("create", "patient");
 		
 		final UserBaseView user = this.getUser();
@@ -80,17 +80,17 @@ public class UserApi extends ApiSupport {
 	
 	@RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
-	public ServiceResult<PatientBaseView> deletePatient(@PathVariable(value="patient") final Long patient) {
+	public ServiceResult<Patient> deletePatient(@PathVariable(value="patient") final Long patient) {
 		this.logAccess("delete", "patient");
 		return this.patientService.deletePatient(patient);
 	}
 	
 	@RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
-	public ServiceResult<PatientBaseView> selectPatient(@PathVariable(value="patient") final Long patientId, final HttpSession session) {
+	public ServiceResult<? extends PatientBaseView> selectPatient(@PathVariable(value="patient") final Long patientId, final HttpSession session) {
 		log.info("Selecting patient {}", patientId);
 		
-		final ServiceResult<PatientBaseView> result = this.patientService.loadPatient(patientId);
+		final ServiceResult<Patient> result = this.patientService.loadPatient(patientId);
 		final PatientBaseView currentPatient = (PatientBaseView) session.getAttribute("currentPatient");
 		
 		if (result.isSuccess()) {

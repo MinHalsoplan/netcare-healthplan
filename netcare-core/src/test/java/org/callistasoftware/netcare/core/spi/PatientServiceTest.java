@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
@@ -86,7 +87,7 @@ public class PatientServiceTest extends TestSupport {
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
 		final PatientEntity saved = this.patientRepository.save(p1);
 		
-		final ServiceResult<PatientBaseView> bv = this.service.loadPatient(saved.getId());
+		final ServiceResult<Patient> bv = this.service.loadPatient(saved.getId());
 		assertNotNull(bv);
 		assertTrue(bv.isSuccess());
 		assertNotNull(bv.getData());

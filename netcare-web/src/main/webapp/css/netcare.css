@@ -61,3 +61,7 @@ a.ui-state-highlight {
 	font-weight:normal;
 }
 
+table td {
+	vertical-align: middle;
+}
+

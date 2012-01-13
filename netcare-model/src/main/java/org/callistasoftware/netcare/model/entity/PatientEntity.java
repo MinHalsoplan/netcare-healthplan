@@ -38,6 +38,9 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="is_mobile")
 	private boolean isMobile;
 	
+	@Column(name="phoneNumber", unique=true)
+	private String phoneNumber;
+	
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="forPatient", cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<HealthPlanEntity> healthPlans;
 	
@@ -76,6 +79,14 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 
 	public List<HealthPlanEntity> getHealthPlans() {
 		return healthPlans;
+	}
+	
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
+	
+	public void setPhoneNumber(final String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	void setHealthPlans(List<HealthPlanEntity> healthPlans) {

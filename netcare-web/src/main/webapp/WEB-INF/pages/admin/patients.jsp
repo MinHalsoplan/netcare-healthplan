@@ -51,7 +51,6 @@
 						}
 					}
 					
-					
 					patients.load(function(data) {
 						if (data.data.length == 0) {
 							$('#patients div').show();
@@ -68,6 +67,7 @@
 								
 								var name = $('<td>' + value.name + '</td>');
 								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
+								var phone = $('<td>' + value.phoneNumber + '</td>');
 								
 								var loginAsIcon = util.createIcon('loginAs', 24, function() {
 									new NC.Patient().selectPatient(value.id, function(data) {
@@ -96,7 +96,7 @@
 								actionCol.append(loginAsIcon);
 								actionCol.append(deleteIcon);
 								
-								tr.append(name).append(cnr).append(actionCol);
+								tr.append(name).append(cnr).append(phone).append(actionCol);
 								
 								$('#patientsTable tbody').append(tr);
 							});
@@ -118,6 +118,7 @@
 					var formData = new Object();
 					formData.name = $('input[name="name"]').val();
 					formData.civicRegistrationNumber = $('input[name="cnr"]').val();
+					formData.phoneNumber = $('input[name="phoneNumber"]').val();
 					
 					var jsonObj = JSON.stringify(formData);
 					patients.create(jsonObj, updatePatientTable);
@@ -150,14 +151,19 @@
 					<legend><spring:message code="newPatient" /></legend>
 				</fieldset>
 				
-				<spring:message code="name" var="name" scope="page"/>
+				<spring:message code="patient.name" var="name" scope="page"/>
 				<netcare:field containerId="nameContainer" name="name" label="${name}">
 					<input type="text" name="name" />
 				</netcare:field>
 				
-				<spring:message code="cnr" var="cnr" scope="page" />
+				<spring:message code="patient.cnr" var="cnr" scope="page" />
 				<netcare:field containerId="cnrContainer" name="cnr" label="${cnr}">
 					<input type="text" name="cnr" />
+				</netcare:field>
+				
+				<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
+				<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
+					<input type="tel" name="phoneNumber" />
 				</netcare:field>
 				
 				<div class="actions">
@@ -174,8 +180,9 @@
 				</div>
 				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
-						<th>Namn</th>
-						<th>Personnummer</th>
+						<th><spring:message code="patient.name" /></th>
+						<th><spring:message code="patient.cnr" /></th>
+						<th><spring:message code="patient.phoneNumber" />
 						<th>&nbsp;</th>
 					</thead>
 					<tbody>

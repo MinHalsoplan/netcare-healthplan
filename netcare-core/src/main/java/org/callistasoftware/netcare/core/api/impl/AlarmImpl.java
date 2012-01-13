@@ -23,14 +23,14 @@ import java.util.Locale;
 import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.Option;
-import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
 
 public class AlarmImpl implements Alarm {
 
 	private Long id;
 	private String careUnitHsaId;
-	private PatientBaseView patient;
+	private Patient patient;
 	private String createdTime;
 	private String resolvedTime;
 	private CareGiverBaseView resolvedBy;
@@ -61,7 +61,7 @@ public class AlarmImpl implements Alarm {
 		
 		alarm.setEntityReferenceId(entity.getRefEntityId());
 		alarm.setId(entity.getId());
-		alarm.setPatient(PatientBaseViewImpl.newFromEntity(entity.getPatient()));
+		alarm.setPatient(PatientImpl.newFromEntity(entity.getPatient()));
 		
 		if (entity.getResolvedBy() != null) {
 			alarm.setResolvedBy(CareGiverBaseViewImpl.newFromEntity(entity.getResolvedBy()));
@@ -78,7 +78,7 @@ public class AlarmImpl implements Alarm {
 		this.careUnitHsaId = careUnitHsaId;
 	}
 
-	public void setPatient(PatientBaseView patient) {
+	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
 
@@ -113,7 +113,7 @@ public class AlarmImpl implements Alarm {
 	}
 
 	@Override
-	public PatientBaseView getPatient() {
+	public Patient getPatient() {
 		return this.patient;
 	}
 

@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
@@ -69,13 +71,13 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 	}
 
 	@Override
-	public ServiceResult<PatientBaseView> loadPatient(Long id) {
+	public ServiceResult<Patient> loadPatient(Long id) {
 		final PatientEntity ent = this.patientRepository.findOne(id);
-		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(ent), new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(ent), new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<PatientBaseView[]> loadPatientsOnCareUnit(final CareUnit careUnit) {
+	public ServiceResult<Patient[]> loadPatientsOnCareUnit(final CareUnit careUnit) {
 		log.info("Loading patients on care unit {}", careUnit.getHsaId());
 		
 		final CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit.getHsaId());
@@ -86,23 +88,26 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		final List<PatientEntity> patients = this.patientRepository.findByCareUnit(cu.getHsaId());
 		log.debug("Found {} patients with health plans at care unit {}", patients.size(), cu.getHsaId());
 		
-		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntities(patients), new ListEntitiesMessage(PatientEntity.class, patients.size()));
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntities(patients), new ListEntitiesMessage(PatientEntity.class, patients.size()));
 	}
 
 	@Override
-	public ServiceResult<PatientBaseView> createPatient(PatientBaseView patient) {
+	public ServiceResult<Patient> createPatient(Patient patient) {
 		log.info("Creating new patient {}", patient.getCivicRegistrationNumber());
 		final PatientEntity ent = this.patientRepository.findByCivicRegistrationNumber(patient.getCivicRegistrationNumber());
 		if (ent != null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotUniqueMessage(PatientEntity.class, "cnr"));
 		}
 		
-		final PatientEntity p = this.patientRepository.save(PatientEntity.newEntity(patient.getName(), patient.getCivicRegistrationNumber()));
-		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(p), new GenericSuccessMessage());
+		final PatientEntity newPatient = PatientEntity.newEntity(patient.getName(), patient.getCivicRegistrationNumber());
+		newPatient.setPhoneNumber(patient.getPhoneNumber());
+		
+		final PatientEntity p = this.patientRepository.save(newPatient);
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<PatientBaseView> deletePatient(Long id) {
+	public ServiceResult<Patient> deletePatient(Long id) {
 		log.info("Deleting patient {}", id);
 		final PatientEntity patient = this.patientRepository.findOne(id);
 		if (patient == null) {
@@ -113,6 +118,6 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		
 		this.patientRepository.delete(patient);
 		
-		return ServiceResultImpl.createSuccessResult(PatientBaseViewImpl.newFromEntity(patient), new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(patient), new GenericSuccessMessage());
 	}
 }

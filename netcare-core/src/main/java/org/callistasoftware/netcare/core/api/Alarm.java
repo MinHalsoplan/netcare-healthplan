@@ -35,7 +35,7 @@ public interface Alarm {
 	 * Get for which patient the alarm was triggered
 	 * @return
 	 */
-	PatientBaseView getPatient();
+	Patient getPatient();
 	
 	/**
 	 * The date the alarm was created

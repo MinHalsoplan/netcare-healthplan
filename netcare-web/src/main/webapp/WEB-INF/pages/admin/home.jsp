@@ -28,6 +28,8 @@
 		<script type="text/javascript">
 			$(function() {
 				
+				var util = new NC.Util();
+				
 				var name = "<c:out value="${sessionScope.currentPatient.name}" />";
 				if (name.length != 0) {
 					new NC.Util().updateCurrentPatient(name);
@@ -48,11 +50,13 @@
 						console.log("Processing " + value.id + "...");
 						var tr = $('<tr>');
 						var created = $('<td>' + value.createdTime + '</td>');
-						var patient = $('<td>' + value.patient.name + '</td>');
+						var patient = $('<td>' + value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber)  + ')</td>');
+						var contact = $('<td>' + value.patient.phoneNumber + '</td>');
 						var cause = $('<td>' + value.cause.value + '</td>');
 						
 						var table = $('#alarmContainer table tbody');
 						tr.append(patient);
+						tr.append(contact);
 						tr.append(cause);
 						tr.append(created);
 						
@@ -126,6 +130,7 @@
 					<table class="bordered-table zebra-striped shadow-box" style="display: none;">
 						<thead>
 							<th><spring:message code="patient" /></th>
+							<th><spring:message code="contactInformation" /></th>
 							<th><spring:message code="alarm.cause" /></th>
 							<th><spring:message code="alarm.created" /></th>
 						</thead>

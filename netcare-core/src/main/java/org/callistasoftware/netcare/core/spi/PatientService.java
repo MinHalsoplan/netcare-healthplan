@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
@@ -33,26 +34,26 @@ public interface PatientService {
 	 * Load all patients
 	 * @return
 	 */
-	ServiceResult<PatientBaseView[]> loadPatientsOnCareUnit(final CareUnit careUnit);
+	ServiceResult<Patient[]> loadPatientsOnCareUnit(final CareUnit careUnit);
 	
 	/**
 	 * Load a patient with a specific id
 	 * @param id
 	 * @return
 	 */
-	ServiceResult<PatientBaseView> loadPatient(final Long id);
+	ServiceResult<Patient> loadPatient(final Long id);
 	
 	/**
 	 * Create a new patient
 	 * @param patient
 	 * @return
 	 */
-	ServiceResult<PatientBaseView> createPatient(final PatientBaseView patient);
+	ServiceResult<Patient> createPatient(final Patient patient);
 	
 	/**
 	 * Delete a patient with the given id
 	 * @param id
 	 * @return
 	 */
-	ServiceResult<PatientBaseView> deletePatient(final Long id);
+	ServiceResult<Patient> deletePatient(final Long id);
 }

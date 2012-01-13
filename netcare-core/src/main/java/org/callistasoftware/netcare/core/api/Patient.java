@@ -16,17 +16,19 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.util.Map;
 
-public interface Patient {
+public interface Patient extends PatientBaseView {
 
-	void setName(String name);
-	String getName();
+	/**
+	 * Get the phone number to this patient
+	 * @return
+	 */
+	String getPhoneNumber();
 	
-	void setProperties(Map<String, String> properties);
-	Map<String, String> getProperties();
-	
-	void setPrimaryCareGiver(CareGiver careGiver);
-	CareGiver getPrimaryCareGiver();
-	
+	/**
+	 * Whether the user is signed up for mobile usage 
+	 * or not
+	 * @return
+	 */
+	boolean isMobile();
 }
