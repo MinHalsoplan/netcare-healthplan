@@ -27,4 +27,11 @@ public interface AlarmService {
 	 * @return
 	 */
 	ServiceResult<Alarm[]> getCareUnitAlarms(final String hsaId);
+	
+	/**
+	 * Resolves an alarm
+	 * @param alarm
+	 * @return
+	 */
+	ServiceResult<Alarm> resolveAlarm(final Long alarm);
 }

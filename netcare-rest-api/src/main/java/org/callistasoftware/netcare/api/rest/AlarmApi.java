@@ -23,6 +23,7 @@ import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.spi.AlarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,5 +46,12 @@ public class AlarmApi extends ApiSupport {
 		}
 		
 		throw new SecurityException("Illegal to access alarms for care unit. No logged in user or user is not a care giver.");
+	}
+	
+	@RequestMapping(value="/{alarm}/resolve", produces="application/json", consumes="application/json", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<Alarm> resolveAlarm(@PathVariable(value="alarm") final Long alarm) {
+		this.logAccess("resolve", "alarm");
+		return this.service.resolveAlarm(alarm);
 	}
 }

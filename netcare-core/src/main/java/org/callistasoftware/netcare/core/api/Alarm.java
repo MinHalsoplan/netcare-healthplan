@@ -16,8 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
-public interface Alarm {
+
+public interface Alarm extends Serializable {
 
 	/**
 	 * The id of this alarm

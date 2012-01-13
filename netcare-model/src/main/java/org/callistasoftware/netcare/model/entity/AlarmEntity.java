@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_alarm")
-public class AlarmEntity {
+public class AlarmEntity implements PermissionRestrictedEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -128,6 +128,16 @@ public class AlarmEntity {
 	public void resolve(CareGiverEntity resolvedBy) {
 		setResolvedBy(resolvedBy);
 		setResolvedTime(new Date());
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity userId) {
+		return userId.isCareGiver();
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity userId) {
+		return userId.isCareGiver();
 	}
 
 }

@@ -39,33 +39,51 @@
 				units.loadLatestReportedActivities('reportedActivities');
 				
 				var alarms = new NC.Alarm();
-				alarms.loadAlarms(function(data) {
-					
-					if (data.data.length == 0) {
-						$('#alarmContainer table').hide();
-						$('#noAlarms').show();
-					}
-					
-					$.each(data.data, function(index, value) {
-						console.log("Processing " + value.id + "...");
-						var tr = $('<tr>');
-						var created = $('<td>' + value.createdTime + '</td>');
-						var patient = $('<td>' + value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber)  + ')</td>');
-						var contact = $('<td>' + value.patient.phoneNumber + '</td>');
-						var cause = $('<td>' + value.cause.value + '</td>');
+				
+				var loadAlarms = function() {
+					alarms.loadAlarms(function(data) {
 						
-						var table = $('#alarmContainer table tbody');
-						tr.append(patient);
-						tr.append(contact);
-						tr.append(cause);
-						tr.append(created);
+						if (data.data.length == 0) {
+							$('#alarmContainer table').hide();
+							$('#alarmContainer div').show();
+						}
 						
-						table.append(tr);
-						
-						$('#alarmContainer table').show();
-						
+						$.each(data.data, function(index, value) {
+							console.log("Processing " + value.id + "...");
+							var tr = $('<tr>');
+							var created = $('<td>' + value.createdTime + '</td>');
+							var patient = $('<td>' + value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber)  + ')</td>');
+							var contact = $('<td>' + value.patient.phoneNumber + '</td>');
+							var cause = $('<td>' + value.cause.value + '</td>');
+							
+							var processIcon = util.createIcon('clear', '24', function() {
+								console.log("Resolving alarm...");
+								alarms.resolve(value.id, loadAlarms);
+							});
+							
+							var actionCol = $('<td>');
+							
+							actionCol.append(processIcon);
+							
+							var table = $('#alarmContainer table tbody');
+							tr.append(patient);
+							tr.append(contact);
+							tr.append(cause);
+							tr.append(created);
+							tr.append(actionCol);
+							
+							table.append(tr);
+							
+							$('#alarmContainer div').hide();
+							$('#alarmContainer table').show();
+							
+						});
 					});
-				});
+				};
+				
+				loadAlarms();
+				
+				
 			});
 		</script>
 	</netcare:header>
@@ -122,10 +140,9 @@
 					<spring:message code="alarm.information" />
 				</p>
 				
-				<div id="alarmContainer">
-					<p id="noAlarms" style="display: none;"><spring:message code="alarm.noAlarms" /></p>
+				<div id="alarmContainer">					
 					<div class="alert-message info" style="display:none;">
-						<a class="close">x</a>
+						<p><spring:message code="alarm.noAlarms" /></p>
 					</div>
 					<table class="bordered-table zebra-striped shadow-box" style="display: none;">
 						<thead>
@@ -133,6 +150,7 @@
 							<th><spring:message code="contactInformation" /></th>
 							<th><spring:message code="alarm.cause" /></th>
 							<th><spring:message code="alarm.created" /></th>
+							<th>&nbsp;</th>
 						</thead>
 						<tbody></tbody>
 					</table>

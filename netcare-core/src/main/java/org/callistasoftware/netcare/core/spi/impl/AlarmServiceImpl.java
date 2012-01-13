@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.spi.impl;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.Alarm;
@@ -24,11 +25,13 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.AlarmImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.AlarmService;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -37,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 	
 	@Autowired
@@ -45,7 +49,6 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 	@Autowired
 	private AlarmRepository alarmRepo;
 	
-	@Transactional
 	@Override
 	public ServiceResult<Alarm[]> getCareUnitAlarms(String hsaId) {
 		
@@ -63,6 +66,24 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 		this.getLog().debug("Found {} alarms for care unit {}", alarms.size(), hsaId);
 		
 		return ServiceResultImpl.createSuccessResult(AlarmImpl.newFromEntities(alarms, LocaleContextHolder.getLocale()), new ListEntitiesMessage(AlarmEntity.class, alarms.size()));
+	}
+
+	@Override
+	public ServiceResult<Alarm> resolveAlarm(Long alarm) {
+		this.getLog().info("Resolving alarm {}", alarm);
+		
+		final AlarmEntity ent = this.alarmRepo.findOne(alarm);
+		if (ent == null) {
+			this.getLog().warn("Alarm {} was not found in the system.", alarm);
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(AlarmEntity.class, alarm));
+		}
+		
+		this.verifyWriteAccess(ent);
+		
+		ent.setResolvedBy((CareGiverEntity) this.getCurrentUser());
+		ent.setResolvedTime(new Date());
+		
+		return ServiceResultImpl.createSuccessResult(AlarmImpl.newFromEntity(ent, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
 
 }
