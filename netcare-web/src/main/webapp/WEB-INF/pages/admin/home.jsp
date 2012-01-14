@@ -48,6 +48,9 @@
 							$('#alarmContainer div').show();
 						}
 						
+						
+						$('#alarmContainer table tbody').empty();
+						
 						$.each(data.data, function(index, value) {
 							console.log("Processing " + value.id + "...");
 							var tr = $('<tr>');
