@@ -14,24 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.api.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public interface PermissionRestrictedEntity {
+public final class DateUtil {
 
-	/**
-	 * Whether the user is allowed to view information
-	 * on this restricted object
-	 * @param user - The user who is trying to read
-	 * @return
-	 */
-	boolean isReadAllowed(final UserEntity user);
+	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
+	private static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_TIME_PATTERN);
 	
-	/**
-	 * Whether the user is allowed to modify information
-	 * on the restricted object.
-	 * @param user - The user who is trying to write
-	 * @return
-	 */
-	boolean isWriteAllowed(final UserEntity user);
+	public static String toDateTime(final Date date) {
+		return SDF.format(date);
+	}
 }

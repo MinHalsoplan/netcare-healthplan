@@ -14,24 +14,57 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
 
-public interface PermissionRestrictedEntity {
+public interface ActivityComment extends Serializable {
 
 	/**
-	 * Whether the user is allowed to view information
-	 * on this restricted object
-	 * @param user - The user who is trying to read
+	 * Get the id of the comment
 	 * @return
 	 */
-	boolean isReadAllowed(final UserEntity user);
+	Long getId();
 	
 	/**
-	 * Whether the user is allowed to modify information
-	 * on the restricted object.
-	 * @param user - The user who is trying to write
+	 * Get the comment
 	 * @return
 	 */
-	boolean isWriteAllowed(final UserEntity user);
+	String getComment();
+	
+	/**
+	 * Get the reply
+	 * @return
+	 */
+	String getReply();
+	
+	/**
+	 * Get the care giver who commented
+	 * @return
+	 */
+	CareGiverBaseView getCareGiver();
+	
+	/**
+	 * Get timestamp for the comment
+	 * @return
+	 */
+	String getCommentedAt();
+	
+	/**
+	 * Get the replied timestamp
+	 * @return
+	 */
+	String getRepliedAt();
+	
+	/**
+	 * Get the activity
+	 * @return
+	 */
+	String getActivityName();
+	
+	/**
+	 * Get the date when activity was reported
+	 * @return
+	 */
+	String getActivityReportedAt();
 }

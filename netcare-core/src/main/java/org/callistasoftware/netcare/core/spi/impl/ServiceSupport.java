@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.repository.UserRepository;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.PermissionRestrictedEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
@@ -82,5 +83,14 @@ public abstract class ServiceSupport {
 		} else {
 			throw new SecurityException("Anonymous access not allowed.");
 		}
+	}
+	
+	protected PatientEntity getPatient() {
+		final UserEntity user = this.getCurrentUser();
+		if (user.isCareGiver()) {
+			throw new IllegalStateException("Expected a patient in the security context but was a care giver.");
+		}
+		
+		return (PatientEntity) user;
 	}
 }

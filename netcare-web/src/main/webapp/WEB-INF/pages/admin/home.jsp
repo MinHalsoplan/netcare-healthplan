@@ -86,7 +86,10 @@
 				
 				loadAlarms();
 				
-				
+				$('#commentActivity').modal();
+				$('#commentActivity').bind('shown', function() {
+					$('#commentActivity input[name="comment"]').focus();
+				})
 			});
 		</script>
 	</netcare:header>
@@ -130,6 +133,20 @@
 						</thead>
 						<tbody></tbody>
 					</table>
+				</div>
+				
+				<div id="commentActivity" class="modal hide fade" style="display: none;">
+					<div class="modal-header">
+						<a href="#" class="close">x</a>
+						<h3>Kommentera</h3>
+					</div>
+					
+					<div class="modal-body">
+						<form action="post">
+							<input type="text" name="comment" class="xlarge" />
+							<input type="submit" class="btn primary" value="Kommentera" />
+						</form>
+					</div>
 				</div>
 				
 			</section>

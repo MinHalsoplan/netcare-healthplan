@@ -53,7 +53,7 @@
 						
 						var util = NC.Util();
 						
-						var resultIcon = util.createIcon('results2', 24, function() {
+						var resultIcon = util.createIcon('results', 24, function() {
 							healthPlans.results(value.id);
 						});
 						

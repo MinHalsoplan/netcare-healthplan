@@ -269,15 +269,43 @@ NC.HealthPlan = function(descriptionId, tableId) {
 								reported.css('background-color', 'lightgreen');
 							}
 							
-							var likeIcon = util.createIcon('', 24, function() {
-								
+							var aElem = $('<a data-controls-modal="commentActivity" data-backdrop="true">');
+							var likeIcon = util.createIcon('like', 24, function() {
+								$('#commentActivity input:submit').click(function(event) {
+									event.preventDefault();
+									console.log("Submitting comment");
+									
+									var commentUrl = _baseUrl + '/activity/' + value.id + '/comment';
+									console.log("Posting comment using url: " + commentUrl);
+									
+									var comment = $('#commentActivity input[name="comment"]').val();
+									
+									$.ajax({
+										url : commentUrl,
+										dataType : 'json',
+										type : 'post',
+										data : { comment : comment },
+										success : function(data) {
+											console.log("Successfully commented activity...");
+											util.processServiceResult(data);
+											
+											$('#commentActivity input[name="comment"]').val('');
+											$('#commentActivity').modal('hide');
+										}
+									});
+								});
 							});
+							
+							var actionCol = $('<td>');
+							aElem.append(likeIcon);
+							actionCol.append(aElem);
 							
 							tr.append(name);
 							tr.append(type);
 							tr.append(goal);
 							tr.append(reported);
 							tr.append(at);
+							tr.append(actionCol);
 							
 							$('#' + containerId + ' table tbody').append(tr);
 							console.log("Appended to table body");

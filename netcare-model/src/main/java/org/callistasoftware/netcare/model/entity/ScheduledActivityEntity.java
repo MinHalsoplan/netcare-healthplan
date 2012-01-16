@@ -16,8 +16,11 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,13 +29,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_scheduled_activity")
-public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity> {
+public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity>, PermissionRestrictedEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -69,8 +73,12 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@JoinColumn(name="activity_def_id")
 	private ActivityDefinitionEntity activityDefinition;
 	
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="activity", orphanRemoval=true, cascade=CascadeType.ALL)
+	private List<ActivityCommentEntity> comments;
+	
 	ScheduledActivityEntity() {
 		rejected = false;
+		this.setComments(new ArrayList<ActivityCommentEntity>());
 	}
 	
 	/**
@@ -177,5 +185,23 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	private void setTargetValue(int targetValue) {
 		this.targetValue = targetValue;
+	}
+
+	public List<ActivityCommentEntity> getComments() {
+		return comments;
+	}
+
+	void setComments(List<ActivityCommentEntity> comments) {
+		this.comments = comments;
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		return this.isWriteAllowed(user);
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		return this.getActivityDefinitionEntity().getHealthPlan().isWriteAllowed(user);
 	}
 }

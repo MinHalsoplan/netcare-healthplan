@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -97,6 +98,14 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
 		this.logAccess("load", "reported activities");
 		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
+	}
+	
+	@RequestMapping(value="/activity/{activity}/comment", produces="application/json", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="comment") final String comment) {
+		this.logAccess("comment", "activity");
+		log.debug("Comment is: {}", comment);
+		return this.service.commentOnPerformedActivity(activity, comment);
 	}
 	
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
