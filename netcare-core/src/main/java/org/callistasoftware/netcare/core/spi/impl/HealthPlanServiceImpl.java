@@ -75,6 +75,7 @@ import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -310,7 +311,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		log.info("Report done for scheduled activity {}", scheduledActivityId);
 		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(scheduledActivityId);
 		entity.setReportedTime(new Date());
-		entity.setRejected(report.isRejected());
+		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.OPEN);
 		entity.setNote(report.getNote());
 		entity.setPerceivedSense(report.getSense());
 		entity.setActualValue(report.getActualValue());

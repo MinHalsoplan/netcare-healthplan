@@ -53,10 +53,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Column(name="actual_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date actualTime;
-	
-	@Column(name="rejected")
-	private boolean rejected = false;
-	
+		
 	@Column(name="actual_value")
 	private int actualValue;
 	
@@ -69,6 +66,9 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Column(name="perceived_sense")
 	private int perceivedSense;
 	
+	@Column(name="status", nullable=false)
+	private ScheduledActivityStatus status;
+	
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
 	@JoinColumn(name="activity_def_id")
 	private ActivityDefinitionEntity activityDefinition;
@@ -77,8 +77,8 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	private List<ActivityCommentEntity> comments;
 	
 	ScheduledActivityEntity() {
-		rejected = false;
 		this.setComments(new ArrayList<ActivityCommentEntity>());
+		status = ScheduledActivityStatus.OPEN;
 	}
 	
 	/**
@@ -171,12 +171,8 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return actualTime;
 	}
 
-	public void setRejected(boolean rejected) {
-		this.rejected = rejected;
-	}
-
 	public boolean isRejected() {
-		return rejected;
+		return (status == ScheduledActivityStatus.REJECTED);
 	}
 
 	public int getTargetValue() {
@@ -203,5 +199,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
 		return this.getActivityDefinitionEntity().getHealthPlan().isWriteAllowed(user);
+	}
+	
+	public void setStatus(ScheduledActivityStatus status) {
+		this.status = status;
+	}
+	
+	public ScheduledActivityStatus getStatus() {
+		return status;
 	}
 }

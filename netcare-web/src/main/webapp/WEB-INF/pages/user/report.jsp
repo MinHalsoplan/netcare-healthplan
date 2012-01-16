@@ -57,16 +57,6 @@
 				var util = new NC.Util();
 				util.validateTimeField($('#reportFormDiv input[name="time"]'));
 				
-				var arr = new Array();
-				var caps = report.getCaptions();
-				console.log('...... easy: ' + caps.easy);
-				arr.push(createOption(1, caps.easy));
-				arr.push(createOption(2, caps.medium));
-				arr.push(createOption(3, caps.middle));
-				arr.push(createOption(4, caps.more));
-				arr.push(createOption(5, caps.heavy));
-				
-				support.setSelectOptions($('#reportFormDiv select[name="sense"]'), arr);
 								
 				$('#reportFormId :submit').click(function(event) {
 					event.preventDefault();
@@ -75,7 +65,7 @@
 					rep.actualValue = $('#reportFormDiv input[name="value"]').val();
 					rep.actualDate = $('#reportFormDiv input[name="date"]').val();
 					rep.actualTime = $('#reportFormDiv input[name="time"]').val();
-					rep.sense = $('#reportFormDiv select[name="sense"]').val();
+					rep.sense = $('#reportFormDiv input[name="gsense"]:checked').val();
 					rep.note = $('#reportFormDiv input[name="note"]').val();
 					rep.rejected = false;
 					
@@ -120,10 +110,18 @@
 							<input type="text" name="time" class="mini" />
 						</netcare:field>
 
-						<spring:message code="report.sense" var="sense" scope="page" />
-						<netcare:field name="sense" label="${sense}">
-							<select name="sense" class="medium"></select>
-						</netcare:field>
+						<div id="senseSectionId">
+							<spring:message code="report.sense" var="sense" scope="page" />
+							<netcare:field name="senseField" label="${sense}">
+								<div style="font-size: 10px; font-style: italic" id="senseTextId"></div>
+								1&nbsp;
+								<input type="radio" name="gsense" value="1" />&nbsp; 
+								<input type="radio" name="gsense" value="2" />&nbsp;
+								<input type="radio" name="gsense" value="3" />&nbsp; 
+								<input type="radio" name="gsense" value="4" />&nbsp;
+								<input type="radio" name="gsense" value="5" />&nbsp;5
+							</netcare:field>
+						</div>
 
 						<spring:message code="report.note" var="note" scope="page" />
 						<netcare:field name="note" label="${note}">

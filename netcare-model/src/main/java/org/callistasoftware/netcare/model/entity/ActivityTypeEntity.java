@@ -38,6 +38,12 @@ public class ActivityTypeEntity {
 	@Column(nullable=false)
 	private MeasureUnit unit;
 	
+	@Column(name="measure_sense", nullable=false)
+	private boolean measuringSense;
+	
+	@Column(name="sense_scale_text")
+	private String senseScaleText;
+	
 	@ManyToOne
 	@JoinColumn(name="category_id")
 	private ActivityCategoryEntity category;
@@ -86,5 +92,21 @@ public class ActivityTypeEntity {
 
 	void setId(Long id) {
 		this.id = id;
+	}
+
+	public boolean isMeasuringSense() {
+		return measuringSense;
+	}
+
+	public void setMeasuringSense(boolean measuringSense) {
+		this.measuringSense = measuringSense;
+	}
+
+	public String getSenseScaleText() {
+		return senseScaleText;
+	}
+
+	public void setSenseScaleText(String senseScaleText) {
+		this.senseScaleText = senseScaleText;
 	}
 }

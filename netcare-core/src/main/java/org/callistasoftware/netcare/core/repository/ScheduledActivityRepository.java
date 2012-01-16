@@ -35,7 +35,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
-			"e.scheduledTime between :start and :end")
+			"e.scheduledTime between :start and :end and e.status != 1")
 	List<ScheduledActivityEntity> findByPatientAndScheduledTimeBetween(
 			@Param("patient") final PatientEntity patient,
 			@Param("start") final Date start,
@@ -45,7 +45,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp inner join " +
 			"hp.careUnit as c where c.hsaId = :careUnit " +
-			"and e.reportedTime != null")
+			"and e.reportedTime != null and e.status != 1")
 	List<ScheduledActivityEntity> findByCareUnit(@Param("careUnit") final String careUnit);
 	
 	List<ScheduledActivityEntity> findByScheduledTimeLessThanAndReportedTimeIsNull(final Date scheduledTime);
