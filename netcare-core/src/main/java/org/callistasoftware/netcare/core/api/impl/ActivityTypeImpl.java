@@ -40,6 +40,8 @@ public class ActivityTypeImpl implements ActivityType {
 	private String name;
 	private Option unit;
 	private ActivityCategoryImpl category;
+	private boolean measuringSense;
+	private String scaleText;
 	
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
@@ -47,6 +49,8 @@ public class ActivityTypeImpl implements ActivityType {
 		dto.setName(entity.getName());
 		dto.setUnit(new Option(entity.getUnit().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
+		dto.measuringSense = entity.isMeasuringSense();
+		dto.scaleText = entity.getSenseScaleText();
 		return dto;
 	}
 	
@@ -93,5 +97,15 @@ public class ActivityTypeImpl implements ActivityType {
 	
 	public void setCategory(final ActivityCategoryImpl category) {
 		this.category = category;
+	}
+
+	@Override
+	public boolean isMeasuringSense() {
+		return measuringSense;
+	}
+
+	@Override
+	public String getScaleText() {
+		return scaleText;
 	}
 }

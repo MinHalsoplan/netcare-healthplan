@@ -26,7 +26,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 	var _captions;
 	var support = new NC.Support();
 	
-	support.loadCaptions('report', ['report', 'change', 'reject', 'easy', 'medium', 'middle', 'more', 'heavy'], function(data) {
+	support.loadCaptions('report', ['report', 'change', 'reject'], function(data) {
 		_captions = data;
 	});
 
@@ -69,10 +69,19 @@ NC.PatientReport = function(descriptionId, tableId) {
 
 			$('#reportFormDiv input[name="activityId"]').attr('value', act.id);
 			$('#reportFormDiv input[name="value"]').attr('value', value);
-			$('#reportFormDiv select[name="sense"]').attr('value', act.sense);
 			$('#reportFormDiv input[name="note"]').attr('value', act.note);
 			$('#unitId').html(act.definition.type.unit.value);
 
+			if (act.definition.type.measuringSense) {
+				$('input:radio[name=gsense]').filter('[value=' + act.sense + ']').attr('checked', true);
+				$('#senseSectionId').show();
+				if (act.definition.type.scaleText !== undefined) {
+					$('#senseTextId').text(act.definition.type.scaleText);
+				}
+			} else {
+				$('#senseSectionId').hide();
+			}
+			
 			var planned = act.definition.type.name + '&nbsp;' + act.definition.goal 
 			+ '&nbsp;' 
 			+ act.definition.type.unit.value
@@ -90,6 +99,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 				date = str[0];
 				time = str[1];
 			}
+			
 			$('#reportFormDiv input[name="date"]').datepicker( "option", "defaultDate", date);
 			$('#reportFormDiv input[name="date"]').attr('value', date);
 			$('#reportFormDiv input[name="time"]').attr('value', time);

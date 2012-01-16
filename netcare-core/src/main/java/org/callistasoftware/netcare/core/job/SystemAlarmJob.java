@@ -32,6 +32,7 @@ import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,8 +91,8 @@ public class SystemAlarmJob {
 						sae.getId()));
 				patients.add(patient.getId());
 			}
-			sae.setRejected(true);
-			//sae.setReportedTime(new Date());
+			sae.setStatus(ScheduledActivityStatus.CLOSED);
+			sae.setReportedTime(new Date());
 			sae.setNote("Stängd per automatik.");
 			sae.setActualValue(0);
 			saSave.add(sae);
