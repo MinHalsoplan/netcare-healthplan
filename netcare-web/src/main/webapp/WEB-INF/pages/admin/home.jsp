@@ -35,8 +35,8 @@
 					new NC.Util().updateCurrentPatient(name);
 				}
 				
-				var units = new NC.Support();
-				units.loadLatestReportedActivities('reportedActivities');
+				var hp = new NC.HealthPlan();
+				hp.loadLatestReportedActivities('reportedActivities');
 				
 				var alarms = new NC.Alarm();
 				

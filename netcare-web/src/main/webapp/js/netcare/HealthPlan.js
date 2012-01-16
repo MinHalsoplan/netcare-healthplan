@@ -224,6 +224,79 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					public.listActivities(healthPlanId, tableId);
 				}
 			});
+		},
+		
+		/**
+		 * Load the latest reported activities
+		 */
+		loadLatestReportedActivities : function(containerId) {
+			var url = _baseUrl + '/activity/reported/latest';
+			console.log("Loading latest reported activities from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					var util = new NC.Util();
+					
+					util.processServiceResult(data);
+					
+					if (data.success) {
+						
+						$.each(data.data, function(index, value) {
+							console.log("Processing value: " + value);
+							
+							var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
+							var unit = value.definition.type.unit.value;
+							var typeName = value.definition.type.name;
+							var goalString = value.definition.goal + ' ' + unit;
+							var reportedString = value.actualValue + ' ' + unit;
+							var reportedAt = value.reported;
+							
+							var tr = $('<tr>');
+							
+							var name = $('<td>' + patient + '</td>');
+							var type = $('<td>' + typeName + '</td>');
+							var goal = $('<td>' + goalString + '</td>');
+							var reported = $('<td>' + reportedString + '</td>');
+							var at = $('<td>' + reportedAt + '</td>');
+							
+							console.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
+							if (value.actualValue !== value.definition.goal) {
+								console.log("Value diff. Mark yellow");
+								reported.css('background-color', 'lightyellow');
+							} else if (value.actualValue == value.definition.goal) {
+								reported.css('background-color', 'lightgreen');
+							}
+							
+							var likeIcon = util.createIcon('', 24, function() {
+								
+							});
+							
+							tr.append(name);
+							tr.append(type);
+							tr.append(goal);
+							tr.append(reported);
+							tr.append(at);
+							
+							$('#' + containerId + ' table tbody').append(tr);
+							console.log("Appended to table body");
+						});
+						
+						var count = $('#' + containerId + ' table tbody tr').size();
+						if(count > 0) {
+							$('#' + containerId + ' table').show();
+							$('#' + containerId + ' div').hide();
+						} else {
+							$('#' + containerId + ' table').hide();
+							$('#' + containerId + ' div').show();
+						}
+						
+					} else {
+						util.processServiceResult(data);
+					}
+				}
+			});
 		}
 	};
 	

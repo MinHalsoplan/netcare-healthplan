@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.api.rest;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
@@ -89,6 +90,13 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
 		this.logAccess("delete", "activity definition");
 		return this.service.deleteActivity(activityDefinitionId);
+	}
+	
+	@RequestMapping(value="/activity/reported/latest", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
+		this.logAccess("load", "reported activities");
+		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
 	}
 	
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
