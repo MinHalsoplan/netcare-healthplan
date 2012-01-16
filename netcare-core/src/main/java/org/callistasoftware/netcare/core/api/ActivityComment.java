@@ -42,7 +42,7 @@ public interface ActivityComment extends Serializable {
 	 * Get the care giver who commented
 	 * @return
 	 */
-	CareGiverBaseView getCareGiver();
+	String getCommentedBy();
 	
 	/**
 	 * Get timestamp for the comment

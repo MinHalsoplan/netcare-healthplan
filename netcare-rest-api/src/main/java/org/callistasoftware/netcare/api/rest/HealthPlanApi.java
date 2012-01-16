@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
@@ -91,6 +92,13 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
 		this.logAccess("delete", "activity definition");
 		return this.service.deleteActivity(activityDefinitionId);
+	}
+	
+	@RequestMapping(value="/activity/reported/{patient}/comments", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityComment[]> loadCommentsForPatient(@PathVariable(value="patient") final Long patient) {
+		this.logAccess("load", "comments");
+		return this.service.loadCommentsForPatient();
 	}
 	
 	@RequestMapping(value="/activity/reported/latest", method=RequestMethod.GET, produces="application/json")

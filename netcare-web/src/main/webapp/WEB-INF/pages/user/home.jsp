@@ -67,6 +67,38 @@
 					});
 				});
 			});
+			
+			$(function() {
+				console.log("Loading latest comments...");
+				var patientId = '<sec:authentication property="principal.id" />';
+				new NC.HealthPlan().loadLatestComments(patientId, function(data) {
+					console.log("Found " + data.data.length + " comments. Processing...");
+					
+					$.each(data.data, function(index, value) {
+						
+						var tr = $('<tr>');
+						
+						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
+						var icon = new NC.Util().createIcon('comment', 24, null);
+						
+						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
+						tr.append($('<td>').html(activity));
+						tr.append($('<td>').html(value.commentedBy));
+						tr.append($('<td>').css('text-align', 'center').append(icon));
+						
+						$('#comments table tbody').append(tr);
+						
+					});
+					
+					if (data.data.length > 0) {
+						$('#comments table').show();
+						$('#comments div').hide();
+					} else {
+						$('#comments table').hide();
+						$('#comments div').show();
+					}
+				})
+			});
 
 		</script>
 	</netcare:header>
@@ -77,6 +109,15 @@
 				<div class="alert-message info">
 					<p><spring:message code="phome.noComments" /></p>
 				</div>
+				<table class="bordered-table zebra-striped" style="display: none;">
+					<thead>
+						<th>Kommentar</th>
+						<th>Aktivitet</th>
+						<th>Från</th>
+						<th>&nbsp;</th>
+					</thead>
+					<tbody></tbody>
+				</table>
 			</section>
 			
 			<br />

@@ -24,7 +24,12 @@ public final class DateUtil {
 	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_TIME_PATTERN);
 	
+	/**
+	 * Format the give date object. Return null if date is null
+	 * @param date
+	 * @return
+	 */
 	public static String toDateTime(final Date date) {
-		return SDF.format(date);
+		return date != null ? SDF.format(date) : null;
 	}
 }

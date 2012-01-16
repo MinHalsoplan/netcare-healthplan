@@ -325,6 +325,23 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					}
 				}
 			});
+		},
+		
+		loadLatestComments : function(patientId, callback) {
+			var url = _baseUrl + '/activity/reported/' + patientId + '/comments';
+			console.log("Loading latest comments using url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					
+					if (data.success) {
+						callback(data);
+					}
+				}
+			});
 		}
 	};
 	

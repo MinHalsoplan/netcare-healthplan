@@ -666,14 +666,14 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			final CareGiverEntity cg = (CareGiverEntity) user;
 			ent.getComments().add(ActivityCommentEntity.newEntity(comment, cg, ent));
 			
-			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(this.scheduledActivityRepository.save(ent)), new GenericSuccessMessage());
+			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent), new GenericSuccessMessage());
 		} else {
 			throw new SecurityException("A patient is not allow to comment his own activity");
 		}
 	}
 
 	@Override
-	public ServiceResult<ActivityComment[]> getCommentsForPatient() {
+	public ServiceResult<ActivityComment[]> loadCommentsForPatient() {
 		final PatientEntity patient = this.getPatient();
 		final List<ActivityCommentEntity> entities = this.commentRepository.findCommentsForPatient(patient);
 		

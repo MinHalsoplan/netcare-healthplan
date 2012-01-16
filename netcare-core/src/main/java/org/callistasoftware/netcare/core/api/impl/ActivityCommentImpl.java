@@ -19,7 +19,6 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 
@@ -33,7 +32,7 @@ public class ActivityCommentImpl implements ActivityComment {
 	private Long id;
 	private String comment;
 	private String reply;
-	private CareGiverBaseView careGiver;
+	private String commentedBy;
 	private String commentedAt;
 	private String repliedAt;
 	private String activityName;
@@ -47,6 +46,7 @@ public class ActivityCommentImpl implements ActivityComment {
 		this.activityReportedAt = DateUtil.toDateTime(entity.getActivity().getReportedTime());
 		this.commentedAt = DateUtil.toDateTime(entity.getCommentedAt());
 		this.repliedAt = DateUtil.toDateTime(entity.getRepliedAt());
+		this.commentedBy = entity.getCommentedBy().getName();
 	}
 	
 	public static ActivityComment newFromEntity(final ActivityCommentEntity entity) {
@@ -82,8 +82,8 @@ public class ActivityCommentImpl implements ActivityComment {
 	}
 
 	@Override
-	public CareGiverBaseView getCareGiver() {
-		return this.careGiver;
+	public String getCommentedBy() {
+		return this.commentedBy;
 	}
 
 	@Override

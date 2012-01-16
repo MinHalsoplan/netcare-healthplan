@@ -117,7 +117,7 @@ public interface HealthPlanService {
 	 * Get comments on reported activities for the currently logged in patient
 	 * @return
 	 */
-	ServiceResult<ActivityComment[]> getCommentsForPatient();
+	ServiceResult<ActivityComment[]> loadCommentsForPatient();
 	
 	/**
 	 * Reports on an activity and returns the update.
