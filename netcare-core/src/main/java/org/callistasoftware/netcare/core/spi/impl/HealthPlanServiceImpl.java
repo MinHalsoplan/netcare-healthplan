@@ -694,4 +694,29 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntity(ent), new GenericSuccessMessage());
 	}
+
+	@Override
+	public ServiceResult<ActivityComment[]> loadRepliesForCareGiver() {
+		final CareGiverEntity cg = this.getCareGiver();
+		log.info("Loading replies for care giver {}", cg.getName());
+		
+		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg);
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments), new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));
+	}
+
+	@Override
+	public ServiceResult<ActivityComment> deleteComment(Long commentId) {
+		final UserEntity user = this.getCurrentUser();
+		log.info("Care giver {} is deleting comment {}", user.getId(), commentId);
+		
+		final ActivityCommentEntity ent = this.commentRepository.findOne(commentId);
+		if (ent == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class, commentId));
+		}
+		
+		this.verifyWriteAccess(ent);
+		this.commentRepository.delete(ent);
+		
+		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+	}
 }

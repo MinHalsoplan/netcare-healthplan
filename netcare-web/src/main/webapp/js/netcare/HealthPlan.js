@@ -344,6 +344,22 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			});
 		},
 		
+		loadNewReplies : function(callback) {
+			var url = _baseUrl + '/activity/reported/comments/newreplies';
+			console.log("Loading new replies using url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					if (data.success && callback !== undefined) {
+						callback(data);
+					}
+				}
+			});
+		},
+		
 		sendCommentReply : function(commentId, reply, callback) {
 			var url = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
 			console.log("Reply to comment " + commentId + " using url: " + url);
@@ -353,6 +369,23 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				dataType : 'json',
 				type : 'post',
 				data : { reply : reply },
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					if (data.success && callback !== undefined) {
+						callback(data);
+					}
+				}
+			});
+		},
+		
+		deleteComment : function(commentId, callback) {
+			var url = _baseUrl + '/activity/reported/comments/' + commentId + '/delete';
+			console.log("Deleting comment " + commentId + " using url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				type : 'post',
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
 					if (data.success && callback !== undefined) {

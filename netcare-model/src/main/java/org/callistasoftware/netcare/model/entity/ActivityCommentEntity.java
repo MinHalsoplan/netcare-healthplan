@@ -30,7 +30,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="nc_activity_comment")
-public class ActivityCommentEntity {
+public class ActivityCommentEntity implements PermissionRestrictedEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -124,5 +124,19 @@ public class ActivityCommentEntity {
 
 	void setActivity(ScheduledActivityEntity activity) {
 		this.activity = activity;
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		return this.isWriteAllowed(user);
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		if (user.isCareGiver()) {
+			return user.getId().equals(this.getCommentedBy().getId());
+		}
+		
+		return user.getId().equals(this.getActivity().getActivityDefinitionEntity().getHealthPlan().getForPatient().getId());
 	}
 }

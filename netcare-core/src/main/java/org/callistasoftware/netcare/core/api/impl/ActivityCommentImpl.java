@@ -21,6 +21,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 
 public class ActivityCommentImpl implements ActivityComment {
 	
@@ -35,18 +36,25 @@ public class ActivityCommentImpl implements ActivityComment {
 	private String commentedBy;
 	private String commentedAt;
 	private String repliedAt;
+	private String repliedBy;
 	private String activityName;
 	private String activityReportedAt;
 	
 	ActivityCommentImpl(final ActivityCommentEntity entity) {
 		this.id = entity.getId();
 		this.comment = entity.getComment();
-		this.reply = entity.getReply();
 		this.activityName = entity.getActivity().getActivityDefinitionEntity().getActivityType().getName();
 		this.activityReportedAt = DateUtil.toDateTime(entity.getActivity().getReportedTime());
 		this.commentedAt = DateUtil.toDateTime(entity.getCommentedAt());
-		this.repliedAt = DateUtil.toDateTime(entity.getRepliedAt());
 		this.commentedBy = entity.getCommentedBy().getName();
+		
+		if (entity.getRepliedAt() != null) {
+			this.reply = entity.getReply();
+			this.repliedAt = DateUtil.toDateTime(entity.getRepliedAt());
+			
+			final PatientEntity p = entity.getActivity().getActivityDefinitionEntity().getHealthPlan().getForPatient();
+			this.repliedBy = p.getName() + " (" + p.getCivicRegistrationNumber() + ")";
+		}
 	}
 	
 	public static ActivityComment newFromEntity(final ActivityCommentEntity entity) {
@@ -104,6 +112,11 @@ public class ActivityCommentImpl implements ActivityComment {
 	@Override
 	public String getActivityReportedAt() {
 		return this.activityReportedAt;
+	}
+
+	@Override
+	public String getRepliedBy() {
+		return this.repliedBy;
 	}
 
 }

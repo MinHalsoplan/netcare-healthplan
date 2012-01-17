@@ -57,6 +57,12 @@ public interface ActivityComment extends Serializable {
 	String getRepliedAt();
 	
 	/**
+	 * Get the name of the patient who replied
+	 * @return
+	 */
+	String getRepliedBy();
+	
+	/**
 	 * Get the activity
 	 * @return
 	 */

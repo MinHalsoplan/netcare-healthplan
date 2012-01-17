@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.repository;
 import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,6 +30,9 @@ public interface ActivityCommentRepository extends JpaRepository<ActivityComment
 	@Query(value="select e from ActivityCommentEntity as e inner join " +
 			"e.activity as a inner join " +
 			"a.activityDefinition as ad inner join " +
-			"ad.healthPlan as hp where hp.forPatient = :patient")
+			"ad.healthPlan as hp where hp.forPatient = :patient and e.repliedAt = null")
 	List<ActivityCommentEntity> findCommentsForPatient(@Param("patient") final PatientEntity patient);
+	
+	@Query(value="select e from ActivityCommentEntity as e where e.commentedBy = :careGiver and e.repliedAt != null")
+	List<ActivityCommentEntity> findRepliesForCareGiver(@Param("careGiver") final CareGiverEntity careGiver);
 }

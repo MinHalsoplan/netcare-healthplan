@@ -127,6 +127,19 @@ public interface HealthPlanService {
 	ServiceResult<ActivityComment[]> loadCommentsForPatient();
 	
 	/**
+	 * Load replies for the currently logged in care giver
+	 * @return
+	 */
+	ServiceResult<ActivityComment[]> loadRepliesForCareGiver();
+	
+	/**
+	 * Delete a comment with the specified id
+	 * @param commentId
+	 * @return
+	 */
+	ServiceResult<ActivityComment> deleteComment(final Long commentId);
+	
+	/**
 	 * Reports on an activity and returns the update.
 	 * 
 	 * @param scheduledActivityId the id.

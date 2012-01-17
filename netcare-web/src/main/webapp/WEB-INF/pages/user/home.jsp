@@ -79,15 +79,14 @@
 					console.log("Found " + data.data.length + " comments. Processing...");
 					
 					if (data.data.length > 0) {
-						
-						$('#comments table tbody').empty();
-						
 						$('#comments table').show();
 						$('#comments div').hide();
 					} else {
 						$('#comments table').hide();
 						$('#comments div').show();
 					}
+					
+					$('#comments table tbody').empty();
 					
 					$.each(data.data, function(index, value) {
 						
@@ -108,7 +107,6 @@
 									$('#sendReply').modal('hide');
 									
 									hps.loadLatestComments(patientId, loadComments);
-									return;
 								});
 							});
 							
@@ -117,7 +115,9 @@
 						aElem.append(icon);
 						
 						var deleteIcon = util.createIcon('trash', 24, function() {
-							
+							hps.deleteComment(value.id, function(data) {
+								hps.loadLatestComments(patientId, loadComments);
+							});
 						});
 						
 						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
@@ -133,7 +133,7 @@
 						$('#comments table tbody').append(tr);
 						
 					});
-				}
+				};
 				
 				hps.loadLatestComments(patientId, loadComments);
 				

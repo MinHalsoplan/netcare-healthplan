@@ -89,7 +89,47 @@
 				$('#commentActivity').modal();
 				$('#commentActivity').bind('shown', function() {
 					$('#commentActivity input[name="comment"]').focus();
-				})
+				});
+				
+				var loadReplies = function() {
+					hp.loadNewReplies(function(data) {
+						
+						if (data.data.length > 0) {
+							$('#replies div').hide();
+							$('#replies table').show();
+						} else {
+							$('#replies div').show();
+							$('#replies table').hide();
+						}
+						
+						$('#replies table tbody').empty();
+						
+						$.each(data.data, function(index, value) {
+							var tr = $('<tr>');
+							
+							tr.append($('<td>').css('font-style', 'italic').html(value.comment));
+							tr.append($('<td>').css('font-style', 'italic').html(value.reply));
+							tr.append($('<td>').html(value.repliedBy));
+							tr.append($('<td>').html(value.activityName));
+							
+							var deleteIcon = util.createIcon('trash', 24, function() {
+								hp.deleteComment(value.id, function(data) {
+									loadReplies();
+								});
+							});
+							
+							var actionCol = $('<td>');
+							actionCol.append(deleteIcon);
+							
+							tr.append(actionCol);
+							
+							$('#replies table tbody').append(tr);
+						});
+						
+					});
+				};
+				
+				loadReplies();
 			});
 		</script>
 	</netcare:header>
@@ -111,10 +151,33 @@
 				
 			</section>
 			
+			<section id="replies">
+				<h2>:<spring:message code="comments.replies" /></h2>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="comments.repliesDescription" />
+				</p>
+				<div class="alert-message info">
+					<p><spring:message code="comments.noReplies" />
+				</div>
+				<table class="bordered-table zebra-striped shadow-box">
+					<thead>
+						<th><spring:message code="comments.comment" /></th>
+						<th><spring:message code="comments.reply" /></th>
+						<th><spring:message code="comments.from" />
+						<th><spring:message code="comments.activity" /></th>
+						<th>&nbsp;</th>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</section>
+			
+			<br />
+			
 			<section id="aktiviteter">
 				<h2>:Genomförda aktiviteter</h2>
 				<p>
-					<span class="label notice">Information</span>
+					<span class="label notice"><spring:message code="information" /></span>
 					Nedan visas en översikt över de patienter som har rapporterat och genomfört
 					aktiviteter det senaste dygnet.
 				</p>
@@ -138,13 +201,13 @@
 				<div id="commentActivity" class="modal hide fade" style="display: none;">
 					<div class="modal-header">
 						<a href="#" class="close">x</a>
-						<h3>Kommentera</h3>
+						<h3><spring:message code="comments.comment" /></h3>
 					</div>
 					
 					<div class="modal-body">
 						<form action="post">
 							<input type="text" name="comment" class="xlarge" />
-							<input type="submit" class="btn primary" value="Kommentera" />
+							<input type="submit" class="btn primary" value="<spring:message code='comments.sendComment' />" />
 						</form>
 					</div>
 				</div>
@@ -154,9 +217,9 @@
 			<br />
 			
 			<section id="alarms">
-				<h2>:Larmöversikt</h2>
+				<h2>:<spring:message code="alarm.overview" /></h2>
 				<p>
-					<span class="label notice">Information</span>
+					<span class="label notice"><spring:message code="information" /></span>
 					<spring:message code="alarm.information" />
 				</p>
 				
