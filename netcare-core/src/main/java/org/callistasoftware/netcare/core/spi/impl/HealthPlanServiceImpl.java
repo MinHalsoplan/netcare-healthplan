@@ -679,4 +679,19 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(entities), new ListEntitiesMessage(ActivityCommentEntity.class, entities.size()));
 	}
+
+	@Override
+	public ServiceResult<ActivityComment> replyToComment(Long comment, final String reply) {
+		final ActivityCommentEntity ent = this.commentRepository.findOne(comment);
+		if (ent == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class, comment));
+		}
+		
+		this.verifyWriteAccess(getPatient());
+		
+		ent.setReply(reply);
+		ent.setRepliedAt(new Date());
+		
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntity(ent), new GenericSuccessMessage());
+	}
 }

@@ -71,49 +71,106 @@
 			$(function() {
 				console.log("Loading latest comments...");
 				var patientId = '<sec:authentication property="principal.id" />';
-				new NC.HealthPlan().loadLatestComments(patientId, function(data) {
+				
+				var util = new NC.Util();
+				var hps = new NC.HealthPlan();
+				
+				var loadComments = function(data) {
 					console.log("Found " + data.data.length + " comments. Processing...");
 					
-					$.each(data.data, function(index, value) {
-						
-						var tr = $('<tr>');
-						
-						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
-						var icon = new NC.Util().createIcon('comment', 24, null);
-						
-						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
-						tr.append($('<td>').html(activity));
-						tr.append($('<td>').html(value.commentedBy));
-						tr.append($('<td>').css('text-align', 'center').append(icon));
-						
-						$('#comments table tbody').append(tr);
-						
-					});
-					
 					if (data.data.length > 0) {
+						
+						$('#comments table tbody').empty();
+						
 						$('#comments table').show();
 						$('#comments div').hide();
 					} else {
 						$('#comments table').hide();
 						$('#comments div').show();
 					}
-				})
+					
+					$.each(data.data, function(index, value) {
+						
+						var tr = $('<tr>');
+						
+						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
+						
+						var aElem = $('<a data-controls-modal="sendReply">');
+						var icon = util.createIcon('comment', 24, function() {
+							
+							$('#sendReply form input:submit').click(function(event) {
+								event.preventDefault();
+								console.log("Submitting reply...");
+								
+								hps.sendCommentReply(value.id, $('#sendReply input[name="reply"]').val(), function(data) {
+									
+									$('#sendReply form input[name="reply"]').val('');
+									$('#sendReply').modal('hide');
+									
+									hps.loadLatestComments(patientId, loadComments);
+									return;
+								});
+							});
+							
+						});
+						
+						aElem.append(icon);
+						
+						var deleteIcon = util.createIcon('trash', 24, function() {
+							
+						});
+						
+						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
+						tr.append($('<td>').html(activity));
+						tr.append($('<td>').html(value.commentedBy));
+						
+						var actionCol = $('<td>');
+						actionCol.append(aElem);
+						actionCol.append(deleteIcon);
+						
+						tr.append(actionCol);
+						
+						$('#comments table tbody').append(tr);
+						
+					});
+				}
+				
+				hps.loadLatestComments(patientId, loadComments);
+				
+				$('#sendReply').modal();
+				$('#sendReply').bind('shown', function() {
+					$('#sendReply input[name="reply"]').focus();
+				});
 			});
 
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<section id="comments">
-				<h2><spring:message code="phome.comments" /></h2>
-				<div class="alert-message info">
-					<p><spring:message code="phome.noComments" /></p>
+		
+			<div id="sendReply" class="modal hide fade" style="display: none;">
+				<div class="modal-header">
+					<a href="#" class="close">x</a>
+					<h3><spring:message code="comments.sendReply" /></h3>
 				</div>
-				<table class="bordered-table zebra-striped" style="display: none;">
+				<div class="modal-body">
+					<form action="#" method="post">
+						<input type="text" class="xlarge" name="reply" />
+						<input type="submit" class="btn primary" value="<spring:message code="comments.reply" />" />
+					</form>
+				</div>
+			</div>
+		
+			<section id="comments">
+				<h2><spring:message code="comments.comments" /></h2>
+				<div class="alert-message info">
+					<p><spring:message code="comments.noComments" /></p>
+				</div>
+				<table class="bordered-table zebra-striped shadow-box" style="display: none;">
 					<thead>
-						<th>Kommentar</th>
-						<th>Aktivitet</th>
-						<th>Från</th>
+						<th><spring:message code="comments.comment" /></th>
+						<th><spring:message code="comments.activity" /></th>
+						<th><spring:message code="comments.from" /></th>
 						<th>&nbsp;</th>
 					</thead>
 					<tbody></tbody>

@@ -108,6 +108,13 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
 	}
 	
+	@RequestMapping(value="/activity/reported/comment/{comment}/reply", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityComment> sendCommentReply(@PathVariable(value="comment") final Long comment, @RequestParam(value="reply") final String reply) {
+		this.logAccess("reply", "comment");
+		return this.service.replyToComment(comment, reply);
+	}
+	
 	@RequestMapping(value="/activity/{activity}/comment", produces="application/json", method=RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="comment") final String comment) {

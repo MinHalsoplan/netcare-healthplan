@@ -114,6 +114,13 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity> commentOnPerformedActivity(final Long activityId, final String comment);
 	
 	/**
+	 * Reply to a comment
+	 * @param comment
+	 * @return
+	 */
+	ServiceResult<ActivityComment> replyToComment(final Long comment, final String reply);
+	
+	/**
 	 * Get comments on reported activities for the currently logged in patient
 	 * @return
 	 */
