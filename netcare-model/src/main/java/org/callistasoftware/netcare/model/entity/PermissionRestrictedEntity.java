@@ -25,7 +25,7 @@ public interface PermissionRestrictedEntity {
 	 * @param user - The user who is trying to read
 	 * @return
 	 */
-	boolean isReadAllowed(final UserEntity userId);
+	boolean isReadAllowed(final UserEntity user);
 	
 	/**
 	 * Whether the user is allowed to modify information
@@ -33,5 +33,5 @@ public interface PermissionRestrictedEntity {
 	 * @param user - The user who is trying to write
 	 * @return
 	 */
-	boolean isWriteAllowed(final UserEntity userId);
+	boolean isWriteAllowed(final UserEntity user);
 }

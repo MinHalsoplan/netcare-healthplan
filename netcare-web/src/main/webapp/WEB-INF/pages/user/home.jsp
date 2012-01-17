@@ -21,6 +21,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
 <netcare:page>
@@ -66,31 +67,83 @@
 					});
 				});
 			});
+			
+			$(function() {
+				console.log("Loading latest comments...");
+				var patientId = '<sec:authentication property="principal.id" />';
+				new NC.HealthPlan().loadLatestComments(patientId, function(data) {
+					console.log("Found " + data.data.length + " comments. Processing...");
+					
+					$.each(data.data, function(index, value) {
+						
+						var tr = $('<tr>');
+						
+						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
+						var icon = new NC.Util().createIcon('comment', 24, null);
+						
+						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
+						tr.append($('<td>').html(activity));
+						tr.append($('<td>').html(value.commentedBy));
+						tr.append($('<td>').css('text-align', 'center').append(icon));
+						
+						$('#comments table tbody').append(tr);
+						
+					});
+					
+					if (data.data.length > 0) {
+						$('#comments table').show();
+						$('#comments div').hide();
+					} else {
+						$('#comments table').hide();
+						$('#comments div').show();
+					}
+				})
+			});
 
 		</script>
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h1><spring:message code="phome.header" /></h1>
-			<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
-			<div id="planDescription" style="margin: 10px"></div>
-			<table id="planTable"
-				style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
-				class="condensed zebra-striped">
-				<thead>
-					<th>&nbsp;</th>
-					<th><spring:message code="phome.activity" /></th>
-					<th><spring:message code="phome.until" /></th>
-					<th><spring:message code="phome.frequency" /></th>
-					<th colspan='2'><spring:message code="phome.done" /></th>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			<div style="text-align: right">
-				<a href="results"><spring:message code="phome.resultLink" /></a>&nbsp;|&nbsp; <a
-					href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
-			</div>
+			<section id="comments">
+				<h2><spring:message code="phome.comments" /></h2>
+				<div class="alert-message info">
+					<p><spring:message code="phome.noComments" /></p>
+				</div>
+				<table class="bordered-table zebra-striped" style="display: none;">
+					<thead>
+						<th>Kommentar</th>
+						<th>Aktivitet</th>
+						<th>Från</th>
+						<th>&nbsp;</th>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</section>
+			
+			<br />
+			
+			<section id="healthPlan">
+				<h2><spring:message code="phome.header" /></h2>
+				<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
+				<div id="planDescription" style="margin: 10px"></div>
+				<table id="planTable"
+					style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
+					class="condensed zebra-striped">
+					<thead>
+						<th>&nbsp;</th>
+						<th><spring:message code="phome.activity" /></th>
+						<th><spring:message code="phome.until" /></th>
+						<th><spring:message code="phome.frequency" /></th>
+						<th colspan='2'><spring:message code="phome.done" /></th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<div style="text-align: right">
+					<a href="results"><spring:message code="phome.resultLink" /></a>&nbsp;|&nbsp; <a
+						href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
+				</div>
+			</section>
 		</netcare:content>
 	</netcare:body>
 </netcare:page>

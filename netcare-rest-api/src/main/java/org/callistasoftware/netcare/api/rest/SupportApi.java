@@ -19,14 +19,11 @@ package org.callistasoftware.netcare.api.rest;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.MessageFields;
 import org.callistasoftware.netcare.core.api.Option;
-import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
-import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.slf4j.Logger;
@@ -50,9 +47,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SupportApi extends ApiSupport {
 	
 	private static final Logger log = LoggerFactory.getLogger(SupportApi.class);
-	
-	@Autowired
-	private HealthPlanService service;
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -123,13 +117,6 @@ public class SupportApi extends ApiSupport {
 		weekdays[6] = this.messageSource.getMessage("saturday", null, locale);
 		
 		return ServiceResultImpl.createSuccessResult(weekdays, new GenericSuccessMessage());
-	}
-	
-	@RequestMapping(value="/reported/latest", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
-		this.logAccess("load", "reported activities");
-		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
 	}
 	
 	/**

@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.ApiUtil;
@@ -37,6 +38,7 @@ import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
@@ -50,6 +52,7 @@ import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.statistics.ReportedActivity;
 import org.callistasoftware.netcare.core.api.statistics.ReportedValue;
+import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
@@ -58,6 +61,7 @@ import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
+import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
@@ -127,6 +131,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ScheduledActivityRepository scheduledActivityRepository;
+	
+	@Autowired
+	private ActivityCommentRepository commentRepository;
 	
 	@Autowired
 	private MessageSource messages;
@@ -642,5 +649,34 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return "SU";
 		}
 		throw new IllegalArgumentException("Invalid day: " + day.getDay());
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> commentOnPerformedActivity(
+			Long activityId, String comment) {
+		final ScheduledActivityEntity ent = this.scheduledActivityRepository.findOne(activityId);
+		if (ent == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class, activityId));
+		}
+		
+		this.verifyWriteAccess(ent);
+		
+		final UserEntity user = this.getCurrentUser();
+		if (user.isCareGiver()) {
+			final CareGiverEntity cg = (CareGiverEntity) user;
+			ent.getComments().add(ActivityCommentEntity.newEntity(comment, cg, ent));
+			
+			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent), new GenericSuccessMessage());
+		} else {
+			throw new SecurityException("A patient is not allow to comment his own activity");
+		}
+	}
+
+	@Override
+	public ServiceResult<ActivityComment[]> loadCommentsForPatient() {
+		final PatientEntity patient = this.getPatient();
+		final List<ActivityCommentEntity> entities = this.commentRepository.findCommentsForPatient(patient);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(entities), new ListEntitiesMessage(ActivityCommentEntity.class, entities.size()));
 	}
 }

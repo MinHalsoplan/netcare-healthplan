@@ -32,6 +32,10 @@ $(function() {
 			$(this).removeClass('spinner');
 		}
 	});
+	
+	$('.nc-autocomplete').blur(function() {
+		$(this).removeClass('spinner');
+	});
 	console.log("done.");
 	
 	var handleErrorCode = function(code) {

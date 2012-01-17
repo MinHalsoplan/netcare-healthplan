@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
@@ -105,6 +106,20 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity[]> getActivitiesForPatient(final PatientBaseView patient);
 	
 	/**
+	 * Comment a performed activity
+	 * @param activityId
+	 * @param comment
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> commentOnPerformedActivity(final Long activityId, final String comment);
+	
+	/**
+	 * Get comments on reported activities for the currently logged in patient
+	 * @return
+	 */
+	ServiceResult<ActivityComment[]> loadCommentsForPatient();
+	
+	/**
 	 * Reports on an activity and returns the update.
 	 * 
 	 * @param scheduledActivityId the id.
@@ -134,7 +149,7 @@ public interface HealthPlanService {
 	 */
 	ServiceResult<PatientEvent> getActualEventsForPatient(final PatientBaseView patient);
 
-	/*
+	/**
 	 * Get reported activities for a certain activity definition within a specific time interval
 	 * @param activityDefintionId
 	 * @param start

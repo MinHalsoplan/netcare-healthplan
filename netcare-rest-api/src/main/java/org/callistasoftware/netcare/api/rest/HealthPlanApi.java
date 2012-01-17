@@ -16,9 +16,11 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -89,6 +92,28 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
 		this.logAccess("delete", "activity definition");
 		return this.service.deleteActivity(activityDefinitionId);
+	}
+	
+	@RequestMapping(value="/activity/reported/{patient}/comments", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityComment[]> loadCommentsForPatient(@PathVariable(value="patient") final Long patient) {
+		this.logAccess("load", "comments");
+		return this.service.loadCommentsForPatient();
+	}
+	
+	@RequestMapping(value="/activity/reported/latest", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
+		this.logAccess("load", "reported activities");
+		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
+	}
+	
+	@RequestMapping(value="/activity/{activity}/comment", produces="application/json", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="comment") final String comment) {
+		this.logAccess("comment", "activity");
+		log.debug("Comment is: {}", comment);
+		return this.service.commentOnPerformedActivity(activity, comment);
 	}
 	
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")

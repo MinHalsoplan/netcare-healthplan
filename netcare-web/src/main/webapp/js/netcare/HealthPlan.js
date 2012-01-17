@@ -224,6 +224,124 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					public.listActivities(healthPlanId, tableId);
 				}
 			});
+		},
+		
+		/**
+		 * Load the latest reported activities
+		 */
+		loadLatestReportedActivities : function(containerId) {
+			var url = _baseUrl + '/activity/reported/latest';
+			console.log("Loading latest reported activities from url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					var util = new NC.Util();
+					
+					util.processServiceResult(data);
+					
+					if (data.success) {
+						
+						$.each(data.data, function(index, value) {
+							console.log("Processing value: " + value);
+							
+							var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
+							var unit = value.definition.type.unit.value;
+							var typeName = value.definition.type.name;
+							var goalString = value.definition.goal + ' ' + unit;
+							var reportedString = value.actualValue + ' ' + unit;
+							var reportedAt = value.reported;
+							
+							var tr = $('<tr>');
+							
+							var name = $('<td>' + patient + '</td>');
+							var type = $('<td>' + typeName + '</td>');
+							var goal = $('<td>' + goalString + '</td>');
+							var reported = $('<td>' + reportedString + '</td>');
+							var at = $('<td>' + reportedAt + '</td>');
+							
+							console.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
+							if (value.actualValue !== value.definition.goal) {
+								console.log("Value diff. Mark yellow");
+								reported.css('background-color', 'lightyellow');
+							} else if (value.actualValue == value.definition.goal) {
+								reported.css('background-color', 'lightgreen');
+							}
+							
+							var aElem = $('<a data-controls-modal="commentActivity" data-backdrop="true">');
+							var likeIcon = util.createIcon('like', 24, function() {
+								$('#commentActivity input:submit').click(function(event) {
+									event.preventDefault();
+									console.log("Submitting comment");
+									
+									var commentUrl = _baseUrl + '/activity/' + value.id + '/comment';
+									console.log("Posting comment using url: " + commentUrl);
+									
+									var comment = $('#commentActivity input[name="comment"]').val();
+									
+									$.ajax({
+										url : commentUrl,
+										dataType : 'json',
+										type : 'post',
+										data : { comment : comment },
+										success : function(data) {
+											console.log("Successfully commented activity...");
+											util.processServiceResult(data);
+											
+											$('#commentActivity input[name="comment"]').val('');
+											$('#commentActivity').modal('hide');
+										}
+									});
+								});
+							});
+							
+							var actionCol = $('<td>');
+							aElem.append(likeIcon);
+							actionCol.append(aElem);
+							
+							tr.append(name);
+							tr.append(type);
+							tr.append(goal);
+							tr.append(reported);
+							tr.append(at);
+							tr.append(actionCol);
+							
+							$('#' + containerId + ' table tbody').append(tr);
+							console.log("Appended to table body");
+						});
+						
+						var count = $('#' + containerId + ' table tbody tr').size();
+						if(count > 0) {
+							$('#' + containerId + ' table').show();
+							$('#' + containerId + ' div').hide();
+						} else {
+							$('#' + containerId + ' table').hide();
+							$('#' + containerId + ' div').show();
+						}
+						
+					} else {
+						util.processServiceResult(data);
+					}
+				}
+			});
+		},
+		
+		loadLatestComments : function(patientId, callback) {
+			var url = _baseUrl + '/activity/reported/' + patientId + '/comments';
+			console.log("Loading latest comments using url: " + url);
+			
+			$.ajax({
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					new NC.Util().processServiceResult(data);
+					
+					if (data.success) {
+						callback(data);
+					}
+				}
+			});
 		}
 	};
 	
