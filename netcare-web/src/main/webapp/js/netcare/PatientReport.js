@@ -24,8 +24,9 @@ NC.PatientReport = function(descriptionId, tableId) {
 	var _lastUpdatedId = -1;
 	
 	var _captions;
+	var _today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
 	var support = new NC.Support();
-	
+
 	support.loadCaptions('report', ['report', 'change', 'reject'], function(data) {
 		_captions = data;
 	});
@@ -41,6 +42,25 @@ NC.PatientReport = function(descriptionId, tableId) {
 		}
 	}
 	
+	
+	var _lineColor = function(value) {
+		if ((value.due && value.reported == null)) {
+			return 'red';
+		} else if (_today == value.date) {
+			return 'blue';
+		} else {
+			return 'gray';
+		}		
+	}
+	
+	var _reportText = function(value) {
+		if (value.reported != null) {
+			return ((value.rejected) ? _captions.reject : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
+			+ '<br/>' + value.reported;
+		} else {
+			return '&nbsp;';
+		}
+	}
 	
 	var createButton = function(type, value, cls) {
 		var btn = $('<input>').attr('type', type).attr('value', value).attr('class', cls);
@@ -59,6 +79,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 		div.append(rbtn);
 		div.append($('<br>'));
 		var cbtn = createButton('submit', _captions.reject, 'btn small danger');
+		cbtn.attr('cbtn-' + act.id);
 		cbtn.css('margin', '5px');
 		div.append(cbtn);
 		cbtn.attr('disabled', act.rejected);
@@ -123,6 +144,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 			console.log("JSON: " + jsonObj.toString());
 
 			public.performReport(id, jsonObj, function(data) {
+				cbtn.attr('disabled', data.rejected);
 			});
 		});
 		
@@ -148,15 +170,16 @@ NC.PatientReport = function(descriptionId, tableId) {
 				success :  function(data) {
 					console.log('Report successfully done');
 					new NC.Util().processServiceResult(data);
-					callback(data);		
-					public.list();
+					$('#act-' + activityId).css('color', _lineColor(data.data));
+					console.log('#rep-' + activityId + ', ' + _reportText(data.data));
+					$('#rep-' + activityId).html(_reportText(data.data));
+					callback(data.data);	
 				}
 			});		
 		},
 				
 		list : function() {
 			console.log("Load activitues for the patient");
-			var today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
 			var curDay = '';
 			var curActivity = '';
 			var util = NC.Util();
@@ -180,7 +203,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 						}
 						
 						var reportField;
-						if (value.due || today == value.date) {
+						if (value.due || _today == value.date) {
 							reportField = createButtons(value);
 						} else {
 							reportField = '&nbsp;';
@@ -194,29 +217,17 @@ NC.PatientReport = function(descriptionId, tableId) {
 							activityField = '-&nbsp;"&nbsp;-';
 						}
 
-						var lineColor;
-						if (value.due) {
-							lineColor = 'red';
-						} else if (today == value.date) {
-							lineColor = 'blue';
-						} else {
-							lineColor = 'gray';
-						}
+						var lineColor = _lineColor(value);
 
-						var reported;
-						if (value.reported != null) {
-							reported =  ((value.rejected) ? _captions.reject : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
-							+ '<br/>' + value.reported;
-						} else {
-							reported = '&nbsp;';
-						}
+						var reported = _reportText(value);
+						
 						$('#' + tableId + ' tbody').append(
-								$('<tr>').css('color', lineColor).append(
+								$('<tr>').attr('id', 'act-' + value.id).css('color', lineColor).append(
 										$('<td>').html(dayField)).append(
 												$('<td>').html(value.time)).append(
 														$('<td>').css('text-align', 'left').html(activityField)).append(
 																$('<td>').css('text-align', 'center').html(reportField)).append(
-																		$('<td>').css('text-align', 'left').html(reported)));
+																		$('<td>').attr('id', 'rep-' + value.id).css('text-align', 'left').html(reported)));
 					});
 					
 					console.log("Updating ordination count to: " + data.data.length);

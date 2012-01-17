@@ -97,6 +97,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		return o;
 	}
 	
+
 	private ActivityDefinitionEntity createActivityDefinitionEntity() {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");
@@ -116,6 +117,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
 		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		at.setMeasuringSense(true);
+		at.setSenseScaleText("Trötthet");
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
@@ -267,7 +270,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		assertEquals(29, n);
 		assertEquals("2013-02-23", ApiUtil.formatDate(scheduledActivities.get(n-1).getScheduledTime()));
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)

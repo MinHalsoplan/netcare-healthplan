@@ -282,6 +282,17 @@
 				});
 				
 				/*
+				 * Activate sense in addNewType
+				 */
+				 $('#senseCB').change(function() {
+					if ($(this).is(':checked')) {
+						$('#senseTextId').show();
+					} else {
+						$('#senseTextId').hide();						
+					}
+				 });
+				
+				/*
 				 * Save activity type when user submits the form
 				 */
 				$('#addNewType :submit').click(function(event) {
@@ -304,8 +315,13 @@
 					formData.name = name;
 					formData.category = category;
 					formData.unit = unit;
+					formData.measuringSense = $('#addNewType input[name=activateSense]').is(':checked');
+					if (formData.measuringSense) {
+						formData.scaleText = $('#addNewType input[name="scaleText"]').val();
+					}
 					
 					var jsonObj = JSON.stringify(formData);
+					console.log('...... CREATE : ' + jsonObj);
 					new NC.ActivityTypes().create(jsonObj, function(data) {
 						
 						showUnit(data.data.unit.value);
@@ -355,6 +371,20 @@
 						<netcare:field name="unit" label="${unit}">
 							<select name="unit" class="xlarge"></select>
 						</netcare:field>
+
+						<spring:message code="activateSense" var="activateSense" scope="page" />
+						<netcare:field name="activateSense" label="${activateSense}">
+							<input id="senseCB" type="checkbox" name="activateSense" checked="checked" />
+						</netcare:field>
+
+						<div id="senseTextId">
+							<spring:message code="senseText" var="senseText"
+								scope="page" />
+							<netcare:field name="senseText" label="${senseText}">
+								<input type="text" name="scaleText" class="xlarge"/>
+							</netcare:field>
+						</div>
+
 					</div>
 					<div class="modal-footer">
 						<input type="submit" value="<spring:message code="create" />" class="btn primary"/>

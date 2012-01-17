@@ -67,8 +67,12 @@ public class ApplicationListener extends ContextLoaderListener {
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
 
-		atRepo.save(ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER));
+		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		ate.setMeasuringSense(true);
+		ate.setSenseScaleText("Lätt(1) - Tufft(5)");
+		atRepo.save(ate);
 		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE));
+		atRepo.flush();
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");
@@ -103,10 +107,8 @@ public class ApplicationListener extends ContextLoaderListener {
 		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
 		
-		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
-		atRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg);
 		ad.setActivityTarget(1200);
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
