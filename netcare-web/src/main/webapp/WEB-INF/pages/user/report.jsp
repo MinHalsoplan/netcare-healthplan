@@ -75,6 +75,10 @@
 					});
 				});
 				
+				$('#historyBoxId').click(function() {
+					report.showHistory($(this).is(':checked'));
+				});
+				
 			});
 				
 		</script>
@@ -83,6 +87,8 @@
 		<netcare:content>
 			<h1><spring:message code="report.header" /></h1>
 			<p id="schemaDescription"></p>
+			<input id="historyBoxId" type="checkbox" />
+			<spring:message code="report.showHistory" />
 
 			<div id="reportFormDiv" class="modal hide fade"
 				style="display: none;">

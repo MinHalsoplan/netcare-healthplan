@@ -317,7 +317,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.setActualValue(report.getActualValue());
 		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
 		entity.setActualTime(d);
-		scheduledActivityRepository.save(entity);
+		entity = scheduledActivityRepository.save(entity);
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(entity), new GenericSuccessMessage());
 	}
 

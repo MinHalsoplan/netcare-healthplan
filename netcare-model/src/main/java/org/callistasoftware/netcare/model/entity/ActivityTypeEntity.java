@@ -25,6 +25,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import antlr.debug.MessageAdapter;
+
 @Entity
 @Table(name="nc_activity_type")
 public class ActivityTypeEntity {
@@ -38,8 +40,8 @@ public class ActivityTypeEntity {
 	@Column(nullable=false)
 	private MeasureUnit unit;
 	
-	@Column(name="measure_sense", nullable=false)
-	private boolean measuringSense;
+	@Column(name="measuring_sense", length=1)
+	private String measuringSense;
 	
 	@Column(name="sense_scale_text")
 	private String senseScaleText;
@@ -95,11 +97,11 @@ public class ActivityTypeEntity {
 	}
 
 	public boolean isMeasuringSense() {
-		return measuringSense;
+		return "Y".equals(measuringSense);
 	}
 
 	public void setMeasuringSense(boolean measuringSense) {
-		this.measuringSense = measuringSense;
+		this.measuringSense = (measuringSense) ? "Y" : null;
 	}
 
 	public String getSenseScaleText() {
