@@ -76,7 +76,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				data : formData,
 				contentType : 'application/json',
 				success :  function(data) {
-					console.log('Ordination successfully created');
+					console.log('Health plan successfully created');
 					new NC.Util().processServiceResult(data);
 					
 					/* Execute callback */
@@ -96,7 +96,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				url : url,
 				type : 'post',
 				success : function(data) {
-					console.log('Deletion of ordination succeeded.');
+					console.log('Deletion of health plan succeeded.');
 					new NC.Util().processServiceResult(data);
 					callback(data);					
 				}
@@ -271,27 +271,22 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							
 							var aElem = $('<a data-controls-modal="commentActivity" data-backdrop="true">');
 							var likeIcon = util.createIcon('like', 24, function() {
-								$('#commentActivity input:submit').click(function(event) {
+								
+								console.log("Clicked on " + value.id);
+								
+								$('#commentActivity button').click(function(event) {
 									event.preventDefault();
-									console.log("Submitting comment");
 									
-									var commentUrl = _baseUrl + '/activity/' + value.id + '/comment';
-									console.log("Posting comment using url: " + commentUrl);
+									console.log("Executing... " + value.id);
 									
 									var comment = $('#commentActivity input[name="comment"]').val();
-									
-									$.ajax({
-										url : commentUrl,
-										dataType : 'json',
-										type : 'post',
-										data : { comment : comment },
-										success : function(data) {
-											console.log("Successfully commented activity...");
-											util.processServiceResult(data);
-											
-											$('#commentActivity input[name="comment"]').val('');
-											$('#commentActivity').modal('hide');
-										}
+									public.sendComment(value.id, comment, function(data) {
+										console.log("Successfully posted " + comment);
+										
+										$('#commentActivity input[name="comment"]').val('');
+										$('#commentActivity').modal('hide');
+										
+										$('#commentActivity button').unbind('click');
 									});
 								});
 							});
@@ -353,6 +348,26 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				dataType : 'json',
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
+					if (data.success && callback !== undefined) {
+						callback(data);
+					}
+				}
+			});
+		},
+		
+		sendComment : function(activityId, comment, callback) {
+			var commentUrl = _baseUrl + '/activity/' + activityId + '/comment';
+			console.log("Posting comment using url: " + commentUrl);
+			
+			$.ajax({
+				url : commentUrl,
+				dataType : 'json',
+				type : 'post',
+				data : { comment : comment },
+				success : function(data) {
+					console.log("Successfully commented activity...");
+					new NC.Util().processServiceResult(data);
+					
 					if (data.success && callback !== undefined) {
 						callback(data);
 					}

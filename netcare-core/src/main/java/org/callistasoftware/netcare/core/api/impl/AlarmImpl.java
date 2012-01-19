@@ -28,6 +28,11 @@ import org.callistasoftware.netcare.model.entity.AlarmEntity;
 
 public class AlarmImpl implements Alarm {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Long id;
 	private String careUnitHsaId;
 	private Patient patient;

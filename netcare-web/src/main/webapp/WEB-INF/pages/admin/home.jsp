@@ -207,7 +207,7 @@
 					<div class="modal-body">
 						<form action="post">
 							<input type="text" name="comment" class="xlarge" />
-							<input type="submit" class="btn primary" value="<spring:message code='comments.sendComment' />" />
+							<button class="btn primary"><spring:message code='comments.sendComment' /></button>
 						</form>
 					</div>
 				</div>

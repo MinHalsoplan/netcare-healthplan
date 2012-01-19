@@ -106,6 +106,8 @@
 									$('#sendReply form input[name="reply"]').val('');
 									$('#sendReply').modal('hide');
 									
+									$('#sendReply').unbind('click');
+									
 									hps.loadLatestComments(patientId, loadComments);
 								});
 							});
