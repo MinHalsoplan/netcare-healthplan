@@ -120,4 +120,22 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(patient), new GenericSuccessMessage());
 	}
+
+	@Override
+	public ServiceResult<Patient> updatePatient(Long id, PatientImpl patient) {
+		log.info("Updating patient {}", id);
+		final PatientEntity p = this.patientRepository.findOne(id);
+		if (p == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(PatientEntity.class, id));
+		}
+		
+		this.verifyWriteAccess(p);
+		
+		p.setName(patient.getName());
+		p.setEmail(patient.getEmail());
+		p.setMobile(patient.isMobile());
+		p.setPhoneNumber(patient.getPhoneNumber());
+		
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
+	}
 }

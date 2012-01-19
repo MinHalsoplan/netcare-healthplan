@@ -20,6 +20,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 
 public interface PatientService {
 
@@ -56,4 +57,12 @@ public interface PatientService {
 	 * @return
 	 */
 	ServiceResult<Patient> deletePatient(final Long id);
+	
+	/**
+	 * Update a patient with new profile data
+	 * @param id
+	 * @param patient
+	 * @return
+	 */
+	ServiceResult<Patient> updatePatient(final Long id, final PatientImpl patient);
 }

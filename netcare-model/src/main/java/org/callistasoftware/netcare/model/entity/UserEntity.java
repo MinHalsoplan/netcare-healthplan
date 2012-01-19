@@ -74,7 +74,7 @@ public abstract class UserEntity {
 		return this.name;
 	}
 	
-	void setName(final String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 	

@@ -41,23 +41,28 @@ NC.Util = function() {
 		
 		if (messages.length > 0) {
 			$.each(messages, function(index, value) {
-				var msg = $('<div>');
-				msg.addClass('alert-message ' + type);
-				
-				var closeLink = $('<a>', { href : '#' }).addClass('close').html('×').click(function(event){
-					event.preventDefault();
-					msg.slideUp('slow');
-				});
-				
-				msg.append(closeLink);
-				msg.append('<p><strong>' + value.message + '</strong></p>');
-				msg.appendTo('#pageMessages');
-				
-				setTimeout(function() {
-					msg.slideUp('slow');
-				}, 5000);
+				_displayMessage(type, value.message);
 			});
 		}
+	};
+	
+	var _displayMessage = function(type, messageText) {
+		console.log("Displaying: " + messageText);
+		var msg = $('<div>');
+		msg.addClass('alert-message ' + type);
+		
+		var closeLink = $('<a>', { href : '#' }).addClass('close').html('×').click(function(event){
+			event.preventDefault();
+			msg.slideUp('slow');
+		});
+		
+		msg.append(closeLink);
+		msg.append('<p><strong>' + messageText + '</strong></p>');
+		msg.appendTo('#pageMessages');
+		
+		setTimeout(function() {
+			msg.slideUp('slow');
+		}, 5000);
 	};
 	
 	public = {
@@ -83,7 +88,7 @@ NC.Util = function() {
 		
 		processServiceResult : function(serviceResult) {
 			console.log("Processing service results...");
-			public.displayMessages(serviceResult.successMessages, serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
+			new NC.Util().displayMessages(serviceResult.successMessages, serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
 		},
 		
 		createIcon : function(name, size, onClickFunction) {

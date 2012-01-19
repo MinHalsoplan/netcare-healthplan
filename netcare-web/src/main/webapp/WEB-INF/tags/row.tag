@@ -16,16 +16,24 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ attribute name="id" required="false" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<c:choose>
+	<c:when test="${not empty id}">
+		<div id="${id}" class="row">
+	</c:when>
+	<c:otherwise>
+		<div class="row">
+	</c:otherwise>
+</c:choose>
 
-<netcare:page>
-	<netcare:header />
-	<netcare:body>
-		<h2>Välkommen!</h2>
-	</netcare:body>
-</netcare:page>
+	<div class="span12">
+		<div class="row">
+			<jsp:doBody />
+		</div>
+	</div>
+</div>

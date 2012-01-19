@@ -66,6 +66,20 @@ public class UserApi extends ApiSupport {
 		}
 	}
 	
+	@RequestMapping(value="/{patient}/load", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<Patient> loadPatient(@PathVariable(value="patient") final Long patient) {
+		this.logAccess("load", "patient");
+		return this.patientService.loadPatient(patient);
+	}
+	
+	@RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@ResponseBody
+	public ServiceResult<Patient> updatePatient(@PathVariable(value="patient") final Long patient, @RequestBody final PatientImpl patientData) {
+		this.logAccess("update", "patient");
+		return this.patientService.updatePatient(patient, patientData);
+	}
+	
 	@RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<Patient> createNewPatient(@RequestBody final PatientImpl patient) throws IllegalAccessException {

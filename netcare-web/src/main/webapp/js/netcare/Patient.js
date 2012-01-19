@@ -16,44 +16,24 @@
  */
 NC.Patient = function() {
 	var _baseUrl = "/netcare-web/api/user";
+	var _ajax = new NC.Ajax();
 	
 	var public = {
 			
 		load : function(callback) {
-			var url = _baseUrl + '/load';
-			console.log("Loading patients from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				success : function(data) {
-					console.log("Service returned success. Processing result");
-					new NC.Util().processServiceResult(data);
-					if (data.success) {
-						console.log("Operation was successful.");
-						callback(data);
-					}
-				}
-			});
+			_ajax.get('/user/load', callback, true);
+		},
+		
+		loadSingle : function(patientId, callback) {
+			_ajax.get('/user/' + patientId + '/load', callback);
 		},
 		
 		create : function(formData, successCallback) {
-			var url = _baseUrl + '/create';
-			console.log("Creating new patient using url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				type : 'post',
-				data : formData,
-				contentType : 'application/json',
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					if (data.success) {
-						successCallback(data);
-					}
-				}
-			});
+			_ajax.post('/user/create', formData, successCallback, true);
+		},
+		
+		update : function(patientId, formData, callback) {
+			_ajax.post('/user/' + patientId + '/update', formData, callback, true);
 		},
 			
 		/**
@@ -81,6 +61,7 @@ NC.Patient = function() {
 		 * display the selected patient
 		 */
 		selectPatient : function(patientId, successFunction) {
+			//_ajax.post('/user/' + patientId + '/select', null, successFunction);
 			console.log("Selecting patient: " + patientId);
 			$.ajax({
 				url : _baseUrl + '/' + patientId + '/select',

@@ -31,6 +31,11 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 	private String phoneNumber;
 	private boolean mobile;
 	
+	private String password;
+	private String password2;
+	
+	private String email;
+	
 	PatientImpl() {
 		super();
 	}
@@ -40,6 +45,7 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 		
 		this.setPhoneNumber(entity.getPhoneNumber());
 		this.setMobile(entity.isMobile());
+		this.setEmail(entity.getEmail());
 	}
 	
 	public static Patient newFromEntity(final PatientEntity entity) {
@@ -73,4 +79,28 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 		this.mobile = mobile;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPassword2() {
+		return password2;
+	}
+
+	public void setPassword2(String password2) {
+		this.password2 = password2;
+	}
+
+	@Override
+	public String getEmail() {
+		return this.email;
+	}
+	
+	public void setEmail(final String email) {
+		this.email = email;
+	}
 }

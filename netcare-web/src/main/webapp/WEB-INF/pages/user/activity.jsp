@@ -396,49 +396,41 @@
 			
 				<fieldset>
 					<legend><spring:message code="activity" /> <spring:message code="and" /> <spring:message code="goal" /></legend>
-					<div class="row">
-						<div class="span12">
-							<div class="row">
-								<div class="span3">
-									<spring:message code="what" var="what" scope="page" />
-									<netcare:field name="activityType" label="${what}">
-										<input type="text" name="activityType" class="medium nc-autocomplete" />
-										<input type="hidden" name="activityTypeId" />	
-										<p><a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a></p>
-									</netcare:field>
-								</div>
-								<div class="span5">
-									<spring:message code="goal" var="goal" scope="page"/>
-									<netcare:field containerId="activityGoal" name="activityGoal" label="${goal}">
-										<input name="activityGoal" type="number" min="0" max="52" class="medium" required/> <span class="unit"></span>
-									</netcare:field>
-								</div>
-							</div>
-						</div>
-					</div>
+					<netcare:row>
+						<netcare:col span="3">
+							<spring:message code="what" var="what" scope="page" />
+							<netcare:field name="activityType" label="${what}">
+								<input type="text" name="activityType" class="medium nc-autocomplete" />
+								<input type="hidden" name="activityTypeId" />	
+								<p><a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a></p>
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="5">
+							<spring:message code="goal" var="goal" scope="page"/>
+							<netcare:field containerId="activityGoal" name="activityGoal" label="${goal}">
+								<input name="activityGoal" type="number" min="0" max="52" class="medium" required/> <span class="unit"></span>
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
 				</fieldset>
 				
 				<fieldset>
 					<legend><spring:message code="schedule" /></legend>
-					<div class="row">
-						<div class="span12">
-							<div class="row">
-								<div class="span3">
-									<spring:message code="startDate" var="start" scope="page" />
-									<netcare:field containerId="startDate" name="startDate" label="${start}">
-										<input name="startDate" type="text" class="medium"/>
-									</netcare:field>
-								</div>
-								<div class="span5">
-									<spring:message code="repeatSchedule" var="repeat" scope="page"/>
-									<netcare:field name="activityRepeat" label="${repeat}">
-										<input name="activityRepeat" type="number" class="medium" />
-										<span><spring:message code="week" /></span>
-									</netcare:field>
-								</div>
-							</div>
-						</div>
-					</div>
+					<netcare:row>
+						<netcare:col span="3">
+							<spring:message code="startDate" var="start" scope="page" />
+							<netcare:field containerId="startDate" name="startDate" label="${start}">
+								<input name="startDate" type="text" class="medium"/>
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="5">
+							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
+							<netcare:field name="activityRepeat" label="${repeat}">
+								<input name="activityRepeat" type="number" class="medium" />
+								<span><spring:message code="week" /></span>
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
 				</fieldset>
 				
 				
@@ -446,28 +438,23 @@
 				
 				<fieldset>
 					<legend><spring:message code="pickDaysAndTimes" /></legend>
-					<div id="mondayContainer" class="row">
-						<div class="span12">
-							<div class="row">
-								<div class="span1">
-									<spring:message code="monday" var="monday" scope="page" />
-									<netcare:field name="day" label="${monday}">
-										<input type="checkbox" name="day" value="monday"/>
-									</netcare:field>
-								</div>
-								<div class="span5">
-									<netcare:field name="mondayTimeField" label="${addTime}">
-										<input type="text" name="mondayTimeField" class="medium" />
-										<netcare:image name="add" icon="true" cursor="pointer"/>
-									</netcare:field>
-								</div>
-								<div id="mondayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
-								</div>
-							</div>
+					<netcare:row id="mondayContainer">
+						<netcare:col span="1">
+							<spring:message code="monday" var="monday" scope="page" />
+							<netcare:field name="day" label="${monday}">
+								<input type="checkbox" name="day" value="monday"/>
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="5">
+							<netcare:field name="mondayTimeField" label="${addTime}">
+								<input type="text" name="mondayTimeField" class="medium" />
+								<netcare:image name="add" icon="true" cursor="pointer"/>
+							</netcare:field>
+						</netcare:col>
+						<div id="mondayAddedTimes" class="span6" style="display: none">
+							<p><strong><spring:message code="times" /></strong></p>
 						</div>
-					</div>
-					
+					</netcare:row>
 					
 					<div id="tuesdayContainer" class="row">
 						<div class="span12">

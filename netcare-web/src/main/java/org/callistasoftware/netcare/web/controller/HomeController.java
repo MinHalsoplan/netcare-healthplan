@@ -123,6 +123,12 @@ public class HomeController extends ControllerSupport {
 		return "user/results";
 	}
 	
+	@RequestMapping(value="/user/profile", method=RequestMethod.GET)
+	public String displayUserProfile() {
+		log.info("Displaying user profile");
+		return "user/profile";
+	}
+	
 	@RequestMapping(value="/user/home", method=RequestMethod.GET)
 	public String displayUserHome() {
 		log.info("Displaying home for user");

@@ -31,4 +31,10 @@ public interface Patient extends PatientBaseView {
 	 * @return
 	 */
 	boolean isMobile();
+	
+	/**
+	 * Get the email address of the user
+	 * @return
+	 */
+	String getEmail();
 }

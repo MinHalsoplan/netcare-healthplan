@@ -120,6 +120,7 @@
 	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Ajax.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Alarm.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
