@@ -91,8 +91,7 @@
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	
 	<!-- Include JQuery -->
-	<c:url value="/js/jquery-1.6.2.min.js" var="jqueryJs" scope="page" />
-	<script type="text/javascript" src="${jqueryJs}"></script>
+	<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.2.min.js" />"></script>
 	
 	<!-- Include JQuery UI Widgets -->
 	<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />

@@ -19,6 +19,8 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	var _baseUrl = "/netcare-web/api/healthplan";
 	var _activityCount = 0;
 	
+	var _ajax = new NC.Ajax();
+	
 	var _updateActivityTable = function(tableId) {
 		console.log("Updating activity table. Activity count = " + _activityCount);
 		if (_activityCount != 0) {
@@ -35,54 +37,20 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	var public = {
 			
 		load : function(healthPlanId, callback) {
-			var url = _baseUrl + '/' + healthPlanId + '/load';
-			console.log("Loading health plan from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				success : function(data) {
-					new NC.Util().processServiceResult();
-					callback(data);
-				}
-			});
+			_ajax.get('/healthplan/' + healthPlanId + '/load', callback, true);
 		},
 		
 		list : function(currentPatient, callback) {
-			console.log("Load active ordinations for the current patient");
-			$.ajax({
-				url : _baseUrl + '/' + currentPatient + '/list',
-				dataType : 'json',
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					callback(data);
-				}
-			});
+			_ajax.get('/healthplan/' + currentPatient + '/list', callback, true);
 		},
 	
 		/**
-		 * Create a new ordination for the current patient.
+		 * Create a new health plan for the current patient.
 		 * The method accepts the form data as a json-object which is
 		 * sent to the server without any validations.
 		 */
 		create : function(formData, currentPatient, callback) {
-			var url = _baseUrl + '/' + currentPatient + '/create';
-			console.log("Creating new ordination. Url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				type : 'post',
-				data : formData,
-				contentType : 'application/json',
-				success :  function(data) {
-					console.log('Health plan successfully created');
-					new NC.Util().processServiceResult(data);
-					
-					/* Execute callback */
-					callback(data);
-				}
-			});
+			_ajax.post('/healthplan/' + currentPatient + '/create', formData, callback, true);
 		},
 		
 		/**
