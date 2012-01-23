@@ -114,8 +114,8 @@ NC.PatientReport = function(descriptionId, tableId) {
 		div.append(rbtn);
 
 		
-		var cbtn = _util.createIcon('remove', 24, function() {
-			event.preventDefault();
+		var cbtn = _util.createIcon('remove', 24, function(xevent) {
+			xevent.preventDefault();
 			var id = act.id;
 			var rep = new Object();
 			rep.actualValue = 0;
