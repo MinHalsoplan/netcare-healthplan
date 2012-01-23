@@ -89,6 +89,13 @@ NC.Patient = function() {
 					}
 				}
 			});
+		},
+		
+		/**
+		 * List activities for a patient
+		 */
+		listActivities : function(callback) {
+			_ajax.get('/patient/schema', callback);
 		}
 	};
 	

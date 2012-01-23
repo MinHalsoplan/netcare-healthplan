@@ -23,24 +23,139 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mobile" tagdir="/WEB-INF/tags/mobile" %>
 
 <netcare:page>
-	<head>
-		<title>Test</title>
-		
-		<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.0.min.css" />" />
-		
-		<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.2.min.js" />"></script>
-		<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.min.js" />"></script>
-		
-	</head>
+	<mobile:header>
+		<script type="text/javascript">
+			$('#start').live('pageinit', function(e) {
+				
+				console.log("Loading unreported activities");
+				new NC.Patient().listActivities(function(data) {
+					
+					
+					var currentDay = '';
+					$.each(data.data, function(index, value) {
+						console.log("Processing " + value.id + " ...");
+						
+						if (currentDay != value.day.value) {
+							currentDay = value.day.value;
+							
+							 var header = $('<li>').attr('data-role', 'list-divider')
+							.attr('role', 'heading')
+							.addClass('ui-li')
+							.addClass('ui-li-divider')
+							.addClass('ui-btn')
+							.addClass('ui-bar-b')
+							.addClass('ui-li-has-count')
+							.addClass('ui-btn-up-undefined') 
+							.html(currentDay + ' <br />' + value.date);
+							
+							$('#schema').append(header);
+						}
+						
+						var activityContainer = $('<li>').attr('data-theme', 'c')
+							.addClass('ui-btn')
+							.addClass('ui-btn-icon-right')
+							.addClass('ui-li-has-arrow')
+							.addClass('ui-li')
+							.addClass('ui-btn-up-c');
+						
+						var activityContentDiv = $('<div>').attr('area-hidden', 'true')
+							.addClass('ui-btn-inner')
+							.addClass('ui-li');
+						activityContainer.append(activityContentDiv);
+						
+						var link = $('<a>').attr('href', '#report').addClass('ui-link-inherit');
+						activityContentDiv.append(link);
+						
+						link.append(
+							$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
+						);
+						
+						var activityText = $('<div>').addClass('ui-btn-text');
+						activityText.append(
+							$('<h3>' + value.definition.type.name + '</h3>').addClass('ui-li-heading')
+						);
+						
+						activityText.append(
+							$('<p>' + value.definition.goal +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
+						);
+						
+						link.append(activityText);
+						
+						$('#schema').append(activityContainer);
+						
+						
+						link.click(function(e) {
+							console.log("Load activity: " + value.id);
+							
+							new NC.HealthPlan().loadScheduledActivity(value.id, function(data) {
+								$('#valueUnit').html(data.data.definition.type.unit.value);
+								
+								$('#report h2').html(data.data.definition.type.name + ' ' + data.data.definition.goal + ' ' + data.data.definition.type.unit.value);
+								$('#report p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
+								
+								$('#value').val(data.data.definition.goal);
+								$('#date').val(data.data.date);
+								$('#time').val(data.data.time);
+							});
+							
+						});
+					});
+				});
+				
+			});
+		</script>	
+	</mobile:header>
 	<body>
-		<div data-role="page">
-			<div data-role="header">
-				<p>Planerade hälsotjänster</p>
+		<mobile:page id="start" title="Mina aktiviteter">
+			<mobile:list id="schema">
+			</mobile:list>
+		</mobile:page>
+		
+		<mobile:page title="Rapportera aktivitet" id="report">
+			<div class="ui-body ui-body-d">
+				<h2>Löpning 1200 Meter</h2>
+				<p>Måndag, 2012-01-16 18:15</p>
+				
+				
+				<form>
+					<div data-role="fieldcontain">
+						<label for="value" class="ui-input-text">Rapportera</label>
+						<input type="number" id="value" name="value" /> <span id="valueUnit"></span>
+					</div>
+					
+					<div data-role="fieldcontain">
+						<label for="date">Datum</label>
+						<input type="date" id="date" name="date" />
+					</div>
+					
+					<div data-role="fieldcontain">
+						<label for="time">Tid</label>
+						<input type="time" id="time" name="time" />
+					</div>
+					
+					<div data-role="fieldcontain">
+						<label for="slider" id="slider-label" class="ui-slider ui-input-text">Känsla</label>
+						<input type="number" data-type="range" name="slider" id="slider" value="3" min="1" max="5" class="ui-slider-input ui-input-text ui-body-c ui-corner-all ui-shadow-inset" />
+					</div>
+					
+					<div data-role="fieldcontain">
+						<label for="note" class="ui-input-text">Anteckning</label>
+						<textarea name="note" id="note" class="ui-input-text"></textarea>
+					</div>
+					
+					<fieldset class="ui-grid-a">
+						<div class="ui-block-b">
+							<a href="#start" data-role="button">Tillbaka</a>
+						</div>
+						<div class="ui-block-b">
+							<button type="submit" data-theme="b" class="ui-btn-hidden" aria-disabled="false">Rapportera</button>
+						</div>
+					</fieldset>
+				</form>
 			</div>
-			<div data-role="content"><p>Content</p></div>
-			<div data-role="footer"><p>A footer</p></div>
-		</div>
+		</mobile:page>
 	</body>
 </netcare:page>

@@ -35,6 +35,11 @@
 		<security:intercept-url pattern="/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 		<security:http-basic/>
 	</security:http>
+	
+	<security:http pattern="/netcare/mobile/**" use-expressions="true" create-session="never">
+		<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+		<security:http-basic/>
+	</security:http>
 
 	<security:http use-expressions="true">
 		<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>

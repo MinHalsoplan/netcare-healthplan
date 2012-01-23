@@ -10,6 +10,7 @@ import org.callistasoftware.netcare.android.serviceclient.ServiceFactory;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -75,7 +76,7 @@ public class StartActivity extends Activity {
 						 * save them. Otherwise just keep them in memory
 						 */
 						if (result.getData().equals(Boolean.TRUE)) {
-							
+							startActivity(new Intent(getApplicationContext(), WebViewActivity.class));
 						}
 					}
 				}).execute();

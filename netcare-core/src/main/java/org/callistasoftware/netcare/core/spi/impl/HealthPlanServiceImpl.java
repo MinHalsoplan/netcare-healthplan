@@ -719,4 +719,16 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> loadScheduledActivity(Long activity) {
+		final ScheduledActivityEntity sae = this.scheduledActivityRepository.findOne(activity);
+		if (sae == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class, activity));
+		}
+		
+		this.verifyReadAccess(sae);
+		
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(sae), new GenericSuccessMessage());
+	}
 }
