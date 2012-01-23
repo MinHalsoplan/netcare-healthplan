@@ -52,7 +52,7 @@
 						$('#alarmContainer table tbody').empty();
 						
 						$.each(data.data, function(index, value) {
-							console.log("Processing " + value.id + "...");
+							NC.log("Processing " + value.id + "...");
 							var tr = $('<tr>');
 							var created = $('<td>' + value.createdTime + '</td>');
 							var patient = $('<td>' + value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber)  + ')</td>');
@@ -60,7 +60,7 @@
 							var cause = $('<td>' + value.cause.value + '</td>');
 							
 							var processIcon = util.createIcon('clear', '24', function() {
-								console.log("Resolving alarm...");
+								NC.log("Resolving alarm...");
 								alarms.resolve(value.id, loadAlarms);
 							});
 							

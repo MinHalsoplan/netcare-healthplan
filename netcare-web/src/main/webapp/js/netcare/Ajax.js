@@ -57,7 +57,7 @@ NC.Ajax = function() {
 			 */
 			get : function(url, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
-				console.log("==== AJAX GET " + call + " ====");
+				NC.log("==== AJAX GET " + call + " ====");
 				
 				$.ajax({
 					url : call,
@@ -71,7 +71,7 @@ NC.Ajax = function() {
 			
 			post : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
-				console.log("==== AJAX POST " + call + " ====");
+				NC.log("==== AJAX POST " + call + " ====");
 				
 				$.ajax({
 					url : call,

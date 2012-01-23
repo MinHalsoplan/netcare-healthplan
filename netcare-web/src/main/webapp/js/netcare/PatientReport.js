@@ -34,7 +34,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 	
 		
 	var _updateDescription = function() {
-		console.log("Updating schema table description");
+		NC.log("Updating schema table description");
 		if (_schemaCount == 0) {
 			$('#' + _descriptionId).html('Inga aktuella aktiviteter').show();
 			$('#' + _tableId).hide();
@@ -68,7 +68,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 		var div = $('<div>');
 		var rbtn = _util.createIcon('edit', 24, function() {
 			var value = (act.actualValue == 0) ? act.definition.goal : act.actualValue;
-			console.log("value = " + value);
+			NC.log("value = " + value);
 
 			$('#reportFormDiv input[name="activityId"]').attr('value', act.id);
 			$('#reportFormDiv input[name="value"]').attr('value', value);
@@ -127,7 +127,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 
 			var jsonObj = JSON.stringify(rep);
 
-			console.log("JSON: " + jsonObj.toString());
+			NC.log("JSON: " + jsonObj.toString());
 
 			public.performReport(id, jsonObj, function(data) {
 				cbtn.attr('disabled', data.rejected);
@@ -158,10 +158,10 @@ NC.PatientReport = function(descriptionId, tableId) {
 				data : formData,
 				contentType : 'application/json',
 				success :  function(data) {
-					console.log('Report successfully done');
+					NC.log('Report successfully done');
 					_util.processServiceResult(data);
 					$('#act-' + activityId).css('color', _lineColor(data.data));
-					console.log('#rep-' + activityId + ', ' + _reportText(data.data));
+					NC.log('#rep-' + activityId + ', ' + _reportText(data.data));
 					$('#rep-' + activityId).html(_reportText(data.data));
 					_dueActivities.push(data.data);
 					callback(data.data);
@@ -170,20 +170,20 @@ NC.PatientReport = function(descriptionId, tableId) {
 		},
 				
 		list : function() {
-			console.log("Load activitues for the patient");
+			NC.log("Load activitues for the patient");
 			var curDay = '';
 			var curActivity = '';
 			$.ajax({
 				url : _baseUrl + 'schema',
 				dataType : 'json',
 				success : function(data) {
-					console.log("Success. Processing results...");
+					NC.log("Success. Processing results...");
 					
 					/* Empty the result list */
 					$('#' + tableId + ' tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.id);	
+						NC.log("Processing index " + index + " value: " + value.id);	
 						
 						if (curDay != value.day.value) {
 							curDay = value.day.value;

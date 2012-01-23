@@ -33,7 +33,7 @@
 					$('#categoryTable tbody').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing " + value.name + "...");
+						NC.log("Processing " + value.name + "...");
 						
 						var tr = $('<tr>');
 						var id = $('<td>' + value.id + '</td>');
@@ -48,7 +48,7 @@
 				categories.load(loadCallback);
 				
 				$(':submit').click(function(event) {
-					console.log("Form submitted");
+					NC.log("Form submitted");
 					event.preventDefault();
 					
 					var formData = new Object();

@@ -21,7 +21,7 @@ NC.ActivityCategories = function() {
 	public = {
 		load : function(callback) {
 			var url = _baseUrl + '/load';
-			console.log("Loading activity categories from url: " + url);
+			NC.log("Loading activity categories from url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -31,7 +31,7 @@ NC.ActivityCategories = function() {
 					new NC.Util().processServiceResult(data);
 					
 					if (data.success) {
-						console.log("Activity categories successfully fetched from server");
+						NC.log("Activity categories successfully fetched from server");
 						callback(data);
 					}
 				}
@@ -39,7 +39,7 @@ NC.ActivityCategories = function() {
 		},
 		
 		loadAsOptions : function(selectElem) {
-			console.log("Loading activity categories as options...");
+			NC.log("Loading activity categories as options...");
 			var util = new NC.Util();
 			
 			new NC.ActivityCategories().load(function(data) {
@@ -50,7 +50,7 @@ NC.ActivityCategories = function() {
 					item.code = value.id;
 					item.value = value.name;
 					
-					console.log("Item created: " + item.code + " " + item.value);
+					NC.log("Item created: " + item.code + " " + item.value);
 					
 					arr.push(item);
 				});
@@ -61,7 +61,7 @@ NC.ActivityCategories = function() {
 		
 		create : function(formData, callback) {
 			var url = _baseUrl + '/create';
-			console.log("Creating new activity category using url " + url);
+			NC.log("Creating new activity category using url " + url);
 			
 			$.ajax({
 				url : url,
@@ -90,14 +90,14 @@ NC.ActivityTypes = function() {
 	public = {
 		load : function(callback) {
 			var url = _baseUrl + '/load';
-			console.log("Loading activity types from url: " + url);
+			NC.log("Loading activity types from url: " + url);
 			
 			$.ajax({
 				url : url,
 				dataType : 'json',
 				success : function(data) {
 					if (data.success) {
-						console.log("Activity types successfully fetched from server");
+						NC.log("Activity types successfully fetched from server");
 						callback(data.data);
 					}
 				}
@@ -106,7 +106,7 @@ NC.ActivityTypes = function() {
 		
 		search : function(searchString, callback) {
 			var url = _baseUrl + '/search';
-			console.log("Searching for activity types with name like " + searchString + " from url: " + url);
+			NC.log("Searching for activity types with name like " + searchString + " from url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -114,10 +114,10 @@ NC.ActivityTypes = function() {
 				data : { text : searchString },
 				success : function(data) {
 					if (data.success) {
-						console.log("Successfully searched for activity types...");
+						NC.log("Successfully searched for activity types...");
 						callback(data);
 					} else {
-						console.log("Error searching for activity types...");
+						NC.log("Error searching for activity types...");
 					}
 				}
 			});
@@ -125,7 +125,7 @@ NC.ActivityTypes = function() {
 		
 		create : function(formData, callback) {
 			var url = _baseUrl + '/create';
-			console.log("Creating new activity type using url: " + url);
+			NC.log("Creating new activity type using url: " + url);
 			
 			$.ajax({
 				url : url,

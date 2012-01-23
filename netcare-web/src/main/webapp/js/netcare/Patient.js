@@ -40,7 +40,7 @@ NC.Patient = function() {
 		 * Called when the care giver wants to find a patient
 		 */
 		findPatients : function(searchValue, successFunction) {
-			console.log("Finding patients. Searching for: " + searchValue);
+			NC.log("Finding patients. Searching for: " + searchValue);
 			
 			if (searchValue.length < 3) {
 				return false;
@@ -62,7 +62,7 @@ NC.Patient = function() {
 		 */
 		selectPatient : function(patientId, successFunction) {
 			//_ajax.post('/user/' + patientId + '/select', null, successFunction);
-			console.log("Selecting patient: " + patientId);
+			NC.log("Selecting patient: " + patientId);
 			$.ajax({
 				url : _baseUrl + '/' + patientId + '/select',
 				dataType : 'json',
@@ -76,7 +76,7 @@ NC.Patient = function() {
 		 */
 		deletePatient : function(patientId, successFunction) {
 			var url = _baseUrl + '/' + patientId + '/delete';
-			console.log("Deleting patient with id " + patientId + " using url: " + url);
+			NC.log("Deleting patient with id " + patientId + " using url: " + url);
 			
 			$.ajax({
 				url : url,

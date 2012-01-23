@@ -45,7 +45,7 @@
 							 * Select the patient and navigate to home
 							 */
 							patients.selectPatient(data.data.id, function(data) {
-								console.log("Created patient selected. Go to home...");
+								NC.log("Created patient selected. Go to home...");
 								window.location = '/netcare-web/netcare/home';
 							});
 						}
@@ -61,7 +61,7 @@
 							
 							$.each(data.data, function(index, value) {
 								
-								console.log("Processing patient " + value.name + "...");
+								NC.log("Processing patient " + value.name + "...");
 								
 								var tr = $('<tr>');
 								
@@ -78,14 +78,14 @@
 								});
 								
 								var deleteIcon = util.createIcon('trash', 24, function() {
-									console.log("Delete patient.");
+									NC.log("Delete patient.");
 									
 									support.loadCaptions(null, ['patientDelete'], function(data) {
 										var result = confirm(data.patientDelete);
 										if (result) {
-											console.log("Deleting patient...");
+											NC.log("Deleting patient...");
 											patients.deletePatient(value.id, function(data) {
-												console.log("Patient deleted. Reload patients...");
+												NC.log("Patient deleted. Reload patients...");
 												patients.load(updatePatientTable);
 											});
 										}
@@ -112,7 +112,7 @@
 				updatePatientTable(null);
 				
 				$('#patientForm :submit').click(function(event) {
-					console.log("Submitting form...");
+					NC.log("Submitting form...");
 					event.preventDefault();
 					
 					var formData = new Object();

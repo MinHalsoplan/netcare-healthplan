@@ -22,13 +22,13 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	var _ajax = new NC.Ajax();
 	
 	var _updateActivityTable = function(tableId) {
-		console.log("Updating activity table. Activity count = " + _activityCount);
+		NC.log("Updating activity table. Activity count = " + _activityCount);
 		if (_activityCount != 0) {
-			console.log("Show activity table");
+			NC.log("Show activity table");
 			$('#activityContainer div').hide();
 			$('#' + tableId).show();
 		} else {
-			console.log("Hide activity table");
+			NC.log("Hide activity table");
 			$('#activityContainer div').show();
 			$('#' + tableId).hide();
 		}
@@ -58,13 +58,13 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		delete : function(healthPlanId, callback) {
 			var url = _baseUrl + '/' + healthPlanId + '/delete';
-			console.log("Removing health plan " + healthPlanId + " using url: " + url);
+			NC.log("Removing health plan " + healthPlanId + " using url: " + url);
 			
 			$.ajax({
 				url : url,
 				type : 'post',
 				success : function(data) {
-					console.log('Deletion of health plan succeeded.');
+					NC.log('Deletion of health plan succeeded.');
 					new NC.Util().processServiceResult(data);
 					callback(data);					
 				}
@@ -75,12 +75,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * View a single ordination
 		 */
 		view : function(healthPlanId) {
-			console.log("GET to view ordination with id: " + healthPlanId);
+			NC.log("GET to view ordination with id: " + healthPlanId);
 			window.location = '/netcare-web/netcare/user/healthplan/' + healthPlanId + '/view';
 		},
 		
 		results : function(healthPlanId) {
-				console.log("GET to view health plan results. Health plan id: " + healthPlanId);
+				NC.log("GET to view health plan results. Health plan id: " + healthPlanId);
 				window.location = '/netcare-web/netcare/user/results?healthPlan=' + healthPlanId;
 		},
 		
@@ -89,7 +89,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		listActivities : function(healthPlanId, tableId) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/list';
-			console.log("Loading activities for health plan " + healthPlanId + " from url: " + url);
+			NC.log("Loading activities for health plan " + healthPlanId + " from url: " + url);
 			
 			_updateActivityTable(tableId);
 			
@@ -97,18 +97,18 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				url : url,
 				dataType : 'json',
 				success : function(data) {
-					console.log("Successfully call to rest service");
+					NC.log("Successfully call to rest service");
 					var util = new NC.Util();
 					if (data.success) {
-						console.log("Emptying the activity table");
+						NC.log("Emptying the activity table");
 						$('#' + tableId + ' tbody > tr').empty();
 						
 						$.each(data.data, function(index, value) {
 							
-							console.log("Processing id: " + value.id);
+							NC.log("Processing id: " + value.id);
 							
 							var deleteIcon = util.createIcon('trash', 24, function() {
-								console.log("Delete icon clicked");
+								NC.log("Delete icon clicked");
 								public.deleteActivity(tableId, healthPlanId, value.id);
 							});
 							
@@ -140,7 +140,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		
 		loadStatistics : function(healthPlanId, callback) {
 			var url = _baseUrl + '/' + healthPlanId + '/statistics';
-			console.log("Loading scheduled activities from url: " + url);
+			NC.log("Loading scheduled activities from url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -159,14 +159,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		addActivity : function(healthPlanId, formData, callback, activityTableId) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/new';
-			console.log("Adding new activity using url: " + url);
+			NC.log("Adding new activity using url: " + url);
 			$.ajax({
 				url : url,
 				type : 'post',
 				data : formData,
 				contentType : 'application/json',
 				success : function(data) {
-					console.log("Call was successful!");
+					NC.log("Call was successful!");
 					new NC.Util().processServiceResult(data);
 					
 					callback(data);
@@ -180,14 +180,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		deleteActivity : function(tableId, healthPlanId, activityId) {
 			var url = _baseUrl + '/' + healthPlanId + '/activity/' + activityId + '/delete';
-			console.log("Deleting activity using url: " + url);
+			NC.log("Deleting activity using url: " + url);
 			
 			$.ajax({
 				url : url,
 				type : 'post',
 				contentType : 'application/json',
 				success : function(data) {
-					console.log("Delete activity service call successfully executed.");
+					NC.log("Delete activity service call successfully executed.");
 					new NC.Util().processServiceResult(data);
 					public.listActivities(healthPlanId, tableId);
 				}
@@ -203,7 +203,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		loadLatestReportedActivities : function(containerId) {
 			var url = _baseUrl + '/activity/reported/latest';
-			console.log("Loading latest reported activities from url: " + url);
+			NC.log("Loading latest reported activities from url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -216,7 +216,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					if (data.success) {
 						
 						$.each(data.data, function(index, value) {
-							console.log("Processing value: " + value);
+							NC.log("Processing value: " + value);
 							
 							var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
 							var unit = value.definition.type.unit.value;
@@ -233,9 +233,9 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							var reported = $('<td>' + reportedString + '</td>');
 							var at = $('<td>' + reportedAt + '</td>');
 							
-							console.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
+							NC.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
 							if (value.actualValue !== value.definition.goal) {
-								console.log("Value diff. Mark yellow");
+								NC.log("Value diff. Mark yellow");
 								reported.css('background-color', 'lightyellow');
 							} else if (value.actualValue == value.definition.goal) {
 								reported.css('background-color', 'lightgreen');
@@ -244,16 +244,16 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							var aElem = $('<a data-controls-modal="commentActivity" data-backdrop="true">');
 							var likeIcon = util.createIcon('like', 24, function() {
 								
-								console.log("Clicked on " + value.id);
+								NC.log("Clicked on " + value.id);
 								
 								$('#commentActivity button').click(function(event) {
 									event.preventDefault();
 									
-									console.log("Executing... " + value.id);
+									NC.log("Executing... " + value.id);
 									
 									var comment = $('#commentActivity input[name="comment"]').val();
 									public.sendComment(value.id, comment, function(data) {
-										console.log("Successfully posted " + comment);
+										NC.log("Successfully posted " + comment);
 										
 										$('#commentActivity input[name="comment"]').val('');
 										$('#commentActivity').modal('hide');
@@ -275,7 +275,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							tr.append(actionCol);
 							
 							$('#' + containerId + ' table tbody').append(tr);
-							console.log("Appended to table body");
+							NC.log("Appended to table body");
 						});
 						
 						var count = $('#' + containerId + ' table tbody tr').size();
@@ -296,7 +296,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		
 		loadLatestComments : function(patientId, callback) {
 			var url = _baseUrl + '/activity/reported/' + patientId + '/comments';
-			console.log("Loading latest comments using url: " + url);
+			NC.log("Loading latest comments using url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -313,7 +313,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		
 		loadNewReplies : function(callback) {
 			var url = _baseUrl + '/activity/reported/comments/newreplies';
-			console.log("Loading new replies using url: " + url);
+			NC.log("Loading new replies using url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -329,7 +329,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		
 		sendComment : function(activityId, comment, callback) {
 			var commentUrl = _baseUrl + '/activity/' + activityId + '/comment';
-			console.log("Posting comment using url: " + commentUrl);
+			NC.log("Posting comment using url: " + commentUrl);
 			
 			$.ajax({
 				url : commentUrl,
@@ -337,7 +337,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				type : 'post',
 				data : { comment : comment },
 				success : function(data) {
-					console.log("Successfully commented activity...");
+					NC.log("Successfully commented activity...");
 					new NC.Util().processServiceResult(data);
 					
 					if (data.success && callback !== undefined) {
@@ -349,7 +349,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		
 		sendCommentReply : function(commentId, reply, callback) {
 			var url = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
-			console.log("Reply to comment " + commentId + " using url: " + url);
+			NC.log("Reply to comment " + commentId + " using url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -367,7 +367,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		
 		deleteComment : function(commentId, callback) {
 			var url = _baseUrl + '/activity/reported/comments/' + commentId + '/delete';
-			console.log("Deleting comment " + commentId + " using url: " + url);
+			NC.log("Deleting comment " + commentId + " using url: " + url);
 			
 			$.ajax({
 				url : url,
