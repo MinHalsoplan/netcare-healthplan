@@ -17,6 +17,8 @@
 package org.callistasoftware.netcare.web.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,5 +29,11 @@ public class MobileController extends ControllerSupport {
 	@RequestMapping(value="/start", method=RequestMethod.GET)
 	public String displayMobileStartPage() {
 		return "mobile/start";
+	}
+	
+	@RequestMapping(value="/activity/{activity}/report", method=RequestMethod.GET)
+	public String displayReportPage(@PathVariable(value="activity") final Long activity, final Model m) {
+		m.addAttribute("activityId", activity);
+		return "mobile/report";
 	}
 }

@@ -194,6 +194,10 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			});
 		},
 		
+		loadScheduledActivity : function(activityId, callback) {
+			_ajax.get('/healthplan/activity/' + activityId + '/load', callback);
+		},
+		
 		/**
 		 * Load the latest reported activities
 		 */

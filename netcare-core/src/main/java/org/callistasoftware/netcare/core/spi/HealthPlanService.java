@@ -39,6 +39,13 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
  *
  */
 public interface HealthPlanService {
+	
+	/**
+	 * Load a scheduled activity
+	 * @param activity
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> loadScheduledActivity(final Long activity);
 
 	/**
 	 * Load ordinations for a patient
