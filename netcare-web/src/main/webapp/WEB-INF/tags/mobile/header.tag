@@ -30,7 +30,13 @@
 	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.min.js" />"></script>
 	
 	<script type="text/javascript">
-		NC = {};
+		NC = {
+			log : function(msg) {
+				if (console !== undefined) {
+					console.log(msg);
+				}
+			}
+		};
 	</script>
 	
 	<!-- Include NETCARE javascripts  -->

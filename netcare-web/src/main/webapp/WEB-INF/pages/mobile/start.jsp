@@ -30,13 +30,13 @@
 		<script type="text/javascript">
 			$('#start').live('pageinit', function(e) {
 				
-				console.log("Loading unreported activities");
+				NC.log("Loading unreported activities");
 				new NC.Patient().listActivities(function(data) {
 					
 					
 					var currentDay = '';
 					$.each(data.data, function(index, value) {
-						console.log("Processing " + value.id + " ...");
+						NC.log("Processing " + value.id + " ...");
 						
 						if (currentDay != value.day.value) {
 							currentDay = value.day.value;
@@ -88,7 +88,7 @@
 						
 						
 						link.click(function(e) {
-							console.log("Load activity: " + value.id);
+							NC.log("Load activity: " + value.id);
 							
 							new NC.HealthPlan().loadScheduledActivity(value.id, function(data) {
 								$('#valueUnit').html(data.data.definition.type.unit.value);
