@@ -28,22 +28,22 @@
 	<netcare:header>
 		<script type="text/javascript">
 		
-			console.log("Load google visualization package...");
+			NC.log("Load google visualization package...");
 			google.load('visualization', '1.0', {'packages' : ['corechart']});
-			console.log("done.");
+			NC.log("done.");
 		
 			$(function() {
 				var drawOverview = function() {
 					
-					console.log("Drawing overview...");
+					NC.log("Drawing overview...");
 					
 					var captions = null;
 					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue'], function(data) {
-						console.log("Load captions returned success...");
+						NC.log("Load captions returned success...");
 						captions = data;
 					});
 					
-					console.log("Captions are: " + captions);
+					NC.log("Captions are: " + captions);
 					
 					var hp = new NC.HealthPlan();
 					var statisticsCallback = function(data) {
@@ -61,7 +61,7 @@
 						dataOverview.addColumn('string',  captions.activityType);
 						dataOverview.addColumn('number', captions.numberOfActivities);
 						
-						console.log("Add rows: " + arr);
+						NC.log("Add rows: " + arr);
 						dataOverview.addRows(arr);
 						
 						var options = {'width' : 600, 'height' : 300};
@@ -72,7 +72,7 @@
 						$('#pieChart').show();
 						
 						$.each(data.data.reportedActivities, function(index, value) {
-							console.log("Processing " + value.name + " ...");
+							NC.log("Processing " + value.name + " ...");
 							var chartData = new google.visualization.DataTable();
 							chartData.addColumn('string', captions.date);
 							chartData.addColumn('number', captions.targetValue);
@@ -96,7 +96,7 @@
 								items.push(arr);
 							});
 							
-							console.log("Adding rows: " + items);
+							NC.log("Adding rows: " + items);
 							chartData.addRows(items);
 							
 							var chartDiv = $('<div>', { id: 'activity-' + index}).addClass('shadow-box');
@@ -117,7 +117,7 @@
 					};
 					
 					var healthPlanId = "<c:out value="${param.healthPlan}" />";
-					console.log("Health plan parameter resolved to: " + healthPlanId);
+					NC.log("Health plan parameter resolved to: " + healthPlanId);
 					if (healthPlanId == "")  {
 						hp.list(<sec:authentication property="principal.id" />, function(data) {
 							$.each(data.data, function(index, value) {

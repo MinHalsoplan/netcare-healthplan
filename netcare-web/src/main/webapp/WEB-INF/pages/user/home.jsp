@@ -69,14 +69,14 @@
 			});
 			
 			$(function() {
-				console.log("Loading latest comments...");
+				NC.log("Loading latest comments...");
 				var patientId = '<sec:authentication property="principal.id" />';
 				
 				var util = new NC.Util();
 				var hps = new NC.HealthPlan();
 				
 				var loadComments = function(data) {
-					console.log("Found " + data.data.length + " comments. Processing...");
+					NC.log("Found " + data.data.length + " comments. Processing...");
 					
 					if (data.data.length > 0) {
 						$('#comments table').show();
@@ -99,7 +99,7 @@
 							
 							$('#sendReply form input:submit').click(function(event) {
 								event.preventDefault();
-								console.log("Submitting reply...");
+								NC.log("Submitting reply...");
 								
 								hps.sendCommentReply(value.id, $('#sendReply input[name="reply"]').val(), function(data) {
 									

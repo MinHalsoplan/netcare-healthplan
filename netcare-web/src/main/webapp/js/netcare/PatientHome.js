@@ -28,7 +28,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	var util = new NC.Util();
 
 	var _updateDescription = function() {
-		console.log("Updating schema table description");
+		NC.log("Updating schema table description");
 		if (_schemaCount == 0) {
 			$('#' + _descriptionId).html('Inga aktuella aktiviteter').show();
 			$('#' + _tableId).hide();
@@ -48,12 +48,12 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 			var curDay = '';
 			var curActivity = '';
 			var _url = _baseUrl + 'activities';
-			console.log("Load activitues for the patient: " + _url);
+			NC.log("Load activitues for the patient: " + _url);
 			$.ajax({
 				url : _url,
 				dataType : 'json',
 				success : function(data) {
-					console.log('Success.');
+					NC.log('Success.');
 					
 					/* Empty the result list */
 					$('#' + tableId + ' tbody > tr').empty();
@@ -76,7 +76,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 						pdata.unit = value.type.unit.value;
 						_perfData.push(pdata);
 						
-						//console.log('done: ' + pdata.sumDone + ', target: ' + pdata.sumTarget + ', total: ' + pdata.sumTotal);
+						//NC.log('done: ' + pdata.sumDone + ', target: ' + pdata.sumTarget + ', total: ' + pdata.sumTotal);
 						
 						var pctSum = ((value.sumDone / value.sumTotal)*100).toFixed(0);
 						var pctTarget = ((value.sumTarget/ value.sumTotal)*100).toFixed(0);
@@ -119,15 +119,15 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 		
 		status : function() {
 			var _url = _baseUrl + 'event';
-			console.log("Load actual events for patient: " + _url);
+			NC.log("Load actual events for patient: " + _url);
 			$.ajax({
 				url : _url,
 				dataType : 'json',
 				success : function(data) {
-					console.log('Success.');
+					NC.log('Success.');
 					var event = data.data;
 					_eventCount = event.numReports + event.dueReports;
-					console.log('event count: ' + _eventCount);
+					NC.log('event count: ' + _eventCount);
 					if (_eventCount == 0) {
 						$('#' + _eventBodyId).hide();
 					} else {

@@ -52,7 +52,7 @@
 				}
 				
 				serviceClient.loadSingle(patientId, function(data) {
-					console.log("Patient loaded...");
+					NC.log("Patient loaded...");
 					updateForm(data);
 				});
 				
@@ -83,7 +83,7 @@
 					if (formData.mobile == "true") {
 						
 						if (formData.password !== formData.password2) {
-							console.log("Password mismatch. Add error handling...");
+							NC.log("Password mismatch. Add error handling...");
 						}
 						
 					}

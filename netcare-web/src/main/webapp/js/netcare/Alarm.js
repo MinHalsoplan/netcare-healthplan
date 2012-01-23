@@ -21,7 +21,7 @@ NC.Alarm = function() {
 	public = {
 		loadAlarms : function(successCallback) {
 			var url = _baseUrl + '/list';
-			console.log("Loading alarms from url: " + url);
+			NC.log("Loading alarms from url: " + url);
 			
 			$.ajax({
 				url : url,
@@ -39,7 +39,7 @@ NC.Alarm = function() {
 		
 		resolve : function(alarmId, callback) {
 			var url = _baseUrl + '/' + alarmId + '/resolve';
-			console.log("Resolving alarm " + alarmId + " using url: " + url);
+			NC.log("Resolving alarm " + alarmId + " using url: " + url);
 			
 			$.ajax({
 				url : url,
