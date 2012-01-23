@@ -29,12 +29,12 @@ NC.Util = function() {
 		                             'step', 'events', 'today', 'youhave'], 
 		                             function(data) {
 			_captions = data;
-			console.log('Localized captions for util loaded.');
+			NC.log('Localized captions for util loaded.');
 		});
 	}
 
 	var _displayMessages = function(type, messages) {
-		console.log('Displaying ' + type + ' messages...');
+		NC.log('Displaying ' + type + ' messages...');
 		if (messages == null) {
 			return false;
 		}
@@ -47,7 +47,7 @@ NC.Util = function() {
 	};
 	
 	var _displayMessage = function(type, messageText) {
-		console.log("Displaying: " + messageText);
+		NC.log("Displaying: " + messageText);
 		var msg = $('<div>');
 		msg.addClass('alert-message ' + type);
 		
@@ -71,14 +71,14 @@ NC.Util = function() {
 		 * of the applica
 		 */
 		updateCurrentPatient : function(name) {
-			console.log("Updating current patient. Display: " + name);
+			NC.log("Updating current patient. Display: " + name);
 			$('#currentpatient a').html(name);
 			$('#nopatient').hide();
 			$('#currentpatient').show();
 		},
 	
 		displayMessages : function(successMessages, infoMessages, warningMessages, errorMessages) {
-			console.log("Display page messages. Success: " + successMessages.length + " Infos: " + infoMessages.length + " Warnings: " + warningMessages.length + " Errors: " + errorMessages.length);
+			NC.log("Display page messages. Success: " + successMessages.length + " Infos: " + infoMessages.length + " Warnings: " + warningMessages.length + " Errors: " + errorMessages.length);
 			
 			_displayMessages('success', successMessages);
 			_displayMessages('info', infoMessages);
@@ -87,7 +87,7 @@ NC.Util = function() {
 		},
 		
 		processServiceResult : function(serviceResult) {
-			console.log("Processing service results...");
+			NC.log("Processing service results...");
 			new NC.Util().displayMessages(serviceResult.successMessages, serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
 		},
 		
@@ -109,8 +109,8 @@ NC.Util = function() {
 		 * or not.
 		 */
 		isCharAllowed : function(char, allowedCharacters) {
-			console.log("Checking if " + char + " is allowed.");
-			console.log("Allowed characters: " + allowedCharacters);
+			NC.log("Checking if " + char + " is allowed.");
+			NC.log("Allowed characters: " + allowedCharacters);
 			var numerics;
 			if (allowedCharacters == undefined) {
 				// 0-9 and :
@@ -119,14 +119,14 @@ NC.Util = function() {
 				numerics = allowedCharacters;
 			}
 			
-			console.log("Allowed characters are: " + numerics);
+			NC.log("Allowed characters are: " + numerics);
 			
 			var result = false;
 			$.each(numerics, function(index, value) {
 				if (!result) {
-					console.log("Processing char: " + char + " against: " + value);
+					NC.log("Processing char: " + char + " against: " + value);
 					if (char == value) {
-						console.log("Character allowed!");
+						NC.log("Character allowed!");
 						result = true;
 					}
 				}
@@ -147,7 +147,7 @@ NC.Util = function() {
 			timeField.keypress(function(event) {
 				var text = timeField.val();
 				
-				console.log("Character count: " + text.length);
+				NC.log("Character count: " + text.length);
 				if (text.length == 0 && !public.isCharAllowed(event.which, [48,49,50])) {
 					event.preventDefault();
 				}
@@ -174,7 +174,7 @@ NC.Util = function() {
 				
 				if (event.keyCode == 13 && text.length == 5) {
 					event.preventDefault();
-					console.log("Pressed enter in add time field. Add the time");
+					NC.log("Pressed enter in add time field. Add the time");
 					if (callback !== undefined)
 						callback(text);
 				}
@@ -186,9 +186,9 @@ NC.Util = function() {
 		 * container will be marked red when field is empty and loses focus.
 		 */
 		bindNotEmptyField : function(containerDiv, inputField) {
-			console.log("Binding " + inputField.attr('name') + " as a not empty field");
+			NC.log("Binding " + inputField.attr('name') + " as a not empty field");
 			inputField.blur(function(event) {
-				console.log("Input field" + inputField.attr('name') + " lost focus. Current value is: " + inputField.val());
+				NC.log("Input field" + inputField.attr('name') + " lost focus. Current value is: " + inputField.val());
 				var val = inputField.val();
 				if (val.length == 0) {
 					containerDiv.addClass('error');
@@ -257,10 +257,10 @@ NC.Util = function() {
 		 * Mark error if the lenght is invalid
 		 */
 		bindLengthField : function(containerDiv, inputField, size) {
-			console.log("Binding " + inputField.attr('name') + " as a length specific field");
+			NC.log("Binding " + inputField.attr('name') + " as a length specific field");
 			inputField.blur(function(event) {
 				var val = inputField.val();
-				console.log("Lenght of input is: " + val.length);
+				NC.log("Lenght of input is: " + val.length);
 				if (val.length < size) {
 					containerDiv.addClass('error');
 				} else {
@@ -283,14 +283,14 @@ NC.Util = function() {
 		 * Create option elements from a set of options
 		 */
 		createOptions : function(options, selectElem) {
-			console.log("Creating options...");
+			NC.log("Creating options...");
 			if (selectElem === undefined) {
-				console.log("Select element is undefined.");
+				NC.log("Select element is undefined.");
 				return false;
 			}
 			
 			$.each(options, function(index, value) {
-				console.log("Creating option: " + value.code);
+				NC.log("Creating option: " + value.code);
 				var opt = $('<option>', { value : value.code });
 				opt.html(value.value);
 				opt.appendTo(selectElem);
@@ -303,17 +303,17 @@ NC.Util = function() {
 		 * with the array of values
 		 */
 		loadOptions : function(url, onDataLoaded) {
-			console.log("Loading support data from url: " + url);
+			NC.log("Loading support data from url: " + url);
 			$.ajax({
 				url : url,
 				dataType : 'json',
 				error : function(jqXHR, textStatus, errorThrown) {
-					console.log("Error: " + errorThrown);
+					NC.log("Error: " + errorThrown);
 				},
 				success : function(data, textStatus, jqXHR) {
 					var arr = new Array();
 					$.each(data.data, function(index, value) {
-						console.log("Processing " + value.value + "...");
+						NC.log("Processing " + value.value + "...");
 						arr[index] = value;
 					});
 					

@@ -24,17 +24,17 @@ NC.Support = function() {
 	 * with the array of values
 	 */
 	var _loadOptions = function(url, onDataLoaded) {
-		console.log("Loading support data from url: " + url);
+		NC.log("Loading support data from url: " + url);
 		$.ajax({
 			url : url,
 			dataType : 'json',
 			error : function(jqXHR, textStatus, errorThrown) {
-				console.log("Error: " + errorThrown);
+				NC.log("Error: " + errorThrown);
 			},
 			success : function(data, textStatus, jqXHR) {
 				var arr = new Array();
 				$.each(data.data, function(index, value) {
-					console.log("Processing " + value + "...");
+					NC.log("Processing " + value + "...");
 					arr[index] = value;
 				});
 				
@@ -49,7 +49,7 @@ NC.Support = function() {
 	 * Callback is called with an object containing the actual fields (property name) and values (property value).
 	 */
 	var _loadCaptions = function(url, record, fields, onLoaded) {
-		console.log("Loading support captions from url: " + url);
+		NC.log("Loading support captions from url: " + url);
 		var data = new Object();
 		data.record = record;
 		data.fields = fields;
@@ -62,7 +62,7 @@ NC.Support = function() {
 			data : JSON.stringify(data),
 			contentType : 'application/json',
 			error : function(jqXHR, textStatus, errorThrown) {
-				console.log("Error: " + errorThrown);
+				NC.log("Error: " + errorThrown);
 			},
 			success : function(data) {
 				onLoaded(data.data, null);
@@ -71,14 +71,14 @@ NC.Support = function() {
 	};
 	
 	var _createOptions = function(options, selectElem) {
-		console.log("Creating options...");
+		NC.log("Creating options...");
 		if (selectElem === undefined) {
-			console.log("Select element is undefined.");
+			NC.log("Select element is undefined.");
 			return false;
 		}
 		
 		$.each(options, function(index, value) {
-			console.log("Creating option: " + value.code);
+			NC.log("Creating option: " + value.code);
 			var opt = $('<option>', { value : value.code });
 			opt.html(value.value);
 			opt.appendTo(selectElem);
@@ -129,7 +129,7 @@ NC.Support = function() {
 		loadMonths : function(callback) {
 			var url = _baseUrl + '/months/load';
 			_loadOptions(url, function(data) {
-				console.log("Got result: " + data);
+				NC.log("Got result: " + data);
 				callback(data);
 			});
 		},
@@ -140,7 +140,7 @@ NC.Support = function() {
 		loadWeekdays : function(callback) {
 			var url = _baseUrl + '/weekdays/load';
 			_loadOptions(url, function(data) {
-				console.log("Got result: " + data);
+				NC.log("Got result: " + data);
 				callback(data);
 			});
 		}

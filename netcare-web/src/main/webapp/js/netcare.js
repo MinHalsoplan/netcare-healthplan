@@ -15,7 +15,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-NC = {};
+NC = {
+		log : function(msg) {
+			if (console !== undefined) {
+				console.log(msg);
+			}
+		}
+};
 
 $(function() {
 	
@@ -23,7 +29,7 @@ $(function() {
 	/*
 	 * Bind all autocomplete boxes
 	 */
-	console.log("Bind autocomplete fields...");
+	NC.log("Bind autocomplete fields...");
 	$('.nc-autocomplete').autocomplete({
 		search : function(event, ui) {
 			$(this).addClass('spinner');
@@ -36,7 +42,7 @@ $(function() {
 	$('.nc-autocomplete').blur(function() {
 		$(this).removeClass('spinner');
 	});
-	console.log("done.");
+	NC.log("done.");
 	
 	var handleErrorCode = function(code) {
 		window.location.href = '/netcare-web/netcare/error/' + code;
@@ -46,7 +52,7 @@ $(function() {
 	/*
 	 * Setup ajax status mappings
 	 */
-	console.log("Setting upp ajax...");
+	NC.log("Setting upp ajax...");
 	$.ajaxSetup({
 		dataType : 'json',
 		statusCode : {
@@ -62,7 +68,7 @@ $(function() {
 		}
 	});
 	
-	console.log("done.");
+	NC.log("done.");
 });
 
 

@@ -31,7 +31,7 @@
 				support.loadDurations($('#createHealthPlanForm select'));
 				
 				var updateDescription = function(count) {
-					console.log("Updating ordination table description");
+					NC.log("Updating ordination table description");
 					if (count == 0) {
 						$('#healthPlanContainer div').show();
 						$('#ordinationTable').hide();
@@ -43,13 +43,13 @@
 				
 				var healthPlans = NC.HealthPlan();
 				var listCallback = function(data) {
-					console.log("Success. Processing results...");
+					NC.log("Success. Processing results...");
 					
 					/* Empty the result list */
 					$('#ordinationTable tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
-						console.log("Processing index " + index + " value: " + value.name);
+						NC.log("Processing index " + index + " value: " + value.name);
 						
 						var util = NC.Util();
 						
@@ -83,7 +83,7 @@
 																actionCol));
 					});
 					
-					console.log("Updating description");
+					NC.log("Updating description");
 					updateDescription(data.data.length);
 				}
 				
@@ -116,7 +116,7 @@
 				 * Bind create button
 				 */
 				$('#createHealthPlanForm :submit').click(function(event) {
-					console.log("Submitting form...");
+					NC.log("Submitting form...");
 					event.preventDefault();
 					
 					var formData = new Object();
@@ -128,7 +128,7 @@
 					formData.durationUnit.value = $('#createHealthPlanForm select option:selected').val();
 					
 					var jsonObj = JSON.stringify(formData);
-					console.log("JSON: " + jsonObj.toString());
+					NC.log("JSON: " + jsonObj.toString());
 					
 					healthPlans.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
 						$('#createHealthPlanForm :reset').click();

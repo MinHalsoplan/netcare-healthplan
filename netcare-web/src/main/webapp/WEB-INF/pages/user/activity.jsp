@@ -45,10 +45,10 @@
 				 * new schedule activity form
 				 */ 
 				var resetForm = function() {
-					console.log("Disabling weekdays");
+					NC.log("Disabling weekdays");
 					disableWeekdays();
 					
-					console.log("Remove added times");
+					NC.log("Remove added times");
 					var rootId = 'div[id$=AddedTimes]';
 					$(rootId + ' div').remove();
 					$(rootId).hide();
@@ -116,15 +116,15 @@
 					var addedTimeContainer = $('<div>').css('padding-right', '10px').css('float', 'left');
 					var addedTime = $('<span>' + text + '</span>');
 					var removeTime = util.createIcon('trash', 16, function() {
-						console.log("Delete time");
+						NC.log("Delete time");
 						addedTimeContainer.remove();
 						
 						var timeCount = $('#' + day + 'AddedTimes span').size();
-						console.log("Times count: " + timeCount);
+						NC.log("Times count: " + timeCount);
 						
 						// Hide if no more times
 						if (timeCount == 0) {
-							console.log("No more times, hide container");
+							NC.log("No more times, hide container");
 							elem.hide();
 						}
 					});
@@ -154,7 +154,7 @@
 				 * Add the time when user presses the image icon
 				 */
 				$('img[src*="add"]').click(function(event) {
-					console.log("Icon clicked");
+					NC.log("Icon clicked");
 					var timeField = $(this).parent().children('input[name$="TimeField"]');
 					addTime(timeField, timeField.val());
 				});
@@ -167,12 +167,12 @@
 				var hp = new NC.HealthPlan();
 				
 				hp.listActivities(healthPlan, 'activitiesTable', function(data) {
-					console.log("Callback executing...");
+					NC.log("Callback executing...");
 				});
 				
 				var types = NC.ActivityTypes();
 				var showUnit = function(name) {
-					console.log("Selected " + name);
+					NC.log("Selected " + name);
 					$('span.unit').html('<strong>(' + name + ')</strong>');
 				}
 				
@@ -182,7 +182,7 @@
 				$('input[name="activityType"]').autocomplete('option', {
 					source : function(request, response) {
 						types.search(request.term, function(data) {
-							console.log("Found " + data.data.length + " activity types");
+							NC.log("Found " + data.data.length + " activity types");
 							response($.map(data.data, function(item) {
 								return { label : item.name + ' (' + item.category.name + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
 							}));
@@ -200,7 +200,7 @@
 				 * to be sent to the server as a JSON object
 				 */
 				$('#activityForm :submit').click(function(event) {
-					console.log("Form submission...");
+					NC.log("Form submission...");
 					event.preventDefault();
 					
 					var activityType = $('input[name="activityTypeId"]').val();
@@ -214,12 +214,12 @@
 						dayTime.times = new Array();
 						dayTime.day = $(value).attr('value');
 						
-						console.log("Processing: " + dayTime.day);
+						NC.log("Processing: " + dayTime.day);
 						
 						// Pick all times, if not times exist for a day. Just skip
 						if ($('#' + dayTime.day + 'AddedTimes span').size() != 0) {
 							$.each($('#' + dayTime.day + 'AddedTimes span'), function(index, value) {
-								console.log($(value).html());
+								NC.log($(value).html());
 								dayTime.times[index] = $(value).html();
 							});
 							
@@ -238,12 +238,12 @@
 					activity.activityRepeat = activityRepeat;
 					
 					var jsonObj = JSON.stringify(activity);
-					console.log("JSON: " + jsonObj.toString());
+					NC.log("JSON: " + jsonObj.toString());
 					
 					var hp = new NC.HealthPlan();
 					hp.addActivity(healthPlan, jsonObj, function(data) {
-						console.log("Success callback is executing...");
-						console.log("Resetting form");
+						NC.log("Success callback is executing...");
+						NC.log("Resetting form");
 						
 						$('input:reset').click();
 						
@@ -259,7 +259,7 @@
 				});
 				
 				$('#showActivityForm').click(function(event) {
-					console.log("Displaying new activity form");
+					NC.log("Displaying new activity form");
 					$('#activityForm').toggle();
 				});
 				
@@ -272,7 +272,7 @@
 				 * form
 				 */
 				$('#addNewType').bind('show', function() {
-					console.log("Showing modal... fill form.");
+					NC.log("Showing modal... fill form.");
 					
 					$('#addNewType select[name="unit"]').empty();
 					new NC.Support().loadUnits($('#addNewType select[name="unit"]'));
@@ -296,7 +296,7 @@
 				 * Save activity type when user submits the form
 				 */
 				$('#addNewType :submit').click(function(event) {
-					console.log("User submitted new activity type form...");
+					NC.log("User submitted new activity type form...");
 					event.preventDefault();
 					
 					var name = $('#addNewType input[name="name"]').val();
@@ -307,9 +307,9 @@
 					var unit = new Object();
 					unit.code = $('#addNewType select[name="unit"] option:selected').val();
 					
-					console.log("Name: " + name);
-					console.log("Category: " + category.id);
-					console.log("Unit: " + unit.code);
+					NC.log("Name: " + name);
+					NC.log("Category: " + category.id);
+					NC.log("Unit: " + unit.code);
 					
 					var formData = new Object();
 					formData.name = name;
@@ -321,7 +321,7 @@
 					}
 					
 					var jsonObj = JSON.stringify(formData);
-					console.log('...... CREATE : ' + jsonObj);
+					NC.log('...... CREATE : ' + jsonObj);
 					new NC.ActivityTypes().create(jsonObj, function(data) {
 						
 						showUnit(data.data.unit.value);
