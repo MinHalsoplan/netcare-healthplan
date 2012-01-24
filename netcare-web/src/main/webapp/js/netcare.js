@@ -15,17 +15,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-NC = {
+NC = {		
 		log : function(msg) {
-			if (console !== undefined) {
-				console.log(msg);
-			}
+			console.log(msg);
 		}
 };
 
 $(function() {
 	
-	
+	if (typeof console === "undefined" || typeof console.log === "undefined") {
+		console = {};
+		console.log = function() {};
+	}
+
 	/*
 	 * Bind all autocomplete boxes
 	 */

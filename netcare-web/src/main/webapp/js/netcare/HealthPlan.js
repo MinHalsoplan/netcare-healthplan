@@ -56,7 +56,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		/**
 		 * Delete an ordination
 		 */
-		delete : function(healthPlanId, callback) {
+		remove : function(healthPlanId, callback) {
 			var url = _baseUrl + '/' + healthPlanId + '/delete';
 			NC.log("Removing health plan " + healthPlanId + " using url: " + url);
 			
