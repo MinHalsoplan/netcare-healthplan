@@ -28,134 +28,269 @@
 <netcare:page>
 	<mobile:header>
 		<script type="text/javascript">
-			$('#start').live('pageinit', function(e) {
+			var buildListView = function(value, buildHeader) {
 				
-				NC.log("Loading unreported activities");
-				new NC.Patient().listActivities(function(data) {
+				if (buildHeader) {
+					 var header = $('<li>').attr('data-role', 'list-divider')
+					.attr('role', 'heading')
+					.addClass('ui-li')
+					.addClass('ui-li-divider')
+					.addClass('ui-btn')
+					.addClass('ui-bar-b')
+					.addClass('ui-li-has-count')
+					.addClass('ui-btn-up-undefined') 
+					.html(value.day.value + ' <br />' + value.date);
 					
+					$('#schema').append(header);
+				}
+				
+				var activityContainer = $('<li>').attr('data-theme', 'c')
+				.addClass('ui-btn')
+				.addClass('ui-btn-icon-right')
+				.addClass('ui-li-has-arrow')
+				.addClass('ui-li')
+				.addClass('ui-btn-up-c');
+			
+				var activityContentDiv = $('<div>').attr('area-hidden', 'true')
+					.addClass('ui-btn-inner')
+					.addClass('ui-li');
+				
+				activityContentDiv.append(
+					$('<span>').addClass('ui-icon').addClass('ui-icon-arrow-r').addClass('ui-icon-shadow')
+				);
+				
+				activityContainer.append(activityContentDiv);
+				
+				var link = $('<a>').attr('href', '#report').addClass('ui-link-inherit');
+				activityContentDiv.append(link);
+				
+				link.append(
+					$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
+				);
+				
+				var activityText = $('<div>').addClass('ui-btn-text');
+				activityText.append(
+					$('<h3>' + value.definition.type.name + '</h3>').addClass('ui-li-heading')
+				);
+				
+				activityText.append(
+					$('<p>' + value.definition.goal +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
+				);
+				
+				if (value.reported != null) {
+					activityText.append(
+						$('<p>Rapporterat värde: ' + value.actualValue +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
+					);
 					
-					var currentDay = '';
-					$.each(data.data, function(index, value) {
-						NC.log("Processing " + value.id + " ...");
-						
-						if (currentDay != value.day.value) {
-							currentDay = value.day.value;
-							
-							 var header = $('<li>').attr('data-role', 'list-divider')
-							.attr('role', 'heading')
-							.addClass('ui-li')
-							.addClass('ui-li-divider')
-							.addClass('ui-btn')
-							.addClass('ui-bar-b')
-							.addClass('ui-li-has-count')
-							.addClass('ui-btn-up-undefined') 
-							.html(currentDay + ' <br />' + value.date);
-							
-							$('#schema').append(header);
-						}
-						
-						var activityContainer = $('<li>').attr('data-theme', 'c')
-							.addClass('ui-btn')
-							.addClass('ui-btn-icon-right')
-							.addClass('ui-li-has-arrow')
-							.addClass('ui-li')
-							.addClass('ui-btn-up-c');
-						
-						var activityContentDiv = $('<div>').attr('area-hidden', 'true')
-							.addClass('ui-btn-inner')
-							.addClass('ui-li');
-						activityContainer.append(activityContentDiv);
-						
-						var link = $('<a>').attr('href', '#report').addClass('ui-link-inherit');
-						activityContentDiv.append(link);
-						
-						link.append(
-							$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
-						);
-						
-						var activityText = $('<div>').addClass('ui-btn-text');
-						activityText.append(
-							$('<h3>' + value.definition.type.name + '</h3>').addClass('ui-li-heading')
-						);
-						
-						activityText.append(
-							$('<p>' + value.definition.goal +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
-						);
-						
-						link.append(activityText);
-						
-						$('#schema').append(activityContainer);
-						
-						
-						link.click(function(e) {
-							NC.log("Load activity: " + value.id);
-							
-							new NC.HealthPlan().loadScheduledActivity(value.id, function(data) {
-								$('#valueUnit').html(data.data.definition.type.unit.value);
-								
-								$('#report h2').html(data.data.definition.type.name + ' ' + data.data.definition.goal + ' ' + data.data.definition.type.unit.value);
-								$('#report p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
-								
-								$('#value').val(data.data.definition.goal);
-								$('#date').val(data.data.date);
-								$('#time').val(data.data.time);
-							});
-							
-						});
-					});
+					activityText.append(
+						$('<p>' + value.reported + '</p>').addClass('ui-li-desc')
+					);
+				}
+				
+				link.append(activityText);
+				
+				$('#schema').append(activityContainer);
+				
+				link.click(function(e) {
+					loadActivity(value.id);
+				});
+			};
+		
+			var loadActivity = function(activityId) {
+				NC.log("Load activity: " + activityId);
+				
+				new NC.HealthPlan().loadScheduledActivity(activityId, function(data) {
+					$('#valueUnit').html(data.data.definition.type.unit.value);
+					
+					$('#report h2').html(data.data.definition.type.name + ' ' + data.data.definition.goal + ' ' + data.data.definition.type.unit.value);
+					$('#report p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
+					
+					$('#value').val(data.data.definition.goal);
+					$('#date').val(data.data.date);
+					$('#time').val(data.data.time);
 				});
 				
+				/*
+				 * Report value
+				 */
+				$('#sendReport').click(function(e) {
+					NC.log("Submitting form...");
+					e.preventDefault();
+					
+					var formData = new Object();
+					formData.actualValue = $('#value').val();
+					formData.actualDate = $('#date').val();
+					formData.actualTime = $('#time').val();
+					formData.sense = $('#slider').val();
+					formData.rejected = false;
+					formData.note = $('#note').val();
+					
+					new NC.Patient().reportActivity(activityId, JSON.stringify(formData), function(data) {
+						if (data.success) {
+							loadFromServer(function() {
+								$('#back').click();
+								$('#actual').click();
+								
+								var msg = $('<div>').addClass('ui-bar').addClass('ui-bar-e').append(
+										$('<h3>' + data.successMessages[0].message + '</h3>')
+								);
+								
+								$('#schema').before(
+									msg
+								);
+								
+								setTimeout(function() {
+									msg.slideUp('slow');
+								}, 5000);
+							});
+						}
+					});
+					
+					$('#sendReport').unbind('click');
+				});
+			};
+			
+			var buildFromArray = function(object) {
+				var currentDay = '';
+				
+				$('#schema').empty();
+				
+				$.each(object, function(index, value) {
+					NC.log("Processing " + value.id + " ...");
+					if (currentDay != value.day.value) {
+						currentDay = value.day.value;
+						buildListView(value, true);
+					} else {
+						buildListView(value, false);
+					}
+				});
+			};
+			
+			var due = new Array();
+			var actual = new Array();
+			var reported = new Array();
+			
+			var loadFromServer = function(callback) {
+				
+				due = new Array();
+				actual = new Array();
+				reported = new Array();
+				
+				new NC.Patient().listActivities(function(data) {
+					$.each(data.data, function(index, value) {
+						
+						if (value.reported != null) {
+							NC.log("Pushing " + value.id + " to reported");
+							reported.push(value);
+						} else if (value.reported == null && value.due) {
+							NC.log("Pushing " + value.id + " to due");
+							due.push(value);
+						} else {
+							NC.log("Pushing " + value.id + " to actual");
+							actual.push(value);
+						}
+					});
+					
+					callback();
+				});
+			};
+		
+			$('#start').live('pageinit', function(e) {
+				
+				loadFromServer(function() {
+					NC.log("Done fetching data.");
+					
+					$('#actual').click(function(e) {
+						NC.log("Loading actual activities...");
+						buildFromArray(actual);
+					});
+					
+					$('#due').click(function(e) {
+						NC.log("Loading due activities...");
+						buildFromArray(due);
+					});
+					
+					$('#reported').click(function(e) {
+						NC.log("Loading reported activities...");
+						buildFromArray(reported);
+					});
+					
+					$('#actual').click();
+				});
 			});
+			
 		</script>	
 	</mobile:header>
 	<body>
-		<mobile:page id="start" title="Mina aktiviteter">
-			<mobile:list id="schema">
-			</mobile:list>
+		<mobile:page id="start">
+			<mobile:page-header title="Aktiviteter" id="today-header">
+				<div data-role="navbar" class="ui-navbar" role="navigation">
+					<ul class="ui-grid-b">
+						<li class="ui-block-a">
+							<a id="actual" href="#" data-icon="home" data-theme="a" class="ui-btn ui-btn-up-a">Aktuella</a>
+						</li>
+						<li class="ui-block-b">
+							<a id="due" href="#" data-icon="alert" data-theme="a" class="ui-btn ui-btn-up-a">Ej klara</a>
+						</li>
+						<li class="ui-block-b">
+							<a id="reported" href="#" data-icon="check" data-theme="a" class="ui-btn ui-btn-up-a">Klara</a>
+						</li>
+					</ul>
+				</div>
+			</mobile:page-header>
+			<mobile:page-body id="today-body">
+				<mobile:list id="schema">
+				</mobile:list>
+			</mobile:page-body>
+			<mobile:page-footer id="today-footer">
+			
+			</mobile:page-footer>
 		</mobile:page>
 		
-		<mobile:page title="Rapportera aktivitet" id="report">
-			<div class="ui-body ui-body-d">
-				<h2>Löpning 1200 Meter</h2>
-				<p>Måndag, 2012-01-16 18:15</p>
-				
-				
-				<form>
-					<div data-role="fieldcontain">
-						<label for="value" class="ui-input-text">Rapportera</label>
-						<input type="number" id="value" name="value" /> <span id="valueUnit"></span>
-					</div>
+		<mobile:page id="report">
+			<mobile:page-header title="Rapportera" id="report-header">
+			</mobile:page-header>
+			<mobile:page-body id="report-body">
+				<div class="ui-body ui-body-d">
+					<h2></h2>
+					<p></p>
 					
-					<div data-role="fieldcontain">
-						<label for="date">Datum</label>
-						<input type="date" id="date" name="date" />
-					</div>
-					
-					<div data-role="fieldcontain">
-						<label for="time">Tid</label>
-						<input type="time" id="time" name="time" />
-					</div>
-					
-					<div data-role="fieldcontain">
-						<label for="slider" id="slider-label" class="ui-slider ui-input-text">Känsla</label>
-						<input type="number" data-type="range" name="slider" id="slider" value="3" min="1" max="5" class="ui-slider-input ui-input-text ui-body-c ui-corner-all ui-shadow-inset" />
-					</div>
-					
-					<div data-role="fieldcontain">
-						<label for="note" class="ui-input-text">Anteckning</label>
-						<textarea name="note" id="note" class="ui-input-text"></textarea>
-					</div>
-					
-					<fieldset class="ui-grid-a">
-						<div class="ui-block-b">
-							<a href="#start" data-role="button">Tillbaka</a>
+					<form method="post">
+						<div data-role="fieldcontain">
+							<label for="value" class="ui-input-text">Rapportera</label>
+							<input type="number" id="value" name="value" /> <span id="valueUnit"></span>
 						</div>
-						<div class="ui-block-b">
-							<button type="submit" data-theme="b" class="ui-btn-hidden" aria-disabled="false">Rapportera</button>
+						
+						<div data-role="fieldcontain">
+							<label for="date">Datum</label>
+							<input type="date" id="date" name="date" />
 						</div>
-					</fieldset>
-				</form>
-			</div>
+						
+						<div data-role="fieldcontain">
+							<label for="time">Tid</label>
+							<input type="time" id="time" name="time" />
+						</div>
+						
+						<div data-role="fieldcontain">
+							<label for="slider" id="slider-label" class="ui-slider ui-input-text">Känsla</label>
+							<input type="number" data-type="range" name="slider" id="slider" value="3" min="1" max="5" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
+						</div>
+						
+						<div data-role="fieldcontain">
+							<label for="note" class="ui-input-text">Anteckning</label>
+							<textarea name="note" id="note" class="ui-input-text"></textarea>
+						</div>
+						
+						
+						<a id="sendReport" href="#" data-theme="b" data-role="button" data-icon="check">Rapportera</a>
+						<a id="back" href="#start" data-theme="c" data-icon="arrow-l" data-role="button">Tillbaka</a>
+					</form>
+				</div>
+			</mobile:page-body>
+			<mobile:page-footer id="report-footer">
+			
+			</mobile:page-footer>
+			
 		</mobile:page>
 	</body>
 </netcare:page>

@@ -20,4 +20,4 @@
 <%@ attribute name="id" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<ul id="${id}" data-role="listview" class="ui-listview"><jsp:doBody /></ul>
+<ul id="${id}" data-role="listview"><jsp:doBody /></ul>

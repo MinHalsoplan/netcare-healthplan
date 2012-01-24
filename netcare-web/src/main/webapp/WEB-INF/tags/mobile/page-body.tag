@@ -16,26 +16,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
+<%@ attribute name="id" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
-<%@ taglib prefix="mobile" tagdir="/WEB-INF/tags/mobile" %>
-
-<netcare:page>
-	<mobile:header>
-		<script type="text/javascript">
-			$(document).delegate('pagecreate', '#report' function() {
-				console.log("Page created");
-			});
-		</script>
-	</mobile:header>
-	<body>
-		<mobile:page id="report" title="Rapportera aktivitet">
-			<h1>Löpning</h1>
-		</mobile:page>
-	</body>
-</netcare:page>
+<div id="${id}" data-role="content-primary">
+	<jsp:doBody />
+</div>

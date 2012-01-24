@@ -36,6 +36,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private boolean mobile;
 	private String civicRegistrationNumber;
 
 	PatientBaseViewImpl() {
@@ -49,6 +50,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	
 	PatientBaseViewImpl(final PatientEntity entity) {
 		super(entity.getId(), entity.getName());
+		this.mobile = entity.isMobile();
 		this.setCivicRegistrationNumber(entity.getCivicRegistrationNumber());
 	}
 	
@@ -90,5 +92,10 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Role.getPatientRoleSet();
+	}
+
+	@Override
+	public boolean isMobile() {
+		return this.mobile;
 	}
 }

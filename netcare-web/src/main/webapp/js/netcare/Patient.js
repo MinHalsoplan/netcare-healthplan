@@ -96,6 +96,10 @@ NC.Patient = function() {
 		 */
 		listActivities : function(callback) {
 			_ajax.get('/patient/schema', callback);
+		},
+		
+		reportActivity : function(activityId, formData, callback) {
+			_ajax.post('/patient/schema/' + activityId + '/accept', formData, callback);
 		}
 	};
 	

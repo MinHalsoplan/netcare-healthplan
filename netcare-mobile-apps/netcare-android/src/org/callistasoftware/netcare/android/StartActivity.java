@@ -11,6 +11,7 @@ import org.callistasoftware.netcare.android.serviceclient.ServiceFactory;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -70,6 +71,14 @@ public class StartActivity extends Activity {
 
 					@Override
 					public void onSuccess(ServiceResult<Boolean> result) {
+						
+						/*
+						 * Save credentials
+						 */
+						final Editor edit = StartActivity.this.getSharedPreferences("NETCARE", MODE_PRIVATE).edit();
+						edit.putString("username", username);
+						edit.putString("password", password);
+						edit.commit();
 						
 						/*
 						 * We're fine. If the user saved the credentials

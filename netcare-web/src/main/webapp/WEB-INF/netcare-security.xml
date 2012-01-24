@@ -36,9 +36,11 @@
 		<security:http-basic/>
 	</security:http>
 	
-	<security:http pattern="/netcare/mobile/**" use-expressions="true" create-session="never">
+	<security:http pattern="/netcare/mobile/**" 
+		use-expressions="true" 
+		create-session="never">
 		<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
-		<security:http-basic/>
+		<security:http-basic />
 	</security:http>
 
 	<security:http use-expressions="true">
@@ -54,5 +56,10 @@
 		<security:authentication-provider ref="authenticationProvider" />
 	</security:authentication-manager>
 	
+<!-- 	<security:authentication-manager> -->
+<!-- 		<security:authentication-provider ref="mobileAuthenticationProvider" /> -->
+<!-- 	</security:authentication-manager> -->
+	
 	<bean id="authenticationProvider" class="org.callistasoftware.netcare.web.security.AuthenticationProvider" />
+<!-- 	<bean id="mobileAuthenticationProvider" class="org.callistasoftware.netcare.web.security.MobileAuthenticationProvider" /> -->
 </beans>

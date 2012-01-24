@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="@color/black"
-    android:padding="20dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    
-    
-    
-    <ImageView
-        	android:id="@+id/logo"
-        	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:src="@drawable/netcare" 
-        	android:paddingTop="30dp"
-        	android:paddingBottom="10dp"/>
-    
-    <TextView 
-        	android:id="@+id/title"
-        	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:gravity="center_horizontal"
-        	android:text="@string/app_name"
-        	style="@style/header"
-        	android:paddingBottom="10dp"
-        	/>
-    
-    <TextView 
-        android:id="@+id/cnrLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/cnr"/>
-    
-    <EditText android:id="@+id/cnr"
-        android:numeric="integer|signed"
-        android:maxLength="12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    
-    <TextView android:id="@+id/pinLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pin"/>
-    
-    <EditText android:id="@+id/pin"
-        android:password="true"
-        android:maxLines="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <CheckBox
-        android:id="@+id/remember"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/remember" 
-        />
-    
-    <Button android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"/>
-
-</LinearLayout>
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical" 
+	    android:background="@color/black"
+	    android:padding="20dp">
+	    
+	    <ImageView
+	        	android:id="@+id/logo"
+	        	android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+	        	android:src="@drawable/netcare" 
+	        	android:paddingTop="30dp"
+	        	android:paddingBottom="10dp"/>
+	    
+	    <TextView 
+	        	android:id="@+id/title"
+	        	android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+	        	android:gravity="center_horizontal"
+	        	android:text="@string/app_name"
+	        	style="@style/header"
+	        	android:paddingBottom="10dp"
+	        	/>
+	    
+	    <TextView 
+	        android:id="@+id/cnrLabel"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/cnr"/>
+	    
+	    <EditText android:id="@+id/cnr"
+	        android:numeric="integer|signed"
+	        android:maxLength="12"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"/>
+	    
+	    <TextView android:id="@+id/pinLabel"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/pin"/>
+	    
+	    <EditText android:id="@+id/pin"
+	        android:password="true"
+	        android:maxLines="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"/>
+	
+	    <CheckBox
+	        android:id="@+id/remember"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/remember" 
+	        />
+	    
+	    <Button android:id="@+id/loginButton"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/login"/>
+	
+	</LinearLayout>
+</ScrollView>

@@ -21,6 +21,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<div data-role="page" id="${id}">
-	<jsp:doBody />
+
+<div id="${id}" data-role="footer">
+	<h4>Planerade hälsoaktiviteter : <sec:authentication property="principal.name" /></h4>
 </div>

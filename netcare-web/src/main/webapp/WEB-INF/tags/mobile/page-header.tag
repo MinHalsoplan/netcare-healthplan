@@ -18,9 +18,11 @@
 --%>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ attribute name="id" required="true" %>
+<%@ attribute name="title" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<div data-role="page" id="${id}">
+<div id="${id}" data-role="header">
+	<h1>${title}</h1>
 	<jsp:doBody />
 </div>

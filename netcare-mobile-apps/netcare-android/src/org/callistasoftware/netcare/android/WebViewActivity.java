@@ -1,12 +1,13 @@
 package org.callistasoftware.netcare.android;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.HttpAuthHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.webkit.WebViewDatabase;
+import android.widget.Toast;
 
 public class WebViewActivity extends Activity {
 
@@ -15,36 +16,33 @@ public class WebViewActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.setContentView(R.layout.webview);
 		
-		final WebView wv = new WebView(this);
+		final SharedPreferences sp = this.getSharedPreferences("NETCARE", MODE_PRIVATE);
+		
+		final String username = sp.getString("username", null);
+		final String password = sp.getString("password", null);
+		
+		if (username == null || password == null) {
+			Log.d(TAG, "Credentials empty, bring to home screen.");
+			Toast.makeText(getApplicationContext(), "Inga användaruppgifter sparade. Vänligen logga in igen...", 3000);
+			startActivity(new Intent(getApplicationContext(), StartActivity.class));
+		}
+		
+		Log.d(TAG, "Setting basic authentication credentials. Username: " + username + " password: " + password);
+		
+		final WebView wv = (WebView) this.findViewById(R.id.webview);
 		wv.getSettings().setJavaScriptEnabled(true);
-		wv.setScrollbarFadingEnabled(true);
+		wv.setHttpAuthUsernamePassword("192.168.0.113", "Spring Security Application", username, password);
 		
-		setContentView(wv);
-		
-		/*WebViewDatabase.getInstance(this).clearHttpAuthUsernamePassword();
-		wv.setWebViewClient(new WebViewClient() {
+		wv.setWebChromeClient(new WebChromeClient() {
 			@Override
-			public void onReceivedHttpAuthRequest(WebView view,
-					HttpAuthHandler handler, String host, String realm) {
-				super.onReceivedHttpAuthRequest(view, handler, host, realm);
-				Log.d(TAG, "Received authentication request.");
-				Log.d(TAG, "Target host: " + host);
-				Log.d(TAG, "Target realm: " + realm);
-				
-				handler.proceed("191212121212", "0000");
-			}
-			
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				view.loadUrl(url);
-				return true;
+			public void onProgressChanged(WebView view, int newProgress) {
+				setProgress(newProgress * 1000);
 			}
 		});
 		
-		wv.setHttpAuthUsernamePassword("192.168.0.113", "Spring Security Application", "191212121212", "0000");
-		*/
 		Log.d(TAG, "Displaying url in web view.");
-		wv.loadUrl("http://191212121212:0000@192.168.0.113:8080/netcare-web/netcare/mobile/start");
+		wv.loadUrl("http://" +username+":"+password+"@192.168.0.113:8080/netcare-web/netcare/mobile/start");
 	}
 }
