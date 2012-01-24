@@ -102,8 +102,8 @@
 				new NC.HealthPlan().loadScheduledActivity(activityId, function(data) {
 					$('#valueUnit').html(data.data.definition.type.unit.value);
 					
-					$('#report h2').html(data.data.definition.type.name + ' ' + data.data.definition.goal + ' ' + data.data.definition.type.unit.value);
-					$('#report p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
+					$('#report div h3').html(data.data.definition.type.name + ' ' + data.data.definition.goal + ' ' + data.data.definition.type.unit.value);
+					$('#report div p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
 					
 					$('#value').val(data.data.definition.goal);
 					$('#date').val(data.data.date);
@@ -114,6 +114,9 @@
 				 * Report value
 				 */
 				$('#sendReport').click(function(e) {
+					
+					$.mobile.showPageLoadingMsg();
+					
 					NC.log("Submitting form...");
 					e.preventDefault();
 					
@@ -128,6 +131,9 @@
 					new NC.Patient().reportActivity(activityId, JSON.stringify(formData), function(data) {
 						if (data.success) {
 							loadFromServer(function() {
+								
+								$.mobile.hidePageLoadingMsg();
+								
 								$('#back').click();
 								$('#actual').click();
 								
@@ -251,9 +257,11 @@
 			<mobile:page-header title="Rapportera" id="report-header">
 			</mobile:page-header>
 			<mobile:page-body id="report-body">
-				<div class="ui-body ui-body-d">
-					<h2></h2>
+				<div class="ui-bar ui-bar-b">
+					<h3></h3>
 					<p></p>
+				</div>
+				<div class="ui-body ui-body-d">
 					
 					<form method="post">
 						<div data-role="fieldcontain">
@@ -283,7 +291,7 @@
 						
 						
 						<a id="sendReport" href="#" data-theme="b" data-role="button" data-icon="check">Rapportera</a>
-						<a id="back" href="#start" data-theme="c" data-icon="arrow-l" data-role="button">Tillbaka</a>
+						<a id="back" data-rel="back" data-theme="c" data-icon="arrow-l" data-role="button">Tillbaka</a>
 					</form>
 				</div>
 			</mobile:page-body>

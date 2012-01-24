@@ -1,6 +1,7 @@
 package org.callistasoftware.netcare.android;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 public class WebViewActivity extends Activity {
 
 	private final static String TAG = WebViewActivity.class.getSimpleName();
+	
+	private ProgressDialog p;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +36,24 @@ public class WebViewActivity extends Activity {
 		
 		final WebView wv = (WebView) this.findViewById(R.id.webview);
 		wv.getSettings().setJavaScriptEnabled(true);
+		wv.clearFormData();
+		wv.clearHistory();
+		wv.clearCache(true);
 		wv.setHttpAuthUsernamePassword("192.168.0.113", "Spring Security Application", username, password);
 		
 		wv.setWebChromeClient(new WebChromeClient() {
 			@Override
 			public void onProgressChanged(WebView view, int newProgress) {
-				setProgress(newProgress * 1000);
+				Log.d(TAG, "Progress is: " + newProgress);
+				if (newProgress == 100) {
+					p.dismiss();
+				}
 			}
 		});
 		
+		
 		Log.d(TAG, "Displaying url in web view.");
+		p = ProgressDialog.show(this, "Laddar", "Vänligen vänta medan sidan laddar klart.");
 		wv.loadUrl("http://" +username+":"+password+"@192.168.0.113:8080/netcare-web/netcare/mobile/start");
 	}
 }
