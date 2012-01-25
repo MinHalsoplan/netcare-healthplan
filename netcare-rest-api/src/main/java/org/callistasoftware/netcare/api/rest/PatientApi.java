@@ -75,7 +75,13 @@ public class PatientApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> getSchema(final Authentication auth) {
 		PatientBaseView pv = (PatientBaseView)auth.getPrincipal();
-		return planService.getActivitiesForPatient(pv);
+		ServiceResult<ScheduledActivity[]> activitiesForPatient = planService.getActivitiesForPatient(pv);
+		
+		for (final ScheduledActivity a : activitiesForPatient.getData()) {
+			log.debug("Returining {} reported {} due {}", new Object[] {a.getId(), a.getReported(), a.isDue()});
+		}
+		
+		return activitiesForPatient;
 	}
 	
 	@RequestMapping(value="/schema/{id}/accept", method=RequestMethod.POST, produces="application/json")

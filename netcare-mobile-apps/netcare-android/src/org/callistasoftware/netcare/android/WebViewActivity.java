@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class WebViewActivity extends Activity {
@@ -32,14 +34,20 @@ public class WebViewActivity extends Activity {
 			startActivity(new Intent(getApplicationContext(), StartActivity.class));
 		}
 		
-		Log.d(TAG, "Setting basic authentication credentials. Username: " + username + " password: " + password);
-		
 		final WebView wv = (WebView) this.findViewById(R.id.webview);
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.clearFormData();
 		wv.clearHistory();
 		wv.clearCache(true);
-		wv.setHttpAuthUsernamePassword("192.168.0.113", "Spring Security Application", username, password);
+		
+		wv.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onReceivedHttpAuthRequest(WebView view,
+					HttpAuthHandler handler, String host, String realm) {
+				Log.d(TAG, "Setting basic authentication credentials. Username: " + username + " password: " + password);
+				handler.proceed(username, password);
+			}
+		});
 		
 		wv.setWebChromeClient(new WebChromeClient() {
 			@Override
@@ -51,9 +59,9 @@ public class WebViewActivity extends Activity {
 			}
 		});
 		
-		
 		Log.d(TAG, "Displaying url in web view.");
 		p = ProgressDialog.show(this, "Laddar", "Vänligen vänta medan sidan laddar klart.");
-		wv.loadUrl("http://" +username+":"+password+"@192.168.0.113:8080/netcare-web/netcare/mobile/start");
+		wv.loadUrl("http://" + ApplicationUtil.getProperties(getApplicationContext()).getProperty("host") + ":" + ApplicationUtil.getProperties(getApplicationContext()).getProperty("port")
+				+ "/netcare-web/netcare/mobile/start");
 	}
 }

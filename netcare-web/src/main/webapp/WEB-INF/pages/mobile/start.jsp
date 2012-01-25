@@ -28,72 +28,15 @@
 <netcare:page>
 	<mobile:header>
 		<script type="text/javascript">
+			var mobile = new NC.Mobile();
+		
 			var buildListView = function(value, buildHeader) {
 				
 				if (buildHeader) {
-					 var header = $('<li>').attr('data-role', 'list-divider')
-					.attr('role', 'heading')
-					.addClass('ui-li')
-					.addClass('ui-li-divider')
-					.addClass('ui-btn')
-					.addClass('ui-bar-b')
-					.addClass('ui-li-has-count')
-					.addClass('ui-btn-up-undefined') 
-					.html(value.day.value + ' <br />' + value.date);
-					
-					$('#schema').append(header);
+					mobile.createListHeader($('#schema'), value.day.value + '<br/>' + value.date);
 				}
 				
-				var activityContainer = $('<li>').attr('data-theme', 'c')
-				.addClass('ui-btn')
-				.addClass('ui-btn-icon-right')
-				.addClass('ui-li-has-arrow')
-				.addClass('ui-li')
-				.addClass('ui-btn-up-c');
-			
-				var activityContentDiv = $('<div>').attr('area-hidden', 'true')
-					.addClass('ui-btn-inner')
-					.addClass('ui-li');
-				
-				activityContentDiv.append(
-					$('<span>').addClass('ui-icon').addClass('ui-icon-arrow-r').addClass('ui-icon-shadow')
-				);
-				
-				activityContainer.append(activityContentDiv);
-				
-				var link = $('<a>').attr('href', '#report').addClass('ui-link-inherit');
-				activityContentDiv.append(link);
-				
-				link.append(
-					$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
-				);
-				
-				var activityText = $('<div>').addClass('ui-btn-text');
-				activityText.append(
-					$('<h3>' + value.definition.type.name + '</h3>').addClass('ui-li-heading')
-				);
-				
-				activityText.append(
-					$('<p>' + value.definition.goal +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
-				);
-				
-				if (value.reported != null) {
-					activityText.append(
-						$('<p>Rapporterat värde: ' + value.actualValue +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
-					);
-					
-					activityText.append(
-						$('<p>' + value.reported + '</p>').addClass('ui-li-desc')
-					);
-				}
-				
-				link.append(activityText);
-				
-				$('#schema').append(activityContainer);
-				
-				link.click(function(e) {
-					loadActivity(value.id);
-				});
+				mobile.createListRow($('#schema'), '#report', value, loadActivity);
 			};
 		
 			var loadActivity = function(activityId) {
@@ -130,12 +73,8 @@
 					
 					new NC.Patient().reportActivity(activityId, JSON.stringify(formData), function(data) {
 						if (data.success) {
+							
 							loadFromServer(function() {
-								
-								$.mobile.hidePageLoadingMsg();
-								
-								$('#back').click();
-								$('#actual').click();
 								
 								var msg = $('<div>').addClass('ui-bar').addClass('ui-bar-e').append(
 										$('<h3>' + data.successMessages[0].message + '</h3>')
@@ -144,6 +83,12 @@
 								$('#schema').before(
 									msg
 								);
+								
+
+								$('#back').click();
+								$('#actual').click();
+								
+								$.mobile.hidePageLoadingMsg();
 								
 								setTimeout(function() {
 									msg.slideUp('slow');
@@ -184,6 +129,8 @@
 				
 				new NC.Patient().listActivities(function(data) {
 					$.each(data.data, function(index, value) {
+						
+						NC.log('Id: ' + value.id + " Reported: " + value.reported + " Due: " + value.due);
 						
 						if (value.reported != null) {
 							NC.log("Pushing " + value.id + " to reported");

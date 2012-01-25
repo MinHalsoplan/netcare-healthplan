@@ -61,7 +61,8 @@ public class StartActivity extends Activity {
 					@Override
 					public ServiceResult<Boolean> doCall(final Context ctx) {
 						
-						final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(8080
+						final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(
+								Integer.valueOf(ApplicationUtil.getProperties(getApplicationContext()).getProperty("port"))
 								, username
 								, password);
 						
