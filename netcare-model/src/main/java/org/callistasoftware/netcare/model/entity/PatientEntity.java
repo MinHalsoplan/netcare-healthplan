@@ -38,6 +38,9 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="is_mobile")
 	private boolean isMobile;
 	
+	@Column(name="password")
+	private String password;
+	
 	@Column(name="phoneNumber", unique=true)
 	private String phoneNumber;
 	
@@ -75,6 +78,14 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 
 	public void setMobile(boolean isMobile) {
 		this.isMobile = isMobile;
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
+	public void setPassword(final String password) {
+		this.password = password;
 	}
 
 	public List<HealthPlanEntity> getHealthPlans() {

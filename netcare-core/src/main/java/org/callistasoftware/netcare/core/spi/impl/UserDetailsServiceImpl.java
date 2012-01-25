@@ -69,6 +69,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				return CareGiverBaseViewImpl.newFromEntity(cg);
 			}
 		} else {
+			
+			log.debug("Patient found.");
+			log.debug("Mobile user: " + patient.isMobile());
+			
 			return PatientBaseViewImpl.newFromEntity(patient);
 		}
 		

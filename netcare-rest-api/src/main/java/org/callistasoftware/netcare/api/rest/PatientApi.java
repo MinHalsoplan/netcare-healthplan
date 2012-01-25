@@ -23,8 +23,6 @@ import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityReportImpl;
-import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +43,6 @@ public class PatientApi extends ApiSupport {
 	
 	@Autowired
 	private HealthPlanService planService;
-	
-	@RequestMapping(value="/checkcredentials", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<Boolean> checkUserCredentials() {
-		return ServiceResultImpl.createSuccessResult(Boolean.TRUE, new GenericSuccessMessage());
-	}
 
 	@RequestMapping(value="/plans", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
@@ -75,7 +67,13 @@ public class PatientApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> getSchema(final Authentication auth) {
 		PatientBaseView pv = (PatientBaseView)auth.getPrincipal();
-		return planService.getActivitiesForPatient(pv);
+		ServiceResult<ScheduledActivity[]> activitiesForPatient = planService.getActivitiesForPatient(pv);
+		
+		for (final ScheduledActivity a : activitiesForPatient.getData()) {
+			log.debug("Returining {} reported {} due {}", new Object[] {a.getId(), a.getReported(), a.isDue()});
+		}
+		
+		return activitiesForPatient;
 	}
 	
 	@RequestMapping(value="/schema/{id}/accept", method=RequestMethod.POST, produces="application/json")

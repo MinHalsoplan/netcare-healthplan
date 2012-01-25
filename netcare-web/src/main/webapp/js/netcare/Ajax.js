@@ -59,14 +59,31 @@ NC.Ajax = function() {
 				var call = _contextPath + _basePath + url;
 				NC.log("==== AJAX GET " + call + " ====");
 				
-				$.ajax({
+				var opts = {
 					url : call,
 					dataType : _dataType,
 					success : function(data) {
 						_defaultSuccess(data, _showMessages(displayMessages), callback);
 					}
-				});
+				};
 				
+				$.ajax(opts);
+			},
+			
+			uncachedGetCall : function(url, callback, displayMessages) {
+				var call = _contextPath + _basePath + url;
+				NC.log("==== AJAX UNCACHED GET " + call + " ====");
+				
+				var opts = {
+					url : call,
+					dataType : _dataType,
+					cache : false,
+					success : function(data) {
+						_defaultSuccess(data, _showMessages(displayMessages), callback);
+					}
+				};
+				
+				$.ajax(opts);
 			},
 			
 			post : function(url, data, callback, displayMessages) {

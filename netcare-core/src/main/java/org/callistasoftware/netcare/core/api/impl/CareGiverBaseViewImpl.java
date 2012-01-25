@@ -82,4 +82,9 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Role.getCareGiverRoleSet();
 	}
+
+	@Override
+	public String getPassword() {
+		throw new UnsupportedOperationException("Care givers should never use basic authentication. This method is most likely called from the mobile authentication manager");
+	}
 }

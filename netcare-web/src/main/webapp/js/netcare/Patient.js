@@ -95,7 +95,7 @@ NC.Patient = function() {
 		 * List activities for a patient
 		 */
 		listActivities : function(callback) {
-			_ajax.get('/patient/schema', callback);
+			_ajax.uncachedGetCall('/patient/schema', callback);
 		},
 		
 		reportActivity : function(activityId, formData, callback) {
