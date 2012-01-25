@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-NC.PatientReport = function(descriptionId, tableId) {
+NC.PatientReport = function(tableId, shortVersion) {
 	
 	var _baseUrl = "/netcare-web/api/patient/";
 	var _schemaCount = 0;
 	
-	var _descriptionId = descriptionId;
 	var _tableId = tableId;
 	var _lastUpdatedId = -1;
 	var _dueActivities = new Array();
-
+	var _shortVersion = shortVersion;
 	var _captions;
 	new NC.Support().loadCaptions('report', ['report', 'change', 'reject'], function(data) {
 		_captions = data;
@@ -34,12 +33,10 @@ NC.PatientReport = function(descriptionId, tableId) {
 	
 		
 	var _updateDescription = function() {
-		NC.log("Updating schema table description");
+		NC.log("Updating schema table description: " + _schemaCount);
 		if (_schemaCount == 0) {
-			$('#' + _descriptionId).html('Inga aktuella aktiviteter').show();
 			$('#' + _tableId).hide();
 		} else {
-			$('#' + _descriptionId).hide();
 			$('#' + _tableId).show();
 		}
 	}
@@ -54,7 +51,7 @@ NC.PatientReport = function(descriptionId, tableId) {
 			return 'gray';
 		}		
 	}
-	
+		
 	var _reportText = function(value) {
 		if (value.reported != null) {
 			return ((value.rejected) ? _captions.reject : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
@@ -63,7 +60,56 @@ NC.PatientReport = function(descriptionId, tableId) {
 			return '&nbsp;';
 		}
 	}
+	
+	var _render = function(data) {
+		var curDay = '';
+		var curActivity = '';
+		$.each(data, function(index, value) {
+			NC.log("Processing index " + index + " value: " + value.id);	
+
+			if (curDay != value.day.value) {
+				curDay = value.day.value;
+				dayField = curDay + '<br/>' + value.date;
+			} else {
+				dayField = '-&nbsp;"&nbsp;-';
+			}
+			
+			var reportField;
+			if (value.due || _today == value.date) {
+				reportField = createButtons(value);
+				if (value.due) {
+					_dueActivities.push(value);
+				}
+			} else {
+				reportField = '&nbsp;';
+			}
+
+			var activity = value.definition.type.name + "<br/>" + value.definition.goal + '&nbsp;' + value.definition.type.unit.value;
+			if (curActivity != activity) {
+				curActivity = activity;
+				activityField = curActivity;
+			} else {
+				activityField = '-&nbsp;"&nbsp;-';
+			}
+
+			var lineColor = _lineColor(value);
+			var reported = _reportText(value);
+
+			if (!_shortVersion || ((value.due && value.reported == null) || _today == value.date)) {
+				$('#' + tableId + ' tbody').append(
+						$('<tr>').attr('id', 'act-' + value.id).css('color', lineColor).append(
+								$('<td>').html(dayField)).append(
+										$('<td>').html(value.time)).append(
+												$('<td>').css('text-align', 'left').html(activityField)).append(
+														$('<td>').css('text-align', 'center').html(reportField)).append(
+																$('<td>').attr('id', 'rep-' + value.id).css('text-align', 'left').html(reported)));
+				_schemaCount++;
+			}
+		});
 		
+		return true;
+	}
+	
 	var createButtons = function(act) {
 		var div = $('<div>');
 		var rbtn = _util.createIcon('edit', 24, function() {
@@ -112,9 +158,8 @@ NC.PatientReport = function(descriptionId, tableId) {
 		});
 		rbtn.attr('title', act.reported != null ? _captions.change : _captions.report);
 		div.append(rbtn);
-
 		
-		var cbtn = _util.createIcon('remove', 24, function(xevent) {
+		var cbtn = _util.createIcon('exit', 24, function(xevent) {
 			xevent.preventDefault();
 			var id = act.id;
 			var rep = new Object();
@@ -147,6 +192,52 @@ NC.PatientReport = function(descriptionId, tableId) {
 		
 		init : function() {
 			_updateDescription();
+
+			if (_shortVersion) {
+				$('#historyOptions').hide();
+			}
+			
+			var support = new NC.Support();
+			$('#reportFormDiv input[name="date"]').datepicker({
+				dateFormat : 'yy-mm-dd',
+				firstDay : 1,
+				minDate : -14
+			});
+
+			support.loadMonths(function(data) {
+				$('#reportFormDiv input[name="date"]').datepicker('option',
+						'monthNames', data);
+			});
+
+			support.loadWeekdays(function(data) {
+				$('#reportFormDiv input[name="date"]').datepicker('option',
+						'dayNamesMin', data);
+			});
+
+			var util = new NC.Util();
+			util.validateTimeField($('#reportFormDiv input[name="time"]'));
+
+			$('#reportFormId :submit').click(function(event) {
+				event.preventDefault();
+				var id = $('#reportFormDiv input[name="activityId"]').val();
+				var rep = new Object();
+				rep.actualValue = $('#reportFormDiv input[name="value"]').val();
+				rep.actualDate = $('#reportFormDiv input[name="date"]').val();
+				rep.actualTime = $('#reportFormDiv input[name="time"]').val();
+				rep.sense = $('#reportFormDiv input[name="gsense"]:checked').val();
+				rep.note = $('#reportFormDiv input[name="note"]').val();
+				rep.rejected = false;
+
+				var jsonObj = JSON.stringify(rep);
+				public.performReport(id, jsonObj, function(data) {
+					$('#reportFormDiv').modal('hide');
+				});
+			});
+
+			$('#historyBoxId').click(function() {
+				public.showHistory($(this).is(':checked'));
+			});
+			public.list();
 		},
 		
 		performReport : function(activityId, formData, callback) {
@@ -171,8 +262,6 @@ NC.PatientReport = function(descriptionId, tableId) {
 				
 		list : function() {
 			NC.log("Load activitues for the patient");
-			var curDay = '';
-			var curActivity = '';
 			$.ajax({
 				url : _baseUrl + 'schema',
 				dataType : 'json',
@@ -181,50 +270,8 @@ NC.PatientReport = function(descriptionId, tableId) {
 					
 					/* Empty the result list */
 					$('#' + tableId + ' tbody > tr').empty();
-					
-					$.each(data.data, function(index, value) {
-						NC.log("Processing index " + index + " value: " + value.id);	
-						
-						if (curDay != value.day.value) {
-							curDay = value.day.value;
-							dayField = curDay + '<br/>' + value.date;
-						} else {
-							dayField = '-&nbsp;"&nbsp;-';
-						}
-						
-						var reportField;
-						if (value.due || _today == value.date) {
-							reportField = createButtons(value);
-							if (value.due) {
-								_dueActivities.push(value);
-							}
-						} else {
-							reportField = '&nbsp;';
-						}
-						
-						var activity = value.definition.type.name + "<br/>" + value.definition.goal + '&nbsp;' + value.definition.type.unit.value;
-						if (curActivity != activity) {
-							curActivity = activity;
-							activityField = curActivity;
-						} else {
-							activityField = '-&nbsp;"&nbsp;-';
-						}
-
-						var lineColor = _lineColor(value);
-
-						var reported = _reportText(value);
-						
-						$('#' + tableId + ' tbody').append(
-								$('<tr>').attr('id', 'act-' + value.id).css('color', lineColor).append(
-										$('<td>').html(dayField)).append(
-												$('<td>').html(value.time)).append(
-														$('<td>').css('text-align', 'left').html(activityField)).append(
-																$('<td>').css('text-align', 'center').html(reportField)).append(
-																		$('<td>').attr('id', 'rep-' + value.id).css('text-align', 'left').html(reported)));
-					});
-					
-					public.showHistory(false);
-					_schemaCount = data.data.length;
+					_render(data.data);
+					public.showHistory(_shortVersion);
 					_updateDescription();
 				}
 			});

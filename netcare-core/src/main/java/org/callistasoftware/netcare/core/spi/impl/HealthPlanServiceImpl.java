@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
@@ -730,5 +731,52 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		this.verifyReadAccess(sae);
 		
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(sae), new GenericSuccessMessage());
+	}
+
+	private static String quotedString(String s) {
+		return String.format("\"%s\"", s);
+	}
+	
+	@Override
+	public String getPlanReports(PatientBaseView patient) {
+		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+		List<HealthPlanEntity> plans = repo.findByForPatient(forPatient);
+		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
+		for (HealthPlanEntity plan : plans) {
+			for (ActivityDefinitionEntity ad : plan.getActivityDefinitions()) {
+				for (ScheduledActivityEntity sc : ad.getScheduledActivities()) {
+					if (sc.getReportedTime() != null) {
+						list.add(sc);
+					}
+				}
+			}
+		}
+		Collections.sort(list);
+		StringBuffer sb = new StringBuffer();
+		sb.append("Aktivitet;Enhet;Mål;Planerad datum;Planerad tid;Utförd datum;Utförd tid;Resultat;Känsla;Kommentar\r\n");
+		for (ScheduledActivityEntity sc : list) {
+			String unit = new Option(sc.getActivityDefinitionEntity().getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
+			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
+			sb.append(";");
+			sb.append(quotedString(unit));
+			sb.append(";");
+			sb.append(sc.getActivityDefinitionEntity().getActivityTarget());
+			sb.append(";");
+			sb.append(ApiUtil.formatDate(sc.getScheduledTime()));
+			sb.append(";");
+			sb.append(ApiUtil.formatTime(sc.getScheduledTime()));
+			sb.append(";");
+			sb.append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
+			sb.append(";");
+			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
+			sb.append(";");
+			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
+			sb.append(";");
+			sb.append(sc.getPerceivedSense());
+			sb.append(";");
+			sb.append(quotedString(sc.getNote()));
+			sb.append("\r\n");
+		}
+		return sb.toString();
 	}
 }

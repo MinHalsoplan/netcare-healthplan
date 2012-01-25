@@ -70,16 +70,9 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 						
 						var pdata = new Object();
 						pdata.id = 'gauge-' + index;
-						pdata.sumDone = value.sumDone;
-						pdata.sumTotal = value.sumTotal;
-						pdata.sumTarget =  value.sumTarget;
-						pdata.unit = value.type.unit.value;
+						pdata.pctSum = Math.ceil((value.sumDone / value.sumTarget)*100);						
 						_perfData.push(pdata);
-						
-						//NC.log('done: ' + pdata.sumDone + ', target: ' + pdata.sumTarget + ', total: ' + pdata.sumTotal);
-						
-						var pctSum = ((value.sumDone / value.sumTotal)*100).toFixed(0);
-						var pctTarget = ((value.sumTarget/ value.sumTotal)*100).toFixed(0);
+												
 						var result = (value.sumTarget > 0) ? (value.sumDone / value.sumTarget) * 100 : -1;
 						var icon;
 						if (result == -1) {
@@ -96,16 +89,14 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
 						
-						var perfText = value.numDone + '&nbsp;(' + value.numTarget + ')&nbsp;ggr<br/>' 
-							+ pctSum + '&nbsp;(' + pctTarget + ')&nbsp;%';
 						var actText = value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit);
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
 										$('<td>').html(icon)).append(
-												$('<td>').html(actText)).append(
-														$('<td>').html(period)).append(
-																$('<td>').html(util.formatFrequency(value))).append(
-																		$('<td>').css('text-align', 'right').html(perfText)).append(
+												$('<td>').html(value.healthPlanName + '<br/><i>' + value.issuedBy.careUnit.name + '<br/>' + value.issuedBy.name + '</i>')).append(
+														$('<td>').html(actText)).append(
+																$('<td>').html(period)).append(
+																		$('<td>').html(util.formatFrequency(value))).append(
 																				$('<td>').attr('id', pdata.id).css('height', '100px').css('width', '100px').html('&nbsp;')));
 					});
 					_schemaCount = data.data.length;

@@ -208,4 +208,12 @@ public interface HealthPlanService {
 	 * @return the iCalendar object as a string.
 	 */
 	String getICalendarEvents(PatientBaseView patient);
+	
+	/**
+	 * Returns a comma separated text for export of reports to excel. <p>
+	 * 
+	 * @param patient the patient.
+	 * @return the results as a comma separated text (text/csv).
+	 */
+	String getPlanReports(PatientBaseView patient);
 }

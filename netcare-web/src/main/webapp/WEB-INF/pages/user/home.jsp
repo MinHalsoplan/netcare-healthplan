@@ -39,16 +39,12 @@
 		        data.addColumn('string', 'Label');
 		        data.addColumn('number', 'Value');
 		        data.addRows(1);
-		        data.setValue(0, 0, pd.unit);
-		        data.setValue(0, 1, pd.sumDone);
+		        data.setValue(0, 0, '%');
+		        data.setValue(0, 1, pd.pctSum);
 		        var options = new Object();
-		        options.max = Math.max(pd.sumTotal, pd.sumDone);
+		        options.max = Math.max(120, pd.pctSum);
 		        options.min = 0;
-		        options.redFrom = 0;
-		        options.redTo = pd.sumTarget * 0.6;
-		        options.yellowFrom = options.redTo;
-		        options.yellowTo =  pd.sumTarget * 0.9;
-		        options.greenFrom = options.yellowTo;
+		        options.greenFrom = 90;
 		        options.greenTo = options.max;
 		        
 		        // Create and draw the visualization.
@@ -137,19 +133,23 @@
 					});
 				};
 				
+				// reporting stuff				
+				var report = new NC.PatientReport('schemaTable', true);
+				report.init();
+
 				hps.loadLatestComments(patientId, loadComments);
 				
 				$('#sendReply').modal();
 				$('#sendReply').bind('shown', function() {
 					$('#sendReply input[name="reply"]').focus();
 				});
+
 			});
 
 		</script>
 	</netcare:header>
 	<netcare:body>
-		<netcare:content>
-		
+		<netcare:content>	
 			<div id="sendReply" class="modal hide fade" style="display: none;">
 				<div class="modal-header">
 					<a href="#" class="close">x</a>
@@ -157,12 +157,22 @@
 				</div>
 				<div class="modal-body">
 					<form action="#" method="post">
-						<input type="text" class="xlarge" name="reply" />
-						<input type="submit" class="btn primary" value="<spring:message code="comments.reply" />" />
+						<spring:message code="comments.reply" var="reply" scope="page" />
+						<netcare:field name="reply" label="${reply}:">
+							<input type="text" class="xlarge" name="reply" />
+						</netcare:field>
+						<div class="modal-footer">
+							<input type="submit" class="btn primary" value="<spring:message code="comments.reply" />" />
+						</div>
 					</form>
 				</div>
 			</div>
 		
+			<section id="report">
+				<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
+				<netcare:report />
+			</section>
+
 			<section id="comments">
 				<h2><spring:message code="comments.comments" /></h2>
 				<div class="alert-message info">
@@ -180,27 +190,27 @@
 			</section>
 			
 			<br />
-			
+
 			<section id="healthPlan">
 				<h2><spring:message code="phome.header" /></h2>
-				<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
 				<div id="planDescription" style="margin: 10px"></div>
 				<table id="planTable"
-					style="width: 99%; border-radius: 10px; box-shadow: 2px 2px 5px #333;"
-					class="condensed zebra-striped">
+					class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<th>&nbsp;</th>
+						<th><spring:message code="phome.plan" /></th>
 						<th><spring:message code="phome.activity" /></th>
 						<th><spring:message code="phome.until" /></th>
 						<th><spring:message code="phome.frequency" /></th>
-						<th colspan='2'><spring:message code="phome.done" /></th>
+						<th><spring:message code="phome.done" /></th>
 					</thead>
 					<tbody>
 					</tbody>
 				</table>
+				<br />
 				<div style="text-align: right">
-					<a href="results"><spring:message code="phome.resultLink" /></a>&nbsp;|&nbsp; <a
-						href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
+					<a href="/netcare-web/api/patient/result/mina-resultat.csv"><spring:message code="phome.resultLink" /></a>&nbsp;|&nbsp; 
+					<a href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 				</div>
 			</section>
 		</netcare:content>

@@ -84,6 +84,11 @@ public interface ActivityDefinition extends Serializable {
 	String getHealthPlanName();
 	
 	/**
+	 * Returns issued by.
+	 */
+	CareGiverBaseView getIssuedBy();
+	
+	/**
 	 * Returns number of times an activity should have been carried out.
 	 */
 	int getNumTarget();
