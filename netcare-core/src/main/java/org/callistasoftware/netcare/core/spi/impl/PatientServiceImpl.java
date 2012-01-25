@@ -38,6 +38,10 @@ import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.dao.SaltSource;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +50,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PatientServiceImpl extends ServiceSupport implements PatientService {
 
 	private static Logger log = LoggerFactory.getLogger(PatientServiceImpl.class);
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private SaltSource saltSource;
 	
 	@Autowired
 	private CareUnitRepository cuRepo;
@@ -135,6 +145,13 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		p.setEmail(patient.getEmail());
 		p.setMobile(patient.isMobile());
 		p.setPhoneNumber(patient.getPhoneNumber());
+		
+		if (patient.isMobile()) {
+			String pw = this.passwordEncoder.encodePassword(patient.getPassword()
+					, this.saltSource.getSalt((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+			
+			p.setPassword(pw);
+		}
 		
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
 	}

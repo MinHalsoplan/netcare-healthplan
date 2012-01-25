@@ -26,7 +26,7 @@ class ServiceImpl extends AbstractServiceClient implements ServiceClient {
 
 	@Override
 	public ServiceResult<Boolean> login() {
-		return super.doServiceCall("/api/patient/checkcredentials", Boolean.class);
+		return super.doServiceCall("/netcare/mobile/checkcredentials", Boolean.class);
 	}
 	
 	@SuppressWarnings("unchecked")

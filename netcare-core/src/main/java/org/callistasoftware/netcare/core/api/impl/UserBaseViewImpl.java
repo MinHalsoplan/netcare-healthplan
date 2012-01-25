@@ -39,9 +39,7 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	public abstract Collection<? extends GrantedAuthority> getAuthorities();
 
 	@Override
-	public String getPassword() {
-		return null;
-	}
+	public abstract String getPassword();
 
 	@Override
 	public String getUsername() {

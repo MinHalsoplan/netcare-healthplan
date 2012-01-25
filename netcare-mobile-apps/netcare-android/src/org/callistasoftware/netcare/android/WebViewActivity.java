@@ -47,6 +47,15 @@ public class WebViewActivity extends Activity {
 				Log.d(TAG, "Setting basic authentication credentials. Username: " + username + " password: " + password);
 				handler.proceed(username, password);
 			}
+			
+			@Override
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				
+				Log.d(TAG, "ERROR ==== Code: " + errorCode + " Desc: " + description + " URL: " + failingUrl);
+				
+				super.onReceivedError(view, errorCode, description, failingUrl);
+			}
 		});
 		
 		wv.setWebChromeClient(new WebChromeClient() {

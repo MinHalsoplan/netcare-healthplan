@@ -16,33 +16,36 @@
  */
 package org.callistasoftware.netcare.web.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
- * Authentication provider that checks username/passwords. This provider is
- * used in the scenario when the user has attempteed to access the /netcare/mobile
- * url.
- * 
- * This provider is used from {@link MobileAuthenticationManager}.
+ * Authentication manager used from the BasicAuthenticationFilter. An instance of this
+ * class is passed to the filter in the netcare-security.xml
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
  */
-public class MobileAuthenticationProvider extends DaoAuthenticationProvider {
+public class MobileAuthenticationManager extends ProviderManager {
+
+	private static Logger log = LoggerFactory.getLogger(MobileAuthenticationManager.class);
 	
-	@Autowired
-	@Override
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		super.setUserDetailsService(userDetailsService);
+	public MobileAuthenticationManager(final List<AuthenticationProvider> providers) {
+		super(providers);
 	}
 	
 	@Override
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
-		return super.authenticate(authentication);
+		log.info("==== MOBILE AUTHENTICATION ====");
+		final Authentication authenticate = super.authenticate(authentication);
+		log.info("===============================");
+		
+		return authenticate;
 	}
 }
