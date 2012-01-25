@@ -21,9 +21,11 @@ NC.PatientReport = function(tableId, shortVersion) {
 	
 	var _tableId = tableId;
 	var _lastUpdatedId = -1;
-	var _dueActivities = new Array();
+	var _dueActivities;
 	var _shortVersion = shortVersion;
 	var _captions;
+	var _reportCallback = null;
+	
 	new NC.Support().loadCaptions('report', ['report', 'change', 'reject'], function(data) {
 		_captions = data;
 	});		
@@ -64,16 +66,12 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _render = function(data) {
 		var curDay = '';
 		var curActivity = '';
+		_dueActivities = new Array();
+		
 		$.each(data, function(index, value) {
 			NC.log("Processing index " + index + " value: " + value.id);	
 
-			if (curDay != value.day.value) {
-				curDay = value.day.value;
-				dayField = curDay + '<br/>' + value.date;
-			} else {
-				dayField = '-&nbsp;"&nbsp;-';
-			}
-			
+			var dayField = value.day.value + '<br/>' + value.date;
 			var reportField;
 			if (value.due || _today == value.date) {
 				reportField = createButtons(value);
@@ -85,12 +83,6 @@ NC.PatientReport = function(tableId, shortVersion) {
 			}
 
 			var activity = value.definition.type.name + "<br/>" + value.definition.goal + '&nbsp;' + value.definition.type.unit.value;
-			if (curActivity != activity) {
-				curActivity = activity;
-				activityField = curActivity;
-			} else {
-				activityField = '-&nbsp;"&nbsp;-';
-			}
 
 			var lineColor = _lineColor(value);
 			var reported = _reportText(value);
@@ -100,7 +92,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 						$('<tr>').attr('id', 'act-' + value.id).css('color', lineColor).append(
 								$('<td>').html(dayField)).append(
 										$('<td>').html(value.time)).append(
-												$('<td>').css('text-align', 'left').html(activityField)).append(
+												$('<td>').css('text-align', 'left').html(activity)).append(
 														$('<td>').css('text-align', 'center').html(reportField)).append(
 																$('<td>').attr('id', 'rep-' + value.id).css('text-align', 'left').html(reported)));
 				_schemaCount++;
@@ -231,6 +223,9 @@ NC.PatientReport = function(tableId, shortVersion) {
 				var jsonObj = JSON.stringify(rep);
 				public.performReport(id, jsonObj, function(data) {
 					$('#reportFormDiv').modal('hide');
+					if (_reportCallback != null) {
+						_reportCallback(data.definition.id, parseInt(rep.actualValue));
+					}
 				});
 			});
 
@@ -256,6 +251,13 @@ NC.PatientReport = function(tableId, shortVersion) {
 					$('#rep-' + activityId).html(_reportText(data.data));
 					_dueActivities.push(data.data);
 					callback(data.data);
+					if (_shortVersion) {
+						$('#act-' + activityId).hide();
+						_schemaCount--;
+						if (_schemaCount == 0) {
+							_updateDescription();
+						}
+					}
 				}
 			});		
 		},
@@ -266,8 +268,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				url : _baseUrl + 'schema',
 				dataType : 'json',
 				success : function(data) {
-					NC.log("Success. Processing results...");
-					
+					NC.log("Success. Processing results...");		
 					/* Empty the result list */
 					$('#' + tableId + ' tbody > tr').empty();
 					_render(data.data);
@@ -289,6 +290,10 @@ NC.PatientReport = function(tableId, shortVersion) {
 		
 		getCaptions : function() {
 			return _captions;
+		},
+		
+		reportCallback : function(callback) {
+			_reportCallback = callback;
 		}
 			
 	};

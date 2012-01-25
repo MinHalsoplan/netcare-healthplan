@@ -26,7 +26,7 @@ NC.Util = function() {
 		
 		_support.loadCaptions('util', ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
 		                             'freq4', 'freq5', 'every', 'meter', 'minute', 
-		                             'step', 'events', 'today', 'youhave'], 
+		                             'step', 'newEvents' ], 
 		                             function(data) {
 			_captions = data;
 			NC.log('Localized captions for util loaded.');

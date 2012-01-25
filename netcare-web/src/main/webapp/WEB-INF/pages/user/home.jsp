@@ -33,27 +33,29 @@
 		</script>
 		
 		<script type="text/javascript">
+			 var home;
+			 
 			 function createGauge(pd) {
 			    // Create and populate the data table.
-		        var data = new google.visualization.DataTable();
-		        data.addColumn('string', 'Label');
-		        data.addColumn('number', 'Value');
-		        data.addRows(1);
-		        data.setValue(0, 0, '%');
-		        data.setValue(0, 1, pd.pctSum);
-		        var options = new Object();
-		        options.max = Math.max(120, pd.pctSum);
-		        options.min = 0;
-		        options.greenFrom = 90;
-		        options.greenTo = options.max;
-		        
+		        pd.data = new google.visualization.DataTable();
+		        pd.data.addColumn('string', 'Label');
+		        pd.data.addColumn('number', 'Value');
+		        pd.data.addRows(1);
+		        pd.data.setValue(0, 0, '%');
+		        pd.data.setValue(0, 1, pd.pctSum);
+		        pd.options = new Object();
+		        pd.options.max = Math.max(120, pd.pctSum);
+		        pd.options.min = 0;
+		        pd.options.greenFrom = 90;
+		        pd.options.greenTo = pd.options.max;
 		        // Create and draw the visualization.
-		        new google.visualization.Gauge($('#' + pd.id).get(0)).draw(data, options);
+		        pd.gauge = new google.visualization.Gauge($('#' + pd.id).get(0));
+		        pd.gauge.draw(pd.data, pd.options);
 			}
 			
 			google.setOnLoadCallback(function() {
 				$(function() {
-					var home = NC.PatientHome('planDescription', 'planTable',
+					home = NC.PatientHome('planDescription', 'planTable',
 							'eventBody');
 					home.status();
 					home.list(function() {
@@ -136,6 +138,21 @@
 				// reporting stuff				
 				var report = new NC.PatientReport('schemaTable', true);
 				report.init();
+				report.reportCallback(function(id, actual) {
+					var gid = 'gauge-' + id;
+					var arr = home.perfData();
+					for (var i = 0; i < arr.length; i++) {
+						if (arr[i].id == gid) {
+							var pd = arr[i];
+							pd.sumDone +=  actual;
+							pd.pctSum = Math.ceil((pd.sumDone / pd.sumTarget)*100);						
+					        pd.options.max = Math.max(120, pd.pctSum);
+							pd.data.setValue(0, 1, pd.pctSum);
+				        	pd.gauge.draw(pd.data, pd.options);
+				        	break;
+						}
+					}
+				});
 
 				hps.loadLatestComments(patientId, loadComments);
 				
@@ -171,8 +188,9 @@
 			<section id="report">
 				<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
 				<netcare:report />
+				<br />
 			</section>
-
+			
 			<section id="comments">
 				<h2><spring:message code="comments.comments" /></h2>
 				<div class="alert-message info">
