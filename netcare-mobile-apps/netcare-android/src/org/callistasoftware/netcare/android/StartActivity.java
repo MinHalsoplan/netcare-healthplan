@@ -9,12 +9,18 @@ import org.callistasoftware.netcare.android.serviceclient.ServiceClient;
 import org.callistasoftware.netcare.android.serviceclient.ServiceFactory;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.webkit.WebViewDatabase;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -37,7 +43,42 @@ public class StartActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        final boolean error = getIntent().getBooleanExtra("error", false);
+        
+        /*
+         * Reset the credentials database
+         */
+        Log.d(TAG, "Clearing credentials...");
+        WebViewDatabase.getInstance(getApplicationContext()).clearHttpAuthUsernamePassword();
+        
+        final String username = ApplicationUtil.getProperty(getApplicationContext(), "cnr");
+        final String pinCode = ApplicationUtil.getProperty(getApplicationContext(), "pin");
+        
+        if (username != null && pinCode != null && !error) {
+        	Log.d(TAG, "Credentials are already stored. Proceeed to login.");
+        	startActivity(new Intent(getApplicationContext(), WebViewActivity.class));
+        }
+        
         setContentView(R.layout.start);
+        
+        if (error) {
+        	final String errorMessage = getIntent().getStringExtra("errorMessage");
+        	
+        	final AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+			builder.setMessage(errorMessage)
+			.setCancelable(false)
+			.setTitle(getString(R.string.error))
+			.setPositiveButton("OK", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
+			
+			builder.create().show();
+        }
         
         this.cnr = (EditText) this.findViewById(R.id.cnr);
         this.pin = (EditText) this.findViewById(R.id.pin);
@@ -51,6 +92,15 @@ public class StartActivity extends Activity {
 				final String username = cnr.getText().toString().trim();
 				final String password = pin.getText().toString().trim();
 				
+				/*
+				 * Save credentials
+				 */
+				Log.d(TAG, "Storing user / pin for user.");
+				final Editor edit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+				edit.putString("cnr", username);
+				edit.putString("pin", password);
+				edit.commit();
+				
 				new ServiceCallTask<Boolean>(StartActivity.this, new ServiceCallback<Boolean>() {
 
 					@Override
@@ -62,7 +112,7 @@ public class StartActivity extends Activity {
 					public ServiceResult<Boolean> doCall(final Context ctx) {
 						
 						final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(
-								Integer.valueOf(ApplicationUtil.getProperties(getApplicationContext()).getProperty("port"))
+								Integer.valueOf(ApplicationUtil.getProperty(getApplicationContext(), "port"))
 								, username
 								, password);
 						
@@ -72,15 +122,6 @@ public class StartActivity extends Activity {
 
 					@Override
 					public void onSuccess(ServiceResult<Boolean> result) {
-						
-						/*
-						 * Save credentials
-						 */
-						final Editor edit = StartActivity.this.getSharedPreferences("NETCARE", MODE_PRIVATE).edit();
-						edit.putString("username", username);
-						edit.putString("password", password);
-						edit.commit();
-						
 						/*
 						 * We're fine. If the user saved the credentials
 						 * save them. Otherwise just keep them in memory
@@ -92,5 +133,11 @@ public class StartActivity extends Activity {
 				}).execute();
 			}
 		});
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	startActivity(new Intent(getApplicationContext(), PreferenceActivity.class));
+    	return true;
     }
 }

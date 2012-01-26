@@ -1,25 +1,19 @@
 package org.callistasoftware.netcare.android;
 
-import java.util.Properties;
-
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class ApplicationUtil {
-
-	private static Properties p = null;
 	
-	public static Properties getProperties(final Context ctx) {
-		if (p != null) {
-			return p;
-		}
+	private static final String TAG = ApplicationUtil.class.getSimpleName();
+	
+	public static String getProperty(final Context ctx, final String property) {
+		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		final String val = sp.getString(property, null);
 		
-		try {
-			p = new Properties();
-			p.load(ctx.getResources().openRawResource(R.raw.app));
-			
-			return p;
-		} catch (final Exception e) {
-			throw new RuntimeException("Could not load properties from file.");
-		}
+		Log.d(TAG, "Resolvning property " + property + ". Property resolved to: " + val);
+		return val;
 	}
 }

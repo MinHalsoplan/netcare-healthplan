@@ -16,10 +16,15 @@
  */
 package org.callistasoftware.netcare.web.security;
 
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -44,5 +49,21 @@ public class MobileAuthenticationProvider extends DaoAuthenticationProvider {
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 		return super.authenticate(authentication);
+	}
+	
+	@Override
+	protected void additionalAuthenticationChecks(UserDetails userDetails,
+			UsernamePasswordAuthenticationToken authentication)
+			throws AuthenticationException {
+		super.additionalAuthenticationChecks(userDetails, authentication);
+		
+		try {
+			PatientBaseView pbv = (PatientBaseView) userDetails;
+			if (!pbv.isMobile()) {
+				throw new DisabledException("User is not enabled for mobile usage.");
+			}
+		} catch (final Exception e) {
+			throw new InsufficientAuthenticationException("User is not a patient and can not use the mobile channel.");
+		}
 	}
 }
