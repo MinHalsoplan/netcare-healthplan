@@ -354,11 +354,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		},
 		
 		sendCommentReply : function(commentId, reply, callback) {
-			var url = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
-			NC.log("Reply to comment " + commentId + " using url: " + url);
+			var curl = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
+			NC.log("Reply to comment " + commentId + " using url: " + curl);
 			
 			$.ajax({
-				url : url,
+				url : curl,
 				dataType : 'json',
 				type : 'post',
 				data : { reply : reply },
