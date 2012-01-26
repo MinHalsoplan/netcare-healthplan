@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Planerade hälsotjänster</string>
     <string name="cnr">Personnummer</string>
+    <string name="error">Fel</string>
     <string name="host">Host</string>
     <string name="port">Port</string>
     <string name="pin">Pin-kod</string>

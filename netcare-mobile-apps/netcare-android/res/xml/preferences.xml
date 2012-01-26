@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="netcare">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     
     <PreferenceCategory android:title="@string/user_settings">
         
-    	<EditTextPreference android:title="@string/cnr" android:persistent="true"/>
-	    <EditTextPreference android:title="@string/pin" android:persistent="true"/>
+    	<EditTextPreference android:title="@string/cnr" android:key="cnr" android:persistent="true"/>
+	    <EditTextPreference android:title="@string/pin" android:key="pin" android:persistent="true" />
 	    
 	    <CheckBoxPreference android:title="@string/push" android:persistent="true"/>    
         
@@ -12,8 +12,8 @@
     
     <PreferenceCategory android:title="@string/server_settings">
 
-	    <EditTextPreference android:title="@string/host" android:persistent="true" android:defaultValue="192.168.0.113"/>
-	    <EditTextPreference android:title="@string/port" android:persistent="true" android:defaultValue="8080"/>
+	    <EditTextPreference android:title="@string/host" android:key="host" android:persistent="true" android:defaultValue="192.168.0.113"/>
+	    <EditTextPreference android:title="@string/port" android:key="port" android:persistent="true" android:defaultValue="8080"/>
 	    
     </PreferenceCategory>
     

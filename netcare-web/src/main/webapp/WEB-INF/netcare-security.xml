@@ -37,8 +37,8 @@
 	</security:http>
 	
 	<security:http pattern="/netcare/mobile/**" 
-		use-expressions="true" 
-		create-session="never"
+		use-expressions="true"
+		create-session="stateless"
 		entry-point-ref="httpBasicAuthEntryPoint">
 		<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
 		

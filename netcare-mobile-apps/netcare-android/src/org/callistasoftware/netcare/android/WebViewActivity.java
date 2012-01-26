@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -54,7 +55,12 @@ public class WebViewActivity extends Activity {
 				
 				Log.d(TAG, "ERROR ==== Code: " + errorCode + " Desc: " + description + " URL: " + failingUrl);
 				
-				super.onReceivedError(view, errorCode, description, failingUrl);
+				final Intent i = new Intent(WebViewActivity.this.getApplicationContext(), StartActivity.class);
+				i.putExtra("error", true);
+				i.putExtra("errorMessage", description);
+				
+				startActivity(i);
+				WebViewActivity.this.finish();
 			}
 		});
 		
@@ -70,7 +76,13 @@ public class WebViewActivity extends Activity {
 		
 		Log.d(TAG, "Displaying url in web view.");
 		p = ProgressDialog.show(this, "Laddar", "Vänligen vänta medan sidan laddar klart.");
-		wv.loadUrl("http://" + ApplicationUtil.getProperties(getApplicationContext()).getProperty("host") + ":" + ApplicationUtil.getProperties(getApplicationContext()).getProperty("port")
+		wv.loadUrl("http://" + ApplicationUtil.getProperty(getApplicationContext(), "host") + ":" + ApplicationUtil.getProperty(getApplicationContext(), "port")
 				+ "/netcare-web/netcare/mobile/start");
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	startActivity(new Intent(getApplicationContext(), PreferenceActivity.class));
+    	return true;
+    }
 }
