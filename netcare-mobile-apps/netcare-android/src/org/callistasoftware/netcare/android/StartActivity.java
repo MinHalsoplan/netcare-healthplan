@@ -14,8 +14,12 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 /**
@@ -31,6 +35,7 @@ public class StartActivity extends Activity {
 	
 	private EditText cnr;
 	private EditText pin;
+	private CheckBox remember;
 	
 	private Button login;
 	
@@ -41,6 +46,7 @@ public class StartActivity extends Activity {
         
         this.cnr = (EditText) this.findViewById(R.id.cnr);
         this.pin = (EditText) this.findViewById(R.id.pin);
+        this.remember = (CheckBox) this.findViewById(R.id.remember);
         
         this.login = (Button) this.findViewById(R.id.loginButton);
         this.login.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +56,17 @@ public class StartActivity extends Activity {
 				Log.i(TAG, "Logging in user " + cnr.getText().toString());
 				final String username = cnr.getText().toString().trim();
 				final String password = pin.getText().toString().trim();
+				
+				/*
+				 * Save credentials
+				 */
+				if (remember.isChecked()) {
+					Log.d(TAG, "Storing user / pin for user.");
+					final Editor edit = StartActivity.this.getSharedPreferences("netcare", MODE_PRIVATE).edit();
+					edit.putString("username", username);
+					edit.putString("password", password);
+					edit.commit();
+				}
 				
 				new ServiceCallTask<Boolean>(StartActivity.this, new ServiceCallback<Boolean>() {
 
@@ -72,15 +89,6 @@ public class StartActivity extends Activity {
 
 					@Override
 					public void onSuccess(ServiceResult<Boolean> result) {
-						
-						/*
-						 * Save credentials
-						 */
-						final Editor edit = StartActivity.this.getSharedPreferences("NETCARE", MODE_PRIVATE).edit();
-						edit.putString("username", username);
-						edit.putString("password", password);
-						edit.commit();
-						
 						/*
 						 * We're fine. If the user saved the credentials
 						 * save them. Otherwise just keep them in memory
@@ -92,5 +100,22 @@ public class StartActivity extends Activity {
 				}).execute();
 			}
 		});
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	final MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.settings_menu, menu);
+    	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == R.id.preferences) {
+    		startActivity(new Intent(getApplicationContext(), PreferenceActivity.class));
+    		return true;
+    	}
+    	
+    	return false;
     }
 }

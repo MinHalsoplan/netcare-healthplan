@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".WebViewActivity" android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".PreferenceActivity" />
     </application>
 
 </manifest>

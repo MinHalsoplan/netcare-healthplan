@@ -2,10 +2,17 @@
 <resources>
     <string name="app_name">Planerade hälsotjänster</string>
     <string name="cnr">Personnummer</string>
+    <string name="host">Host</string>
+    <string name="port">Port</string>
     <string name="pin">Pin-kod</string>
     <string name="remember">Kom ihåg</string>
     <string name="login">Logga in</string>
     <string name="loginProgress">Loggar in. Vänligen vänta...</string>
+    
+    <string name="push">Push-notifieringar</string>
+    
+    <string name="user_settings">Inställningar</string>
+    <string name="server_settings">Server inställningar</string>
     
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
