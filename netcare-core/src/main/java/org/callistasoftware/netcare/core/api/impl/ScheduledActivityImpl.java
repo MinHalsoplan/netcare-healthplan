@@ -26,6 +26,7 @@ import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 public class ScheduledActivityImpl implements ScheduledActivity {

@@ -22,6 +22,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
@@ -53,6 +54,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int numDone;
 	private int sumTarget;
 	private int numTarget;
+	private CareGiverBaseView issuedBy;
 	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
@@ -74,7 +76,8 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		
 		dto.calcCompletion(entity.getScheduledActivities());
-		
+		CareGiverBaseView issuedBy = CareGiverBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
+		dto.setIssuedBy(issuedBy);
 		
 		return dto;
 	}
@@ -140,6 +143,15 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 
 	public void setHealthPlanName(String healthPlanMame) {
 		this.healthPlanName = healthPlanMame;
+	}
+	
+	@Override
+	public CareGiverBaseView getIssuedBy() {
+		return issuedBy;
+	}
+	
+	protected void setIssuedBy(CareGiverBaseView issuedBy) {
+		this.issuedBy = issuedBy;
 	}
 	
 	//
