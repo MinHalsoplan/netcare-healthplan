@@ -26,6 +26,7 @@ NC.Alarm = function() {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					
 					new NC.Util().processServiceResult(data);
