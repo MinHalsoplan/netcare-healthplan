@@ -28,6 +28,7 @@ NC.Support = function() {
 		$.ajax({
 			url : url,
 			dataType : 'json',
+			cache : false,
 			error : function(jqXHR, textStatus, errorThrown) {
 				NC.log("Error: " + errorThrown);
 			},

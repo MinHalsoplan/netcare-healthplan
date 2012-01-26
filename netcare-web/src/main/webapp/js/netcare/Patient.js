@@ -49,6 +49,7 @@ NC.Patient = function() {
 			$.ajax({
 				url : _baseUrl + '/find',
 				dataType : 'json',
+				cache : false,
 				data : { search : searchValue },
 				success : successFunction
 			});

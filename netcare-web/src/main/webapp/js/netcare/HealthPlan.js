@@ -96,6 +96,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					NC.log("Successfully call to rest service");
 					var util = new NC.Util();
@@ -145,6 +146,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
 					if (data.success) {
@@ -208,6 +210,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					var util = new NC.Util();
 					
@@ -301,6 +304,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
 					
@@ -318,6 +322,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
 					if (data.success && callback !== undefined) {

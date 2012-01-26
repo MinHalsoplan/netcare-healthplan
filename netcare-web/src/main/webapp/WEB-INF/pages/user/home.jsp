@@ -44,6 +44,8 @@
 		        pd.data.setValue(0, 0, '%');
 		        pd.data.setValue(0, 1, pd.pctSum);
 		        pd.options = new Object();
+		        pd.options.width = 100;
+		        pd.options.height = 100;
 		        pd.options.max = Math.max(120, pd.pctSum);
 		        pd.options.min = 0;
 		        pd.options.greenFrom = 90;
@@ -138,7 +140,10 @@
 				// reporting stuff				
 				var report = new NC.PatientReport('schemaTable', true);
 				report.init();
-				report.reportCallback(function(id, actual) {
+				report.reportCallback(function(id, actual, last) {
+					if (last) {
+						$('#eventBody').hide();
+					}
 					var gid = 'gauge-' + id;
 					var arr = home.perfData();
 					for (var i = 0; i < arr.length; i++) {
