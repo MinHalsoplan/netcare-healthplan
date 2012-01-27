@@ -32,9 +32,12 @@
 	<script type="text/javascript">
 		NC = {
 			log : function(msg) {
-				if (console !== undefined) {
-					console.log(msg);
+				if (typeof console === "undefined" || typeof console.log === "undefined") {
+					console = {};
+					console.log = function() {};
 				}
+				
+				console.log(msg);
 			}
 		};
 	</script>

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.webkit.DownloadListener;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -40,6 +41,15 @@ public class WebViewActivity extends Activity {
 		wv.clearFormData();
 		wv.clearHistory();
 		wv.clearCache(true);
+		
+		wv.setDownloadListener(new DownloadListener() {
+			
+			@Override
+			public void onDownloadStart(String url, String userAgent,
+					String contentDisposition, String mimetype, long contentLength) {
+				Log.d(TAG, "Download " + mimetype + " " + url);
+			}
+		});
 		
 		wv.setWebViewClient(new WebViewClient() {
 			@Override

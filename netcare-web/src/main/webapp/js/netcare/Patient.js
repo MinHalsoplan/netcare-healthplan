@@ -100,6 +100,10 @@ NC.Patient = function() {
 		
 		reportActivity : function(activityId, formData, callback) {
 			_ajax.post('/patient/schema/' + activityId + '/accept', formData, callback);
+		},
+		
+		getCalendar : function(callback) {
+			_ajax.get('/patient/schema/min-halso-plan', callback);
 		}
 	};
 	

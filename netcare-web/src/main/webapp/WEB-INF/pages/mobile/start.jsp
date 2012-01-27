@@ -170,6 +170,13 @@
 					
 					$('#actual').click();
 				});
+				
+				$('#ical').click(function(e) {
+					NC.log("Getting calendar as ical");
+					new NC.Patient().getCalendar(function(data) {
+						NC.log("Success!");
+					});
+				});
 			});
 			
 		</script>	
@@ -177,6 +184,7 @@
 	<body>
 		<mobile:page id="start">
 			<mobile:page-header title="Aktiviteter" id="today-header">
+<!-- 				<a rel="external" href="/netcare-web/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a> -->
 				<div data-role="navbar" class="ui-navbar" role="navigation">
 					<ul class="ui-grid-b">
 						<li class="ui-block-a">

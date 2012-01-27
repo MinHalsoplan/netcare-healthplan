@@ -45,7 +45,7 @@
 				 * a function that should be executed upon success.
 				 */
 				patient.findPatients(request.term, function(data) {
-					console.log("Found " + data.data.length + " patients.");
+					NC.log("Found " + data.data.length + " patients.");
 					response($.map(data.data, function(item) {
 						console.log("Processing item: " + item.name);
 						return { label : item.name + ' (' + util.formatCnr(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
@@ -53,7 +53,7 @@
 				});
 			},
 			select : function(event, ui) {
-				console.log("Setting hidden field value to: " + ui.item.patientId);
+				NC.log("Setting hidden field value to: " + ui.item.patientId);
 				$('#pickPatientForm input[name="selectedPatient"]').attr('value', ui.item.patientId);
 			}
 		});
@@ -64,11 +64,11 @@
 		};
 		
 		var selectPatient = function(event) {
-			console.log("Selecting patient...");
+			NC.log("Selecting patient...");
 			event.preventDefault();
 			patient.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
 			
-			console.log("Hide modal.");
+			NC.log("Hide modal.");
 			$('#modal-from-dom').modal('hide');
 			
 			/* Redirect to home in order to prevent weird stuff
@@ -101,9 +101,9 @@
 		}
 		
 		var cnr = '<c:out value="${sessionScope.currentPatient.civicRegistrationNumber}" />';
-		console.log("Current patient cnr is: " + cnr);
+		NC.log("Current patient cnr is: " + cnr);
 		if (cnr.length != 0) {
-			console.log("Displaying patient cnr");
+			NC.log("Displaying patient cnr");
 			$('#cnr').html('<strong>Personnummer:</strong> ' + util.formatCnr(cnr));
 		}
 	});
