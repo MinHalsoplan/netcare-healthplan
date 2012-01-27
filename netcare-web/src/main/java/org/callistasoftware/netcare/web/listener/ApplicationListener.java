@@ -107,7 +107,7 @@ public class ApplicationListener extends ContextLoaderListener {
 		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
 		
-		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
+		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg);
 		ad.setActivityTarget(1200);
 		adRepo.save(ad);

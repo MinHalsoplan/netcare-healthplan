@@ -12,7 +12,7 @@
     
     <PreferenceCategory android:title="@string/server_settings">
 
-	    <EditTextPreference android:title="@string/host" android:key="host" android:persistent="true" android:defaultValue="192.168.43.22"/>
+	    <EditTextPreference android:title="@string/host" android:key="host" android:persistent="true" android:defaultValue="netcare.callistasoftware.org"/>
 	    <EditTextPreference android:title="@string/port" android:key="port" android:persistent="true" android:defaultValue="8080"/>
 	    
     </PreferenceCategory>
