@@ -3,7 +3,6 @@ package org.callistasoftware.netcare.android;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,10 +24,10 @@ public class WebViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.webview);
 		
-		final SharedPreferences sp = this.getSharedPreferences("NETCARE", MODE_PRIVATE);
+		//final SharedPreferences sp = this.getSharedPreferences("NETCARE", MODE_PRIVATE);
 		
-		final String username = sp.getString("username", null);
-		final String password = sp.getString("password", null);
+		final String username = ApplicationUtil.getProperty(getBaseContext(), "cnr");//sp.getString("username", null);
+		final String password = ApplicationUtil.getProperty(getBaseContext(), "pin");//sp.getString("password", null);
 		
 		if (username == null || password == null) {
 			Log.d(TAG, "Credentials empty, bring to home screen.");
@@ -86,8 +85,10 @@ public class WebViewActivity extends Activity {
 		
 		Log.d(TAG, "Displaying url in web view.");
 		p = ProgressDialog.show(this, "Laddar", "Vänligen vänta medan sidan laddar klart.");
-		wv.loadUrl("http://" + ApplicationUtil.getProperty(getApplicationContext(), "host") + ":" + ApplicationUtil.getProperty(getApplicationContext(), "port")
-				+ "/netcare-web/netcare/mobile/start");
+		final String url = "http://" + ApplicationUtil.getProperty(getBaseContext(), "host") + ":" + ApplicationUtil.getProperty(getBaseContext(), "port") + "/netcare-web/netcare/mobile/start";
+		Log.d(TAG, "Load url: " + url);
+		
+		wv.loadUrl(url);
 	}
 	
 	@Override

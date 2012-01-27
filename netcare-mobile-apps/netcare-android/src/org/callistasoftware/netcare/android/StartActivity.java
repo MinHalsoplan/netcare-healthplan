@@ -52,12 +52,12 @@ public class StartActivity extends Activity {
         Log.d(TAG, "Clearing credentials...");
         WebViewDatabase.getInstance(getApplicationContext()).clearHttpAuthUsernamePassword();
         
-        final String username = ApplicationUtil.getProperty(getApplicationContext(), "cnr");
-        final String pinCode = ApplicationUtil.getProperty(getApplicationContext(), "pin");
+        final String username = ApplicationUtil.getProperty(getBaseContext(), "cnr");
+        final String pinCode = ApplicationUtil.getProperty(getBaseContext(), "pin");
         
         if (username != null && pinCode != null && !error) {
         	Log.d(TAG, "Credentials are already stored. Proceeed to login.");
-        	startActivity(new Intent(getApplicationContext(), WebViewActivity.class));
+        	login(username, pinCode);
         }
         
         setContentView(R.layout.start);
@@ -96,41 +96,12 @@ public class StartActivity extends Activity {
 				 * Save credentials
 				 */
 				Log.d(TAG, "Storing user / pin for user.");
-				final Editor edit = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+				final Editor edit = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
 				edit.putString("cnr", username);
 				edit.putString("pin", password);
 				edit.commit();
 				
-				new ServiceCallTask<Boolean>(StartActivity.this, new ServiceCallback<Boolean>() {
-
-					@Override
-					public String getProgressMessage() {
-						return getApplicationContext().getString(R.string.loginProgress);
-					}
-
-					@Override
-					public ServiceResult<Boolean> doCall(final Context ctx) {
-						
-						final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(
-								Integer.valueOf(ApplicationUtil.getProperty(getApplicationContext(), "port"))
-								, username
-								, password);
-						
-						final ServiceClient sc = ServiceFactory.newServiceClient(ctx, config);
-						return sc.login();
-					}
-
-					@Override
-					public void onSuccess(ServiceResult<Boolean> result) {
-						/*
-						 * We're fine. If the user saved the credentials
-						 * save them. Otherwise just keep them in memory
-						 */
-						if (result.getData().equals(Boolean.TRUE)) {
-							startActivity(new Intent(getApplicationContext(), WebViewActivity.class));
-						}
-					}
-				}).execute();
+				login(username, password);
 			}
 		});
     }
@@ -139,5 +110,38 @@ public class StartActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
     	startActivity(new Intent(getApplicationContext(), PreferenceActivity.class));
     	return true;
+    }
+    
+    public void login(final String username, final String password) {
+    	new ServiceCallTask<Boolean>(StartActivity.this, new ServiceCallback<Boolean>() {
+
+			@Override
+			public String getProgressMessage() {
+				return getApplicationContext().getString(R.string.loginProgress);
+			}
+
+			@Override
+			public ServiceResult<Boolean> doCall(final Context ctx) {
+				
+				final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(
+						Integer.valueOf(ApplicationUtil.getProperty(getBaseContext(), "port"))
+						, username
+						, password);
+				
+				final ServiceClient sc = ServiceFactory.newServiceClient(ctx, config);
+				return sc.login();
+			}
+
+			@Override
+			public void onSuccess(ServiceResult<Boolean> result) {
+				/*
+				 * We're fine. If the user saved the credentials
+				 * save them. Otherwise just keep them in memory
+				 */
+				if (result.getData().equals(Boolean.TRUE)) {
+					startActivity(new Intent(getApplicationContext(), WebViewActivity.class));
+				}
+			}
+		}).execute();
     }
 }
