@@ -87,7 +87,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			var lineColor = _lineColor(value);
 			var reported = _reportText(value);
 
-			if (!_shortVersion || ((value.due && value.reported == null) || _today == value.date)) {
+			if (!_shortVersion || ((value.due || _today == value.date) && value.reported == null)) {
 				$('#' + tableId + ' tbody').append(
 						$('<tr>').attr('id', 'act-' + value.id).css('color', lineColor).append(
 								$('<td>').html(dayField)).append(
@@ -166,8 +166,11 @@ NC.PatientReport = function(tableId, shortVersion) {
 
 			NC.log("JSON: " + jsonObj.toString());
 
-			public.performReport(id, jsonObj, function(data) {
+			public.performReport(id, jsonObj, function(data, last) {
 				cbtn.attr('disabled', data.rejected);
+				if (_reportCallback != null) {
+					_reportCallback(data.definition.id, 0, last);
+				}
 			});
 		});
 		cbtn.attr('cbtn-' + act.id);
@@ -221,10 +224,10 @@ NC.PatientReport = function(tableId, shortVersion) {
 				rep.rejected = false;
 
 				var jsonObj = JSON.stringify(rep);
-				public.performReport(id, jsonObj, function(data) {
+				public.performReport(id, jsonObj, function(data, last) {
 					$('#reportFormDiv').modal('hide');
 					if (_reportCallback != null) {
-						_reportCallback(data.definition.id, parseInt(rep.actualValue));
+						_reportCallback(data.definition.id, parseInt(rep.actualValue), last);
 					}
 				});
 			});
@@ -250,7 +253,6 @@ NC.PatientReport = function(tableId, shortVersion) {
 					NC.log('#rep-' + activityId + ', ' + _reportText(data.data));
 					$('#rep-' + activityId).html(_reportText(data.data));
 					_dueActivities.push(data.data);
-					callback(data.data);
 					if (_shortVersion) {
 						$('#act-' + activityId).hide();
 						_schemaCount--;
@@ -258,6 +260,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 							_updateDescription();
 						}
 					}
+					callback(data.data, _schemaCount <= 0);
 				}
 			});		
 		},
@@ -267,6 +270,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			$.ajax({
 				url : _baseUrl + 'schema',
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					NC.log("Success. Processing results...");		
 					/* Empty the result list */

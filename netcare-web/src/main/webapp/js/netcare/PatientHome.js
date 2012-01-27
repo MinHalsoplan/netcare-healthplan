@@ -52,6 +52,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 			$.ajax({
 				url : _url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					NC.log('Success.');
 					
@@ -120,6 +121,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 			$.ajax({
 				url : _url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					NC.log('Success.');
 					var event = data.data;

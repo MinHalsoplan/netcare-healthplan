@@ -96,6 +96,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					NC.log("Successfully call to rest service");
 					var util = new NC.Util();
@@ -145,6 +146,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
 					if (data.success) {
@@ -208,6 +210,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					var util = new NC.Util();
 					
@@ -241,7 +244,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 								reported.css('background-color', 'lightgreen');
 							}
 							
-							var aElem = $('<a data-controls-modal="commentActivity" data-backdrop="true">');
 							var likeIcon = util.createIcon('like', 24, function() {
 								
 								NC.log("Clicked on " + value.id);
@@ -261,11 +263,13 @@ NC.HealthPlan = function(descriptionId, tableId) {
 										$('#commentActivity button').unbind('click');
 									});
 								});
+								
+								$('#commentActivity').modal('show');
+								$('#commentActivity input[name="comment"]').focus();
 							});
 							
 							var actionCol = $('<td>');
-							aElem.append(likeIcon);
-							actionCol.append(aElem);
+							actionCol.append(likeIcon);
 							
 							tr.append(name);
 							tr.append(type);
@@ -301,6 +305,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
 					
@@ -318,9 +323,10 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
-					if (data.success && callback !== undefined) {
+					if (data.success) {
 						callback(data);
 					}
 				}
@@ -340,7 +346,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					NC.log("Successfully commented activity...");
 					new NC.Util().processServiceResult(data);
 					
-					if (data.success && callback !== undefined) {
+					if (data.success) {
 						callback(data);
 					}
 				}
@@ -348,17 +354,17 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		},
 		
 		sendCommentReply : function(commentId, reply, callback) {
-			var url = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
-			NC.log("Reply to comment " + commentId + " using url: " + url);
+			var curl = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
+			NC.log("Reply to comment " + commentId + " using url: " + curl);
 			
 			$.ajax({
-				url : url,
+				url : curl,
 				dataType : 'json',
 				type : 'post',
 				data : { reply : reply },
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
-					if (data.success && callback !== undefined) {
+					if (data.success) {
 						callback(data);
 					}
 				}
@@ -375,7 +381,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				type : 'post',
 				success : function(data) {
 					new NC.Util().processServiceResult(data);
-					if (data.success && callback !== undefined) {
+					if (data.success) {
 						callback(data);
 					}
 				}

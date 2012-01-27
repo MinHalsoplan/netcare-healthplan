@@ -93,20 +93,18 @@
 				
 				var loadReplies = function() {
 					hp.loadNewReplies(function(data) {
-						
 						if (data.data.length > 0) {
-							$('#replies div').hide();
-							$('#replies table').show();
+							$('#noReplyId').hide();
+							$('#replyTableId').show();
 						} else {
-							$('#replies div').show();
-							$('#replies table').hide();
+							$('#noReplyId').show();
+							$('#replyTableId').hide();
 						}
 						
-						$('#replies table tbody').empty();
+						$('#replyTableId tbody > tr').empty();
 						
 						$.each(data.data, function(index, value) {
 							var tr = $('<tr>');
-							
 							tr.append($('<td>').css('font-style', 'italic').html(value.comment));
 							tr.append($('<td>').css('font-style', 'italic').html(value.reply));
 							tr.append($('<td>').html(value.repliedBy));
@@ -123,7 +121,8 @@
 							
 							tr.append(actionCol);
 							
-							$('#replies table tbody').append(tr);
+							$('#replyTableId tbody').append(tr);
+							
 						});
 						
 					});
@@ -137,7 +136,7 @@
 		<netcare:content>
 			
 			<section id="dashboard">
-				<h2>:Start</h2>
+				<h2>Start</h2>
 				<p>
 					Välkommen till planerade hälsotjänster. I menyn till höger anges vem du är
 					inloggad som, vilken patient du för närvarande arbetar med samt en meny där
@@ -152,15 +151,16 @@
 			</section>
 			
 			<section id="replies">
-				<h2>:<spring:message code="comments.replies" /></h2>
+				<h2><spring:message code="comments.replies" /></h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
 					<spring:message code="comments.repliesDescription" />
 				</p>
-				<div class="alert-message info">
+				<div id="noReplyId" class="alert-message info">
 					<p><spring:message code="comments.noReplies" />
 				</div>
-				<table class="bordered-table zebra-striped shadow-box">
+				
+				<table id="replyTableId" class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<th><spring:message code="comments.comment" /></th>
 						<th><spring:message code="comments.reply" /></th>
@@ -175,7 +175,7 @@
 			<br />
 			
 			<section id="aktiviteter">
-				<h2>:Genomförda aktiviteter</h2>
+				<h2>Genomförda aktiviteter</h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
 					Nedan visas en översikt över de patienter som har rapporterat och genomfört
@@ -193,6 +193,7 @@
 							<th><spring:message code="goal" /></th>
 							<th><spring:message code="reportedValue" /></th>
 							<th><spring:message code="when" /></th>
+							<th>&nbsp;</th>
 						</thead>
 						<tbody></tbody>
 					</table>
@@ -203,13 +204,17 @@
 						<a href="#" class="close">x</a>
 						<h3><spring:message code="comments.comment" /></h3>
 					</div>
-					
-					<div class="modal-body">
-						<form action="post">
+
+					<form action="post">
+						<div class="modal-body">
 							<input type="text" name="comment" class="xlarge" />
-							<button class="btn primary"><spring:message code='comments.sendComment' /></button>
-						</form>
-					</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn primary">
+								<spring:message code='comments.sendComment' />
+							</button>
+						</div>
+					</form>
 				</div>
 				
 			</section>
@@ -217,7 +222,7 @@
 			<br />
 			
 			<section id="alarms">
-				<h2>:<spring:message code="alarm.overview" /></h2>
+				<h2><spring:message code="alarm.overview" /></h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
 					<spring:message code="alarm.information" />

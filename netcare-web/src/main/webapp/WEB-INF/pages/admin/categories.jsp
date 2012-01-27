@@ -36,10 +36,10 @@
 						NC.log("Processing " + value.name + "...");
 						
 						var tr = $('<tr>');
-						var id = $('<td>' + value.id + '</td>');
+						//var id = $('<td>' + value.id + '</td>');
 						var name = $('<td>' + value.name + '</td>');
 						
-						tr.append(id).append(name);
+						tr.append(name);
 						
 						$('#categoryTable tbody').append(tr);
 					});
@@ -79,18 +79,16 @@
 					<input type="text" name="name" />
 					
 					<spring:message code="create" var="create" scope="page" />
-					<input type="submit" class="btn primary" value="${create}" />
 				</netcare:field>
+				<input type="submit" class="btn primary" value="${create}" />
 				
 			</form>
 			
 			<table id="categoryTable" class="bordered-table zebra-striped shadow-box">
 				<thead>
-					<th>Id</th>
-					<th>Namn</th>
+					<th><spring:message code="name" /></th>
 				</thead>
-				<tbody>
-				
+				<tbody>		
 				</tbody>
 			</table>
 		</netcare:content>

@@ -62,6 +62,7 @@ NC.Ajax = function() {
 				var opts = {
 					url : call,
 					dataType : _dataType,
+					cache : false,
 					success : function(data) {
 						_defaultSuccess(data, _showMessages(displayMessages), callback);
 					}

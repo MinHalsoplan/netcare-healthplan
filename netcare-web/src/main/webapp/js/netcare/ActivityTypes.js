@@ -26,12 +26,13 @@ NC.ActivityCategories = function() {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					
 					new NC.Util().processServiceResult(data);
 					
 					if (data.success) {
-						NC.log("Activity categories successfully fetched from server");
+						NC.log("Activity categories successfully fetched from server: " + data.data.length);
 						callback(data);
 					}
 				}
@@ -70,13 +71,12 @@ NC.ActivityCategories = function() {
 				data : formData,
 				contentType : 'application/json',
 				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					
+					new NC.Util().processServiceResult(data);					
 					if (data.success) {
 						callback(data);
 					}
 				}
-			})
+			});
 		}
 	};
 	
@@ -95,6 +95,7 @@ NC.ActivityTypes = function() {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				success : function(data) {
 					if (data.success) {
 						NC.log("Activity types successfully fetched from server");
@@ -111,6 +112,7 @@ NC.ActivityTypes = function() {
 			$.ajax({
 				url : url,
 				dataType : 'json',
+				cache : false,
 				data : { text : searchString },
 				success : function(data) {
 					if (data.success) {

@@ -44,6 +44,8 @@
 		        pd.data.setValue(0, 0, '%');
 		        pd.data.setValue(0, 1, pd.pctSum);
 		        pd.options = new Object();
+		        pd.options.width = 100;
+		        pd.options.height = 100;
 		        pd.options.max = Math.max(120, pd.pctSum);
 		        pd.options.min = 0;
 		        pd.options.greenFrom = 90;
@@ -73,18 +75,38 @@
 				var util = new NC.Util();
 				var hps = new NC.HealthPlan();
 				
+
+				$('#sendReplyId :submit').click(function(event) {
+					event.preventDefault();
+					
+					NC.log("Submitting reply...");
+					
+					var commentId = $('#sendReplyId input[name="commentId"]').val();
+					hps.sendCommentReply(commentId, $('#sendReplyId input[name="reply"]').val(), function(data) {
+						
+						$('#sendReplyId input[name="reply"]').val('');
+						$('#sendReply').modal('hide');
+						
+						$('#sendReply').unbind('click');
+						
+						hps.loadLatestComments(patientId, loadComments);
+						
+						$('#sendReplyId').modal('hide');
+					});
+				});
+
 				var loadComments = function(data) {
 					NC.log("Found " + data.data.length + " comments. Processing...");
 					
 					if (data.data.length > 0) {
-						$('#comments table').show();
-						$('#comments div').hide();
+						$('#commentTableId').show();
+						$('#noCommentId').hide();
 					} else {
-						$('#comments table').hide();
-						$('#comments div').show();
+						$('#commentTableId').hide();
+						$('#noCommentId').show();
 					}
 					
-					$('#comments table tbody').empty();
+					$('#commentTableId tbody > tr').empty();
 					
 					$.each(data.data, function(index, value) {
 						
@@ -92,28 +114,13 @@
 						
 						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
 						
-						var aElem = $('<a data-controls-modal="sendReply">');
+
 						var icon = util.createIcon('comment', 24, function() {
-							
-							$('#sendReply form input:submit').click(function(event) {
-								event.preventDefault();
-								NC.log("Submitting reply...");
-								
-								hps.sendCommentReply(value.id, $('#sendReply input[name="reply"]').val(), function(data) {
-									
-									$('#sendReply form input[name="reply"]').val('');
-									$('#sendReply').modal('hide');
-									
-									$('#sendReply').unbind('click');
-									
-									hps.loadLatestComments(patientId, loadComments);
-								});
-							});
-							
+							$('#sendReplyId input[name="commentId"]').attr('value', value.id);
+							$('#sendReply').modal('show');
+							$('#sendReplyId input[name="reply"]').focus();
 						});
-						
-						aElem.append(icon);
-						
+												
 						var deleteIcon = util.createIcon('trash', 24, function() {
 							hps.deleteComment(value.id, function(data) {
 								hps.loadLatestComments(patientId, loadComments);
@@ -125,12 +132,12 @@
 						tr.append($('<td>').html(value.commentedBy));
 						
 						var actionCol = $('<td>');
-						actionCol.append(aElem);
+						actionCol.append(icon);
 						actionCol.append(deleteIcon);
 						
 						tr.append(actionCol);
 						
-						$('#comments table tbody').append(tr);
+						$('#commentTableId tbody').append(tr);
 						
 					});
 				};
@@ -138,7 +145,10 @@
 				// reporting stuff				
 				var report = new NC.PatientReport('schemaTable', true);
 				report.init();
-				report.reportCallback(function(id, actual) {
+				report.reportCallback(function(id, actual, last) {
+					if (last) {
+						$('#eventBody').hide();
+					}
 					var gid = 'gauge-' + id;
 					var arr = home.perfData();
 					for (var i = 0; i < arr.length; i++) {
@@ -166,25 +176,29 @@
 		</script>
 	</netcare:header>
 	<netcare:body>
-		<netcare:content>	
+		<netcare:content>
 			<div id="sendReply" class="modal hide fade" style="display: none;">
-				<div class="modal-header">
-					<a href="#" class="close">x</a>
-					<h3><spring:message code="comments.sendReply" /></h3>
-				</div>
-				<div class="modal-body">
-					<form action="#" method="post">
+				<form id="sendReplyId" action="#" method="post">
+					<div class="modal-header">
+						<a href="#" class="close">x</a>
+						<h3>
+							<spring:message code="comments.sendReply" />
+						</h3>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" name="commentId" />
 						<spring:message code="comments.reply" var="reply" scope="page" />
 						<netcare:field name="reply" label="${reply}:">
 							<input type="text" class="xlarge" name="reply" />
 						</netcare:field>
-						<div class="modal-footer">
-							<input type="submit" class="btn primary" value="<spring:message code="comments.reply" />" />
-						</div>
-					</form>
-				</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn primary"
+							value="<spring:message code="comments.reply" />" />
+					</div>
+				</form>
 			</div>
-		
+
 			<section id="report">
 				<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
 				<netcare:report />
@@ -193,10 +207,10 @@
 			
 			<section id="comments">
 				<h2><spring:message code="comments.comments" /></h2>
-				<div class="alert-message info">
+				<div id="noCommentId" class="alert-message info">
 					<p><spring:message code="comments.noComments" /></p>
 				</div>
-				<table class="bordered-table zebra-striped shadow-box" style="display: none;">
+				<table id="commentTableId" class="bordered-table zebra-striped shadow-box" style="display: none;">
 					<thead>
 						<th><spring:message code="comments.comment" /></th>
 						<th><spring:message code="comments.activity" /></th>
