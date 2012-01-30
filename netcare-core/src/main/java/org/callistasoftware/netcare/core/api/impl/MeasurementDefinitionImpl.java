@@ -16,30 +16,37 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
-import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.callistasoftware.netcare.core.api.MeasurementType;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 
-public class MeasurementImpl implements Measurement {
-
+public class MeasurementDefinitionImpl implements MeasurementDefinition {
 	private Long id;
-	private MeasurementDefinition measurementDefinition;
+	private MeasurementType measurementType;
 	private int target;
 	private int maxTarget;
 	private int minTarget;
-	private int reportedValue;
-	
-	public static Measurement newFromEntity(MeasurementEntity entity) {
-		MeasurementImpl m = new MeasurementImpl();
-	
+
+	//
+	public static MeasurementDefinition newFromEntity(MeasurementDefinitionEntity entity) {
+		MeasurementDefinitionImpl m = new MeasurementDefinitionImpl();
+		
 		m.id = entity.getId();
-		m.measurementDefinition = MeasurementDefinitionImpl.newFromEntity(entity.getMeasurementDefinition());
+		m.measurementType = MeasurementTypeImpl.newFromEntity(entity.getMeasurementType());
 		m.target = entity.getTarget();
 		m.maxTarget = entity.getMaxTarget();
 		m.minTarget = entity.getMinTarget();
-		m.reportedValue = entity.getReportedValue();
-		
 		return m;
+	}
+	
+	@Override
+	public MeasurementType getMeasurementType() {
+		return measurementType;
+	}
+
+	@Override
+	public int getTarget() {
+		return target;
 	}
 	
 	@Override
@@ -47,8 +54,8 @@ public class MeasurementImpl implements Measurement {
 		return id;
 	}
 
-	public void setMeasurementDefinition(MeasurementDefinition measurementDefinition) {
-		this.measurementDefinition = measurementDefinition;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public void setTarget(int target) {
@@ -63,20 +70,6 @@ public class MeasurementImpl implements Measurement {
 		this.minTarget = minTarget;
 	}
 
-	public void setReportedValue(int reportedValue) {
-		this.reportedValue = reportedValue;
-	}
-
-	@Override
-	public MeasurementDefinition getMeasurementDefinition() {
-		return measurementDefinition;
-	}
-
-	@Override
-	public int getTarget() {
-		return target;
-	}
-
 	@Override
 	public int getMinTarget() {
 		return minTarget;
@@ -85,11 +78,6 @@ public class MeasurementImpl implements Measurement {
 	@Override
 	public int getMaxTarget() {
 		return maxTarget;
-	}
-
-	@Override
-	public int getReportedValue() {
-		return reportedValue;
 	}
 
 }

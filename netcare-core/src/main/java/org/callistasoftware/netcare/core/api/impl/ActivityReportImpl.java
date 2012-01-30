@@ -16,7 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.List;
+
 import org.callistasoftware.netcare.core.api.ActivityReport;
+import org.callistasoftware.netcare.core.api.Value;
 
 /**
  * Keeps report information.
@@ -25,7 +28,7 @@ import org.callistasoftware.netcare.core.api.ActivityReport;
  */
 public class ActivityReportImpl implements ActivityReport {
 	private static final long serialVersionUID = 1L;
-	private int actualValue;
+	private List<Value> values;
 	private String actualDate;
 	private String actualTime;
 	private int sense;
@@ -33,8 +36,8 @@ public class ActivityReportImpl implements ActivityReport {
 	private boolean rejected;
 	
 	@Override
-	public int getActualValue() {
-		return actualValue;
+	public List<Value> getValues() {
+		return values;
 	}
 
 	@Override

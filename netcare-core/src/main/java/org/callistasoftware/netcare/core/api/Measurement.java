@@ -17,29 +17,37 @@
 package org.callistasoftware.netcare.core.api;
 
 public interface Measurement {
+	
+	/**
+	 * Returns id.
+	 * 
+	 */
+	Long getId();
 
 	/**
-	 * Get the name of this measurement
-	 * @return
+	 * Returns the definition.
+	 * 
 	 */
-	String getName();
+	MeasurementDefinition getMeasurementDefinition();
+
+	/**
+	 * Returns target if not an interval.
+	 */
+	int getTarget();
+
+	/**
+	 * Returns min target if there is an interval.
+	 */
+	int getMinTarget();
+
+	/**
+	 * Returns max target if there is an interval.
+	 * 
+	 */
+	int getMaxTarget();
 	
 	/**
-	 * Get the type of value for this measurement
-	 * @return
+	 * Returns reported value.
 	 */
-	Option getValueType();
-	
-	/**
-	 * Get the unit of this activity type
-	 */
-	Option getUnit();
-	
-	/**
-	 * If this measurement is an interval, this flag tells
-	 * whether an alarm should be sent if the reported value
-	 * is outside the boundaries of this interval
-	 * @return
-	 */
-	boolean isAlarm();
+	int getReportedValue();
 }

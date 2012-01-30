@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.Measurement;
+import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 
 /**
@@ -43,7 +43,7 @@ public class ActivityTypeImpl implements ActivityType {
 	private String minScaleText;
 	private String maxScaleText;
 	
-	private Measurement[] measureValues;
+	private MeasurementType[] measureValues;
 	
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
@@ -54,9 +54,9 @@ public class ActivityTypeImpl implements ActivityType {
 		dto.setMinScaleText(entity.getSenseLabelLow());
 		dto.setMaxScaleText(entity.getSenseLabelHigh());
 		
-		final Measurement[] values = new MeasurementImpl[entity.getMeasurementTypes().size()];
+		final MeasurementType[] values = new MeasurementTypeImpl[entity.getMeasurementTypes().size()];
 		for (int i = 0; i < values.length; i++) {
-			values[i] = MeasurementImpl.newFromEntity(entity.getMeasurementTypes().get(i));
+			values[i] = MeasurementTypeImpl.newFromEntity(entity.getMeasurementTypes().get(i));
 		}
 		
 		dto.measureValues = values;
@@ -124,11 +124,11 @@ public class ActivityTypeImpl implements ActivityType {
 	}
 
 	@Override
-	public Measurement[] getMeasureValues() {
+	public MeasurementType[] getMeasureValues() {
 		return this.measureValues;
 	}
 	
-	public void setMeasureValues(final MeasurementImpl[] measureValues) {
+	public void setMeasureValues(final MeasurementTypeImpl[] measureValues) {
 		this.measureValues = measureValues;
 	}
 }
