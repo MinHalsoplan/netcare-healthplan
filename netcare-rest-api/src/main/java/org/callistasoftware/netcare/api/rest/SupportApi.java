@@ -26,7 +26,7 @@ import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
-import org.callistasoftware.netcare.model.entity.MeasureValueType;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class SupportApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<Option[]> loadMeasureValueTypes() {
 		this.logAccess("load", "measure value types");
-		final MeasureValueType[] valueTypes = MeasureValueType.values();
+		final MeasurementValueType[] valueTypes = MeasurementValueType.values();
 		final Option[] opts = new Option[valueTypes.length];
 		for (int i = 0; i < valueTypes.length; i++) {
 			opts[i] = new Option(valueTypes[i].name(), LocaleContextHolder.getLocale());

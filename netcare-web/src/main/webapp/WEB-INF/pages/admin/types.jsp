@@ -50,6 +50,16 @@
 					});
 				});
 				
+				var categoryOpts = new Array();
+				new NC.ActivityCategories().load(function(data) {
+					$.each(data.data, function(i, v) {
+						var opt = $('<option>').attr('value', v.code).html(v.value);
+						
+						categoryOpts.push(opt);
+						$('#activityCategory').append(opt);
+					});
+				});
+				
 				findOptionName = function(value, arr) {
 					var text = '';
 					$.each(arr, function(i, v) {
@@ -171,8 +181,6 @@
 						measureValues.push(formData);
 						updateMeasureValueTable();
 						resetMeasureValueForm();
-						
-						
 					});
 					
 					
@@ -182,26 +190,9 @@
 					$('#measureValueContainer').append(div);
 				};
 				
-				/*var createMeasureValue = function(label) {
-					var container = $('<div>').addClass('span2');
-					var div = $('<div>').addClass('clearfix');
-					
-					var label = $('<label>').attr('for', 'measureValue').html(label);
-					div.append(label);
-					
-					var inputDiv = $('<div>').addClass('input');
-					var input = $('<input>').attr('type', 'text').attr('name', 'measureValue').attr('id', 'measureValue').addClass('small');
-					inputDiv.append(input);
-					div.append(inputDiv);
-					
-					container.append(div);
-					$('#measureValueContainer').append(container);
-				};*/
-				
 				var showSingleMeasureValue = function() {
 					removeMeasureValueForm();
 					
-					//createMeasureValue('Målvärde');
 					createMeasureUnit();
 					createActionButton();
 				};
@@ -209,8 +200,6 @@
 				var showIntervalMeasureValue = function() {
 					removeMeasureValueForm();
 					
-					//createMeasureValue('Målvärde (min)');
-					//createMeasureValue('Målvärde (max)');
 					createMeasureUnit();
 					createAlarmBox();
 					createActionButton();
@@ -254,6 +243,15 @@
 				
 				$('#senseDescriptionContainer input').prop('disabled', true);
 				
+				
+				$('#createActivityType').click(function(e) {
+					
+					var formData = new Object();
+					formData.name = $('#name').val();
+					//formData.
+					
+				});
+				
 			});
 		</script>
 	</netcare:header>
@@ -269,10 +267,18 @@
 					<form class="form-stacked">
 						<div>
 							<netcare:row>
-								<netcare:col span="3">
+								<netcare:col span="5">
 									<spring:message code="activityType.name" scope="page" var="activityName" />
 									<netcare:field name="name" label="${activityName}">
 										<input type="text" name="name" id="name" />
+									</netcare:field>
+								</netcare:col>
+								<netcare:col span="5">
+									<spring:message code="activityType.category" var="category" scope="page" />
+									<netcare:field name="activityCategory" label="${category}">
+										<select name="activityCategory" id="activityCategory">
+										
+										</select>
 									</netcare:field>
 								</netcare:col>
 							</netcare:row>
@@ -321,19 +327,25 @@
 								</netcare:row>
 							</div>
 						</div>
-					</form>
-					<table id="measureValues" class="bordered-table zebra-striped shadow-box" style="display: none;">
-						<thead>
-							<tr>
-								<th><spring:message code="measureValue.name" /></th>
-								<th><spring:message code="measureValue.type" /></th>
-								<th><spring:message code="measureValue.unit" /></th>
-								<th><spring:message code="measureValue.alarm" /></th>
-								<th>&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
+						
+						<table id="measureValues" class="bordered-table zebra-striped shadow-box" style="display: none;">
+							<thead>
+								<tr>
+									<th><spring:message code="measureValue.name" /></th>
+									<th><spring:message code="measureValue.type" /></th>
+									<th><spring:message code="measureValue.unit" /></th>
+									<th><spring:message code="measureValue.alarm" /></th>
+									<th>&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+						
+						<div class="actions">
+							<button id="createActivityType" style="text-align: left;" class="btn primary"><spring:message code="activityType.create" /></button>
+						</div>
+						
+					</form>					
 				</div>
 				
 			</section>

@@ -28,7 +28,6 @@ import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
-import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 public class ScheduledActivityImpl implements ScheduledActivity {

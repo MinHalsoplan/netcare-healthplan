@@ -14,52 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
-
-import java.io.Serializable;
+package org.callistasoftware.netcare.model.entity;
 
 /**
- * Definition of an activity type
+ * The type of a measured value
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public interface ActivityType extends Serializable {
+public enum MeasurementValueType {
 
-	/**
-	 * Get the id of this activity type
-	 */
-	Long getId();
-	
-	/**
-	 * Get the name of this activity type
-	 */
-	String getName();
-	
-	/**
-	 * Get the name of the category where this type belongs
-	 */
-	ActivityCategory getCategory();
-	
-	/**
-	 * Returns if sense shall be measured.
-	 */
-	boolean isMeasuringSense();
-	
-	/**
-	 * Returns the minimum scale description.
-	 */
-	String getMinScaleText();
-	
-	/**
-	 * Returns the maximum scale description
-	 * @return
-	 */
-	String getMaxScaleText();
-	
-	/**
-	 * The measure values bound to this activity type
-	 * @return
-	 */
-	Measurement[] getMeasureValues();
+	SINGLE_VALUE,
+	INTERVAL;
 }

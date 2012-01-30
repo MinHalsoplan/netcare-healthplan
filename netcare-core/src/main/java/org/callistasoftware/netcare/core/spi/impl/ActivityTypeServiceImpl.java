@@ -33,7 +33,6 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,11 +125,12 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCategoryEntity.class, dto.getCategory().getId()));
 		}
 		
-		final MeasureUnit unit = MeasureUnit.valueOf(dto.getUnit().getCode());
+		//final MeasureUnit unit = MeasureUnit.valueOf(dto.getUnit().getCode());
 		
-		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category, unit);
+		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category, null/*unit*/);
 		entity.setMeasuringSense(dto.isMeasuringSense());
-		entity.setSenseLabelLow(dto.getScaleText());
+		entity.setSenseLabelLow(dto.getMinScaleText());
+		entity.setSenseLabelHigh(dto.getMaxScaleText());
 		final ActivityTypeEntity savedEntity = this.repo.save(entity);
 		return ServiceResultImpl.createSuccessResult((ActivityType) ActivityTypeImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}

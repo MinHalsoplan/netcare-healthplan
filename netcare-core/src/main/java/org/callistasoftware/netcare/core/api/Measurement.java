@@ -14,16 +14,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.model.entity;
+package org.callistasoftware.netcare.core.api;
 
-/**
- * The type of a measured value
- * 
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public enum MeasureValueType {
+public interface Measurement {
 
-	SINGLE_VALUE,
-	INTERVAL;
+	/**
+	 * Get the name of this measurement
+	 * @return
+	 */
+	String getName();
+	
+	/**
+	 * Get the type of value for this measurement
+	 * @return
+	 */
+	Option getValueType();
+	
+	/**
+	 * Get the unit of this activity type
+	 */
+	Option getUnit();
+	
+	/**
+	 * If this measurement is an interval, this flag tells
+	 * whether an alarm should be sent if the reported value
+	 * is outside the boundaries of this interval
+	 * @return
+	 */
+	boolean isAlarm();
 }

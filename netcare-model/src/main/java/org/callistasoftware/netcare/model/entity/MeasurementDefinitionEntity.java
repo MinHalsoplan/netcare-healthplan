@@ -78,7 +78,7 @@ public class MeasurementDefinitionEntity {
 	}
 
 	public void setTarget(int target) {
-		if (measurementType.isIntervalTarget()) {
+		if (measurementType.equals(MeasurementValueType.INTERVAL)) {
 			throw new IllegalStateException("Set target on an interval measurement is not allowed.");
 		}
 		this.target = target;
@@ -89,7 +89,7 @@ public class MeasurementDefinitionEntity {
 	}
 
 	public void setMinTarget(int minTarget) {
-		if (!measurementType.isIntervalTarget()) {
+		if (!measurementType.equals(MeasurementValueType.INTERVAL)) {
 			throw new IllegalStateException("Attempt to set min target on a non-interval measurement.");
 		}
 		this.minTarget = minTarget;
@@ -100,7 +100,7 @@ public class MeasurementDefinitionEntity {
 	}
 
 	public void setMaxTarget(int maxTarget) {
-		if (!measurementType.isIntervalTarget()) {
+		if (!measurementType.equals(MeasurementValueType.INTERVAL)) {
 			throw new IllegalStateException("Attempt to set min target on a non-interval measurement.");
 		}
 		this.maxTarget = maxTarget;

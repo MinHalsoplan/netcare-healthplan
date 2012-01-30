@@ -41,8 +41,8 @@ public class MeasurementTypeEntity {
 	@Column(name="name", length=32)
 	private String name;
 	
-	@Column(name="interval_target", length=1)
-	private String intervalTarget;
+	@Column(name="value_type", length=1)
+	private MeasurementValueType valueType;
 	
 	@Column(name="alarm_enabled", length=1)
 	private String alarmEnabled;
@@ -61,11 +61,11 @@ public class MeasurementTypeEntity {
 s	 * @param unit the unit.
 	 * @return the entity.
 	 */
-	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name, boolean intervalTarget, MeasureUnit unit) {
+	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name, MeasurementValueType valueType, MeasureUnit unit) {
 		MeasurementTypeEntity entity = new MeasurementTypeEntity();
 		entity.setActivityType(activityType);
 		entity.setName(name);
-		entity.setIntervalTarget(intervalTarget);
+		entity.setValueType(valueType);
 		entity.setUnit(unit);
 		return entity;
 	}
@@ -90,12 +90,12 @@ s	 * @param unit the unit.
 		this.name = name;
 	}
 
-	public boolean isIntervalTarget() {
-		return "Y".equals(intervalTarget);
+	public MeasurementValueType getValueType() {
+		return this.valueType;
 	}
 
-	void setIntervalTarget(boolean intervalTarget) {
-		this.intervalTarget = intervalTarget ? "Y" : null;
+	void setValueType(final MeasurementValueType valueType) {
+		this.valueType = valueType;
 	}
 
 	public boolean isAlarmEnabled() {

@@ -129,7 +129,7 @@ public class MeasurementEntity {
 	 */
 	private void copyActualTargets() {
 		// copy target values
-		if (getMeasurementDefinition().getMeasurementType().isIntervalTarget()) {
+		if (getMeasurementDefinition().getMeasurementType().equals(MeasurementValueType.INTERVAL)) {
 			setMinTarget(measurementDefinition.getMinTarget());
 			setMaxTarget(measurementDefinition.getMaxTarget());
 		} else {
