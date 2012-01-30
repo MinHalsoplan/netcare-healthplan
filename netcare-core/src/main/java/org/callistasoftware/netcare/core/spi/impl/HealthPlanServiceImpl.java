@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
@@ -75,6 +77,10 @@ import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
@@ -268,7 +274,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId()) : patientRepository.findOne(user.getId());
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency, userEntity);
-		newEntity.setActivityTarget(dto.getGoal());
+		// FIXME: multi-values
+		//newEntity.setActivityTarget(dto.getGoal());
 		if (dto.getStartDate() != null) {
 			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));		
 		}
@@ -463,15 +470,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			if (existing == null) {
 				final ReportedActivity ra = new ReportedActivity();
 				ra.setName(name);
-				ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
+				// FIXME: Multi values.
+				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
 				
 				reportedActivities.add(ra);
 			}
 			
 			final ReportedValue value = new ReportedValue();
 			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-// FIXME:			value.setReportedValue((float) e.getActualValue());
-			value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
+			// FIXME: multi values	
+			//value.setReportedValue((float) e.getActualValue());
+			//value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
 			value.setNewWeek(newWeek);
 			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
 			value.setNote(e.getNote());
@@ -568,9 +577,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		for (ActivityDefinitionEntity ad : defs) {
 			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
 			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
-			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + unit;
+			String summary = ad.getActivityType().getName();
 			Frequency fr = ad.getFrequency();
-			String duration = toICalDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
+			String duration = toICalDuration(ad);
 			for (FrequencyDay day : fr.getDays()) {
 				StringBuffer rrule = new StringBuffer();
 				String wday = toICalDay(day);
@@ -607,23 +616,26 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 * 
 	 * Minutes are rounded to half-hour precision.
 	 * 
-	 * @param unit the unit.
-	 * @param amount the amount.
+	 * @param the activity deftinion. 
 	 * @return the ical duration.
 	 */
-	private static String toICalDuration(MeasureUnit unit, int amount) {
-		int minutes;
-		switch (unit) {
-		case STEP: 
-			minutes = (amount / 50);
-			break;
-		case METER:
-			minutes = (amount / 80);
-			break;
-		default:
-			minutes = amount;
-			break;
+	private static String toICalDuration(ActivityDefinitionEntity ad) {	
+		int minutes = 30;
+		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
+			int target = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md.getMaxTarget() : md.getTarget();
+			switch (md.getMeasurementType().getUnit()) {
+			case STEP:
+				minutes = Math.max(target / 50, minutes);
+				break;
+			case METER:
+				minutes = Math.max(target / 80, minutes);
+				break;
+			case MINUTE:
+				minutes = Math.max(target, minutes);				
+				break;
+			}
 		}
+		
 		String dur = "PT";
 		if (minutes > 60) {
 			int hours = minutes / 60;
@@ -743,6 +755,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		return String.format("\"%s\"", s);
 	}
 	
+	// FIXME: Requires single activity definitions
 	@Override
 	public String getPlanReports(PatientBaseView patient) {
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
@@ -758,31 +771,55 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			}
 		}
 		Collections.sort(list);
+		StringBuffer hb = new StringBuffer();
+		hb.append("Aktivitet,Planerad datum,Planerad tid,Utförd datum,Utförd tid,Känsla,Kommentar");
 		StringBuffer sb = new StringBuffer();
-		sb.append("Aktivitet;Enhet;Mål;Planerad datum;Planerad tid;Utförd datum;Utförd tid;Resultat;Känsla;Kommentar\r\n");
+		boolean first = true;
 		for (ScheduledActivityEntity sc : list) {
-			String unit = new Option(sc.getActivityDefinitionEntity().getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
 			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
-			sb.append(";");
-			sb.append(quotedString(unit));
-			sb.append(";");
-			sb.append(sc.getActivityDefinitionEntity().getActivityTarget());
-			sb.append(";");
+			sb.append(",");
 			sb.append(ApiUtil.formatDate(sc.getScheduledTime()));
-			sb.append(";");
+			sb.append(",");
 			sb.append(ApiUtil.formatTime(sc.getScheduledTime()));
-			sb.append(";");
+			sb.append(",");
 			sb.append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
-			sb.append(";");
+			sb.append(",");
 			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
-			sb.append(";");
-// FIXME:			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
-			sb.append(";");
+			sb.append(",");
 			sb.append(sc.getPerceivedSense());
-			sb.append(";");
+			sb.append(",");
 			sb.append(quotedString(sc.getNote()));
+			for (MeasurementEntity me : sc.getMeasurements()) {
+				MeasurementTypeEntity t = me.getMeasurementDefinition().getMeasurementType();
+				boolean interval = t.getValueType().equals(MeasurementValueType.INTERVAL);
+				if (first) {
+					hb.append(",");
+					String unit = new Option(t.getUnit().name(), LocaleContextHolder.getLocale()).getValue();
+					hb.append(String.format("\"Rapporterat %s [%s]\"", t.getName(), unit));
+					hb.append(",");
+					if (!interval) {
+						hb.append(String.format("\"Mål %s [%s]\"", t.getName(), unit));
+					} else {
+						hb.append(String.format("\"Min %s [%s]\"", t.getName(), unit));
+					}
+					if (interval) {
+						hb.append(",");
+						hb.append(String.format("\"Max %s [%s]\"", t.getName(), unit));
+					}
+				}
+				sb.append(",");
+				sb.append(me.getReportedValue());
+				sb.append(",");
+				sb.append(interval ? me.getMinTarget() : me.getTarget());
+				if (interval) {
+					sb.append(",");
+					sb.append(me.getMaxTarget());
+				}
+			}
+			first = false;
 			sb.append("\r\n");
 		}
-		return sb.toString();
+		hb.append("\r\n");
+		return hb.toString() + sb.toString();
 	}
 }

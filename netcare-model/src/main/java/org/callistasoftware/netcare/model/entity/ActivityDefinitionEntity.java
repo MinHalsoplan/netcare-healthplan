@@ -49,10 +49,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	
 	@Column(length=256, nullable=false)
 	private String frequency;
-	
-	@Column(name="target")
-	private int activityTarget;
-	
+		
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
 	private Date createdTime;
@@ -140,25 +137,6 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	}
 	
 	
-	/**
-	 * Sets the target for this activity (for each execution), which will be used during follow up.
-	 * 
-	 * @param activityTarget the target in the same unit as specified by {@link ActivityTypeEntity}
-	 * and the actual unit {@link MeasureUnit}
-	 */
-	public void setActivityTarget(int activityTarget) {
-		this.activityTarget = activityTarget;
-	}
-
-	/**
-	 * Returns the weekly target.
-	 * 
-	 * @return the weekly target in the same unit as specified by {@link ActivityTypeEntity}
-	 */
-	public int getActivityTarget() {
-		return activityTarget;
-	}
-
 	/**
 	 * Sets the start date of this activity.
 	 * 
