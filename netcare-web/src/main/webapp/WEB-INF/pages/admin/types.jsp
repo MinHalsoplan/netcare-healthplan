@@ -51,18 +51,26 @@
 				});
 				
 				findOptionName = function(value, arr) {
-					NC.log("Searching for: " + value);
-					
 					var text = '';
 					$.each(arr, function(i, v) {
-						NC.log("Comparing " + v.attr('value') + " == " + value);
 						if (v.attr('value') == value) {
-							NC.log("Found. Returning " + v.text());
 							text = v.text();
 						}
 					});
 					
 					return text;
+				};
+				
+				var removeMeasuredValue = function(idx) {
+					NC.log("Array before removal: " + measureValues);
+					
+					$.each(measureValues, function(i, v) {
+						if (i == idx) {
+							measureValues.splice(i, 1);
+						}
+					});
+					
+					NC.log("Array is now: " + measureValues);
 				};
 				
 				var updateMeasureValueTable = function() {
@@ -91,10 +99,21 @@
 								row.append($('<td>').html('Nej'));
 							}
 							
+							var deleteIcon = new NC.Util().createIcon('trash', '24', function() {
+								removeMeasuredValue(i);
+								updateMeasureValueTable();
+							});
+							
+							row.append(
+								$('<td>').append(deleteIcon)
+							);
+							
 							$('#measureValues tbody').append(row);
 						});
 						
 						$('#measureValues').show();
+					} else {
+						$('#measureValues').hide();
 					}
 				};
 				
@@ -310,6 +329,7 @@
 								<th><spring:message code="measureValue.type" /></th>
 								<th><spring:message code="measureValue.unit" /></th>
 								<th><spring:message code="measureValue.alarm" /></th>
+								<th>&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody></tbody>
