@@ -61,6 +61,9 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@Column(name="start_date")
 	private Date startDate;
 
+	@Column(name="removedFlag")
+	private String removedFlag;
+
 	@ManyToOne
 	@JoinColumn(name="health_plan_id")
 	private HealthPlanEntity healthPlan;
@@ -75,9 +78,14 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
     
 	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<ScheduledActivityEntity> scheduledActivities;
+	
+	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	private List<MeasurementDefinitionEntity> measurementDefinition;
+	
 
     ActivityDefinitionEntity() {
     	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
+    	measurementDefinition = new LinkedList<MeasurementDefinitionEntity>();
     	uuid = UUID.randomUUID().toString();
     	createdTime = new Date();
 	}
@@ -89,7 +97,10 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
     	entity.setFrequency(frequency);
     	entity.setStartDate(healthPlanEntity.getStartDate());
     	entity.setCreatedBy(createdBy);
-    	
+    	for (MeasurementTypeEntity measurementType : activityType.getMeasurementTypes()) {
+    		MeasurementDefinitionEntity e = MeasurementDefinitionEntity.newEntity(entity, measurementType);
+    		entity.measurementDefinition.add(e);
+    	}
     	healthPlanEntity.addActivityDefinition(entity);
     	
     	return entity;
@@ -210,11 +221,20 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	/**
 	 * Returns the list of {@link ScheduledActivityEntity}
 	 * 
-	 * @return the list.
+	 * @return the list (unmodifable).
 	 */
 	public List<ScheduledActivityEntity> getScheduledActivities() {
 		Collections.sort(scheduledActivities);
 		return Collections.unmodifiableList(scheduledActivities);
+	}
+	
+	/**
+	 * Returns the list of {@link MeasurementDefinitionEntity}
+	 * 
+	 * @return the list (unmodifable).
+	 */
+	public List<MeasurementDefinitionEntity> getMeasurementDefinitions() {
+		return Collections.unmodifiableList(measurementDefinition);		
 	}
 	
 	/**
@@ -278,6 +298,14 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		}
 		
 		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
+	}
+
+	public boolean isRemovedFlag() {
+		return "Y".equals(removedFlag);
+	}
+
+	public void setRemovedFlag(boolean removedFlag) {
+		this.removedFlag = removedFlag ? "Y" : null;
 	}
 
 }
