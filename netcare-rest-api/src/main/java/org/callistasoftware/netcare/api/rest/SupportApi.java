@@ -26,6 +26,7 @@ import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasureValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,19 @@ public class SupportApi extends ApiSupport {
 		for (int i = 0; i < units.length; i++) {
 			log.debug("Processing {}", units[i].name());
 			opts[i] = new Option(units[i].name(), LocaleContextHolder.getLocale());
+		}
+		
+		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
+	}
+	
+	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<Option[]> loadMeasureValueTypes() {
+		this.logAccess("load", "measure value types");
+		final MeasureValueType[] valueTypes = MeasureValueType.values();
+		final Option[] opts = new Option[valueTypes.length];
+		for (int i = 0; i < valueTypes.length; i++) {
+			opts[i] = new Option(valueTypes[i].name(), LocaleContextHolder.getLocale());
 		}
 		
 		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());

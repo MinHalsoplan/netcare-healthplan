@@ -17,6 +17,7 @@
 NC.Support = function() {
 	
 	var _baseUrl = "/netcare-web/api/support";
+	var _ajax = new NC.Ajax();
 	
 	/**
 	 * Method that will make call to the server, if the call was
@@ -24,7 +25,6 @@ NC.Support = function() {
 	 * with the array of values
 	 */
 	var _loadOptions = function(url, onDataLoaded) {
-		NC.log("Loading support data from url: " + url);
 		$.ajax({
 			url : url,
 			dataType : 'json',
@@ -87,6 +87,15 @@ NC.Support = function() {
 	};
 	
 	var public = {
+			
+		getUnits : function(callback) {
+			_ajax.get('/support/units/load', callback);
+		},
+		
+		getMeasureValueTypes : function(callback) {
+			_ajax.get('/support/measureValueTypes', callback);
+		},
+			
 		/**
 		 * Load all unit options that exist in the
 		 * application.
