@@ -60,7 +60,7 @@ public class ActivityTypeEntity {
 	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<MeasurementTypeEntity> measurementTypes;
 
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="care_unit_id")
 	private CareUnitEntity careUnit;
 
