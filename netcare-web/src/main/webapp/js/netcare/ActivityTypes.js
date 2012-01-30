@@ -17,10 +17,14 @@
 NC.ActivityCategories = function() {
 	var _baseUrl = '/netcare-web/api/activityCategory';
 	var _this = this;
+	var _ajax = new NC.Ajax();
 	
 	public = {
 		load : function(callback) {
-			var url = _baseUrl + '/load';
+			_ajax.get('/activityCategory/load', callback);
+			
+			
+			/*var url = _baseUrl + '/load';
 			NC.log("Loading activity categories from url: " + url);
 			
 			$.ajax({
@@ -36,7 +40,7 @@ NC.ActivityCategories = function() {
 						callback(data);
 					}
 				}
-			});
+			});*/
 		},
 		
 		loadAsOptions : function(selectElem) {

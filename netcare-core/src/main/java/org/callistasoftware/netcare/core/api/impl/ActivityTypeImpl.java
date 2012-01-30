@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 
 /**
@@ -38,19 +38,21 @@ public class ActivityTypeImpl implements ActivityType {
 	
 	private Long id;
 	private String name;
-	private Option unit;
 	private ActivityCategoryImpl category;
 	private boolean measuringSense;
-	private String scaleText;
+	private String minScaleText;
+	private String maxScaleText;
+	
+	private Measurement[] measureValues;
 	
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
-		dto.setUnit(new Option(entity.getUnit().name(), l));
+		//dto.setUnit(new Option(entity.getUnit().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		dto.measuringSense = entity.isMeasuringSense();
-		dto.scaleText = entity.getSenseScaleText();
+		//dto.scaleText = entity.getSenseScaleText();
 		return dto;
 	}
 	
@@ -82,15 +84,6 @@ public class ActivityTypeImpl implements ActivityType {
 	}
 
 	@Override
-	public Option getUnit() {
-		return this.unit;
-	}
-	
-	public void setUnit(final Option unit) {
-		this.unit = unit;
-	}
-
-	@Override
 	public ActivityCategory getCategory() {
 		return this.category;
 	}
@@ -105,7 +98,29 @@ public class ActivityTypeImpl implements ActivityType {
 	}
 
 	@Override
-	public String getScaleText() {
-		return scaleText;
+	public String getMinScaleText() {
+		return this.minScaleText;
+	}
+	
+	public void setMinScaleText(final String minScaleText) {
+		this.minScaleText = minScaleText;
+	}
+
+	@Override
+	public String getMaxScaleText() {
+		return this.maxScaleText;
+	}
+	
+	public void setMaxScaleText(final String maxScaleText) {
+		this.maxScaleText = maxScaleText;
+	}
+
+	@Override
+	public Measurement[] getMeasureValues() {
+		return this.measureValues;
+	}
+	
+	public void setMeasureValues(final MeasurementImpl[] measureValues) {
+		this.measureValues = measureValues;
 	}
 }

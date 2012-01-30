@@ -16,50 +16,30 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.io.Serializable;
-
-/**
- * Definition of an activity type
- * 
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public interface ActivityType extends Serializable {
+public interface Measurement {
 
 	/**
-	 * Get the id of this activity type
-	 */
-	Long getId();
-	
-	/**
-	 * Get the name of this activity type
+	 * Get the name of this measurement
+	 * @return
 	 */
 	String getName();
 	
 	/**
-	 * Get the name of the category where this type belongs
-	 */
-	ActivityCategory getCategory();
-	
-	/**
-	 * Returns if sense shall be measured.
-	 */
-	boolean isMeasuringSense();
-	
-	/**
-	 * Returns the minimum scale description.
-	 */
-	String getMinScaleText();
-	
-	/**
-	 * Returns the maximum scale description
+	 * Get the type of value for this measurement
 	 * @return
 	 */
-	String getMaxScaleText();
+	Option getValueType();
 	
 	/**
-	 * The measure values bound to this activity type
+	 * Get the unit of this activity type
+	 */
+	Option getUnit();
+	
+	/**
+	 * If this measurement is an interval, this flag tells
+	 * whether an alarm should be sent if the reported value
+	 * is outside the boundaries of this interval
 	 * @return
 	 */
-	Measurement[] getMeasureValues();
+	boolean isAlarm();
 }

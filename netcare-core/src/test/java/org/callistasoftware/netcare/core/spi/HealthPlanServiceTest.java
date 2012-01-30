@@ -188,7 +188,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
 		typeImpl.setId(savedType.getId());
 		typeImpl.setName("Löpning");
-		typeImpl.setUnit(new Option(MeasureUnit.METER.name(), LocaleContextHolder.getLocale()));
+		//typeImpl.setUnit(new Option(MeasureUnit.METER.name(), LocaleContextHolder.getLocale()));
 		
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
 		
