@@ -25,6 +25,8 @@ import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
+import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -46,6 +48,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private String actualTime;
 	private int sense;
 	private String note;
+	private Measurement[] measurements;
 	private boolean rejected;
 	
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
@@ -81,8 +84,23 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 			a.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " " + ApiUtil.formatTime(entity.getActualTime());
 		}
 		
+		List<MeasurementEntity> mList = entity.getMeasurements();
+		a.measurements = new Measurement[mList.size()];
+		for (int i = 0; i < a.measurements.lenght; i++) {
+			MeasurementEntity me = mList.get(i);
+			MeasurementTypeEntity type = me.getMeasurementDefinition().getMeasurementType();
+			a.measurements[i].name = type.getName();
+			a.measurements[i].unit = new Option(type.getUnit(), LocaleContextHolder.getLocale());
+			a.measurements[i].interval = type.isIntervalTarget();
+			if (type.isIntervalTarget()) {
+				a.measurements[i].minTarget = me.getMinTarget();
+				a.measurements[i].maxTarget = me.getMaxTarget();
+			} else {
+				a.measurements[i].target = me.getTarget();				
+			}
+			a.measurements[i].value = me.getReportedValue();
+		}
 		a.rejected = entity.isRejected();
-		a.actualValue = entity.getActualValue();
 		a.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity().getHealthPlan().getForPatient());
 		a.sense = entity.getPerceivedSense();
 		a.note = entity.getNote();

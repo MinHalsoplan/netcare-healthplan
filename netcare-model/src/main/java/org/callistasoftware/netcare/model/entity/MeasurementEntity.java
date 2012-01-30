@@ -48,8 +48,8 @@ public class MeasurementEntity {
 	@JoinColumn(name="measurement_definition_id")
 	private MeasurementDefinitionEntity measurementDefinition;
 
-	@Column(name="target_value")
-	private int targetValue;
+	@Column(name="target")
+	private int target;
 	
 	@Column(name="min_target")
 	private int minTarget;
@@ -62,6 +62,9 @@ public class MeasurementEntity {
 
 
 	MeasurementEntity() {
+		this.minTarget = -1;
+		this.maxTarget = -1;
+		this.target = -1;
 	}
 
 	static MeasurementEntity newEntity(ScheduledActivityEntity scheduledActivity, MeasurementDefinitionEntity measurementDefinition) {
@@ -93,16 +96,16 @@ public class MeasurementEntity {
 		this.measurementDefinition = measurementDefinition;
 	}
 
-	public int getTargetValue() {
-		return targetValue;
+	public int getTarget() {
+		return target == -1 ? getMeasurementDefinition().getTarget() : target;
 	}
 
-	public void setTargetValue(int targetValue) {
-		this.targetValue = targetValue;
+	public void setTarget(int target) {
+		this.target = target;
 	}
 
 	public int getMinTarget() {
-		return minTarget;
+		return minTarget == -1 ? getMeasurementDefinition().getMinTarget() : minTarget;
 	}
 
 	public void setMinTarget(int minTarget) {
@@ -110,7 +113,7 @@ public class MeasurementEntity {
 	}
 
 	public int getMaxTarget() {
-		return maxTarget;
+		return maxTarget == -1 ? getMeasurementDefinition().getMaxTarget() : maxTarget;
 	}
 
 	public void setMaxTarget(int maxTarget) {
@@ -130,7 +133,7 @@ public class MeasurementEntity {
 			setMinTarget(measurementDefinition.getMinTarget());
 			setMaxTarget(measurementDefinition.getMaxTarget());
 		} else {
-			setTargetValue(measurementDefinition.getTarget());
+			setTarget(measurementDefinition.getTarget());
 		}		
 	}
 
