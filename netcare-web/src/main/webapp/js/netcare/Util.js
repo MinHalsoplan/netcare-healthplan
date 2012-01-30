@@ -66,6 +66,9 @@ NC.Util = function() {
 	};
 	
 	public = {
+			
+		
+			
 		/**
 		 * Update the current patient shown in the menu
 		 * of the applica
@@ -196,6 +199,20 @@ NC.Util = function() {
 					containerDiv.removeClass('error');
 				}
 			});
+		},
+		
+		validateFieldNotEmpty : function(input) {
+			if (input.val() == '' || input.val() == null || input.val() == undefined) {
+				var id = input.attr('id');
+				var existingText = $('label[for="' + id + '"]').html();
+				
+				//$('label[for="' + id + '"]').html(existingText + ' ' + 'Vänligen fyll i ett värde');
+				
+				$('label[for="' + id + '"]').parent().addClass('error');
+				return false;
+			}
+			
+			return true;
 		},
 		
 		

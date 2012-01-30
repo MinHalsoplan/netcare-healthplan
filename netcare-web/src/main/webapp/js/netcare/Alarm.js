@@ -17,25 +17,11 @@
 NC.Alarm = function() {
 	
 	var _baseUrl = "/netcare-web/api/alarm";
+	var _ajax = new NC.Ajax();
 	
 	public = {
 		loadAlarms : function(successCallback) {
-			var url = _baseUrl + '/list';
-			NC.log("Loading alarms from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					
-					new NC.Util().processServiceResult(data);
-					
-					if (data.success && successCallback !== undefined) {
-						successCallback(data);
-					}
-				}
-			});
+			_ajax.get('/alarm/list', successCallback, true);
 		},
 		
 		resolve : function(alarmId, callback) {

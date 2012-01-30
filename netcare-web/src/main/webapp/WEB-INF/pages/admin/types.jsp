@@ -50,13 +50,10 @@
 					});
 				});
 				
-				var categoryOpts = new Array();
 				new NC.ActivityCategories().load(function(data) {
 					$.each(data.data, function(i, v) {
-						var opt = $('<option>').attr('value', v.code).html(v.value);
-						
-						categoryOpts.push(opt);
-						$('#activityCategory').append(opt);
+						NC.log("Processing: " + v.code + " " + v.value);
+						$('#activityCategory').append($('<option>').attr('value', v.id).html(v.name));
 					});
 				});
 				
@@ -115,7 +112,7 @@
 							});
 							
 							row.append(
-								$('<td>').append(deleteIcon)
+								$('<td>').css('text-align', 'right').append(deleteIcon)
 							);
 							
 							$('#measureValues tbody').append(row);
@@ -243,13 +240,44 @@
 				
 				$('#senseDescriptionContainer input').prop('disabled', true);
 				
-				
 				$('#createActivityType').click(function(e) {
+					e.preventDefault();
+					
+					var errors = false;
+					if (!new NC.Util().validateFieldNotEmpty($('#name'))) {
+						errors = true;
+					}
+					
+					if (measureValues.length < 1) {
+						errors = true;
+					}
+					
+					new NC.PageMessages().addMessage('error', 'Det gick fel');
+					new NC.PageMessages().addMessage('info', 'Coolt');
+					return false;
 					
 					var formData = new Object();
 					formData.name = $('#name').val();
-					//formData.
 					
+					formData.category = new Object();
+					formData.category.id = $('#activityCategory option:selected').attr('value');
+					formData.category.name = $('#activityCategory option:selected').text();
+					
+					if ($('#useSense').val() == 1) {
+						formData.measuringSense = true;
+					} else {
+						formData.measuringSense = false;
+					}
+					
+					if (formData.measuringSense == true) {
+						formData.minScaleText = $('#minDescription').val();
+						formData.maxScaleText = $('#maxDescription').val();
+					}
+					
+					formData.measureValues = measureValues;
+					
+					var jsonObj = JSON.stringify(formData);
+					NC.log(jsonObj);
 				});
 				
 			});
@@ -270,13 +298,13 @@
 								<netcare:col span="5">
 									<spring:message code="activityType.name" scope="page" var="activityName" />
 									<netcare:field name="name" label="${activityName}">
-										<input type="text" name="name" id="name" />
+										<input type="text" name="name" id="name" class="xlarge"/>
 									</netcare:field>
 								</netcare:col>
 								<netcare:col span="5">
 									<spring:message code="activityType.category" var="category" scope="page" />
 									<netcare:field name="activityCategory" label="${category}">
-										<select name="activityCategory" id="activityCategory">
+										<select name="activityCategory" id="activityCategory" class="xlarge">
 										
 										</select>
 									</netcare:field>
