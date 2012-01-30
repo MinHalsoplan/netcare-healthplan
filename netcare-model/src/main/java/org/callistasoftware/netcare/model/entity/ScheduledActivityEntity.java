@@ -16,8 +16,9 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -76,8 +77,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="activity", orphanRemoval=true, cascade=CascadeType.ALL)
 	private List<ActivityCommentEntity> comments;
 	
+	@OneToMany(mappedBy="scheduledActivity", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	private List<MeasurementEntity> measurements;
+
+	
 	ScheduledActivityEntity() {
-		this.setComments(new ArrayList<ActivityCommentEntity>());
+		this.setComments(new LinkedList<ActivityCommentEntity>());
+		this.setMeasurements(new LinkedList<MeasurementEntity>());
 		status = ScheduledActivityStatus.OPEN;
 	}
 	
@@ -93,6 +99,10 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
 		scheduledActivityEntity.setTargetValue(activityDefinition.getActivityTarget());
+		for (MeasurementDefinitionEntity measurementDefinition : activityDefinition.getMeasurementDefinitions()) {
+			MeasurementEntity e = MeasurementEntity.newEntity(scheduledActivityEntity, measurementDefinition);
+			scheduledActivityEntity.measurements.add(e);
+		}
 		return scheduledActivityEntity;
 	}
 	
@@ -207,5 +217,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	
 	public ScheduledActivityStatus getStatus() {
 		return status;
+	}
+
+	public List<MeasurementEntity> getMeasurements() {
+		return Collections.unmodifiableList(measurements);
+	}
+
+	void setMeasurements(List<MeasurementEntity> measurements) {
+		this.measurements = measurements;
 	}
 }

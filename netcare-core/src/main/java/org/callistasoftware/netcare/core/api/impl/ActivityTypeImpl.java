@@ -50,7 +50,7 @@ public class ActivityTypeImpl implements ActivityType {
 		dto.setUnit(new Option(entity.getUnit().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		dto.measuringSense = entity.isMeasuringSense();
-		dto.scaleText = entity.getSenseScaleText();
+		dto.scaleText = entity.getSenseLabelHigh();
 		return dto;
 	}
 	

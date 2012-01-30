@@ -130,7 +130,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 		
 		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category, unit);
 		entity.setMeasuringSense(dto.isMeasuringSense());
-		entity.setSenseScaleText(dto.getScaleText());
+		entity.setSenseLabelLow(dto.getScaleText());
 		final ActivityTypeEntity savedEntity = this.repo.save(entity);
 		return ServiceResultImpl.createSuccessResult((ActivityType) ActivityTypeImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
