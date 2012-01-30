@@ -25,22 +25,7 @@ NC.Alarm = function() {
 		},
 		
 		resolve : function(alarmId, callback) {
-			var url = _baseUrl + '/' + alarmId + '/resolve';
-			NC.log("Resolving alarm " + alarmId + " using url: " + url);
-			
-			$.ajax({
-				url : url,
-				type : 'post',
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					
-					if (data.success && callback !== undefined) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.post('/alarm/' + alarmId + '/resolve', {}, callback, true);
 		} 
 	};
 	
