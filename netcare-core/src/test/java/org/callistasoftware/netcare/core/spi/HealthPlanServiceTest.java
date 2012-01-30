@@ -118,7 +118,8 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
 		at.setMeasuringSense(true);
-		at.setSenseScaleText("Trötthet");
+		at.setSenseLabelHigh("Mycket Trötthet");
+		at.setSenseLabelLow("Väldigt Lätt");
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);

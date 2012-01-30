@@ -181,8 +181,6 @@
 						measureValues.push(formData);
 						updateMeasureValueTable();
 						resetMeasureValueForm();
-						
-						
 					});
 					
 					
@@ -192,26 +190,9 @@
 					$('#measureValueContainer').append(div);
 				};
 				
-				/*var createMeasureValue = function(label) {
-					var container = $('<div>').addClass('span2');
-					var div = $('<div>').addClass('clearfix');
-					
-					var label = $('<label>').attr('for', 'measureValue').html(label);
-					div.append(label);
-					
-					var inputDiv = $('<div>').addClass('input');
-					var input = $('<input>').attr('type', 'text').attr('name', 'measureValue').attr('id', 'measureValue').addClass('small');
-					inputDiv.append(input);
-					div.append(inputDiv);
-					
-					container.append(div);
-					$('#measureValueContainer').append(container);
-				};*/
-				
 				var showSingleMeasureValue = function() {
 					removeMeasureValueForm();
 					
-					//createMeasureValue('Målvärde');
 					createMeasureUnit();
 					createActionButton();
 				};
@@ -219,8 +200,6 @@
 				var showIntervalMeasureValue = function() {
 					removeMeasureValueForm();
 					
-					//createMeasureValue('Målvärde (min)');
-					//createMeasureValue('Målvärde (max)');
 					createMeasureUnit();
 					createAlarmBox();
 					createActionButton();

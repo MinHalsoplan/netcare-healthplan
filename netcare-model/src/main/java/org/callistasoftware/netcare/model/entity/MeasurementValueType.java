@@ -22,7 +22,7 @@ package org.callistasoftware.netcare.model.entity;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public enum MeasureValueType {
+public enum MeasurementValueType {
 
 	SINGLE_VALUE,
 	INTERVAL;

@@ -16,13 +16,19 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -40,15 +46,27 @@ public class ActivityTypeEntity {
 	
 	@Column(name="measuring_sense", length=1)
 	private String measuringSense;
+		
+	@Column(name="sense_label_low")
+	private String senseLabelLow;
 	
-	@Column(name="sense_scale_text")
-	private String senseScaleText;
+	@Column(name="sense_label_high")
+	private String senseLabelHigh;
 	
 	@ManyToOne
 	@JoinColumn(name="category_id")
 	private ActivityCategoryEntity category;
 	
+	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	private List<MeasurementTypeEntity> measurementTypes;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="care_unit_id")
+	private CareUnitEntity careUnit;
+
+	
 	ActivityTypeEntity() {
+		measurementTypes = new LinkedList<MeasurementTypeEntity>();
 	}
 	
 	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final MeasureUnit unit) {
@@ -102,11 +120,31 @@ public class ActivityTypeEntity {
 		this.measuringSense = (measuringSense) ? "Y" : null;
 	}
 
-	public String getSenseScaleText() {
-		return senseScaleText;
+	public String getSenseLabelLow() {
+		return senseLabelLow;
 	}
 
-	public void setSenseScaleText(String senseScaleText) {
-		this.senseScaleText = senseScaleText;
+	public void setSenseLabelLow(String senseLabelLow) {
+		this.senseLabelLow = senseLabelLow;
+	}
+
+	public String getSenseLabelHigh() {
+		return senseLabelHigh;
+	}
+
+	public void setSenseLabelHigh(String senseLabelHigh) {
+		this.senseLabelHigh = senseLabelHigh;
+	}
+
+	public List<MeasurementTypeEntity> getMeasurementTypes() {
+		return measurementTypes;
+	}
+
+	public CareUnitEntity getCareUnit() {
+		return careUnit;
+	}
+
+	public void setCareUnit(CareUnitEntity careUnit) {
+		this.careUnit = careUnit;
 	}
 }

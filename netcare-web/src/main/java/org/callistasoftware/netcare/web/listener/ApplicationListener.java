@@ -69,7 +69,7 @@ public class ApplicationListener extends ContextLoaderListener {
 
 		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
 		ate.setMeasuringSense(true);
-		ate.setSenseScaleText("Lätt(1) - Tufft(5)");
+		ate.setSenseLabelLow("Lätt(1) - Tufft(5)");
 		atRepo.save(ate);
 		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE));
 		atRepo.flush();

@@ -18,6 +18,8 @@ package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 public class MeasurementImpl implements Measurement {
 
@@ -26,9 +28,23 @@ public class MeasurementImpl implements Measurement {
 	private Option valueType;
 	private Option unit;
 	
+	public static Measurement newFromEntity(final MeasurementTypeEntity entity) {
+		final MeasurementImpl dto = new MeasurementImpl();
+		dto.setName(entity.getName());
+		dto.setAlarm(entity.isAlarmEnabled());
+		dto.setUnit(new Option(entity.getUnit().name(), LocaleContextHolder.getLocale()));
+		dto.setValueType(new Option(entity.getValueType().name(), LocaleContextHolder.getLocale()));
+		
+		return dto;
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	@Override

@@ -49,10 +49,18 @@ public class ActivityTypeImpl implements ActivityType {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
-		//dto.setUnit(new Option(entity.getUnit().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		dto.measuringSense = entity.isMeasuringSense();
-		//dto.scaleText = entity.getSenseScaleText();
+		dto.setMinScaleText(entity.getSenseLabelLow());
+		dto.setMaxScaleText(entity.getSenseLabelHigh());
+		
+		final Measurement[] values = new MeasurementImpl[entity.getMeasurementTypes().size()];
+		for (int i = 0; i < values.length; i++) {
+			values[i] = MeasurementImpl.newFromEntity(entity.getMeasurementTypes().get(i));
+		}
+		
+		dto.measureValues = values;
+		
 		return dto;
 	}
 	
