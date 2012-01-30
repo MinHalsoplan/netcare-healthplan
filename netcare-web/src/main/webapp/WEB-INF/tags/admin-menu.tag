@@ -119,21 +119,24 @@
 		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
 	</p>
 		
-	<h3><netcare:image name="user" size="16"/><spring:message code="patient" /></h3>
+	<h3 id="patientName"><netcare:image name="user" size="16"/><spring:message code="patient" /></h3>
 	<c:if test="${not empty sessionScope.currentPatient}">
-		<p id="currentpatient" style="display: block;">
-			<spring:message code="currentPatient" /> <a href="#"><c:out value="${sessionScope.currentPatient.name}" /></a>
-		</p>
-		<p>
-			<span id="cnr"></span>
-		</p>
+		<div id="workWith" class="shadow-box" style="padding-left: 5px;">
+			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
+			<p>
+				<span id="cnr"></span>
+			</p>
+			<ul>
+				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a></li>
+			</ul>
+		</div>
+		<br />
 	</c:if>
-	<p>
-		<a data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="clickHere" /></a> <spring:message code="toPickPatient" /><br />
-	</p>
 	
 	<p>
-		<a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="clickHere" /></a> <spring:message code="toViewPatients" />
+		<a data-backdrop="true" data-controls-modal="modal-from-dom">
+			<spring:message code="clickHere" /></a> <spring:message code="toPickPatient" />
+		</a>
 	</p>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
@@ -157,13 +160,12 @@
 		</form>
 	</div>
 	
-	<div id="workWith">
+	<div id="system">
 		<h3><spring:message code="workWith" /></h3>
-		<ul>
-			<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="startPage" /></a></li>
-			<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a>
-			<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
-		</ul>
+		<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="startPage" /></a></li>
+		<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="patients" /></a></li>
+		<li><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="activityType.title" /></a></li>
+		<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
 	</div>
 </div>
 </body>
