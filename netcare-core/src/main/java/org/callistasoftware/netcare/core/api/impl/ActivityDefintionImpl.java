@@ -28,6 +28,8 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -178,43 +180,26 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		int numDone = 0;
 		int numTotal = 0;
 		int numTarget = 0;
-		int sumDone = 0;
-		int sumTotal = 0;
-		int sumTarget = 0;	
 
 		Calendar cal = Calendar.getInstance();
 		ApiUtil.dayEnd(cal);
 		
 		for (ScheduledActivityEntity a : list) {
 			if (a.getReportedTime() != null) {
-				sumDone += a.getActualValue();
 				numDone++;
 			}
 			
 			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
-				sumTarget += a.getTargetValue();
 				numTarget++;
 			}
-			
-			sumTotal += a.getTargetValue();
 			numTotal++;
 		}
 
 		setNumDone(numDone);
 		setNumTotal(numTotal);
-		setSumDone(sumDone);
-		setSumTotal(sumTotal);
-		setSumTarget(sumTarget);
 		setNumTarget(numTarget);
 	}
 
-	private void setSumDone(int sumDone) {
-		this.sumDone = sumDone;
-	}
-
-	private void setSumTotal(int sumTotal) {
-		this.sumTotal = sumTotal;
-	}
 
 	private void setNumTotal(int numTotal) {
 		this.numTotal = numTotal;
@@ -222,10 +207,6 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 
 	private void setNumDone(int numDone) {
 		this.numDone = numDone;
-	}
-
-	private void setSumTarget(int sumTarget) {
-		this.sumTarget = sumTarget;
 	}
 	
 	@Override

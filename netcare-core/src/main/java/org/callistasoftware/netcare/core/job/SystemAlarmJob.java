@@ -94,7 +94,6 @@ public class SystemAlarmJob {
 			sae.setStatus(ScheduledActivityStatus.CLOSED);
 			sae.setReportedTime(new Date());
 			sae.setNote("Stängd per automatik.");
-			sae.setActualValue(0);
 			saSave.add(sae);
 		}
 		log.info("Alarm activity job: {} new activity alarms!", al.size());

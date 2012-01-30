@@ -39,6 +39,7 @@ import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.Value;
 import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
@@ -315,7 +316,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.OPEN);
 		entity.setNote(report.getNote());
 		entity.setPerceivedSense(report.getSense());
-		entity.setActualValue(report.getActualValue());
+		for (Value value : report.getValues()) {
+			entity.lookupMeasurement(value.getMeasurementId()).setReportedValue(value.getValue());
+		}
 		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
 		entity.setActualTime(d);
 		entity = scheduledActivityRepository.save(entity);
@@ -467,7 +470,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			
 			final ReportedValue value = new ReportedValue();
 			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-			value.setReportedValue((float) e.getActualValue());
+// FIXME:			value.setReportedValue((float) e.getActualValue());
 			value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
 			value.setNewWeek(newWeek);
 			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
@@ -773,7 +776,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			sb.append(";");
 			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
 			sb.append(";");
-			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
+// FIXME:			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
 			sb.append(";");
 			sb.append(sc.getPerceivedSense());
 			sb.append(";");

@@ -17,57 +17,30 @@
 package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * Keeps information about an activity report. <p>
- * 
- * Used when reporting back.
+ * Keeps a reported value.
  * 
  * @author Peter
  */
-public interface ActivityReport extends Serializable {
+public class Value implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private Long measurementId;
+	private int value;
+	
+	public Value() {}
+	
+	/**
+	 * Returns the corresponding entity id. {@link MeasurementEntity}
+	 */
+	public Long getMeasurementId() {
+		return measurementId;
+	}
 
-	
 	/**
-	 * Returns the reported value.
-	 * 
-	 * @return the actual value reported.
+	 * Returns the actual value.
 	 */
-	List<Value> getValues();
-	
-	/**
-	 * Returns the actual date when the activity was performed.
-	 * 
-	 * @return the date as (yyyy-mm-dd), or null.
-	 */
-	String getActualDate();
-	
-	/**
-	 * Return the actual time when the activity was performed.
-	 * 
-	 * @return the time as (hh:mm)
-	 */
-	String getActualTime();
-	
-	/**
-	 * Returns the perceived sense.
-	 * 
-	 * @return the sense.
-	 */
-	int getSense();
-	
-	/**
-	 * Returns a note.
-	 * 
-	 * @return the note, or null if not set.
-	 */
-	String getNote();
-	
-	/**
-	 * Returns if this activity has been rejected.
-	 * 
-	 * @return true if rejected, otherwise false.
-	 */
-	boolean isRejected();
+	public int getValue() {
+		return value;
+	}
 }

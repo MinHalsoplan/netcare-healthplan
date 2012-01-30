@@ -54,13 +54,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Column(name="actual_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date actualTime;
-		
-	@Column(name="actual_value")
-	private int actualValue;
-	
-	@Column(name="target_value")
-	private int targetValue;
-	
+			
 	@Column(name="note", length=128)
 	private String note;
 	
@@ -98,7 +92,6 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
 		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
-		scheduledActivityEntity.setTargetValue(activityDefinition.getActivityTarget());
 		for (MeasurementDefinitionEntity measurementDefinition : activityDefinition.getMeasurementDefinitions()) {
 			MeasurementEntity e = MeasurementEntity.newEntity(scheduledActivityEntity, measurementDefinition);
 			scheduledActivityEntity.measurements.add(e);
@@ -124,14 +117,6 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	public Date getReportedTime() {
 		return reportedTime;
-	}
-
-	public void setActualValue(int actualValue) {
-		this.actualValue = actualValue;
-	}
-
-	public int getActualValue() {
-		return actualValue;
 	}
 
 	@Override
@@ -185,14 +170,6 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return (status == ScheduledActivityStatus.REJECTED);
 	}
 
-	public int getTargetValue() {
-		return targetValue;
-	}
-
-	private void setTargetValue(int targetValue) {
-		this.targetValue = targetValue;
-	}
-
 	public List<ActivityCommentEntity> getComments() {
 		return comments;
 	}
@@ -221,6 +198,15 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	public List<MeasurementEntity> getMeasurements() {
 		return Collections.unmodifiableList(measurements);
+	}
+	
+	public MeasurementEntity lookupMeasurement(Long id) {
+		for (MeasurementEntity m : measurements) {
+			if (m.getId().equals(id)) {
+				return m;
+			}
+		}
+		throw new IllegalArgumentException("No such measurement found: " + id);
 	}
 
 	void setMeasurements(List<MeasurementEntity> measurements) {
