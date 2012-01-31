@@ -111,7 +111,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
 						
-						var actText = value.type.name + _formatMeasurements(value.measurementDefinitions);
+						var actText = value.type.name + _formatMeasurements(value.goalValues);
 						
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(

@@ -24,19 +24,12 @@ import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.DayTime;
-<<<<<<< HEAD
-import org.callistasoftware.netcare.core.api.Measurement;
-=======
->>>>>>> 45496204e8dbab7f6179ee9d8d4c65094a62a411
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
-<<<<<<< HEAD
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
-=======
->>>>>>> 45496204e8dbab7f6179ee9d8d4c65094a62a411
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
