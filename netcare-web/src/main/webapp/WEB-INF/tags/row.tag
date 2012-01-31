@@ -31,7 +31,7 @@
 	</c:otherwise>
 </c:choose>
 
-	<div class="span12">
+	<div class="span10">
 		<div class="row">
 			<jsp:doBody />
 		</div>

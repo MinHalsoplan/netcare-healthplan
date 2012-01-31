@@ -24,7 +24,6 @@ public interface MeasurementType {
 	 */
 	Long getId();
 
-
 	/**
 	 * Get the name of this measurement
 	 * @return

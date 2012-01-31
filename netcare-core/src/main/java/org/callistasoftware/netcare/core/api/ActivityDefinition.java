@@ -33,6 +33,11 @@ public interface ActivityDefinition extends Serializable {
 	Long getId();
 
 	/**
+	 * The desired goal values of this definition
+	 */
+	MeasurementDefinition[] getGoalValues();
+	
+	/**
 	 * The activity's type
 	 * @return
 	 */
@@ -81,12 +86,7 @@ public interface ActivityDefinition extends Serializable {
 	 * Returns issued by.
 	 */
 	CareGiverBaseView getIssuedBy();
-	
-	/**
-	 * Returns measurememnt defintions.
-	 */
-	MeasurementDefinition[] getMeasurementDefinitions();
-	
+		
 	/**
 	 * Returns number of times an activity should have been carried out.
 	 */

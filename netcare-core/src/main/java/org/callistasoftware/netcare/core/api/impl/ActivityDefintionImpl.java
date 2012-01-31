@@ -24,13 +24,19 @@ import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.DayTime;
+<<<<<<< HEAD
 import org.callistasoftware.netcare.core.api.Measurement;
+=======
+>>>>>>> 45496204e8dbab7f6179ee9d8d4c65094a62a411
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
+<<<<<<< HEAD
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+=======
+>>>>>>> 45496204e8dbab7f6179ee9d8d4c65094a62a411
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -56,6 +62,8 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private CareGiverBaseView issuedBy;
 	private MeasurementDefinition[] measurements;
 	
+	private MeasurementDefinition[] goalValues;
+	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
@@ -74,14 +82,17 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		
+		List<MeasurementDefinitionEntity> mdl = entity.getMeasurementDefinitions();
+		final MeasurementDefinition[] goalValues = new MeasurementDefinitionImpl[mdl.size()];
+		for (int i = 0; i < goalValues.length; i++) {
+			goalValues[i] = MeasurementDefinitionImpl.newFromEntity(mdl.get(i));
+		}
+		dto.goalValues = goalValues;
+		
 		dto.calcCompletion(entity.getScheduledActivities());
 		CareGiverBaseView issuedBy = CareGiverBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
 		dto.setIssuedBy(issuedBy);
-		List<MeasurementDefinitionEntity> mdl = entity.getMeasurementDefinitions();
-		dto.measurements = new MeasurementDefinition[mdl.size()];
-		for (int i = 0; i < dto.measurements.length; i++) {
-			dto.measurements[i] = MeasurementDefinitionImpl.newFromEntity(mdl.get(i));
-		}
+
 		return dto;
 	}
 
@@ -167,11 +178,6 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		setDayTimes(dayTimes);	
 	}
 	
-	@Override
-	public MeasurementDefinition[] getMeasurementDefinitions() {
-		return measurements;
-	}
-
 	//
 	private void calcCompletion(List<ScheduledActivityEntity> list) {
 		int numDone = 0;
@@ -234,5 +240,12 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		return numTarget;
 	}
 
-
+	@Override
+	public MeasurementDefinition[] getGoalValues() {
+		return this.goalValues;
+	}
+	
+	public void setGoalValues(final MeasurementDefinitionImpl[] goalValues) {
+		this.goalValues = goalValues;
+	}
 }

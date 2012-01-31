@@ -170,11 +170,27 @@
 					NC.log("Callback executing...");
 				});
 				
+				
+				var addMeasureValueInput = function(id, rowCol, label, value) {
+					var clearfix = $('<div>').addClass('clearfix');
+					clearfix.append(
+						$('<label>').attr('for', id).html(label)
+					);
+					
+					var inputDiv = $('<div>').addClass('input');
+					var input = $('<input>').attr('type', 'number').attr('step', '0.1').attr('name', id).attr('id', id).addClass('small');
+					
+					inputDiv.append(input);
+					inputDiv.append($('<span>').html(' ' + value.unit.value));
+					
+					clearfix.append(inputDiv);
+					
+					rowCol.append(
+						$('<div>').addClass('span3').append(clearfix)
+					);
+				};
+				
 				var types = NC.ActivityTypes();
-				var showUnit = function(name) {
-					NC.log("Selected " + name);
-					$('span.unit').html('<strong>(' + name + ')</strong>');
-				}
 				
 				/*
 				 * Auto complete activity type field
@@ -184,14 +200,78 @@
 						types.search(request.term, function(data) {
 							NC.log("Found " + data.data.length + " activity types");
 							response($.map(data.data, function(item) {
-								return { label : item.name + ' (' + item.category.name + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
+								return { label : item.name + ' (' + item.category.name + ')', value : item.name, data : item}
 							}));
 						});
 					},
 					select : function(event, ui) {
-						showUnit(ui.item.unit);
-						$('input[name="activityTypeId"]').attr('value', ui.item.id);
-						$('input[name="activityGoal"]').focus();
+						
+						$('#measureValues').remove();
+						
+						var minValue = '';
+						var maxValue = '';
+						var value = '';
+						var title = '';
+						new NC.Support().loadCaptions('measureValue', ['minValue', 'maxValue', 'value', 'title'], function(data) {
+							minValue = data.minValue;
+							maxValue = data.maxValue;
+							value = data.value;
+						});
+						
+						/*
+						 * Loop through all measure values
+						 */
+						var data = ui.item.data;
+						NC.log("Selected data is: " + data);
+						
+						var fieldset = $('<fieldset>').attr('id', 'measureValues');
+						fieldset.append(
+							$('<legend>').html(title)
+						);
+						
+						$.each(data.measureValues, function(i, v) {
+							NC.log("Processing " + v.name);
+							
+							var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
+							var row = $('<div>').addClass('row').append(
+								$('<div>').addClass('span10').append(
+									rowCol
+								)
+							);
+							
+							rowCol.append(
+								$('<div>').addClass('span1').append(
+									$('<div>').addClass('clearfix').append(
+										$('<label>').html('&nbsp')
+									).append(
+										$('<span>').css('vertical-align', 'middle').append($('<strong>').html(v.name)) 
+									)
+								)
+							);
+							
+							if (v.valueType.code == "INTERVAL") {
+								
+								addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
+								addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
+								
+							} else if (v.valueType.code == "SINGLE_VALUE") {
+								
+								addMeasureValueInput(v.id + '-1', rowCol, value, v);
+								
+							} else {
+								throw new Error("Unsupported value type");
+							}
+							
+							fieldset.append(row);
+							
+						});
+						
+						$('#activityFieldset').append(fieldset);
+						
+						/*
+						 * Move focus to the first measure value
+						 */
+						$('#measureValues input').get(0).focus();
 					}
 				});
 				
@@ -323,8 +403,6 @@
 					var jsonObj = JSON.stringify(formData);
 					NC.log('...... CREATE : ' + jsonObj);
 					new NC.ActivityTypes().create(jsonObj, function(data) {
-						
-						showUnit(data.data.unit.value);
 						$('input[name="activityType"]').attr('value', data.data.name);
 						$('input[name="activityTypeId"]').attr('value', data.data.id);
 						$('input[name="activityGoal"]').focus();
@@ -352,7 +430,7 @@
 			
 			<netcare:form id="activityForm" classes="form-stacked">
 			
-				<fieldset>
+				<fieldset id="activityFieldset">
 					<legend><spring:message code="activity" /> <spring:message code="and" /> <spring:message code="goal" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
@@ -360,19 +438,13 @@
 							<netcare:field name="activityType" label="${what}">
 								<input type="text" name="activityType" class="medium nc-autocomplete" />
 								<input type="hidden" name="activityTypeId" />	
-								<p><a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a></p>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="5">
-							<spring:message code="goal" var="goal" scope="page"/>
-							<netcare:field containerId="activityGoal" name="activityGoal" label="${goal}">
-								<input name="activityGoal" type="number" min="0" max="52" class="medium" required/> <span class="unit"></span>
+								<p><a href="<c:url value="/netcare/admin/activitytypes" />">Lägg till ny aktivitetstyp</a></p>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
 				</fieldset>
 				
-				<fieldset>
+				<fieldset id="scheduleFieldset">
 					<legend><spring:message code="schedule" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
@@ -403,9 +475,9 @@
 								<input type="checkbox" name="day" value="monday"/>
 							</netcare:field>
 						</netcare:col>
-						<netcare:col span="5">
+						<netcare:col span="3">
 							<netcare:field name="mondayTimeField" label="${addTime}">
-								<input type="text" name="mondayTimeField" class="medium" />
+								<input type="text" name="mondayTimeField" class="small" />
 								<netcare:image name="add" icon="true" cursor="pointer"/>
 							</netcare:field>
 						</netcare:col>
@@ -415,7 +487,7 @@
 					</netcare:row>
 					
 					<div id="tuesdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="tuesday" var="tuesday" scope="page" />
@@ -423,9 +495,9 @@
 										<input type="checkbox" name="day" value="tuesday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="tuesdayTimeField" label="${addTime}">
-										<input type="text" name="tuesdayTimeField" class="medium" />
+										<input type="text" name="tuesdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -438,7 +510,7 @@
 					
 					
 					<div id="wednesdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="wednesday" var="wednesday" scope="page" />
@@ -446,9 +518,9 @@
 										<input type="checkbox" name="day" value="wednesday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="wednesdayTimeField" label="${addTime}">
-										<input type="text" name="wednesdayTimeField" class="medium" />
+										<input type="text" name="wednesdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -461,7 +533,7 @@
 					
 					
 					<div id="thursdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="thursday" var="thursday" scope="page" />
@@ -469,9 +541,9 @@
 										<input type="checkbox" name="day" value="thursday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="thursdayTimeField" label="${addTime}">
-										<input type="text" name="thursdayTimeField" class="medium" />
+										<input type="text" name="thursdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -484,7 +556,7 @@
 					
 					
 					<div id="fridayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="friday" var="friday" scope="page" />
@@ -492,9 +564,9 @@
 										<input type="checkbox" name="day" value="friday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="fridayTimeField" label="${addTime}">
-										<input type="text" name="fridayTimeField" class="medium" />
+										<input type="text" name="fridayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -507,7 +579,7 @@
 					
 					
 					<div id="saturdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="saturday" var="saturday" scope="page" />
@@ -515,9 +587,9 @@
 										<input type="checkbox" name="day" value="saturday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="saturdayTimeField" label="${addTime}">
-										<input type="text" name="saturdayTimeField" class="medium" />
+										<input type="text" name="saturdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -530,7 +602,7 @@
 					
 					
 					<div id="sundayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="sunday" var="sunday" scope="page" />
@@ -538,9 +610,9 @@
 										<input type="checkbox" name="day" value="sunday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="sundayTimeField" label="${addTime}">
-										<input type="text" name="sundayTimeField" class="medium" />
+										<input type="text" name="sundayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -571,7 +643,9 @@
 					<thead>
 						<tr>
 							<th><spring:message code="type" /></th>
-							<th><spring:message code="goal" /></th>
+							<th><spring:message code="activityCategory" /></th>
+							<th><spring:message code="startDate" /></th>
+							<th><spring:message code="phome.frequency" /></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
