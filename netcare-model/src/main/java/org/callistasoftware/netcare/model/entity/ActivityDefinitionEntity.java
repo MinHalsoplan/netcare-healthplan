@@ -76,7 +76,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<ScheduledActivityEntity> scheduledActivities;
 	
-	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
 	private List<MeasurementDefinitionEntity> measurementDefinition;
 	
 

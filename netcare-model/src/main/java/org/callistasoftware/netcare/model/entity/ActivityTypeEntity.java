@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -124,14 +125,21 @@ public class ActivityTypeEntity {
 		this.senseLabelHigh = senseLabelHigh;
 	}
 
-	public List<MeasurementTypeEntity> getMeasurementTypes() {
-		return measurementTypes;
+	public boolean addMeasurementType(MeasurementTypeEntity measurementType) {
+		if (!measurementTypes.contains(measurementType)) {
+			return measurementTypes.add(measurementType);
+		}
+		return false;
 	}
 	
-	public void addMeasurementType(final MeasurementTypeEntity measurementType) {
-		this.measurementTypes.add(measurementType);
+	public boolean removeMeasurementType(MeasurementTypeEntity measurementType) {
+		return measurementTypes.remove(measurementType);
 	}
-
+	
+	public List<MeasurementTypeEntity> getMeasurementTypes() {
+		return Collections.unmodifiableList(measurementTypes);
+	}
+	
 	public CareUnitEntity getCareUnit() {
 		return careUnit;
 	}

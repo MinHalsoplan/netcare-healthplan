@@ -129,7 +129,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCategoryEntity.class, dto.getCategory().getId()));
 		}
 		
-		final ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category);
+		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category);
 		entity.setMeasuringSense(dto.isMeasuringSense());
 		entity.setSenseLabelLow(dto.getMinScaleText());
 		entity.setSenseLabelHigh(dto.getMaxScaleText());
@@ -146,6 +146,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 		
 		
 		final ActivityTypeEntity savedEntity = this.repo.save(entity);
+		
 		return ServiceResultImpl.createSuccessResult((ActivityType) ActivityTypeImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
 

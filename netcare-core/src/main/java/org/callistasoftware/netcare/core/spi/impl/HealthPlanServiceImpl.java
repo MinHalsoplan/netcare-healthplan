@@ -67,6 +67,7 @@ import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
@@ -542,63 +543,61 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Override
 	public String getICalendarEvents(PatientBaseView patient) {
-		throw new UnsupportedOperationException("Fix implementation to support multiple measures for a scheduled activity.");
-//		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-//		Date now = new Date();
-//		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
-//		final String calPattern =
-//			"BEGIN:VCALENDAR\r\n"
-//			+ "VERSION:2.0\r\n"
-//			+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
-//			+ "%s"
-//			+ "END:VCALENDAR\r\n";
-//		
-//		final String eventPattern = 
-//			"BEGIN:VEVENT\r\n"
-//			+ "UID:%s@%s.%d\r\n"
-//			+ "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
-//			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
-//			+ "DURATION:%s\r\n"
-//			+ "SUMMARY:%s\r\n"
-//			+ "TRANSP:TRANSPARENT\r\n"
-//			+ "CLASS:CONFIDENTIAL\r\n"
-//			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-//			+ "%s"
-//			+ "END:VEVENT\r\n";
-//		
-//		StringBuffer events = new StringBuffer();
-//		for (ActivityDefinitionEntity ad : defs) {
-//			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
-//			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
-//			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + unit;
-//			Frequency fr = ad.getFrequency();
-//			String duration = toICalDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
-//			for (FrequencyDay day : fr.getDays()) {
-//				StringBuffer rrule = new StringBuffer();
-//				String wday = toICalDay(day);
-//
-//				if (fr.getWeekFrequency() > 0) {
-//					rrule.append("RRULE:FREQ=WEEKLY");
-//					rrule.append(";INTERVAL=").append(ad.getFrequency().getWeekFrequency());
-//					rrule.append(";WKST=MO");
-//					rrule.append(";BYDAY=").append(wday);
-//					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
-//					rrule.append("\r\n");
-//				}
-//				
-//				int timeIndex = 0;
-//				for (FrequencyTime time : day.getTimes()) {
-//					Calendar cal = Calendar.getInstance();
-//					cal.setTime(ad.getStartDate());
-//					cal.set(Calendar.HOUR, time.getHour());
-//					cal.set(Calendar.MINUTE, time.getMinute());
-//					String start = EntityUtil.formatCalTime(cal.getTime());
-//					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration, summary, rrule.toString()));
-//				}
-//			}
-//		}
-//		String r = String.format(calPattern, events.toString());
-//		return r;
+		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+		Date now = new Date();
+		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
+		final String calPattern =
+			"BEGIN:VCALENDAR\r\n"
+			+ "VERSION:2.0\r\n"
+			+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
+			+ "%s"
+			+ "END:VCALENDAR\r\n";
+		
+		final String eventPattern = 
+			"BEGIN:VEVENT\r\n"
+			+ "UID:%s@%s.%d\r\n"
+			+ "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
+			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
+			+ "DURATION:%s\r\n"
+			+ "SUMMARY:%s\r\n"
+			+ "TRANSP:TRANSPARENT\r\n"
+			+ "CLASS:CONFIDENTIAL\r\n"
+			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+			+ "%s"
+			+ "END:VEVENT\r\n";
+		
+		StringBuffer events = new StringBuffer();
+		for (ActivityDefinitionEntity ad : defs) {
+			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
+			String summary = ad.getActivityType().getName();
+			Frequency fr = ad.getFrequency();
+			String duration = toICalDuration(ad);
+			for (FrequencyDay day : fr.getDays()) {
+				StringBuffer rrule = new StringBuffer();
+				String wday = toICalDay(day);
+				if (fr.getWeekFrequency() > 0) {
+					rrule.append("RRULE:FREQ=WEEKLY");
+					rrule.append(";INTERVAL=").append(ad.getFrequency().getWeekFrequency());
+					rrule.append(";WKST=MO");
+					rrule.append(";BYDAY=").append(wday);
+					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
+					rrule.append("\r\n");
+				}
+				
+				int timeIndex = 0;
+				for (FrequencyTime time : day.getTimes()) {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(ad.getStartDate());
+					cal.set(Calendar.HOUR, time.getHour());
+					cal.set(Calendar.MINUTE, time.getMinute());
+					String start = EntityUtil.formatCalTime(cal.getTime());
+					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration, summary, rrule.toString()));
+				}
+			}
+		}
+		String r = String.format(calPattern, events.toString());
+		return r;
+
 	}
 	
 	

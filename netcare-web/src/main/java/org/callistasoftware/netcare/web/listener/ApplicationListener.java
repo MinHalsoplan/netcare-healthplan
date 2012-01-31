@@ -38,6 +38,7 @@ import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
@@ -70,11 +71,14 @@ public class ApplicationListener extends ContextLoaderListener {
 		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
 
 		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat);
-		ate.addMeasurementType(MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER));
+		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ate, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
+		me.setAlarmEnabled(true);
 		ate.setMeasuringSense(true);
 		ate.setSenseLabelLow("Lätt");
 		ate.setSenseLabelHigh("Tufft");
 		atRepo.save(ate);
+		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat));
 		atRepo.flush();
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
@@ -113,18 +117,25 @@ public class ApplicationListener extends ContextLoaderListener {
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg);
 		// FIXME: multi-values
-		//ad.setActivityTarget(1200);
+		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
+			if (md.getMeasurementType().getName().equals("Vikt")) {
+				md.setMinTarget(80);
+				md.setMaxTarget(120);
+			} 
+			if (md.getMeasurementType().getName().equals("Distans")) {
+				md.setTarget(1200);
+			}
+		}
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
 		
 		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat);
-		at2.addMeasurementType(MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE));
-		
+		MeasurementTypeEntity.newEntity(at2, "Längd", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE);
 		atRepo.save(at2);
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
 		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);
-		// FIXME: multi-values
-		//ad2.setActivityTarget(60);
+		ad2.getMeasurementDefinitions().get(0).setTarget(60);
+		
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
 		

@@ -46,15 +46,16 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat);
-		ent.addMeasurementType(MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER));
-		
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
+		me.setAlarmEnabled(true);
 		final ActivityTypeEntity savedEnt = this.repo.save(ent);
 		
 		assertNotNull(savedEnt);
 		assertNotNull(savedEnt.getId());
 		assertEquals(ent.getName(), savedEnt.getName());
-		
+		assertEquals(ent.getMeasurementTypes().size(), savedEnt.getMeasurementTypes().size());		
 		assertNotNull(savedEnt.getMeasurementTypes());
-		assertEquals("Vikt", ent.getMeasurementTypes().get(0).getName());
+		assertEquals("Vikt", ent.getMeasurementTypes().get(1).getName());
 	}
 }

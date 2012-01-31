@@ -67,6 +67,7 @@ s	 * @param unit the unit.
 		entity.setName(name);
 		entity.setValueType(valueType);
 		entity.setUnit(unit);
+		activityType.addMeasurementType(entity);
 		return entity;
 	}
 	
