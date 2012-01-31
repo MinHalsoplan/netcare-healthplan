@@ -54,8 +54,8 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		assertNotNull(savedEnt);
 		assertNotNull(savedEnt.getId());
 		assertEquals(ent.getName(), savedEnt.getName());
-		assertEquals(ent.getMeasurementTypes(), savedEnt.getMeasurementTypes());		
+		assertEquals(ent.getMeasurementTypes().size(), savedEnt.getMeasurementTypes().size());		
 		assertNotNull(savedEnt.getMeasurementTypes());
-		assertEquals("Vikt", ent.getMeasurementTypes().get(0).getName());
+		assertEquals("Vikt", ent.getMeasurementTypes().get(1).getName());
 	}
 }

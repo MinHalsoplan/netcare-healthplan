@@ -140,10 +140,6 @@ public class ActivityTypeEntity {
 		return Collections.unmodifiableList(measurementTypes);
 	}
 	
-	public void addMeasurementType(final MeasurementTypeEntity measurementType) {
-		this.measurementTypes.add(measurementType);
-	}
-
 	public CareUnitEntity getCareUnit() {
 		return careUnit;
 	}

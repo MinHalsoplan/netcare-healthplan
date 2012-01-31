@@ -71,7 +71,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="activity", orphanRemoval=true, cascade=CascadeType.ALL)
 	private List<ActivityCommentEntity> comments;
 	
-	@OneToMany(mappedBy="scheduledActivity", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	@OneToMany(mappedBy="scheduledActivity", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
 	private List<MeasurementEntity> measurements;
 
 	
