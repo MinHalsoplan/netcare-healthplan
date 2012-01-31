@@ -576,7 +576,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		StringBuffer events = new StringBuffer();
 		for (ActivityDefinitionEntity ad : defs) {
 			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
-			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
 			String summary = ad.getActivityType().getName();
 			Frequency fr = ad.getFrequency();
 			String duration = toICalDuration(ad);

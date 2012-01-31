@@ -58,6 +58,9 @@ import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.junit.Test;
@@ -116,15 +119,25 @@ public class HealthPlanServiceTest extends TestSupport {
 		ordinationRepo.save(hp);
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
-		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat);
+		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
+		me.setAlarmEnabled(true);
 		at.setMeasuringSense(true);
 		at.setSenseLabelHigh("Mycket Trötthet");
 		at.setSenseLabelLow("Väldigt Lätt");
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
-		// FIXME: multi-values
-		//ad.setActivityTarget(1200);
+		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
+			if (md.getMeasurementType().getName().equals("Vikt")) {
+				md.setMinTarget(80);
+				md.setMaxTarget(120);
+			} 
+			if (md.getMeasurementType().getName().equals("Distans")) {
+				md.setTarget(1200);
+			}
+		}
 		defRepo.save(ad);
 		
 		schedRepo.save(ad.scheduleActivities());
@@ -171,7 +184,11 @@ public class HealthPlanServiceTest extends TestSupport {
 	public void testAddActivityDefintion() throws Exception {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat);
+		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
+		me.setAlarmEnabled(true);
+
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
@@ -190,7 +207,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
 		typeImpl.setId(savedType.getId());
 		typeImpl.setName("Löpning");
-		//typeImpl.setUnit(new Option(MeasureUnit.METER.name(), LocaleContextHolder.getLocale()));
 		
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
 		
@@ -239,7 +255,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
 		
-		assertEquals(MeasureUnit.METER, ent.getActivityType().getUnit());
+		// FIXME: multi-values
+		assertEquals(MeasureUnit.METER, ent.getMeasurementDefinitions().get(0).getMeasurementType().getUnit());
 		assertEquals("Löpning", ent.getActivityType().getName());
 		// FIXME: multi-values
 		// assertEquals(12, ent.getActivityTarget());
@@ -450,7 +467,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 	
 	private ActivityTypeEntity createActivityType() {
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), MeasureUnit.MINUTE);
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory());
+		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE);
 		return this.typeRepo.save(at);
 	}
 	

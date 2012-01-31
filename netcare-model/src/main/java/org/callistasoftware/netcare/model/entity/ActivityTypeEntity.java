@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,9 +41,6 @@ public class ActivityTypeEntity {
 	
 	@Column(length=64, nullable=false)
 	private String name;
-	
-	@Column(nullable=false)
-	private MeasureUnit unit;
 	
 	@Column(name="measuring_sense", length=1)
 	private String measuringSense;
@@ -69,15 +67,14 @@ public class ActivityTypeEntity {
 		measurementTypes = new LinkedList<MeasurementTypeEntity>();
 	}
 	
-	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final MeasureUnit unit) {
+	ActivityTypeEntity(final String name, final ActivityCategoryEntity category) {
 		this();
 		this.setName(name);
 		this.setCategory(category);
-		this.setUnit(unit);
 	}
 	
-	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category, MeasureUnit unit) {
-		return new ActivityTypeEntity(name, category, unit);
+	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category) {
+		return new ActivityTypeEntity(name, category);
 	}
 
 	public Long getId() {
@@ -90,14 +87,6 @@ public class ActivityTypeEntity {
 
 	public String getName() {
 		return name;
-	}
-
-	void setUnit(MeasureUnit unit) {
-		this.unit = EntityUtil.notNull(unit);
-	}
-
-	public MeasureUnit getUnit() {
-		return unit;
 	}
 
 	public ActivityCategoryEntity getCategory() {
@@ -136,8 +125,19 @@ public class ActivityTypeEntity {
 		this.senseLabelHigh = senseLabelHigh;
 	}
 
+	public boolean addMeasurementType(MeasurementTypeEntity measurementType) {
+		if (!measurementTypes.contains(measurementType)) {
+			return measurementTypes.add(measurementType);
+		}
+		return false;
+	}
+	
+	public boolean removeMeasurementType(MeasurementTypeEntity measurementType) {
+		return measurementTypes.remove(measurementType);
+	}
+	
 	public List<MeasurementTypeEntity> getMeasurementTypes() {
-		return measurementTypes;
+		return Collections.unmodifiableList(measurementTypes);
 	}
 
 	public CareUnitEntity getCareUnit() {

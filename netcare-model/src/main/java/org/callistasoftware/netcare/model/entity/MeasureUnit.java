@@ -30,5 +30,11 @@ package org.callistasoftware.netcare.model.entity;
 public enum MeasureUnit {
 	MINUTE,
 	METER,
-	STEP
+	STEP,
+	KILOGRAM,
+	GRAM,
+	PRESSURE_MMHG,
+	FLOW_MLMIN,
+	LITER,
+	MILLILITER,
 }
