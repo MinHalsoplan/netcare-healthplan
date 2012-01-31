@@ -32,25 +32,24 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 public class ActivityTypeRepositoryTest extends TestSupport {
-
+	
+	@Autowired
+	private CareUnitRepository cuRepo;
+	
 	@Autowired
 	private ActivityCategoryRepository catRepo;
 	
 	@Autowired
 	private ActivityTypeRepository repo;
 	
-	@Autowired
-	private CareUnitRepository cuRepo;
-	
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 		
+		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
+		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
-		this.cuRepo.save(cu);
-
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, cu);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);

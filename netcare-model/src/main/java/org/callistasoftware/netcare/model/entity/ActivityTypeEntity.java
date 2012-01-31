@@ -145,7 +145,7 @@ public class ActivityTypeEntity {
 		return careUnit;
 	}
 
-	public void setCareUnit(CareUnitEntity careUnit) {
+	void setCareUnit(CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
 	}
 }

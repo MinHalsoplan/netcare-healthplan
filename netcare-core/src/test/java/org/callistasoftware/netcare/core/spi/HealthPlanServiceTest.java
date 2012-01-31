@@ -191,8 +191,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
 		final ActivityTypeEntity savedType = typeRepo.save(type);
-
-		
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		

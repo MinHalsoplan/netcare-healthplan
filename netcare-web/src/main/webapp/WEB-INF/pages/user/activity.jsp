@@ -350,48 +350,6 @@
 				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			
-			<div id="addNewType" class="modal hide fade" style="display: none;">
-				<form id="addNewActivityTypeForm" class="form-stacked">
-					<div class="modal-header">
-						<a href="#" class="close">x</a>
-						<h3><spring:message code="addActivityType" /></h3>
-					</div>
-					<div class="modal-body">
-						<spring:message code="activityCategory" var="cat" scope="page" />
-						<netcare:field name="category" label="${cat}">
-							<select name="category" class="xlarge"></select>
-						</netcare:field>
-						
-						<spring:message code="name" var="name" scope="page" />
-						<netcare:field name="name" label="${name}">
-							<input type="text" name="name" class="xlarge"/>
-						</netcare:field>
-						
-						<spring:message code="unit" var="unit" scope="page" />
-						<netcare:field name="unit" label="${unit}">
-							<select name="unit" class="xlarge"></select>
-						</netcare:field>
-
-						<spring:message code="activateSense" var="activateSense" scope="page" />
-						<netcare:field name="activateSense" label="${activateSense}">
-							<input id="senseCB" type="checkbox" name="activateSense" checked="checked" />
-						</netcare:field>
-
-						<div id="senseTextId">
-							<spring:message code="senseText" var="senseText"
-								scope="page" />
-							<netcare:field name="senseText" label="${senseText}">
-								<input type="text" name="scaleText" class="xlarge"/>
-							</netcare:field>
-						</div>
-
-					</div>
-					<div class="modal-footer">
-						<input type="submit" value="<spring:message code="create" />" class="btn primary"/>
-					</div>
-				</form>
-			</div>
-			
 			<netcare:form id="activityForm" classes="form-stacked">
 			
 				<fieldset>

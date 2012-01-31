@@ -55,7 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ActivityTypeServiceImpl implements ActivityTypeService {
+public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityTypeService {
 
 	private static final Logger log = LoggerFactory.getLogger(ActivityTypeServiceImpl.class);
 	
@@ -71,7 +71,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 	@Override
 	public ServiceResult<ActivityType[]> loadAllActivityTypes() {
 		log.info("Loading all activity types from repository...");
-		final List<ActivityTypeEntity> all = this.repo.findAll();
+		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(getCareGiver().getCareUnit().getHsaId());
 		
 		log.debug("Found {} activity types in repository. Converting to dtos", all.size());
 		final ActivityType[] types = new ActivityType[all.size()];
