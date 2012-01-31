@@ -171,10 +171,6 @@
 				});
 				
 				var types = NC.ActivityTypes();
-				var showUnit = function(name) {
-					NC.log("Selected " + name);
-					$('span.unit').html('<strong>(' + name + ')</strong>');
-				}
 				
 				/*
 				 * Auto complete activity type field
@@ -184,12 +180,11 @@
 						types.search(request.term, function(data) {
 							NC.log("Found " + data.data.length + " activity types");
 							response($.map(data.data, function(item) {
-								return { label : item.name + ' (' + item.category.name + ', ' + item.unit.value + ')', value : item.name, unit : item.unit.value, id : item.id}
+								return { label : item.name + ' (' + item.category.name + ')', value : item.name, id : item.id}
 							}));
 						});
 					},
 					select : function(event, ui) {
-						showUnit(ui.item.unit);
 						$('input[name="activityTypeId"]').attr('value', ui.item.id);
 						$('input[name="activityGoal"]').focus();
 					}
@@ -323,8 +318,6 @@
 					var jsonObj = JSON.stringify(formData);
 					NC.log('...... CREATE : ' + jsonObj);
 					new NC.ActivityTypes().create(jsonObj, function(data) {
-						
-						showUnit(data.data.unit.value);
 						$('input[name="activityType"]').attr('value', data.data.name);
 						$('input[name="activityTypeId"]').attr('value', data.data.id);
 						$('input[name="activityGoal"]').focus();
@@ -360,7 +353,7 @@
 							<netcare:field name="activityType" label="${what}">
 								<input type="text" name="activityType" class="medium nc-autocomplete" />
 								<input type="hidden" name="activityTypeId" />	
-								<p><a data-backdrop="true" data-controls-modal="addNewType">Lägg till ny aktivitetstyp</a></p>
+								<p><a href="<c:url value="/netcare/admin/activitytypes" />">Lägg till ny aktivitetstyp</a></p>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="5">
