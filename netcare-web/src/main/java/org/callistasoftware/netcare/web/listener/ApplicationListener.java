@@ -78,7 +78,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		ate.setSenseLabelLow("Lätt");
 		ate.setSenseLabelHigh("Tufft");
 		atRepo.save(ate);
-		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat));
 		atRepo.flush();
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");

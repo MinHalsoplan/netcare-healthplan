@@ -293,50 +293,55 @@
 					
 					new NC.ActivityTypes().create(jsonObj, function(data) {
 						NC.log("Creation successful!");
+						loadExistingTypes();
 					});
 				});
 				
-				new NC.ActivityTypes().load(function(data) {
-					if (data.data.length > 0) {
-						$.each(data.data, function(i, v) {
-							
-							var row = $('<tr>');
-							
-							row.append(
-								$('<td>').html(v.name)
-							);
-							
-							row.append(
-								$('<td>').html(v.category.name)
-							);
-							
-							if (v.measuringSense) {
-								row.append($('<td>').html('Ja'));	
-							} else {
-								row.append($('<td>').html('Nej'));
-							}
-							
-							var td = $('<td>');
-							$.each(v.measureValues, function(index, value) {
-								td.append(
-									$('<span>').css('display', 'block').html(value.name + ' | ' + value.valueType.value + ' | ' + value.unit.value)
+				var loadExistingTypes = function() {
+					new NC.ActivityTypes().load(function(data) {
+						if (data.data.length > 0) {
+							$.each(data.data, function(i, v) {
+								
+								var row = $('<tr>');
+								
+								row.append(
+									$('<td>').html(v.name)
 								);
+								
+								row.append(
+									$('<td>').html(v.category.name)
+								);
+								
+								if (v.measuringSense) {
+									row.append($('<td>').html('Ja'));	
+								} else {
+									row.append($('<td>').html('Nej'));
+								}
+								
+								var td = $('<td>');
+								$.each(v.measureValues, function(index, value) {
+									td.append(
+										$('<span>').css('display', 'block').html(value.name + ' | ' + value.valueType.value + ' | ' + value.unit.value)
+									);
+								});
+								
+								row.append(td);
+								
+								$('#existingTypesContainer table tbody').append(row);
+								
 							});
 							
-							row.append(td);
+							$('#existingTypesContainer div').hide();
+							$('#existingTypesContainer table').show();
 							
-							$('#existingTypes table tbody').append(row);
-							
-						});
-						
-						$('#existingTypesContainer div').hide();
-						$('#existingTypesContainer table').show();
-						
-					} else {
-						$('#existingTypesContainer div').show();
-						$('#existingTypesContainer table').hide();
-					}
-				});
+						} else {
+							$('#existingTypesContainer div').show();
+							$('#existingTypesContainer table').hide();
+						}
+					});
+				};
+				
+				loadExistingTypes();
 				
 			});
 		</script>
