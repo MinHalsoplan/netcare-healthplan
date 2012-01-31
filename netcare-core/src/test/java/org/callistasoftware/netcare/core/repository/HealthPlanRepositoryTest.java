@@ -62,6 +62,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
+	//
 	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity healthPlan, UserEntity user) {
 		Frequency freq = new Frequency();
 		freq.setWeekFrequency(1);
@@ -71,7 +72,6 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
-		
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu);
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
@@ -86,7 +86,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu-123");
 		this.cuRepo.save(cu);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);

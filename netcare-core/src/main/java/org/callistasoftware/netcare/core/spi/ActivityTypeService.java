@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
 /**
@@ -32,9 +33,10 @@ public interface ActivityTypeService {
 	/**
 	 * Create a new activity type
 	 * @param dto
+	 * @param careGiver the user creating this type.
 	 * @return
 	 */
-	ServiceResult<ActivityType> createActivityType(final ActivityType dto);
+	ServiceResult<ActivityType> createActivityType(final ActivityType dto, final CareGiverBaseView careGiver);
 	
 	/**
 	 * Searches for activity types

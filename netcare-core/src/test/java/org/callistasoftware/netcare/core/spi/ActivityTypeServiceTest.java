@@ -57,14 +57,15 @@ public class ActivityTypeServiceTest extends TestSupport {
 	
 	@Autowired
 	private ActivityTypeService service;
-	
+
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testLoadAllActivityTypes() throws Exception {
-		
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
+		final CareUnitEntity savedCu = cuRepo.save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
 		
 		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "hsa-id-cg", cu));
 		final CareGiverBaseView cgb = CareGiverBaseViewImpl.newFromEntity(cg);
@@ -72,7 +73,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		this.runAs(cgb);
 		
 		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, cu));
+			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu));
 		}
 		
 		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();

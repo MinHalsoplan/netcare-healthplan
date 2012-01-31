@@ -191,7 +191,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
 		final ActivityTypeEntity savedType = typeRepo.save(type);
-		
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		
@@ -464,8 +463,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 	
 	private ActivityTypeEntity createActivityType() {
-		final CareUnitEntity cu = this.createCareUnit("hsa-id");
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), cu);
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), createCareUnit("123"));
 		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE);
 		return this.typeRepo.save(at);
 	}

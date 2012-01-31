@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
@@ -57,6 +58,6 @@ public class ActivityTypeApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityType> createNewActivityType(@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("create", "activity type");
-		return this.service.createActivityType(activityType);
+		return this.service.createActivityType(activityType, (CareGiverBaseView)getUser());
 	}
 }

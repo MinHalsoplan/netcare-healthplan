@@ -50,7 +50,6 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, cu);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
