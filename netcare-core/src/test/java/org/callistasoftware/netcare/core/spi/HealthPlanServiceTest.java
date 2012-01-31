@@ -208,7 +208,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
 		
 		impl.setType(typeImpl);
-		impl.setGoal(12);
 		impl.setActivityRepeat(2);
 		
 		// Monday and saturday
@@ -234,7 +233,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		final ActivityDefintionImpl impl2 = new ActivityDefintionImpl();
 		impl2.setType(typeImpl);
-		impl2.setGoal(10);
 		impl2.setActivityRepeat(0);
 		impl2.setStartDate("2013-01-30");
 		

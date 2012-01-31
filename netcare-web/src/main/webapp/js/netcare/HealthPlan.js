@@ -88,15 +88,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * List all activities that exist on a health plan
 		 */
 		listActivities : function(healthPlanId, tableId) {
-			var url = _baseUrl + '/' + healthPlanId + '/activity/list';
-			NC.log("Loading activities for health plan " + healthPlanId + " from url: " + url);
-			
 			_updateActivityTable(tableId);
-			
 			_ajax.get('/healthplan/' + healthPlanId + '/activity/list', function(data) {
 				NC.log("Emptying the activity table");
 				$('#' + tableId + ' tbody > tr').empty();
 				
+				var util = new NC.Util();
 				$.each(data.data, function(index, value) {
 					
 					NC.log("Processing id: " + value.id);
@@ -112,13 +109,17 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					deleteIcon.appendTo(actionCol);
 					
 					var tr = $('<tr>');
-					var type = $('<td>' + value.type.name + '</td>');
-					var goal = $('<td>' + value.goal + '</td>');
+					tr.append(
+						$('<td>').html(value.type.name)
+					).append(
+						$('<td>').html(value.type.category.name)
+					).append(
+						$('<td>').html(value.startDate)
+					).append(
+						$('<td>').html(util.formatFrequency(value))
+					);
 					
-					tr.append(type);
-					tr.append(goal);
 					tr.append(actionCol);
-					
 					$('#' + tableId + ' tbody').append(tr);
 				});
 				

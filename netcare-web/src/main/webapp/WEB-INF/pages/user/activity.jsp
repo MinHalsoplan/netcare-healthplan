@@ -208,6 +208,16 @@
 						
 						$('#measureValues').remove();
 						
+						var minValue = '';
+						var maxValue = '';
+						var value = '';
+						var title = '';
+						new NC.Support().loadCaptions('measureValue', ['minValue', 'maxValue', 'value', 'title'], function(data) {
+							minValue = data.minValue;
+							maxValue = data.maxValue;
+							value = data.value;
+						});
+						
 						/*
 						 * Loop through all measure values
 						 */
@@ -216,7 +226,7 @@
 						
 						var fieldset = $('<fieldset>').attr('id', 'measureValues');
 						fieldset.append(
-							$('<legend>').html('Mätvärden')
+							$('<legend>').html(title)
 						);
 						
 						$.each(data.measureValues, function(i, v) {
@@ -241,12 +251,12 @@
 							
 							if (v.valueType.code == "INTERVAL") {
 								
-								addMeasureValueInput(v.id + '-1', rowCol, 'Målvärde (min)', v);
-								addMeasureValueInput(v.id + '-2', rowCol, 'Målvärde (max)', v);
+								addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
+								addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
 								
 							} else if (v.valueType.code == "SINGLE_VALUE") {
 								
-								addMeasureValueInput(v.id + '-1', rowCol, 'Målvärde (min)', v);
+								addMeasureValueInput(v.id + '-1', rowCol, value, v);
 								
 							} else {
 								throw new Error("Unsupported value type");
@@ -633,7 +643,9 @@
 					<thead>
 						<tr>
 							<th><spring:message code="type" /></th>
-							<th><spring:message code="goal" /></th>
+							<th><spring:message code="activityCategory" /></th>
+							<th><spring:message code="startDate" /></th>
+							<th><spring:message code="phome.frequency" /></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
