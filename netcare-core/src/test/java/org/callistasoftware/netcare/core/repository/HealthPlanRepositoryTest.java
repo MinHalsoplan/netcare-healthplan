@@ -62,6 +62,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
+	//
 	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity healthPlan, UserEntity user) {
 		Frequency freq = new Frequency();
 		freq.setWeekFrequency(1);
@@ -86,7 +87,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu-123");
 		this.cuRepo.save(cu);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
 		cgRepo.save(cg);
