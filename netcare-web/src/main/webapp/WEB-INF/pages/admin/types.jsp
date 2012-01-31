@@ -298,8 +298,6 @@
 				
 				new NC.ActivityTypes().load(function(data) {
 					if (data.data.length > 0) {
-						$('#existingTypes table').show();
-						
 						$.each(data.data, function(i, v) {
 							
 							var row = $('<tr>');
@@ -308,12 +306,35 @@
 								$('<td>').html(v.name)
 							);
 							
+							row.append(
+								$('<td>').html(v.category.name)
+							);
+							
+							if (v.measuringSense) {
+								row.append($('<td>').html('Ja'));	
+							} else {
+								row.append($('<td>').html('Nej'));
+							}
+							
+							var td = $('<td>');
+							$.each(v.measureValues, function(index, value) {
+								td.append(
+									$('<span>').css('display', 'block').html(value.name + ' | ' + value.valueType.value + ' | ' + value.unit.value)
+								);
+							});
+							
+							row.append(td);
+							
 							$('#existingTypes table tbody').append(row);
 							
 						});
 						
+						$('#existingTypesContainer div').hide();
+						$('#existingTypesContainer table').show();
+						
 					} else {
-						$('#existingTypes table').hide();
+						$('#existingTypesContainer div').show();
+						$('#existingTypesContainer table').hide();
 					}
 				});
 				
@@ -417,18 +438,28 @@
 			
 			<section id="existingTypes">
 				<h2><spring:message code="activityType.title" /></h2>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="activityType.description" />
+				</p>
 				
-				<table class="bordered-table zebra-striped shadow-box">
-					<thead>
-						<tr>
-							<th>Namn</th>
-							<th>Skattningsskala</th>
-							<th>Mätvärden</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
+				<div id="existingTypesContainer">
+					<div class="alert-message info" style="display:none;">
+						<p><spring:message code="activityType.noTypes" />
+					</div>
 				
+					<table class="bordered-table zebra-striped shadow-box">
+						<thead>
+							<tr>
+								<th><spring:message code="activityType.name" /></th>
+								<th><spring:message code="activityType.category" /></th>
+								<th><spring:message code="activityType.scale" /></th>
+								<th><spring:message code="activityType.measureValues" /></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
 			</section>	
 			
 		</netcare:content>
