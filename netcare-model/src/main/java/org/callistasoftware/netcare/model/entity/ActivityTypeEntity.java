@@ -59,7 +59,7 @@ public class ActivityTypeEntity {
 	private List<MeasurementTypeEntity> measurementTypes;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="care_unit_id")
+	@JoinColumn(name="care_unit_id", nullable=false)
 	private CareUnitEntity careUnit;
 
 	
@@ -67,14 +67,15 @@ public class ActivityTypeEntity {
 		measurementTypes = new LinkedList<MeasurementTypeEntity>();
 	}
 	
-	ActivityTypeEntity(final String name, final ActivityCategoryEntity category) {
+	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final CareUnitEntity careUnit) {
 		this();
 		this.setName(name);
 		this.setCategory(category);
+		this.setCareUnit(careUnit);
 	}
 	
-	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category) {
-		return new ActivityTypeEntity(name, category);
+	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category, final CareUnitEntity careUnit) {
+		return new ActivityTypeEntity(name, category, careUnit);
 	}
 
 	public Long getId() {
@@ -144,7 +145,7 @@ public class ActivityTypeEntity {
 		return careUnit;
 	}
 
-	public void setCareUnit(CareUnitEntity careUnit) {
+	void setCareUnit(CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
 	}
 }

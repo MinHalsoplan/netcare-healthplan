@@ -22,14 +22,20 @@ import static org.junit.Assert.assertTrue;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
+import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -44,6 +50,12 @@ public class ActivityTypeServiceTest extends TestSupport {
 	private ActivityTypeRepository repo;
 	
 	@Autowired
+	private CareUnitRepository cuRepo;
+	
+	@Autowired
+	private CareGiverRepository cgRepo;
+	
+	@Autowired
 	private ActivityTypeService service;
 	
 	@Test
@@ -52,9 +64,15 @@ public class ActivityTypeServiceTest extends TestSupport {
 	public void testLoadAllActivityTypes() throws Exception {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
+		
+		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "hsa-id-cg", cu));
+		final CareGiverBaseView cgb = CareGiverBaseViewImpl.newFromEntity(cg);
+		
+		this.runAs(cgb);
 		
 		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat));
+			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, cu));
 		}
 		
 		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();

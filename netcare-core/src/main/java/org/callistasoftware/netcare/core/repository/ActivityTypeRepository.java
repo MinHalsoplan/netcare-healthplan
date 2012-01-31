@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long> {
 	
@@ -30,4 +32,11 @@ public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity
 	 */
 	List<ActivityTypeEntity> findByNameLike(final String name);
 	
+	/**
+	 * Find activity types created on the given care unit
+	 * @param hsaId
+	 * @return
+	 */
+	@Query("select e from ActivityTypeEntity as e where e.careUnit.hsaId = :hsaId")
+	List<ActivityTypeEntity> findByCareUnit(@Param("hsaId") final String hsaId);
 }

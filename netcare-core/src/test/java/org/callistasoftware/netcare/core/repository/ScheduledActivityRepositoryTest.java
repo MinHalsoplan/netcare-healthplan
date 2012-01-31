@@ -84,7 +84,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat);
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu);
 		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
