@@ -475,9 +475,9 @@
 								<input type="checkbox" name="day" value="monday"/>
 							</netcare:field>
 						</netcare:col>
-						<netcare:col span="5">
+						<netcare:col span="3">
 							<netcare:field name="mondayTimeField" label="${addTime}">
-								<input type="text" name="mondayTimeField" class="medium" />
+								<input type="text" name="mondayTimeField" class="small" />
 								<netcare:image name="add" icon="true" cursor="pointer"/>
 							</netcare:field>
 						</netcare:col>
@@ -495,9 +495,9 @@
 										<input type="checkbox" name="day" value="tuesday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="tuesdayTimeField" label="${addTime}">
-										<input type="text" name="tuesdayTimeField" class="medium" />
+										<input type="text" name="tuesdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -518,9 +518,9 @@
 										<input type="checkbox" name="day" value="wednesday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="wednesdayTimeField" label="${addTime}">
-										<input type="text" name="wednesdayTimeField" class="medium" />
+										<input type="text" name="wednesdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -541,9 +541,9 @@
 										<input type="checkbox" name="day" value="thursday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="thursdayTimeField" label="${addTime}">
-										<input type="text" name="thursdayTimeField" class="medium" />
+										<input type="text" name="thursdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -564,9 +564,9 @@
 										<input type="checkbox" name="day" value="friday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="fridayTimeField" label="${addTime}">
-										<input type="text" name="fridayTimeField" class="medium" />
+										<input type="text" name="fridayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -587,9 +587,9 @@
 										<input type="checkbox" name="day" value="saturday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="saturdayTimeField" label="${addTime}">
-										<input type="text" name="saturdayTimeField" class="medium" />
+										<input type="text" name="saturdayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -610,9 +610,9 @@
 										<input type="checkbox" name="day" value="sunday"/>
 									</netcare:field>
 								</div>
-								<div class="span5">
+								<div class="span3">
 									<netcare:field name="sundayTimeField" label="${addTime}">
-										<input type="text" name="sundayTimeField" class="medium" />
+										<input type="text" name="sundayTimeField" class="small" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
