@@ -113,7 +113,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					
 					var tr = $('<tr>');
 					var type = $('<td>' + value.type.name + '</td>');
-					var goal = $('<td>' + value.goal + ' ' + value.type.unit.value + '</td>');
+					var goal = $('<td>' + value.goal + '</td>');
 					
 					tr.append(type);
 					tr.append(goal);

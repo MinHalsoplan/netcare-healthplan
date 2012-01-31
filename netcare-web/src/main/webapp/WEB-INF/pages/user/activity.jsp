@@ -170,6 +170,26 @@
 					NC.log("Callback executing...");
 				});
 				
+				
+				var addMeasureValueInput = function(id, rowCol, label, value) {
+					var clearfix = $('<div>').addClass('clearfix');
+					clearfix.append(
+						$('<label>').attr('for', id).html(label)
+					);
+					
+					var inputDiv = $('<div>').addClass('input');
+					var input = $('<input>').attr('type', 'number').attr('step', '0.1').attr('name', id).attr('id', id).addClass('small');
+					
+					inputDiv.append(input);
+					inputDiv.append($('<span>').html(' ' + value.unit.value));
+					
+					clearfix.append(inputDiv);
+					
+					rowCol.append(
+						$('<div>').addClass('span3').append(clearfix)
+					);
+				};
+				
 				var types = NC.ActivityTypes();
 				
 				/*
@@ -180,13 +200,68 @@
 						types.search(request.term, function(data) {
 							NC.log("Found " + data.data.length + " activity types");
 							response($.map(data.data, function(item) {
-								return { label : item.name + ' (' + item.category.name + ')', value : item.name, id : item.id}
+								return { label : item.name + ' (' + item.category.name + ')', value : item.name, data : item}
 							}));
 						});
 					},
 					select : function(event, ui) {
-						$('input[name="activityTypeId"]').attr('value', ui.item.id);
-						$('input[name="activityGoal"]').focus();
+						
+						$('#measureValues').remove();
+						
+						/*
+						 * Loop through all measure values
+						 */
+						var data = ui.item.data;
+						NC.log("Selected data is: " + data);
+						
+						var fieldset = $('<fieldset>').attr('id', 'measureValues');
+						fieldset.append(
+							$('<legend>').html('Mätvärden')
+						);
+						
+						$.each(data.measureValues, function(i, v) {
+							NC.log("Processing " + v.name);
+							
+							var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
+							var row = $('<div>').addClass('row').append(
+								$('<div>').addClass('span10').append(
+									rowCol
+								)
+							);
+							
+							rowCol.append(
+								$('<div>').addClass('span1').append(
+									$('<div>').addClass('clearfix').append(
+										$('<label>').html('&nbsp')
+									).append(
+										$('<span>').css('vertical-align', 'middle').append($('<strong>').html(v.name)) 
+									)
+								)
+							);
+							
+							if (v.valueType.code == "INTERVAL") {
+								
+								addMeasureValueInput(v.id + '-1', rowCol, 'Målvärde (min)', v);
+								addMeasureValueInput(v.id + '-2', rowCol, 'Målvärde (max)', v);
+								
+							} else if (v.valueType.code == "SINGLE_VALUE") {
+								
+								addMeasureValueInput(v.id + '-1', rowCol, 'Målvärde (min)', v);
+								
+							} else {
+								throw new Error("Unsupported value type");
+							}
+							
+							fieldset.append(row);
+							
+						});
+						
+						$('#activityFieldset').append(fieldset);
+						
+						/*
+						 * Move focus to the first measure value
+						 */
+						$('#measureValues input').get(0).focus();
 					}
 				});
 				
@@ -345,7 +420,7 @@
 			
 			<netcare:form id="activityForm" classes="form-stacked">
 			
-				<fieldset>
+				<fieldset id="activityFieldset">
 					<legend><spring:message code="activity" /> <spring:message code="and" /> <spring:message code="goal" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
@@ -356,16 +431,10 @@
 								<p><a href="<c:url value="/netcare/admin/activitytypes" />">Lägg till ny aktivitetstyp</a></p>
 							</netcare:field>
 						</netcare:col>
-						<netcare:col span="5">
-							<spring:message code="goal" var="goal" scope="page"/>
-							<netcare:field containerId="activityGoal" name="activityGoal" label="${goal}">
-								<input name="activityGoal" type="number" min="0" max="52" class="medium" required/> <span class="unit"></span>
-							</netcare:field>
-						</netcare:col>
 					</netcare:row>
 				</fieldset>
 				
-				<fieldset>
+				<fieldset id="scheduleFieldset">
 					<legend><spring:message code="schedule" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
@@ -408,7 +477,7 @@
 					</netcare:row>
 					
 					<div id="tuesdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="tuesday" var="tuesday" scope="page" />
@@ -431,7 +500,7 @@
 					
 					
 					<div id="wednesdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="wednesday" var="wednesday" scope="page" />
@@ -454,7 +523,7 @@
 					
 					
 					<div id="thursdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="thursday" var="thursday" scope="page" />
@@ -477,7 +546,7 @@
 					
 					
 					<div id="fridayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="friday" var="friday" scope="page" />
@@ -500,7 +569,7 @@
 					
 					
 					<div id="saturdayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="saturday" var="saturday" scope="page" />
@@ -523,7 +592,7 @@
 					
 					
 					<div id="sundayContainer" class="row">
-						<div class="span12">
+						<div class="span10">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="sunday" var="sunday" scope="page" />
