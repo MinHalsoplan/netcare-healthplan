@@ -38,6 +38,8 @@ import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +69,12 @@ public class ApplicationListener extends ContextLoaderListener {
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
 
-		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat);
+		ate.addMeasurementType(MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER));
 		ate.setMeasuringSense(true);
-		ate.setSenseLabelLow("Lätt(1) - Tufft(5)");
+		ate.setSenseLabelLow("Lätt");
+		ate.setSenseLabelHigh("Tufft");
 		atRepo.save(ate);
-		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE));
 		atRepo.flush();
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
@@ -114,7 +117,9 @@ public class ApplicationListener extends ContextLoaderListener {
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
 		
-		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, MeasureUnit.MINUTE);
+		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat);
+		at2.addMeasurementType(MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE));
+		
 		atRepo.save(at2);
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
 		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);

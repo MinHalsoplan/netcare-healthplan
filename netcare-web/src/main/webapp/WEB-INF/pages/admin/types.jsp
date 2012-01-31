@@ -87,8 +87,8 @@
 						
 						$.each(measureValues, function(i, v) {
 							
-							var unitLabel = findOptionName(v.unit, unitOpts);
-							var valueType = findOptionName(v.valueType, typeOpts);
+							var unitLabel = findOptionName(v.unit.code, unitOpts);
+							var valueType = findOptionName(v.valueType.code, typeOpts);
 							
 							var row = $('<tr>');
 							
