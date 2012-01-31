@@ -104,7 +104,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId());
-
+		assertEquals(result.get(0).getMeasurements().get(0).getMeasurementDefinition().getMeasurementType().getSeqno(), 1);
 		e.setReportedTime(null);
 		e = this.repo.save(e);
 		

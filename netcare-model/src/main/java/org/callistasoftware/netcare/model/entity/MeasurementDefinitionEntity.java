@@ -28,7 +28,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="nc_measurement_definition")
-public class MeasurementDefinitionEntity {
+public class MeasurementDefinitionEntity implements Comparable<MeasurementDefinitionEntity> {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -103,5 +103,10 @@ public class MeasurementDefinitionEntity {
 
 	void setMeasurementType(MeasurementTypeEntity measurementType) {
 		this.measurementType = measurementType;
+	}
+
+	@Override
+	public int compareTo(MeasurementDefinitionEntity m) {
+		return this.getMeasurementType().compareTo(m.getMeasurementType());
 	}
 }
