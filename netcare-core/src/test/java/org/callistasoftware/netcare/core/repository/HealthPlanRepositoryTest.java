@@ -35,7 +35,6 @@ import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.junit.Test;
@@ -69,7 +68,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, MeasureUnit.METER);
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat);
 		typeRepo.save(type);
 		typeRepo.flush();
 

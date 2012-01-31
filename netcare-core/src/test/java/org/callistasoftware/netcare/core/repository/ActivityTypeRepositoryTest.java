@@ -16,16 +16,19 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.Assert.*;
 
 public class ActivityTypeRepositoryTest extends TestSupport {
 
@@ -42,12 +45,16 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat);
+		ent.addMeasurementType(MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER));
+		
 		final ActivityTypeEntity savedEnt = this.repo.save(ent);
 		
 		assertNotNull(savedEnt);
 		assertNotNull(savedEnt.getId());
 		assertEquals(ent.getName(), savedEnt.getName());
-		assertEquals(ent.getUnit(), savedEnt.getUnit());
+		
+		assertNotNull(savedEnt.getMeasurementTypes());
+		assertEquals("Vikt", ent.getMeasurementTypes().get(0).getName());
 	}
 }

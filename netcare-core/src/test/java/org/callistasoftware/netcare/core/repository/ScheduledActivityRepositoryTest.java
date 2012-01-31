@@ -32,7 +32,6 @@ import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.junit.Test;
@@ -82,7 +81,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, MeasureUnit.METER);
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
 		
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTH);

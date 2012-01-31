@@ -171,9 +171,21 @@
 						
 						var formData = new Object();
 						formData.name = $('input[name="measureName"]').val();
-						formData.valueType = $('#valueType option:selected').val();
-						formData.unit = $('#measureUnit option:selected').val();
-						formData.alarm = $('#measureAlarm:checked').val();
+						
+						formData.valueType = new Object();
+						formData.valueType.value = $('#valueType option:selected').val();
+						formData.valueType.code = $('#valueType option:selected').attr('value');
+						
+						formData.unit = new Object();
+						formData.unit.value = $('#measureUnit option:selected').val();
+						formData.unit.code = $('#measureUnit option:selected').attr('value');
+						
+						if ($('#measureAlarm:checked').val() == "on") {
+							formData.alarm = true;	
+						} else {
+							formData.alarm = false;
+						}
+						
 						
 						measureValues.push(formData);
 						updateMeasureValueTable();
@@ -252,9 +264,9 @@
 						errors = true;
 					}
 					
-					new NC.PageMessages().addMessage('error', 'Det gick fel');
-					new NC.PageMessages().addMessage('info', 'Coolt');
-					return false;
+					if (errors) {
+						return false;
+					}
 					
 					var formData = new Object();
 					formData.name = $('#name').val();
@@ -278,6 +290,10 @@
 					
 					var jsonObj = JSON.stringify(formData);
 					NC.log(jsonObj);
+					
+					new NC.ActivityTypes().create(jsonObj, function(data) {
+						NC.log("Creation successful!");
+					});
 				});
 				
 			});

@@ -41,9 +41,6 @@ public class ActivityTypeEntity {
 	@Column(length=64, nullable=false)
 	private String name;
 	
-	@Column(nullable=false)
-	private MeasureUnit unit;
-	
 	@Column(name="measuring_sense", length=1)
 	private String measuringSense;
 		
@@ -57,7 +54,7 @@ public class ActivityTypeEntity {
 	@JoinColumn(name="category_id")
 	private ActivityCategoryEntity category;
 	
-	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
 	private List<MeasurementTypeEntity> measurementTypes;
 
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -69,15 +66,14 @@ public class ActivityTypeEntity {
 		measurementTypes = new LinkedList<MeasurementTypeEntity>();
 	}
 	
-	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final MeasureUnit unit) {
+	ActivityTypeEntity(final String name, final ActivityCategoryEntity category) {
 		this();
 		this.setName(name);
 		this.setCategory(category);
-		this.setUnit(unit);
 	}
 	
-	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category, MeasureUnit unit) {
-		return new ActivityTypeEntity(name, category, unit);
+	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category) {
+		return new ActivityTypeEntity(name, category);
 	}
 
 	public Long getId() {
@@ -90,14 +86,6 @@ public class ActivityTypeEntity {
 
 	public String getName() {
 		return name;
-	}
-
-	void setUnit(MeasureUnit unit) {
-		this.unit = EntityUtil.notNull(unit);
-	}
-
-	public MeasureUnit getUnit() {
-		return unit;
 	}
 
 	public ActivityCategoryEntity getCategory() {
@@ -138,6 +126,10 @@ public class ActivityTypeEntity {
 
 	public List<MeasurementTypeEntity> getMeasurementTypes() {
 		return measurementTypes;
+	}
+	
+	public void addMeasurementType(final MeasurementTypeEntity measurementType) {
+		this.measurementTypes.add(measurementType);
 	}
 
 	public CareUnitEntity getCareUnit() {

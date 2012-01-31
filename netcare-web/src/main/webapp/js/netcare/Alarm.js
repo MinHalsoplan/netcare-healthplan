@@ -15,8 +15,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.Alarm = function() {
-	
-	var _baseUrl = "/netcare-web/api/alarm";
 	var _ajax = new NC.Ajax();
 	
 	public = {

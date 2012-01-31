@@ -41,7 +41,7 @@ public class MeasurementTypeEntity {
 	@Column(name="name", length=32)
 	private String name;
 	
-	@Column(name="value_type", length=1)
+	@Column(name="value_type", nullable=false)
 	private MeasurementValueType valueType;
 	
 	@Column(name="alarm_enabled", length=1)

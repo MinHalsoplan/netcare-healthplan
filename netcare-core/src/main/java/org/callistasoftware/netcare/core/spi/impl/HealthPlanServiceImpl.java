@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
@@ -33,7 +32,6 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
-import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -69,7 +67,6 @@ import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
-import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
@@ -541,62 +538,63 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Override
 	public String getICalendarEvents(PatientBaseView patient) {
-		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-		Date now = new Date();
-		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
-		final String calPattern =
-			"BEGIN:VCALENDAR\r\n"
-			+ "VERSION:2.0\r\n"
-			+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
-			+ "%s"
-			+ "END:VCALENDAR\r\n";
-		
-		final String eventPattern = 
-			"BEGIN:VEVENT\r\n"
-			+ "UID:%s@%s.%d\r\n"
-			+ "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
-			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
-			+ "DURATION:%s\r\n"
-			+ "SUMMARY:%s\r\n"
-			+ "TRANSP:TRANSPARENT\r\n"
-			+ "CLASS:CONFIDENTIAL\r\n"
-			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-			+ "%s"
-			+ "END:VEVENT\r\n";
-		
-		StringBuffer events = new StringBuffer();
-		for (ActivityDefinitionEntity ad : defs) {
-			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
-			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
-			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + unit;
-			Frequency fr = ad.getFrequency();
-			String duration = toICalDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
-			for (FrequencyDay day : fr.getDays()) {
-				StringBuffer rrule = new StringBuffer();
-				String wday = toICalDay(day);
-
-				if (fr.getWeekFrequency() > 0) {
-					rrule.append("RRULE:FREQ=WEEKLY");
-					rrule.append(";INTERVAL=").append(ad.getFrequency().getWeekFrequency());
-					rrule.append(";WKST=MO");
-					rrule.append(";BYDAY=").append(wday);
-					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
-					rrule.append("\r\n");
-				}
-				
-				int timeIndex = 0;
-				for (FrequencyTime time : day.getTimes()) {
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(ad.getStartDate());
-					cal.set(Calendar.HOUR, time.getHour());
-					cal.set(Calendar.MINUTE, time.getMinute());
-					String start = EntityUtil.formatCalTime(cal.getTime());
-					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration, summary, rrule.toString()));
-				}
-			}
-		}
-		String r = String.format(calPattern, events.toString());
-		return r;
+		throw new UnsupportedOperationException("Fix implementation to support multiple measures for a scheduled activity.");
+//		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+//		Date now = new Date();
+//		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
+//		final String calPattern =
+//			"BEGIN:VCALENDAR\r\n"
+//			+ "VERSION:2.0\r\n"
+//			+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
+//			+ "%s"
+//			+ "END:VCALENDAR\r\n";
+//		
+//		final String eventPattern = 
+//			"BEGIN:VEVENT\r\n"
+//			+ "UID:%s@%s.%d\r\n"
+//			+ "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
+//			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
+//			+ "DURATION:%s\r\n"
+//			+ "SUMMARY:%s\r\n"
+//			+ "TRANSP:TRANSPARENT\r\n"
+//			+ "CLASS:CONFIDENTIAL\r\n"
+//			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+//			+ "%s"
+//			+ "END:VEVENT\r\n";
+//		
+//		StringBuffer events = new StringBuffer();
+//		for (ActivityDefinitionEntity ad : defs) {
+//			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
+//			String unit = new Option(ad.getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
+//			String summary = ad.getActivityType().getName() + " " + ad.getActivityTarget() + " " + unit;
+//			Frequency fr = ad.getFrequency();
+//			String duration = toICalDuration(ad.getActivityType().getUnit(), ad.getActivityTarget());
+//			for (FrequencyDay day : fr.getDays()) {
+//				StringBuffer rrule = new StringBuffer();
+//				String wday = toICalDay(day);
+//
+//				if (fr.getWeekFrequency() > 0) {
+//					rrule.append("RRULE:FREQ=WEEKLY");
+//					rrule.append(";INTERVAL=").append(ad.getFrequency().getWeekFrequency());
+//					rrule.append(";WKST=MO");
+//					rrule.append(";BYDAY=").append(wday);
+//					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
+//					rrule.append("\r\n");
+//				}
+//				
+//				int timeIndex = 0;
+//				for (FrequencyTime time : day.getTimes()) {
+//					Calendar cal = Calendar.getInstance();
+//					cal.setTime(ad.getStartDate());
+//					cal.set(Calendar.HOUR, time.getHour());
+//					cal.set(Calendar.MINUTE, time.getMinute());
+//					String start = EntityUtil.formatCalTime(cal.getTime());
+//					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration, summary, rrule.toString()));
+//				}
+//			}
+//		}
+//		String r = String.format(calPattern, events.toString());
+//		return r;
 	}
 	
 	
@@ -745,44 +743,45 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Override
 	public String getPlanReports(PatientBaseView patient) {
-		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-		List<HealthPlanEntity> plans = repo.findByForPatient(forPatient);
-		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
-		for (HealthPlanEntity plan : plans) {
-			for (ActivityDefinitionEntity ad : plan.getActivityDefinitions()) {
-				for (ScheduledActivityEntity sc : ad.getScheduledActivities()) {
-					if (sc.getReportedTime() != null) {
-						list.add(sc);
-					}
-				}
-			}
-		}
-		Collections.sort(list);
-		StringBuffer sb = new StringBuffer();
-		sb.append("Aktivitet;Enhet;Mål;Planerad datum;Planerad tid;Utförd datum;Utförd tid;Resultat;Känsla;Kommentar\r\n");
-		for (ScheduledActivityEntity sc : list) {
-			String unit = new Option(sc.getActivityDefinitionEntity().getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
-			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
-			sb.append(";");
-			sb.append(quotedString(unit));
-			sb.append(";");
-			sb.append(sc.getActivityDefinitionEntity().getActivityTarget());
-			sb.append(";");
-			sb.append(ApiUtil.formatDate(sc.getScheduledTime()));
-			sb.append(";");
-			sb.append(ApiUtil.formatTime(sc.getScheduledTime()));
-			sb.append(";");
-			sb.append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
-			sb.append(";");
-			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
-			sb.append(";");
-// FIXME:			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
-			sb.append(";");
-			sb.append(sc.getPerceivedSense());
-			sb.append(";");
-			sb.append(quotedString(sc.getNote()));
-			sb.append("\r\n");
-		}
-		return sb.toString();
+		throw new UnsupportedOperationException("Fix implementation to support multiple measures for a scheduled activity.");
+//		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+//		List<HealthPlanEntity> plans = repo.findByForPatient(forPatient);
+//		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
+//		for (HealthPlanEntity plan : plans) {
+//			for (ActivityDefinitionEntity ad : plan.getActivityDefinitions()) {
+//				for (ScheduledActivityEntity sc : ad.getScheduledActivities()) {
+//					if (sc.getReportedTime() != null) {
+//						list.add(sc);
+//					}
+//				}
+//			}
+//		}
+//		Collections.sort(list);
+//		StringBuffer sb = new StringBuffer();
+//		sb.append("Aktivitet;Enhet;Mål;Planerad datum;Planerad tid;Utförd datum;Utförd tid;Resultat;Känsla;Kommentar\r\n");
+//		for (ScheduledActivityEntity sc : list) {
+//			String unit = new Option(sc.getActivityDefinitionEntity().getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
+//			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
+//			sb.append(";");
+//			sb.append(quotedString(unit));
+//			sb.append(";");
+//			sb.append(sc.getActivityDefinitionEntity().getActivityTarget());
+//			sb.append(";");
+//			sb.append(ApiUtil.formatDate(sc.getScheduledTime()));
+//			sb.append(";");
+//			sb.append(ApiUtil.formatTime(sc.getScheduledTime()));
+//			sb.append(";");
+//			sb.append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
+//			sb.append(";");
+//			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
+//			sb.append(";");
+//// FIXME:			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
+//			sb.append(";");
+//			sb.append(sc.getPerceivedSense());
+//			sb.append(";");
+//			sb.append(quotedString(sc.getNote()));
+//			sb.append("\r\n");
+//		}
+//		return sb.toString();
 	}
 }
