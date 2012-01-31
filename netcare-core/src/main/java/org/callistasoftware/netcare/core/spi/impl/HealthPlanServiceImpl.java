@@ -71,7 +71,8 @@ import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
@@ -265,7 +266,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId()) : patientRepository.findOne(user.getId());
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency, userEntity);
-		newEntity.setActivityTarget(dto.getGoal());
+		// FIXME: multi-values
+		//newEntity.setActivityTarget(dto.getGoal());
 		if (dto.getStartDate() != null) {
 			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));		
 		}
@@ -460,15 +462,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			if (existing == null) {
 				final ReportedActivity ra = new ReportedActivity();
 				ra.setName(name);
-				ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
+				// FIXME: Multi values.
+				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
 				
 				reportedActivities.add(ra);
 			}
 			
 			final ReportedValue value = new ReportedValue();
 			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-// FIXME:			value.setReportedValue((float) e.getActualValue());
-			value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
+			// FIXME: multi values	
+			//value.setReportedValue((float) e.getActualValue());
+			//value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
 			value.setNewWeek(newWeek);
 			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
 			value.setNote(e.getNote());
@@ -605,23 +609,26 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 * 
 	 * Minutes are rounded to half-hour precision.
 	 * 
-	 * @param unit the unit.
-	 * @param amount the amount.
+	 * @param the activity deftinion. 
 	 * @return the ical duration.
 	 */
-	private static String toICalDuration(MeasureUnit unit, int amount) {
-		int minutes;
-		switch (unit) {
-		case STEP: 
-			minutes = (amount / 50);
-			break;
-		case METER:
-			minutes = (amount / 80);
-			break;
-		default:
-			minutes = amount;
-			break;
+	private static String toICalDuration(ActivityDefinitionEntity ad) {	
+		int minutes = 30;
+		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
+			int target = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md.getMaxTarget() : md.getTarget();
+			switch (md.getMeasurementType().getUnit()) {
+			case STEP:
+				minutes = Math.max(target / 50, minutes);
+				break;
+			case METER:
+				minutes = Math.max(target / 80, minutes);
+				break;
+			case MINUTE:
+				minutes = Math.max(target, minutes);				
+				break;
+			}
 		}
+		
 		String dur = "PT";
 		if (minutes > 60) {
 			int hours = minutes / 60;
@@ -741,6 +748,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		return String.format("\"%s\"", s);
 	}
 	
+	// FIXME: Requires single activity definitions
 	@Override
 	public String getPlanReports(PatientBaseView patient) {
 		throw new UnsupportedOperationException("Fix implementation to support multiple measures for a scheduled activity.");

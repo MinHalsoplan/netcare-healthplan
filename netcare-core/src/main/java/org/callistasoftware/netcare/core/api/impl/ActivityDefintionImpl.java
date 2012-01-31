@@ -71,7 +71,8 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
 		dto.setId(entity.getId());
 		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
-		dto.setGoal(entity.getActivityTarget());
+		// FIXME: multi values
+		//dto.setGoal(entity.getActivityTarget());
 		dto.setFrequency(entity.getFrequency());
 		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
 		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));

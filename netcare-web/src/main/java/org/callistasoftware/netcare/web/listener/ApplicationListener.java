@@ -109,7 +109,8 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg);
-		ad.setActivityTarget(1200);
+		// FIXME: multi-values
+		//ad.setActivityTarget(1200);
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
 		
@@ -117,7 +118,8 @@ public class ApplicationListener extends ContextLoaderListener {
 		atRepo.save(at2);
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
 		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);
-		ad2.setActivityTarget(60);
+		// FIXME: multi-values
+		//ad2.setActivityTarget(60);
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
 		

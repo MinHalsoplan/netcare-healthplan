@@ -122,7 +122,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
-		ad.setActivityTarget(1200);
+		// FIXME: multi-values
+		//ad.setActivityTarget(1200);
 		defRepo.save(ad);
 		
 		schedRepo.save(ad.scheduleActivities());
@@ -236,13 +237,11 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
-		
-		/*
-		 * FIXME
-		 */
+
 		//assertEquals(MeasureUnit.METER, ent.getActivityType().getUnit());
-		//assertEquals("Löpning", ent.getActivityType().getName());
-		//assertEquals(12, ent.getActivityTarget());
+		assertEquals("Löpning", ent.getActivityType().getName());
+		// FIXME: multi-values
+		// assertEquals(12, ent.getActivityTarget());
 		
 		final Frequency fr = ent.getFrequency();
 		final List<FrequencyTime> times = fr.getDay(Calendar.MONDAY).getTimes();
