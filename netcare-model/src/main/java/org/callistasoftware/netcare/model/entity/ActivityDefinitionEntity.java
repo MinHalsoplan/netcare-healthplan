@@ -77,12 +77,12 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	private List<ScheduledActivityEntity> scheduledActivities;
 	
 	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
-	private List<MeasurementDefinitionEntity> measurementDefinition;
+	private List<MeasurementDefinitionEntity> measurementDefinitions;
 	
 
     ActivityDefinitionEntity() {
     	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
-    	measurementDefinition = new LinkedList<MeasurementDefinitionEntity>();
+    	measurementDefinitions = new LinkedList<MeasurementDefinitionEntity>();
     	uuid = UUID.randomUUID().toString();
     	createdTime = new Date();
 	}
@@ -96,7 +96,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
     	entity.setCreatedBy(createdBy);
     	for (MeasurementTypeEntity measurementType : activityType.getMeasurementTypes()) {
     		MeasurementDefinitionEntity e = MeasurementDefinitionEntity.newEntity(entity, measurementType);
-    		entity.measurementDefinition.add(e);
+    		entity.measurementDefinitions.add(e);
     	}
     	healthPlanEntity.addActivityDefinition(entity);
     	
@@ -212,7 +212,8 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	 * @return the list (unmodifable).
 	 */
 	public List<MeasurementDefinitionEntity> getMeasurementDefinitions() {
-		return Collections.unmodifiableList(measurementDefinition);		
+		Collections.sort(measurementDefinitions);
+		return Collections.unmodifiableList(measurementDefinitions);		
 	}
 	
 	/**

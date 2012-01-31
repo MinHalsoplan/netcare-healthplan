@@ -128,6 +128,8 @@ public class ActivityTypeEntity {
 
 	public boolean addMeasurementType(MeasurementTypeEntity measurementType) {
 		if (!measurementTypes.contains(measurementType)) {
+			int seqno = measurementTypes.size() + 1;
+			measurementType.setSeqno(seqno);
 			return measurementTypes.add(measurementType);
 		}
 		return false;
@@ -138,6 +140,7 @@ public class ActivityTypeEntity {
 	}
 	
 	public List<MeasurementTypeEntity> getMeasurementTypes() {
+		Collections.sort(measurementTypes);
 		return Collections.unmodifiableList(measurementTypes);
 	}
 	

@@ -197,6 +197,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	}
 
 	public List<MeasurementEntity> getMeasurements() {
+		Collections.sort(measurements);
 		return Collections.unmodifiableList(measurements);
 	}
 	

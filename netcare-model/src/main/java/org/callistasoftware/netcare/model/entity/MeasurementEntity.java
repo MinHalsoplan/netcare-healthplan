@@ -35,7 +35,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="nc_measurement")
-public class MeasurementEntity {
+public class MeasurementEntity implements Comparable<MeasurementEntity> {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -140,6 +140,11 @@ public class MeasurementEntity {
 	public void setReportedValue(int reportedValue) {
 		copyActualTargets();
 		this.reportedValue = reportedValue;
+	}
+
+	@Override
+	public int compareTo(MeasurementEntity m) {
+		return this.getMeasurementDefinition().compareTo(m.getMeasurementDefinition());
 	}
 }
 

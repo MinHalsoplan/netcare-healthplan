@@ -28,7 +28,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="nc_measurement_type")
-public class MeasurementTypeEntity {
+public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -49,6 +49,9 @@ public class MeasurementTypeEntity {
 	
 	@Column(name="unit", nullable=false)
 	private MeasureUnit unit;
+	
+	@Column(name="seqno")
+	private int seqno;
 
 	MeasurementTypeEntity() {
 	}
@@ -115,4 +118,16 @@ s	 * @param unit the unit.
 		this.unit = unit;
 	}
 
+	public int getSeqno() {
+		return seqno;
+	}
+
+	public void setSeqno(int seqno) {
+		this.seqno = seqno;
+	}
+
+	@Override
+	public int compareTo(MeasurementTypeEntity m) {
+		return (this.getSeqno() - m.getSeqno());
+	}
 }
