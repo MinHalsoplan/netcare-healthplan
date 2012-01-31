@@ -27,9 +27,11 @@ import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -45,16 +47,20 @@ public class ActivityTypeServiceTest extends TestSupport {
 	
 	@Autowired
 	private ActivityTypeService service;
-	
+
+	@Autowired
+	private CareUnitRepository cuRepo;
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testLoadAllActivityTypes() throws Exception {
-		
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
+		final CareUnitEntity savedCu = cuRepo.save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
 		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat));
+			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu));
 		}
 		
 		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
@@ -31,9 +32,11 @@ import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
@@ -61,6 +64,9 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 	
 	@Autowired
 	private ActivityTypeRepository repo;
+
+	@Autowired
+	private CareUnitRepository cuRepo;
 	
 	@Override
 	public ServiceResult<ActivityType[]> loadAllActivityTypes() {
@@ -121,7 +127,7 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 	}
 
 	@Override
-	public ServiceResult<ActivityType> createActivityType(ActivityType dto) {
+	public ServiceResult<ActivityType> createActivityType(ActivityType dto, CareGiverBaseView careGiver) {
 		log.info("Creating new activity type. Name: {}", dto.getName());
 		
 		final ActivityCategoryEntity category = this.catRepo.findOne(dto.getCategory().getId());
@@ -129,7 +135,9 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCategoryEntity.class, dto.getCategory().getId()));
 		}
 		
-		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category);
+		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(careGiver.getCareUnit().getHsaId());
+		
+		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit);
 		entity.setMeasuringSense(dto.isMeasuringSense());
 		entity.setSenseLabelLow(dto.getMinScaleText());
 		entity.setSenseLabelHigh(dto.getMaxScaleText());

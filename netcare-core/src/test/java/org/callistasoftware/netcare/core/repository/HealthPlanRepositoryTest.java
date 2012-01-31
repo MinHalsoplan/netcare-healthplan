@@ -70,8 +70,9 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		day.addTime(time);
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat);
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		this.cuRepo.save(cu);
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu);
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
