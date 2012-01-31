@@ -75,7 +75,6 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
-
 		typeRepo.save(type);
 		typeRepo.flush();
 

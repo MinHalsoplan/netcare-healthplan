@@ -90,23 +90,11 @@ NC.ActivityCategories = function() {
 NC.ActivityTypes = function() {
 	
 	var _baseUrl = '/netcare-web/api/activityType';
+	var _ajax = new NC.Ajax();
 	
 	public = {
 		load : function(callback) {
-			var url = _baseUrl + '/load';
-			NC.log("Loading activity types from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					if (data.success) {
-						NC.log("Activity types successfully fetched from server");
-						callback(data.data);
-					}
-				}
-			});
+			_ajax.get('/activityType/load', callback, true);
 		},
 		
 		search : function(searchString, callback) {
@@ -130,22 +118,7 @@ NC.ActivityTypes = function() {
 		},
 		
 		create : function(formData, callback) {
-			var url = _baseUrl + '/create';
-			NC.log("Creating new activity type using url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				type : 'post',
-				data : formData,
-				contentType : 'application/json',
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.post('/activityType/create', formData, callback, true);
 		}
 	};
 	

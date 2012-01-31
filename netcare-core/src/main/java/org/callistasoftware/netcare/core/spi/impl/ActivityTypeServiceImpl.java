@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
@@ -33,6 +34,9 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,11 +129,22 @@ public class ActivityTypeServiceImpl implements ActivityTypeService {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCategoryEntity.class, dto.getCategory().getId()));
 		}
 		
-		
 		ActivityTypeEntity entity = ActivityTypeEntity.newEntity(dto.getName(), category);
 		entity.setMeasuringSense(dto.isMeasuringSense());
 		entity.setSenseLabelLow(dto.getMinScaleText());
 		entity.setSenseLabelHigh(dto.getMaxScaleText());
+		
+		for (final MeasurementType t : dto.getMeasureValues()) {
+			final MeasurementTypeEntity mte = MeasurementTypeEntity.newEntity(entity
+					, t.getName()
+					, MeasurementValueType.valueOf(t.getValueType().getCode())
+					, MeasureUnit.valueOf(t.getUnit().getCode()));
+			
+			log.debug("Adding measurement type {}", t.getName());
+			entity.addMeasurementType(mte);
+		}
+		
+		
 		final ActivityTypeEntity savedEntity = this.repo.save(entity);
 		
 		return ServiceResultImpl.createSuccessResult((ActivityType) ActivityTypeImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());

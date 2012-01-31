@@ -50,13 +50,10 @@
 					});
 				});
 				
-				var categoryOpts = new Array();
 				new NC.ActivityCategories().load(function(data) {
 					$.each(data.data, function(i, v) {
-						var opt = $('<option>').attr('value', v.code).html(v.value);
-						
-						categoryOpts.push(opt);
-						$('#activityCategory').append(opt);
+						NC.log("Processing: " + v.code + " " + v.value);
+						$('#activityCategory').append($('<option>').attr('value', v.id).html(v.name));
 					});
 				});
 				
@@ -90,8 +87,8 @@
 						
 						$.each(measureValues, function(i, v) {
 							
-							var unitLabel = findOptionName(v.unit, unitOpts);
-							var valueType = findOptionName(v.valueType, typeOpts);
+							var unitLabel = findOptionName(v.unit.code, unitOpts);
+							var valueType = findOptionName(v.valueType.code, typeOpts);
 							
 							var row = $('<tr>');
 							
@@ -115,7 +112,7 @@
 							});
 							
 							row.append(
-								$('<td>').append(deleteIcon)
+								$('<td>').css('text-align', 'right').append(deleteIcon)
 							);
 							
 							$('#measureValues tbody').append(row);
@@ -174,9 +171,21 @@
 						
 						var formData = new Object();
 						formData.name = $('input[name="measureName"]').val();
-						formData.valueType = $('#valueType option:selected').val();
-						formData.unit = $('#measureUnit option:selected').val();
-						formData.alarm = $('#measureAlarm:checked').val();
+						
+						formData.valueType = new Object();
+						formData.valueType.value = $('#valueType option:selected').val();
+						formData.valueType.code = $('#valueType option:selected').attr('value');
+						
+						formData.unit = new Object();
+						formData.unit.value = $('#measureUnit option:selected').val();
+						formData.unit.code = $('#measureUnit option:selected').attr('value');
+						
+						if ($('#measureAlarm:checked').val() == "on") {
+							formData.alarm = true;	
+						} else {
+							formData.alarm = false;
+						}
+						
 						
 						measureValues.push(formData);
 						updateMeasureValueTable();
@@ -243,13 +252,69 @@
 				
 				$('#senseDescriptionContainer input').prop('disabled', true);
 				
-				
 				$('#createActivityType').click(function(e) {
+					e.preventDefault();
+					
+					var errors = false;
+					if (!new NC.Util().validateFieldNotEmpty($('#name'))) {
+						errors = true;
+					}
+					
+					if (measureValues.length < 1) {
+						errors = true;
+					}
+					
+					if (errors) {
+						return false;
+					}
 					
 					var formData = new Object();
 					formData.name = $('#name').val();
-					//formData.
 					
+					formData.category = new Object();
+					formData.category.id = $('#activityCategory option:selected').attr('value');
+					formData.category.name = $('#activityCategory option:selected').text();
+					
+					if ($('#useSense').val() == 1) {
+						formData.measuringSense = true;
+					} else {
+						formData.measuringSense = false;
+					}
+					
+					if (formData.measuringSense == true) {
+						formData.minScaleText = $('#minDescription').val();
+						formData.maxScaleText = $('#maxDescription').val();
+					}
+					
+					formData.measureValues = measureValues;
+					
+					var jsonObj = JSON.stringify(formData);
+					NC.log(jsonObj);
+					
+					new NC.ActivityTypes().create(jsonObj, function(data) {
+						NC.log("Creation successful!");
+					});
+				});
+				
+				new NC.ActivityTypes().load(function(data) {
+					if (data.data.length > 0) {
+						$('#existingTypes table').show();
+						
+						$.each(data.data, function(i, v) {
+							
+							var row = $('<tr>');
+							
+							row.append(
+								$('<td>').html(v.name)
+							);
+							
+							$('#existingTypes table tbody').append(row);
+							
+						});
+						
+					} else {
+						$('#existingTypes table').hide();
+					}
 				});
 				
 			});
@@ -270,13 +335,13 @@
 								<netcare:col span="5">
 									<spring:message code="activityType.name" scope="page" var="activityName" />
 									<netcare:field name="name" label="${activityName}">
-										<input type="text" name="name" id="name" />
+										<input type="text" name="name" id="name" class="xlarge"/>
 									</netcare:field>
 								</netcare:col>
 								<netcare:col span="5">
 									<spring:message code="activityType.category" var="category" scope="page" />
 									<netcare:field name="activityCategory" label="${category}">
-										<select name="activityCategory" id="activityCategory">
+										<select name="activityCategory" id="activityCategory" class="xlarge">
 										
 										</select>
 									</netcare:field>
@@ -349,6 +414,23 @@
 				</div>
 				
 			</section>
+			
+			<section id="existingTypes">
+				<h2><spring:message code="activityType.title" /></h2>
+				
+				<table class="bordered-table zebra-striped shadow-box">
+					<thead>
+						<tr>
+							<th>Namn</th>
+							<th>Skattningsskala</th>
+							<th>Mätvärden</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				
+			</section>	
+			
 		</netcare:content>
 	</netcare:body>
 </netcare:page>

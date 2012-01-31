@@ -188,7 +188,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
-
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
@@ -254,7 +253,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
-		
 		// FIXME: multi-values
 		assertEquals(MeasureUnit.METER, ent.getMeasurementDefinitions().get(0).getMeasurementType().getUnit());
 		assertEquals("Löpning", ent.getActivityType().getName());

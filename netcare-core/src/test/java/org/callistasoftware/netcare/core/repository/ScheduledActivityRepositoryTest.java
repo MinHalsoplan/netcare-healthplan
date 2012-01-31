@@ -88,7 +88,6 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
-
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
 		
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTH);

@@ -23,13 +23,14 @@ NC.Ajax = function() {
 	var _contentType = 'application/json'
 	
 	var _util = new NC.Util();
+	var _pm = new NC.PageMessages();
 		
 	var _defaultSuccess = function(data, show, callback) {
 		/*
 		 * Show results
 		 */
 		if (show) {
-			_util.processServiceResult(data);
+			_pm.processServiceResult(data);
 		}
 		
 		/*

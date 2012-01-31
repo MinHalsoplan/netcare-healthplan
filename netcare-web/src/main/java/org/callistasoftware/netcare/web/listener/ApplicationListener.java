@@ -74,7 +74,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ate, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
-		
 		ate.setMeasuringSense(true);
 		ate.setSenseLabelLow("Lätt");
 		ate.setSenseLabelHigh("Tufft");
@@ -132,7 +131,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat);
 		MeasurementTypeEntity.newEntity(at2, "Längd", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE);
-
 		atRepo.save(at2);
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
 		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);

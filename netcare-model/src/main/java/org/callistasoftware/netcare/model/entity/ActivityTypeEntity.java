@@ -55,7 +55,7 @@ public class ActivityTypeEntity {
 	@JoinColumn(name="category_id")
 	private ActivityCategoryEntity category;
 	
-	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
+	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
 	private List<MeasurementTypeEntity> measurementTypes;
 
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -138,6 +138,10 @@ public class ActivityTypeEntity {
 	
 	public List<MeasurementTypeEntity> getMeasurementTypes() {
 		return Collections.unmodifiableList(measurementTypes);
+	}
+	
+	public void addMeasurementType(final MeasurementTypeEntity measurementType) {
+		this.measurementTypes.add(measurementType);
 	}
 
 	public CareUnitEntity getCareUnit() {

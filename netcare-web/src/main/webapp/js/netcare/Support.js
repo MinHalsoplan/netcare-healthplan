@@ -86,7 +86,7 @@ NC.Support = function() {
 		});
 	};
 	
-	var public = {
+	var public = {			
 			
 		getUnits : function(callback) {
 			_ajax.get('/support/units/load', callback);

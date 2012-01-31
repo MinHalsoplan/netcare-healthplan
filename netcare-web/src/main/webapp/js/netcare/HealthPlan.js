@@ -93,67 +93,42 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			
 			_updateActivityTable(tableId);
 			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					NC.log("Successfully call to rest service");
-					var util = new NC.Util();
-					if (data.success) {
-						NC.log("Emptying the activity table");
-						$('#' + tableId + ' tbody > tr').empty();
-						
-						$.each(data.data, function(index, value) {
-							
-							NC.log("Processing id: " + value.id);
-							
-							var deleteIcon = util.createIcon('trash', 24, function() {
-								NC.log("Delete icon clicked");
-								public.deleteActivity(tableId, healthPlanId, value.id);
-							});
-							
-							var actionCol = $('<td>');
-							actionCol.css('text-align', 'right');
-							
-							deleteIcon.appendTo(actionCol);
-							
-							var tr = $('<tr>');
-							var type = $('<td>' + value.type.name + '</td>');
-							var goal = $('<td>' + value.goal + ' ' + value.type.unit.value + '</td>');
-							
-							tr.append(type);
-							tr.append(goal);
-							tr.append(actionCol);
-							
-							$('#' + tableId + ' tbody').append(tr);
-						});
-						
-						_activityCount = data.data.length;
-						_updateActivityTable(tableId);
-					} else {
-						util.processServiceResult(data);
-					}
-				}
-			});
-			
+			_ajax.get('/healthplan/' + healthPlanId + '/activity/list', function(data) {
+				NC.log("Emptying the activity table");
+				$('#' + tableId + ' tbody > tr').empty();
+				
+				$.each(data.data, function(index, value) {
+					
+					NC.log("Processing id: " + value.id);
+					
+					var deleteIcon = new NC.Util().createIcon('trash', 24, function() {
+						NC.log("Delete icon clicked");
+						public.deleteActivity(tableId, healthPlanId, value.id);
+					});
+					
+					var actionCol = $('<td>');
+					actionCol.css('text-align', 'right');
+					
+					deleteIcon.appendTo(actionCol);
+					
+					var tr = $('<tr>');
+					var type = $('<td>' + value.type.name + '</td>');
+					var goal = $('<td>' + value.goal + ' ' + value.type.unit.value + '</td>');
+					
+					tr.append(type);
+					tr.append(goal);
+					tr.append(actionCol);
+					
+					$('#' + tableId + ' tbody').append(tr);
+				});
+				
+				_activityCount = data.data.length;
+				_updateActivityTable(tableId);
+			}, true);
 		},
 		
 		loadStatistics : function(healthPlanId, callback) {
-			var url = _baseUrl + '/' + healthPlanId + '/statistics';
-			NC.log("Loading scheduled activities from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.get('/healthplan/' + healthPlanId + '/statistics', callback, true);
 		},
 		
 		/**
@@ -207,130 +182,88 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			var url = _baseUrl + '/activity/reported/latest';
 			NC.log("Loading latest reported activities from url: " + url);
 			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					var util = new NC.Util();
+			_ajax.get('/healthplan/activity/reported/latest', function(data) {
+				$.each(data.data, function(index, value) {
+					NC.log("Processing value: " + value);
 					
-					util.processServiceResult(data);
+					var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
+					var unit = value.definition.type.unit.value;
+					var typeName = value.definition.type.name;
+					var goalString = value.definition.goal + ' ' + unit;
+					var reportedString = value.actualValue + ' ' + unit;
+					var reportedAt = value.reported;
 					
-					if (data.success) {
+					var tr = $('<tr>');
+					
+					var name = $('<td>' + patient + '</td>');
+					var type = $('<td>' + typeName + '</td>');
+					var goal = $('<td>' + goalString + '</td>');
+					var reported = $('<td>' + reportedString + '</td>');
+					var at = $('<td>' + reportedAt + '</td>');
+					
+					NC.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
+					if (value.actualValue !== value.definition.goal) {
+						NC.log("Value diff. Mark yellow");
+						reported.css('background-color', 'lightyellow');
+					} else if (value.actualValue == value.definition.goal) {
+						reported.css('background-color', 'lightgreen');
+					}
+					
+					var likeIcon = util.createIcon('like', 24, function() {
 						
-						$.each(data.data, function(index, value) {
-							NC.log("Processing value: " + value);
+						NC.log("Clicked on " + value.id);
+						
+						$('#commentActivity button').click(function(event) {
+							event.preventDefault();
 							
-							var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
-							var unit = value.definition.type.unit.value;
-							var typeName = value.definition.type.name;
-							var goalString = value.definition.goal + ' ' + unit;
-							var reportedString = value.actualValue + ' ' + unit;
-							var reportedAt = value.reported;
+							NC.log("Executing... " + value.id);
 							
-							var tr = $('<tr>');
-							
-							var name = $('<td>' + patient + '</td>');
-							var type = $('<td>' + typeName + '</td>');
-							var goal = $('<td>' + goalString + '</td>');
-							var reported = $('<td>' + reportedString + '</td>');
-							var at = $('<td>' + reportedAt + '</td>');
-							
-							NC.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
-							if (value.actualValue !== value.definition.goal) {
-								NC.log("Value diff. Mark yellow");
-								reported.css('background-color', 'lightyellow');
-							} else if (value.actualValue == value.definition.goal) {
-								reported.css('background-color', 'lightgreen');
-							}
-							
-							var likeIcon = util.createIcon('like', 24, function() {
+							var comment = $('#commentActivity input[name="comment"]').val();
+							public.sendComment(value.id, comment, function(data) {
+								NC.log("Successfully posted " + comment);
 								
-								NC.log("Clicked on " + value.id);
+								$('#commentActivity input[name="comment"]').val('');
+								$('#commentActivity').modal('hide');
 								
-								$('#commentActivity button').click(function(event) {
-									event.preventDefault();
-									
-									NC.log("Executing... " + value.id);
-									
-									var comment = $('#commentActivity input[name="comment"]').val();
-									public.sendComment(value.id, comment, function(data) {
-										NC.log("Successfully posted " + comment);
-										
-										$('#commentActivity input[name="comment"]').val('');
-										$('#commentActivity').modal('hide');
-										
-										$('#commentActivity button').unbind('click');
-									});
-								});
-								
-								$('#commentActivity').modal('show');
-								$('#commentActivity input[name="comment"]').focus();
+								$('#commentActivity button').unbind('click');
 							});
-							
-							var actionCol = $('<td>');
-							actionCol.append(likeIcon);
-							
-							tr.append(name);
-							tr.append(type);
-							tr.append(goal);
-							tr.append(reported);
-							tr.append(at);
-							tr.append(actionCol);
-							
-							$('#' + containerId + ' table tbody').append(tr);
-							NC.log("Appended to table body");
 						});
 						
-						var count = $('#' + containerId + ' table tbody tr').size();
-						if(count > 0) {
-							$('#' + containerId + ' table').show();
-							$('#' + containerId + ' div').hide();
-						} else {
-							$('#' + containerId + ' table').hide();
-							$('#' + containerId + ' div').show();
-						}
-						
-					} else {
-						util.processServiceResult(data);
-					}
+						$('#commentActivity').modal('show');
+						$('#commentActivity input[name="comment"]').focus();
+					});
+					
+					var actionCol = $('<td>');
+					actionCol.append(likeIcon);
+					
+					tr.append(name);
+					tr.append(type);
+					tr.append(goal);
+					tr.append(reported);
+					tr.append(at);
+					tr.append(actionCol);
+					
+					$('#' + containerId + ' table tbody').append(tr);
+					NC.log("Appended to table body");
+				});
+				
+				var count = $('#' + containerId + ' table tbody tr').size();
+				if(count > 0) {
+					$('#' + containerId + ' table').show();
+					$('#' + containerId + ' div').hide();
+				} else {
+					$('#' + containerId + ' table').hide();
+					$('#' + containerId + ' div').show();
 				}
-			});
+			}, true);
 		},
 		
 		loadLatestComments : function(patientId, callback) {
-			var url = _baseUrl + '/activity/reported/' + patientId + '/comments';
-			NC.log("Loading latest comments using url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.get('/healthplan/activity/reported/' + patientId + '/comments', callbacl, true);
 		},
 		
 		loadNewReplies : function(callback) {
-			var url = _baseUrl + '/activity/reported/comments/newreplies';
-			NC.log("Loading new replies using url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.get('/healthplan/activity/reported/comments/newreplies', callback, true);
 		},
 		
 		sendComment : function(activityId, comment, callback) {

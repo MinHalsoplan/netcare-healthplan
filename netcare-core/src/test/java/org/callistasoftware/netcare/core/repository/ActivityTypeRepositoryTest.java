@@ -16,6 +16,9 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -26,8 +29,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.Assert.*;
 
 public class ActivityTypeRepositoryTest extends TestSupport {
 
@@ -53,7 +54,8 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		assertNotNull(savedEnt);
 		assertNotNull(savedEnt.getId());
 		assertEquals(ent.getName(), savedEnt.getName());
-		assertEquals(ent.getMeasurementTypes(), savedEnt.getMeasurementTypes());
-		
+		assertEquals(ent.getMeasurementTypes(), savedEnt.getMeasurementTypes());		
+		assertNotNull(savedEnt.getMeasurementTypes());
+		assertEquals("Vikt", ent.getMeasurementTypes().get(0).getName());
 	}
 }
