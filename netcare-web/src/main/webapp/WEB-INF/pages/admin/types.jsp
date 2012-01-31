@@ -296,6 +296,27 @@
 					});
 				});
 				
+				new NC.ActivityTypes().load(function(data) {
+					if (data.data.length > 0) {
+						$('#existingTypes table').show();
+						
+						$.each(data.data, function(i, v) {
+							
+							var row = $('<tr>');
+							
+							row.append(
+								$('<td>').html(v.name)
+							);
+							
+							$('#existingTypes table tbody').append(row);
+							
+						});
+						
+					} else {
+						$('#existingTypes table').hide();
+					}
+				});
+				
 			});
 		</script>
 	</netcare:header>
@@ -393,6 +414,23 @@
 				</div>
 				
 			</section>
+			
+			<section id="existingTypes">
+				<h2><spring:message code="activityType.title" /></h2>
+				
+				<table class="bordered-table zebra-striped shadow-box">
+					<thead>
+						<tr>
+							<th>Namn</th>
+							<th>Skattningsskala</th>
+							<th>Mätvärden</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				
+			</section>	
+			
 		</netcare:content>
 	</netcare:body>
 </netcare:page>

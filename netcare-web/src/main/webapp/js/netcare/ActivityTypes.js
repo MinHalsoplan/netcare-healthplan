@@ -94,7 +94,7 @@ NC.ActivityTypes = function() {
 	
 	public = {
 		load : function(callback) {
-			_ajax.get('/activityType/load', callback);
+			_ajax.get('/activityType/load', callback, true);
 		},
 		
 		search : function(searchString, callback) {
