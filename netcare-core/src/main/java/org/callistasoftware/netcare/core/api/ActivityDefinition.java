@@ -33,12 +33,6 @@ public interface ActivityDefinition extends Serializable {
 	Long getId();
 
 	/**
-	 * The desired goal of this definition
-	 * @return
-	 */
-	int getGoal();
-	
-	/**
 	 * The activity's type
 	 * @return
 	 */
@@ -89,6 +83,11 @@ public interface ActivityDefinition extends Serializable {
 	CareGiverBaseView getIssuedBy();
 	
 	/**
+	 * Returns measurememnt defintions.
+	 */
+	MeasurementDefinition[] getMeasurementDefinitions();
+	
+	/**
 	 * Returns number of times an activity should have been carried out.
 	 */
 	int getNumTarget();
@@ -101,20 +100,5 @@ public interface ActivityDefinition extends Serializable {
 	/**
 	 * Returns number of done activities
 	 */
-	int getNumDone();
-	
-	/**
-	 * Returns the target sum of work, i.e. goal until now.
-	 */
-	int getSumTarget();
-	
-	/**
-	 * Returns total sum of work.
-	 */
-	int getSumTotal();
-
-	/**
-	 * Returns done sum of work.
-	 */
-	int getSumDone();
+	int getNumDone();	
 }

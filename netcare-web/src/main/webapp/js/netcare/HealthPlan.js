@@ -259,7 +259,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		},
 		
 		loadLatestComments : function(patientId, callback) {
-			_ajax.get('/healthplan/activity/reported/' + patientId + '/comments', callbacl, true);
+			_ajax.get('/healthplan/activity/reported/' + patientId + '/comments', callback, true);
 		},
 		
 		loadNewReplies : function(callback) {

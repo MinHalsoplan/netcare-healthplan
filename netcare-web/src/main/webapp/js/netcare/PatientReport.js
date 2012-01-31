@@ -123,10 +123,12 @@ NC.PatientReport = function(tableId, shortVersion) {
 				$('#senseSectionId').hide();
 			}
 
-			var planned = act.definition.type.name + '&nbsp;' + act.definition.goal 
-			+ '&nbsp;' 
-			+ act.definition.type.unit.value
-			+ ',&nbsp;' + act.day.value + '&nbsp;' + act.date + '&nbsp;' + act.time;
+			var planned = act.definition.type.name;
+			// FIXME:
+//			+ '&nbsp;' + act.definition.goal 
+//			+ '&nbsp;' 
+//			+ act.definition.type.unit.value
+//			+ ',&nbsp;' + act.day.value + '&nbsp;' + act.date + '&nbsp;' + act.time;
 
 			$('#plannedId').html(planned);
 

@@ -25,9 +25,10 @@ NC.Util = function() {
 		var _support = new NC.Support();
 		
 		_support.loadCaptions('util', ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
-		                             'freq4', 'freq5', 'every', 'meter', 'minute', 
-		                             'step', 'newEvents' ], 
-		                             function(data) {
+		                               'freq4', 'freq5', 'every', 'meter', 'minute', 
+		                               'step', 'newEvents', 'kilogram', 'gram', 'pressure_mmhg',
+		                               'flow_mlmin', 'milliliter', 'liter'], 
+		                               function(data) {
 			_captions = data;
 			NC.log('Localized captions for util loaded.');
 		});
@@ -65,9 +66,7 @@ NC.Util = function() {
 		}, 5000);
 	};
 	
-	public = {
-			
-		
+	public = {	
 			
 		/**
 		 * Update the current patient shown in the menu
@@ -236,7 +235,7 @@ NC.Util = function() {
 				text += '<br/>';				
 			});
 			
-			text += '<i>';
+			text += '<i style="font-size: 10px;">';
 			switch (activityDefinition.activityRepeat) {
 				case 0: text += _captions.freq0; break;
 				case 1: text += _captions.freq1; break;
@@ -267,6 +266,25 @@ NC.Util = function() {
 			if (unitOption.code == 'STEP') {
 				return _captions.step;
 			}
+			if (unitOption.code == 'KILOGRAM') {
+				return _captions.kilogram;
+			}
+			if (unitOption.code == 'GRAM') {
+				return _captions.gram;
+			}
+			if (unitOption.code == 'PRESSURE_MMHG') {
+				return _captions.pressure_mmhg;
+			}
+			if (unitOption.code == 'FLOW_MLMIN') {
+				return _captions.flow_mlmin;
+			}
+			if (unitOption.code == 'MILLILITER') {
+				return _captions.milliliter;
+			}
+			if (unitOption.code == 'LITER') {
+				return _captions.liter;
+			}
+			
 			return unitOption.code;
 		},
 		

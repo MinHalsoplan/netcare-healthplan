@@ -38,6 +38,21 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 		}
 	}
 	
+	var _formatMeasurements = function(data) {
+		NC.log('formatMeasurements()')
+		var ms = '<i style="font-size: 10px;">';
+		$.each(data, function(index, value) {
+			var target = '';
+			if (value.measurementType.valueType.code == 'INTERVAL') {
+				target = value.minTarget + '-' + value.maxTarget + '&nbsp;';
+			} else {
+				target = value.target + '&nbsp;';
+			}
+			ms += '<br/>' + value.measurementType.name + ' (' + target + util.formatUnit(value.measurementType.unit) + ')';
+		});
+		ms += '</i>';
+		return ms;
+	}
 	var public = {
 		
 		init : function() {
@@ -71,16 +86,16 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 						
 						var pdata = new Object();
 						pdata.id = 'gauge-' + value.id;
-						pdata.pctSum = Math.ceil((value.sumDone / value.sumTarget)*100);
-						pdata.sumDone = value.sumDone;
-						pdata.sumTarget = value.sumTarget;
+						pdata.pctDone = Math.ceil((value.numDone / value.numTarget)*100);
+						pdata.numDone = value.numDone;
+						pdata.numTarget = value.numTarget;
 						// gauge & data
 						pdata.gauge = null;
 						pdata.options = null;
 						pdata.data = null;
 						_perfData.push(pdata);
 												
-						var result = (value.sumTarget > 0) ? (value.sumDone / value.sumTarget) * 100 : -1;
+						var result = (pdata.numTarget > 0) ? pdata.pctDone: -1;
 						var icon;
 						if (result == -1) {
 							icon = util.createIcon("face-smile", 32, null);
@@ -96,7 +111,8 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 							icon = util.createIcon("face-crying", 32, null);	
 						}
 						
-						var actText = value.type.name + '<br/>' + value.goal + '&nbsp' + util.formatUnit(value.type.unit);
+						var actText = value.type.name + _formatMeasurements(value.measurementDefinitions);
+						
 						$('#' + tableId + ' tbody').append(
 								$('<tr>').append(
 										$('<td>').html(icon)).append(

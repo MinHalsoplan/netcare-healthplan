@@ -42,11 +42,11 @@
 		        pd.data.addColumn('number', 'Value');
 		        pd.data.addRows(1);
 		        pd.data.setValue(0, 0, '%');
-		        pd.data.setValue(0, 1, pd.pctSum);
+		        pd.data.setValue(0, 1, pd.pctDone);
 		        pd.options = new Object();
 		        pd.options.width = 100;
 		        pd.options.height = 100;
-		        pd.options.max = Math.max(120, pd.pctSum);
+		        pd.options.max = Math.max(120, pd.pctDone);
 		        pd.options.min = 0;
 		        pd.options.greenFrom = 90;
 		        pd.options.greenTo = pd.options.max;
@@ -154,10 +154,10 @@
 					for (var i = 0; i < arr.length; i++) {
 						if (arr[i].id == gid) {
 							var pd = arr[i];
-							pd.sumDone +=  actual;
-							pd.pctSum = Math.ceil((pd.sumDone / pd.sumTarget)*100);						
+							pd.numDone +=  actual;
+							pd.pctDone = Math.ceil((pd.numDone / pd.numTarget)*100);						
 					        pd.options.max = Math.max(120, pd.pctSum);
-							pd.data.setValue(0, 1, pd.pctSum);
+							pd.data.setValue(0, 1, pd.pctDone);
 				        	pd.gauge.draw(pd.data, pd.options);
 				        	break;
 						}
