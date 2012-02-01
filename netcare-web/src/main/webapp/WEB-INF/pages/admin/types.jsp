@@ -300,6 +300,9 @@
 				var loadExistingTypes = function() {
 					new NC.ActivityTypes().load(function(data) {
 						if (data.data.length > 0) {
+							
+							$('#existingTypesContainer table tbody').empty();
+							
 							$.each(data.data, function(i, v) {
 								
 								var row = $('<tr>');
