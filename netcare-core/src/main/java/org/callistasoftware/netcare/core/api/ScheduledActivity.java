@@ -30,21 +30,21 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the system unique id.
 	 */
 	long getId();
-	
+
 	/**
 	 * Returns the day in week (monday, ...)
 	 * 
 	 * @return the day as an option.
 	 */
 	Option getDay();
-	
+
 	/**
 	 * Returns if this activity has been rejected by the user.
 	 * 
 	 * @return true if rejected, otherwise false.
 	 */
 	boolean isRejected();
-	
+
 	/**
 	 * Returns the scheduled time (hh:mm)
 	 * 
@@ -54,34 +54,36 @@ public interface ScheduledActivity extends Serializable {
 
 	/**
 	 * Returns the scheduled date (yyyy-mm-dd)
-	 *
+	 * 
 	 * @return the date.
 	 */
 	String getDate();
-	
+
 	/**
 	 * Returns the associated {@link ActivityDefinition}
 	 * 
 	 * @return the definition.
 	 */
 	ActivityDefinition getDefinition();
-	
+
 	/**
-	 * Returns if this activity is due. <p>
+	 * Returns if this activity is due.
+	 * <p>
 	 * 
-	 * An activity is marked as due if it's not reported on during the same day (date) as scheduled.
+	 * An activity is marked as due if it's not reported on during the same day
+	 * (date) as scheduled.
 	 * 
 	 * @return true if due, otherwise false.
 	 */
 	boolean isDue();
-	
+
 	/**
 	 * Returns the reported value.
 	 * 
 	 * @return the actual value reported.
 	 */
 	int getActualValue();
-	
+
 	/**
 	 * Returns the target value.
 	 * 
@@ -89,39 +91,43 @@ public interface ScheduledActivity extends Serializable {
 	 */
 	int getTargetValue();
 
-	
 	/**
 	 * Returns the date and time this was reported (yyyy-mm-dd hh:mm).
 	 * 
 	 * @return the reported time, or null if none.
 	 */
 	String getReported();
-	
+
 	/**
 	 * Returns the actual time this activity was carried out (yyyy-dd-dd hh:mm).
 	 * 
 	 * @return the actual time, or null if not yet reported.
 	 */
 	String getActualTime();
-	
+
 	/**
 	 * Returns the patient for this activity.
 	 * 
 	 * @return the patient.
 	 */
 	PatientBaseView getPatient();
-	
+
 	/**
 	 * Returns the perceived sense.
 	 * 
 	 * @return the sense.
 	 */
 	int getSense();
-	
+
 	/**
 	 * Returns the associated patient notice.
 	 * 
 	 * @return the patient note.
 	 */
 	String getNote();
+	
+	/**
+	 * Returns measurements.
+	 */
+	Measurement[] getMeasurements();
 }

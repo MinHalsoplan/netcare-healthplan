@@ -26,7 +26,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _captions;
 	var _reportCallback = null;
 	
-	new NC.Support().loadCaptions('report', ['report', 'change', 'reject'], function(data) {
+	new NC.Support().loadCaptions('report', ['report', 'change', 'reject', 'time'], function(data) {
 		_captions = data;
 	});		
 	
@@ -56,8 +56,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 		
 	var _reportText = function(value) {
 		if (value.reported != null) {
-			return ((value.rejected) ? _captions.reject : (value.actualValue + '&nbsp;' + value.definition.type.unit.value))
-			+ '<br/>' + value.reported;
+			return (value.rejected) ? _captions.reject : value.reported;
 		} else {
 			return '&nbsp;';
 		}
@@ -82,7 +81,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				reportField = '&nbsp;';
 			}
 
-			var activity = value.definition.type.name + "<br/>" + value.definition.goal + '&nbsp;' + value.definition.type.unit.value;
+			var activity = value.definition.type.name;
 
 			var lineColor = _lineColor(value);
 			var reported = _reportText(value);
@@ -105,30 +104,24 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var createButtons = function(act) {
 		var div = $('<div>');
 		var rbtn = _util.createIcon('edit', 24, function() {
-			var value = (act.actualValue == 0) ? act.definition.goal : act.actualValue;
-			NC.log("value = " + value);
 
 			$('#reportFormDiv input[name="activityId"]').attr('value', act.id);
-			$('#reportFormDiv input[name="value"]').attr('value', value);
 			$('#reportFormDiv input[name="note"]').attr('value', act.note);
-			$('#unitId').html(act.definition.type.unit.value);
+			$('#reportFormDiv input[name="numValueId"]').attr('value', act.measurements.length);
 
 			if (act.definition.type.measuringSense) {
-				$('input:radio[name=gsense]').filter('[value=' + act.sense + ']').attr('checked', true);
-				$('#senseSectionId').show();
-				if (act.definition.type.scaleText !== undefined) {
-					$('#senseTextId').text(act.definition.type.scaleText);
+				if (act.sense == 0) {
+					act.sense = 3;
 				}
+				$('input:radio[name=gsense]').filter('[value=' + act.sense + ']').attr('checked', true);
+				$('#senseLowId').html(act.definition.type.minScaleText);
+				$('#senseHighId').html(act.definition.type.maxScaleText);
+				$('#senseSectionId').show();
 			} else {
 				$('#senseSectionId').hide();
 			}
 
-			var planned = act.definition.type.name;
-			// FIXME:
-//			+ '&nbsp;' + act.definition.goal 
-//			+ '&nbsp;' 
-//			+ act.definition.type.unit.value
-//			+ ',&nbsp;' + act.day.value + '&nbsp;' + act.date + '&nbsp;' + act.time;
+			var planned = act.definition.type.name + ',&nbsp;' + act.day.value + '&nbsp;' + act.date + '&nbsp;' + act.time;
 
 			$('#plannedId').html(planned);
 
@@ -143,11 +136,48 @@ NC.PatientReport = function(tableId, shortVersion) {
 				time = str[1];
 			}
 
-			$('#reportFormDiv input[name="date"]').datepicker( "option", "defaultDate", date);
-			$('#reportFormDiv input[name="date"]').attr('value', date);
-			$('#reportFormDiv input[name="time"]').attr('value', time);
+			// keep template in form, instead of removing it...
+			$('#reportFormId').append($('#dateTimeInputId'));
+			$('#measurementTableId tbody > tr').empty();
+			
+			
+			$('#dateTimeInputId input[name="date"]').datepicker( "option", "defaultDate", date);
+			$('#dateTimeInputId input[name="date"]').attr('value', date);
+			$('#dateTimeInputId input[name="time"]').attr('value', time);
+			var label = $('<label>');
+			label.attr('for', 'date');
+			label.html(_captions.time);
+			$('#measurementTableId tbody').append($('<tr>').append($('<td>').append(label)).append($('<td>').append($('#dateTimeInputId'))));
+			$('#dateTimeInputId').show();
+			
+			$.each(act.measurements, function(index, m) {
+				var type = m.measurementDefinition.measurementType;
+				var unit = _util.formatUnit(type.unit);
+
+				var tr = $('<tr>');
+				var label = $('<label>');
+				label.attr('for', 'mval-' + type.seqno);
+				label.html(type.name + ' (' + unit + ')');
+				tr.append($('<td>').append(label));
+				
+				var input = $('<input>');
+				input.attr('name', 'mval-' + type.seqno);
+				input.attr('type', 'number');
+				input.attr('step', '1');
+				input.attr('class', 'small');
+				if (type.valueType.code == 'INTERVAL') {
+					input.attr('value', act.reported != null ? m.reportedValue : (m.maxTarget + m.minTarget) / 2);
+				} else {
+					input.attr('value', act.reported != null ? m.reportedValue : m.target);
+				}
+				tr.append($('<td>').append(input));
+				
+				$('#measurementTableId tbody').append(tr);
+			});
+
+			
 			$('#reportFormDiv').modal('show');
-			$('#reportFormDiv input[name="value"]').focus();		
+			$('#reportFormDiv input[name="mval-1"]').focus();		
 
 		});
 		rbtn.attr('title', act.reported != null ? _captions.change : _captions.report);
@@ -157,12 +187,12 @@ NC.PatientReport = function(tableId, shortVersion) {
 			xevent.preventDefault();
 			var id = act.id;
 			var rep = new Object();
-			rep.actualValue = 0;
 			rep.actualDate = null;
 			rep.actualTime = null;
 			rep.sense = 0;
 			rep.note = null;
 			rep.rejected = true;
+			rep.values = new Array();
 
 			var jsonObj = JSON.stringify(rep);
 
@@ -195,36 +225,42 @@ NC.PatientReport = function(tableId, shortVersion) {
 			}
 			
 			var support = new NC.Support();
-			$('#reportFormDiv input[name="date"]').datepicker({
+			$('#dateTimeInputId input[name="date"]').datepicker({
 				dateFormat : 'yy-mm-dd',
 				firstDay : 1,
 				minDate : -14
 			});
 
 			support.loadMonths(function(data) {
-				$('#reportFormDiv input[name="date"]').datepicker('option',
+				$('#dateTimeInputId input[name="date"]').datepicker('option',
 						'monthNames', data);
 			});
 
 			support.loadWeekdays(function(data) {
-				$('#reportFormDiv input[name="date"]').datepicker('option',
+				$('#dateTimeInputId input[name="date"]').datepicker('option',
 						'dayNamesMin', data);
 			});
 
-			var util = new NC.Util();
-			util.validateTimeField($('#reportFormDiv input[name="time"]'));
+			_util.validateTimeField($('#dateTimeInputId input[name="time"]'));
 
 			$('#reportFormId :submit').click(function(event) {
 				event.preventDefault();
 				var id = $('#reportFormDiv input[name="activityId"]').val();
 				var rep = new Object();
-				rep.actualValue = $('#reportFormDiv input[name="value"]').val();
 				rep.actualDate = $('#reportFormDiv input[name="date"]').val();
 				rep.actualTime = $('#reportFormDiv input[name="time"]').val();
 				rep.sense = $('#reportFormDiv input[name="gsense"]:checked').val();
 				rep.note = $('#reportFormDiv input[name="note"]').val();
 				rep.rejected = false;
-
+				rep.values = new Array();
+				var nValues = parseInt($('#reportFormDiv input[name="numValueId"]').val());
+				NC.log('Report contains ' + nValues + ' values.');
+				for (var i = 0; i < nValues; i++) {
+					var value = new Object();
+					value.seqno = i+1;
+					value.value = parseInt($('#reportFormDiv input[name="mval-' + value.seqno + '"]').val());
+					rep.values.push(value);
+				}
 				var jsonObj = JSON.stringify(rep);
 				public.performReport(id, jsonObj, function(data, last) {
 					$('#reportFormDiv').modal('hide');

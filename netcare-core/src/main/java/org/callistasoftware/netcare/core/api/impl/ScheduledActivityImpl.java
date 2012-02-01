@@ -168,4 +168,9 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	public int getTargetValue() {
 		return targetValue;
 	}
+
+	@Override
+	public Measurement[] getMeasurements() {
+		return measurements;
+	}
 }

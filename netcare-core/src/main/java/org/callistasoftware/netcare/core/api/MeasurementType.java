@@ -47,5 +47,10 @@ public interface MeasurementType {
 	 * is outside the boundaries of this interval
 	 * @return
 	 */
-	boolean isAlarm();	
+	boolean isAlarm();
+	
+	/**
+	 * Returns sequence number.
+	 */
+	int getSeqno();
 }

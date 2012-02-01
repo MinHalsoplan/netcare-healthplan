@@ -344,7 +344,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.setNote(report.getNote());
 		entity.setPerceivedSense(report.getSense());
 		for (Value value : report.getValues()) {
-			entity.lookupMeasurement(value.getMeasurementId()).setReportedValue(value.getValue());
+			entity.lookupMeasurement(value.getSeqno()).setReportedValue(value.getValue());
 		}
 		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
 		entity.setActualTime(d);
