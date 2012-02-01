@@ -48,6 +48,10 @@ public class MeasurementTypeImpl implements MeasurementType {
 		return this.id;
 	}
 	
+	public void setId(final Long id) {
+		this.id = id;
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;

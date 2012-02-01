@@ -66,7 +66,7 @@ NC.Util = function() {
 		}, 5000);
 	};
 	
-	public = {	
+	var public = {	
 			
 		/**
 		 * Update the current patient shown in the menu

@@ -56,8 +56,6 @@ public class ApplicationListener extends ContextLoaderListener {
 	public void contextInitialized(ServletContextEvent event) {
 		super.contextInitialized(event);
 		
-		log.info("======== NETCARE STARTED ========");
-		
 		final WebApplicationContext wc = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
@@ -83,7 +81,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		ate.setSenseLabelLow("Lätt");
 		ate.setSenseLabelHigh("Tufft");
 		atRepo.save(ate);
-		atRepo.save(ActivityTypeEntity.newEntity("Yoga", cat, cu));
 		atRepo.flush();
 		
 		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234", cu);
@@ -141,6 +138,8 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		// start background house-keeping task
 		job.init();
+		
+		log.info("======== NETCARE STARTED ========");
 	}
 	
 	@Override

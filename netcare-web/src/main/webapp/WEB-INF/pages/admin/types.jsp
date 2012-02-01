@@ -343,6 +343,13 @@
 				
 				loadExistingTypes();
 				
+				$('#showTypesForm').click(function(e) {
+					e.preventDefault();
+					$('#activityTypesContainer').toggle();
+				});
+				
+				$('#activityTypesContainer').hide();
+				
 			});
 		</script>
 	</netcare:header>
@@ -351,8 +358,11 @@
 			<section id="types">
 				<h2><spring:message code="activityType.title" /></h2>
 				<p>
-					<span class="label info"><spring:message code="information" /></span>
+					<span class="label notice"><spring:message code="information" /></span>
 					<spring:message code="activityType.description" />
+				</p>
+				<p style="text-align: right; padding-right: 20px;">
+					<a id="showTypesForm" class="btn addButton"><spring:message code="activityType.create" /></a>
 				</p>
 				<div id="activityTypesContainer">
 					<form class="form-stacked">
@@ -414,7 +424,7 @@
 										<select name="valueType" id="valueType" class="small">
 										</select>										
 									</netcare:col>
-									<div id="measureValueContainer" class="row span7"></div>
+									<div id="measureValueContainer" class="row span6"></div>
 								</netcare:row>
 							</div>
 						</div>
@@ -442,12 +452,6 @@
 			</section>
 			
 			<section id="existingTypes">
-				<h2><spring:message code="activityType.title" /></h2>
-				<p>
-					<span class="label notice"><spring:message code="information" /></span>
-					<spring:message code="activityType.description" />
-				</p>
-				
 				<div id="existingTypesContainer">
 					<div class="alert-message info" style="display:none;">
 						<p><spring:message code="activityType.noTypes" />

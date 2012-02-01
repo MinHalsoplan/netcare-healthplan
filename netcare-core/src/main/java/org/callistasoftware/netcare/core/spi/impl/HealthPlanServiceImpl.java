@@ -32,6 +32,7 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -58,6 +59,7 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
+import org.callistasoftware.netcare.core.repository.MeasurementTypeRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
@@ -135,6 +137,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ActivityCommentRepository commentRepository;
+	
+	@Autowired
+	private MeasurementTypeRepository measurementTypeRepo;
 	
 	@Autowired
 	private MessageSource messages;
@@ -267,11 +272,33 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId()) : patientRepository.findOne(user.getId());
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency, userEntity);
-		// FIXME: multi-values
-		//newEntity.setActivityTarget(dto.getGoal());
+
+		/*
+		 * Process measurement defintions
+		 */
+		for (final MeasurementDefinitionEntity mde : newEntity.getMeasurementDefinitions()) {
+			for (final MeasurementDefinition md : dto.getGoalValues()) {
+				if (mde.getMeasurementType().getId().equals(md.getMeasurementType().getId())) {	
+					
+					log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType().getName(), mde.getMeasurementType().getActivityType().getName());
+					
+					switch (mde.getMeasurementType().getValueType()) {
+					case INTERVAL:
+						mde.setMaxTarget(md.getMaxTarget());
+						mde.setMinTarget(md.getMinTarget());
+						break;
+					case SINGLE_VALUE:
+						mde.setTarget(md.getTarget());
+						break;
+					}
+				}
+			}
+		}
+		
 		if (dto.getStartDate() != null) {
 			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));		
 		}
+		
 		ActivityDefinitionEntity savedEntity = activityDefintionRepository.save(newEntity);
 		
 		log.debug("Activity defintion saved.");
@@ -279,7 +306,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		scheduleActivities(savedEntity);
 		
 		final HealthPlanEntity savedOrdination = this.repo.save(entity);
-		log.debug("Ordination saved");
+		log.debug("Health plan saved");
 		
 		log.debug("Creating result. Success!");
 		final HealthPlan result = HealthPlanImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());

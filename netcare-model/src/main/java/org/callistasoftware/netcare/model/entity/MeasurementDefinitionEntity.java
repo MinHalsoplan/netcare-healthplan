@@ -53,7 +53,7 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 	MeasurementDefinitionEntity() {
 	}
 
-	static MeasurementDefinitionEntity newEntity(ActivityDefinitionEntity activityDefinition, MeasurementTypeEntity measurementType) {
+	public static MeasurementDefinitionEntity newEntity(ActivityDefinitionEntity activityDefinition, MeasurementTypeEntity measurementType) {
 		MeasurementDefinitionEntity entity = new MeasurementDefinitionEntity();
 		entity.setActivityDefinition(activityDefinition);
 		entity.setMeasurementType(measurementType);
@@ -78,6 +78,9 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 	}
 
 	public void setTarget(int target) {
+		if (!this.getMeasurementType().getValueType().equals(MeasurementValueType.SINGLE_VALUE)) {
+			throw new IllegalStateException("Cannot set a target value for an interval measurement definition");
+		}
 		this.target = target;
 	}
 
@@ -86,6 +89,9 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 	}
 
 	public void setMinTarget(int minTarget) {
+		if (!this.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL)) {
+			throw new IllegalStateException("Cannot set min value for a single valued measurement definition");
+		}
 		this.minTarget = minTarget;
 	}
 
@@ -94,6 +100,9 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 	}
 
 	public void setMaxTarget(int maxTarget) {
+		if (!this.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL)) {
+			throw new IllegalStateException("Cannot set max value for a single valued measurement definition");
+		}
 		this.maxTarget = maxTarget;
 	}
 
