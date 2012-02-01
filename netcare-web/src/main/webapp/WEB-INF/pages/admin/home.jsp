@@ -32,7 +32,7 @@
 				
 				var name = "<c:out value="${sessionScope.currentPatient.name}" />";
 				if (name.length != 0) {
-					new NC.Util().updateCurrentPatient(name);
+					util.updateCurrentPatient(name);
 				}
 				
 				var hp = new NC.HealthPlan();

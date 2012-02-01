@@ -17,7 +17,7 @@
 NC.Util = function() {
 	/** loadCaptions must be used prior to use functions with captions required. */
 	var _captions;
-
+	
 	/**
 	 * Loads captions used by util.
 	 */
