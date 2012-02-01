@@ -38,7 +38,10 @@ NC.Ajax = function() {
 		 * Execute callback 
 		 */
 		if (data.success && callback !== undefined) {
+			NC.log("Call was successful. Execute callback function...");
 			callback(data);
+		} else {
+			NC.log("Call was not successful. Data success: " + data.success + " Callback: " + callback);
 		}
 	};
 	
@@ -75,10 +78,10 @@ NC.Ajax = function() {
 			},
 			
 			getWithParams : function(url, data, callback, displayMessages) {
-				var opts = _getDefaultOpts(_contextPath + _basePath + url);
+				var opts = _getDefaultOpts(_contextPath + _basePath + url, callback, displayMessages);
 				opts.data = data;
 				
-				$.ajax(opts, callback, displayMessages);
+				$.ajax(opts);
 			},
 			
 			uncachedGetCall : function(url, callback, displayMessages) {

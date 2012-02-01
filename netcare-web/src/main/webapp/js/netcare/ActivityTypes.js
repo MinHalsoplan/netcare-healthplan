@@ -56,23 +56,7 @@ NC.ActivityTypes = function() {
 		},
 		
 		search : function(searchString, callback) {
-			var url = _baseUrl + '/search';
-			NC.log("Searching for activity types with name like " + searchString + " from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				data : { text : searchString },
-				success : function(data) {
-					if (data.success) {
-						NC.log("Successfully searched for activity types...");
-						callback(data);
-					} else {
-						NC.log("Error searching for activity types...");
-					}
-				}
-			});
+			_ajax.getWithParams('/activityType/search', {text : searchString}, callback);
 		},
 		
 		create : function(formData, callback) {
