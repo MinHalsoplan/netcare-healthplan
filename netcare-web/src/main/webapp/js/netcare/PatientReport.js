@@ -33,6 +33,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
 	var _util = new NC.Util();
 	
+	var _ajax = new NC.Ajax();
 		
 	var _updateDescription = function() {
 		NC.log("Updating schema table description: " + _schemaCount);
@@ -277,30 +278,24 @@ NC.PatientReport = function(tableId, shortVersion) {
 		},
 		
 		performReport : function(activityId, formData, callback) {
-			var url = _baseUrl + 'schema/' + activityId + '/accept';
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				type : 'post',
-				data : formData,
-				contentType : 'application/json',
-				success :  function(data) {
-					NC.log('Report successfully done');
-					_util.processServiceResult(data);
-					$('#act-' + activityId).css('color', _lineColor(data.data));
-					NC.log('#rep-' + activityId + ', ' + _reportText(data.data));
-					$('#rep-' + activityId).html(_reportText(data.data));
-					_dueActivities.push(data.data);
-					if (_shortVersion) {
-						$('#act-' + activityId).hide();
-						_schemaCount--;
-						if (_schemaCount == 0) {
-							_updateDescription();
-						}
+			
+			_ajax.post('/patient/schema/' + activityId + '/accept', formData, function(data) {
+				
+				$('#act-' + activityId).css('color', _lineColor(data.data));
+				NC.log('#rep-' + activityId + ', ' + _reportText(data.data));
+				$('#rep-' + activityId).html(_reportText(data.data));
+				_dueActivities.push(data.data);
+				if (_shortVersion) {
+					$('#act-' + activityId).hide();
+					_schemaCount--;
+					if (_schemaCount == 0) {
+						_updateDescription();
 					}
-					callback(data.data, _schemaCount <= 0);
 				}
-			});		
+				
+				callback(data.data, _schemaCount <= 0);
+				
+			}, true);	
 		},
 				
 		list : function() {

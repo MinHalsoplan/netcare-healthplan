@@ -46,43 +46,55 @@
 					NC.log("Captions are: " + captions);
 					
 					var hp = new NC.HealthPlan();
-					var reports = null;
-					hp.loadStatistics("<c:out value="${param.healthPlan}" />", function(data) {
-						reports = new NC.Reports(data, captions);
-						
-						reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities, 600, 300);
-						$('#pieChart').show();
-						
-						
-						/*
-						 * For each activity type draw diagrams for each
-						 */
-						var processed = '';
-						$.each(data.data.measuredValues, function(i, v) {
-							if (v.name != processed) {
-								
-								$('#activities').append(
-									$('<h2>').html(v.name)
-								).append(
-									$('<p>').append(
-										$('<span>').addClass('label').addClass('notice').html('Information')
-									).html('Tralala')
-								).append(
-									$('<div>').attr('id', 'activity-' + i)
-								);
-								
-								
-								NC.log("Drawing diagrams for: " + v.name);
-								reports.getResultsForActivityType(v.name, 'activity-' + i, 600, 300);
-								
-								processed = v.name;
-							}
+					
+					var loadStatistics = function(healthPlanId) {
+						NC.log("Loading statistics for health plan " + healthPlanId);
+						var reports = null;
+						hp.loadStatistics(healthPlanId, function(data) {
+							reports = new NC.Reports(data, captions);
+							reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities, 600, 300);
+							$('#pieChart').show();
+							
+							
+							/*
+							 * For each activity type draw diagrams for each
+							 */
+							var processed = '';
+							$.each(data.data.measuredValues, function(i, v) {
+								if (v.name != processed) {
+									
+									$('#activities').append(
+										$('<h2>').html(v.name)
+									).append(
+										$('<p>').append(
+											$('<span>').addClass('label').addClass('notice').html('Information')
+										).html('Tralala')
+									).append(
+										$('<div>').attr('id', 'activity-' + i)
+									);
+									
+									
+									NC.log("Drawing diagrams for: " + v.name);
+									reports.getResultsForActivityType(v.name, 'activity-' + i, 600, 300);
+									
+									processed = v.name;
+								}
+							});
+							
+							$('div[class="shadow-box"]').each(function(i) {
+								$(this).after('<br />');
+							});
 						});
-						
-						$('div[class="shadow-box"]').each(function(i) {
-							$(this).after('<br />');
-						});
-					});
+					};
+					
+					var healthPlanId = "<c:out value="${param.healthPlan}" />";
+					if (healthPlanId == "")  {
+						hp.list(<sec:authentication property="principal.id" />, function(data) {
+							loadStatistics(data.data[0].id);
+						});	
+					} else {
+						loadStatistics(healthPlanId);
+					}
 				};
 								
 				google.setOnLoadCallback(drawOverview);

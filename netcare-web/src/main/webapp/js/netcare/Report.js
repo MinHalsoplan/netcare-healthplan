@@ -78,7 +78,7 @@ NC.Reports = function(statistics, captions) {
 					chart.addColumn('number', captions.reportedValue);
 					
 					$.each(v.reportedValues, function(idx, val) {
-						var entry = [val.reportedAt, val.minTargetValue, val.maxTargetValue, reportedValue];
+						var entry = [val.reportedAt, val.minTargetValue, val.maxTargetValue, val.reportedValue];
 						
 						NC.log("Adding: " + entry);
 						entries.push(entry);
