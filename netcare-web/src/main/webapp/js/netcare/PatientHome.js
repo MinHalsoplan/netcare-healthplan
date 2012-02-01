@@ -16,7 +16,6 @@
  */
 NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	
-	var _baseUrl = "/netcare-web/api/patient/";
 	var _schemaCount = 0;
 	var _eventCount = 0;
 	
@@ -25,8 +24,9 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	var _tableId = tableId;
 	var _perfData;
 
-	var util = new NC.Util();
-
+	var _util = new NC.Util();
+	var _ajax = new NC.Ajax();
+	
 	var _updateDescription = function() {
 		NC.log("Updating schema table description");
 		if (_schemaCount == 0) {
@@ -48,7 +48,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 			} else {
 				target = value.target + '&nbsp;';
 			}
-			ms += '<br/>' + value.measurementType.name + ' (' + target + util.formatUnit(value.measurementType.unit) + ')';
+			ms += '<br/>' + value.measurementType.name + ' (' + target + _util.formatUnit(value.measurementType.unit) + ')';
 		});
 		ms += '</i>';
 		return ms;
@@ -61,103 +61,84 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 		},
 		
 		list : function(callback) {
-			var curDay = '';
-			var curActivity = '';
-			var _url = _baseUrl + 'activities';
-			NC.log("Load activitues for the patient: " + _url);
-			$.ajax({
-				url : _url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					NC.log('Success.');
-					
-					/* Empty the result list */
-					$('#' + tableId + ' tbody > tr').empty();
-					
-					_perfData = new Array();
-					
-					$.each(data.data, function(index, value) {							
-						var period;
-						if (value.activityRepeat == 0) {
-							period = value.startDate;
-						} else {
-							period = value.endDate;
-						}
-						
-						var pdata = new Object();
-						pdata.id = 'gauge-' + value.id;
-						var pctDone = Math.ceil((value.numDone / value.numTarget)*100);
-						pdata.numDone = value.numDone;
-						pdata.numTarget = value.numTarget;
-						pdata.numTotal = value.numTotal;
-						// gauge & data
-						pdata.gauge = null;
-						pdata.options = null;
-						pdata.data = null;
-						_perfData.push(pdata);
-												
-						var result = (pdata.numTarget > 0) ? pctDone: -1;
-						var icon;
-						if (result == -1) {
-							icon = util.createIcon("face-smile", 32, null);
-						} else if (result > 120) {
-							icon = util.createIcon('face-grin', 32, null);
-						} else if (result > 90) {
-							icon = util.createIcon("face-smile", 32, null);
-						} else if (result > 70) {
-							icon = util.createIcon("face-plain", 32, null);
-						} else if (result > 50) {
-							icon = util.createIcon("face-sad", 32, null);
-						} else {
-							icon = util.createIcon("face-crying", 32, null);	
-						}
-						
-						var actText = value.type.name + _formatMeasurements(value.goalValues);
-						
-						$('#' + tableId + ' tbody').append(
-								$('<tr>').append(
-										$('<td>').html(icon)).append(
-												$('<td>').html(value.healthPlanName + '<br/><i>' + value.issuedBy.careUnit.name + '<br/>' + value.issuedBy.name + '</i>')).append(
-														$('<td>').html(actText)).append(
-																$('<td>').html(period)).append(
-																		$('<td>').html(util.formatFrequency(value))).append(
-																				$('<td>').attr('id', pdata.id).css('height', '100px').css('width', '100px').html('&nbsp;')));
-					});
-					_schemaCount = data.data.length;
-					
-					_updateDescription();
-					
-					callback();
-				}
-			});
+			_ajax.get('/patient/activities', function(data) {
+				/* Empty the result list */
+				$('#' + tableId + ' tbody > tr').empty();
+
+				_perfData = new Array();
+
+				$.each(data.data, function(index, value) {							
+					var period;
+					if (value.activityRepeat == 0) {
+						period = value.startDate;
+					} else {
+						period = value.endDate;
+					}
+
+					var pdata = new Object();
+					pdata.id = 'gauge-' + value.id;
+					var pctDone = Math.ceil((value.numDone / value.numTarget)*100);
+					pdata.numDone = value.numDone;
+					pdata.numTarget = value.numTarget;
+					pdata.numTotal = value.numTotal;
+					// gauge & data
+					pdata.gauge = null;
+					pdata.options = null;
+					pdata.data = null;
+					_perfData.push(pdata);
+
+					var result = (pdata.numTarget > 0) ? pctDone: -1;
+					var icon;
+					if (result == -1) {
+						icon = _util.createIcon("face-smile", 32, null);
+					} else if (result > 120) {
+						icon = _util.createIcon('face-grin', 32, null);
+					} else if (result > 90) {
+						icon = _util.createIcon("face-smile", 32, null);
+					} else if (result > 70) {
+						icon = _util.createIcon("face-plain", 32, null);
+					} else if (result > 50) {
+						icon = _util.createIcon("face-sad", 32, null);
+					} else {
+						icon = _util.createIcon("face-crying", 32, null);	
+					}
+
+					var actText = value.type.name + _formatMeasurements(value.goalValues);
+
+					$('#' + tableId + ' tbody').append(
+							$('<tr>').append(
+									$('<td>').html(icon)).append(
+											$('<td>').html(value.healthPlanName + '<br/><i>' + value.issuedBy.careUnit.name + '<br/>' + value.issuedBy.name + '</i>')).append(
+													$('<td>').html(actText)).append(
+															$('<td>').html(period)).append(
+																	$('<td>').html(_util.formatFrequency(value))).append(
+																			$('<td>').attr('id', pdata.id).css('height', '100px').css('width', '100px').html('&nbsp;')));
+				});
+				_schemaCount = data.data.length;
+
+				_updateDescription();
+
+				callback();
+			}, false);
 		},
 		
 		status : function() {
-			var _url = _baseUrl + 'event';
-			NC.log("Load actual events for patient: " + _url);
-			$.ajax({
-				url : _url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					NC.log('Success.');
-					var event = data.data;
-					_eventCount = event.numReports + event.dueReports;
-					NC.log('event count: ' + _eventCount);
-					if (_eventCount == 0) {
-						$('#' + _eventBodyId).hide();
-					} else {
-						var msg = $('<a>');
-						msg.css('color', 'white');
-						var caps = util.getCaptions();
-						msg.text(caps.newEvents);
-						msg.attr('href', 'report');
-						$('#' + _eventBodyId).append(msg);
-						$('#' + _eventBodyId).show();
-					}
+			_ajax.get('/patient/event', function(data) {
+				var event = data.data;
+				_eventCount = event.numReports + event.dueReports;
+				NC.log('Event Count: ' + _eventCount);
+				if (_eventCount == 0) {
+					$('#' + _eventBodyId).hide();
+				} else {
+					var msg = $('<a>');
+					msg.css('color', 'white');
+					var caps = _util.getCaptions();
+					msg.text(caps.newEvents);
+					msg.attr('href', 'report');
+					$('#' + _eventBodyId).append(msg);
+					$('#' + _eventBodyId).show();
 				}
-			});
+			}, false);
 		},
 		
 		eventCount : function() {

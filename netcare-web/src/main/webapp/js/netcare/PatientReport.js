@@ -16,7 +16,6 @@
  */
 NC.PatientReport = function(tableId, shortVersion) {
 	
-	var _baseUrl = "/netcare-web/api/patient/";
 	var _schemaCount = 0;
 	
 	var _tableId = tableId;
@@ -32,6 +31,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 	
 	var _today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
 	var _util = new NC.Util();
+	var _ajax = new NC.Ajax();
 	
 	var _ajax = new NC.Ajax();
 		
@@ -278,9 +278,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 		},
 		
 		performReport : function(activityId, formData, callback) {
-			
 			_ajax.post('/patient/schema/' + activityId + '/accept', formData, function(data) {
-				
 				$('#act-' + activityId).css('color', _lineColor(data.data));
 				NC.log('#rep-' + activityId + ', ' + _reportText(data.data));
 				$('#rep-' + activityId).html(_reportText(data.data));
@@ -292,27 +290,19 @@ NC.PatientReport = function(tableId, shortVersion) {
 						_updateDescription();
 					}
 				}
-				
 				callback(data.data, _schemaCount <= 0);
 				
 			}, true);	
 		},
 				
 		list : function() {
-			NC.log("Load activitues for the patient");
-			$.ajax({
-				url : _baseUrl + 'schema',
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					NC.log("Success. Processing results...");		
-					/* Empty the result list */
-					$('#' + tableId + ' tbody > tr').empty();
-					_render(data.data);
-					public.showHistory(_shortVersion);
-					_updateDescription();
-				}
-			});
+			_ajax.get('/patient/schema', function(data) {
+				/* Empty the result list */
+				$('#' + tableId + ' tbody > tr').empty();
+				_render(data.data);
+				public.showHistory(_shortVersion);
+				_updateDescription();
+			}, false);
 		},
 
 		showHistory : function(show) {

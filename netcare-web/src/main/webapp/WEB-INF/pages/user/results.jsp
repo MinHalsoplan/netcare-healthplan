@@ -27,11 +27,8 @@
 <netcare:page>
 	<netcare:header>
 		<script type="text/javascript">
-		
-			NC.log("Load google visualization package...");
 			google.load('visualization', '1.0', {'packages' : ['corechart']});
-			NC.log("done.");
-		
+
 			$(function() {
 				var drawOverview = function() {
 					
