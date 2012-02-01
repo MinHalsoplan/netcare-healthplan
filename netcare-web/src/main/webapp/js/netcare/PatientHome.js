@@ -86,16 +86,17 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 						
 						var pdata = new Object();
 						pdata.id = 'gauge-' + value.id;
-						pdata.pctDone = Math.ceil((value.numDone / value.numTarget)*100);
+						var pctDone = Math.ceil((value.numDone / value.numTarget)*100);
 						pdata.numDone = value.numDone;
 						pdata.numTarget = value.numTarget;
+						pdata.numTotal = value.numTotal;
 						// gauge & data
 						pdata.gauge = null;
 						pdata.options = null;
 						pdata.data = null;
 						_perfData.push(pdata);
 												
-						var result = (pdata.numTarget > 0) ? pdata.pctDone: -1;
+						var result = (pdata.numTarget > 0) ? pctDone: -1;
 						var icon;
 						if (result == -1) {
 							icon = util.createIcon("face-smile", 32, null);

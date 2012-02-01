@@ -33,6 +33,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -59,7 +60,6 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
-import org.callistasoftware.netcare.core.repository.MeasurementTypeRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
@@ -75,6 +75,8 @@ import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
@@ -111,6 +113,16 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
 	 */
 	public static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
+	
+	/**
+	 * CSV Separator.
+	 */
+	public static String CSV_SEP = "\t";
+	
+	/**
+	 * CSV End of Line
+	 */
+	public static String CSV_EOL = "\r\n";
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
@@ -137,9 +149,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ActivityCommentRepository commentRepository;
-	
-	@Autowired
-	private MeasurementTypeRepository measurementTypeRepo;
 	
 	@Autowired
 	private MessageSource messages;
@@ -490,9 +499,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			if (existing == null) {
 				final ReportedActivity ra = new ReportedActivity();
 				ra.setName(name);
+				ra.setId(e.getActivityDefinitionEntity().getId());
 				// FIXME: Multi values.
 				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
-				
 				reportedActivities.add(ra);
 			}
 			
@@ -776,46 +785,58 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	// FIXME: Requires single activity definitions
 	@Override
-	public String getPlanReports(PatientBaseView patient) {
-		throw new UnsupportedOperationException("Fix implementation to support multiple measures for a scheduled activity.");
-//		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-//		List<HealthPlanEntity> plans = repo.findByForPatient(forPatient);
-//		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
-//		for (HealthPlanEntity plan : plans) {
-//			for (ActivityDefinitionEntity ad : plan.getActivityDefinitions()) {
-//				for (ScheduledActivityEntity sc : ad.getScheduledActivities()) {
-//					if (sc.getReportedTime() != null) {
-//						list.add(sc);
-//					}
-//				}
-//			}
-//		}
-//		Collections.sort(list);
-//		StringBuffer sb = new StringBuffer();
-//		sb.append("Aktivitet;Enhet;Mål;Planerad datum;Planerad tid;Utförd datum;Utförd tid;Resultat;Känsla;Kommentar\r\n");
-//		for (ScheduledActivityEntity sc : list) {
-//			String unit = new Option(sc.getActivityDefinitionEntity().getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
-//			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
-//			sb.append(";");
-//			sb.append(quotedString(unit));
-//			sb.append(";");
-//			sb.append(sc.getActivityDefinitionEntity().getActivityTarget());
-//			sb.append(";");
-//			sb.append(ApiUtil.formatDate(sc.getScheduledTime()));
-//			sb.append(";");
-//			sb.append(ApiUtil.formatTime(sc.getScheduledTime()));
-//			sb.append(";");
-//			sb.append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
-//			sb.append(";");
-//			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
-//			sb.append(";");
-//// FIXME:			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
-//			sb.append(";");
-//			sb.append(sc.getPerceivedSense());
-//			sb.append(";");
-//			sb.append(quotedString(sc.getNote()));
-//			sb.append("\r\n");
-//		}
-//		return sb.toString();
+	public String getPlanReports(Long activityDeifntionId, PatientBaseView patient) {
+		ActivityDefinitionEntity entity = activityDefintionRepository.findOne(activityDeifntionId);
+		
+		List<ScheduledActivityEntity> list = entity.getScheduledActivities();
+		StringBuffer hb = new StringBuffer();
+		hb.append("Aktivitet");
+		hb.append(CSV_SEP).append("Planerad datum");
+		hb.append(CSV_SEP).append("Planerad tid");
+		hb.append(CSV_SEP).append("Utförd datum");
+		hb.append(CSV_SEP).append("Utförd tid");
+		hb.append(CSV_SEP).append("Känsla");
+		hb.append(CSV_SEP).append("Kommentar");
+		
+		StringBuffer sb = new StringBuffer();
+		boolean first = true;
+		for (ScheduledActivityEntity sc : list) {
+			if (sc.getReportedTime() == null) {
+				continue;
+			}
+			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
+			sb.append(CSV_SEP).append(ApiUtil.formatDate(sc.getScheduledTime()));
+			sb.append(CSV_SEP).append(ApiUtil.formatTime(sc.getScheduledTime()));
+			sb.append(CSV_SEP).append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
+			sb.append(CSV_SEP).append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
+			sb.append(CSV_SEP).append(sc.getPerceivedSense());
+			sb.append(CSV_SEP).append(quotedString(sc.getNote()));
+			for (MeasurementEntity me : sc.getMeasurements()) {
+				MeasurementTypeEntity type = me.getMeasurementDefinition().getMeasurementType();
+				String name = type.getName();
+				if (first) {
+					Option unit = new Option(type.getUnit().name(), LocaleContextHolder.getLocale());
+					hb.append(CSV_SEP).append(quotedString(name + " [" + unit.getValue() + "]"));
+					if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
+						hb.append(CSV_SEP).append(quotedString(name + " - min"));
+						hb.append(CSV_SEP).append(quotedString(name + " - max"));
+					} else {
+						hb.append(CSV_SEP).append(quotedString(name + " - mål"));						
+					}
+				}
+				sb.append(CSV_SEP).append(me.getReportedValue());
+				if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
+					sb.append(CSV_SEP).append(me.getMinTarget());
+					sb.append(CSV_SEP).append(me.getMaxTarget());
+				} else {
+					sb.append(CSV_SEP).append(me.getTarget());
+				}
+			}
+			sb.append(CSV_EOL);
+			first = false;
+		}
+		hb.append(CSV_EOL);
+		
+		return hb.append(sb).toString();
 	}
 }

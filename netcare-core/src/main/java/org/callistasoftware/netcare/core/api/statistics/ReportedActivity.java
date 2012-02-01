@@ -32,9 +32,19 @@ public class ReportedActivity implements Serializable {
 	private Float goal;
 
 	private List<ReportedValue> reportedValues;
+	
+	private Long id;
 
 	public ReportedActivity() {
 		this.setReportedValues(new ArrayList<ReportedValue>());
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public Long getId() {
+		return id;
 	}
 	
 	public Float getGoal() {

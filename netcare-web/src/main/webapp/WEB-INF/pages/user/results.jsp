@@ -38,7 +38,7 @@
 					NC.log("Drawing overview...");
 					
 					var captions = null;
-					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue'], function(data) {
+					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue', 'resultLink'], function(data) {
 						NC.log("Load captions returned success...");
 						captions = data;
 					});
@@ -100,7 +100,10 @@
 							chartData.addRows(items);
 							
 							var chartDiv = $('<div>', { id: 'activity-' + index}).addClass('shadow-box');
-							$('#activityCharts').append('<br />').append(chartDiv);
+							$('#activityCharts').append('<br />').append(chartDiv);							
+							var link = $('<a>').attr('href', '/netcare-web/api/patient/result/'  + value.id + '/mina-resultat.csv');
+							link.html(captions.resultLink);
+							$('#activityCharts').append('<br />').append($('<div>').css('text-align', 'right').append(link));
 							
 							var opts = {
 									width: 600,

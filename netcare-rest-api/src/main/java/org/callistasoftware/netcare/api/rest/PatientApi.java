@@ -95,9 +95,9 @@ public class PatientApi extends ApiSupport {
 		return planService.getICalendarEvents((PatientBaseView)auth.getPrincipal());
 	}
 	
-	@RequestMapping(value="/result/mina-resultat.csv",method=RequestMethod.GET, produces="text/csv")
+	@RequestMapping(value="/result/{id}/mina-resultat.csv",method=RequestMethod.GET, produces="text/csv")
 	@ResponseBody
-	public String getPlanReports(final Authentication auth) {
-		return planService.getPlanReports((PatientBaseView)auth.getPrincipal());
+	public String getPlanReports(@PathVariable(value="id") final Long activityDefId, final Authentication auth) {
+		return planService.getPlanReports(activityDefId, (PatientBaseView)auth.getPrincipal());
 	}
 }

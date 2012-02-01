@@ -248,7 +248,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				var id = $('#reportFormDiv input[name="activityId"]').val();
 				var rep = new Object();
 				rep.actualDate = $('#reportFormDiv input[name="date"]').val();
-				rep.actualTime = $('#reportFormDiv input[name="time"]').val();
+				rep.actualTime = $('#reportFormDiv input[name="time"]').val();				
 				rep.sense = $('#reportFormDiv input[name="gsense"]:checked').val();
 				rep.note = $('#reportFormDiv input[name="note"]').val();
 				rep.rejected = false;
@@ -265,7 +265,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				public.performReport(id, jsonObj, function(data, last) {
 					$('#reportFormDiv').modal('hide');
 					if (_reportCallback != null) {
-						_reportCallback(data.definition.id, parseInt(rep.actualValue), last);
+						_reportCallback(data.definition.id, 1, last);
 					}
 				});
 			});
