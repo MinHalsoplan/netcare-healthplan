@@ -37,6 +37,8 @@ import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.DayTimeImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.impl.MeasurementDefinitionImpl;
+import org.callistasoftware.netcare.core.api.impl.MeasurementTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
@@ -190,6 +192,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
 		me.setAlarmEnabled(true);
+		
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
@@ -205,10 +208,17 @@ public class HealthPlanServiceTest extends TestSupport {
 		typeImpl.setId(savedType.getId());
 		typeImpl.setName("Löpning");
 		
+		final MeasurementTypeImpl mdType = new MeasurementTypeImpl();
+		mdType.setId(me.getId());
+		final MeasurementDefinitionImpl md = new MeasurementDefinitionImpl();
+		md.setTarget(1200);
+		md.setMeasurementType(mdType);
+		
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
 		
 		impl.setType(typeImpl);
 		impl.setActivityRepeat(2);
+		impl.setGoalValues(new MeasurementDefinitionImpl[] { md });
 		
 		// Monday and saturday
 		final DayTimeImpl dt = new DayTimeImpl();
@@ -235,6 +245,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		impl2.setType(typeImpl);
 		impl2.setActivityRepeat(0);
 		impl2.setStartDate("2013-01-30");
+		impl2.setGoalValues(new MeasurementDefinitionImpl[] { md });
 		
 		// Wednesday (1 time activity)
 		final DayTimeImpl dt3 = new DayTimeImpl();

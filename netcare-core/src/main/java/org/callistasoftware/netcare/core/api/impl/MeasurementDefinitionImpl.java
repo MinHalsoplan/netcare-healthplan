@@ -43,6 +43,10 @@ public class MeasurementDefinitionImpl implements MeasurementDefinition {
 	public MeasurementType getMeasurementType() {
 		return measurementType;
 	}
+	
+	public void setMeasurementType(final MeasurementTypeImpl measurementType) {
+		this.measurementType = measurementType;
+	}
 
 	@Override
 	public int getTarget() {

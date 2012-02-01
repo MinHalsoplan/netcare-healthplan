@@ -206,6 +206,7 @@
 					},
 					select : function(event, ui) {
 						
+						$('input[name="activityTypeId"]').attr('value', ui.item.data.id);
 						$('#measureValues').remove();
 						
 						var minValue = '';
@@ -310,8 +311,35 @@
 					var at = new Object();
 					at.id = activityType;
 					
+					var measureValues = new Array();
+					var processed = 0;
+					$.each($('#measureValues input'), function(i, v) {
+						var id = $(v).attr('id').substr(0, 1);
+						
+						NC.log("Checking " + id + " with " + processed + " to determine whether to process...");
+						if (id != processed) {
+							var measure = new Object();
+							measure.measurementType = new Object();
+							measure.measurementType.id = id;
+							
+							var inputs = $('#measureValues input[id*="'+ id +'-"]');
+							if (inputs.size() == 2) {
+								measure.minTarget = $(inputs.get(0)).val();
+								measure.maxTarget = $(inputs.get(1)).val();
+							} else if (inputs.size() == 1) {
+								measure.target = $(inputs.get(0)).val();
+							} else {
+								throw new Error("Measured value has wrong number of input fields.");
+							}
+							
+							measureValues.push(measure);
+							processed = id;
+						}
+					});
+					
+					
 					var activity = new Object();
-					activity.goal = goal;
+					activity.goalValues = measureValues;
 					activity.type = at;
 					activity.startDate = startDate;
 					activity.dayTimes = dayTimes;
@@ -329,7 +357,6 @@
 						
 						resetForm();
 						
-						/* List activities */
 						hp.listActivities(healthPlan, 'activitiesTable')
 						
 					});
@@ -344,72 +371,6 @@
 				});
 				
 				$('#activityForm').hide();
-				
-				/*
-				 * Bind modal show event,
-				 * When the modal is shown we want to download units as
-				 * well as activity categories and fill the modal
-				 * form
-				 */
-				$('#addNewType').bind('show', function() {
-					NC.log("Showing modal... fill form.");
-					
-					$('#addNewType select[name="unit"]').empty();
-					new NC.Support().loadUnits($('#addNewType select[name="unit"]'));
-					
-					$('#addNewType select[name="category"]').empty();
-					new NC.ActivityCategories().loadAsOptions($('#addNewType select[name="category"]'));
-				});
-				
-				/*
-				 * Activate sense in addNewType
-				 */
-				 $('#senseCB').change(function() {
-					if ($(this).is(':checked')) {
-						$('#senseTextId').show();
-					} else {
-						$('#senseTextId').hide();						
-					}
-				 });
-				
-				/*
-				 * Save activity type when user submits the form
-				 */
-				$('#addNewType :submit').click(function(event) {
-					NC.log("User submitted new activity type form...");
-					event.preventDefault();
-					
-					var name = $('#addNewType input[name="name"]').val();
-					
-					var category = new Object();
-					category.id = $('#addNewType select[name="category"] option:selected').val();
-					
-					var unit = new Object();
-					unit.code = $('#addNewType select[name="unit"] option:selected').val();
-					
-					NC.log("Name: " + name);
-					NC.log("Category: " + category.id);
-					NC.log("Unit: " + unit.code);
-					
-					var formData = new Object();
-					formData.name = name;
-					formData.category = category;
-					formData.unit = unit;
-					formData.measuringSense = $('#addNewType input[name=activateSense]').is(':checked');
-					if (formData.measuringSense) {
-						formData.scaleText = $('#addNewType input[name="scaleText"]').val();
-					}
-					
-					var jsonObj = JSON.stringify(formData);
-					NC.log('...... CREATE : ' + jsonObj);
-					new NC.ActivityTypes().create(jsonObj, function(data) {
-						$('input[name="activityType"]').attr('value', data.data.name);
-						$('input[name="activityTypeId"]').attr('value', data.data.id);
-						$('input[name="activityGoal"]').focus();
-						
-						$('#addNewType').modal('hide');
-					});
-				});
 			});
 		</script>
 	</netcare:header>
