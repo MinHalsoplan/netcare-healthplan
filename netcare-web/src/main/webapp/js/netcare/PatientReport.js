@@ -106,7 +106,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 		var rbtn = _util.createIcon('edit', 24, function() {
 
 			$('#reportFormDiv input[name="activityId"]').attr('value', act.id);
-			$('#reportFormDiv input[name="note"]').attr('value', act.note);
+			$('#reportFormDiv input[name="note"]').attr('value', (act.note == null) ? '' : act.note);
 			$('#reportFormDiv input[name="numValueId"]').attr('value', act.measurements.length);
 
 			if (act.definition.type.measuringSense) {

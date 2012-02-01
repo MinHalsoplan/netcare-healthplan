@@ -113,16 +113,14 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
 	 */
 	public static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
-	
-	/**
-	 * CSV Separator.
-	 */
-	public static String CSV_SEP = "\t";
-	
+		
 	/**
 	 * CSV End of Line
 	 */
 	public static String CSV_EOL = "\r\n";
+	
+	@org.springframework.beans.factory.annotation.Value("#{application['csv.delimiter']}")
+	private String CSV_SEP;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
@@ -787,7 +785,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public String getPlanReports(Long activityDeifntionId, PatientBaseView patient) {
 		ActivityDefinitionEntity entity = activityDefintionRepository.findOne(activityDeifntionId);
-		
+				
 		List<ScheduledActivityEntity> list = entity.getScheduledActivities();
 		StringBuffer hb = new StringBuffer();
 		hb.append("Aktivitet");
