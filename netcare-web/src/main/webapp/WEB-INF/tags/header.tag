@@ -128,6 +128,7 @@
 	<script type="text/javascript" src="<c:url value='/js/netcare/ActivityTypes.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientReport.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
 	
 	<jsp:doBody />
 </head>

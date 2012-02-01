@@ -31,6 +31,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
@@ -172,25 +173,23 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	//
 	private void calcCompletion(List<ScheduledActivityEntity> list) {
 		int numDone = 0;
-		int numTotal = 0;
 		int numTarget = 0;
 
 		Calendar cal = Calendar.getInstance();
 		ApiUtil.dayEnd(cal);
 		
 		for (ScheduledActivityEntity a : list) {
-			if (a.getReportedTime() != null) {
+			if (a.getReportedTime() != null && a.getStatus().equals(ScheduledActivityStatus.OPEN)) {
 				numDone++;
 			}
 			
 			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
 				numTarget++;
 			}
-			numTotal++;
 		}
 
 		setNumDone(numDone);
-		setNumTotal(numTotal);
+		setNumTotal(list.size());
 		setNumTarget(numTarget);
 	}
 

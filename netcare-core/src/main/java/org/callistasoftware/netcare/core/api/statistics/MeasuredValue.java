@@ -23,6 +23,8 @@ import org.callistasoftware.netcare.core.api.Option;
 
 public class MeasuredValue {
 	
+	private String name;
+	private boolean interval;
 	private Option valueType;
 	private Option unit;
 	
@@ -54,5 +56,21 @@ public class MeasuredValue {
 
 	public void setUnit(Option unit) {
 		this.unit = unit;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isInterval() {
+		return interval;
+	}
+
+	public void setInterval(boolean interval) {
+		this.interval = interval;
 	}
 }

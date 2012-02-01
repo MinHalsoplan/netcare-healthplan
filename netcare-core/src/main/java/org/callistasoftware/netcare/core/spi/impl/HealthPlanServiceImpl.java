@@ -62,7 +62,6 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
-import org.callistasoftware.netcare.core.repository.MeasurementTypeRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
@@ -79,6 +78,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
@@ -87,7 +87,6 @@ import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -115,6 +114,16 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
 	 */
 	public static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
+	
+	/**
+	 * CSV Separator.
+	 */
+	public static String CSV_SEP = "\t";
+	
+	/**
+	 * CSV End of Line
+	 */
+	public static String CSV_EOL = "\r\n";
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
@@ -141,12 +150,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ActivityCommentRepository commentRepository;
-	
-	@Autowired
-	private MeasurementTypeRepository measurementTypeRepo;
-	
-	@Autowired
-	private MessageSource messages;
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -472,7 +475,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				, new Date()
 				, new Sort(Sort.Direction.ASC, "scheduledTime"));
 		
-		final List<ReportedActivity> reported = new ArrayList<ReportedActivity>();
+		final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
 		for (final ScheduledActivityEntity e : ents) {
 			
 			final ReportedActivity ra = new ReportedActivity();
@@ -482,15 +485,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			ra.setLabel(DateUtil.toDateTime(e.getScheduledTime()));
 			
 			final List<MeasurementEntity> measurements = e.getMeasurements();
-			final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
-			for (final MeasurementEntity m : measurements) {
-				
+			for (final MeasurementEntity m : measurements) {	
 				final String measurementName = m.getMeasurementDefinition().getMeasurementType().getName(); 
 				MeasuredValue mv = this.findMeasuredValue(measurementName, measuredValues);
 				if (mv == null) {
 					mv = new MeasuredValue();
+					mv.setName(e.getActivityDefinitionEntity().getActivityType().getName());
 					mv.setValueType(new Option(measurementName, null));
 					mv.setUnit(new Option(m.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale()));
+					mv.setInterval(m.getMeasurementDefinition().getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL));
 					measuredValues.add(mv);
 				}
 				
@@ -506,54 +509,14 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				}
 				
 				rv.setReportedValue((float) m.getReportedValue());
+				rv.setReportedAt(DateUtil.toDateTime(e.getReportedTime()));
+				
 				mv.getReportedValues().add(rv);
 			}
 			ra.setMeasures(measuredValues);
-			reported.add(ra);
 		}
 		
-		stats.setReportedActivities(reported);
-		
-//		int currentWeek = -1;
-//		for (final ScheduledActivityEntity e : ents) {
-//			final Calendar c = Calendar.getInstance();
-//			c.setTime(e.getScheduledTime());
-//		
-//			final boolean newWeek;
-//			log.debug("Current week is: " + currentWeek);
-//			log.debug("Activity week is: " + c.get(Calendar.WEEK_OF_YEAR));
-//			if (currentWeek != c.get(Calendar.WEEK_OF_YEAR)) {
-//				currentWeek = c.get(Calendar.WEEK_OF_YEAR);
-//				newWeek = true;
-//			} else {
-//				newWeek = false;
-//			}
-//			
-//			final String name = e.getActivityDefinitionEntity().getActivityType().getName();
-//			final ReportedActivity existing = this.findReportedActivity(name, reportedActivities);
-//			
-//			if (existing == null) {
-//				final ReportedActivity ra = new ReportedActivity();
-//				ra.setName(name);
-//				// FIXME: Multi values.
-//				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
-//				
-//				reportedActivities.add(ra);
-//			}
-//			
-//			final ReportedValue value = new ReportedValue();
-//			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-//			// FIXME: multi values	
-//			//value.setReportedValue((float) e.getActualValue());
-//			//value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
-//			value.setNewWeek(newWeek);
-//			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
-//			value.setNote(e.getNote());
-//			
-//			log.debug("ADD: " + value);
-//			this.findReportedActivity(name, reportedActivities).getReportedValues().add(value);
-//		}
-//		stats.setReportedActivities(reportedActivities);
+		stats.setMeasuredValues(measuredValues);
 		
 		return ServiceResultImpl.createSuccessResult(stats, new GenericSuccessMessage());
 	}
@@ -568,18 +531,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		return null;
 	}
 	
-	private String formatLabel(final int week, final int year) {
-		final StringBuilder label = new StringBuilder();
-		label.append(messages.getMessage("week", null, LocaleContextHolder.getLocale()));
-		label.append(" ");
-		label.append(week);
-		label.append(", ");
-		label.append(year);
-		
-		return label.toString();
-		
-	}
-	
 	private ActivityCount findActivityCount(final String name, final List<ActivityCount> list) {
 		for (final ActivityCount a : list) {
 			if (a.getName().equals(name)) {
@@ -587,15 +538,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			}
 		}
 		
-		return null;
-	}
-	
-	private ReportedActivity findReportedActivity(final String name, final List<ReportedActivity> list) {
-		for (final ReportedActivity act : list) {
-			if (act.getName().equals(name)) {
-				return act;
-			}
-		}
 		return null;
 	}
 
@@ -831,46 +773,58 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	// FIXME: Requires single activity definitions
 	@Override
-	public String getPlanReports(PatientBaseView patient) {
-		throw new UnsupportedOperationException("Fix implementation to support multiple measures for a scheduled activity.");
-//		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-//		List<HealthPlanEntity> plans = repo.findByForPatient(forPatient);
-//		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
-//		for (HealthPlanEntity plan : plans) {
-//			for (ActivityDefinitionEntity ad : plan.getActivityDefinitions()) {
-//				for (ScheduledActivityEntity sc : ad.getScheduledActivities()) {
-//					if (sc.getReportedTime() != null) {
-//						list.add(sc);
-//					}
-//				}
-//			}
-//		}
-//		Collections.sort(list);
-//		StringBuffer sb = new StringBuffer();
-//		sb.append("Aktivitet;Enhet;Mål;Planerad datum;Planerad tid;Utförd datum;Utförd tid;Resultat;Känsla;Kommentar\r\n");
-//		for (ScheduledActivityEntity sc : list) {
-//			String unit = new Option(sc.getActivityDefinitionEntity().getActivityType().getUnit().name(), LocaleContextHolder.getLocale()).getValue();
-//			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
-//			sb.append(";");
-//			sb.append(quotedString(unit));
-//			sb.append(";");
-//			sb.append(sc.getActivityDefinitionEntity().getActivityTarget());
-//			sb.append(";");
-//			sb.append(ApiUtil.formatDate(sc.getScheduledTime()));
-//			sb.append(";");
-//			sb.append(ApiUtil.formatTime(sc.getScheduledTime()));
-//			sb.append(";");
-//			sb.append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
-//			sb.append(";");
-//			sb.append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
-//			sb.append(";");
-//// FIXME:			sb.append(sc.getActualTime() != null ? sc.getActualValue() : "");
-//			sb.append(";");
-//			sb.append(sc.getPerceivedSense());
-//			sb.append(";");
-//			sb.append(quotedString(sc.getNote()));
-//			sb.append("\r\n");
-//		}
-//		return sb.toString();
+	public String getPlanReports(Long activityDeifntionId, PatientBaseView patient) {
+		ActivityDefinitionEntity entity = activityDefintionRepository.findOne(activityDeifntionId);
+		
+		List<ScheduledActivityEntity> list = entity.getScheduledActivities();
+		StringBuffer hb = new StringBuffer();
+		hb.append("Aktivitet");
+		hb.append(CSV_SEP).append("Planerad datum");
+		hb.append(CSV_SEP).append("Planerad tid");
+		hb.append(CSV_SEP).append("Utförd datum");
+		hb.append(CSV_SEP).append("Utförd tid");
+		hb.append(CSV_SEP).append("Känsla");
+		hb.append(CSV_SEP).append("Kommentar");
+		
+		StringBuffer sb = new StringBuffer();
+		boolean first = true;
+		for (ScheduledActivityEntity sc : list) {
+			if (sc.getReportedTime() == null) {
+				continue;
+			}
+			sb.append(quotedString(sc.getActivityDefinitionEntity().getActivityType().getName()));
+			sb.append(CSV_SEP).append(ApiUtil.formatDate(sc.getScheduledTime()));
+			sb.append(CSV_SEP).append(ApiUtil.formatTime(sc.getScheduledTime()));
+			sb.append(CSV_SEP).append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
+			sb.append(CSV_SEP).append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
+			sb.append(CSV_SEP).append(sc.getPerceivedSense());
+			sb.append(CSV_SEP).append(quotedString(sc.getNote()));
+			for (MeasurementEntity me : sc.getMeasurements()) {
+				MeasurementTypeEntity type = me.getMeasurementDefinition().getMeasurementType();
+				String name = type.getName();
+				if (first) {
+					Option unit = new Option(type.getUnit().name(), LocaleContextHolder.getLocale());
+					hb.append(CSV_SEP).append(quotedString(name + " [" + unit.getValue() + "]"));
+					if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
+						hb.append(CSV_SEP).append(quotedString(name + " - min"));
+						hb.append(CSV_SEP).append(quotedString(name + " - max"));
+					} else {
+						hb.append(CSV_SEP).append(quotedString(name + " - mål"));						
+					}
+				}
+				sb.append(CSV_SEP).append(me.getReportedValue());
+				if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
+					sb.append(CSV_SEP).append(me.getMinTarget());
+					sb.append(CSV_SEP).append(me.getMaxTarget());
+				} else {
+					sb.append(CSV_SEP).append(me.getTarget());
+				}
+			}
+			sb.append(CSV_EOL);
+			first = false;
+		}
+		hb.append(CSV_EOL);
+		
+		return hb.append(sb).toString();
 	}
 }

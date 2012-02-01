@@ -212,8 +212,9 @@ public interface HealthPlanService {
 	/**
 	 * Returns a comma separated text for export of reports to excel. <p>
 	 * 
+	 * @param activityDefinitionId the id.
 	 * @param patient the patient.
 	 * @return the results as a comma separated text (text/csv).
 	 */
-	String getPlanReports(PatientBaseView patient);
+	String getPlanReports(Long activityDefinitionId, PatientBaseView patient);
 }

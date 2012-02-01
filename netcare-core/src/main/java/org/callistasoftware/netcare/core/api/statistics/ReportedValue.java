@@ -18,17 +18,13 @@ package org.callistasoftware.netcare.core.api.statistics;
 
 public class ReportedValue {
 
-	
+	private String reportedAt;
 	
 	private Float reportedValue;
 	private Float targetValue;
 	
 	private Float minTargetValue;
 	private Float maxTargetValue;
-	
-	private boolean newWeek;
-	
-	
 	
 	public Float getReportedValue() {
 		return reportedValue;
@@ -44,14 +40,6 @@ public class ReportedValue {
 	
 	public void setTargetValue(Float targetValue) {
 		this.targetValue = targetValue;
-	}
-	
-	public boolean isNewWeek() {
-		return this.newWeek;
-	}
-	
-	public void setNewWeek(final boolean newWeek) {
-		this.newWeek = newWeek;
 	}
 
 	public Float getMinTargetValue() {
@@ -70,8 +58,16 @@ public class ReportedValue {
 		this.maxTargetValue = maxTargetValue;
 	}
 
+	public String getReportedAt() {
+		return reportedAt;
+	}
+
+	public void setReportedAt(String reportedAt) {
+		this.reportedAt = reportedAt;
+	}
+
 	@Override
 	public String toString() {
-		return "== REPORTED VALUE == " + reportedValue + " | " + targetValue + " | " + newWeek;
+		return "== REPORTED VALUE == " + reportedValue + " | " + targetValue;
 	}
 }

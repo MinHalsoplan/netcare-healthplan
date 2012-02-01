@@ -38,7 +38,7 @@
 					NC.log("Drawing overview...");
 					
 					var captions = null;
-					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue'], function(data) {
+					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue', 'resultLink'], function(data) {
 						NC.log("Load captions returned success...");
 						captions = data;
 					});
@@ -46,88 +46,43 @@
 					NC.log("Captions are: " + captions);
 					
 					var hp = new NC.HealthPlan();
-					var statisticsCallback = function(data) {
-						var arr = new Array();
+					var reports = null;
+					hp.loadStatistics("<c:out value="${param.healthPlan}" />", function(data) {
+						reports = new NC.Reports(data, captions);
 						
-						$.each(data.data.activities, function(index, value) {
-							var item = new Array();
-							item[0] = value.name;
-							item[1] = value.count;
-							
-							arr.push(item);
-						});
-						
-						var dataOverview = new google.visualization.DataTable();
-						dataOverview.addColumn('string',  captions.activityType);
-						dataOverview.addColumn('number', captions.numberOfActivities);
-						
-						NC.log("Add rows: " + arr);
-						dataOverview.addRows(arr);
-						
-						var options = {'width' : 600, 'height' : 300};
-					
-						var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
-						chart.draw(dataOverview, options);
-						
+						reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities, 600, 300);
 						$('#pieChart').show();
 						
-						$.each(data.data.reportedActivities, function(index, value) {
-							NC.log("Processing " + value.name + " ...");
-							var chartData = new google.visualization.DataTable();
-							chartData.addColumn('string', captions.date);
-							chartData.addColumn('number', captions.targetValue);
-							chartData.addColumn('number', captions.reportedValue);
-							chartData.addColumn({type:'string', role:'tooltip'});
-							
-							var items = new Array();
-							$.each(value.reportedValues, function(index, val) {
-								var arr = new Array();
-								
-								if (val.newWeek || index == 0 || value.reportedValues.length -1 == index) {
-									arr[0] = val.label;
-								} else {
-									arr[0] = null;
-								}
-								
-								arr[1] = val.targetValue;
-								arr[2] = val.reportedValue;
-								arr[3] = captions.reportedValue + ': ' + val.reportedValue + '\n"' + val.note + '"';
-								
-								items.push(arr);
-							});
-							
-							NC.log("Adding rows: " + items);
-							chartData.addRows(items);
-							
-							var chartDiv = $('<div>', { id: 'activity-' + index}).addClass('shadow-box');
-							$('#activityCharts').append('<br />').append(chartDiv);
-							
-							var opts = {
-									width: 600,
-									height: 300,
-									title: value.name
-							}
-							
-							var chart = new google.visualization.LineChart(document.getElementById('activity-' + index));
-							chart.draw(chartData, opts);
 						
-							$('#pieChart').show();
-							$('#activityCharts').show();
+						/*
+						 * For each activity type draw diagrams for each
+						 */
+						var processed = '';
+						$.each(data.data.measuredValues, function(i, v) {
+							if (v.name != processed) {
+								
+								$('#activities').append(
+									$('<h2>').html(v.name)
+								).append(
+									$('<p>').append(
+										$('<span>').addClass('label').addClass('notice').html('Information')
+									).html('Tralala')
+								).append(
+									$('<div>').attr('id', 'activity-' + i)
+								);
+								
+								
+								NC.log("Drawing diagrams for: " + v.name);
+								reports.getResultsForActivityType(v.name, 'activity-' + i, 600, 300);
+								
+								processed = v.name;
+							}
 						});
-					};
-					
-					var healthPlanId = "<c:out value="${param.healthPlan}" />";
-					NC.log("Health plan parameter resolved to: " + healthPlanId);
-					if (healthPlanId == "")  {
-						hp.list(<sec:authentication property="principal.id" />, function(data) {
-							$.each(data.data, function(index, value) {
-								healthPlanId = value.id;
-								hp.loadStatistics(healthPlanId, statisticsCallback);
-							});
-						});	
-					} else {
-						hp.loadStatistics(healthPlanId, statisticsCallback);	
-					}
+						
+						$('div[class="shadow-box"]').each(function(i) {
+							$(this).after('<br />');
+						});
+					});
 				};
 								
 				google.setOnLoadCallback(drawOverview);
@@ -144,12 +99,7 @@
 			</p>
 			<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
 			
-			<h2>Rapporterade Resultat</h2>
-			<p>
-				<span class="label notice">Information</span>
-				Diagrammen nedan visar dina rapporterade resultat i förhållande till ditt uppsatta målvärde per aktivitet.
-			</p>
-			<div id="activityCharts" style="display: none;"></div>
+			<section id="activities"></section>
 		</netcare:content>
 		
 	</netcare:body>	

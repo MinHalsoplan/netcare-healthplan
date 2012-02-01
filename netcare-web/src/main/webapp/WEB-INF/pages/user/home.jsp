@@ -42,11 +42,12 @@
 		        pd.data.addColumn('number', 'Value');
 		        pd.data.addRows(1);
 		        pd.data.setValue(0, 0, '%');
-		        pd.data.setValue(0, 1, pd.pctDone);
+				var pctDone = Math.ceil((pd.numDone / pd.numTarget)*100);						
+		        pd.data.setValue(0, 1, pctDone);
 		        pd.options = new Object();
 		        pd.options.width = 100;
 		        pd.options.height = 100;
-		        pd.options.max = Math.max(120, pd.pctDone);
+		        pd.options.max = Math.max(120, pctDone);
 		        pd.options.min = 0;
 		        pd.options.greenFrom = 90;
 		        pd.options.greenTo = pd.options.max;
@@ -142,10 +143,27 @@
 					});
 				};
 				
+				var updateGauges = function(total) {
+					var arr = home.perfData();
+					for (var i = 0; i < arr.length; i++) {
+						var pd = arr[i];
+						var pctDone = Math.ceil((pd.numDone / (total ? pd.numTotal : pd.numTarget))*100);						
+						pd.data.setValue(0, 1, pctDone);
+					    pd.options.max = Math.max(120, pctDone);
+				        pd.options.greenFrom = total ? (pd.numTarget / pd.numTotal) * 100 : 90;
+				        pd.options.greenTo = pd.options.max;
+				        pd.gauge.draw(pd.data, pd.options);
+					}
+				};
+				
+				$('#totalBoxId').click(function() {
+					updateGauges(($(this).is(':checked')));
+				});
+				
 				// reporting stuff				
 				var report = new NC.PatientReport('schemaTable', true);
 				report.init();
-				report.reportCallback(function(id, actual, last) {
+				report.reportCallback(function(id, done, last) {
 					if (last) {
 						$('#eventBody').hide();
 					}
@@ -154,10 +172,10 @@
 					for (var i = 0; i < arr.length; i++) {
 						if (arr[i].id == gid) {
 							var pd = arr[i];
-							pd.numDone +=  actual;
-							pd.pctDone = Math.ceil((pd.numDone / pd.numTarget)*100);						
-					        pd.options.max = Math.max(120, pd.pctSum);
-							pd.data.setValue(0, 1, pd.pctDone);
+							pd.numDone += done;
+							var pctDone = Math.ceil((pd.numDone / pd.numTarget)*100);						
+					        pd.options.max = Math.max(120, pctDone);
+							pd.data.setValue(0, 1, pctDone);
 				        	pd.gauge.draw(pd.data, pd.options);
 				        	break;
 						}
@@ -229,19 +247,22 @@
 				<table id="planTable"
 					class="bordered-table zebra-striped shadow-box">
 					<thead>
-						<th>&nbsp;</th>
-						<th><spring:message code="phome.plan" /></th>
-						<th><spring:message code="phome.activity" /></th>
-						<th><spring:message code="phome.until" /></th>
-						<th><spring:message code="phome.frequency" /></th>
-						<th><spring:message code="phome.done" /></th>
+						<tr>
+							<th>&nbsp;</th>
+							<th><spring:message code="phome.plan" /></th>
+							<th><spring:message code="phome.activity" /></th>
+							<th><spring:message code="phome.until" /></th>
+							<th><spring:message code="phome.frequency" /></th>
+							<th><spring:message code="phome.done" /><br /> <input
+								id="totalBoxId" type="checkbox" /> <spring:message
+									code="phome.showTot" /></th>
+						</tr>
 					</thead>
 					<tbody>
 					</tbody>
 				</table>
 				<br />
 				<div style="text-align: right">
-					<a href="/netcare-web/api/patient/result/mina-resultat.csv"><spring:message code="phome.resultLink" /></a>&nbsp;|&nbsp; 
 					<a href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 				</div>
 			</section>
