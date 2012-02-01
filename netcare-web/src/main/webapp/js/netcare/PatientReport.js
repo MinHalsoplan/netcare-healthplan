@@ -33,6 +33,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _util = new NC.Util();
 	var _ajax = new NC.Ajax();
 	
+	var _ajax = new NC.Ajax();
 		
 	var _updateDescription = function() {
 		NC.log("Updating schema table description: " + _schemaCount);
@@ -290,7 +291,8 @@ NC.PatientReport = function(tableId, shortVersion) {
 					}
 				}
 				callback(data.data, _schemaCount <= 0);
-			}, true);
+				
+			}, true);	
 		},
 				
 		list : function() {

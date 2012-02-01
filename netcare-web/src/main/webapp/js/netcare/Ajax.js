@@ -29,6 +29,7 @@ NC.Ajax = function() {
 		/*
 		 * Show results
 		 */
+		NC.log("Show page messages after call: " + show);
 		if (show) {
 			_pm.processServiceResult(data);
 		}
@@ -37,7 +38,10 @@ NC.Ajax = function() {
 		 * Execute callback 
 		 */
 		if (data.success && callback !== undefined) {
+			NC.log("Call was successful. Execute callback function...");
 			callback(data);
+		} else {
+			NC.log("Call was not successful. Data success: " + data.success + " Callback: " + callback);
 		}
 	};
 	
@@ -52,22 +56,30 @@ NC.Ajax = function() {
 		return showMessages;
 	};
 	
+	var _getDefaultOpts = function(url, callback, displayMessages) {
+		NC.log("==== AJAX GET " + url + " ====");
+		return {
+			url : url,
+			dataType : _dataType,
+			cache : false,
+			success : function(data) {
+				_defaultSuccess(data, _showMessages(displayMessages), callback);
+			}
+		}
+	};
+	
 	public = {
 			/**
 			 * Execute a GET request
 			 */
 			get : function(url, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
-				NC.log("==== AJAX GET " + call + " ====");
-				
-				var opts = {
-					url : call,
-					dataType : _dataType,
-					cache : false,
-					success : function(data) {
-						_defaultSuccess(data, _showMessages(displayMessages), callback);
-					}
-				};
+				$.ajax(_getDefaultOpts(call, callback, displayMessages));
+			},
+			
+			getWithParams : function(url, data, callback, displayMessages) {
+				var opts = _getDefaultOpts(_contextPath + _basePath + url, callback, displayMessages);
+				opts.data = data;
 				
 				$.ajax(opts);
 			},

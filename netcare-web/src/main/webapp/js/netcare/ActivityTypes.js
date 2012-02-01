@@ -19,45 +19,18 @@ NC.ActivityCategories = function() {
 	var _this = this;
 	var _ajax = new NC.Ajax();
 	
-	public = {
+	var public = {
 		load : function(callback) {
-			_ajax.get('/activityCategory/load', callback);
-			
-			
-			/*var url = _baseUrl + '/load';
-			NC.log("Loading activity categories from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				success : function(data) {
-					
-					new NC.Util().processServiceResult(data);
-					
-					if (data.success) {
-						NC.log("Activity categories successfully fetched from server: " + data.data.length);
-						callback(data);
-					}
-				}
-			});*/
+			_ajax.get('/activityCategory/load', callback, true);
 		},
 		
 		loadAsOptions : function(selectElem) {
-			NC.log("Loading activity categories as options...");
 			var util = new NC.Util();
 			
-			new NC.ActivityCategories().load(function(data) {
+			public.load(function(data) {
 				var arr = new Array();
-				
 				$.each(data.data, function(index, value) {
-					var item = new Object();
-					item.code = value.id;
-					item.value = value.name;
-					
-					NC.log("Item created: " + item.code + " " + item.value);
-					
-					arr.push(item);
+					arr.push({code : value.id, value : value.name});
 				});
 				
 				util.createOptions(arr, selectElem);
@@ -65,22 +38,7 @@ NC.ActivityCategories = function() {
 		},
 		
 		create : function(formData, callback) {
-			var url = _baseUrl + '/create';
-			NC.log("Creating new activity category using url " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				type : 'post',
-				data : formData,
-				contentType : 'application/json',
-				success : function(data) {
-					new NC.Util().processServiceResult(data);					
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.post('/activityCategory/create', formData, callback, true);
 		}
 	};
 	
@@ -98,23 +56,7 @@ NC.ActivityTypes = function() {
 		},
 		
 		search : function(searchString, callback) {
-			var url = _baseUrl + '/search';
-			NC.log("Searching for activity types with name like " + searchString + " from url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				data : { text : searchString },
-				success : function(data) {
-					if (data.success) {
-						NC.log("Successfully searched for activity types...");
-						callback(data);
-					} else {
-						NC.log("Error searching for activity types...");
-					}
-				}
-			});
+			_ajax.getWithParams('/activityType/search', {text : searchString}, callback);
 		},
 		
 		create : function(formData, callback) {

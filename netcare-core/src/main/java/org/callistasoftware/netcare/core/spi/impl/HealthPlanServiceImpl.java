@@ -52,8 +52,10 @@ import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
+import org.callistasoftware.netcare.core.api.statistics.MeasuredValue;
 import org.callistasoftware.netcare.core.api.statistics.ReportedActivity;
 import org.callistasoftware.netcare.core.api.statistics.ReportedValue;
+import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
@@ -85,7 +87,6 @@ import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -147,9 +148,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ActivityCommentRepository commentRepository;
-	
-	@Autowired
-	private MessageSource messages;
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -469,67 +467,66 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		 * Get all reported activities
 		 */
 		log.debug("Calculating reported activities...");
-		final List<ReportedActivity> reportedActivities = new ArrayList<ReportedActivity>();
 		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository.findReportedActivitiesForHealthPlan(
 				healthPlanId
 				, healthPlan.getStartDate()
 				, new Date()
 				, new Sort(Sort.Direction.ASC, "scheduledTime"));
 		
-		int currentWeek = -1;
+		final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
 		for (final ScheduledActivityEntity e : ents) {
-			final Calendar c = Calendar.getInstance();
-			c.setTime(e.getScheduledTime());
-		
-			final boolean newWeek;
-			log.debug("Current week is: " + currentWeek);
-			log.debug("Activity week is: " + c.get(Calendar.WEEK_OF_YEAR));
-			if (currentWeek != c.get(Calendar.WEEK_OF_YEAR)) {
-				currentWeek = c.get(Calendar.WEEK_OF_YEAR);
-				newWeek = true;
-			} else {
-				newWeek = false;
+			
+			final ReportedActivity ra = new ReportedActivity();
+			ra.setName(e.getActivityDefinitionEntity().getActivityType().getName());
+			ra.setNote(e.getNote());
+			ra.setReportedAt(DateUtil.toDateTime(e.getReportedTime()));
+			ra.setLabel(DateUtil.toDateTime(e.getScheduledTime()));
+			
+			final List<MeasurementEntity> measurements = e.getMeasurements();
+			for (final MeasurementEntity m : measurements) {	
+				final String measurementName = m.getMeasurementDefinition().getMeasurementType().getName(); 
+				MeasuredValue mv = this.findMeasuredValue(measurementName, measuredValues);
+				if (mv == null) {
+					mv = new MeasuredValue();
+					mv.setName(e.getActivityDefinitionEntity().getActivityType().getName());
+					mv.setValueType(new Option(measurementName, null));
+					mv.setUnit(new Option(m.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale()));
+					mv.setInterval(m.getMeasurementDefinition().getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL));
+					measuredValues.add(mv);
+				}
+				
+				final ReportedValue rv = new ReportedValue();
+				switch (m.getMeasurementDefinition().getMeasurementType().getValueType()) {
+				case INTERVAL:
+					rv.setMaxTargetValue((float) m.getMaxTarget());
+					rv.setMinTargetValue((float) m.getMinTarget());
+					break;
+				case SINGLE_VALUE:
+					rv.setTargetValue((float) m.getTarget());
+					break;
+				}
+				
+				rv.setReportedValue((float) m.getReportedValue());
+				rv.setReportedAt(DateUtil.toDateTime(e.getReportedTime()));
+				
+				mv.getReportedValues().add(rv);
 			}
-			
-			final String name = e.getActivityDefinitionEntity().getActivityType().getName();
-			final ReportedActivity existing = this.findReportedActivity(name, reportedActivities);
-			
-			if (existing == null) {
-				final ReportedActivity ra = new ReportedActivity();
-				ra.setName(name);
-				ra.setId(e.getActivityDefinitionEntity().getId());
-				// FIXME: Multi values.
-				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
-				reportedActivities.add(ra);
-			}
-			
-			final ReportedValue value = new ReportedValue();
-			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-			// FIXME: multi values	
-			//value.setReportedValue((float) e.getActualValue());
-			//value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
-			value.setNewWeek(newWeek);
-			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
-			value.setNote(e.getNote());
-			
-			log.debug("ADD: " + value);
-			this.findReportedActivity(name, reportedActivities).getReportedValues().add(value);
+			ra.setMeasures(measuredValues);
 		}
-		stats.setReportedActivities(reportedActivities);
+		
+		stats.setMeasuredValues(measuredValues);
 		
 		return ServiceResultImpl.createSuccessResult(stats, new GenericSuccessMessage());
 	}
 	
-	private String formatLabel(final int week, final int year) {
-		final StringBuilder label = new StringBuilder();
-		label.append(messages.getMessage("week", null, LocaleContextHolder.getLocale()));
-		label.append(" ");
-		label.append(week);
-		label.append(", ");
-		label.append(year);
+	private MeasuredValue findMeasuredValue(final String measurementName, final List<MeasuredValue> list) {
+		for (final MeasuredValue mv : list) {
+			if (mv.getValueType().getCode().equals(measurementName)) {
+				return mv;
+			}
+		}
 		
-		return label.toString();
-		
+		return null;
 	}
 	
 	private ActivityCount findActivityCount(final String name, final List<ActivityCount> list) {
@@ -539,15 +536,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			}
 		}
 		
-		return null;
-	}
-	
-	private ReportedActivity findReportedActivity(final String name, final List<ReportedActivity> list) {
-		for (final ReportedActivity act : list) {
-			if (act.getName().equals(name)) {
-				return act;
-			}
-		}
 		return null;
 	}
 

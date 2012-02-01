@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReportedActivity implements Serializable {
-
 	/**
 	 * 
 	 */
@@ -29,30 +28,15 @@ public class ReportedActivity implements Serializable {
 
 	private String name;
 	
-	private Float goal;
-
-	private List<ReportedValue> reportedValues;
+	private String label;
 	
-	private Long id;
+	private String reportedAt;
+	private String note;
+	
+	private List<MeasuredValue> measures;
 
 	public ReportedActivity() {
-		this.setReportedValues(new ArrayList<ReportedValue>());
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public Float getGoal() {
-		return goal;
-	}
-
-	public void setGoal(Float goal) {
-		this.goal = goal;
+		this.setMeasures(new ArrayList<MeasuredValue>());
 	}
 	
 	public String getName() {
@@ -62,12 +46,36 @@ public class ReportedActivity implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public List<ReportedValue> getReportedValues() {
-		return reportedValues;
+	
+	public List<MeasuredValue> getMeasures() {
+		return this.measures;
+	}
+	
+	public void setMeasures(final List<MeasuredValue> measures) {
+		this.measures = measures;
+	}
+	
+	public String getReportedAt() {
+		return reportedAt;
+	}
+	
+	public void setReportedAt(String reportedAt) {
+		this.reportedAt = reportedAt;
+	}
+	
+	public String getLabel() {
+		return this.label;
+	}
+	
+	public void setLabel(final String label) {
+		this.label = label;
+	}
+	
+	public String getNote() {
+		return note;
 	}
 
-	public void setReportedValues(List<ReportedValue> reportedValues) {
-		this.reportedValues = reportedValues;
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

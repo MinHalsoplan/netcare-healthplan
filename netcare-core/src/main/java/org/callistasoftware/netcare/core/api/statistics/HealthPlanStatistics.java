@@ -27,15 +27,14 @@ public class HealthPlanStatistics implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private List<ActivityCount> activities;
-	
-	private List<ReportedActivity> reportedActivities;
+	private List<MeasuredValue> measuredValues;
 
-	public List<ReportedActivity> getReportedActivities() {
-		return this.reportedActivities;
+	public List<MeasuredValue> getMeasuredValues() {
+		return measuredValues;
 	}
-	
-	public void setReportedActivities(final List<ReportedActivity> reportedActivities) {
-		this.reportedActivities = reportedActivities;
+
+	public void setMeasuredValues(List<MeasuredValue> measuredValues) {
+		this.measuredValues = measuredValues;
 	}
 	
 	public List<ActivityCount> getActivities() {
