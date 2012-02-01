@@ -25,16 +25,16 @@ import java.io.Serializable;
  */
 public class Value implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Long measurementId;
+	private int seqno;
 	private int value;
 	
 	public Value() {}
 	
 	/**
-	 * Returns the corresponding entity id. {@link MeasurementEntity}
+	 * Returns the sequence number. {@link MeasurementEntity}
 	 */
-	public Long getMeasurementId() {
-		return measurementId;
+	public int getSeqno() {
+		return seqno;
 	}
 
 	/**

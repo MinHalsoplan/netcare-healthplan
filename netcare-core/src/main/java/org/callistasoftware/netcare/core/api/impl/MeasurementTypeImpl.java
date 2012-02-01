@@ -28,6 +28,7 @@ public class MeasurementTypeImpl implements MeasurementType {
 	private boolean alarm;
 	private Option valueType;
 	private Option unit;
+	private int seqno;
 	
 	public static MeasurementType newFromEntity(final MeasurementTypeEntity entity) {
 		final MeasurementTypeImpl dto = new MeasurementTypeImpl();
@@ -37,6 +38,8 @@ public class MeasurementTypeImpl implements MeasurementType {
 		dto.setAlarm(entity.isAlarmEnabled());
 		dto.setUnit(new Option(entity.getUnit().name(), LocaleContextHolder.getLocale()));
 		dto.setValueType(new Option(entity.getValueType().name(), LocaleContextHolder.getLocale()));
+		dto.setSeqno(entity.getSeqno());
+		
 		return dto;
 	}
 	
@@ -79,5 +82,13 @@ public class MeasurementTypeImpl implements MeasurementType {
 	
 	public void setAlarm(final boolean alarm) {
 		this.alarm = alarm;
+	}
+
+	public int getSeqno() {
+		return seqno;
+	}
+
+	void setSeqno(int seqno) {
+		this.seqno = seqno;
 	}
 }

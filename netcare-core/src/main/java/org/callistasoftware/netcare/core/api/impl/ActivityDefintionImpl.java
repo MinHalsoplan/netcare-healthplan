@@ -52,9 +52,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private int numTotal;
 	private int numDone;
 	private int numTarget;
-	private CareGiverBaseView issuedBy;
-	private MeasurementDefinition[] measurements;
-	
+	private CareGiverBaseView issuedBy;	
 	private MeasurementDefinition[] goalValues;
 	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {

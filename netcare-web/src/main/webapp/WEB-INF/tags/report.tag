@@ -41,18 +41,17 @@
 		</div>
 		<div class="modal-body">
 			<input type="hidden" name="activityId" />
+			<input type="hidden" name="numValueId" />
 
-			<spring:message code="report.value" var="value" scope="page" />
-			<netcare:field name="value" label="${value}">
-				<input type="text" name="value" class="small" />
-				<div id="unitId" style="display: inline; left-margin: px;"></div>
-			</netcare:field>
-
-			<spring:message code="report.time" var="time" scope="page" />
-			<netcare:field name="datetime" label="${time}">
-				<input type="text" name="date" class="small" />&nbsp;:
-							<input type="text" name="time" class="mini" />
-			</netcare:field>
+			<div id="dateTimeInputId" style="display: none;">
+				<input type="text" name="date" class="small" />&nbsp;-
+				<input type="text" name="time" class="mini" />				
+			</div>
+			
+			<!--  Space for measurement input -->
+			<table id="measurementTableId" class="condensed-table">
+				<tbody></tbody>
+			</table>
 
 			<div id="senseSectionId">
 				<spring:message code="report.sense" var="sense" scope="page" />
@@ -60,19 +59,25 @@
 					<div style="font-size: 10px; font-style: italic" id="senseTextId"></div>
 					<table class="condensed-table">
 						<thead>
-							<th>1</th>
-							<th>2</th>
-							<th>3</th>
-							<th>4</th>
-							<th>5</th>
+							<tr>
+								<th>&nbsp;</th>
+								<th>1</th>
+								<th>2</th>
+								<th>3</th>
+								<th>4</th>
+								<th>5</th>
+								<th>&nbsp;</th>
+							</tr>
 						</thead>
 						<tbody>
 							<tr>
+								<td id="senseLowId">&nbsp;</td>
 								<td><input type="radio" name="gsense" value="1" /></td>
 								<td><input type="radio" name="gsense" value="2" /></td>
 								<td><input type="radio" name="gsense" value="3" /></td>
 								<td><input type="radio" name="gsense" value="4" /></td>
 								<td><input type="radio" name="gsense" value="5" /></td>
+								<td id="senseHighId">&nbsp;</td>
 							</tr>
 						</tbody>
 					</table>

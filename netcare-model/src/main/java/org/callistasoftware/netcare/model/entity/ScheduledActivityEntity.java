@@ -201,9 +201,9 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		return Collections.unmodifiableList(measurements);
 	}
 	
-	public MeasurementEntity lookupMeasurement(Long id) {
+	public MeasurementEntity lookupMeasurement(int seqno) {
 		for (MeasurementEntity m : measurements) {
-			if (m.getId().equals(id)) {
+			if (m.getMeasurementDefinition().getMeasurementType().getSeqno() == seqno) {
 				return m;
 			}
 		}
