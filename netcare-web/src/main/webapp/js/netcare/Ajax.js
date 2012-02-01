@@ -29,6 +29,7 @@ NC.Ajax = function() {
 		/*
 		 * Show results
 		 */
+		NC.log("Show page messages after call: " + show);
 		if (show) {
 			_pm.processServiceResult(data);
 		}
@@ -52,24 +53,32 @@ NC.Ajax = function() {
 		return showMessages;
 	};
 	
+	var _getDefaultOpts = function(url, callback, displayMessages) {
+		NC.log("==== AJAX GET " + url + " ====");
+		return {
+			url : url,
+			dataType : _dataType,
+			cache : false,
+			success : function(data) {
+				_defaultSuccess(data, _showMessages(displayMessages), callback);
+			}
+		}
+	};
+	
 	public = {
 			/**
 			 * Execute a GET request
 			 */
 			get : function(url, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
-				NC.log("==== AJAX GET " + call + " ====");
+				$.ajax(_getDefaultOpts(call, callback, displayMessages));
+			},
+			
+			getWithParams : function(url, data, callback, displayMessages) {
+				var opts = _getDefaultOpts(_contextPath + _basePath + url);
+				opts.data = data;
 				
-				var opts = {
-					url : call,
-					dataType : _dataType,
-					cache : false,
-					success : function(data) {
-						_defaultSuccess(data, _showMessages(displayMessages), callback);
-					}
-				};
-				
-				$.ajax(opts);
+				$.ajax(opts, callback, displayMessages);
 			},
 			
 			uncachedGetCall : function(url, callback, displayMessages) {

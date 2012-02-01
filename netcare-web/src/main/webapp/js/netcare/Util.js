@@ -32,38 +32,6 @@ NC.Util = function() {
 			_captions = data;
 			NC.log('Localized captions for util loaded.');
 		});
-	}
-
-	var _displayMessages = function(type, messages) {
-		NC.log('Displaying ' + type + ' messages...');
-		if (messages == null) {
-			return false;
-		}
-		
-		if (messages.length > 0) {
-			$.each(messages, function(index, value) {
-				_displayMessage(type, value.message);
-			});
-		}
-	};
-	
-	var _displayMessage = function(type, messageText) {
-		NC.log("Displaying: " + messageText);
-		var msg = $('<div>');
-		msg.addClass('alert-message ' + type);
-		
-		var closeLink = $('<a>', { href : '#' }).addClass('close').html('×').click(function(event){
-			event.preventDefault();
-			msg.slideUp('slow');
-		});
-		
-		msg.append(closeLink);
-		msg.append('<p><strong>' + messageText + '</strong></p>');
-		msg.appendTo('#pageMessages');
-		
-		setTimeout(function() {
-			msg.slideUp('slow');
-		}, 5000);
 	};
 	
 	var public = {	
@@ -77,20 +45,6 @@ NC.Util = function() {
 			$('#currentpatient a').html(name);
 			$('#nopatient').hide();
 			$('#currentpatient').show();
-		},
-	
-		displayMessages : function(successMessages, infoMessages, warningMessages, errorMessages) {
-			NC.log("Display page messages. Success: " + successMessages.length + " Infos: " + infoMessages.length + " Warnings: " + warningMessages.length + " Errors: " + errorMessages.length);
-			
-			_displayMessages('success', successMessages);
-			_displayMessages('info', infoMessages);
-			_displayMessages('warning', warningMessages);
-			_displayMessages('error', errorMessages);
-		},
-		
-		processServiceResult : function(serviceResult) {
-			NC.log("Processing service results...");
-			new NC.Util().displayMessages(serviceResult.successMessages, serviceResult.infoMessages, serviceResult.warningMessages, serviceResult.errorMessages);
 		},
 		
 		createIcon : function(name, size, onClickFunction) {
