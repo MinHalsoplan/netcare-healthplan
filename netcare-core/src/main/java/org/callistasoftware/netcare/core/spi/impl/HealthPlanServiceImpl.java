@@ -33,6 +33,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -51,8 +52,10 @@ import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
+import org.callistasoftware.netcare.core.api.statistics.MeasuredValue;
 import org.callistasoftware.netcare.core.api.statistics.ReportedActivity;
 import org.callistasoftware.netcare.core.api.statistics.ReportedValue;
+import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
@@ -75,6 +78,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
@@ -462,55 +466,106 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		 * Get all reported activities
 		 */
 		log.debug("Calculating reported activities...");
-		final List<ReportedActivity> reportedActivities = new ArrayList<ReportedActivity>();
 		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository.findReportedActivitiesForHealthPlan(
 				healthPlanId
 				, healthPlan.getStartDate()
 				, new Date()
 				, new Sort(Sort.Direction.ASC, "scheduledTime"));
 		
-		int currentWeek = -1;
+		final List<ReportedActivity> reported = new ArrayList<ReportedActivity>();
 		for (final ScheduledActivityEntity e : ents) {
-			final Calendar c = Calendar.getInstance();
-			c.setTime(e.getScheduledTime());
-		
-			final boolean newWeek;
-			log.debug("Current week is: " + currentWeek);
-			log.debug("Activity week is: " + c.get(Calendar.WEEK_OF_YEAR));
-			if (currentWeek != c.get(Calendar.WEEK_OF_YEAR)) {
-				currentWeek = c.get(Calendar.WEEK_OF_YEAR);
-				newWeek = true;
-			} else {
-				newWeek = false;
-			}
 			
-			final String name = e.getActivityDefinitionEntity().getActivityType().getName();
-			final ReportedActivity existing = this.findReportedActivity(name, reportedActivities);
+			final ReportedActivity ra = new ReportedActivity();
+			ra.setName(e.getActivityDefinitionEntity().getActivityType().getName());
+			ra.setNote(e.getNote());
+			ra.setReportedAt(DateUtil.toDateTime(e.getReportedTime()));
+			ra.setLabel(DateUtil.toDateTime(e.getScheduledTime()));
 			
-			if (existing == null) {
-				final ReportedActivity ra = new ReportedActivity();
-				ra.setName(name);
-				// FIXME: Multi values.
-				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
+			final List<MeasurementEntity> measurements = e.getMeasurements();
+			final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
+			for (final MeasurementEntity m : measurements) {
 				
-				reportedActivities.add(ra);
+				final String measurementName = m.getMeasurementDefinition().getMeasurementType().getName(); 
+				MeasuredValue mv = this.findMeasuredValue(measurementName, measuredValues);
+				if (mv == null) {
+					mv = new MeasuredValue();
+					mv.setValueType(new Option(measurementName, null));
+					mv.setUnit(new Option(m.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale()));
+					measuredValues.add(mv);
+				}
+				
+				final ReportedValue rv = new ReportedValue();
+				switch (m.getMeasurementDefinition().getMeasurementType().getValueType()) {
+				case INTERVAL:
+					rv.setMaxTargetValue((float) m.getMaxTarget());
+					rv.setMinTargetValue((float) m.getMinTarget());
+					break;
+				case SINGLE_VALUE:
+					rv.setTargetValue((float) m.getTarget());
+					break;
+				}
+				
+				rv.setReportedValue((float) m.getReportedValue());
+				mv.getReportedValues().add(rv);
 			}
-			
-			final ReportedValue value = new ReportedValue();
-			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
-			// FIXME: multi values	
-			//value.setReportedValue((float) e.getActualValue());
-			//value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
-			value.setNewWeek(newWeek);
-			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
-			value.setNote(e.getNote());
-			
-			log.debug("ADD: " + value);
-			this.findReportedActivity(name, reportedActivities).getReportedValues().add(value);
+			ra.setMeasures(measuredValues);
+			reported.add(ra);
 		}
-		stats.setReportedActivities(reportedActivities);
+		
+		stats.setReportedActivities(reported);
+		
+//		int currentWeek = -1;
+//		for (final ScheduledActivityEntity e : ents) {
+//			final Calendar c = Calendar.getInstance();
+//			c.setTime(e.getScheduledTime());
+//		
+//			final boolean newWeek;
+//			log.debug("Current week is: " + currentWeek);
+//			log.debug("Activity week is: " + c.get(Calendar.WEEK_OF_YEAR));
+//			if (currentWeek != c.get(Calendar.WEEK_OF_YEAR)) {
+//				currentWeek = c.get(Calendar.WEEK_OF_YEAR);
+//				newWeek = true;
+//			} else {
+//				newWeek = false;
+//			}
+//			
+//			final String name = e.getActivityDefinitionEntity().getActivityType().getName();
+//			final ReportedActivity existing = this.findReportedActivity(name, reportedActivities);
+//			
+//			if (existing == null) {
+//				final ReportedActivity ra = new ReportedActivity();
+//				ra.setName(name);
+//				// FIXME: Multi values.
+//				//ra.setGoal((float) e.getActivityDefinitionEntity().getActivityTarget());
+//				
+//				reportedActivities.add(ra);
+//			}
+//			
+//			final ReportedValue value = new ReportedValue();
+//			value.setReportedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(e.getScheduledTime()));
+//			// FIXME: multi values	
+//			//value.setReportedValue((float) e.getActualValue());
+//			//value.setTargetValue((float) e.getActivityDefinitionEntity().getActivityTarget());
+//			value.setNewWeek(newWeek);
+//			value.setLabel(this.formatLabel(currentWeek, c.get(Calendar.YEAR)));
+//			value.setNote(e.getNote());
+//			
+//			log.debug("ADD: " + value);
+//			this.findReportedActivity(name, reportedActivities).getReportedValues().add(value);
+//		}
+//		stats.setReportedActivities(reportedActivities);
 		
 		return ServiceResultImpl.createSuccessResult(stats, new GenericSuccessMessage());
+	}
+	
+	private MeasuredValue findMeasuredValue(final String measurementName, final List<MeasuredValue> list) {
+		for (final MeasuredValue mv : list) {
+			if (mv.getValueType().getCode().equals(measurementName)) {
+				return mv;
+			}
+		}
+		
+		return null;
 	}
 	
 	private String formatLabel(final int week, final int year) {
