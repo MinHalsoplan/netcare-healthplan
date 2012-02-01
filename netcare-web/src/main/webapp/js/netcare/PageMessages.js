@@ -48,12 +48,14 @@ NC.PageMessages = function() {
 					if (($('#pageMessages div[class*="' + type + '"] ul li').size() - 1) <= 0) {
 						NC.log("Hide page messages...");
 						$('#pageMessages').slideUp('slow', function() {
-							$('#pageMessages div[class*="' + type + '"]').empty();
+							$('#pageMessages div[class*="' + type + '"]').remove();
 						});
 					}
 				});
 			}, 5000);
 		});
+		
+		$('#pageMessages').show();
 	};
 	
 	var public = {
