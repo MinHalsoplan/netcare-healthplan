@@ -53,6 +53,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 		ms += '</i>';
 		return ms;
 	}
+	
 	var public = {
 		
 		init : function() {

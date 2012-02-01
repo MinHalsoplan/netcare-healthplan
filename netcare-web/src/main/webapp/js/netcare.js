@@ -23,8 +23,10 @@ NC = {
 
 $(function() {
 	
-	if (typeof console === "undefined" || typeof console.log === "undefined") {
+	if (typeof console === "undefined") {
 		console = {};
+	}
+	if (typeof console.log === "undefined") {
 		console.log = function() {};
 	}
 

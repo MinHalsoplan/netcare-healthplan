@@ -20,6 +20,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	var _activityCount = 0;
 	
 	var _ajax = new NC.Ajax();
+	var _util = new NC.Util();
 	
 	var _updateActivityTable = function(tableId) {
 		NC.log("Updating activity table. Activity count = " + _activityCount);
@@ -34,6 +35,26 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		}
 	};
 	
+	var _formatMeasurements = function(data) {
+		NC.log('formatMeasurements()')
+		var ms = '';
+		$.each(data, function(index, value) {
+			var target;
+			if (value.measurementDefinition.measurementType.valueType.code == 'INTERVAL') {
+				target = value.minTarget + '-' + value.maxTarget;
+			} else {
+				target = value.target;
+			}
+			if (index > 0) {
+				ms += '<br/>'
+			}
+			ms += value.measurementDefinition.measurementType.name + ':&nbsp;' + value.reportedValue + '&nbsp;' 
+				+ _util.formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
+		});
+		NC.log(ms);
+		return ms;
+	};
+
 	var public = {
 			
 		load : function(healthPlanId, callback) {
@@ -65,7 +86,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				type : 'post',
 				success : function(data) {
 					NC.log('Deletion of health plan succeeded.');
-					new NC.Util().processServiceResult(data);
+					_util.processServiceResult(data);
 					callback(data);					
 				}
 			});
@@ -93,12 +114,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				NC.log("Emptying the activity table");
 				$('#' + tableId + ' tbody > tr').empty();
 				
-				var util = new NC.Util();
 				$.each(data.data, function(index, value) {
 					
 					NC.log("Processing id: " + value.id);
 					
-					var deleteIcon = new NC.Util().createIcon('trash', 24, function() {
+					var deleteIcon = _util.createIcon('trash', 24, function() {
 						NC.log("Delete icon clicked");
 						public.deleteActivity(tableId, healthPlanId, value.id);
 					});
@@ -116,7 +136,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					).append(
 						$('<td>').html(value.startDate)
 					).append(
-						$('<td>').html(util.formatFrequency(value))
+						$('<td>').html(_util.formatFrequency(value))
 					);
 					
 					tr.append(actionCol);
@@ -145,7 +165,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				contentType : 'application/json',
 				success : function(data) {
 					NC.log("Call was successful!");
-					new NC.Util().processServiceResult(data);
+					_util.processServiceResult(data);
 					
 					callback(data);
 				}
@@ -166,7 +186,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				contentType : 'application/json',
 				success : function(data) {
 					NC.log("Delete activity service call successfully executed.");
-					new NC.Util().processServiceResult(data);
+					_util.processServiceResult(data);
 					public.listActivities(healthPlanId, tableId);
 				}
 			});
@@ -187,30 +207,17 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				$.each(data.data, function(index, value) {
 					NC.log("Processing value: " + value);
 					
-					var patient = value.patient.name + ' (' + util.formatCnr(value.patient.civicRegistrationNumber) + ')';
-					var unit = value.definition.type.unit.value;
+					var patient = value.patient.name + '<br/>' + _util.formatCnr(value.patient.civicRegistrationNumber);
 					var typeName = value.definition.type.name;
-					var goalString = value.definition.goal + ' ' + unit;
-					var reportedString = value.actualValue + ' ' + unit;
 					var reportedAt = value.reported;
 					
 					var tr = $('<tr>');
-					
 					var name = $('<td>' + patient + '</td>');
 					var type = $('<td>' + typeName + '</td>');
-					var goal = $('<td>' + goalString + '</td>');
-					var reported = $('<td>' + reportedString + '</td>');
+					var reported = $('<td style="font-size: 11px">' + _formatMeasurements(value.measurements) + '</td>');
 					var at = $('<td>' + reportedAt + '</td>');
 					
-					NC.log("Actual: " + value.actual + ", Goal: " + value.definition.goal);
-					if (value.actualValue !== value.definition.goal) {
-						NC.log("Value diff. Mark yellow");
-						reported.css('background-color', 'lightyellow');
-					} else if (value.actualValue == value.definition.goal) {
-						reported.css('background-color', 'lightgreen');
-					}
-					
-					var likeIcon = util.createIcon('like', 24, function() {
+					var likeIcon = _util.createIcon('like', 24, function() {
 						
 						NC.log("Clicked on " + value.id);
 						
@@ -239,7 +246,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					
 					tr.append(name);
 					tr.append(type);
-					tr.append(goal);
 					tr.append(reported);
 					tr.append(at);
 					tr.append(actionCol);
@@ -278,7 +284,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				data : { comment : comment },
 				success : function(data) {
 					NC.log("Successfully commented activity...");
-					new NC.Util().processServiceResult(data);
+					_util.processServiceResult(data);
 					
 					if (data.success) {
 						callback(data);
@@ -297,7 +303,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				type : 'post',
 				data : { reply : reply },
 				success : function(data) {
-					new NC.Util().processServiceResult(data);
+					_util.processServiceResult(data);
 					if (data.success) {
 						callback(data);
 					}
@@ -314,7 +320,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				dataType : 'json',
 				type : 'post',
 				success : function(data) {
-					new NC.Util().processServiceResult(data);
+					_util.processServiceResult(data);
 					if (data.success) {
 						callback(data);
 					}

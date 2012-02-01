@@ -190,7 +190,6 @@
 						<thead>
 							<th><spring:message code="patient" /></th>
 							<th><spring:message code="type" /></th>
-							<th><spring:message code="goal" /></th>
 							<th><spring:message code="reportedValue" /></th>
 							<th><spring:message code="when" /></th>
 							<th>&nbsp;</th>
