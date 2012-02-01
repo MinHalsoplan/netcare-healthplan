@@ -507,7 +507,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				}
 				
 				rv.setReportedValue((float) m.getReportedValue());
-				rv.setReportedAt(DateUtil.toDateTime(e.getReportedTime()));
+				rv.setReportedAt(DateUtil.toDateTime(e.getScheduledTime()));
 				
 				mv.getReportedValues().add(rv);
 			}

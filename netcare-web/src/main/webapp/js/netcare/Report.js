@@ -19,19 +19,22 @@ NC.Reports = function(statistics, captions) {
 	var _statistics = statistics;
 	var _captions = captions;
 	
+	var _getDefaultOptions = function() {
+		return {
+			'width' : 600,
+			'height' : 300
+		}
+	};
+	
 	var public = {
 		/**
 		 * Get a pie chart diagram showing the health plan's activity types
 		 */
-		getHealthPlanOverview : function(elementId, width, height) {
+		getHealthPlanOverview : function(elementId) {
 			var arr = new Array();
 			
 			$.each(_statistics.data.activities, function(index, value) {
-				var item = new Array();
-				item[0] = value.name;
-				item[1] = value.count;
-				
-				arr.push(item);
+				arr.push([value.name, value.count]);
 			});
 			
 			var dataOverview = new google.visualization.DataTable();
@@ -40,32 +43,25 @@ NC.Reports = function(statistics, captions) {
 			
 			dataOverview.addRows(arr);
 			
-			var options = {'width' : width, 'height' : height};
-		
 			var diagram = new google.visualization.PieChart(document.getElementById(elementId));
-			diagram.draw(dataOverview, options);
+			diagram.draw(dataOverview, _getDefaultOptions());
 		},
 		
 		/**
 		 * Get results for a specific activity type
 		 */
-		getResultsForActivityType : function(type, elementId, width, height) {
+		getResultsForActivityType : function(type, elementId) {
 			var measureValueType = new Array();
 			$.each(_statistics.data.measuredValues, function(i, v) {
 				if (v.name == type) {
-					NC.log("Adding " + v.name + " to array");
 					measureValueType.push(v);
 				}
 			});
-			
-			NC.log("Array consist of " + measureValueType.length + " measure types");
 			
 			/*
 			 * Process each measure type. One diagram for each type
 			 */
 			$.each(measureValueType, function(i, v) {
-				
-				NC.log("Processing " + v.valueType.code);
 				
 				var entries = new Array();
 				
@@ -73,15 +69,12 @@ NC.Reports = function(statistics, captions) {
 				chart.addColumn('string', captions.date);
 				if (v.interval) {
 					
-					chart.addColumn('number', 'Målvärde min');
-					chart.addColumn('number', 'Målvärde max');
-					chart.addColumn('number', captions.reportedValue);
+					chart.addColumn('number', _captions.targetMinValue);
+					chart.addColumn('number', _captions.targetMaxValue);
+					chart.addColumn('number', _captions.reportedValue);
 					
 					$.each(v.reportedValues, function(idx, val) {
-						var entry = [val.reportedAt, val.minTargetValue, val.maxTargetValue, val.reportedValue];
-						
-						NC.log("Adding: " + entry);
-						entries.push(entry);
+						entries.push([val.reportedAt, val.minTargetValue, val.maxTargetValue, val.reportedValue]);
 					});
 				} else {
 					
@@ -89,10 +82,7 @@ NC.Reports = function(statistics, captions) {
 					chart.addColumn('number', captions.reportedValue);
 					
 					$.each(v.reportedValues, function(idx, val) {
-						var entry = [val.reportedAt, val.targetValue, val.reportedValue];
-						
-						NC.log("Adding: " + entry);
-						entries.push(entry);
+						entries.push([val.reportedAt, val.targetValue, val.reportedValue]);
 					});
 				}
 				
@@ -106,8 +96,12 @@ NC.Reports = function(statistics, captions) {
 					$('<div>').attr('id', id).addClass('shadow-box')
 				);
 				
+				var opts = _getDefaultOptions();
+				opts.title = v.valueType.code;
+				//opts.curveType = 'function';
+				
 				var diagram = new google.visualization.LineChart(document.getElementById(id));
-				diagram.draw(chart, { width: width, height : height, title : v.valueType.code});
+				diagram.draw(chart, opts);
 			});
 		}
 	};

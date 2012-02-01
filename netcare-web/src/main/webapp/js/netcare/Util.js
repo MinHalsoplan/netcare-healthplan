@@ -317,7 +317,20 @@ NC.Util = function() {
 				_loadCaptions();
 			}
 			return _captions;
-		}	
+		},
+		
+		createCheckbox : function(id, label) {
+			var container = $('<div>').addClass('clearfix').attr('id', id + '-container');
+			container.append(
+				$('<label>').attr('for', id).html(label)
+			).append(
+				$('<div>').addClass('input').append(
+					$('<input>').attr('type', 'checkbox').attr('id', id).attr('name', id)
+				)
+			);
+			
+			return container;
+		}
 	};
 	
 	return public;

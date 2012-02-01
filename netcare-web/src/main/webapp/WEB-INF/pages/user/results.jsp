@@ -38,7 +38,14 @@
 					NC.log("Drawing overview...");
 					
 					var captions = null;
-					new NC.Support().loadCaptions('result', ['activityType', 'numberOfActivities', 'date', 'reportedValue', 'targetValue', 'resultLink'], function(data) {
+					new NC.Support().loadCaptions('result', ['activityType'
+					                                         , 'numberOfActivities'
+					                                         , 'date'
+					                                         , 'reportedValue'
+					                                         , 'targetValue'
+					                                         , 'resultLink'
+					                                         , 'targetMinValue'
+					                                         , 'targetMaxValue'], function(data) {
 						NC.log("Load captions returned success...");
 						captions = data;
 					});
@@ -52,7 +59,7 @@
 						var reports = null;
 						hp.loadStatistics(healthPlanId, function(data) {
 							reports = new NC.Reports(data, captions);
-							reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities, 600, 300);
+							reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities);
 							$('#pieChart').show();
 							
 							
@@ -73,6 +80,7 @@
 										$('<div>').attr('id', 'activity-' + i)
 									);
 									
+									setupFilter($('#activity-' + i), v.name);
 									
 									NC.log("Drawing diagrams for: " + v.name);
 									reports.getResultsForActivityType(v.name, 'activity-' + i, 600, 300);
@@ -84,8 +92,24 @@
 							$('div[class="shadow-box"]').each(function(i) {
 								$(this).after('<br />');
 							});
+							
+							$('#filter').show();
 						});
 					};
+					
+					var setupFilter = function(forElement, label) {
+						var id = 'filter-for-' + forElement.attr('id');
+						var input = new NC.Util().createCheckbox(id, label);
+						
+						$('#filter-row').append(
+							$('<div>').addClass('span2').append(input)
+						);
+						
+						$('#' + id).attr('checked', 'checked');
+						input.click(function(e) {
+							forElement.toggle();
+						});
+					}
 					
 					var healthPlanId = "<c:out value="${param.healthPlan}" />";
 					if (healthPlanId == "")  {
@@ -111,6 +135,18 @@
 			</p>
 			<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
 			
+			<section id="filter" style="display:none;">
+				<h2>Filtrera</h2>
+				<p>
+					<span class="label notice">Information</span>
+					Markera de diagram som du vill visa genom att klicka på respektive aktivitets kryssruta.
+				</p>
+				<form class="form-stacked">
+					<netcare:row id="filter-row">
+					
+					</netcare:row>
+				</form>
+			</section>
 			<section id="activities"></section>
 		</netcare:content>
 		
