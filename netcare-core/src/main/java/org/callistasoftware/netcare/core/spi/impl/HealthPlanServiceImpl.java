@@ -105,7 +105,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	/**
 	 * Days back when fetching patient plan (schema).
 	 */
-	public static int SCHEMA_HISTORY_DAYS = 90;
+	public static int SCHEMA_HISTORY_DAYS = 7;
 	/**
 	 * Days forward when fetching patient plan (schema).
 	 */
