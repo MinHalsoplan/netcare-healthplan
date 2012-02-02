@@ -365,7 +365,7 @@
 					<spring:message code="activityType.description" />
 				</p>
 				<p style="text-align: right; padding-right: 20px;">
-					<a id="showTypesForm" class="btn addButton"><spring:message code="activityType.create" /></a>
+					<a id="showTypesForm" class="btn addButton"><spring:message code="activityType.new" /></a>
 				</p>
 				<div id="activityTypesContainer">
 					<form class="form-stacked">
