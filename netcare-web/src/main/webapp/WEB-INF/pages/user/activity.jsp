@@ -178,7 +178,7 @@
 					);
 					
 					var inputDiv = $('<div>').addClass('input');
-					var input = $('<input>').attr('type', 'number').attr('step', '0.1').attr('name', id).attr('id', id).addClass('small');
+					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('small');
 					
 					inputDiv.append(input);
 					inputDiv.append($('<span>').html(' ' + value.unit.value));
@@ -322,12 +322,11 @@
 							measure.measurementType = new Object();
 							measure.measurementType.id = id;
 							
-							var inputs = $('#measureValues input[id*="'+ id +'-"]');
-							if (inputs.size() == 2) {
-								measure.minTarget = $(inputs.get(0)).val();
-								measure.maxTarget = $(inputs.get(1)).val();
-							} else if (inputs.size() == 1) {
-								measure.target = $(inputs.get(0)).val();
+							if ($('#measureValues input[id="'+ id +'-2"]').length == 1) {
+								measure.minTarget = $('#measureValues input[id="'+ id +'-1"]').val();
+								measure.maxTarget = $('#measureValues input[id="'+ id +'-2"]').val();
+							} else if ($('#measureValues input[id="'+ id +'-1"]').length == 1) {
+								measure.target = $('#measureValues input[id="'+ id +'-1"]').val();
 							} else {
 								throw new Error("Measured value has wrong number of input fields.");
 							}
