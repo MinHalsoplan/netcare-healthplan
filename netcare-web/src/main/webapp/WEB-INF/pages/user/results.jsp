@@ -70,10 +70,6 @@
 									$('#activities').append(
 										$('<h2>').html(v.name)
 									).append(
-										$('<p>').append(
-											$('<span>').addClass('label').addClass('notice').html('Information')
-										).html('Tralala')
-									).append(
 										$('<div>').attr('id', 'activity-' + i)
 									);
 									

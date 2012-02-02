@@ -58,11 +58,15 @@ NC.Reports = function(statistics, captions) {
 				}
 			});
 			
+			
+			$('#' + elementId).prepend(
+				$('<div>').attr('id', 'filter-row-' + elementId).addClass('row').addClass('span10')
+			);
+			
 			/*
 			 * Process each measure type. One diagram for each type
 			 */
 			$.each(measureValueType, function(i, v) {
-				
 				var entries = new Array();
 				
 				var chart = new google.visualization.DataTable();
@@ -96,9 +100,20 @@ NC.Reports = function(statistics, captions) {
 					$('<div>').attr('id', id).addClass('shadow-box')
 				);
 				
+				NC.log("Creating checkbox for: " + v.valueType.code);
+				var input = new NC.Util().createCheckbox('filter-for-' + id, v.valueType.code);
+				input.click(function(e) {
+					$('#' + id).toggle();
+				});
+				
+				$('#filter-row-' + elementId).append(
+					$('<div>').addClass('span1').addClass('form-stacked').append(input)
+				);
+				
+				$('#filter-for-'+ id).attr('checked', 'checked');
+				
 				var opts = _getDefaultOptions();
 				opts.title = v.valueType.code;
-				//opts.curveType = 'function';
 				
 				var diagram = new google.visualization.LineChart(document.getElementById(id));
 				diagram.draw(chart, opts);
