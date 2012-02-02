@@ -24,17 +24,16 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _shortVersion = shortVersion;
 	var _captions;
 	var _reportCallback = null;
-	
-	new NC.Support().loadCaptions('report', ['report', 'change', 'reject', 'time'], function(data) {
-		_captions = data;
-	});		
-	
+		
 	var _today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
 	var _util = new NC.Util();
 	var _ajax = new NC.Ajax();
+	var _support = new NC.Support();
 	
-	var _ajax = new NC.Ajax();
-		
+	_support.loadCaptions('report', ['report', 'change', 'reject', 'time'], function(data) {
+		_captions = data;
+	});		
+
 	var _updateDescription = function() {
 		NC.log("Updating schema table description: " + _schemaCount);
 		if (_schemaCount == 0) {
@@ -166,6 +165,14 @@ NC.PatientReport = function(tableId, shortVersion) {
 				input.attr('type', 'number');
 				input.attr('step', '1');
 				input.attr('class', 'small');
+				
+				input.focusin(function() {
+					NC.focusGained(input);
+				});	
+				
+				input.focusout( function () { 
+					NC.focusLost(input);
+				});
 				if (type.valueType.code == 'INTERVAL') {
 					input.attr('value', act.reported != null ? m.reportedValue : (m.maxTarget + m.minTarget) / 2);
 				} else {
@@ -225,19 +232,18 @@ NC.PatientReport = function(tableId, shortVersion) {
 				$('#historyOptions').hide();
 			}
 			
-			var support = new NC.Support();
 			$('#dateTimeInputId input[name="date"]').datepicker({
 				dateFormat : 'yy-mm-dd',
 				firstDay : 1,
 				minDate : -14
 			});
 
-			support.loadMonths(function(data) {
+			_support.loadMonths(function(data) {
 				$('#dateTimeInputId input[name="date"]').datepicker('option',
 						'monthNames', data);
 			});
 
-			support.loadWeekdays(function(data) {
+			_support.loadWeekdays(function(data) {
 				$('#dateTimeInputId input[name="date"]').datepicker('option',
 						'dayNamesMin', data);
 			});

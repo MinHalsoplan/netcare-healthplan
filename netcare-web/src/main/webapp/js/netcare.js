@@ -18,7 +18,17 @@
 NC = {		
 		log : function(msg) {
 			console.log(msg);
+		},
+
+		focusGained : function(inputField) {
+			$(inputField).css('background', 'lightcyan');
+			$(inputField).select();		
+		},
+
+		focusLost : function(inputField) {
+			$(inputField).css('background', 'transparent');
 		}
+
 };
 
 $(function() {
@@ -52,6 +62,18 @@ $(function() {
 		window.location.href = '/netcare-web/netcare/error/' + code;
 		return false;
 	};
+	
+		
+	/*
+	 * Select text when a text input field gets focus.
+	 */
+	$('input[type="text"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+	
+	$('input[type="text"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
 	
 	/*
 	 * Setup ajax status mappings
