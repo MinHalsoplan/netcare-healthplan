@@ -189,7 +189,7 @@ NC.Util = function() {
 				text += '<br/>';				
 			});
 			
-			text += '<i style="font-size: 10px;">';
+			text += '<i style="font-size: 10px;">';			
 			switch (activityDefinition.activityRepeat) {
 				case 0: text += _captions.freq0; break;
 				case 1: text += _captions.freq1; break;
@@ -293,22 +293,14 @@ NC.Util = function() {
 		 */
 		loadOptions : function(url, onDataLoaded) {
 			NC.log("Loading support data from url: " + url);
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				cache : false,
-				error : function(jqXHR, textStatus, errorThrown) {
-					NC.log("Error: " + errorThrown);
-				},
-				success : function(data, textStatus, jqXHR) {
-					var arr = new Array();
-					$.each(data.data, function(index, value) {
-						NC.log("Processing " + value.value + "...");
-						arr[index] = value;
-					});
-					
-					onDataLoaded(arr);
-				}
+			_ajax.get(url, function(data) {
+				var arr = new Array();
+				$.each(data.data, function(index, value) {
+					NC.log("Processing " + value.value + "...");
+					arr[index] = value;
+				});
+				
+				onDataLoaded(arr);
 			});
 		},
 		

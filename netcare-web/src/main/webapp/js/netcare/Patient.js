@@ -40,19 +40,10 @@ NC.Patient = function() {
 		 * Called when the care giver wants to find a patient
 		 */
 		findPatients : function(searchValue, successFunction) {
-			NC.log("Finding patients. Searching for: " + searchValue);
-			
 			if (searchValue.length < 3) {
 				return false;
 			}
-			
-			$.ajax({
-				url : _baseUrl + '/find',
-				dataType : 'json',
-				cache : false,
-				data : { search : searchValue },
-				success : successFunction
-			});
+			_ajax.getWithParams('/user/find', { search : searchValue }, successFunction);
 		},
 		
 		/**
@@ -62,41 +53,25 @@ NC.Patient = function() {
 		 * display the selected patient
 		 */
 		selectPatient : function(patientId, successFunction) {
-			//_ajax.post('/user/' + patientId + '/select', null, successFunction);
-			NC.log("Selecting patient: " + patientId);
-			$.ajax({
-				url : _baseUrl + '/' + patientId + '/select',
-				dataType : 'json',
-				type : 'post',
-				success : successFunction
-			});
+			_ajax.post('/user/' + patientId + '/select', null, successFunction);
+		},
+		
+		unselect : function(callback) {
+			_ajax.post('/user/unselect', null, callback);
 		},
 		
 		/**
 		 * Deletes a patient from the system
 		 */
 		deletePatient : function(patientId, successFunction) {
-			var url = _baseUrl + '/' + patientId + '/delete';
-			NC.log("Deleting patient with id " + patientId + " using url: " + url);
-			
-			$.ajax({
-				url : url,
-				type : 'post',
-				success : function(data) {
-					new NC.Util().processServiceResult(data);
-					
-					if (data.success) {
-						successFunction(data);
-					}
-				}
-			});
+			_ajax.post('/user/' + patientId + '/delete', null, successFunction);
 		},
 		
 		/**
 		 * List activities for a patient
 		 */
 		listActivities : function(callback) {
-			_ajax.uncachedGetCall('/patient/schema', callback);
+			_ajax.get('/patient/schema', callback);
 		},
 		
 		reportActivity : function(activityId, formData, callback) {

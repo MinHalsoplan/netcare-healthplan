@@ -28,6 +28,8 @@
 		<script type="text/javascript">
 			$(function() {
 				
+				var currentPatientId = "<c:out value='${sessionScope.currentPatient.id}' />";
+				
 				var util = new NC.Util();
 				var support = new NC.Support();
 				
@@ -85,6 +87,14 @@
 										if (result) {
 											NC.log("Deleting patient...");
 											patients.deletePatient(value.id, function(data) {
+												
+												NC.log("Comparing " + value.id + " " + currentPatientId);
+												if (value.id == currentPatientId) {
+													patients.unselect(function(data) {
+														window.location = '/netcare-web/netcare/home';
+													});
+												}
+												
 												NC.log("Patient deleted. Reload patients...");
 												patients.load(updatePatientTable);
 											});

@@ -24,6 +24,8 @@ import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.PatientImpl;
+import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,5 +123,12 @@ public class UserApi extends ApiSupport {
 		}
 				
 		return result;
+	}
+	
+	@RequestMapping(value="/unselect", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<PatientBaseView> unselect(final HttpSession session) {
+		session.removeAttribute("currentPatient");
+		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
 }

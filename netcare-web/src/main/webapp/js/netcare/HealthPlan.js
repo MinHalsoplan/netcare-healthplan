@@ -78,18 +78,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * Delete an ordination
 		 */
 		remove : function(healthPlanId, callback) {
-			var url = _baseUrl + '/' + healthPlanId + '/delete';
-			NC.log("Removing health plan " + healthPlanId + " using url: " + url);
-			
-			$.ajax({
-				url : url,
-				type : 'post',
-				success : function(data) {
-					NC.log('Deletion of health plan succeeded.');
-					_util.processServiceResult(data);
-					callback(data);					
-				}
-			});
+			_ajax.post('/healthplan/' + healthPlanId + '/delete', null, callback, true);
 		},
 		
 		/**
@@ -157,20 +146,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		addActivity : function(healthPlanId, formData, callback, activityTableId) {
 			_ajax.post('/healthplan/' + healthPlanId + 'activity/new', formData, callback, true);
-			/*var url = _baseUrl + '/' + healthPlanId + '/activity/new';
-			NC.log("Adding new activity using url: " + url);
-			$.ajax({
-				url : url,
-				type : 'post',
-				data : formData,
-				contentType : 'application/json',
-				success : function(data) {
-					NC.log("Call was successful!");
-					_util.processServiceResult(data);
-					
-					callback(data);
-				}
-			});*/
 		},
 		
 		/**
@@ -178,19 +153,9 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * plan.
 		 */
 		deleteActivity : function(tableId, healthPlanId, activityId) {
-			var url = _baseUrl + '/' + healthPlanId + '/activity/' + activityId + '/delete';
-			NC.log("Deleting activity using url: " + url);
-			
-			$.ajax({
-				url : url,
-				type : 'post',
-				contentType : 'application/json',
-				success : function(data) {
-					NC.log("Delete activity service call successfully executed.");
-					_util.processServiceResult(data);
-					public.listActivities(healthPlanId, tableId);
-				}
-			});
+			_ajax.post('/healthplan/' + healthPlanId + '/activity/' + activityId + '/delete', null, function(data){
+				public.listActivities(healthPlanId, tableId);
+			}, true);
 		},
 		
 		loadScheduledActivity : function(activityId, callback) {
@@ -201,9 +166,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * Load the latest reported activities
 		 */
 		loadLatestReportedActivities : function(containerId) {
-			var url = _baseUrl + '/activity/reported/latest';
-			NC.log("Loading latest reported activities from url: " + url);
-			
 			_ajax.get('/healthplan/activity/reported/latest', function(data) {
 				$.each(data.data, function(index, value) {
 					NC.log("Processing value: " + value);
@@ -275,58 +237,15 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		},
 		
 		sendComment : function(activityId, comment, callback) {
-			var commentUrl = _baseUrl + '/activity/' + activityId + '/comment';
-			NC.log("Posting comment using url: " + commentUrl);
-			
-			$.ajax({
-				url : commentUrl,
-				dataType : 'json',
-				type : 'post',
-				data : { comment : comment },
-				success : function(data) {
-					NC.log("Successfully commented activity...");
-					_util.processServiceResult(data);
-					
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.post('/healthplan/activity/' + activityId + '/comment', { comment : comment }, callback, true);
 		},
 		
 		sendCommentReply : function(commentId, reply, callback) {
-			var curl = _baseUrl + '/activity/reported/comment/' + commentId + '/reply';
-			NC.log("Reply to comment " + commentId + " using url: " + curl);
-			
-			$.ajax({
-				url : curl,
-				dataType : 'json',
-				type : 'post',
-				data : { reply : reply },
-				success : function(data) {
-					_util.processServiceResult(data);
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.post('/healthplan/activity/reported/comment/' + commentId + '/reply', { reply : reply }, callback, true);
 		},
 		
 		deleteComment : function(commentId, callback) {
-			var url = _baseUrl + '/activity/reported/comments/' + commentId + '/delete';
-			NC.log("Deleting comment " + commentId + " using url: " + url);
-			
-			$.ajax({
-				url : url,
-				dataType : 'json',
-				type : 'post',
-				success : function(data) {
-					_util.processServiceResult(data);
-					if (data.success) {
-						callback(data);
-					}
-				}
-			});
+			_ajax.post('/healthplan/activity/reported/comments/' + commentId + '/delete', null, callback, true);
 		}
 	};
 	
