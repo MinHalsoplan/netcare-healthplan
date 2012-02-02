@@ -72,7 +72,6 @@ NC.Ajax = function() {
 		return {
 			url : url,
 			type : 'post',
-			contentType : 'application/json',
 			success : function(data) {
 				_defaultSuccess(data, _showMessages(displayMessages), callback);
 			}
@@ -98,6 +97,17 @@ NC.Ajax = function() {
 			post : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
+				opts.contentType = 'application/json';
+				if (data != null) {
+					opts.data = data;
+				}
+				
+				$.ajax(opts);
+			},
+			
+			postWithParams : function(url, data, callback, displayMessage) {
+				var call = _contextPath + _basePath + url;
+				var opts = _getDefaultPostOpts(call, callback, displayMessage);
 				if (data != null) {
 					opts.data = data;
 				}
@@ -109,6 +119,7 @@ NC.Ajax = function() {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
 				opts.async = false;
+				opts.contentType = 'application/json';
 				
 				if (data != null) {
 					opts.data = data;

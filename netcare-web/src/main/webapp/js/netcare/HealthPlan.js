@@ -237,11 +237,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		},
 		
 		sendComment : function(activityId, comment, callback) {
-			_ajax.post('/healthplan/activity/' + activityId + '/comment', { comment : comment }, callback, true);
+			_ajax.postWithParams('/healthplan/activity/' + activityId + '/comment', { comment : comment }, callback, true);
 		},
 		
 		sendCommentReply : function(commentId, reply, callback) {
-			_ajax.post('/healthplan/activity/reported/comment/' + commentId + '/reply', { reply : reply }, callback, true);
+			_ajax.postWithParams('/healthplan/activity/reported/comment/' + commentId + '/reply', { reply : reply }, callback, true);
 		},
 		
 		deleteComment : function(commentId, callback) {
