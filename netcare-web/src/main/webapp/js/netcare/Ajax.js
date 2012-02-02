@@ -103,6 +103,18 @@ NC.Ajax = function() {
 				}
 				
 				$.ajax(opts);
+			},
+			
+			postSynchronous : function(url, data, callback, displayMessages) {
+				var call = _contextPath + _basePath + url;
+				var opts = _getDefaultPostOpts(call, callback, displayMessages);
+				opts.async = false;
+				
+				if (data != null) {
+					opts.data = data;
+				}
+				
+				$.ajax(opts);
 			}
 	};
 	
