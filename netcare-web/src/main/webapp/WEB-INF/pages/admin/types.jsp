@@ -444,9 +444,9 @@
 							</thead>
 							<tbody></tbody>
 						</table>
-						
-						<div class="actions">
-							<button id="createActivityType" style="text-align: left;" class="btn primary"><spring:message code="activityType.create" /></button>
+						<br />
+						<div class="modal-footer">
+							<button id="createActivityType" class="btn primary"><spring:message code="activityType.create" /></button>
 						</div>
 						
 					</form>					
