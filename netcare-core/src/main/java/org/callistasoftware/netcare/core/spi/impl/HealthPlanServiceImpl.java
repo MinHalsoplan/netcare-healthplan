@@ -121,7 +121,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	public static String CSV_EOL = "\r\n";
 	
 	@org.springframework.beans.factory.annotation.Value("#{application['csv.delimiter']}")
-	private static String CSV_SEP;
+	private String CSV_SEP;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
