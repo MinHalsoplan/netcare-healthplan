@@ -29,7 +29,6 @@ NC.Ajax = function() {
 		/*
 		 * Show results
 		 */
-		NC.log("Show page messages after call: " + show);
 		if (show) {
 			_pm.processServiceResult(data);
 		}
@@ -38,7 +37,6 @@ NC.Ajax = function() {
 		 * Execute callback 
 		 */
 		if (data.success && callback !== undefined) {
-			NC.log("Call was successful. Execute callback function...");
 			callback(data);
 		} else {
 			NC.log("Call was not successful. Data success: " + data.success + " Callback: " + callback);
@@ -68,6 +66,19 @@ NC.Ajax = function() {
 		}
 	};
 	
+	var _getDefaultPostOpts = function(url, callback, displayMessages) {
+		NC.log("==== AJAX POST " + url + " ====");
+		
+		return {
+			url : url,
+			type : 'post',
+			contentType : 'application/json',
+			success : function(data) {
+				_defaultSuccess(data, _showMessages(displayMessages), callback);
+			}
+		}
+	}
+	
 	public = {
 			/**
 			 * Execute a GET request
@@ -84,35 +95,14 @@ NC.Ajax = function() {
 				$.ajax(opts);
 			},
 			
-			uncachedGetCall : function(url, callback, displayMessages) {
-				var call = _contextPath + _basePath + url;
-				NC.log("==== AJAX UNCACHED GET " + call + " ====");
-				
-				var opts = {
-					url : call,
-					dataType : _dataType,
-					cache : false,
-					success : function(data) {
-						_defaultSuccess(data, _showMessages(displayMessages), callback);
-					}
-				};
-				
-				$.ajax(opts);
-			},
-			
 			post : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
-				NC.log("==== AJAX POST " + call + " ====");
+				var opts = _getDefaultPostOpts(call, callback, displayMessages);
+				if (data != null) {
+					opts.data = data;
+				}
 				
-				$.ajax({
-					url : call,
-					data : data,
-					type : 'post',
-					contentType : 'application/json',
-					success : function(data) {
-						_defaultSuccess(data, _showMessages(displayMessages), callback);
-					}
-				});
+				$.ajax(opts);
 			}
 	};
 	

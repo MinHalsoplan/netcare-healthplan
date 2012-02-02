@@ -15,8 +15,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.Support = function() {
-	
-	var _baseUrl = "/netcare-web/api/support";
 	var _ajax = new NC.Ajax();
 	
 	/**
@@ -25,22 +23,13 @@ NC.Support = function() {
 	 * with the array of values
 	 */
 	var _loadOptions = function(url, onDataLoaded) {
-		$.ajax({
-			url : url,
-			dataType : 'json',
-			cache : false,
-			error : function(jqXHR, textStatus, errorThrown) {
-				NC.log("Error: " + errorThrown);
-			},
-			success : function(data, textStatus, jqXHR) {
-				var arr = new Array();
-				$.each(data.data, function(index, value) {
-					NC.log("Processing " + value + "...");
-					arr[index] = value;
-				});
-				
-				onDataLoaded(arr);
-			}
+		_ajax.get(url, function(data) {
+			var arr = new Array();
+			$.each(data.data, function(index, value) {				
+				arr[index] = value;
+			});
+			
+			onDataLoaded(arr);
 		});
 	};
 	
@@ -55,19 +44,8 @@ NC.Support = function() {
 		data.record = record;
 		data.fields = fields;
 		
-		$.ajax({
-			url : url,
-			dataType : 'json',
-			type : 'post',
-			async : false,
-			data : JSON.stringify(data),
-			contentType : 'application/json',
-			error : function(jqXHR, textStatus, errorThrown) {
-				NC.log("Error: " + errorThrown);
-			},
-			success : function(data) {
-				onLoaded(data.data, null);
-			}
+		_ajax.post(url, JSON.stringify(data), function(data) {
+			onLoaded(data.data, null);
 		});
 	};
 	
@@ -101,7 +79,7 @@ NC.Support = function() {
 		 * application.
 		 */
 		loadUnits : function(selectElem) {
-			var url = _baseUrl + '/units/load';
+			var url = '/support/units/load';
 			
 			_loadOptions(url, function(data) {
 				_createOptions(data, selectElem);
@@ -119,7 +97,7 @@ NC.Support = function() {
 		 * application
 		 */
 		loadDurations : function(selectElem) {
-			var url = _baseUrl + '/durations/load';
+			var url = '/support/durations/load';
 			
 			_loadOptions(url, function(data) {
 				_createOptions(data, selectElem);
@@ -127,7 +105,7 @@ NC.Support = function() {
 		},
 		
 		loadCaptions : function(record, fields, callback) {
-			var url = _baseUrl + '/caption';
+			var url = '/support/caption';
 			_loadCaptions(url, record, fields, function(data) {
 				callback(data);
 			});
@@ -137,7 +115,7 @@ NC.Support = function() {
 		 * Load month names
 		 */
 		loadMonths : function(callback) {
-			var url = _baseUrl + '/months/load';
+			var url = '/support/months/load';
 			_loadOptions(url, function(data) {
 				NC.log("Got result: " + data);
 				callback(data);
@@ -148,7 +126,7 @@ NC.Support = function() {
 		 * Load weekday names
 		 */
 		loadWeekdays : function(callback) {
-			var url = _baseUrl + '/weekdays/load';
+			var url = '/support/weekdays/load';
 			_loadOptions(url, function(data) {
 				NC.log("Got result: " + data);
 				callback(data);

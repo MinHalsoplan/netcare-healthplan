@@ -22,7 +22,6 @@ NC.PageMessages = function() {
 		}
 		
 		var exist = $('#pageMessages div[class*="' + type + '"]').size() == 1;
-		NC.log("Message container exist: " + exist);
 		if (!exist) {
 			$('#pageMessages').append(
 				$('<div>').addClass('alert-message').addClass('block-message').addClass(type).append(
@@ -44,9 +43,7 @@ NC.PageMessages = function() {
 				li.slideUp('slow', function() {
 					li.remove();
 					
-					NC.log("Count " + $('#pageMessages div[class*="' + type + '"] ul li').size());
 					if (($('#pageMessages div[class*="' + type + '"] ul li').size() - 1) <= 0) {
-						NC.log("Hide page messages...");
 						$('#pageMessages').slideUp('slow', function() {
 							$('#pageMessages div[class*="' + type + '"]').remove();
 						});
