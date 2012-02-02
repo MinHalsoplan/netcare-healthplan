@@ -78,20 +78,6 @@ public interface ScheduledActivity extends Serializable {
 	boolean isDue();
 
 	/**
-	 * Returns the reported value.
-	 * 
-	 * @return the actual value reported.
-	 */
-	int getActualValue();
-
-	/**
-	 * Returns the target value.
-	 * 
-	 * @return the target value.
-	 */
-	int getTargetValue();
-
-	/**
 	 * Returns the date and time this was reported (yyyy-mm-dd hh:mm).
 	 * 
 	 * @return the reported time, or null if none.

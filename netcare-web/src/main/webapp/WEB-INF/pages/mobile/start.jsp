@@ -43,12 +43,26 @@
 				NC.log("Load activity: " + activityId);
 				
 				new NC.HealthPlan().loadScheduledActivity(activityId, function(data) {
-					$('#valueUnit').html(data.data.definition.type.unit.value);
-					
-					$('#report div h3').html(data.data.definition.type.name + ' ' + data.data.definition.goal + ' ' + data.data.definition.type.unit.value);
+					$('#report div h3').html(data.data.definition.type.name);
 					$('#report div p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
 					
-					$('#value').val(data.data.definition.goal);
+					$.each(data.data.measurements, function(i, v) {
+						
+						var id = 'report-' + v.measurementDefinition.measurementType.seqno;
+						
+						if (v.measurementDefinition.measurementType.valueType.code == "INTERVAL") {
+							mobile.createReportField(id
+									, $('#reportForm')
+									, v.measurementDefinition.measurementType.name
+									, (v.measurementDefinition.maxTarget + v.measurementDefinition.minTarget) / 2);
+						} else {
+							mobile.createReportField(id
+									, $('#reportForm')
+									, v.measurementDefinition.measurementType.name
+									, v.measurementDefinition.target);
+						}
+					});
+					
 					$('#date').val(data.data.date);
 					$('#time').val(data.data.time);
 				});
@@ -64,7 +78,12 @@
 					e.preventDefault();
 					
 					var formData = new Object();
-					formData.actualValue = $('#value').val();
+					formData.values = new Array();
+					
+					$.each($('input[id*="report-"]'), function(i, v) {
+						formData.values.push({ seqno : $(v).attr('id').substr(7), value : $(v).val()});
+					});
+					
 					formData.actualDate = $('#date').val();
 					formData.actualTime = $('#time').val();
 					formData.sense = $('#slider').val();
@@ -218,12 +237,7 @@
 				</div>
 				<div class="ui-body ui-body-d">
 					
-					<form method="post">
-						<div data-role="fieldcontain">
-							<label for="value" class="ui-input-text">Rapportera</label>
-							<input type="number" id="value" name="value" /> <span id="valueUnit"></span>
-						</div>
-						
+					<form id="reportForm" method="post">
 						<div data-role="fieldcontain">
 							<label for="date">Datum</label>
 							<input type="date" id="date" name="date" />

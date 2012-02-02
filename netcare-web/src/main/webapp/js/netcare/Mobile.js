@@ -18,6 +18,19 @@ NC.Mobile = function() {
 	
 	var public = {
 			
+		createReportField : function(id, parent, label, value) {
+			var div = $('<div>').attr('id', id).attr('data-role', 'fieldcontain').append(
+				$('<label>').attr('for', id).html(label).addClass('ui-input-text')
+			).append(
+				$('<input>').attr('type', 'number').attr('id', id).attr('name', name).attr('value', value).addClass('ui-input-text').addClass('ui-body-d').addClass('ui-corner-all').addClass('ui-shadow-inset')
+			);
+			
+			div.addClass('ui-field-contain').addClass('ui-body').addClass('ui-br');
+			
+			NC.log("Prepending input div");
+			parent.prepend(div);
+		},
+			
 		createListHeader : function(parent, title) {
 			if (parent === undefined) {
 				throw new Error("Parent element is not defined");
@@ -66,17 +79,38 @@ NC.Mobile = function() {
 				$('<h3>' + value.definition.type.name + '</h3>').addClass('ui-li-heading')
 			);
 			
+			var desc = '';
+			$.each(value.definition.goalValues, function(i, v) {
+				var interval = v.measurementType.valueType.code;
+				if (interval == "INTERVAL") {
+					desc += v.measurementType.name + ': ' + v.minTarget + '-' + v.maxTarget + ' ' + v.measurementType.unit.value; 
+				} else if (interval == "SINGLE_VALUE") {
+					desc += v.measurementType.name + ': ' + v.target + ' ' + v.measurementType.unit.value;
+				}
+				
+				if (i != value.definition.goalValues.length -1) {
+					desc += ', ';
+				}
+			});
+			
 			activityText.append(
-				$('<p>' + value.definition.goal +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
+				$('<p>').addClass('ui-li-desc').html(desc)
 			);
 			
 			if (value.reported != null) {
-				activityText.append(
-					$('<p>Rapporterat värde: ' + value.actualValue +  ' ' + value.definition.type.unit.value + '</p>').addClass('ui-li-desc')
-				);
+				
+				var reported = '';
+				$.each(value.measurements, function(i, v) {
+					reported += v.measurementDefinition.measurementType.name + ': ' + v.reportedValue;
+					
+					if (i != value.definition.goalValues.length -1) {
+						reported += ', ';
+					}
+					
+				});
 				
 				activityText.append(
-					$('<p>' + value.reported + '</p>').addClass('ui-li-desc')
+					$('<p>').addClass('ui-li-desc').html('Rapporterade värden: ' + reported)
 				);
 			}
 			
