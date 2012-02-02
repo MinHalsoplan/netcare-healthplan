@@ -218,7 +218,7 @@
 			</div>
 
 			<section id="report">
-				<div id="eventBody" style="border-radius: 10px" class="alert-message info"></div>
+				<div id="eventBody" class="alert-message info"></div>
 				<netcare:report />
 				<br />
 			</section>

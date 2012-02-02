@@ -105,7 +105,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	/**
 	 * Days back when fetching patient plan (schema).
 	 */
-	public static int SCHEMA_HISTORY_DAYS = 7;
+	@org.springframework.beans.factory.annotation.Value("#{application['csv.delimiter']}")
+	public static int SCHEMA_HISTORY_DAYS = 90;
 	/**
 	 * Days forward when fetching patient plan (schema).
 	 */
@@ -121,7 +122,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	public static String CSV_EOL = "\r\n";
 	
 	@org.springframework.beans.factory.annotation.Value("#{application['csv.delimiter']}")
-	private String CSV_SEP;
+	private static String CSV_SEP;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
 	
@@ -552,13 +553,10 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		this.verifyWriteAccess(ent);
 		
-		for (final ScheduledActivityEntity sae : ent.getScheduledActivities()) {
-			log.debug("Removing scheduled activity on defintion. Scheduled activity id is {}", sae.getId());
-			this.scheduledActivityRepository.delete(sae);
-		}
+		ent.setRemovedFlag(true);
 		
-		log.debug("Removing activity definition with id {}", activityDefinitionId);
-		this.activityDefintionRepository.delete(ent);
+		log.debug("Activity definition with id {} marked as rmeoved", activityDefinitionId);
+		this.activityDefintionRepository.save(ent);
 		
 		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(ent), new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId)); 
 	}
