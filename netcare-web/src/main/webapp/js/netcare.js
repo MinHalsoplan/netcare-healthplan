@@ -65,14 +65,32 @@ $(function() {
 	
 		
 	/*
-	 * Select text when a text input field gets focus.
+	 * Select content when a text or number input field gains focus.
 	 */
-	$('input[type="text"]').focus( function (event) { 
+	$('input:text').focus( function (event) { 
 		NC.focusGained($(this));
 	});
 	
-	$('input[type="text"]').focusout( function () { 
+	$('input[type=number]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input:text').focusout( function () { 
 		NC.focusLost($(this));
+	});
+	
+	$('input[type=number]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+	
+	/*
+	 * Fix for IE8, make sure enter submits a form.
+	 */
+	$('form').keypress(function(event) {
+		// enter
+		if (event.which == 13) {
+			event.stopPropagation();
+		}
 	});
 	
 	/*
