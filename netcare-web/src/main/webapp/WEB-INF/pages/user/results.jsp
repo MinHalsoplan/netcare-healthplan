@@ -59,7 +59,6 @@
 							reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities);
 							$('#pieChart').show();
 							
-							
 							/*
 							 * For each activity type draw diagrams for each
 							 */
@@ -81,7 +80,7 @@
 									processed = v.name;
 								}
 							});
-							
+
 							$('div[class="shadow-box"]').each(function(i) {
 								$(this).after('<br />');
 							});
@@ -140,7 +139,7 @@
 					</netcare:row>
 				</form>
 			</section>
-			<section id="activities"></section>
+			<div id="activities"></div>
 		</netcare:content>
 		
 	</netcare:body>	

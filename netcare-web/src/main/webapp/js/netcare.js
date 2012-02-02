@@ -21,7 +21,7 @@ NC = {
 		},
 
 		focusGained : function(inputField) {
-			$(inputField).css('background', 'lightcyan');
+			$(inputField).css('background', '#D9EDF7');
 			$(inputField).select();		
 		},
 

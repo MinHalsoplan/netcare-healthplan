@@ -37,22 +37,33 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	
 	var _formatMeasurements = function(data) {
 		NC.log('formatMeasurements()')
-		var ms = '';
+		var rc = new Object();
+		rc.alarm = false;
+		rc.html = '';
+		
 		$.each(data, function(index, value) {
 			var target;
+			var alarm;
 			if (value.measurementDefinition.measurementType.valueType.code == 'INTERVAL') {
 				target = value.minTarget + '-' + value.maxTarget;
+				alarm = (value.reportedValue < value.minTarget || value.reportedValue> value.maxTarget);
+				if (alarm) {
+					rc.alarm = true;
+				}
 			} else {
 				target = value.target;
 			}
 			if (index > 0) {
-				ms += '<br/>'
+				rc.html += '<br/>'
 			}
-			ms += value.measurementDefinition.measurementType.name + ':&nbsp;' + value.reportedValue + '&nbsp;' 
+			
+			var report = alarm ? '<i style="font-weight: bold">' + value.reportedValue + '</i>' : value.reportedValue ;
+			
+			rc.html += value.measurementDefinition.measurementType.name + ':&nbsp;' + report + '&nbsp;' 
 				+ _util.formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
-		});
-		NC.log(ms);
-		return ms;
+			
+		});		
+		return rc;
 	};
 
 	var public = {
@@ -177,7 +188,9 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					var tr = $('<tr>');
 					var name = $('<td>' + patient + '</td>');
 					var type = $('<td>' + typeName + '</td>');
-					var reported = $('<td style="font-size: 11px">' + _formatMeasurements(value.measurements) + '</td>');
+					var ms = _formatMeasurements(value.measurements);
+					var reported = $('<td>').css('font-size', '11px').html(ms.html);
+					reported.css('background-color', ms.alarm ? '#F2DEDE' : '#DFF0D8');
 					var at = $('<td>' + reportedAt + '</td>');
 					
 					var likeIcon = _util.createIcon('like', 24, function() {
