@@ -314,7 +314,8 @@
 					var measureValues = new Array();
 					var processed = 0;
 					$.each($('#measureValues input'), function(i, v) {
-						var id = $(v).attr('id').substr(0, 1);
+						var attr = $(v).attr('id');
+						var id = attr.substr(0, 1);
 						
 						NC.log("Checking " + id + " with " + processed + " to determine whether to process...");
 						if (id != processed) {
@@ -322,14 +323,14 @@
 							measure.measurementType = new Object();
 							measure.measurementType.id = id;
 							
-							if ($('#measureValues input[id="'+ id +'-2"]').length == 1) {
-								measure.minTarget = $('#measureValues input[id="'+ id +'-1"]').val();
-								measure.maxTarget = $('#measureValues input[id="'+ id +'-2"]').val();
-							} else if ($('#measureValues input[id="'+ id +'-1"]').length == 1) {
-								measure.target = $('#measureValues input[id="'+ id +'-1"]').val();
+							var value1 = $(v).val();
+							var value2 = $('#measureValues input[id="'+ id +'-2"]').val();
+							if (typeof value2 === 'undefined') {
+								measure.target = value1;
 							} else {
-								throw new Error("Measured value has wrong number of input fields.");
-							}
+								measure.minTarget = value1;
+								measure.maxTarget = value2;
+							} 
 							
 							measureValues.push(measure);
 							processed = id;
