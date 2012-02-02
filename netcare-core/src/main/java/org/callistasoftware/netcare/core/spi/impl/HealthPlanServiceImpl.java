@@ -105,7 +105,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	/**
 	 * Days back when fetching patient plan (schema).
 	 */
-	@org.springframework.beans.factory.annotation.Value("#{application['csv.delimiter']}")
 	public static int SCHEMA_HISTORY_DAYS = 90;
 	/**
 	 * Days forward when fetching patient plan (schema).
