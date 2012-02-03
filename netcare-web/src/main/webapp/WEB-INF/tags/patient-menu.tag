@@ -49,8 +49,7 @@
 		<li><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="result.header" /></a></li>
 	</ul>
 	
-	<ul>
-		<li><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
+	<ul id="healthplan-menu">
 	</ul>
 </div>
 	

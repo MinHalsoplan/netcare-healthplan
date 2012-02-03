@@ -108,7 +108,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		/**
 		 * List all activities that exist on a health plan
 		 */
-		listActivities : function(healthPlanId, tableId) {
+		listActivities : function(healthPlanId, tableId, isPatient) {
 			_updateActivityTable(tableId);
 			_ajax.get('/healthplan/' + healthPlanId + '/activity/list', function(data) {
 				NC.log("Emptying the activity table");
@@ -117,30 +117,33 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				$.each(data.data, function(index, value) {
 					
 					NC.log("Processing id: " + value.id);
-					
-					var deleteIcon = _util.createIcon('trash', 24, function() {
-						NC.log("Delete icon clicked");
-						public.deleteActivity(tableId, healthPlanId, value.id);
-					});
-					
-					var actionCol = $('<td>');
-					actionCol.css('text-align', 'right');
-					
-					deleteIcon.appendTo(actionCol);
-					
-					var tr = $('<tr>');
-					tr.append(
-						$('<td>').html(value.type.name)
-					).append(
-						$('<td>').html(value.type.category.name)
-					).append(
-						$('<td>').html(value.startDate)
-					).append(
-						$('<td>').html(_util.formatFrequency(value))
-					);
-					
-					tr.append(actionCol);
-					$('#' + tableId + ' tbody').append(tr);
+					if (!value.publicDefinition && !isPatient) {
+						var deleteIcon = _util.createIcon('trash', 24, function() {
+							NC.log("Delete icon clicked");
+							public.deleteActivity(tableId, healthPlanId, value.id);
+						});
+						
+						var actionCol = $('<td>');
+						actionCol.css('text-align', 'right');
+						
+						if (isPatient === undefined || !isPatient) {
+							deleteIcon.appendTo(actionCol);
+						}
+						
+						var tr = $('<tr>');
+						tr.append(
+							$('<td>').html(value.type.name)
+						).append(
+							$('<td>').html(value.type.category.name)
+						).append(
+							$('<td>').html(value.startDate)
+						).append(
+							$('<td>').html(_util.formatFrequency(value))
+						);
+						
+						tr.append(actionCol);
+						$('#' + tableId + ' tbody').append(tr);
+					}
 				});
 				
 				_activityCount = data.data.length;

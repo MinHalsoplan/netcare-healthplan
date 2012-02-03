@@ -277,7 +277,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId()) : patientRepository.findOne(user.getId());
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency, userEntity);
-
+		newEntity.setPublicDefinition(dto.isPublicDefinition());
+		
 		/*
 		 * Process measurement defintions
 		 */

@@ -76,6 +76,12 @@ public interface ActivityDefinition extends Serializable {
 	String getEndDate();
 	
 	/**
+	 * Get the id of the health plan this definition belongs to
+	 * @return
+	 */
+	Long getHealthPlanId();
+	
+	/**
 	 * Returns health plan name.
 	 * 
 	 * @return the health plan name.
@@ -86,7 +92,20 @@ public interface ActivityDefinition extends Serializable {
 	 * Returns issued by.
 	 */
 	CareGiverBaseView getIssuedBy();
-		
+	
+	/**
+	 * True if the patient issued this definition
+	 * @return
+	 */
+	boolean isIssuedByPatient();
+	
+	/**
+	 * If this is definition is issued by a patient, he may set this flag
+	 * to allow/deny the care viewer to see this definition.
+	 * @return
+	 */
+	boolean isPublicDefinition();
+	
 	/**
 	 * Returns number of times an activity should have been carried out.
 	 */

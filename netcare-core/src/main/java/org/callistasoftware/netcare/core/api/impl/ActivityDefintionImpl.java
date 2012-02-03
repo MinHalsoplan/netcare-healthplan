@@ -49,12 +49,16 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	private DayTimeImpl[] dayTimes;
 	private String endDate;
+	private Long healthPlanId;
 	private String healthPlanName;
 	private int numTotal;
 	private int numDone;
 	private int numTarget;
 	private CareGiverBaseView issuedBy;	
 	private MeasurementDefinition[] goalValues;
+	
+	private boolean issuedByPatient;
+	private boolean publicDefinition;
 	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
@@ -73,6 +77,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
 		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
+		dto.setHealthPlanId(entity.getHealthPlan().getId());
 		
 		List<MeasurementDefinitionEntity> mdl = entity.getMeasurementDefinitions();
 		final MeasurementDefinition[] goalValues = new MeasurementDefinitionImpl[mdl.size()];
@@ -84,6 +89,12 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.calcCompletion(entity.getScheduledActivities());
 		CareGiverBaseView issuedBy = CareGiverBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
 		dto.setIssuedBy(issuedBy);
+		
+		if (!entity.getCreatedBy().isCareGiver()) {
+			dto.issuedByPatient = true;
+		}
+		
+		dto.publicDefinition = entity.isPublicDefinition();
 
 		return dto;
 	}
@@ -237,5 +248,24 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	public void setGoalValues(final MeasurementDefinitionImpl[] goalValues) {
 		this.goalValues = goalValues;
+	}
+
+	@Override
+	public Long getHealthPlanId() {
+		return this.healthPlanId;
+	}
+	
+	public void setHealthPlanId(final Long healthPlanId) {
+		this.healthPlanId = healthPlanId;
+	}
+
+	@Override
+	public boolean isIssuedByPatient() {
+		return this.issuedByPatient;
+	}
+
+	@Override
+	public boolean isPublicDefinition() {
+		return this.publicDefinition;
 	}
 }

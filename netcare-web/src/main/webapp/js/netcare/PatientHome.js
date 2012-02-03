@@ -67,7 +67,18 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 
 				_perfData = new Array();
 
-				$.each(data.data, function(index, value) {							
+				var currentHealthPlanId = '';
+				$.each(data.data, function(index, value) {
+					
+					if (currentHealthPlanId != value.healthPlanId) {
+						var link = $('<a>').attr('href', '/netcare-web/netcare/user/healthplan/' + value.healthPlanId + '/view').html(value.healthPlanName);
+						$('#healthplan-menu').append(
+							$('<li>').append(link)
+						);
+						
+						currentHealthPlanId = value.healthPlanId;
+					}
+					
 					var period;
 					if (value.activityRepeat == 0) {
 						period = value.startDate;

@@ -60,7 +60,10 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 
 	@Column(name="removedFlag")
 	private String removedFlag;
-
+	
+	@Column(name="is_public_definition", nullable=false)
+	private boolean publicDefinition;
+	
 	@ManyToOne
 	@JoinColumn(name="health_plan_id")
 	private HealthPlanEntity healthPlan;
@@ -85,6 +88,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
     	measurementDefinitions = new LinkedList<MeasurementDefinitionEntity>();
     	uuid = UUID.randomUUID().toString();
     	createdTime = new Date();
+    	publicDefinition = true;
 	}
     
     public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency, UserEntity createdBy) {
@@ -280,6 +284,14 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 
 	public void setRemovedFlag(boolean removedFlag) {
 		this.removedFlag = removedFlag ? "Y" : null;
+	}
+
+	public boolean isPublicDefinition() {
+		return publicDefinition;
+	}
+
+	public void setPublicDefinition(boolean publicDefinition) {
+		this.publicDefinition = publicDefinition;
 	}
 
 }

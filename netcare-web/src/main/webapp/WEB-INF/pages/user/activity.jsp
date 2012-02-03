@@ -28,6 +28,15 @@
 		<script type="text/javascript">
 			$(function() {
 				
+				/*
+				 * Are we a patient or are a care giver
+				 */
+				var isPatient = false;
+				var patientId = '<sec:authentication property="principal.id" />';
+				if (patientId != "") {
+					isPatient = true;
+				}
+				
 				var util = new NC.Util();
 				var support = new NC.Support();
 				
@@ -344,6 +353,7 @@
 					activity.startDate = startDate;
 					activity.dayTimes = dayTimes;
 					activity.activityRepeat = activityRepeat;
+					activity.publicDefinition = true;
 					
 					var jsonObj = JSON.stringify(activity);
 					NC.log("JSON: " + jsonObj.toString());
@@ -357,7 +367,7 @@
 						
 						resetForm();
 						
-						hp.listActivities(healthPlan, 'activitiesTable')
+						hp.listActivities(healthPlan, 'activitiesTable', isPatient)
 						
 					});
 					
