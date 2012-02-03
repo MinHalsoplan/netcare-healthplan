@@ -21,10 +21,25 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 <body>
+	<div id="pageLoading" class="modal-backdrop fade in" style="display:none;">
+	</div>
+	<div id="pageLoadingBox" class="modal" style="display: none;">
+		<div class="modal-body" style="height: 100px; text-align:center;">
+			<span><img src="<c:url value="/img/ajax-loader-large.gif" />" /></span>
+			<h2>Vänligen vänta medan sidan laddar klart...</h2>
+		</div>
+	</div>
 	<div class="container">
 		<div class="content">
 			<div class="page-header">
-				<h1>Planerade hälsoaktiviteter <small>Tagline text kan skrivas här</small></h1>
+				<div class="row">
+					<div class="span13">
+						<h1>Planerade hälsoaktiviteter <small>Tagline text kan skrivas här</small></h1>
+					</div>
+					<div id="ajaxInProgress" class="span3" style="text-align: right; vertical-align: middle; display: none;">
+						<span><spring:message code="loading" /><img src="<c:url value="/img/ajax-loader-small.gif" />" /></span>
+					</div>
+				</div>
 			</div>
 			
 			<div class="row">

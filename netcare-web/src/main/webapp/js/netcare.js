@@ -31,7 +31,14 @@ NC = {
 
 };
 
-$(function() {
+$(window).load(function() {
+	$('#pageLoading').fadeOut('fast', function(e) {
+		$(this).hide();
+		$('#pageLoadingBox').hide();
+	});
+});
+
+$(document).ready(function() {
 	
 	if (typeof console === "undefined") {
 		console = {};
@@ -39,6 +46,21 @@ $(function() {
 	if (typeof console.log === "undefined") {
 		console.log = function() {};
 	}
+	
+	$('#pageLoading').css('height', $(window).height()).show();
+	$('#pageLoadingBox').show();
+	
+	setTimeout(function() {
+		NC.log("Wait");
+	}, 5000);
+	
+	$('#ajaxInProgress').ajaxStart(function() {
+		$(this).show();
+	});
+	
+	$('#ajaxInProgress').ajaxStop(function() {
+		$(this).hide();
+	});
 
 	/*
 	 * Bind all autocomplete boxes

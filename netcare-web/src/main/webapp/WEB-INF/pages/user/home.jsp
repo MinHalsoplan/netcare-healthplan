@@ -225,6 +225,9 @@
 			
 			<section id="comments">
 				<h2><spring:message code="comments.comments" /></h2>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="comments.commentDesc" />
 				<div id="noCommentId" class="alert-message info">
 					<p><spring:message code="comments.noComments" /></p>
 				</div>
@@ -243,6 +246,10 @@
 
 			<section id="healthPlan">
 				<h2><spring:message code="phome.header" /></h2>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="phome.headerDesc" />
+				</p>
 				<div id="planDescription" style="margin: 10px"></div>
 				<table id="planTable"
 					class="bordered-table zebra-striped shadow-box">
@@ -253,9 +260,7 @@
 							<th><spring:message code="phome.activity" /></th>
 							<th><spring:message code="phome.until" /></th>
 							<th><spring:message code="phome.frequency" /></th>
-							<th><spring:message code="phome.done" /><br /> <input
-								id="totalBoxId" type="checkbox" /> <spring:message
-									code="phome.showTot" /></th>
+							<th><spring:message code="phome.done" /><br /> <input id="totalBoxId" type="checkbox" /> <spring:message code="phome.showTot" /></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -265,6 +270,16 @@
 				<div style="text-align: right">
 					<a href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 				</div>
+			</section>
+			
+			<section id="activities">
+				<h2><spring:message code="phome.activities" /></h2>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="phome.activitiesDesc" />
+				</p>
+				<ul id="healthplan-menu">
+				</ul>
 			</section>
 		</netcare:content>
 	</netcare:body>
