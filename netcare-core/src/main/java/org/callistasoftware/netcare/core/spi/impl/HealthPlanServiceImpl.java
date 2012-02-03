@@ -452,7 +452,13 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final ScheduledActivity[] activities = this.getScheduledActivitiesForHealthPlan(healthPlanId).getData();
 		final List<ActivityCount> activityCount = new ArrayList<ActivityCount>();
 		
-		for(final ScheduledActivity ac : activities) {
+		actLoop: for(final ScheduledActivity ac : activities) {
+			
+			if (!ac.getDefinition().isPublicDefinition() && this.getCurrentUser().isCareGiver()) {
+				log.debug("Skip activity because the care giver was not allowed to see it.");
+				continue actLoop;
+			}
+			
 			final String name = ac.getDefinition().getType().getName();
 			final ActivityCount act = new ActivityCount(name);
 			final ActivityCount existing = this.findActivityCount(name, activityCount);
@@ -480,6 +486,11 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
 		for (final ScheduledActivityEntity e : ents) {
+			
+			if (!e.getActivityDefinitionEntity().isPublicDefinition() && this.getCurrentUser().isCareGiver()) {
+				log.debug("Skip activity because the care giver was not allowed to see it.");
+				continue;
+			}
 			
 			final ReportedActivity ra = new ReportedActivity();
 			ra.setName(e.getActivityDefinitionEntity().getActivityType().getName());
