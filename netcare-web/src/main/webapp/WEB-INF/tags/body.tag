@@ -26,7 +26,7 @@
 	<div id="pageLoadingBox" class="modal" style="display: none;">
 		<div class="modal-body" style="height: 100px; text-align:center;">
 			<span><img src="<c:url value="/img/ajax-loader-large.gif" />" /></span>
-			<h2>Vänligen vänta medan sidan laddar klart...</h2>
+			<h2><spring:message code="loadingPage" /></h2>
 		</div>
 	</div>
 	<div class="container">

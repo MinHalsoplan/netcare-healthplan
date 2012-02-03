@@ -50,10 +50,6 @@ $(document).ready(function() {
 	$('#pageLoading').css('height', $(window).height()).show();
 	$('#pageLoadingBox').show();
 	
-	setTimeout(function() {
-		NC.log("Wait");
-	}, 5000);
-	
 	$('#ajaxInProgress').ajaxStart(function() {
 		$(this).show();
 	});

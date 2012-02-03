@@ -292,10 +292,12 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 					
 					switch (mde.getMeasurementType().getValueType()) {
 					case INTERVAL:
+						log.debug("Setting values for measure defintion: {}-{}", md.getMinTarget(), md.getMaxTarget());
 						mde.setMaxTarget(md.getMaxTarget());
 						mde.setMinTarget(md.getMinTarget());
 						break;
 					case SINGLE_VALUE:
+						log.debug("Setting values for measure defintion: {}", md.getTarget());
 						mde.setTarget(md.getTarget());
 						break;
 					}
