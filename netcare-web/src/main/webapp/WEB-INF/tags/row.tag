@@ -18,6 +18,7 @@
 --%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ attribute name="id" required="false" %>
+<%@ attribute name="style" required="false" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -31,7 +32,7 @@
 	</c:otherwise>
 </c:choose>
 
-	<div class="span10">
+	<div class="span10" style="${style}">
 		<div class="row">
 			<jsp:doBody />
 		</div>

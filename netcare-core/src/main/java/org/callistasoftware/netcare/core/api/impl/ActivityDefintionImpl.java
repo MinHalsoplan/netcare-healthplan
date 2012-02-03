@@ -91,10 +91,10 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setIssuedBy(issuedBy);
 		
 		if (!entity.getCreatedBy().isCareGiver()) {
-			dto.issuedByPatient = true;
+			dto.setIssuedByPatient(true);
 		}
 		
-		dto.publicDefinition = entity.isPublicDefinition();
+		dto.setPublicDefinition(entity.isPublicDefinition());
 
 		return dto;
 	}
@@ -263,9 +263,17 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public boolean isIssuedByPatient() {
 		return this.issuedByPatient;
 	}
+	
+	public void setIssuedByPatient(final boolean issuedByPatient) {
+		this.issuedByPatient = issuedByPatient;
+	}
 
 	@Override
 	public boolean isPublicDefinition() {
 		return this.publicDefinition;
+	}
+	
+	public void setPublicDefinition(final boolean publicDefinition) {
+		this.publicDefinition = publicDefinition;
 	}
 }

@@ -32,10 +32,19 @@
 				 * Are we a patient or are a care giver
 				 */
 				var isPatient = false;
-				var patientId = '<sec:authentication property="principal.id" />';
-				if (patientId != "") {
-					isPatient = true;
+				var careGiver = '<c:out value="${sessionScope.currentPatient}" />';
+				if (careGiver != '') {
+					isPatient = false;
+				} else {
+					var patientId = '<sec:authentication property="principal.id" />';
+					if (patientId != "") {
+						isPatient = true;
+					} else {
+						throw new Error("Could not determine whether user is patient or care giver");
+					}
 				}
+				
+				NC.log("Is viewer a patient: " + isPatient);
 				
 				var util = new NC.Util();
 				var support = new NC.Support();
@@ -250,7 +259,7 @@
 							);
 							
 							rowCol.append(
-								$('<div>').addClass('span1').append(
+								$('<div>').addClass('span2').append(
 									$('<div>').addClass('clearfix').append(
 										$('<label>').html('&nbsp')
 									).append(
@@ -378,6 +387,10 @@
 				$('#showActivityForm').click(function(event) {
 					NC.log("Displaying new activity form");
 					$('#activityForm').toggle();
+					
+					if (isPatient != true) {
+						$('#publicDefinitionContainer').hide();
+					}
 				});
 				
 				$('#activityForm').hide();
@@ -595,6 +608,13 @@
 					</div>
 				</fieldset>
 				
+				<netcare:row id="publicDefinitionContainer">
+					<netcare:col span="5">
+						<netcare:field name="publicDefinition" label="Ska vårdgivare få ta del av denna aktiviteten?">
+							<input type="checkbox" name="publicDefinition" value="true" checked="checked"/>
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
 			
 				<div class="actions">
 					<spring:message code="create" var="create" scope="page" />
