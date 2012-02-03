@@ -34,7 +34,26 @@ NC.Util = function() {
 		});
 	};
 	
-	var public = {	
+	var public = {
+		
+		/**
+		 * Check if current logged in user is a patient or not
+		 */
+		isPatient : function(currentPatient) {
+			if (currentPatient != '') {
+				isPatient = false;
+			} else {
+				var patientId = '<sec:authentication property="principal.id" />';
+				if (patientId != "") {
+					isPatient = true;
+				} else {
+					throw new Error("Could not determine whether user is patient or care giver");
+				}
+			}
+			
+			NC.log("Is user patient: " + isPatient);
+			return isPatient;
+		},
 			
 		/**
 		 * Update the current patient shown in the menu

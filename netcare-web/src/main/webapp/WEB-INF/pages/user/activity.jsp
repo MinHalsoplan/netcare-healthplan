@@ -27,27 +27,13 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				var util = new NC.Util();
+				var support = new NC.Support();
 				
 				/*
 				 * Are we a patient or are a care giver
 				 */
-				var isPatient = false;
-				var careGiver = '<c:out value="${sessionScope.currentPatient}" />';
-				if (careGiver != '') {
-					isPatient = false;
-				} else {
-					var patientId = '<sec:authentication property="principal.id" />';
-					if (patientId != "") {
-						isPatient = true;
-					} else {
-						throw new Error("Could not determine whether user is patient or care giver");
-					}
-				}
-				
-				NC.log("Is viewer a patient: " + isPatient);
-				
-				var util = new NC.Util();
-				var support = new NC.Support();
+				var isPatient = util.isPatient('<c:out value="${sessionScope.currentPatient}" />');
 				
 				/*
 				 * Disable the weekdays as well as its
@@ -184,9 +170,7 @@
 				var healthPlan = <c:out value="${requestScope.result.data.id}" />;
 				var hp = new NC.HealthPlan();
 				
-				hp.listActivities(healthPlan, 'activitiesTable', function(data) {
-					NC.log("Callback executing...");
-				});
+				hp.listActivities(healthPlan, 'activitiesTable', isPatient);
 				
 				
 				var addMeasureValueInput = function(id, rowCol, label, value) {
@@ -362,7 +346,18 @@
 					activity.startDate = startDate;
 					activity.dayTimes = dayTimes;
 					activity.activityRepeat = activityRepeat;
-					activity.publicDefinition = true;
+					
+					if (!isPatient) {
+						activity.publicDefinition = true;
+					} else {
+						if ($('#publicDefinition').attr('checked') == "checked") {
+							activity.publicDefinition = true;
+						} else {
+							activity.publicDefinition = false;
+						}
+					}
+					
+					NC.log("Public definition: " + activity.publicDefinition);
 					
 					var jsonObj = JSON.stringify(activity);
 					NC.log("JSON: " + jsonObj.toString());

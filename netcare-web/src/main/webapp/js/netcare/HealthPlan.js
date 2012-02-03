@@ -117,7 +117,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				$.each(data.data, function(index, value) {
 					
 					NC.log("Processing id: " + value.id);
-					if (value.publicDefinition) {
+					
+					NC.log("Public: " + value.publicDefinition);
+					NC.log("Patient: " + isPatient);
+					
+					if ((!value.publicDefinition && isPatient) || value.publicDefinition) {
 						var deleteIcon = _util.createIcon('trash', 24, function() {
 							NC.log("Delete icon clicked");
 							public.deleteActivity(tableId, healthPlanId, value.id);
