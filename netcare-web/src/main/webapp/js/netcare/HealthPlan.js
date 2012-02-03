@@ -159,7 +159,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 * Add an activity to a health plan
 		 */
 		addActivity : function(healthPlanId, formData, callback, activityTableId) {
-			_ajax.post('/healthplan/' + healthPlanId + 'activity/new', formData, callback, true);
+			_ajax.post('/healthplan/' + healthPlanId + '/activity/new', formData, callback, true);
 		},
 		
 		/**

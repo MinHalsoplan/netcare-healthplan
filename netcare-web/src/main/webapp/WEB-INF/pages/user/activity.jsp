@@ -187,7 +187,7 @@
 					);
 					
 					var inputDiv = $('<div>').addClass('input');
-					var input = $('<input>').attr('type', 'number').attr('step', '0.1').attr('name', id).attr('id', id).addClass('small');
+					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('small');
 					
 					inputDiv.append(input);
 					inputDiv.append($('<span>').html(' ' + value.unit.value));
@@ -323,7 +323,8 @@
 					var measureValues = new Array();
 					var processed = 0;
 					$.each($('#measureValues input'), function(i, v) {
-						var id = $(v).attr('id').substr(0, 1);
+						var attr = $(v).attr('id');
+						var id = attr.substr(0, 1);
 						
 						NC.log("Checking " + id + " with " + processed + " to determine whether to process...");
 						if (id != processed) {
@@ -331,15 +332,14 @@
 							measure.measurementType = new Object();
 							measure.measurementType.id = id;
 							
-							var inputs = $('#measureValues input[id*="'+ id +'-"]');
-							if (inputs.size() == 2) {
-								measure.minTarget = $(inputs.get(0)).val();
-								measure.maxTarget = $(inputs.get(1)).val();
-							} else if (inputs.size() == 1) {
-								measure.target = $(inputs.get(0)).val();
+							var value1 = $(v).val();
+							var value2 = $('#measureValues input[id="'+ id +'-2"]').val();
+							if (typeof value2 === 'undefined') {
+								measure.target = value1;
 							} else {
-								throw new Error("Measured value has wrong number of input fields.");
-							}
+								measure.minTarget = value1;
+								measure.maxTarget = value2;
+							} 
 							
 							measureValues.push(measure);
 							processed = id;
