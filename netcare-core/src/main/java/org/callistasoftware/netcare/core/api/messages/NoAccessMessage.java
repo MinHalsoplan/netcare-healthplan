@@ -14,35 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.statistics;
+package org.callistasoftware.netcare.core.api.messages;
 
-public class ActivityCount {
-	private String name;
-	private int count;
-	
-	public ActivityCount(final String name) {
-		this.setName(name);
-		this.setCount(0);
+public class NoAccessMessage extends DefaultSystemMessage {
+	private static final long serialVersionUID = 1L;
+
+	public NoAccessMessage() {
+		super("noAccess");
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public int getCount() {
-		return count;
-	}
-	
-	public void setCount(int count) {
-		this.count = count;
-	}
-	
-	public void increaseCount() {
-		this.setCount(this.getCount() + 1);
+	@Override
+	public MessageType getType() {
+		return MessageType.ERROR;
 	}
 
 }
