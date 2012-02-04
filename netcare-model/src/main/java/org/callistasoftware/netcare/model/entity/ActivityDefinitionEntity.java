@@ -59,7 +59,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	private Date startDate;
 
 	@Column(name="removedFlag")
-	private String removedFlag;
+	private boolean removedFlag;
 	
 	@Column(name="is_public_definition", nullable=false)
 	private boolean publicDefinition;
@@ -279,11 +279,11 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	}
 
 	public boolean isRemovedFlag() {
-		return "Y".equals(removedFlag);
+		return removedFlag;
 	}
 
 	public void setRemovedFlag(boolean removedFlag) {
-		this.removedFlag = removedFlag ? "Y" : null;
+		this.removedFlag = removedFlag;
 	}
 
 	public boolean isPublicDefinition() {

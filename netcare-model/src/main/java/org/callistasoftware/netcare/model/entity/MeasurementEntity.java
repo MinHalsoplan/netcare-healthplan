@@ -130,10 +130,10 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 	private void copyActualTargets() {
 		// copy target values
 		if (getMeasurementDefinition().getMeasurementType().equals(MeasurementValueType.INTERVAL)) {
-			setMinTarget(measurementDefinition.getMinTarget());
-			setMaxTarget(measurementDefinition.getMaxTarget());
+			setMinTarget(getMeasurementDefinition().getMinTarget());
+			setMaxTarget(getMeasurementDefinition().getMaxTarget());
 		} else {
-			setTarget(measurementDefinition.getTarget());
+			setTarget(getMeasurementDefinition().getTarget());
 		}		
 	}
 
@@ -145,6 +145,14 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 	@Override
 	public int compareTo(MeasurementEntity m) {
 		return this.getMeasurementDefinition().compareTo(m.getMeasurementDefinition());
+	}
+	
+	public boolean isAlarm() {
+		MeasurementTypeEntity type = getMeasurementDefinition().getMeasurementType();
+		if (type.isAlarmEnabled()) {
+			return (getReportedValue() < getMinTarget() || getReportedValue() > getMaxTarget());
+		}
+		return false;
 	}
 }
 

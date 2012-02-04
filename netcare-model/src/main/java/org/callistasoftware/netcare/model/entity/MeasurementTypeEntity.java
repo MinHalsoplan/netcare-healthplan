@@ -44,8 +44,8 @@ public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> 
 	@Column(name="value_type", nullable=false)
 	private MeasurementValueType valueType;
 	
-	@Column(name="alarm_enabled", length=1)
-	private String alarmEnabled;
+	@Column(name="alarm_enabled")
+	private boolean alarmEnabled;
 	
 	@Column(name="unit", nullable=false)
 	private MeasureUnit unit;
@@ -103,11 +103,11 @@ s	 * @param unit the unit.
 	}
 
 	public boolean isAlarmEnabled() {
-		return "Y".equals(alarmEnabled);
+		return alarmEnabled;
 	}
 
 	public void setAlarmEnabled(boolean alarmEnabled) {
-		this.alarmEnabled = alarmEnabled ? "Y" : null;
+		this.alarmEnabled = alarmEnabled;
 	}
 
 	public MeasureUnit getUnit() {

@@ -18,5 +18,6 @@ package org.callistasoftware.netcare.model.entity;
 
 public enum AlarmCause {
 	PLAN_EXPIRES,
-	UNREPORTED_ACTIVITY
+	UNREPORTED_ACTIVITY,
+	LIMIT_BREACH,
 }

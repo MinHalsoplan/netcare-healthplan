@@ -59,6 +59,7 @@ import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
@@ -68,6 +69,8 @@ import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.AlarmCause;
+import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
@@ -148,6 +151,10 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ActivityCommentRepository commentRepository;
+	
+	@Autowired
+	private AlarmRepository alarmRepo;
+
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -354,7 +361,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.setNote(report.getNote());
 		entity.setPerceivedSense(report.getSense());
 		for (Value value : report.getValues()) {
-			entity.lookupMeasurement(value.getSeqno()).setReportedValue(value.getValue());
+			MeasurementEntity me = entity.lookupMeasurement(value.getSeqno()); 
+			me.setReportedValue(value.getValue());
+			log.debug("Alarm status: enabled {} raised {}", me.getMeasurementDefinition().getMeasurementType().isAlarmEnabled(), me.isAlarm());
+			if (!report.isRejected() && me.isAlarm()) {
+				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, 
+						entity.getActivityDefinitionEntity().getHealthPlan().getForPatient(), 
+						entity.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
+				alarmRepo.save(ae);
+			}
 		}
 		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
 		entity.setActualTime(d);
