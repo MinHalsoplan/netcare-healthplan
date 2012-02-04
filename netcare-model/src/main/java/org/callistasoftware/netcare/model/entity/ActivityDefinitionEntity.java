@@ -58,7 +58,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@Column(name="start_date")
 	private Date startDate;
 
-	@Column(name="removedFlag")
+	@Column(name="removed_flag")
 	private boolean removedFlag;
 	
 	@Column(name="is_public_definition", nullable=false)
