@@ -68,4 +68,9 @@ public interface Alarm extends Serializable {
 	 * @return
 	 */
 	Long getEntityReferenceId();
+	
+	/**
+	 * Returns additional info.
+	 */
+	String getInfo();
 }

@@ -57,7 +57,11 @@
 							var created = $('<td>' + value.createdTime + '</td>');
 							var patient = $('<td>' + value.patient.name + '<br/>' + util.formatCnr(value.patient.civicRegistrationNumber)  + '</td>');
 							var contact = $('<td>' + value.patient.phoneNumber + '</td>');
-							var cause = $('<td>' + value.cause.value + '</td>');
+							var info =  value.cause.value;
+							if (value.info != null) {
+								info += '<br/>' + value.info;
+							}
+							var cause = $('<td>' + info + '</td>');
 							
 							var processIcon = util.createIcon('clear', '24', function() {
 								NC.log("Resolving alarm...");

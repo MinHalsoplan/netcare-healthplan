@@ -373,6 +373,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, 
 						entity.getActivityDefinitionEntity().getHealthPlan().getForPatient(), 
 						entity.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
+					Option o = new Option(me.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale());
+					ae.setInfo(me.getMeasurementDefinition().getMeasurementType().getName() + ": " + me.getReportedValue() + " " + o.getValue());
 				alarmRepo.save(ae);
 			}
 		}

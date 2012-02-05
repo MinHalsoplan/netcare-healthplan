@@ -50,6 +50,9 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 	@Column(name="ref_entity_id", nullable=false)
 	private Long refEntityId;
 		
+	@Column(name="info", length=64)
+	private String info;
+	
 	@Column(name="resolved_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date resolvedTime;
@@ -138,6 +141,14 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 	@Override
 	public boolean isWriteAllowed(UserEntity userId) {
 		return userId.isCareGiver() && this.getPatient().isWriteAllowed(userId);
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 }
