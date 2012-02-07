@@ -18,9 +18,11 @@ package org.callistasoftware.netcare.core.job;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
@@ -36,16 +38,26 @@ import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Runs system jobs.
+ * 
+ * 
+ * @author Peter
+ */
 @Component
 @Transactional
 public class SystemAlarmJob {
 
 	private static Logger log = LoggerFactory.getLogger(SystemAlarmJob.class);
-	
+
+	@Value("#{application['reminder.time']}")
+	private int reminderTime;
+
 	@Autowired
 	private ScheduledActivityRepository saRepo;
 	
@@ -56,11 +68,12 @@ public class SystemAlarmJob {
 	private AlarmRepository alRepo;
 
 	public void init() {
-		this.run();
+		alarmJob();
+		reminderJob();
 	}
 	
 	@Scheduled(fixedRate=3600000)
-	public void run() {
+	public void alarmJob() {
 		log.info("======== ALARM JOB STARTED =========");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -(HealthPlanServiceImpl.SCHEMA_HISTORY_DAYS));
@@ -72,9 +85,49 @@ public class SystemAlarmJob {
 		
 		activities(cal.getTime());
 		
-
 		log.info("======== ALARM JOB COMPLETED =========");
 	}
+	
+	/**
+	 * Notifies mobile users about it's time to perform an activity.
+	 */
+	@Scheduled(fixedDelay=300000)
+	public void reminderJob() {
+		log.info("======== REMINDER JOB STARTED =========");
+		HashMap<PatientEntity, Integer> patients = new HashMap<PatientEntity, Integer>();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MINUTE, reminderTime);
+		Date start = cal.getTime();
+		
+		List<ScheduledActivityEntity> list = saRepo.findByScheduledTimeLessThanAndReportedTimeIsNull(start);
+		log.debug("Reminder: {} candidates found", list.size());
+		for (ScheduledActivityEntity sae : list) {
+			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
+			log.debug("Reminder: for patient {}, activity {}", patient.getName(), sae.getActivityDefinitionEntity().getActivityType().getName());
+			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() != null) {
+				Integer i = patients.get(patient);
+				log.debug("Reminder: for patient {} -- add to send list", patient.getName());
+				patients.put(patient, (i == null) ? 0 : i.intValue()+1);
+			}
+			sae.setReminderDone(true);
+			saRepo.save(sae);
+		}
+		log.debug("Reminder: {} to send", patients.size());
+		for (Map.Entry<PatientEntity, Integer> p : patients.entrySet()) {
+			log.debug("Reminder: send {} new events reminder to patient {}", p.getValue(), p.getKey().getName());
+			sendReminder(p.getKey(), p.getValue());
+		}
+		
+		log.info("======== REMINDER JOB COMPLETED =========");
+	}
+	
+	
+	// FIXME: to be implemented
+	private void sendReminder(PatientEntity to, int n) {
+		; // TBD
+	}
+	
 	
 	//
 	private void activities(Date endDate) {
