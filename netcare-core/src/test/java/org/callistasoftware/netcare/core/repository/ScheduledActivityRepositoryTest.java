@@ -68,11 +68,9 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 	@Autowired
 	private ScheduledActivityRepository repo;
 	
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testFindByCareUnit() throws Exception {
-		
+	
+	
+	private ScheduledActivityEntity setup() {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 		
@@ -97,6 +95,18 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final ActivityDefinitionEntity saved = this.adRepo.save(def);
 		
 		ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(saved, new Date());
+		
+		e = this.repo.save(e);
+				
+		return e;
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testFindByCareUnit() {
+		
+		ScheduledActivityEntity e = setup();
 		e.setReportedTime(new Date());
 		e = this.repo.save(e);
 		
@@ -106,8 +116,8 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId());
 		assertEquals(result.get(0).getMeasurements().get(0).getMeasurementDefinition().getMeasurementType().getSeqno(), 1);
 		e.setReportedTime(null);
-		e = this.repo.save(e);
-		
+		e = this.repo.save(e);		
+
 		Calendar cal = Calendar.getInstance();
 		assertEquals(1, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
 		cal.add(Calendar.DATE, -1);
@@ -118,6 +128,19 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		this.repo.save(e);
 		cal.add(Calendar.DATE, 1);		
 		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testFindByScheduledTimeLessThanAndReportedTimeIsNull() {
+		setup();
+		
+		final List<ScheduledActivityEntity> result = repo.findByScheduledTimeLessThanAndReportedTimeIsNull(new Date());
+		
+		assertEquals(1, result.size());
+		assertEquals(false, result.get(0).isReminderDone());
+
 	}
 	
 }
