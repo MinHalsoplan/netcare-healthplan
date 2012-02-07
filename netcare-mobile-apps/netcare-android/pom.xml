@@ -19,6 +19,11 @@
 			<artifactId>android-service-client</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.callistasoftware.android</groupId>
+			<artifactId>android-c2dm</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	
 	<build>

@@ -23,6 +23,7 @@ import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.UserDetailsService;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl extends ServiceSupport implements UserDetailsService {
 	
 	private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 	
@@ -78,6 +79,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		throw new UsernameNotFoundException("Please check your credentials");
 		
+	}
+
+	@Override
+	public void registerForC2dmPush(String c2dmRegistrationId) {
+		final UserEntity user = this.getCurrentUser();
+		
+		log.info("User: {} registers for c2dm push using reg id: {}", user.getName(), c2dmRegistrationId);
+		user.getProperties().put("c2dmRegistrationId", c2dmRegistrationId);
 	}
 
 }

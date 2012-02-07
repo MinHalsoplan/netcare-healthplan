@@ -52,14 +52,6 @@ public class StartActivity extends Activity {
         Log.d(TAG, "Clearing credentials...");
         WebViewDatabase.getInstance(getApplicationContext()).clearHttpAuthUsernamePassword();
         
-        final String username = ApplicationUtil.getProperty(getBaseContext(), "cnr");
-        final String pinCode = ApplicationUtil.getProperty(getBaseContext(), "pin");
-        
-        if (username != null && pinCode != null && !error) {
-        	Log.d(TAG, "Credentials are already stored. Proceeed to login.");
-        	login(username, pinCode);
-        }
-        
         setContentView(R.layout.start);
         
         if (error) {
@@ -97,7 +89,7 @@ public class StartActivity extends Activity {
 				 */
 				Log.d(TAG, "Storing user / pin for user.");
 				final Editor edit = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
-				edit.putString("cnr", username);
+				edit.putString("crn", username);
 				edit.putString("pin", password);
 				edit.commit();
 				
@@ -113,7 +105,7 @@ public class StartActivity extends Activity {
     }
     
     public void login(final String username, final String password) {
-    	new ServiceCallTask<Boolean>(StartActivity.this, new ServiceCallback<Boolean>() {
+    	new ServiceCallTask<Boolean>(this, new ServiceCallback<Boolean>() {
 
 			@Override
 			public String getProgressMessage() {
@@ -124,7 +116,7 @@ public class StartActivity extends Activity {
 			public ServiceResult<Boolean> doCall(final Context ctx) {
 				
 				final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(
-						Integer.valueOf(ApplicationUtil.getProperty(getBaseContext(), "port"))
+						Integer.valueOf(ApplicationUtil.getProperty(getApplicationContext(), "port"))
 						, username
 						, password);
 				

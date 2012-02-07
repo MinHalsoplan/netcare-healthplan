@@ -18,17 +18,17 @@ package org.callistasoftware.netcare.core.spi;
 
 
 /**
- * Defines the user details service
+ * Sends push notifications through Google C2DM or Apple APN
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
  */
-public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {
+public interface PushNotificationService {
 
 	/**
-	 * Registers the current logged in user for c2dm push
-	 * notifications
-	 * @param c2dmRegistrationId - The c2dm registration id
+	 * Send push notification to a specified user
+	 * @param subject - Subject of the message
+	 * @param message - The message
+	 * @param toUserId - The id of the receiving user
 	 */
-	void registerForC2dmPush(final String c2dmRegistrationId);
+	void sendPushNotification(final String subject, final String message, final Long toUserId);
 }

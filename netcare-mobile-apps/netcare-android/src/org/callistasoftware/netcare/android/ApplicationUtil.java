@@ -9,11 +9,32 @@ public class ApplicationUtil {
 	
 	private static final String TAG = ApplicationUtil.class.getSimpleName();
 	
+	public static String getServerBaseUrl(final Context ctx) {
+		final StringBuilder builder = new StringBuilder();
+		
+		if (getBooleanProperty(ctx, "secure")) {
+			builder.append("https://");
+		} else {
+			builder.append("http://");
+		}
+		
+		builder.append(getProperty(ctx, "host")).append(":").append(getProperty(ctx, "port")).append("/netcare-web");
+		return builder.toString();
+	}
+	
 	public static String getProperty(final Context ctx, final String property) {
 		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
 		final String val = sp.getString(property, null);
 		
 		Log.d(TAG, "Resolvning property " + property + ". Property resolved to: " + val);
+		return val;
+	}
+	
+	public static boolean getBooleanProperty(final Context ctx, final String property) {
+		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+		final boolean val = sp.getBoolean(property, false);
+		
+		Log.d(TAG, "Resolved property "+ property + " to " + val);
 		return val;
 	}
 }

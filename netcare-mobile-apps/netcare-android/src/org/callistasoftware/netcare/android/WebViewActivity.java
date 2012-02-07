@@ -1,5 +1,7 @@
 package org.callistasoftware.netcare.android;
 
+import org.callistasoftware.android.c2dm.PushService;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,10 +26,16 @@ public class WebViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.webview);
 		
-		//final SharedPreferences sp = this.getSharedPreferences("NETCARE", MODE_PRIVATE);
+		final boolean push = true;
+		if (push) {
+			Log.d(TAG, "Registering for push");
+			final Intent i = new Intent(this.getApplicationContext(), org.callistasoftware.netcare.android.push.PushService.class);
+			i.setAction(PushService.REGISTER_APP_FOR_PUSH);
+			startService(i);
+		}
 		
-		final String username = ApplicationUtil.getProperty(getBaseContext(), "cnr");//sp.getString("username", null);
-		final String password = ApplicationUtil.getProperty(getBaseContext(), "pin");//sp.getString("password", null);
+		final String username = ApplicationUtil.getProperty(getApplicationContext(), "crn");
+		final String password = ApplicationUtil.getProperty(getApplicationContext(), "pin");
 		
 		if (username == null || password == null) {
 			Log.d(TAG, "Credentials empty, bring to home screen.");
@@ -42,7 +50,6 @@ public class WebViewActivity extends Activity {
 		wv.clearCache(true);
 		
 		wv.setDownloadListener(new DownloadListener() {
-			
 			@Override
 			public void onDownloadStart(String url, String userAgent,
 					String contentDisposition, String mimetype, long contentLength) {
@@ -76,7 +83,6 @@ public class WebViewActivity extends Activity {
 		wv.setWebChromeClient(new WebChromeClient() {
 			@Override
 			public void onProgressChanged(WebView view, int newProgress) {
-				Log.d(TAG, "Progress is: " + newProgress);
 				if (newProgress == 100) {
 					p.dismiss();
 				}
@@ -85,7 +91,7 @@ public class WebViewActivity extends Activity {
 		
 		Log.d(TAG, "Displaying url in web view.");
 		p = ProgressDialog.show(this, "Laddar", "Vänligen vänta medan sidan laddar klart.");
-		final String url = "http://" + ApplicationUtil.getProperty(getBaseContext(), "host") + ":" + ApplicationUtil.getProperty(getBaseContext(), "port") + "/netcare-web/netcare/mobile/start";
+		final String url = ApplicationUtil.getServerBaseUrl(getApplicationContext()) + "/netcare/mobile/start";
 		Log.d(TAG, "Load url: " + url);
 		
 		wv.loadUrl(url);

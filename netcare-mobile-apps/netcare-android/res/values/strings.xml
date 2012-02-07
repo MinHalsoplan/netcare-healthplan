@@ -13,6 +13,7 @@
     <string name="push">Push-notifieringar</string>
     
     <string name="user_settings">Inställningar</string>
+    <string name="secure">Säker anslutning</string>
     <string name="server_settings">Server inställningar</string>
     
     <color name="white">#FFFFFF</color>

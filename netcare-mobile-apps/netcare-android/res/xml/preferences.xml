@@ -3,17 +3,19 @@
     
     <PreferenceCategory android:title="@string/user_settings">
         
-    	<EditTextPreference android:title="@string/cnr" android:key="cnr" android:persistent="true"/>
+    	<EditTextPreference android:title="@string/cnr" android:key="crn" android:persistent="true"/>
 	    <EditTextPreference android:title="@string/pin" android:key="pin" android:persistent="true" />
 	    
-	    <CheckBoxPreference android:title="@string/push" android:persistent="true"/>    
+	    <CheckBoxPreference android:title="@string/push" android:persistent="true" android:defaultValue="true"/>    
         
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/server_settings">
 
 	    <EditTextPreference android:title="@string/host" android:key="host" android:persistent="true" android:defaultValue="netcare.callistasoftware.org"/>
-	    <EditTextPreference android:title="@string/port" android:key="port" android:persistent="true" android:defaultValue="8080"/>
+	    <EditTextPreference android:title="@string/port" android:key="port" android:persistent="true" android:defaultValue="8080" android:inputType="number" />
+	
+	    <CheckBoxPreference android:title="@string/secure" android:key="secure" android:persistent="true" android:defaultValue="false"/>
 	    
     </PreferenceCategory>
     
