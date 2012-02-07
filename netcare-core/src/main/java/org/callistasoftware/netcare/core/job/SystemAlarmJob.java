@@ -28,6 +28,7 @@ import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
+import org.callistasoftware.netcare.core.spi.PushNotificationService;
 import org.callistasoftware.netcare.core.spi.impl.HealthPlanServiceImpl;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
@@ -55,6 +56,9 @@ public class SystemAlarmJob {
 
 	private static Logger log = LoggerFactory.getLogger(SystemAlarmJob.class);
 
+	@Autowired
+	private PushNotificationService notificationService;
+	
 	@Value("#{application['reminder.time']}")
 	private int reminderTime;
 
@@ -91,13 +95,15 @@ public class SystemAlarmJob {
 	/**
 	 * Notifies mobile users about it's time to perform an activity.
 	 */
-	@Scheduled(fixedDelay=300000)
+	//@Scheduled(fixedDelay=300000)
+	@Scheduled(fixedDelay=60000)
 	public void reminderJob() {
 		log.info("======== REMINDER JOB STARTED =========");
 		HashMap<PatientEntity, Integer> patients = new HashMap<PatientEntity, Integer>();
 		
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MINUTE, reminderTime);
+		cal.add(Calendar.MINUTE, reminderTime);
+		
 		Date start = cal.getTime();
 		
 		List<ScheduledActivityEntity> list = saRepo.findByScheduledTimeLessThanAndReportedTimeIsNull(start);
@@ -125,7 +131,7 @@ public class SystemAlarmJob {
 	
 	// FIXME: to be implemented
 	private void sendReminder(PatientEntity to, int n) {
-		; // TBD
+		this.notificationService.sendPushNotification("Test", "Du har " + n + " nya aktiviteter att rapportera", to.getId());
 	}
 	
 	

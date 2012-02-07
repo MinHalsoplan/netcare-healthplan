@@ -31,7 +31,7 @@
 
 	<util:properties id="application" location="classpath:/application.properties" />
 
-  <context:property-placeholder location="classpath:/database.properties,classpath:/email.properties" />
+  <context:property-placeholder location="classpath:/database.properties,classpath:/email.properties,classpath:/push.properties" />
   
   <import resource="netcare-common-config.xml" />
 

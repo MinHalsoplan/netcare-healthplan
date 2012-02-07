@@ -34,12 +34,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementation of service interface
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  */
+@Service
 public class PushNotificationServiceImpl extends ServiceSupport implements PushNotificationService {
 
 	private final static Logger log = LoggerFactory.getLogger(PushNotificationServiceImpl.class);
@@ -48,8 +50,8 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 	private UserRepository repo;
 	
 	@Value("${c2dm.username}") private String c2dmUsername;
-	@Value("${c2dm.password") private String c2dmPassword;
-	@Value("${c2dm.auth-url") private String c2dmAuthUrl;
+	@Value("${c2dm.password}") private String c2dmPassword;
+	@Value("${c2dm.auth-url}") private String c2dmAuthUrl;
 	@Value("${c2dm.url}") private String c2dmUrl;
 	@Value("${c2dm.client-app}") private String c2dmClientApp;
 	
@@ -67,6 +69,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 		if (c2dm) {
 			final String registrationId = user.getProperties().get("c2dmRegistrationId");
 			this.sendGooglePushNotification(this.fetchGoogleAuthToken(), registrationId, subject, message, null, null);
+			return;
 		}
 		
 		throw new UnsupportedOperationException("Only implemented for c2dm so far...");
