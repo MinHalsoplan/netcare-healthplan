@@ -63,6 +63,7 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 		this.verifyReadAccess(cu);
 		
 		final List<AlarmEntity> alarms = this.alarmRepo.findByResolvedTimeIsNullAndCareUnitHsaIdLike(hsaId, new Sort(Sort.Direction.DESC, "createdTime"));
+		
 		this.getLog().debug("Found {} alarms for care unit {}", alarms.size(), hsaId);
 				
 		return ServiceResultImpl.createSuccessResult(AlarmImpl.newFromEntities(alarms, LocaleContextHolder.getLocale()), new ListEntitiesMessage(AlarmEntity.class, alarms.size()));

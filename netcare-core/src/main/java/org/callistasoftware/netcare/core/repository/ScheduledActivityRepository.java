@@ -48,7 +48,13 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"and e.reportedTime != null and e.status != 1")
 	List<ScheduledActivityEntity> findByCareUnit(@Param("careUnit") final String careUnit);
 	
+	/**
+	 * Returns a list of unreported activities before a certain timestamp.
+	 * @param scheduledTime the timestamp.
+	 * @return the list
+	 */
 	List<ScheduledActivityEntity> findByScheduledTimeLessThanAndReportedTimeIsNull(final Date scheduledTime);
+	
 	
 	/**
 	 * Find reported activities for a certain activity defintion within a specified interval

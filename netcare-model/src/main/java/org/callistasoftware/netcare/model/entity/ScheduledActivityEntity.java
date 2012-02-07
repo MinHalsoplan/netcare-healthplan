@@ -67,6 +67,9 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Column(name="status", nullable=false)
 	private ScheduledActivityStatus status;
 	
+	@Column(name="reminder_done")
+	private boolean reminderDone;
+	
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
 	@JoinColumn(name="activity_def_id")
 	private ActivityDefinitionEntity activityDefinition;
@@ -81,7 +84,8 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	ScheduledActivityEntity() {
 		this.setComments(new LinkedList<ActivityCommentEntity>());
 		this.setMeasurements(new LinkedList<MeasurementEntity>());
-		status = ScheduledActivityStatus.OPEN;
+		this.setStatus(ScheduledActivityStatus.OPEN);
+		this.setReminderDone(false);
 	}
 	
 	/**
@@ -216,4 +220,13 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	void setMeasurements(List<MeasurementEntity> measurements) {
 		this.measurements = measurements;
 	}
+
+	public boolean isReminderDone() {
+		return reminderDone;
+	}
+
+	public void setReminderDone(boolean reminderDone) {
+		this.reminderDone = reminderDone;
+	}
+
 }
