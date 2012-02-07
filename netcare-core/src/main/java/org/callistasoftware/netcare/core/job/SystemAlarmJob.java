@@ -105,7 +105,7 @@ public class SystemAlarmJob {
 		for (ScheduledActivityEntity sae : list) {
 			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
 			log.debug("Reminder: for patient {}, activity {}", patient.getName(), sae.getActivityDefinitionEntity().getActivityType().getName());
-			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() != null) {
+			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null) {
 				Integer i = patients.get(patient);
 				log.debug("Reminder: for patient {} -- add to send list", patient.getName());
 				patients.put(patient, (i == null) ? 0 : i.intValue()+1);
