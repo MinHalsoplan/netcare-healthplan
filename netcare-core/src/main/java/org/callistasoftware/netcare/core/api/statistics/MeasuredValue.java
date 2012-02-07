@@ -27,6 +27,7 @@ public class MeasuredValue {
 	private boolean interval;
 	private Option valueType;
 	private Option unit;
+	private Long definitionId;
 	
 	private List<ReportedValue> reportedValues;
 	
@@ -72,5 +73,13 @@ public class MeasuredValue {
 
 	public void setInterval(boolean interval) {
 		this.interval = interval;
+	}
+
+	public Long getDefinitionId() {
+		return definitionId;
+	}
+
+	public void setDefinitionId(Long definitionId) {
+		this.definitionId = definitionId;
 	}
 }

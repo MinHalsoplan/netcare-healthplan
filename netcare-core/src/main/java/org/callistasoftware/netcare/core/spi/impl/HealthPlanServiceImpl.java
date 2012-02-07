@@ -50,6 +50,7 @@ import org.callistasoftware.netcare.core.api.messages.EntityDeletedMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
+import org.callistasoftware.netcare.core.api.messages.NoAccessMessage;
 import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.statistics.MeasuredValue;
@@ -59,15 +60,19 @@ import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
+import org.callistasoftware.netcare.core.repository.UserRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.AlarmCause;
+import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
@@ -139,7 +144,10 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private PatientRepository patientRepository;
-	
+
+	@Autowired
+	private UserRepository userRepository;
+
 	@Autowired
 	private ActivityDefinitionRepository activityDefintionRepository;
 	
@@ -148,6 +156,10 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	@Autowired
 	private ActivityCommentRepository commentRepository;
+	
+	@Autowired
+	private AlarmRepository alarmRepo;
+
 	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -354,7 +366,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.setNote(report.getNote());
 		entity.setPerceivedSense(report.getSense());
 		for (Value value : report.getValues()) {
-			entity.lookupMeasurement(value.getSeqno()).setReportedValue(value.getValue());
+			MeasurementEntity me = entity.lookupMeasurement(value.getSeqno()); 
+			me.setReportedValue(value.getValue());
+			log.debug("Alarm status: enabled {} raised {}", me.getMeasurementDefinition().getMeasurementType().isAlarmEnabled(), me.isAlarm());
+			if (!report.isRejected() && me.isAlarm()) {
+				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, 
+						entity.getActivityDefinitionEntity().getHealthPlan().getForPatient(), 
+						entity.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
+					Option o = new Option(me.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale());
+					ae.setInfo(me.getMeasurementDefinition().getMeasurementType().getName() + ": " + me.getReportedValue() + " " + o.getValue());
+				alarmRepo.save(ae);
+			}
 		}
 		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
 		entity.setActualTime(d);
@@ -505,6 +527,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				if (mv == null) {
 					mv = new MeasuredValue();
 					mv.setName(e.getActivityDefinitionEntity().getActivityType().getName());
+					mv.setDefinitionId(e.getActivityDefinitionEntity().getId());
 					mv.setValueType(new Option(measurementName, null));
 					mv.setUnit(new Option(m.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale()));
 					mv.setInterval(m.getMeasurementDefinition().getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL));
@@ -595,9 +618,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
 			+ "DURATION:%s\r\n"
 			+ "SUMMARY:%s\r\n"
-			+ "TRANSP:TRANSPARENT\r\n"
+			+ "TRANSP:OPAQUE\r\n"
 			+ "CLASS:CONFIDENTIAL\r\n"
-			+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+			+ "CATEGORIES:PERSONLIGT,PLAN,HÄLSA\r\n"
 			+ "%s"
 			+ "END:VEVENT\r\n";
 		
@@ -784,9 +807,12 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	
 	// FIXME: Requires single activity definitions
 	@Override
-	public String getPlanReports(Long activityDeifntionId, PatientBaseView patient) {
+	public String getPlanReports(UserBaseView user, Long activityDeifntionId) {
 		ActivityDefinitionEntity entity = activityDefintionRepository.findOne(activityDeifntionId);
-				
+		UserEntity ue = userRepository.findOne(user.getId());
+		if (!entity.isReadAllowed(ue)) {
+			return new NoAccessMessage().getMessage();
+		}
 		List<ScheduledActivityEntity> list = entity.getScheduledActivities();
 		StringBuffer hb = new StringBuffer();
 		hb.append("Aktivitet");

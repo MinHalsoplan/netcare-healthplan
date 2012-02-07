@@ -42,8 +42,8 @@ public class ActivityTypeEntity {
 	@Column(length=64, nullable=false)
 	private String name;
 	
-	@Column(name="measuring_sense", length=1)
-	private String measuringSense;
+	@Column(name="measuring_sense")
+	private boolean measuringSense;
 		
 	@Column(name="sense_label_low")
 	private String senseLabelLow;
@@ -103,11 +103,11 @@ public class ActivityTypeEntity {
 	}
 
 	public boolean isMeasuringSense() {
-		return "Y".equals(measuringSense);
+		return measuringSense;
 	}
 
 	public void setMeasuringSense(boolean measuringSense) {
-		this.measuringSense = (measuringSense) ? "Y" : null;
+		this.measuringSense = measuringSense;
 	}
 
 	public String getSenseLabelLow() {

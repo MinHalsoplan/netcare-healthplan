@@ -35,6 +35,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Index;
+
 @Entity
 @Table(name="nc_scheduled_activity")
 public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity>, PermissionRestrictedEntity {
@@ -45,6 +47,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	@Column(name="scheduled_time", nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@Index(name="nc_scheduled_activity_time_ix")
 	private Date scheduledTime;
 	
 	@Column(name="reported_time")

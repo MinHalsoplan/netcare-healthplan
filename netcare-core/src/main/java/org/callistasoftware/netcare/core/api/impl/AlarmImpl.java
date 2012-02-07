@@ -40,6 +40,7 @@ public class AlarmImpl implements Alarm {
 	private String resolvedTime;
 	private CareGiverBaseView resolvedBy;
 	private Option cause;
+	private String info;
 	private Long entityReferenceId;
 	
 	public static Alarm[] newFromEntities(final List<AlarmEntity> entities, final Locale l) {
@@ -67,7 +68,7 @@ public class AlarmImpl implements Alarm {
 		alarm.setEntityReferenceId(entity.getRefEntityId());
 		alarm.setId(entity.getId());
 		alarm.setPatient(PatientImpl.newFromEntity(entity.getPatient()));
-		
+		alarm.setInfo(entity.getInfo());
 		if (entity.getResolvedBy() != null) {
 			alarm.setResolvedBy(CareGiverBaseViewImpl.newFromEntity(entity.getResolvedBy()));
 		}
@@ -145,6 +146,15 @@ public class AlarmImpl implements Alarm {
 	@Override
 	public Long getEntityReferenceId() {
 		return this.entityReferenceId;
+	}
+	
+	void setInfo(String info) {
+		this.info = info;
+	}
+
+	@Override
+	public String getInfo() {
+		return info;
 	}
 
 }

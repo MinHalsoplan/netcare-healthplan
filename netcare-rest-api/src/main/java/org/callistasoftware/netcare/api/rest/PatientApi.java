@@ -47,6 +47,7 @@ public class PatientApi extends ApiSupport {
 	@RequestMapping(value="/plans", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlan[]> listOrdinations(final Authentication auth) {
+		logAccess("lista", "planer");
 		Long patientId = ((PatientBaseView) auth.getPrincipal()).getId();
 		log.info("User {} list health plans", patientId);
 		final ServiceResult<HealthPlan[]> plans = planService.loadHealthPlansForPatient(patientId);
@@ -57,6 +58,7 @@ public class PatientApi extends ApiSupport {
 	@RequestMapping(value="/activities", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> listActivities(final Authentication auth) {
+		logAccess("lista", "aktiviteter");
 		log.info("User {} list activities", auth);
 		ServiceResult<ActivityDefinition[]> sr = planService.getPlannedActivitiesForPatient((PatientBaseView)auth.getPrincipal());
 		log.debug("Found # activities {} for patient {}", sr.getData().length, auth);
@@ -66,6 +68,7 @@ public class PatientApi extends ApiSupport {
 	@RequestMapping(value="/schema", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> getSchema(final Authentication auth) {
+		logAccess("lista", "schema");
 		PatientBaseView pv = (PatientBaseView)auth.getPrincipal();
 		ServiceResult<ScheduledActivity[]> activitiesForPatient = planService.getActivitiesForPatient(pv);
 		
@@ -80,24 +83,28 @@ public class PatientApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> report(@PathVariable(value="id") final Long id,
 			@RequestBody final ActivityReportImpl dto, final Authentication auth) {
+		logAccess("rapportera", "händelse");
 		return planService.reportReady(id, dto);
 	}
 	
 	@RequestMapping(value="/event", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<PatientEvent> event(final Authentication auth) {
+		logAccess("lista", "händelser");
 		return planService.getActualEventsForPatient((PatientBaseView)auth.getPrincipal());
 	}
 	
 	@RequestMapping(value="/schema/min-halso-plan", method=RequestMethod.GET, produces="text/calendar")
 	@ResponseBody
 	public String getCalendar(final Authentication auth) {
+		logAccess("exportera", "kalender");
 		return planService.getICalendarEvents((PatientBaseView)auth.getPrincipal());
 	}
 	
-	@RequestMapping(value="/result/{id}/mina-resultat.csv",method=RequestMethod.GET, produces="application/vnd.ms-excel")
+	@RequestMapping(value="/result/{id}/resultat.csv",method=RequestMethod.GET, produces="application/vnd.ms-excel")
 	@ResponseBody
-	public String getPlanReports(@PathVariable(value="id") final Long activityDefId, final Authentication auth) {
-		return planService.getPlanReports(activityDefId, (PatientBaseView)auth.getPrincipal());
+	public String getPlanReports(@PathVariable(value="id") final Long activityDefId) {
+		logAccess("exportera", "resultat");
+		return planService.getPlanReports(getUser(), activityDefId);
 	}
 }

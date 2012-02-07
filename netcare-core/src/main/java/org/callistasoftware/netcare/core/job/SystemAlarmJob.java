@@ -86,9 +86,12 @@ public class SystemAlarmJob {
 		for (ScheduledActivityEntity sae : sal) {
 			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
 			if (!patients.contains(patient.getId())) {
-				al.add(AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, patient,
+				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, patient,
 						sae.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), 
-						sae.getId()));
+						sae.getId());
+				ae.setInfo(sae.getActivityDefinitionEntity().getHealthPlan().getName());
+				al.add(ae);
+				
 				patients.add(patient.getId());
 			}
 			sae.setStatus(ScheduledActivityStatus.CLOSED);
@@ -110,7 +113,9 @@ public class SystemAlarmJob {
 		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThan(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
-			al.add(AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId()));
+			AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId());
+			ae.setInfo(hpe.getName());
+			al.add(ae);
 		}
 		log.info("Alarm plan job ready: {} new plan alarms!", al.size());
 		if (al.size() > 0) {

@@ -65,12 +65,18 @@
 							var processed = '';
 							$.each(data.data.measuredValues, function(i, v) {
 								if (v.name != processed) {
+									var div = $('<div>').attr('id', 'activity-' + i);
+									
+									var div2 = $('<div>').css('text-align', 'right');
+									
+									var link = $('<a>').attr('href', '/netcare-web/api/patient/result/' + v.definitionId + '/resultat.csv');
+									link.html(captions.resultLink);
+									div2.append(link);
+									NC.log('added div2 ' + div2);
 									
 									$('#activities').append(
 										$('<h2>').html(v.name)
-									).append(
-										$('<div>').attr('id', 'activity-' + i)
-									);
+									).append(div2).append(div);
 									
 									setupFilter($('#activity-' + i), v.name);
 									
