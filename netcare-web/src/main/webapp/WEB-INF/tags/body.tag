@@ -34,7 +34,7 @@
 			<div class="page-header">
 				<div class="row">
 					<div class="span13">
-						<h1>Planerade hälsoaktiviteter <small>Tagline text kan skrivas här</small></h1>
+						<h1><spring:message code="system.name" /></h1>
 					</div>
 					<div id="ajaxInProgress" class="span3" style="text-align: right; vertical-align: middle; display: none;">
 						<span><spring:message code="loading" /><img src="<c:url value="/img/ajax-loader-small.gif" />" /></span>
