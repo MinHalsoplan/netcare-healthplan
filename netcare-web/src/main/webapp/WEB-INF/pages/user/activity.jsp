@@ -180,7 +180,7 @@
 					);
 					
 					var inputDiv = $('<div>').addClass('input');
-					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('small');
+					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('span1');
 					
 					inputDiv.append(input);
 					inputDiv.append($('<span>').html(' ' + value.unit.value));
@@ -188,7 +188,7 @@
 					clearfix.append(inputDiv);
 					
 					rowCol.append(
-						$('<div>').addClass('span3').append(clearfix)
+						$('<div>').addClass('span2').append(clearfix)
 					);
 				};
 				
@@ -456,7 +456,7 @@
 						</netcare:col>
 						<netcare:col span="3">
 							<netcare:field name="mondayTimeField" label="${addTime}">
-								<input type="text" name="mondayTimeField" class="small" />
+								<input type="text" name="mondayTimeField" class="span1" />
 								<netcare:image name="add" icon="true" cursor="pointer"/>
 							</netcare:field>
 						</netcare:col>
@@ -474,9 +474,9 @@
 										<input type="checkbox" name="day" value="tuesday"/>
 									</netcare:field>
 								</div>
-								<div class="span3">
+								<div class="span2">
 									<netcare:field name="tuesdayTimeField" label="${addTime}">
-										<input type="text" name="tuesdayTimeField" class="small" />
+										<input type="text" name="tuesdayTimeField" class="span1" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -497,9 +497,9 @@
 										<input type="checkbox" name="day" value="wednesday"/>
 									</netcare:field>
 								</div>
-								<div class="span3">
+								<div class="span2">
 									<netcare:field name="wednesdayTimeField" label="${addTime}">
-										<input type="text" name="wednesdayTimeField" class="small" />
+										<input type="text" name="wednesdayTimeField" class="span1" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -520,9 +520,9 @@
 										<input type="checkbox" name="day" value="thursday"/>
 									</netcare:field>
 								</div>
-								<div class="span3">
+								<div class="span2">
 									<netcare:field name="thursdayTimeField" label="${addTime}">
-										<input type="text" name="thursdayTimeField" class="small" />
+										<input type="text" name="thursdayTimeField" class="span1" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -543,9 +543,9 @@
 										<input type="checkbox" name="day" value="friday"/>
 									</netcare:field>
 								</div>
-								<div class="span3">
+								<div class="span2">
 									<netcare:field name="fridayTimeField" label="${addTime}">
-										<input type="text" name="fridayTimeField" class="small" />
+										<input type="text" name="fridayTimeField" class="span1" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -566,9 +566,9 @@
 										<input type="checkbox" name="day" value="saturday"/>
 									</netcare:field>
 								</div>
-								<div class="span3">
+								<div class="span2">
 									<netcare:field name="saturdayTimeField" label="${addTime}">
-										<input type="text" name="saturdayTimeField" class="small" />
+										<input type="text" name="saturdayTimeField" class="span1" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -589,9 +589,9 @@
 										<input type="checkbox" name="day" value="sunday"/>
 									</netcare:field>
 								</div>
-								<div class="span3">
+								<div class="span2">
 									<netcare:field name="sundayTimeField" label="${addTime}">
-										<input type="text" name="sundayTimeField" class="small" />
+										<input type="text" name="sundayTimeField" class="span1" />
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
@@ -615,17 +615,17 @@
 					<spring:message code="create" var="create" scope="page" />
 					<spring:message code="clear" var="clear" scope="page" />
 				
-					<input type="submit" class="btn primary" value="${create}"/>
+					<input type="submit" class="btn-primary" value="${create}"/>
 					<input type="reset" class="btn" value="${clear}"/>
 				</div>
 			
 			</netcare:form>
 			
 			<div id="activityContainer">
-				<div class="alert-message info" style="display: none;">
+				<div class="alert alert-info" style="display: none;">
 					<p><spring:message code="noActivities" />
 				</div>
-				<table id="activitiesTable" class="bordered-table zebra-striped shadow-box">
+				<netcare:table id="activitiesTable">
 					<thead>
 						<tr>
 							<th><spring:message code="type" /></th>
@@ -636,7 +636,7 @@
 						</tr>
 					</thead>
 					<tbody></tbody>
-				</table>
+				</netcare:table>
 			</div>
 		</netcare:content>
 	</netcare:body>

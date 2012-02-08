@@ -91,7 +91,7 @@
 		</div>
 		<div class="modal-footer">
 			<input type="submit" name="save"
-				value="<spring:message code="report.save" />" class="btn primary" />
+				value="<spring:message code="report.save" />" class="btn-primary" />
 		</div>
 	</form>
 </div>

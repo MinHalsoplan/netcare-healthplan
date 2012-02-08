@@ -33,7 +33,7 @@
 	});
 </script>
 
-<div class="span4">
+<div class="span3 menu">
 	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
 		<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>

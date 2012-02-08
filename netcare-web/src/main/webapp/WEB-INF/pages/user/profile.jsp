@@ -166,7 +166,7 @@
 						</fieldset>
 						
 						<div class="actions">
-							<input type="submit" class="btn primary" value="Spara"/>
+							<input type="submit" class="btn-primary" value="Spara"/>
 						</div>
 						
 					</form>

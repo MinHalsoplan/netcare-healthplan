@@ -16,14 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
+<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ attribute name="id" required="false" %>
+<%@ attribute name="style" required="false" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-
-<div class="span9">
+<table id="${id}" class="table table-bordered table-striped shadow-box" style="${style}">
 	<jsp:doBody />
-</div>
-
-<netcare:menu />
+</table>

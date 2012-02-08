@@ -136,7 +136,7 @@
 					var label = $('<label>').attr('for', 'measureUnit').html('Enhet');
 					div.append(label);
 					
-					var input = $('<select>').attr('name', 'measureUnit').attr('id', 'measureUnit').addClass('small');
+					var input = $('<select>').attr('name', 'measureUnit').attr('id', 'measureUnit').addClass('span1');
 					
 					$.each(unitOpts, function(i, v) {
 						NC.log("Adding unit: " + v.html());
@@ -164,7 +164,7 @@
 				
 				var createActionButton = function() {
 					var div = $('<div>').addClass('span2');
-					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn').addClass('primary').attr('value', 'Lägg till');
+					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-primary').attr('value', 'Lägg till');
 					btn.click(function(e) {
 						e.preventDefault();
 						NC.log("Add measure value");
@@ -419,12 +419,12 @@
 									<netcare:col span="2">
 										<spring:message code="measureValue.name" var="lbl" scope="page" />
 										<netcare:field name="measureName" label="${lbl}">
-											<input type="text" name="measureName" class="small"/>
+											<input type="text" name="measureName" class="span1"/>
 										</netcare:field>
 									</netcare:col>
 									<netcare:col span="2">
 										<label for="valueType"><spring:message code="measureValue.type" /></label>
-										<select name="valueType" id="valueType" class="small">
+										<select name="valueType" id="valueType" class="span1">
 										</select>										
 									</netcare:col>
 									<div id="measureValueContainer" class="row span6"></div>
@@ -432,7 +432,7 @@
 							</div>
 						</div>
 						
-						<table id="measureValues" class="bordered-table zebra-striped shadow-box" style="display: none;">
+						<netcare:table id="measureValues" style="display: none;">
 							<thead>
 								<tr>
 									<th><spring:message code="measureValue.name" /></th>
@@ -443,10 +443,10 @@
 								</tr>
 							</thead>
 							<tbody></tbody>
-						</table>
+						</netcare:table>
 						<br />
 						<div class="modal-footer">
-							<button id="createActivityType" class="btn primary"><spring:message code="activityType.create" /></button>
+							<button id="createActivityType" class="btn-primary"><spring:message code="activityType.create" /></button>
 						</div>
 						
 					</form>					
@@ -456,11 +456,11 @@
 			
 			<section id="existingTypes">
 				<div id="existingTypesContainer">
-					<div class="alert-message info" style="display:none;">
+					<div class="alert alert-info" style="display:none;">
 						<p><spring:message code="activityType.noTypes" />
 					</div>
 				
-					<table class="bordered-table zebra-striped shadow-box">
+					<netcare:table>
 						<thead>
 							<tr>
 								<th><spring:message code="activityType.name" /></th>
@@ -470,7 +470,7 @@
 							</tr>
 						</thead>
 						<tbody></tbody>
-					</table>
+					</netcare:table>
 				</div>
 			</section>	
 			

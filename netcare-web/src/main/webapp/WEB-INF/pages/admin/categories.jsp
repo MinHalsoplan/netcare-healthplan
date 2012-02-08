@@ -80,17 +80,16 @@
 					
 					<spring:message code="create" var="create" scope="page" />
 				</netcare:field>
-				<input type="submit" class="btn primary" value="${create}" />
+				<input type="submit" class="btn-primary" value="${create}" />
 				
 			</form>
-			
-			<table id="categoryTable" class="bordered-table zebra-striped shadow-box">
+			<netcare:table id="categoryTable">
 				<thead>
 					<th><spring:message code="name" /></th>
 				</thead>
 				<tbody>		
 				</tbody>
-			</table>
+			</netcare:table>
 		</netcare:content>
 		
 	</netcare:body>	

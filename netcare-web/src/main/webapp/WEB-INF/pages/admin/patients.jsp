@@ -177,7 +177,7 @@
 				</netcare:field>
 				
 				<div class="actions">
-					<input type="submit" class="btn primary" value="<spring:message code="create" />" />
+					<input type="submit" class="btn-primary" value="<spring:message code="create" />" />
 					<input type="reset" class="btn" value="<spring:message code="reset" />" />
 				</div>
 				
@@ -185,10 +185,10 @@
 			
 			<section id="patients">
 				<h3><spring:message code="patients" /></h3>
-				<div class="alert-message info" style="display: none;">
+				<div class="alert alert-info" style="display: none;">
 					<p><spring:message code="noPatients" /></p>
 				</div>
-				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
+				<netcare:table id="patientsTable">
 					<thead>
 						<th><spring:message code="patient.name" /></th>
 						<th><spring:message code="patient.cnr" /></th>
@@ -198,7 +198,7 @@
 					<tbody>
 					
 					</tbody>
-				</table>
+				</netcare:table>
 			</section>
 		</netcare:content>
 	</netcare:body>	

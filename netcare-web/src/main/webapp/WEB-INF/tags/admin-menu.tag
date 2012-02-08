@@ -109,7 +109,7 @@
 	});
 </script>
 
-<div class="span4">
+<div class="span3 menu">
 	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
 		<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
@@ -134,9 +134,8 @@
 	</c:if>
 	
 	<p>
-		<a data-backdrop="true" data-controls-modal="modal-from-dom">
+		<a data-toggle="modal" data-target="#modal-from-dom">
 			<spring:message code="clickHere" /></a> <spring:message code="toPickPatient" />
-		</a>
 	</p>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
@@ -155,7 +154,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn primary"/>
+				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn-primary"/>
 			</div>
 		</form>
 	</div>

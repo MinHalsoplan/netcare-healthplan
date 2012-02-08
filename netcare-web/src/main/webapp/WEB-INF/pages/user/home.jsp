@@ -198,7 +198,7 @@
 			<div id="sendReply" class="modal hide fade" style="display: none;">
 				<form id="sendReplyId" action="#" method="post">
 					<div class="modal-header">
-						<a href="#" class="close">x</a>
+						<a href="#" class="close" data-dismiss="modal">x</a>
 						<h3>
 							<spring:message code="comments.sendReply" />
 						</h3>
@@ -211,14 +211,14 @@
 						</netcare:field>
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn primary"
+						<input type="submit" class="btn-primary"
 							value="<spring:message code="comments.reply" />" />
 					</div>
 				</form>
 			</div>
 
 			<section id="report">
-				<div id="eventBody" class="alert-message info"></div>
+				<div id="eventBody" class="alert alert-info"></div>
 				<netcare:report />
 				<br />
 			</section>
@@ -228,10 +228,10 @@
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
 					<spring:message code="comments.commentDesc" />
-				<div id="noCommentId" class="alert-message info">
+				<div id="noCommentId" class="alert alert-info">
 					<p><spring:message code="comments.noComments" /></p>
 				</div>
-				<table id="commentTableId" class="bordered-table zebra-striped shadow-box" style="display: none;">
+				<netcare:table id="commentTableId" style="display: none;">
 					<thead>
 						<th><spring:message code="comments.comment" /></th>
 						<th><spring:message code="comments.activity" /></th>
@@ -239,7 +239,7 @@
 						<th>&nbsp;</th>
 					</thead>
 					<tbody></tbody>
-				</table>
+				</netcare:table>
 			</section>
 			
 			<br />
@@ -251,8 +251,7 @@
 					<spring:message code="phome.headerDesc" />
 				</p>
 				<div id="planDescription" style="margin: 10px"></div>
-				<table id="planTable"
-					class="bordered-table zebra-striped shadow-box">
+				<netcare:table id="planTable">
 					<thead>
 						<tr>
 							<th>&nbsp;</th>
@@ -263,9 +262,8 @@
 							<th><spring:message code="phome.done" /><br /> <input id="totalBoxId" type="checkbox" /> <spring:message code="phome.showTot" /></th>
 						</tr>
 					</thead>
-					<tbody>
-					</tbody>
-				</table>
+					<tbody></tbody>
+				</netcare:table>
 				<br />
 				<div style="text-align: right">
 					<a href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>

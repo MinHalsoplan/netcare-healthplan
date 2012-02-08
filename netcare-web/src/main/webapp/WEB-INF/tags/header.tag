@@ -47,7 +47,7 @@
         text-align: center; /* center align it with the container */
       }
       .container {
-        width: 940px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+        /*width: 940px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
       }
 
       /* The white background content wrapper */
@@ -70,13 +70,8 @@
         margin: -20px -20px 20px;
       }
 
-      /* Styles you shouldn't keep as they are for displaying this base example only */
-      /*.content .span10,*/
-      .content .span4 {
-        min-height: 500px;
-      }
       /* Give a quick and non-cross-browser friendly divider */
-      .content .span4 {
+      .content .menu {
         margin-left: 0;
         padding-left: 19px;
         border-left: 1px solid #eee;
@@ -91,30 +86,13 @@
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	
 	<!-- Include JQuery -->
-	<script type="text/javascript" src="<c:url value="/js/jquery-1.6.2.min.js" />"></script>
+	<script type="text/javascript" src="<c:url value="/js/jquery-1.7.1.min.js" />"></script>
 	
 	<!-- Include JQuery UI Widgets -->
-	<c:url value="/js/jquery-ui-1.8.16.custom.min.js" var="jqueryUiJs" scope="page" />
-	<script type="text/javascript" src="${jqueryUiJs}"></script>
+	<script type="text/javascript" src="<c:url value="/js/jquery-ui-1.8.16.custom.min.js" />"></script>
 	
-	<!-- Include Twitter bootstrap js -->
-	<c:url value="/js/bootstrap-alerts.js" var="bootstrapAlerts" scope="page" />
-	<c:url value="/js/bootstrap-buttons.js" var="bootstrapButtons" scope="page" />
-	<c:url value="/js/bootstrap-dropdown.js" var="bootstrapDropdown" scope="page" />
-	<c:url value="/js/bootstrap-modal.js" var="bootstrapModal" scope="page" />
-	<c:url value="/js/bootstrap-popover.js" var="bootstrapPopover" scope="page" />
-	<c:url value="/js/bootstrap-scrollspy.js" var="bootstrapScrollspy" scope="page" />
-	<c:url value="/js/bootstrap-tabs.js" var="bootstrapTabs" scope="page" />
-	<c:url value="/js/bootstrap-twipsy.js" var="bootstrapTwipsy" scope="page" />
-	
-	<script type="text/javascript" src="${bootstrapAlerts}"></script>
-	<script type="text/javascript" src="${bootstrapButtons}"></script>
-	<script type="text/javascript" src="${bootstrapDropdown}"></script>
-	<script type="text/javascript" src="${bootstrapModal}"></script>
-	<script type="text/javascript" src="${bootstrapTwipsy}"></script>
-	<script type="text/javascript" src="${bootstrapPopover}"></script>
-	<script type="text/javascript" src="${bootstrapScrollspy}"></script>
-	<script type="text/javascript" src="${bootstrapTabs}"></script>
+	<!-- Twitter Bootstrap -->
+	<script type="text/javascript" src="<c:url value="/js/bootstrap.min.js" />"></script>
 	
 	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare.js' />"></script>

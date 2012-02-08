@@ -33,7 +33,7 @@
 		<div class="content">
 			<div class="page-header">
 				<div class="row">
-					<div class="span13">
+					<div class="span9">
 						<h1><spring:message code="system.name" /></h1>
 					</div>
 					<div id="ajaxInProgress" class="span3" style="text-align: right; vertical-align: middle; display: none;">
@@ -43,7 +43,7 @@
 			</div>
 			
 			<div class="row">
-				<div id="pageMessages" class="span16">
+				<div id="pageMessages" class="span12">
 					<c:if test="${not empty requestScope.result and empty requestScope.hideMessages}">
 						<%--
 							Display any messages that we have

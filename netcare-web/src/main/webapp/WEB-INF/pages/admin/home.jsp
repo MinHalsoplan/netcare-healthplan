@@ -90,7 +90,7 @@
 				
 				loadAlarms();
 				
-				$('#commentActivity').modal();
+				//$('#commentActivity').modal();
 				$('#commentActivity').bind('shown', function() {
 					$('#commentActivity input[name="comment"]').focus();
 				});
@@ -160,20 +160,22 @@
 					<span class="label notice"><spring:message code="information" /></span>
 					<spring:message code="comments.repliesDescription" />
 				</p>
-				<div id="noReplyId" class="alert-message info">
+				<div id="noReplyId" class="alert alert-info">
 					<p><spring:message code="comments.noReplies" />
 				</div>
 				
-				<table id="replyTableId" class="bordered-table zebra-striped shadow-box">
+				<netcare:table id="replyTableId">
 					<thead>
-						<th><spring:message code="comments.comment" /></th>
-						<th><spring:message code="comments.reply" /></th>
-						<th><spring:message code="comments.from" />
-						<th><spring:message code="comments.activity" /></th>
-						<th>&nbsp;</th>
+						<tr>
+							<th><spring:message code="comments.comment" /></th>
+							<th><spring:message code="comments.reply" /></th>
+							<th><spring:message code="comments.from" />
+							<th><spring:message code="comments.activity" /></th>
+							<th>&nbsp;</th>
+						</tr>
 					</thead>
 					<tbody></tbody>
-				</table>
+				</netcare:table>
 			</section>
 			
 			<br />
@@ -187,24 +189,26 @@
 				</p>
 				
 				<div id="reportedActivities">
-					<div id="noReportedActivities" style="display: none;" class="alert-message info">
+					<div id="noReportedActivities" style="display: none;" class="alert alert-info">
 						<p><spring:message code="noReportedActivities" /></p>
 					</div>
-					<table class="bordered-table zebra-striped shadow-box" style="display: none">
+					<netcare:table style="display: none;">
 						<thead>
-							<th><spring:message code="patient" /></th>
-							<th><spring:message code="type" /></th>
-							<th><spring:message code="reportedValue" /></th>
-							<th><spring:message code="when" /></th>
-							<th>&nbsp;</th>
+							<tr>
+								<th><spring:message code="patient" /></th>
+								<th><spring:message code="type" /></th>
+								<th><spring:message code="reportedValue" /></th>
+								<th><spring:message code="when" /></th>
+								<th>&nbsp;</th>
+							</tr>
 						</thead>
 						<tbody></tbody>
-					</table>
+					</netcare:table>
 				</div>
 				
 				<div id="commentActivity" class="modal hide fade" style="display: none;">
 					<div class="modal-header">
-						<a href="#" class="close">x</a>
+						<a href="#" class="close" data-dismiss="modal">x</a>
 						<h3><spring:message code="comments.comment" /></h3>
 					</div>
 
@@ -213,7 +217,7 @@
 							<input type="text" name="comment" class="xlarge" />
 						</div>
 						<div class="modal-footer">
-							<button class="btn primary">
+							<button class="btn-primary">
 								<spring:message code='comments.sendComment' />
 							</button>
 						</div>
@@ -232,10 +236,10 @@
 				</p>
 				
 				<div id="alarmContainer">					
-					<div class="alert-message info" style="display:none;">
+					<div class="alert alert-info" style="display:none;">
 						<p><spring:message code="alarm.noAlarms" /></p>
 					</div>
-					<table class="bordered-table zebra-striped shadow-box" style="display: none;">
+					<netcare:table style="display: none;">
 						<thead>
 							<th><spring:message code="patient" /></th>
 							<th><spring:message code="contactInformation" /></th>
@@ -244,7 +248,7 @@
 							<th>&nbsp;</th>
 						</thead>
 						<tbody></tbody>
-					</table>
+					</netcare:table>
 				</div>
 			</section>
 		</netcare:content>

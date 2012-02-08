@@ -196,17 +196,17 @@
 				</fieldset>
 				
 				<div class="actions">
-					<input type="submit" class="btn primary" value="${title}" />
+					<input type="submit" class="btn-primary" value="${title}" />
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				
 			</netcare:form>
 			
 			<div id="healthPlanContainer">
-				<div style="display: none;" class="alert-message info">
+				<div style="display: none;" class="alert alert-info">
 					<p><spring:message code="noHealthPlans" /></p>
 				</div>
-				<table id="ordinationTable" class="bordered-table zebra-striped shadow-box">
+				<netcare:table id="ordinationTable">
 					<thead>
 						<tr>
 							<th><spring:message code="name" /></th>
@@ -218,7 +218,7 @@
 					</thead>
 					<tbody>
 					</tbody>
-				</table>
+				</netcare:table>
 			</div>
 		</netcare:content>
 	</netcare:body>

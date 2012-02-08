@@ -48,7 +48,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input class="btn primary" type="submit" value="<spring:message code="login" />" />
+					<input class="btn-primary" type="submit" value="<spring:message code="login" />" />
 				</div>
 			
 			</form>	
