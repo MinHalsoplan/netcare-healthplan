@@ -40,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +72,9 @@ public class SystemAlarmJob {
 	
 	@Autowired
 	private AlarmRepository alRepo;
+	
+	@Autowired
+	private MessageSource messageBundle;
 
 	public void init() {
 		alarmJob();
@@ -114,7 +119,7 @@ public class SystemAlarmJob {
 			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null) {
 				Integer i = patients.get(patient);
 				log.debug("Reminder: for patient {} -- add to send list", patient.getName());
-				patients.put(patient, (i == null) ? 0 : i.intValue()+1);
+				patients.put(patient, (i == null) ? 1 : i.intValue()+1);
 			}
 			sae.setReminderDone(true);
 			saRepo.save(sae);
@@ -128,14 +133,13 @@ public class SystemAlarmJob {
 		log.info("======== REMINDER JOB COMPLETED =========");
 	}
 	
-	
-	// FIXME: to be implemented
 	private void sendReminder(PatientEntity to, int n) {
-		this.notificationService.sendPushNotification("Test", "Du har " + n + " nya aktiviteter att rapportera", to.getId());
+		final String title = messageBundle.getMessage("system.name", new Object[0], LocaleContextHolder.getLocale());
+		final String message = messageBundle.getMessage("system.push", new Object[]{new Integer(n)}, LocaleContextHolder.getLocale());
+		
+		this.notificationService.sendPushNotification(title, message, to.getId());
 	}
 	
-	
-	//
 	private void activities(Date endDate) {
 		List<ScheduledActivityEntity> sal = saRepo.findByScheduledTimeLessThanAndReportedTimeIsNull(endDate);
 		log.info("Alarm activity job: {} activities over due ({})", sal.size(), endDate);
