@@ -31,25 +31,25 @@
 </div>
 
 <div id="reportFormDiv" class="modal hide fade" style="display: none;">
-	<form id="reportFormId" class="form-stacked">
-		<div class="modal-header">
-			<a href="#" class="close">x</a>
-			<h3>
-				<spring:message code="report.title" />
-			</h3>
-			<h5 id="plannedId"></h5>
-		</div>
-		<div class="modal-body">
+	<form id="reportFormId">
+	<div class="modal-header">
+		<a href="#" class="close" data-dismiss="modal">x</a>
+		<h3>
+			<spring:message code="report.title" />
+		</h3>
+		<h5 id="plannedId"></h5>
+	</div>
+	<div class="modal-body">
 			<input type="hidden" name="activityId" />
 			<input type="hidden" name="numValueId" />
 
 			<div id="dateTimeInputId" style="display: none;">
-				<input type="text" name="date" class="small" />&nbsp;-
-				<input type="text" name="time" class="mini" />				
+				<input type="text" name="date" class="input-small" />&nbsp;-
+				<input type="text" name="time" class="input-mini" />				
 			</div>
 			
 			<!--  Space for measurement input -->
-			<table id="measurementTableId" class="condensed-table">
+			<table id="measurementTableId" class="table-condensed">
 				<tbody></tbody>
 			</table>
 
@@ -57,7 +57,7 @@
 				<spring:message code="report.sense" var="sense" scope="page" />
 				<netcare:field name="senseField" label="${sense}">
 					<div style="font-size: 10px; font-style: italic" id="senseTextId"></div>
-					<table class="condensed-table">
+					<table class="table-condensed">
 						<thead>
 							<tr>
 								<th>&nbsp;</th>
@@ -86,17 +86,17 @@
 
 			<spring:message code="report.note" var="note" scope="page" />
 			<netcare:field name="note" label="${note}">
-				<input type="text" name="note" class="xlarge" />
+				<input type="text" name="note" class="input-xlarge" />
 			</netcare:field>
 		</div>
 		<div class="modal-footer">
 			<input type="submit" name="save"
-				value="<spring:message code="report.save" />" class="btn-primary" />
+				value="<spring:message code="report.save" />" class="btn btn-primary" />
 		</div>
 	</form>
 </div>
 
-<table id="schemaTable" class="bordered-table zebra-striped shadow-box">
+<netcare:table id="schemaTable">
 	<thead>
 		<tr>
 			<th colspan='2'><spring:message code="report.scheduled" /></th>
@@ -107,4 +107,4 @@
 	</thead>
 	<tbody>
 	</tbody>
-</table>
+</netcare:table>

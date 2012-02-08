@@ -148,7 +148,10 @@
 	<netcare:body>
 		<netcare:content>
 			<h2><spring:message code="patients" /></h2>
-			<p>På den här sidan lägger du till nya patienter. Etc...</p>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="patient.titleDesc" />
+			</p>
 			
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton">
@@ -156,7 +159,7 @@
 				</a>
 			</p>
 			
-			<form id="patientForm" class="form-stacked">
+			<form id="patientForm">
 				<fieldset>
 					<legend><spring:message code="newPatient" /></legend>
 				</fieldset>
@@ -176,15 +179,14 @@
 					<input type="tel" name="phoneNumber" />
 				</netcare:field>
 				
-				<div class="actions">
-					<input type="submit" class="btn-primary" value="<spring:message code="create" />" />
+				<div class="form-actions">
+					<input type="submit" class="btn btn-primary" value="<spring:message code="create" />" />
 					<input type="reset" class="btn" value="<spring:message code="reset" />" />
 				</div>
 				
 			</form>
 			
 			<section id="patients">
-				<h3><spring:message code="patients" /></h3>
 				<div class="alert alert-info" style="display: none;">
 					<p><spring:message code="noPatients" /></p>
 				</div>

@@ -32,7 +32,7 @@
 	</c:otherwise>
 </c:choose>
 
-	<div class="span10" style="${style}">
+	<div class="span9" style="${style}">
 		<div class="row">
 			<jsp:doBody />
 		</div>

@@ -147,7 +147,7 @@
 					du anger vad du vill arbeta med.
 				</p>
 				<p>
-					<span class="label important">Viktigt!</span>
+					<span class="label label-important">Viktigt!</span>
 					Du måste ha valt en patient att arbeta med innan du kan utföra andra
 					aktiviteter i systemet.
 				</p>
@@ -157,7 +157,7 @@
 			<section id="replies">
 				<h2><spring:message code="comments.replies" /></h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="comments.repliesDescription" />
 				</p>
 				<div id="noReplyId" class="alert alert-info">
@@ -183,7 +183,7 @@
 			<section id="aktiviteter">
 				<h2>Genomförda aktiviteter</h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					Nedan visas en översikt över de patienter som har rapporterat och genomfört
 					aktiviteter det senaste dygnet.
 				</p>
@@ -231,7 +231,7 @@
 			<section id="alarms">
 				<h2><spring:message code="alarm.overview" /></h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="alarm.information" />
 				</p>
 				

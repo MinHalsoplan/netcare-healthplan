@@ -151,7 +151,7 @@
 		<netcare:content>
 			<h2><spring:message code="healthPlans" /> för <c:out value="${sessionScope.currentPatient.name}" /></h2>
 			<p>
-				<span class="label notice">Information</span>
+				<span class="label label-info">Information</span>
 				Den här sidan visar hälsoplaner för <c:out value="${sessionScope.currentPatient.name}" />. Du kan även skapa
 				till en ny hälsoplan genom att klicka på "Skapa hälsoplan" länken nedan.
 			</p>
@@ -166,7 +166,7 @@
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
-			<netcare:form id="createHealthPlanForm" classes="form-stacked">
+			<netcare:form id="createHealthPlanForm">
 				<fieldset>
 					<legend>${title}</legend>
 					<netcare:field name="name" label="${name}">
@@ -195,8 +195,8 @@
 					</div>
 				</fieldset>
 				
-				<div class="actions">
-					<input type="submit" class="btn-primary" value="${title}" />
+				<div class="form-actions">
+					<input type="submit" class="btn btn-primary" value="${title}" />
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				

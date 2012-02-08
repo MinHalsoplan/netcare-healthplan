@@ -24,9 +24,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div id="${containerId}" class="clearfix">
-	<label for="${name}">${label}</label>
-	<div class="input">
+<div id="${containerId}" class="control-group">
+	<label for="${name}" class="control-label">${label}</label>
+	<div class="controls">
 		<jsp:doBody />
 	</div>
 </div>

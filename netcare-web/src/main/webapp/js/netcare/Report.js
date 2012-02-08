@@ -58,10 +58,11 @@ NC.Reports = function(statistics, captions) {
 				}
 			});
 			
-			
-			$('#' + elementId).prepend(
-				$('<div>').attr('id', 'filter-row-' + elementId).addClass('row').addClass('span10')
+			var filterRow = $('<div>').attr('id', 'filter-row-' + elementId).addClass('row').append(
+					$('<div>').addClass('span9')
 			);
+			
+			$('#' + elementId).prepend(filterRow);
 			
 			/*
 			 * Process each measure type. One diagram for each type
@@ -107,7 +108,7 @@ NC.Reports = function(statistics, captions) {
 				});
 				
 				$('#filter-row-' + elementId).append(
-					$('<div>').addClass('span1').addClass('form-stacked').append(input)
+					$('<div>').addClass('span1').append(input)
 				);
 				
 				$('#filter-for-'+ id).attr('checked', 'checked');

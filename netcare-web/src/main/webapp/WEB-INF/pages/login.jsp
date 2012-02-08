@@ -33,24 +33,23 @@
 		</script>
 	</netcare:header>
 	<body>
-		<div class="modal-backdrop fade in"></div>
+		<div class="modal-backdrop fade"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
-			<form method="post" action="<spring:url value="/j_spring_security_check" />" class="form-stacked">
-				<div class="modal-header">
-					<h3><spring:message code="login" /></h3>
-				</div>
-				<div class="modal-body">
-					<div class="clearfix">
-						<label for="j_username"><spring:message code="username" /></label>
-						<div class="input">
-							<input name="j_username" type="text" class="xlarge" />
-						</div>
+			<div class="modal-header">
+				<h3><spring:message code="login" /></h3>
+			</div>
+			<div class="modal-body">
+				<form method="post" action="<spring:url value="/j_spring_security_check" />">
+				<div class="clearfix">
+					<label for="j_username"><spring:message code="username" /></label>
+					<div class="input">
+						<input name="j_username" type="text" class="xlarge" />
 					</div>
 				</div>
-				<div class="modal-footer">
-					<input class="btn-primary" type="submit" value="<spring:message code="login" />" />
-				</div>
-			
+			</div>
+			<div class="modal-footer">
+				<input class="btn btn-primary" type="submit" value="<spring:message code="login" />" />
+			</div>
 			</form>	
 		</div>
 	</body>

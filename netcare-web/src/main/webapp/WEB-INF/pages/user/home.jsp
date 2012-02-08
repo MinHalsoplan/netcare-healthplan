@@ -184,7 +184,7 @@
 
 				hps.loadLatestComments(patientId, loadComments);
 				
-				$('#sendReply').modal();
+				//$('#sendReply').modal();
 				$('#sendReply').bind('shown', function() {
 					$('#sendReply input[name="reply"]').focus();
 				});
@@ -211,7 +211,7 @@
 						</netcare:field>
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn-primary"
+						<input type="submit" class="btn btn-primary"
 							value="<spring:message code="comments.reply" />" />
 					</div>
 				</form>
@@ -226,7 +226,7 @@
 			<section id="comments">
 				<h2><spring:message code="comments.comments" /></h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="comments.commentDesc" />
 				<div id="noCommentId" class="alert alert-info">
 					<p><spring:message code="comments.noComments" /></p>
@@ -247,7 +247,7 @@
 			<section id="healthPlan">
 				<h2><spring:message code="phome.header" /></h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="phome.headerDesc" />
 				</p>
 				<div id="planDescription" style="margin: 10px"></div>
@@ -273,7 +273,7 @@
 			<section id="activities">
 				<h2><spring:message code="phome.activities" /></h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="phome.activitiesDesc" />
 				</p>
 				<ul id="healthplan-menu">

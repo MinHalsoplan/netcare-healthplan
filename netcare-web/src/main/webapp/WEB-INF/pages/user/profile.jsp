@@ -103,13 +103,13 @@
 			<section id="profile">
 				<h2><sec:authentication property="principal.name" /></h2>
 				<p>
-					<span class="label info"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					På den här sidan anger du...
 				</p>
 				
 				
 				<div id="userprofile">
-					<form class="form-stacked">
+					<form>
 					
 						<netcare:row>
 							<netcare:col span="5">
@@ -165,8 +165,8 @@
 							</netcare:row>
 						</fieldset>
 						
-						<div class="actions">
-							<input type="submit" class="btn-primary" value="Spara"/>
+						<div class="form-actions">
+							<input type="submit" class="btn btn-primary" value="Spara"/>
 						</div>
 						
 					</form>

@@ -100,7 +100,7 @@
 						var input = new NC.Util().createCheckbox(id, label);
 						
 						$('#filter-row').append(
-							$('<div>').addClass('span2').append(input)
+							$('<div>').addClass('span1').append(input)
 						);
 						
 						$('#' + id).attr('checked', 'checked');
@@ -127,7 +127,7 @@
 		<netcare:content>
 			<h2><spring:message code="myStatistics" /></h2>
 			<p>
-				<span class="label notice">Information</span>
+				<span class="label label-info">Information</span>
 				Nedan visas hur din hälsoplan är fördelad. Din hälsoplan innehåller aktiviteter och diagrammet visar hur stor del
 				dessa aktiviteter utgör av hälsoplanen.
 			</p>
@@ -136,13 +136,11 @@
 			<section id="filter" style="display:none;">
 				<h2>Filtrera</h2>
 				<p>
-					<span class="label notice">Information</span>
+					<span class="label label-info">Information</span>
 					Markera de diagram som du vill visa genom att klicka på respektive aktivitets kryssruta.
 				</p>
-				<form class="form-stacked">
-					<netcare:row id="filter-row">
-					
-					</netcare:row>
+				<form>
+					<netcare:row id="filter-row"></netcare:row>
 				</form>
 			</section>
 			<div id="activities"></div>

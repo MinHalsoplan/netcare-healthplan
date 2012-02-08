@@ -136,7 +136,7 @@
 					var label = $('<label>').attr('for', 'measureUnit').html('Enhet');
 					div.append(label);
 					
-					var input = $('<select>').attr('name', 'measureUnit').attr('id', 'measureUnit').addClass('span1');
+					var input = $('<select>').attr('name', 'measureUnit').attr('id', 'measureUnit').addClass('span2');
 					
 					$.each(unitOpts, function(i, v) {
 						NC.log("Adding unit: " + v.html());
@@ -163,7 +163,7 @@
 				};
 				
 				var createActionButton = function() {
-					var div = $('<div>').addClass('span2');
+					var div = $('<div>').addClass('span1');
 					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-primary').attr('value', 'Lägg till');
 					btn.click(function(e) {
 						e.preventDefault();
@@ -361,23 +361,23 @@
 			<section id="types">
 				<h2><spring:message code="activityType.title" /></h2>
 				<p>
-					<span class="label notice"><spring:message code="information" /></span>
+					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="activityType.description" />
 				</p>
 				<p style="text-align: right; padding-right: 20px;">
 					<a id="showTypesForm" class="btn addButton"><spring:message code="activityType.new" /></a>
 				</p>
 				<div id="activityTypesContainer">
-					<form class="form-stacked">
+					<form>
 						<div>
 							<netcare:row>
-								<netcare:col span="5">
+								<netcare:col span="3">
 									<spring:message code="activityType.name" scope="page" var="activityName" />
 									<netcare:field name="name" label="${activityName}">
 										<input type="text" name="name" id="name" class="xlarge"/>
 									</netcare:field>
 								</netcare:col>
-								<netcare:col span="5">
+								<netcare:col span="3">
 									<spring:message code="activityType.category" var="category" scope="page" />
 									<netcare:field name="activityCategory" label="${category}">
 										<select name="activityCategory" id="activityCategory" class="xlarge">
@@ -395,14 +395,14 @@
 								</netcare:col>
 							</netcare:row>
 							<netcare:row id="senseDescriptionContainer">
-								<netcare:col span="5">
+								<netcare:col span="3">
 									<spring:message code="activityType.scaleMinDescription" var="minDesc" scope="page" />
 									<spring:message code="activityType.scaleMaxDescription" var="maxDesc" scope="page" />
 									<netcare:field name="minDescription" label="${minDesc}">
 										<input type="text" name="minDescription" id="minDescription" class="xlarge" />
 									</netcare:field>
 								</netcare:col>
-								<netcare:col span="5">
+								<netcare:col span="3">
 									<netcare:field name="maxDescription" label="${maxDesc}">
 										<input type="text" name="maxDescription" id="minDescription" class="xlarge" />
 									</netcare:field>
@@ -419,15 +419,15 @@
 									<netcare:col span="2">
 										<spring:message code="measureValue.name" var="lbl" scope="page" />
 										<netcare:field name="measureName" label="${lbl}">
-											<input type="text" name="measureName" class="span1"/>
+											<input type="text" name="measureName" class="span2"/>
 										</netcare:field>
 									</netcare:col>
 									<netcare:col span="2">
 										<label for="valueType"><spring:message code="measureValue.type" /></label>
-										<select name="valueType" id="valueType" class="span1">
+										<select name="valueType" id="valueType" class="span2">
 										</select>										
 									</netcare:col>
-									<div id="measureValueContainer" class="row span6"></div>
+									<div id="measureValueContainer" class="row span5"></div>
 								</netcare:row>
 							</div>
 						</div>
@@ -445,8 +445,8 @@
 							<tbody></tbody>
 						</netcare:table>
 						<br />
-						<div class="modal-footer">
-							<button id="createActivityType" class="btn-primary"><spring:message code="activityType.create" /></button>
+						<div class="form-actions">
+							<button id="createActivityType" class="btn btn-primary"><spring:message code="activityType.create" /></button>
 						</div>
 						
 					</form>					

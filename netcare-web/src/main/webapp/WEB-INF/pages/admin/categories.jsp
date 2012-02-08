@@ -70,25 +70,27 @@
 			<h2><spring:message code="activityCategories" /></h2>
 			<p>På den här sidan lägger du till nya aktivitetskategorier. Varje aktivitetskategori kan sedan innehålla flera aktivitetstyper. Etc...</p>
 			
-			<form id="activityCategoryForm" class="form-stacked">
+			<form id="activityCategoryForm">
 				<fieldset>
 					<legend><spring:message code="create" /></legend>
 				</fieldset>
 				
 				<netcare:field name="name">
 					<input type="text" name="name" />
-					
-					<spring:message code="create" var="create" scope="page" />
 				</netcare:field>
-				<input type="submit" class="btn-primary" value="${create}" />
+				
+				<div class="form-actions">
+					<input type="submit" class="btn btn-primary" value="<spring:message code="create" />" />
+				</div>
 				
 			</form>
 			<netcare:table id="categoryTable">
 				<thead>
-					<th><spring:message code="name" /></th>
+					<tr>
+						<th><spring:message code="name" /></th>
+					</tr>
 				</thead>
-				<tbody>		
-				</tbody>
+				<tbody></tbody>
 			</netcare:table>
 		</netcare:content>
 		

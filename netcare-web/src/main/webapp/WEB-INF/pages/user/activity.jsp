@@ -237,7 +237,7 @@
 							
 							var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
 							var row = $('<div>').addClass('row').append(
-								$('<div>').addClass('span10').append(
+								$('<div>').addClass('span9').append(
 									rowCol
 								)
 							);
@@ -396,7 +396,7 @@
 		<netcare:content>
 			<h2><c:out value="${requestScope.result.data.name}" /> : <spring:message code="activities" /></h2>
 			<p>
-				<span class="label notice">Information</span>
+				<span class="label label-info">Information</span>
 				Den här sidan låter dig schemalägga aktiviteter som ingår i hälsoplanen. Du anger
 				dagar samt tider som aktiviteten skall utföras.
 			</p>
@@ -407,7 +407,7 @@
 				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			
-			<netcare:form id="activityForm" classes="form-stacked">
+			<netcare:form id="activityForm">
 			
 				<fieldset id="activityFieldset">
 					<legend><spring:message code="activity" /> <spring:message code="and" /> <spring:message code="goal" /></legend>
@@ -466,7 +466,7 @@
 					</netcare:row>
 					
 					<div id="tuesdayContainer" class="row">
-						<div class="span10">
+						<div class="span9">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="tuesday" var="tuesday" scope="page" />
@@ -489,7 +489,7 @@
 					
 					
 					<div id="wednesdayContainer" class="row">
-						<div class="span10">
+						<div class="span9">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="wednesday" var="wednesday" scope="page" />
@@ -512,7 +512,7 @@
 					
 					
 					<div id="thursdayContainer" class="row">
-						<div class="span10">
+						<div class="span9">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="thursday" var="thursday" scope="page" />
@@ -535,7 +535,7 @@
 					
 					
 					<div id="fridayContainer" class="row">
-						<div class="span10">
+						<div class="span9">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="friday" var="friday" scope="page" />
@@ -558,7 +558,7 @@
 					
 					
 					<div id="saturdayContainer" class="row">
-						<div class="span10">
+						<div class="span9">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="saturday" var="saturday" scope="page" />
@@ -581,7 +581,7 @@
 					
 					
 					<div id="sundayContainer" class="row">
-						<div class="span10">
+						<div class="span9">
 							<div class="row">
 								<div class="span1">
 									<spring:message code="sunday" var="sunday" scope="page" />
@@ -611,11 +611,11 @@
 					</netcare:col>
 				</netcare:row>
 			
-				<div class="actions">
+				<div class="form-actions">
 					<spring:message code="create" var="create" scope="page" />
 					<spring:message code="clear" var="clear" scope="page" />
 				
-					<input type="submit" class="btn-primary" value="${create}"/>
+					<input type="submit" class="btn btn-primary" value="${create}"/>
 					<input type="reset" class="btn" value="${clear}"/>
 				</div>
 			

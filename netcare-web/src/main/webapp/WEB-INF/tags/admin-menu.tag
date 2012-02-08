@@ -139,12 +139,12 @@
 	</p>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
-		<form id="pickPatientForm" class="form-stacked">
 			<div class="modal-header">
 				<a href="#" class="close">x</a>
 				<h3><spring:message code="pickPatient" /></h3>
 			</div>
 			<div class="modal-body">
+				<form id="pickPatientForm">
 				<div class="clearfix">
 					<label for="pickPatient"><spring:message code="search" /></label>
 					<div class="input">
@@ -154,9 +154,10 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn-primary"/>
+				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn btn-primary"/>
+				</form>
 			</div>
-		</form>
+		
 	</div>
 	
 	<div id="system">
