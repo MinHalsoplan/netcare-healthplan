@@ -211,17 +211,16 @@
 						<a href="#" class="close" data-dismiss="modal">x</a>
 						<h3><spring:message code="comments.comment" /></h3>
 					</div>
-
-					<form action="post">
-						<div class="modal-body">
+					<div class="modal-body">
+						<form action="post">
 							<input type="text" name="comment" class="xlarge" />
-						</div>
-						<div class="modal-footer">
-							<button class="btn-primary">
-								<spring:message code='comments.sendComment' />
-							</button>
-						</div>
-					</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary">
+							<spring:message code='comments.sendComment' />
+						</button>
+						</form>
+					</div>
 				</div>
 				
 			</section>

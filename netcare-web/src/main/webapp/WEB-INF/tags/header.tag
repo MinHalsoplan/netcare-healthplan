@@ -66,6 +66,7 @@
       /* Page header tweaks */
       .page-header {
         background-color: #f5f5f5;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
         padding: 20px 20px 10px;
         margin: -20px -20px 20px;
       }
