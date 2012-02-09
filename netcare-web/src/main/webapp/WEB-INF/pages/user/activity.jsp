@@ -215,9 +215,9 @@
 						var maxValue = '';
 						var value = '';
 						var title = '';
-						new NC.Support().loadCaptions('measureValue', ['minValue', 'maxValue', 'value', 'title'], function(data) {
-							minValue = data.minValue;
-							maxValue = data.maxValue;
+						new NC.Support().loadCaptions('result', ['targetMinValue', 'targetMaxValue', 'value', 'title'], function(data) {
+							minValue = data.targetMinValue;
+							maxValue = data.targetMaxValue;
 							value = data.value;
 						});
 						
