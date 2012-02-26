@@ -47,7 +47,7 @@
 	<key>NCPort</key>
 	<string>8080</string>
 	<key>NCHost</key>
-	<string>localhost</string>
+	<string>netcare-dev.callistasoftware.org</string>
 	<key>NCProtocol</key>
 	<string>http</string>
 </dict>
