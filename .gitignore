@@ -15,4 +15,4 @@ doc
 **/gen
 **/bin
 *~
-**/xcuserdata
+**/xcuserdata/**

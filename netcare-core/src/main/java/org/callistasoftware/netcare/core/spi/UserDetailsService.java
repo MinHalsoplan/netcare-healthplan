@@ -31,4 +31,11 @@ public interface UserDetailsService extends org.springframework.security.core.us
 	 * @param c2dmRegistrationId - The c2dm registration id
 	 */
 	void registerForC2dmPush(final String c2dmRegistrationId);
+
+	/**
+	 * Registers the current logged in user for apple psh notifications.
+	 * 
+	 * @param apnsRegistrationId the apns registration id.
+	 */
+	void registerForApnsPush(String apnsRegistrationId);
 }

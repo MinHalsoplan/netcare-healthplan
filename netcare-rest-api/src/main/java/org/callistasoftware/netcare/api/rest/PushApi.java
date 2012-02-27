@@ -37,4 +37,12 @@ public class PushApi extends ApiSupport {
 		this.logAccess("register", "c2dm");
 		service.registerForC2dmPush(c2dmRegistrationId);
 	}
+
+	@RequestMapping(value="/register/apns", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public void apnsRegistration(@RequestParam(value="apnsRegistrationId") final String apnsRegistrationId) {
+		this.logAccess("register", "apns");
+		service.registerForApnsPush(apnsRegistrationId);
+	}
+
 }

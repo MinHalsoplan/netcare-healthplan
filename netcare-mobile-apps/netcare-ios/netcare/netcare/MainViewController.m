@@ -54,6 +54,7 @@ NSURLProtectionSpace *protectionSpace = nil;
                            protocol: [self infoValueForKey:@"NCProtocol"]
                            realm:[self infoValueForKey:@"NCSecurityRealm"]
                            authenticationMethod: NSURLAuthenticationMethodHTTPBasic];
+        
     }
     
     [nextPageButton setHidden:YES];
@@ -100,14 +101,16 @@ NSURLProtectionSpace *protectionSpace = nil;
 //
 - (NSString*)baseURLString
 {
-    int port = [[self infoValueForKey:@"NCPort"] intValue];
-    NSString *portString = (port == 80) ? @"" : [@":" stringByAppendingFormat:@"%d",port];
     NSString *urlString = [self infoValueForKey:@"NCProtocol"];
     urlString = [urlString stringByAppendingString:@"://"];
     urlString = [urlString stringByAppendingString:[self infoValueForKey:@"NCHost"]];
-    urlString = [urlString stringByAppendingString:portString];
-    NSLog(@"BaseURL --> %@\n", urlString);
     
+    int port = [[self infoValueForKey:@"NCPort"] intValue];
+    if (port > 0) 
+    {
+        urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
+    }
+    NSLog(@"BaseURL --> %@\n", urlString);
     return urlString;
 }
 
@@ -127,7 +130,9 @@ NSURLProtectionSpace *protectionSpace = nil;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Åtkomst nekad"
                                                     message:msg 
-                                                   delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                                                   delegate:self
+                                          cancelButtonTitle:@"Ok" 
+                                          otherButtonTitles:nil];
     
     [alert show];
     
@@ -199,6 +204,8 @@ NSURLProtectionSpace *protectionSpace = nil;
     NSLog(@"Authenticate: Connection failure: %@\n", [error localizedDescription]);
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [connection cancel];
+    [self showAuthError:-2];
 }
 
 //
