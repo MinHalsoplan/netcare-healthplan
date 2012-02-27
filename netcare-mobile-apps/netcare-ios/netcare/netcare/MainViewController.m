@@ -124,6 +124,17 @@ NSURLProtectionSpace *protectionSpace = nil;
     return [NSURL URLWithString:urlString];     
 }
 
+//
+- (NSURL*)pushRegistrationURL:(NSString*)deviceToken
+{
+    NSString *urlString = [self  baseURLString];
+    urlString = [urlString stringByAppendingString:[self infoValueForKey:@"NCPushRegistrationPage"]]; 
+    urlString = [urlString stringByAppendingFormat:@"?apnsRegistrationId=%@", deviceToken];
+    
+    NSLog(@"Push Registration:  URL --> %@\n", urlString);
+    return [NSURL URLWithString:urlString];         
+}
+
 - (void)showAuthError:(int)responseCode
 {
     NSString *msg = [NSString stringWithFormat:(responseCode == -1) ? @"Felaktig personlig kod, eller så saknas inställningar för denna tjänst (%d)" : @"Tekniskt fel, försök igen lite senare (%d)", responseCode];
@@ -190,7 +201,7 @@ NSURLProtectionSpace *protectionSpace = nil;
 
 //
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
+{    
     NSLog(@"Authenticate: Succeded\n");
     [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
     
@@ -263,6 +274,36 @@ NSURLProtectionSpace *protectionSpace = nil;
     [pinCodeTextEdit setText:@""];
 }
 
+- (void)pushKeeping
+{
+    // Clear Badge
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    if ([prefs boolForKey:@"isDeviceTokenUpdated"])
+    {
+        NSString* token = [prefs stringForKey:@"deviceToken"];
+        // Start registration
+        NSURL *url = [self pushRegistrationURL:token];
+        //NSURL *url = [self checkCredentialURL];
+        
+        URLHandler *handler = [[URLHandler alloc] init:url withDelegate:self];
+        [handler execute];
+    }
+}
+#pragma mark - URLHandler
+
+- (void)ready:(BOOL)success
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    if (success) 
+    {
+        [prefs setBool:NO forKey:@"isDeviceTokenUpdated"];
+        [prefs synchronize];
+    }
+    NSLog(@"Basic ready with code: %d\n", success);
+}
+
 #pragma mark - Flipside View
 
 // back to logon screen
@@ -275,9 +316,10 @@ NSURLProtectionSpace *protectionSpace = nil;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSLog(@"%@\n", [segue identifier]);
-        
+    
     if ([[segue identifier] isEqualToString:@"webView"]) {
         [[segue destinationViewController] setDelegate:self];
+        [self pushKeeping];
     }
 }
 

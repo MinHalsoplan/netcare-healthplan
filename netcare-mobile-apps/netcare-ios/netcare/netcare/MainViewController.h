@@ -6,8 +6,9 @@
 //  Copyright (c) 2012 Callista Enterprise AB. All rights reserved.
 //
 #import "FlipsideViewController.h"
+#import "URLHandler.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, NSURLConnectionDataDelegate>
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, NSURLConnectionDataDelegate, URLHandlerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
 @property (weak, nonatomic) IBOutlet UITextField *pinCodeTextEdit;

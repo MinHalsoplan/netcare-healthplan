@@ -12,9 +12,52 @@
 
 @synthesize window = _window;
 
+//
++ (NSString*) serializeDeviceToken:(NSData*) deviceToken
+{
+    NSMutableString *str = [NSMutableString stringWithCapacity:64];
+    int length = [deviceToken length];
+    char *bytes = malloc(sizeof(char) * length);
+    
+    [deviceToken getBytes:bytes length:length];
+    
+    for (int i = 0; i < length; i++)
+    {
+        [str appendFormat:@"%02.2hhx", bytes[i]];
+    }
+    free(bytes);
+    
+    return str;
+}
+
+// push
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    NSString *token = [AppDelegate serializeDeviceToken:deviceToken]; 
+	NSLog(@"My token is: %@", token);
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *oldToken = [prefs valueForKey:@"deviceToken"];
+    if (![token isEqualToString:oldToken])
+    {
+        NSLog(@"Token is updated");
+        [prefs setValue:token forKey:@"deviceToken"];
+        [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
+        [prefs synchronize];
+    }
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
+}
+
+// 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // register for push.
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
     return YES;
 }
 							
