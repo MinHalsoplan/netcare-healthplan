@@ -7,7 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HTTPConnection.h"
 
-@interface HTTPAuthentication : NSObject
+@class HTTPAuthentication;
+
+@protocol HTTPAuthenticationDelegate
+- (void)authReady:(NSInteger)code;
+@end
+
+@interface HTTPAuthentication : HTTPConnection <HTTPConnectionDelegate>
+
+@property (weak, atomic, readonly) NSString *user;
+@property (weak, atomic, readonly) NSString *password;
+@property (weak, atomic, readonly) id authDelegate;
+
+
+
+- (HTTPAuthentication*)init:(NSURL*)theUrl withDelegate:(id)theDelegate withUser:(NSString*)theUser withPassword:(NSString*)thePassword;
+
++ (void)cleanSession;
 
 @end

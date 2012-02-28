@@ -10,4 +10,7 @@
 
 @interface Util : NSObject
 
++ (NSString*)infoValueForKey:(NSString*)key;
++ (NSString*) toHexString:(NSData*) data;
+
 @end

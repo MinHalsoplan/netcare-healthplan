@@ -7,33 +7,17 @@
 //
 
 #import "AppDelegate.h"
+#import "Util.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
 
-//
-+ (NSString*) serializeDeviceToken:(NSData*) deviceToken
-{
-    NSMutableString *str = [NSMutableString stringWithCapacity:64];
-    int length = [deviceToken length];
-    char *bytes = malloc(sizeof(char) * length);
-    
-    [deviceToken getBytes:bytes length:length];
-    
-    for (int i = 0; i < length; i++)
-    {
-        [str appendFormat:@"%02.2hhx", bytes[i]];
-    }
-    free(bytes);
-    
-    return str;
-}
 
 // push
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-    NSString *token = [AppDelegate serializeDeviceToken:deviceToken]; 
+    NSString *token = [Util toHexString:deviceToken]; 
 	NSLog(@"My token is: %@", token);
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *oldToken = [prefs valueForKey:@"deviceToken"];

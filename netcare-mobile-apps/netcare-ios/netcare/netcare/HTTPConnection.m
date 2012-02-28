@@ -6,19 +6,20 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "URLHandler.h"
+#import "HTTPConnection.h"
 
-@implementation URLHandler
+@implementation HTTPConnection
 
 @synthesize url;
-@synthesize delegate;
+@synthesize connDelegate;
+@synthesize conn;
 
-NSURLConnection *conn;
-
-- (URLHandler*)init:(NSURL*)theUrl withDelegate:(id)theDelegate
+- (HTTPConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate
 {
     url = theUrl;
-    delegate = theDelegate;
+    connDelegate = theDelegate;
+    conn = nil;
+    
     return self;
 }
 
@@ -32,24 +33,27 @@ NSURLConnection *conn;
 }
 
 //
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+- (void)ready:(NSInteger)code connection:(NSURLConnection*)connection
 {
-    NSLog(@"Basic: willSendRequestForAuthenticationChallenge");
+    [connection cancel];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [connDelegate connReady:code];
+    conn = nil;
 }
 
+#pragma mark -
+#pragma mark NSURLConnectionDataDelegate
+
+
 //
-- (void)ready:(BOOL)success connection:(NSURLConnection*)connection
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    if (!success) {
-        [connection cancel];
-    }
-    [delegate ready:success];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    conn = nil;
+    NSLog(@"HTTP: willSendRequestForAuthenticationChallenge");
 }
 
 //
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection {
+    NSLog(@"Use credential storage YES\n");
     return YES;
 }
 
@@ -67,15 +71,15 @@ NSURLConnection *conn;
 //
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {    
-    NSLog(@"Basic: Succeded\n");
-    [self ready:YES connection:connection];
+    NSLog(@"HTTP: Succeded\n");
+    [self ready:200 connection:connection];
 }
 
 //
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    NSLog(@"Basic: Connection failure: %@\n", [error localizedDescription]);
-    [self ready:NO connection:connection];
+    NSLog(@"HTTP: Connection failure: %@ (%d)\n", [error localizedDescription], [error code]);
+    [self ready:[error code] connection:connection];
 }
 
 //
@@ -85,18 +89,18 @@ NSURLConnection *conn;
     
     int responseCode = [httpResponse statusCode];
     
-    NSLog(@"Basic: HTTP Response code: %d\n", responseCode);
+    NSLog(@"HTTP: Response code: %d\n", responseCode);
     
     if (responseCode != 200)
     {
-        [self ready:NO connection:connection];
+        [self ready:responseCode connection:connection];
     }
 }
 
 //
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    NSLog(@"Basic: Received %d bytes\n", [data length]);
+    NSLog(@"HTTP: Received %d bytes\n", [data length]);
 }
 
 

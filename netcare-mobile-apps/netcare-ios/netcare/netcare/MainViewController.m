@@ -7,14 +7,13 @@
 //
 
 #import "MainViewController.h"
+#import "Util.h"
 
 @implementation MainViewController
 
 @synthesize personNumberTextEdit;
 @synthesize pinCodeTextEdit;
 @synthesize nextPageButton;
-
-NSURLProtectionSpace *protectionSpace = nil;
 
 - (void)didReceiveMemoryWarning
 {
@@ -36,26 +35,11 @@ NSURLProtectionSpace *protectionSpace = nil;
     return (s == nil) ? @"" : s;
 }
 
-- (NSString*)infoValueForKey:(NSString*)key {
-    return [[[NSBundle mainBundle] infoDictionary] valueForKey:key];
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    if (protectionSpace == nil) 
-    {
-        protectionSpace = [[NSURLProtectionSpace alloc]
-                           initWithHost: [self infoValueForKey:@"NCHost"]
-                           port: [[self infoValueForKey:@"NCPort"] intValue]
-                           protocol: [self infoValueForKey:@"NCProtocol"]
-                           realm:[self infoValueForKey:@"NCSecurityRealm"]
-                           authenticationMethod: NSURLAuthenticationMethodHTTPBasic];
-        
-    }
     
     [nextPageButton setHidden:YES];
     [personNumberTextEdit setText:[self retrievePersonalNumber]];
@@ -64,8 +48,6 @@ NSURLProtectionSpace *protectionSpace = nil;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -101,11 +83,11 @@ NSURLProtectionSpace *protectionSpace = nil;
 //
 - (NSString*)baseURLString
 {
-    NSString *urlString = [self infoValueForKey:@"NCProtocol"];
+    NSString *urlString = [Util infoValueForKey:@"NCProtocol"];
     urlString = [urlString stringByAppendingString:@"://"];
-    urlString = [urlString stringByAppendingString:[self infoValueForKey:@"NCHost"]];
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCHost"]];
     
-    int port = [[self infoValueForKey:@"NCPort"] intValue];
+    int port = [[Util infoValueForKey:@"NCPort"] intValue];
     if (port > 0) 
     {
         urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
@@ -119,7 +101,7 @@ NSURLProtectionSpace *protectionSpace = nil;
 {
     
     NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[self infoValueForKey:@"NCCheckCredentialsPage"]];    
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCCheckCredentialsPage"]];    
     NSLog(@"Authenticate: Check Auth URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];     
 }
@@ -128,7 +110,7 @@ NSURLProtectionSpace *protectionSpace = nil;
 - (NSURL*)pushRegistrationURL:(NSString*)deviceToken
 {
     NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[self infoValueForKey:@"NCPushRegistrationPage"]]; 
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCPushRegistrationPage"]]; 
     urlString = [urlString stringByAppendingFormat:@"?apnsRegistrationId=%@", deviceToken];
     
     NSLog(@"Push Registration:  URL --> %@\n", urlString);
@@ -137,7 +119,7 @@ NSURLProtectionSpace *protectionSpace = nil;
 
 - (void)showAuthError:(int)responseCode
 {
-    NSString *msg = [NSString stringWithFormat:(responseCode == -1) ? @"Felaktig personlig kod, eller så saknas inställningar för denna tjänst (%d)" : @"Tekniskt fel, försök igen lite senare (%d)", responseCode];
+    NSString *msg = [NSString stringWithFormat:(responseCode == -1012) ? @"Felaktig personlig kod, eller så saknas inställningar för denna tjänst (%d)" : @"Tekniskt fel, försök igen lite senare (%d)", responseCode];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Åtkomst nekad"
                                                     message:msg 
@@ -152,90 +134,23 @@ NSURLProtectionSpace *protectionSpace = nil;
 // starts a request
 - (void)startAuthentication
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[self checkCredentialURL]];
-    // Start the connection request
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
-        
-    conn = nil;
+    HTTPAuthentication *auth = [[HTTPAuthentication alloc] init:[self checkCredentialURL] withDelegate:self withUser:[personNumberTextEdit text] withPassword:[pinCodeTextEdit text]];
+  
+    [auth execute];
 }
 
-
-//
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+- (void)authReady:(NSInteger)code
 {
-    NSLog(@"Authenticate: willSendRequestForAuthenticationChallenge");
-    
-    if ([challenge previousFailureCount] > 0) {
-        [[challenge sender] cancelAuthenticationChallenge:challenge];
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        [self showAuthError:-1];
-    } else {
-        NSURLCredential *credential = [[NSURLCredential alloc]
-                                       initWithUser: [personNumberTextEdit text]
-                                       password: [pinCodeTextEdit text]
-                                       persistence: NSURLCredentialPersistenceForSession]; 
-        
-        [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:credential forProtectionSpace:protectionSpace];
-        
-        [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];        
+    if (code == 200)
+    {
+        [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
+    }
+    else
+    {
+        [self showAuthError:code];
     }
 }
 
-//
-- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection {
-    return YES;
-}
-
-//
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
-{
-    return YES;
-}
-
-
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
-    return nil;
-}
-
-//
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{    
-    NSLog(@"Authenticate: Succeded\n");
-    [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-}
-
-//
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"Authenticate: Connection failure: %@\n", [error localizedDescription]);
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [connection cancel];
-    [self showAuthError:-2];
-}
-
-//
-- (void) connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    int responseCode = [httpResponse statusCode];
-    if (responseCode != 200) {
-        [connection cancel];
-        [self showAuthError:responseCode];
-    }
-    NSLog(@"Authenticate: HTTP Response code: %d\n", responseCode);
-}
-
-//
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    NSLog(@"Authenticate: Received %d bytes\n", [data length]);
-}
 
 //
 - (IBAction)login:(id)sender {
@@ -261,15 +176,7 @@ NSURLProtectionSpace *protectionSpace = nil;
 // to prepare for a new session
 - (void)cleanSession
 {
-    // remove actual credentials to force a new login
-    NSURLCredential *credential = [[NSURLCredentialStorage sharedCredentialStorage]defaultCredentialForProtectionSpace:protectionSpace];
-    
-    if (credential)
-    {
-        NSLog(@"Delete credential --> %@\n", [credential description]);
-        [[NSURLCredentialStorage sharedCredentialStorage] removeCredential:credential forProtectionSpace:protectionSpace];
-    }
-    
+    [HTTPAuthentication cleanSession];   
     // reset pinCode
     [pinCodeTextEdit setText:@""];
 }
@@ -287,21 +194,22 @@ NSURLProtectionSpace *protectionSpace = nil;
         NSURL *url = [self pushRegistrationURL:token];
         //NSURL *url = [self checkCredentialURL];
         
-        URLHandler *handler = [[URLHandler alloc] init:url withDelegate:self];
+        HTTPConnection *handler = [[HTTPConnection alloc] init:url withDelegate:self];
         [handler execute];
     }
 }
+
 #pragma mark - URLHandler
 
-- (void)ready:(BOOL)success
+- (void)connReady:(NSInteger)code
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    if (success) 
+    if (code == 200) 
     {
         [prefs setBool:NO forKey:@"isDeviceTokenUpdated"];
         [prefs synchronize];
     }
-    NSLog(@"Basic ready with code: %d\n", success);
+    NSLog(@"RegistrationId token update done with code: %d\n", code);
 }
 
 #pragma mark - Flipside View
@@ -326,7 +234,7 @@ NSURLProtectionSpace *protectionSpace = nil;
 - (NSURL*)startURL
 {
     NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[self infoValueForKey:@"NCStartPage"]];
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCStartPage"]];
     NSLog(@"Start URL --> %@\n", urlString);
     
     return [[NSURL alloc] initWithString:urlString];

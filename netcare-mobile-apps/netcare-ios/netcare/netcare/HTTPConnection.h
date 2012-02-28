@@ -8,18 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-@class URLHandler;
+@class HTTPConnection;
 
-@protocol URLHandlerDelegate
-- (void)ready:(BOOL)success;
+@protocol HTTPConnectionDelegate
+- (void)connReady:(NSInteger)code;
 @end
 
-@interface URLHandler : NSObject <NSURLConnectionDataDelegate>
+@interface HTTPConnection : NSObject <NSURLConnectionDataDelegate>
 
 @property (weak, atomic, readonly) NSURL *url;
-@property (weak, atomic, readonly) id delegate;
+@property (weak, atomic, readonly) id connDelegate;
+@property (retain, readonly) NSURLConnection *conn;
 
-- (URLHandler*)init:(NSURL*)theUrl withDelegate:(id)theDelegate;
+- (HTTPConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate;
 - (void)execute;
+- (void)ready:(NSInteger)code connection:(NSURLConnection*)connection;
 
 @end
