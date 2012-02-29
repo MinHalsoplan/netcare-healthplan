@@ -34,7 +34,7 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 
 	private static final Logger log = LoggerFactory.getLogger(ExceptionResolver.class);
 	
-	@Value("#{application['support.email']}")
+	@Value("${support.email}")
 	private String email;
 	
 	@Autowired

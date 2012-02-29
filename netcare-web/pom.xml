@@ -23,6 +23,11 @@
   		<artifactId>netcare-rest-api</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.callistasoftware.netcare</groupId>
+  		<artifactId>netcare-mvk-integration</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
   	
   	<dependency>
   		<groupId>javax.servlet</groupId>

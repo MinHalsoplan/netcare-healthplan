@@ -61,7 +61,7 @@ public class SystemAlarmJob {
 	@Autowired
 	private PushNotificationService notificationService;
 	
-	@Value("#{application['reminder.time']}")
+	@Value("${reminder.time}")
 	private int reminderTime;
 
 	@Autowired

@@ -29,8 +29,9 @@
 	
 	<logger name="org.codehaus.jackson" level="WARN" />
 	
-	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework" level="DEBUG" />
 	<logger name="org.springframework.security" level="WARN" />
+	<logger name="org.springframework.beans.factory.config" level="DEBUG" />
 	<logger name="org.springframework.web" level="DEBUG" />
 	<logger name="org.springframework.http" level="DEBUG" />
 	

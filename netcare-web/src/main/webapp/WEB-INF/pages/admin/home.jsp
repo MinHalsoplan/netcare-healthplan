@@ -63,7 +63,7 @@
 							}
 							var cause = $('<td>' + info + '</td>');
 							
-							var processIcon = util.createIcon('clear', '24', function() {
+							var processIcon = util.createIcon('trash', '24', function() {
 								NC.log("Resolving alarm...");
 								alarms.resolve(value.id, loadAlarms);
 							});
@@ -142,14 +142,11 @@
 			<section id="dashboard">
 				<h2>Start</h2>
 				<p>
-					Välkommen till planerade hälsotjänster. I menyn till höger anges vem du är
-					inloggad som, vilken patient du för närvarande arbetar med samt en meny där
-					du anger vad du vill arbeta med.
+					<spring:message code="admin.home.description" />
 				</p>
 				<p>
 					<span class="label important">Viktigt!</span>
-					Du måste ha valt en patient att arbeta med innan du kan utföra andra
-					aktiviteter i systemet.
+					<spring:message code="admin.home.important" />
 				</p>
 				
 			</section>
@@ -179,11 +176,10 @@
 			<br />
 			
 			<section id="aktiviteter">
-				<h2>Genomförda aktiviteter</h2>
+				<h2><spring:message code="performedActivities" /></h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
-					Nedan visas en översikt över de patienter som har rapporterat och genomfört
-					aktiviteter det senaste dygnet.
+					<spring:message code="performedActivities.description" />
 				</p>
 				
 				<div id="reportedActivities">
@@ -193,9 +189,9 @@
 					<table class="bordered-table zebra-striped shadow-box" style="display: none">
 						<thead>
 							<th><spring:message code="patient" /></th>
-							<th><spring:message code="type" /></th>
+							<th><spring:message code="performedActivities.type" /></th>
 							<th><spring:message code="reportedValue" /></th>
-							<th><spring:message code="when" /></th>
+							<th><spring:message code="performedActivities.when" /></th>
 							<th>&nbsp;</th>
 						</thead>
 						<tbody></tbody>

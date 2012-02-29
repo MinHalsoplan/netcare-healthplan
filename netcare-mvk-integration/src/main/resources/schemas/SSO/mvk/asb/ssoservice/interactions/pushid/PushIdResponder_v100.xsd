@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema targetNamespace="urn:mvk:asb:sso:v100:PushIdResponder" xmlns:bons0="urn:mvk:asb:sso:v100:core" xmlns:bons1="urn:mvk:asb:common:base:1" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--
+
+    Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+    <xsd:import namespace="urn:mvk:asb:sso:v100:core" schemaLocation="../../core/MvkSSOServiceBase_v100.xsd"/>
+    <xsd:import namespace="urn:mvk:asb:common:base:1" schemaLocation="../../../common/base/core/MvkCommonBase_1.0.xsd">
+	</xsd:import>
+	<xsd:complexType name="PushIdType">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="tokenSize" type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="ssoObject" type="bons0:SSOObjectType">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PushIdResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="bons1:MvkResponseHeaderType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="guid" type="xsd:string">
+					</xsd:element>
+				</xsd:sequence>
+
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

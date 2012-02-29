@@ -20,11 +20,13 @@ import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.junit.runner.RunWith;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
+@ActiveProfiles("test")
 public abstract class TestSupport {
 
 	protected void runAs(final UserBaseView user) {
