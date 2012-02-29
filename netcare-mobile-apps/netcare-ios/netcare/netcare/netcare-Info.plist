@@ -45,11 +45,11 @@
 	<key>NCCheckCredentialsPage</key>
 	<string>/netcare-web/netcare/mobile/checkcredentials</string>
 	<key>NCPushRegistrationPage</key>
-	<string>/netcare-web/netcare/push/register/apns</string>
+	<string>/netcare-web/api/push/register/apns</string>
 	<key>NCPort</key>
 	<string>8080</string>
 	<key>NCHost</key>
-	<string>netcare-dev.callistasoftware.org</string>
+	<string>192.168.0.112</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>NCProtocol</key>

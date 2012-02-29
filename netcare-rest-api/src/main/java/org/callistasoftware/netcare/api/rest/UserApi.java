@@ -75,7 +75,7 @@ public class UserApi extends ApiSupport {
 		return this.patientService.loadPatient(patient);
 	}
 	
-	@RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+    @RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<Patient> updatePatient(@PathVariable(value="patient") final Long patient, @RequestBody final PatientImpl patientData) {
 		this.logAccess("update", "patient");
@@ -95,14 +95,14 @@ public class UserApi extends ApiSupport {
 		}
 	}
 	
-	@RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<Patient> deletePatient(@PathVariable(value="patient") final Long patient) {
 		this.logAccess("delete", "patient");
 		return this.patientService.deletePatient(patient);
 	}
 	
-	@RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<? extends PatientBaseView> selectPatient(@PathVariable(value="patient") final Long patientId, final HttpSession session) {
 		log.info("Selecting patient {}", patientId);
@@ -125,7 +125,7 @@ public class UserApi extends ApiSupport {
 		return result;
 	}
 	
-	@RequestMapping(value="/unselect", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/unselect", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<PatientBaseView> unselect(final HttpSession session) {
 		session.removeAttribute("currentPatient");

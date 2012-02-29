@@ -79,7 +79,7 @@ public class PatientApi extends ApiSupport {
 		return activitiesForPatient;
 	}
 	
-	@RequestMapping(value="/schema/{id}/accept", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/schema/{id}/accept", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> report(@PathVariable(value="id") final Long id,
 			@RequestBody final ActivityReportImpl dto, final Authentication auth) {

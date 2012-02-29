@@ -28,13 +28,42 @@ import org.callistasoftware.netcare.core.api.Value;
  */
 public class ActivityReportImpl implements ActivityReport {
 	private static final long serialVersionUID = 1L;
-	private List<Value> values;
+	private List<Value> values;	
 	private String actualDate;
 	private String actualTime;
 	private int sense;
 	private String note;
-	private boolean rejected;
+	private boolean rejected;	
 	
+	
+	//
+	public ActivityReportImpl() {}
+	
+	
+	public void setValues(List<Value> values) {
+		this.values = values;
+	}
+
+	public void setActualDate(String actualDate) {
+		this.actualDate = actualDate;
+	}
+
+	public void setActualTime(String actualTime) {
+		this.actualTime = actualTime;
+	}
+
+	public void setSense(int sense) {
+		this.sense = sense;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void setRejected(boolean rejected) {
+		this.rejected = rejected;
+	}
+
 	@Override
 	public List<Value> getValues() {
 		return values;

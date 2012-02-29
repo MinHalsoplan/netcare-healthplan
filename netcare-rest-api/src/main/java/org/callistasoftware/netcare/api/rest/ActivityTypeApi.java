@@ -54,7 +54,7 @@ public class ActivityTypeApi extends ApiSupport {
 		return this.service.searchForActivityTypes(text);
 	}
 	
-	@RequestMapping(value="/create", method=RequestMethod.POST)
+    @RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityType> createNewActivityType(@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("create", "activity type");

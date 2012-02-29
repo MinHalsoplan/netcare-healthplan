@@ -21,7 +21,8 @@
 @property (retain, readonly) NSURLConnection *conn;
 
 - (HTTPConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate;
-- (void)execute;
+- (void)get;
+- (void)synchronizedPost:(NSString*)data;
 - (void)ready:(NSInteger)code connection:(NSURLConnection*)connection;
 
 @end

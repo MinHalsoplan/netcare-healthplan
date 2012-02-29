@@ -30,6 +30,10 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	protected Long id;
 	protected String name;
 	
+	//
+	public UserBaseViewImpl() {}
+	
+	//
 	public UserBaseViewImpl(final Long id, final String name) {
 		this.id = id;
 		this.name = name;
@@ -74,6 +78,14 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

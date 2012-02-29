@@ -77,7 +77,6 @@
 }
 
 
-
 #pragma mark - Basic Auth Stuff
 
 //
@@ -107,12 +106,10 @@
 }
 
 //
-- (NSURL*)pushRegistrationURL:(NSString*)deviceToken
+- (NSURL*)pushRegistrationURL
 {
     NSString *urlString = [self  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCPushRegistrationPage"]]; 
-    urlString = [urlString stringByAppendingFormat:@"?apnsRegistrationId=%@", deviceToken];
-    
     NSLog(@"Push Registration:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
 }
@@ -136,7 +133,7 @@
 {
     HTTPAuthentication *auth = [[HTTPAuthentication alloc] init:[self checkCredentialURL] withDelegate:self withUser:[personNumberTextEdit text] withPassword:[pinCodeTextEdit text]];
   
-    [auth execute];
+    [auth get];
 }
 
 - (void)authReady:(NSInteger)code
@@ -191,11 +188,9 @@
     {
         NSString* token = [prefs stringForKey:@"deviceToken"];
         // Start registration
-        NSURL *url = [self pushRegistrationURL:token];
-        //NSURL *url = [self checkCredentialURL];
-        
-        HTTPConnection *handler = [[HTTPConnection alloc] init:url withDelegate:self];
-        [handler execute];
+        NSURL *url = [self pushRegistrationURL];
+        HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:self];
+        [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
     }
 }
 

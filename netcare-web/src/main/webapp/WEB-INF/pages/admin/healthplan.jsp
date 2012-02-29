@@ -127,10 +127,7 @@
 					formData.durationUnit.code = $('#createHealthPlanForm select option:selected').attr('value');
 					formData.durationUnit.value = $('#createHealthPlanForm select option:selected').val();
 					
-					var jsonObj = JSON.stringify(formData);
-					NC.log("JSON: " + jsonObj.toString());
-					
-					healthPlans.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
+					healthPlans.create(formData, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
 						$('#createHealthPlanForm :reset').click();
 						healthPlans.view(data.data.id);
 					});

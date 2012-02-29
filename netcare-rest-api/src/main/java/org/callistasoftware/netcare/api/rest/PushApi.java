@@ -31,14 +31,14 @@ public class PushApi extends ApiSupport {
 	@Autowired
 	private UserDetailsService service;
 	
-	@RequestMapping(value="/register/c2dm", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/register/c2dm", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public void c2dmRegistration(@RequestParam(value="c2dmRegistrationId") final String c2dmRegistrationId) {
 		this.logAccess("register", "c2dm");
 		service.registerForC2dmPush(c2dmRegistrationId);
 	}
 
-	@RequestMapping(value="/register/apns", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/register/apns", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public void apnsRegistration(@RequestParam(value="apnsRegistrationId") final String apnsRegistrationId) {
 		this.logAccess("register", "apns");

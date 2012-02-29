@@ -30,6 +30,17 @@ public class Value implements Serializable {
 	
 	public Value() {}
 	
+	//
+	public void setSeqno(int seqno) {
+		this.seqno = seqno;
+	}
+
+	//
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+
 	/**
 	 * Returns the sequence number. {@link MeasurementEntity}
 	 */

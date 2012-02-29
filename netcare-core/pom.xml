@@ -90,6 +90,16 @@
   			org.apache.servicemix.bundles.java-apns
   		</artifactId>
   		<version>0.1.6_3</version>
+  		<exclusions>
+  			<exclusion>
+  				<groupId>org.codehaus.jackson</groupId>
+  				<artifactId>jackson-mapper-asl</artifactId>
+  			</exclusion>
+  			<exclusion>
+  				<groupId>org.codehaus.jackson</groupId>
+  				<artifactId>jackson-core-asl</artifactId>
+  			</exclusion>
+  		</exclusions>
   	</dependency>
   </dependencies>
   

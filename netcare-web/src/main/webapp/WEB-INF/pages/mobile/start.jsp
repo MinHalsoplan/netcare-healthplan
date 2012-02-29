@@ -90,7 +90,7 @@
 					formData.rejected = false;
 					formData.note = $('#note').val();
 					
-					new NC.Patient().reportActivity(activityId, JSON.stringify(formData), function(data) {
+					new NC.Patient().reportActivity(activityId, formData, function(data) {
 						if (data.success) {
 							
 							loadFromServer(function() {

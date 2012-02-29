@@ -40,7 +40,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	private String password;
 	private String civicRegistrationNumber;
 
-	PatientBaseViewImpl() {
+	public PatientBaseViewImpl() {
 		super(null, null);
 	}
 	
@@ -69,14 +69,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return dtos;
 	}
 	
-	void setId(final Long id) {
-		this.id = id;
-	}
-	
-	void setName(final String name) {
-		this.name = name;
-	}
-
 	@Override
 	public boolean isCareGiver() {
 		return false;
@@ -87,7 +79,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return this.civicRegistrationNumber;
 	}
 	
-	void setCivicRegistrationNumber(final String civicRegistrationNumber) {
+	public void setCivicRegistrationNumber(final String civicRegistrationNumber) {
 		this.civicRegistrationNumber = civicRegistrationNumber;
 	}
 
@@ -106,7 +98,11 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return this.password;
 	}
 	
-	void setPassword(final String password) {
+	public void setPassword(final String password) {
 		this.password = password;
+	}
+
+	public void setMobile(boolean mobile) {
+		this.mobile = mobile;
 	}
 }

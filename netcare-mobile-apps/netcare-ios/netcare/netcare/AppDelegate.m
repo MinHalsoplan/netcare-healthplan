@@ -18,21 +18,25 @@
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
     NSString *token = [Util toHexString:deviceToken]; 
-	NSLog(@"My token is: %@", token);
+	NSLog(@"APNS Device token: %@", token);
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *oldToken = [prefs valueForKey:@"deviceToken"];
     if (![token isEqualToString:oldToken])
     {
-        NSLog(@"Token is updated");
+        NSLog(@"APNS Device token is updated");
         [prefs setValue:token forKey:@"deviceToken"];
         [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
         [prefs synchronize];
     }
+// sandbox dev. token each time for iphone device test
+    [prefs setValue:token forKey:@"deviceToken"];
+    [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
+    [prefs synchronize];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
-	NSLog(@"Failed to get token, error: %@", error);
+	NSLog(@"Failed to get APNS Device token, error: %@", error);
 }
 
 // 
@@ -41,7 +45,13 @@
     // register for push.
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-    
+
+// dummy token for simulator test    
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    [prefs setValue:@"dummy-token" forKey:@"deviceToken"];
+//    [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
+//    [prefs synchronize];
+   
     return YES;
 }
 							

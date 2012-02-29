@@ -23,11 +23,12 @@
     return self;
 }
 
-- (void)execute
+- (void)get
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    [urlRequest setTimeoutInterval:15];
     // Start registration
     conn = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
 }
@@ -35,11 +36,42 @@
 //
 - (void)ready:(NSInteger)code connection:(NSURLConnection*)connection
 {
-    [connection cancel];
+    if (connection)
+    {
+        [connection cancel];
+    }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [connDelegate connReady:code];
     conn = nil;
 }
+
+- (void)synchronizedPost:(NSString*)data
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    [urlRequest setTimeoutInterval:15];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    [urlRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField: @"Content-Type"];
+    NSLog(@"synchronizedPost: %@\n", data);
+ 
+    NSError* error;
+    NSData *resp = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:&error];
+    
+    if (error)
+    {
+        NSLog(@"Error synchronizedPost: %@\n", error);
+        [self ready:[error code] connection:nil];
+    }
+    else
+    {
+        [self ready:200 connection:nil];        
+    }
+    resp = nil;
+    error = nil;
+}
+
 
 #pragma mark -
 #pragma mark NSURLConnectionDataDelegate

@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+
 /**
  * Defines message keys to get localized messages (captions) from server.
  * 
@@ -28,12 +29,21 @@ public class MessageFields implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String record;
 	private String[] fields;
+	
+	//
+	public MessageFields() {}
+	
 	/**
 	 * Returns the message record, i.e. prefix to key as in [record].[field].
 	 * @return the message record name or null if none.
 	 */
 	public String getRecord() {
 		return record;
+	}
+	
+	//
+	public void setRecord(String record) {
+		this.record = record;
 	}
 	
 	/**
@@ -43,5 +53,10 @@ public class MessageFields implements Serializable {
 	 */
 	public String[] getFields() {
 		return fields;
+	}
+	
+	//
+	public void setFields(String[] fields) {
+		this.fields = fields;
 	}
 }

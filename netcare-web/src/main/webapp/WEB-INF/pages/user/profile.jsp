@@ -88,8 +88,7 @@
 						
 					}
 					
-					var jsonObj = JSON.stringify(formData);
-					serviceClient.update(patientId, jsonObj, function(data) {
+					serviceClient.update(patientId, formData, function(data) {
 						updateForm(data);
 					});
 					
