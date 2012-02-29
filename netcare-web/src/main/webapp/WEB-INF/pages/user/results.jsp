@@ -69,7 +69,7 @@
 									
 									var div2 = $('<div>').css('text-align', 'right');
 									
-									var link = $('<a>').attr('href', '/netcare-web/api/patient/result/' + v.definitionId + '/resultat.csv');
+									var link = $('<a>').attr('href', NC.getContextPath() + '/api/patient/result/' + v.definitionId + '/resultat.csv');
 									link.html(captions.resultLink);
 									div2.append(link);
 									NC.log('added div2 ' + div2);

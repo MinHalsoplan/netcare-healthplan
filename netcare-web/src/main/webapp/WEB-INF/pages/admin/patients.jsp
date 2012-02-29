@@ -48,7 +48,7 @@
 							 */
 							patients.selectPatient(data.data.id, function(data) {
 								NC.log("Created patient selected. Go to home...");
-								window.location = '/netcare-web/netcare/home';
+								window.location = NC.getContextPath() + '/netcare/home';
 							});
 						}
 					}
@@ -75,7 +75,7 @@
 									new NC.Patient().selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
 										
-										window.location = '/netcare-web/netcare/home';
+										window.location = NC.getContextPath() + '/netcare/home';
 									});
 								});
 								
@@ -91,7 +91,7 @@
 												NC.log("Comparing " + value.id + " " + currentPatientId);
 												if (value.id == currentPatientId) {
 													patients.unselect(function(data) {
-														window.location = '/netcare-web/netcare/home';
+														window.location = NC.getContextPath() + '/netcare/home';
 													});
 												}
 												

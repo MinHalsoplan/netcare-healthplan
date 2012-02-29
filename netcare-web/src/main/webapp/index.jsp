@@ -1,4 +1,4 @@
-<!--
+<%--
 
     Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
 
@@ -15,14 +15,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
--->
+--%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Planerade hälsoaktiviteter</title>
+<title>Planerade Hälsoaktiviteter</title>
 
-<meta http-equiv="refresh" content="0;url=/netcare-web/netcare/home">
+<meta http-equiv="refresh" content="0;url=<c:out value="${pageContext.request.contextPath}" />/netcare/home">
 
 </head>
 <body>

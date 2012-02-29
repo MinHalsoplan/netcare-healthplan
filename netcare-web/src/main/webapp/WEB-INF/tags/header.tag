@@ -130,5 +130,11 @@
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
 	
+	<script type="text/javascript">
+		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
+	</script>
+	
+	<c:set var="GLOB_CTX_PATH" value="${pageContext.request.contextPath}" />
+	
 	<jsp:doBody />
 </head>

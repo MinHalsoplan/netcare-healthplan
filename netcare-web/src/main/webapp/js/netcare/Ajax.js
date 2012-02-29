@@ -16,7 +16,7 @@
  */
 NC.Ajax = function() {
 	
-	var _contextPath = '/netcare-web';
+	var _contextPath = NC.getContextPath();
 	var _basePath = '/api';
 	
 	var _dataType = 'json';

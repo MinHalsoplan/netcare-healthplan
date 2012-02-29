@@ -71,7 +71,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 				$.each(data.data, function(index, value) {
 					
 					if (currentHealthPlanId != value.healthPlanId) {
-						var link = $('<a>').attr('href', '/netcare-web/netcare/user/healthplan/' + value.healthPlanId + '/view').html(value.healthPlanName);
+						var link = $('<a>').attr('href', NC.getContextPath() + '/netcare/user/healthplan/' + value.healthPlanId + '/view').html(value.healthPlanName);
 						$('#healthplan-menu').append(
 							$('<li>').append(link)
 						);

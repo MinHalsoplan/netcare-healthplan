@@ -19,6 +19,10 @@ NC = {
 		log : function(msg) {
 			console.log(msg);
 		},
+		
+		getContextPath : function() {
+			return GLOB_CTX_PATH;
+		},
 
 		focusGained : function(inputField) {
 			$(inputField).css('background', '#D9EDF7');
@@ -77,7 +81,7 @@ $(document).ready(function() {
 	NC.log("done.");
 	
 	var handleErrorCode = function(code) {
-		window.location.href = '/netcare-web/netcare/error/' + code;
+		window.location.href = NC.getContextPath() + '/netcare/error/' + code;
 		return false;
 	};
 	

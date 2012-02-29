@@ -74,7 +74,7 @@
 			/* Redirect to home in order to prevent weird stuff
 			 * to happen
 			 */
-			window.location = '/netcare-web/netcare/home';
+			window.location = NC.getContextPath() + '/netcare/home';
 		}
 		
 		/*

@@ -68,7 +68,7 @@ NC.Util = function() {
 		
 		createIcon : function(name, size, onClickFunction) {
 			var icon = $('<img>', {
-				src : '/netcare-web/img/icons/' + size + '/' + name + '.png'
+				src : NC.getContextPath() + '/img/icons/' + size + '/' + name + '.png'
 			}).css('padding-left', '10px');
 			
 			if (onClickFunction != null) {

@@ -268,7 +268,7 @@
 				</table>
 				<br />
 				<div style="text-align: right">
-					<a href="/netcare-web/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
+					<a href="<c:out value="${GLOB_CTX_PATH}" />/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 				</div>
 			</section>
 			

@@ -30,6 +30,9 @@
 	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.min.js" />"></script>
 	
 	<script type="text/javascript">
+	
+		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
+	
 		NC = {
 			log : function(msg) {
 				if (typeof console === "undefined" || typeof console.log === "undefined") {
@@ -38,6 +41,10 @@
 				}
 				
 				console.log(msg);
+			},
+			
+			getContextPath : function() {
+				return GLOB_CTX_PATH;
 			}
 		};
 	</script>

@@ -15,7 +15,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.ActivityCategories = function() {
-	var _baseUrl = '/netcare-web/api/activityCategory';
 	var _this = this;
 	var _ajax = new NC.Ajax();
 	
@@ -46,8 +45,6 @@ NC.ActivityCategories = function() {
 };
 
 NC.ActivityTypes = function() {
-	
-	var _baseUrl = '/netcare-web/api/activityType';
 	var _ajax = new NC.Ajax();
 	
 	public = {

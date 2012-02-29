@@ -16,7 +16,6 @@
  */
 NC.HealthPlan = function(descriptionId, tableId) {
 	
-	var _baseUrl = "/netcare-web/api/healthplan";
 	var _activityCount = 0;
 	
 	var _ajax = new NC.Ajax();
@@ -97,12 +96,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		view : function(healthPlanId) {
 			NC.log("GET to view ordination with id: " + healthPlanId);
-			window.location = '/netcare-web/netcare/user/healthplan/' + healthPlanId + '/view';
+			window.location = NC.getContextPath() + '/netcare/user/healthplan/' + healthPlanId + '/view';
 		},
 		
 		results : function(healthPlanId) {
 				NC.log("GET to view health plan results. Health plan id: " + healthPlanId);
-				window.location = '/netcare-web/netcare/user/results?healthPlan=' + healthPlanId;
+				window.location = NC.getContextPath() + '/netcare/user/results?healthPlan=' + healthPlanId;
 		},
 		
 		/**

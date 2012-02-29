@@ -100,7 +100,7 @@
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0,
-					buttonImage : '/netcare-web/img/icons/16/date.png',
+					buttonImage : NC.getContextPath() + '/img/icons/16/date.png',
 					buttonImageOnly : true
 				});
 				
