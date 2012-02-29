@@ -174,7 +174,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 					NC.focusLost(input);
 				});
 				if (type.valueType.code == 'INTERVAL') {
-					input.attr('value', act.reported != null ? m.reportedValue : (m.maxTarget + m.minTarget) / 2);
+					input.attr('value', act.reported != null ? m.reportedValue : Math.round((m.maxTarget + m.minTarget) / 2) );
 				} else {
 					input.attr('value', act.reported != null ? m.reportedValue : m.target);
 				}
