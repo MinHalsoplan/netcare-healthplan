@@ -29,18 +29,18 @@
 			file:${user.home}/.netcare-prod/email.properties,
 			file:${user.home}/.netcare-prod/push.properties,
 			file:${user.home}/.netcare-prod/mvk.properties,
-			file:${user.home}/.netcare-prod/application.properties,"/>
+			file:${user.home}/.netcare-prod/application.properties"/>
 		
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
 	</beans>
 
 	<beans profile="qa">
 		<context:property-placeholder location="
- 			file:${user.home}/.netcare-qa/database.properties,
- 			file:${user.home}/.netcare-qa/email.properties,
- 			file:${user.home}/.netcare-qa/push.properties,
- 			file:${user.home}/.netcare-qa/mvk.properties,
- 			file:${user.home}/.netcare-qa/application.properties,"/>
+ 			file://${user.home}/.netcare-qa/database.properties,
+ 			file://${user.home}/.netcare-qa/email.properties,
+ 			file://${user.home}/.netcare-qa/push.properties,
+ 			file://${user.home}/.netcare-qa/mvk.properties,
+ 			file://${user.home}/.netcare-qa/application.properties"/>
 			
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
 	</beans>
