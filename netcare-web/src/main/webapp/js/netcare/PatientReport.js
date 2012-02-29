@@ -174,7 +174,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 					NC.focusLost(input);
 				});
 				if (type.valueType.code == 'INTERVAL') {
-					input.attr('value', act.reported != null ? m.reportedValue : (m.maxTarget + m.minTarget) / 2);
+					input.attr('value', act.reported != null ? m.reportedValue : Math.round((m.maxTarget + m.minTarget) / 2) );
 				} else {
 					input.attr('value', act.reported != null ? m.reportedValue : m.target);
 				}
@@ -202,11 +202,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			rep.rejected = true;
 			rep.values = new Array();
 
-			var jsonObj = JSON.stringify(rep);
-
-			NC.log("JSON: " + jsonObj.toString());
-
-			public.performReport(id, jsonObj, function(data, last) {
+			public.performReport(id, rep, function(data, last) {
 				cbtn.attr('disabled', data.rejected);
 				if (_reportCallback != null) {
 					_reportCallback(data.definition.id, 0, last);
@@ -268,8 +264,8 @@ NC.PatientReport = function(tableId, shortVersion) {
 					value.value = parseInt($('#reportFormDiv input[name="mval-' + value.seqno + '"]').val());
 					rep.values.push(value);
 				}
-				var jsonObj = JSON.stringify(rep);
-				public.performReport(id, jsonObj, function(data, last) {
+
+				public.performReport(id, rep, function(data, last) {
 					$('#reportFormDiv').modal('hide');
 					if (_reportCallback != null) {
 						_reportCallback(data.definition.id, 1, last);

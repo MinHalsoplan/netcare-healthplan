@@ -20,7 +20,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 
 public class CareUnitImpl implements CareUnit {
-
+	private static final long serialVersionUID = 1L;
 	private String hsaId;
 	private String name;
 	

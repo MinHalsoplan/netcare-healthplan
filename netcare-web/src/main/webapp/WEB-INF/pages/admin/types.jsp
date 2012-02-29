@@ -288,10 +288,7 @@
 					
 					formData.measureValues = measureValues;
 					
-					var jsonObj = JSON.stringify(formData);
-					NC.log(jsonObj);
-					
-					new NC.ActivityTypes().create(jsonObj, function(data) {
+					new NC.ActivityTypes().create(formData, function(data) {
 						NC.log("Creation successful!");
 						loadExistingTypes();
 					});

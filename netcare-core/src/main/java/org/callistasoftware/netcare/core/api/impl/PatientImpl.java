@@ -36,7 +36,7 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 	
 	private String email;
 	
-	PatientImpl() {
+	public PatientImpl() {
 		super();
 	}
 	
@@ -66,7 +66,7 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 		return this.phoneNumber;
 	}
 	
-	public void setPhoneNumber(final String phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
@@ -75,7 +75,7 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 		return this.mobile;
 	}
 	
-	public void setMobile(final boolean mobile) {
+	public void setMobile(boolean mobile) {
 		this.mobile = mobile;
 	}
 
@@ -100,7 +100,7 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 		return this.email;
 	}
 	
-	public void setEmail(final String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 }

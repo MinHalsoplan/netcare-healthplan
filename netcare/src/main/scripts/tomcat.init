@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# chkconfig: 2345 50 20
+# description: Starts and stops the tomcat application server
+
+
+# PostgreSQL Service script for Linux
+
+export CATALINA_HOME=/opt/apache-tomcat-7.0.25
+export JAVA_OPTS="-XX:MaxPermSize=128m"
+export JAVA_HOME=/opt/java
+
+start()
+{
+	echo $"Starting Tomcat"
+	${CATALINA_HOME}/bin/daemon.sh --tomcat-user postgres start
+}
+
+stop()
+{
+	echo $"Stopping Tomcat"
+	${CATALINA_HOME}/bin/daemon.sh --tomcat-user postgres stop
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+esac
+

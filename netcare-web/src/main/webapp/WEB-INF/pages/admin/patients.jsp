@@ -130,8 +130,7 @@
 					formData.civicRegistrationNumber = $('input[name="cnr"]').val();
 					formData.phoneNumber = $('input[name="phoneNumber"]').val();
 					
-					var jsonObj = JSON.stringify(formData);
-					patients.create(jsonObj, updatePatientTable);
+					patients.create(formData, updatePatientTable);
 					
 					$('#patientForm :reset').click();
 				});

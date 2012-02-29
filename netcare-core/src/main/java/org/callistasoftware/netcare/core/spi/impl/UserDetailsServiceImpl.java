@@ -89,4 +89,12 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		user.getProperties().put("c2dmRegistrationId", c2dmRegistrationId);
 	}
 
+	@Override
+	public void registerForApnsPush(String apnsRegistrationId) {
+		final UserEntity user = this.getCurrentUser();
+		
+		log.info("User: {} registers for apns push using reg id: {}", user.getName(), apnsRegistrationId);
+		user.getProperties().put("apnsRegistrationId", apnsRegistrationId);
+	}
+
 }

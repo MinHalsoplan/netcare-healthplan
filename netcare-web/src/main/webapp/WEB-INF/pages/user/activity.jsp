@@ -359,11 +359,8 @@
 					
 					NC.log("Public definition: " + activity.publicDefinition);
 					
-					var jsonObj = JSON.stringify(activity);
-					NC.log("JSON: " + jsonObj.toString());
-					
 					var hp = new NC.HealthPlan();
-					hp.addActivity(healthPlan, jsonObj, function(data) {
+					hp.addActivity(healthPlan, activity, function(data) {
 						NC.log("Success callback is executing...");
 						NC.log("Resetting form");
 						

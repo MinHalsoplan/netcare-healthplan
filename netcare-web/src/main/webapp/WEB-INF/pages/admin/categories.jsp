@@ -54,8 +54,7 @@
 					var formData = new Object();
 					formData.name = $('input[name="name"]').val();
 					
-					var jsonObj = JSON.stringify(formData);
-					categories.create(jsonObj, function(data) {
+					categories.create(formData, function(data) {
 						categories.load(loadCallback);
 					});
 					
