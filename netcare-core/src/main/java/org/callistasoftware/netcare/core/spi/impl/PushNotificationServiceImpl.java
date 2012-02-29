@@ -91,7 +91,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 			return;
 		}
 		
-		throw new UnsupportedOperationException("Only implemented for c2dm and apns so far...");
+		log.error("Unable to find mobile push registration id för user {}", user.getId());
 	}
 
 	String fetchGoogleAuthToken() {
