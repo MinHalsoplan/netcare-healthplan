@@ -30,8 +30,8 @@
 	http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
 	http://cxf.apache.org/configuration/security http://cxf.apache.org/schemas/configuration/security.xsd">
 	
-	<http-conf:conduit name="{urn:mvk:asb:sso:v100:pushid}.exports_PushId_Cert_Facade_PushIdInterfaceHttpPort.http-conduit">
-		<http-conf:tlsClientParameters>
+	<http-conf:conduit name="{urn:mvk:asb:sso:v100:pushid}exports_PushId_Cert_Facade_PushIdInterfaceHttpPort.http-conduit">
+		<http-conf:tlsClientParameters disableCNCheck="true">
 			<sec:trustManagers>
 				<sec:keyStore file="${mvk.truststore.file}" type="${mvk.truststore.type}" password="${mvk.truststore.password}"/>
 			</sec:trustManagers>
@@ -39,10 +39,6 @@
 				<sec:keyStore file="${mvk.keystore.file}" type="${mvk.keystore.type}" password="${mvk.keystore.password}"/>
 			</sec:keyManagers>
 			<sec:cipherSuitesFilter>
-		        <!-- these filters ensure that a ciphersuite with
-		          export-suitable or null encryption is used,
-		          but exclude anonymous Diffie-Hellman key change as
-		          this is vulnerable to man-in-the-middle attacks -->
 		        <sec:include>.*_EXPORT_.*</sec:include>
 		        <sec:include>.*_EXPORT1024_.*</sec:include>
 		        <sec:include>.*_WITH_DES_.*</sec:include>
@@ -51,4 +47,5 @@
 		    </sec:cipherSuitesFilter>
 		</http-conf:tlsClientParameters>
 	</http-conf:conduit>
+
 </beans>

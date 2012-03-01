@@ -33,11 +33,7 @@
 		<import resource="netcare-security-test.xml"/>
 	</beans>
 	
-	<beans profile="qa">
-		<import resource="netcare-security-prod.xml" />
-	</beans>
-	
-	<beans profile="prod">
+	<beans profile="prod,qa">
 		<import resource="netcare-security-prod.xml" />
 	</beans>
 </beans>

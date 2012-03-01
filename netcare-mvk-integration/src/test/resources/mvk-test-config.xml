@@ -33,9 +33,6 @@
 	http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
 	
 	<context:property-placeholder location="classpath:/mvk-test.properties"/>
-	
-	<import resource="mvk-createtoken-cxf-config.xml"/>
-	<import resource="mvk-validatetoken-cxf-config.xml"/>
 
 	<context:annotation-config />
 	<context:component-scan base-package="org.callistasoftware.spring.mvk.authentication.service.impl" />
