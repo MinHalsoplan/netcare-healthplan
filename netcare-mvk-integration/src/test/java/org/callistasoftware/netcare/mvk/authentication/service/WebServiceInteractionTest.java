@@ -14,26 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service;
+package org.callistasoftware.netcare.mvk.authentication.service;
 
 import junit.framework.TestCase;
 
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationRequest;
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationResult;
-import org.callistasoftware.spring.mvk.authentication.service.api.impl.AuthenticationRequestImpl;
+import org.callistasoftware.netcare.mvk.authentication.service.MvkAuthenticationService;
+import org.callistasoftware.netcare.mvk.authentication.service.MvkTokenService;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationRequest;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
+import org.callistasoftware.netcare.mvk.authentication.service.api.impl.AuthenticationRequestImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/mvk-test-config.xml")
+@ActiveProfiles("qa")
 public class WebServiceInteractionTest extends TestCase {
-
-	static {
-		System.setProperty("spring.profiles.active", "qa");
-	}
 	
 	@Autowired
 	private MvkTokenService service;
@@ -51,6 +51,6 @@ public class WebServiceInteractionTest extends TestCase {
 		final AuthenticationResult result = this.authService.authenticate(req);
 		
 		assertFalse(result.isCareGiver());
-		assertEquals("191212121212", result.getCivicRegistrationNumber());
+		assertEquals("191212121212", result.getUsername());
 	}
 }

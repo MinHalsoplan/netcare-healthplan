@@ -43,7 +43,7 @@ public class ActivityTypeApi extends ApiSupport {
 	@RequestMapping(value="/load", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityType[]> loadActivityTypes() {
-		log.info("User {} (care giver: {}) is loading activity types", getUser().getName(), getUser().isCareGiver());
+		log.info("User {} (care giver: {}) is loading activity types", getUser().getFirstName(), getUser().isCareGiver());
 		return this.service.loadAllActivityTypes();
 	}
 	

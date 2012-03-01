@@ -27,7 +27,7 @@
 	http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 	
 	<context:annotation-config />
-	<context:component-scan base-package="org.callistasoftware.spring.mvk.authentication.service.impl" />
+	<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 	
 	<beans profile="qa">
 		<import resource="mvk-createtoken-cxf-config.xml"/>

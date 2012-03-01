@@ -70,7 +70,7 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		}
 		
 		final StringBuilder search = new StringBuilder().append("%").append(freeTextSearch).append("%"); 
-		final List<PatientEntity> hits = this.patientRepository.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search.toString(), search.toString(), search.toString());
+		final List<PatientEntity> hits = this.patientRepository.findPatients(search.toString());
 		
 		final List<PatientBaseView> dtos = new ArrayList<PatientBaseView>(hits.size());
 		for (final PatientEntity ent : hits) {
@@ -109,7 +109,7 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 			return ServiceResultImpl.createFailedResult(new EntityNotUniqueMessage(PatientEntity.class, "cnr"));
 		}
 		
-		final PatientEntity newPatient = PatientEntity.newEntity(patient.getName(), patient.getCivicRegistrationNumber());
+		final PatientEntity newPatient = PatientEntity.newEntity(patient.getFirstName(), patient.getSurName(), patient.getCivicRegistrationNumber());
 		newPatient.setPhoneNumber(patient.getPhoneNumber());
 		
 		final PatientEntity p = this.patientRepository.save(newPatient);
@@ -141,7 +141,7 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		
 		this.verifyWriteAccess(p);
 		
-		p.setName(patient.getName());
+		p.setFirstName(patient.getFirstName());
 		p.setEmail(patient.getEmail());
 		p.setMobile(patient.isMobile());
 		p.setPhoneNumber(patient.getPhoneNumber());

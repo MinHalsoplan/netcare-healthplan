@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service.api;
+package org.callistasoftware.netcare.mvk.authentication.service.api;
 
 public interface AuthenticationResult {
 
@@ -23,13 +23,7 @@ public interface AuthenticationResult {
 	 * authenticated.
 	 * @return Null if care giver
 	 */
-	String getCivicRegistrationNumber();
-	
-	/**
-	 * The hsa id of the care giver that authenticated
-	 * @return Null if patient
-	 */
-	String getHsaId();
+	String getUsername();
 	
 	/**
 	 * Whether a care giver or a patient initiated the

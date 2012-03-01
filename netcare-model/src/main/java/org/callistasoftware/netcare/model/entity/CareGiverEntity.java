@@ -38,18 +38,18 @@ public class CareGiverEntity extends UserEntity {
 	
 	CareGiverEntity() {}
 	
-	CareGiverEntity(final String name) {
-		super(name);
+	CareGiverEntity(final String firstName, final String surName) {
+		super(firstName, surName);
 	}
 	
-	CareGiverEntity(final String name, final String hsaId, final CareUnitEntity careUnit) {
-		this(name);
+	CareGiverEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
+		this(firstName, surName);
 		this.setHsaId(hsaId);
 		this.setCareUnit(careUnit);
 	}
 
-	public static CareGiverEntity newEntity(final String name, final String hsaId, final CareUnitEntity careUnit) {
-		return new CareGiverEntity(name, hsaId, careUnit);
+	public static CareGiverEntity newEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
+		return new CareGiverEntity(firstName, surName, hsaId, careUnit);
 	}
 
 	public String getHsaId() {
@@ -71,5 +71,10 @@ public class CareGiverEntity extends UserEntity {
 	@Override
 	public boolean isCareGiver() {
 		return true;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.getHsaId();
 	}
 }

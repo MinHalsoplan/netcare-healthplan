@@ -60,7 +60,7 @@ public class HealthPlanImpl implements HealthPlan {
 		dto.setDurationUnit(new Option(entity.getDurationUnit().name(), l));
 		dto.setStartDate(sdf.format(entity.getStartDate()));
 		
-		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getName());
+		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getFirstName(), entity.getIssuedBy().getSurName());
 		cg.setHsaId(entity.getIssuedBy().getHsaId());
 		
 		dto.setIssuedBy(cg);

@@ -14,6 +14,11 @@
   <dependencies>
   	<dependency>
   		<groupId>org.callistasoftware.netcare</groupId>
+  		<artifactId>netcare-mvk-integration</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.callistasoftware.netcare</groupId>
   		<artifactId>netcare-model</artifactId>
   		<version>${project.version}</version>
   	</dependency>
@@ -36,6 +41,11 @@
   	<dependency>
   		<groupId>javax.activation</groupId>
   		<artifactId>activation</artifactId>
+  	</dependency>
+  
+  	<dependency>
+  		<groupId>org.springframework.security</groupId>
+  		<artifactId>spring-security-web</artifactId>
   	</dependency>
   
   	<dependency>

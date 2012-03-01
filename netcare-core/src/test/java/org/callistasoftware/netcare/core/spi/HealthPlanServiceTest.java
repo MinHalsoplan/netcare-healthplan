@@ -109,10 +109,10 @@ public class HealthPlanServiceTest extends TestSupport {
 		cuRepo.save(cu);
 		cuRepo.flush();
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 
-		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212");
+		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "", "191212121212");
 		patientRepo.save(p2);
 
 		Calendar cal = Calendar.getInstance();
@@ -151,13 +151,13 @@ public class HealthPlanServiceTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123-id", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123-id", cu);
 		this.cgRepo.save(cg);
 		
 		final CareGiverBaseViewImpl cgDto = new CareGiverBaseViewImpl();
 		cgDto.setHsaId("hsa-123-id");
 				
-		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "611028");
+		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "", "611028");
 		patientRepo.save(patient);
 		
 		final ServiceResult<HealthPlan> saved = this.service.createNewHealthPlan(o, cgDto, patient.getId());
@@ -194,10 +194,10 @@ public class HealthPlanServiceTest extends TestSupport {
 		me.setAlarmEnabled(true);
 		
 		final ActivityTypeEntity savedType = typeRepo.save(type);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "hsa-123", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		
-		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "123456789004");
+		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "", "123456789004");
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 
 		// the date and duration can't be changed without breaking the test, see further below.
@@ -478,7 +478,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 	
 	private PatientEntity createPatient(final String cnr) {
-		final PatientEntity p = PatientEntity.newEntity("Kalle Anka", cnr == null ? "191212121212" : cnr);
+		final PatientEntity p = PatientEntity.newEntity("Kalle Anka", "", cnr == null ? "191212121212" : cnr);
 		return this.patientRepo.save(p);
 	}
 	
@@ -488,7 +488,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 	
 	private CareGiverEntity createCareGiver(final String hsaId, final CareUnitEntity careUnit) {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", hsaId == null ? "hsa-id-123" : hsaId, careUnit == null ? this.createCareUnit(null) : careUnit);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "", hsaId == null ? "hsa-id-123" : hsaId, careUnit == null ? this.createCareUnit(null) : careUnit);
 		return this.cgRepo.save(cg);
 	}
 }

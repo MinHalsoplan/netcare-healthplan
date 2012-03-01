@@ -14,25 +14,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service.api.impl;
+package org.callistasoftware.netcare.mvk.authentication.service;
 
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationRequest;
+import mvk.asb.common.base._1.MvkRequestHeaderType;
+import mvk.asb.common.base._1.ResultBaseType;
+import mvk.asb.common.base._1.ResultCodeEnum;
+import mvk.asb.sso.v100.pushid.PushIdInterface;
+import mvk.asb.sso.v100.pushidresponder.PushIdResponseType;
+import mvk.asb.sso.v100.pushidresponder.PushIdType;
 
-public class AuthenticationRequestImpl implements AuthenticationRequest {
+public class PushIdServiceImpl implements PushIdInterface {
 
-	private final String authenticationToken;
-	
-	AuthenticationRequestImpl(final String token) {
-		this.authenticationToken = token;
-	}
-	
-	public static AuthenticationRequest newAuthenticationRequest(final String token) {
-		return new AuthenticationRequestImpl(token);
-	}
-	
 	@Override
-	public String getAuthenticationToken() {
-		return this.authenticationToken;
+	public PushIdResponseType pushId(MvkRequestHeaderType mvkHeader,
+			PushIdType parameters) {
+		
+		final ResultBaseType bt = new ResultBaseType();
+		bt.setResultCode(ResultCodeEnum.OK);
+		
+		final PushIdResponseType resp = new PushIdResponseType();
+		resp.setGuid("1234-mvk");
+		resp.setStatus(bt);
+		
+		return resp;
 	}
 
 }

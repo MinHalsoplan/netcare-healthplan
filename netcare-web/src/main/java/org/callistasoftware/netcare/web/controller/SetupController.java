@@ -14,17 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service;
+package org.callistasoftware.netcare.web.controller;
 
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationRequest;
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationResult;
+import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-public interface MvkAuthenticationService {
-
-	/**
-	 * Authenticate the request against MVK's validate token service
-	 * @param request - Contain information about the current request
-	 * @return The result of the authentication
-	 */
-	AuthenticationResult authenticate(final AuthenticationRequest request);
+@Controller
+@RequestMapping(value="/setup")
+public class SetupController extends ControllerSupport {
+	
+	@RequestMapping(value="", method=RequestMethod.GET)
+	public String firstTimeSetup() {
+		
+		final UserBaseView user = this.getLoggedInUser();
+		if (user.getFirstName().equals("system-generated-name")) {
+			return "setup-patient";
+		} else {
+			return "redirect:/netcare/home";
+		}
+	}
 }

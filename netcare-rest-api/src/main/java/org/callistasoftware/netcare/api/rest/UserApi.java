@@ -27,6 +27,7 @@ import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.PatientService;
+import org.callistasoftware.netcare.core.spi.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class UserApi extends ApiSupport {
 	
 	@Autowired
 	private PatientService patientService;
+	
+	@Autowired
+	private UserDetailsService userService;
 	
 	@RequestMapping(value = "/find", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
@@ -95,6 +99,13 @@ public class UserApi extends ApiSupport {
 		}
 	}
 	
+	@RequestMapping(value="/saveUserData", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@ResponseBody
+	public ServiceResult<Boolean> saveUserData(@RequestParam(value="firstName") final String firstName, @RequestParam(value="surName") final String surName) {
+		this.logAccess("save", "user data");
+		return this.userService.saveUserData(firstName, surName);
+	}
+	
     @RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<Patient> deletePatient(@PathVariable(value="patient") final Long patient) {
@@ -113,11 +124,11 @@ public class UserApi extends ApiSupport {
 		if (result.isSuccess()) {
 			if (currentPatient == null) {
 				if (result.isSuccess()) {
-					log.debug("Setting new current patient in session scope. New patient is: {}", result.getData().getName());
+					log.debug("Setting new current patient in session scope. New patient is: {}", result.getData().getFirstName());
 					session.setAttribute("currentPatient", result.getData());
 				}
 			} else {
-				log.debug("Replacing patient {} with {} as current patient in session scope", currentPatient.getName(), result.getData().getName());
+				log.debug("Replacing patient {} with {} as current patient in session scope", currentPatient.getFirstName(), result.getData().getFirstName());
 				session.setAttribute("currentPatient", result.getData());
 			}
 		}

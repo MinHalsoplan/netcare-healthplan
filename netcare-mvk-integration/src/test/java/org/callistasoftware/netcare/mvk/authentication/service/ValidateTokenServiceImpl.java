@@ -14,21 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service;
+package org.callistasoftware.netcare.mvk.authentication.service;
 
-import mvk.asb.common.base._1.MvkRequestHeaderType;
-import mvk.asb.sso.v100.pushid.PushIdInterface;
-import mvk.asb.sso.v100.pushidresponder.PushIdResponseType;
-import mvk.asb.sso.v100.pushidresponder.PushIdType;
+import mvk.asb.interaction.validateidresponder._1._0.ValidateIdResponseType;
+import mvk.asb.mvksso.ssoobjekttype._1._0.SSOObjectType;
+import mvk.asb.mvksso.validateidresponder._1.ValidateIDType;
+import mvk.asb.mvksso.validatetoken._1._0.mvkasb10.ValidateToken;
 
-public class PushIdServiceImpl implements PushIdInterface {
+public class ValidateTokenServiceImpl implements ValidateToken {
 
 	@Override
-	public PushIdResponseType pushId(MvkRequestHeaderType mvkHeader,
-			PushIdType parameters) {
-		final PushIdResponseType resp = new PushIdResponseType();
-		resp.setGuid("1234-mvk");
+	public ValidateIdResponseType validate(ValidateIDType requestpayload) {
+		final String guid = requestpayload.getGuid();
 		
+		final ValidateIdResponseType resp = new ValidateIdResponseType();
+		final SSOObjectType sso = new SSOObjectType();
+		sso.setGuid(guid);
+		sso.setUserType("INV");
+		sso.setUserId("191212121212");
+		
+		resp.setSsoobject(sso);
 		return resp;
 	}
 

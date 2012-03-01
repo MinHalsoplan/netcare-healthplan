@@ -35,15 +35,15 @@
 	<context:property-placeholder location="classpath:/mvk-test.properties"/>
 
 	<context:annotation-config />
-	<context:component-scan base-package="org.callistasoftware.spring.mvk.authentication.service.impl" />
+	<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 
 	<jaxws:endpoint 
 		address="http://localhost:8080/validatetoken" 
-		implementor="org.callistasoftware.spring.mvk.authentication.service.ValidateTokenServiceImpl" />
+		implementor="org.callistasoftware.netcare.mvk.authentication.service.ValidateTokenServiceImpl" />
 		
 	<jaxws:endpoint 
 		address="http://localhost:8080/createtoken" 
-		implementor="org.callistasoftware.spring.mvk.authentication.service.PushIdServiceImpl" />	
+		implementor="org.callistasoftware.netcare.mvk.authentication.service.PushIdServiceImpl" />	
 	
 	<cxf:bus>
 		<cxf:features>

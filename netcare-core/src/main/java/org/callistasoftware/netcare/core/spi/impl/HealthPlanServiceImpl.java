@@ -767,7 +767,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<ActivityComment[]> loadRepliesForCareGiver() {
 		final CareGiverEntity cg = this.getCareGiver();
-		log.info("Loading replies for care giver {}", cg.getName());
+		log.info("Loading replies for care giver {}", cg.getFirstName());
 		
 		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg);
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments), new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));

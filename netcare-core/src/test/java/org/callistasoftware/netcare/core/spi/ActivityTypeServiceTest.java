@@ -67,7 +67,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "hsa-id-cg", cu));
+		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
 		final CareGiverBaseView cgb = CareGiverBaseViewImpl.newFromEntity(cg);
 		
 		this.runAs(cgb);

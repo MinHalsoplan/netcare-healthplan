@@ -115,10 +115,10 @@ public class SystemAlarmJob {
 		log.debug("Reminder: {} candidates found", list.size());
 		for (ScheduledActivityEntity sae : list) {
 			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
-			log.debug("Reminder: for patient {}, activity {}", patient.getName(), sae.getActivityDefinitionEntity().getActivityType().getName());
+			log.debug("Reminder: for patient {}, activity {}", patient.getFirstName(), sae.getActivityDefinitionEntity().getActivityType().getName());
 			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null) {
 				Integer i = patients.get(patient);
-				log.debug("Reminder: for patient {} -- add to send list", patient.getName());
+				log.debug("Reminder: for patient {} -- add to send list", patient.getFirstName());
 				patients.put(patient, (i == null) ? 1 : i.intValue()+1);
 			}
 			sae.setReminderDone(true);
@@ -126,7 +126,7 @@ public class SystemAlarmJob {
 		}
 		log.debug("Reminder: {} to send", patients.size());
 		for (Map.Entry<PatientEntity, Integer> p : patients.entrySet()) {
-			log.debug("Reminder: send {} new events reminder to patient {}", p.getValue(), p.getKey().getName());
+			log.debug("Reminder: send {} new events reminder to patient {}", p.getValue(), p.getKey().getFirstName());
 			sendReminder(p.getKey(), p.getValue());
 		}
 		

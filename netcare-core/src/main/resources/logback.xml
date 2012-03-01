@@ -31,7 +31,7 @@
 	
 	<logger name="org.springframework" level="WARN" />
 	<logger name="org.springframework.security" level="WARN" />
-	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="DEBUG" />
+	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN" />
 	<logger name="org.springframework.web" level="WARN" />
 	<logger name="org.springframework.http" level="WARN" />
 	

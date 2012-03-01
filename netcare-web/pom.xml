@@ -94,12 +94,12 @@
   			<artifactId>jetty-maven-plugin</artifactId>
   			<version>8.1.1.v20120215</version>
   			<configuration>
-  				<systemProperties>
-  					<systemProperty>
-  						<name>javax.net.debug</name>
-  						<value>ssl,handshake</value>
-  					</systemProperty>
-  				</systemProperties>
+<!--   				<systemProperties> -->
+<!--   					<systemProperty> -->
+<!--   						<name>javax.net.debug</name> -->
+<!--   						<value>ssl,handshake</value> -->
+<!--   					</systemProperty> -->
+<!--   				</systemProperties> -->
   			</configuration>
   		</plugin>
   	</plugins>

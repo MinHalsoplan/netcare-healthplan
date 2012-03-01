@@ -14,24 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service.api.impl;
+package org.callistasoftware.netcare.mvk.authentication.service.api.impl;
 
 import mvk.asb.interaction.validateidresponder._1._0.ValidateIdResponseType;
 
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationResult;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
 
 public class AuthenticationResultImpl implements AuthenticationResult {
 
 	private final String username;
 	
-	private final String careUnitHsaId;
-	private final String careUnitName;
+	private String careUnitHsaId;
+	private String careUnitName;
 	
 	private final boolean caregiver;
 	
+	AuthenticationResultImpl(final String username, final boolean careGiver) {
+		this.username = username;
+		this.caregiver = careGiver;
+	}
+	
 	AuthenticationResultImpl(final ValidateIdResponseType response) {
-		this.username = response.getSsoobject().getUserId();
-		this.caregiver = response.getSsoobject().getUserType().equals("VA");
+		this(response.getSsoobject().getUserId(), response.getSsoobject().getUserType().equals("VA"));
 		
 		if (isCareGiver()) {
 			this.careUnitHsaId = response.getSsoobject().getHealthcareFacility().getHealthcareFacilityId();
@@ -46,14 +50,16 @@ public class AuthenticationResultImpl implements AuthenticationResult {
 		return new AuthenticationResultImpl(response);
 	}
 	
-	@Override
-	public String getCivicRegistrationNumber() {
-		return isCareGiver() ? null : this.username;
+	public static AuthenticationResult newPatient(final String civicRegistrationNumber) {
+		return new AuthenticationResultImpl(civicRegistrationNumber, false);
 	}
-
-	@Override
-	public String getHsaId() {
-		return isCareGiver() ? this.username : null;
+	
+	public static AuthenticationResult newCareGiver(final String hsaId, final String careUnitHsaId, final String careUnitName) {
+		final AuthenticationResultImpl dto = new AuthenticationResultImpl(hsaId, true);
+		dto.setCareUnitHsaId(careUnitHsaId);
+		dto.setCareUnitName(careUnitName);
+		
+		return dto;
 	}
 
 	@Override
@@ -65,10 +71,23 @@ public class AuthenticationResultImpl implements AuthenticationResult {
 	public String getCareUnitHsaId() {
 		return this.careUnitHsaId;
 	}
+	
+	void setCareUnitHsaId(final String careUnitHsaId) {
+		this.careUnitHsaId = careUnitHsaId;
+	}
 
 	@Override
 	public String getCareUnitName() {
 		return this.careUnitName;
+	}
+	
+	void setCareUnitName(final String careUnitName) {
+		this.careUnitName = careUnitName;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.username;
 	}
 
 }

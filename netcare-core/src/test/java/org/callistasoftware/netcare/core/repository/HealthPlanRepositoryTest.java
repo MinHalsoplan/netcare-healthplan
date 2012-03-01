@@ -88,11 +88,11 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	public void testInsertFind() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu-123");
 		this.cuRepo.save(cu);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 		cgRepo.flush();
 		
-		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456");
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "", "123456");
 		patientRepo.save(patient);
 		patientRepo.flush();
 		
@@ -128,11 +128,11 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	public void testFindByForPatient() throws Exception {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 		cgRepo.flush();
 		
-		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456");
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "", "123456");
 		patientRepo.save(patient);
 		patientRepo.flush();
 		

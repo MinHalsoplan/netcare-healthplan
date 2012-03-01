@@ -14,27 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service;
+package org.callistasoftware.netcare.mvk.authentication.service.api.impl;
 
-import mvk.asb.interaction.validateidresponder._1._0.ValidateIdResponseType;
-import mvk.asb.mvksso.ssoobjekttype._1._0.SSOObjectType;
-import mvk.asb.mvksso.validateidresponder._1.ValidateIDType;
-import mvk.asb.mvksso.validatetoken._1._0.mvkasb10.ValidateToken;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationRequest;
 
-public class ValidateTokenServiceImpl implements ValidateToken {
+public class AuthenticationRequestImpl implements AuthenticationRequest {
 
+	private final String authenticationToken;
+	
+	AuthenticationRequestImpl(final String token) {
+		this.authenticationToken = token;
+	}
+	
+	public static AuthenticationRequest newAuthenticationRequest(final String token) {
+		return new AuthenticationRequestImpl(token);
+	}
+	
 	@Override
-	public ValidateIdResponseType validate(ValidateIDType requestpayload) {
-		final String guid = requestpayload.getGuid();
-		
-		final ValidateIdResponseType resp = new ValidateIdResponseType();
-		final SSOObjectType sso = new SSOObjectType();
-		sso.setGuid(guid);
-		sso.setUserType("INV");
-		sso.setUserId("191212121212");
-		
-		resp.setSsoobject(sso);
-		return resp;
+	public String getAuthenticationToken() {
+		return this.authenticationToken;
 	}
 
 }

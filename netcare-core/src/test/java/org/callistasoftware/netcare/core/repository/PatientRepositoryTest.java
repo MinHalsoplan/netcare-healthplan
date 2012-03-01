@@ -53,10 +53,10 @@ public class PatientRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus","", "123456789004");
 		
 		this.repo.save(p1);
 		
@@ -73,10 +73,10 @@ public class PatientRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
 		cgRepo.save(cg);
 
-		final PatientEntity p = PatientEntity.newEntity("Arne", "123456789004");
+		final PatientEntity p = PatientEntity.newEntity("Arne","", "123456789004");
 		p.getProperties().put("prop1", "val1");
 		p.getProperties().put("prop2", "val2");
 		repo.save(p);
@@ -102,13 +102,13 @@ public class PatientRepositoryTest extends TestSupport {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
 		cgRepo.save(cg);
 
-		final PatientEntity p1 = PatientEntity.newEntity("Arne", "123456789004");
-		final PatientEntity p2 = PatientEntity.newEntity("Bjarne", "123456789005");
-		final PatientEntity p3 = PatientEntity.newEntity("Peter", "123456789006");
-		final PatientEntity p4 = PatientEntity.newEntity("Marcus", "123456789007");
+		final PatientEntity p1 = PatientEntity.newEntity("Arne","", "123456789004");
+		final PatientEntity p2 = PatientEntity.newEntity("Bjarne","", "123456789005");
+		final PatientEntity p3 = PatientEntity.newEntity("Peter","", "123456789006");
+		final PatientEntity p4 = PatientEntity.newEntity("Marcus","", "123456789007");
 		
 		ents.add(p1);
 		ents.add(p2);
@@ -121,22 +121,22 @@ public class PatientRepositoryTest extends TestSupport {
 		assertEquals(4, count);
 		
 		String search = "%123%";
-		List<PatientEntity> result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		List<PatientEntity> result = this.repo.findPatients(search);
 		assertNotNull(result);
 		assertEquals(4, result.size());
 		
 		search = "%004%";
-		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		result = this.repo.findPatients(search);
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		
 		search = "%rne%";
-		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		result = this.repo.findPatients(search);
 		assertNotNull(result);
 		assertEquals(2, result.size());
 		
 		search = "%Arn%";
-		result = this.repo.findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(search, search, search);
+		result = this.repo.findPatients(search);
 		assertNotNull(result);
 		assertEquals(1, result.size());
 	}
@@ -147,9 +147,9 @@ public class PatientRepositoryTest extends TestSupport {
 	public void findPatientsWithHealthPlansAtCareUnit() throws Exception {
 		
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
-		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Test", "hsa-2", cu));
-		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus", "123456789004"));
-		final PatientEntity patient2 = this.repo.save(PatientEntity.newEntity("Peter", "123456789005"));
+		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Test","", "hsa-2", cu));
+		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus","", "123456789004"));
+		final PatientEntity patient2 = this.repo.save(PatientEntity.newEntity("Peter","", "123456789005"));
 		
 		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient, "Testplan", new Date(), 12, DurationUnit.WEEK));
 		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient2, "Testplan", new Date(), 12, DurationUnit.WEEK));

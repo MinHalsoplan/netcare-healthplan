@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.web.filter;
+package org.callistasoftware.netcare.mvk.authentication.web.filter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.callistasoftware.spring.mvk.authentication.service.MvkAuthenticationService;
-import org.callistasoftware.spring.mvk.authentication.service.api.impl.AuthenticationRequestImpl;
+import org.callistasoftware.netcare.mvk.authentication.service.MvkAuthenticationService;
+import org.callistasoftware.netcare.mvk.authentication.service.api.impl.AuthenticationRequestImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

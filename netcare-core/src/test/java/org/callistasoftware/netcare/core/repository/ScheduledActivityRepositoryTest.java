@@ -74,10 +74,10 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "hsa-id-1234", savedCu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "", "hsa-id-1234", savedCu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
 		
-		final PatientEntity p = PatientEntity.newEntity("Marcus", "123456789002");
+		final PatientEntity p = PatientEntity.newEntity("Marcus", "", "123456789002");
 		final PatientEntity savedPatient = this.pRepo.save(p);
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));

@@ -28,15 +28,17 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected Long id;
-	protected String name;
+	protected String firstName;
+	protected String surName;
 	
 	//
 	public UserBaseViewImpl() {}
 	
 	//
-	public UserBaseViewImpl(final Long id, final String name) {
+	public UserBaseViewImpl(final Long id, final String name, final String surName) {
 		this.id = id;
-		this.name = name;
+		this.firstName = name;
+		this.surName = surName;
 	}
 	
 	@Override
@@ -47,7 +49,7 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 
 	@Override
 	public String getUsername() {
-		return this.getName();
+		return this.getFirstName();
 	}
 
 	@Override
@@ -76,16 +78,30 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	}
 
 	@Override
-	public String getName() {
-		return this.name;
+	public String getFirstName() {
+		return this.firstName;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String name) {
+		this.firstName = name;
+	}
+	
+	@Override
+	public String getSurName() {
+		return this.surName;
+	}
+	
+	public void setSurName(final String surName) {
+		this.surName = surName;
+	}
+	
+	@Override
+	public String getName() {
+		return this.getFirstName() + " " + this.getSurName();
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class ActivityCommentRepositoryTest extends TestSupport {
 		
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-unit"));
 		
-		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Marcus", "hsa", cu));
+		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Marcus", "", "hsa", cu));
 		
 		final ScheduledActivityEntity ent = Mockito.mock(ScheduledActivityEntity.class);
 		Mockito.when(ent.getId()).thenReturn(1L);

@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.core.api.ServiceResult;
+
 
 /**
  * Defines the user details service
@@ -25,6 +27,13 @@ package org.callistasoftware.netcare.core.spi;
  */
 public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {
 
+	/**
+	 * Save user data for the current logged in user
+	 * @param firstName
+	 * @param surName
+	 */
+	ServiceResult<Boolean> saveUserData(final String firstName, final String surName);
+	
 	/**
 	 * Registers the current logged in user for c2dm push
 	 * notifications

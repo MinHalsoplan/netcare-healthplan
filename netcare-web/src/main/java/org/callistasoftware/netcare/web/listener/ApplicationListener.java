@@ -83,27 +83,27 @@ public class ApplicationListener extends ContextLoaderListener {
 		atRepo.save(ate);
 		atRepo.flush();
 		
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Dr. Test Testgren", "hsa-id-1234", cu);
+		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Testgren", "hsa-id-1234", cu);
 		cgRepo.save(cg1);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Peter", "Hook", "12345-67", cu);
 		cgRepo.save(cg);
 		
 		cgRepo.flush();
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus Krantz", "198212121213");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "Krantz", "198212121213");
 		p1.setPhoneNumber("0733 - 12 08 90");
 		bean.save(p1);
 		
-		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "191212121212");
+		final PatientEntity p2 = PatientEntity.newEntity("Peter", "Larsson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
 		bean.save(p2);
 		
-		final PatientEntity p3 = PatientEntity.newEntity("Arne Andersson", "123456789003");
+		final PatientEntity p3 = PatientEntity.newEntity("Arne", "Andersson", "123456789003");
 		p3.getProperties().put("testKey", "[Test Value]");
 		bean.save(p3);
 		
-		final PatientEntity p4 = PatientEntity.newEntity("Anders Arnesson", "123456789004");
+		final PatientEntity p4 = PatientEntity.newEntity("Anders", "Arnesson", "123456789004");
 		bean.save(p4);
 		
 		Calendar cal = Calendar.getInstance();

@@ -14,46 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.mvk.authentication.service.api;
 
-import java.io.Serializable;
-
-import org.springframework.security.core.userdetails.UserDetails;
-
-/**
- * Defines a base view of a user
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public interface UserBaseView extends UserDetails, Serializable {
+public interface AuthenticationRequest {
 
 	/**
-	 * The id of the user
+	 * The authentication token that was used when the
+	 * user started the application
 	 * @return
 	 */
-	Long getId();
-	
-	/**
-	 * The full name of the patient
-	 * @return
-	 */
-	String getName();
-	
-	/**
-	 * The name of the user
-	 * @return
-	 */
-	String getFirstName();
-	
-	/**
-	 * The surname of the user
-	 * @return
-	 */
-	String getSurName();
-	
-	/**
-	 * Whether the user is a care giver or not
-	 * @return
-	 */
-	boolean isCareGiver();
+	String getAuthenticationToken();
 }

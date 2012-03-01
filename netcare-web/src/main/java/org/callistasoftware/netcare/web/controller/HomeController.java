@@ -75,7 +75,7 @@ public class HomeController extends ControllerSupport {
 		if (pbv == null) {
 			log.debug("No patient in session.");
 		} else {
-			log.debug("Current patient in session is: " + this.getCurrentPatient(session).getName());
+			log.debug("Current patient in session is: " + this.getCurrentPatient(session).getFirstName());
 		}
 		
 		

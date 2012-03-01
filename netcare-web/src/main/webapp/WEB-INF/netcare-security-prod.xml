@@ -25,32 +25,40 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<security:http use-expressions="true" entry-point-ref="entryPoint">
-		<security:custom-filter position="PRE_AUTH_FILTER" ref="mvkPreAuthFilter"/>
+	<beans profile="qa">
+		<security:http security="none" pattern="/netcare/mvk/token/**" />
 		
-		<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
-		<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
-		<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>
-		<security:logout logout-success-url="/netcare/login"/>
-	</security:http>
+		<bean id="mvkPreAuthFilter" class="org.callistasoftware.netcare.mvk.authentication.web.filter.AuthenticationFilterQA">
+			<property name="authenticationManager" ref="mvkAuthenticationManager" />
+		</bean>
+	</beans>
 	
-	<bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 
-		name="http403ForbiddenEntryPoint">
-	</bean>
+	<beans profile="prod">
+		<bean id="mvkPreAuthFilter" class="org.callistasoftware.netcare.mvk.authentication.web.filter.AuthenticationFilter">
+			<property name="authenticationManager" ref="mvkAuthenticationManager" />
+		</bean>
+	</beans>
 	
-	<bean id="mvkPreAuthFilter" class="org.callistasoftware.spring.mvk.authentication.web.filter.AuthenticationFilter">
-		<property name="authenticationManager" ref="mvkAuthenticationManager" />
-	</bean>
+	<beans profile="qa,prod">
+		<security:http use-expressions="true" entry-point-ref="entryPoint">
+			<security:custom-filter position="PRE_AUTH_FILTER" ref="mvkPreAuthFilter"/>
+			
+			<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
+			<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
+			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>
+			<security:logout logout-success-url="/netcare/login"/>
+		</security:http>
 		
-	<bean id="preAuthAuthProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
-		<property name="preAuthenticatedUserDetailsService">
-			<bean id="userDetailsServiceWrapper" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
-				<property name="userDetailsService" ref="userDetailsServiceImpl" />
-			</bean>
-		</property>
-	</bean>
-	
-	<security:authentication-manager alias="mvkAuthenticationManager">
-		<security:authentication-provider ref="preAuthAuthProvider" />
-	</security:authentication-manager>
+		<bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 
+			name="http403ForbiddenEntryPoint">
+		</bean>
+		
+		<bean id="preAuthAuthProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+			<property name="preAuthenticatedUserDetailsService" ref="preAuthUserDetailsServiceImpl" />
+		</bean>
+		
+		<security:authentication-manager alias="mvkAuthenticationManager">
+			<security:authentication-provider ref="preAuthAuthProvider" />
+		</security:authentication-manager>
+	</beans>
 </beans>

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service.impl;
+package org.callistasoftware.netcare.mvk.authentication.service.impl;
 
 import java.net.URL;
 
@@ -25,21 +25,26 @@ import mvk.asb.mvksso.validateidresponder._1.ValidateIDType;
 import mvk.asb.mvksso.validatetoken._1._0.mvkasb10.ValidateToken;
 import mvk.asb.mvksso.validatetoken._1._0.mvkasb10.ValidateTokenValidateTokenHttpService;
 
-import org.callistasoftware.spring.mvk.authentication.service.MvkAuthenticationService;
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationRequest;
-import org.callistasoftware.spring.mvk.authentication.service.api.AuthenticationResult;
-import org.callistasoftware.spring.mvk.authentication.service.api.impl.AuthenticationResultImpl;
+import org.callistasoftware.netcare.mvk.authentication.service.MvkAuthenticationService;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationRequest;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
+import org.callistasoftware.netcare.mvk.authentication.service.api.impl.AuthenticationResultImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MvkAuthenticationServiceImpl implements MvkAuthenticationService {
 	
+	private static final Logger log = LoggerFactory.getLogger(MvkAuthenticationServiceImpl.class);
+	
 	@Value("${mvk.validatetoken.address}")
 	private String endpointAddress;
 	
 	@Override
 	public AuthenticationResult authenticate(AuthenticationRequest request) {
+		log.info("Validating token {} by calling MVK validate token service at: {}", request.getAuthenticationToken(), this.endpointAddress);
 		final ValidateIDType req = new ValidateIDType();
 		req.setGuid(request.getAuthenticationToken());
 		

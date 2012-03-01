@@ -41,16 +41,16 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	private String civicRegistrationNumber;
 
 	public PatientBaseViewImpl() {
-		super(null, null);
+		super(null, null, null);
 	}
 	
-	PatientBaseViewImpl(final Long id, final String name, final String civicRegistrationNumber) {
-		super(id, name);
+	PatientBaseViewImpl(final Long id, final String name, final String surName, final String civicRegistrationNumber) {
+		super(id, name, surName);
 		this.setCivicRegistrationNumber(civicRegistrationNumber);
 	}
 	
 	PatientBaseViewImpl(final PatientEntity entity) {
-		super(entity.getId(), entity.getName());
+		super(entity.getId(), entity.getFirstName(), entity.getSurName());
 		this.mobile = entity.isMobile();
 		this.setCivicRegistrationNumber(entity.getCivicRegistrationNumber());
 		this.setPassword(entity.getPassword());

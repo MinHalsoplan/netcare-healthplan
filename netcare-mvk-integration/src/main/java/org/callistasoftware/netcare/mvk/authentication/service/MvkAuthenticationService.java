@@ -14,14 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.spring.mvk.authentication.service.api;
+package org.callistasoftware.netcare.mvk.authentication.service;
 
-public interface AuthenticationRequest {
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationRequest;
+import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
+
+public interface MvkAuthenticationService {
 
 	/**
-	 * The authentication token that was used when the
-	 * user started the application
-	 * @return
+	 * Authenticate the request against MVK's validate token service
+	 * @param request - Contain information about the current request
+	 * @return The result of the authentication
 	 */
-	String getAuthenticationToken();
+	AuthenticationResult authenticate(final AuthenticationRequest request);
 }
