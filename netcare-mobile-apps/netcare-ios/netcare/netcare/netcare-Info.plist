@@ -8,8 +8,29 @@
 	<string>Mina Hälsoaktiviteter</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFiles</key>
-	<array/>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string></string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+		<key>UINewsstandIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string></string>
+			</array>
+			<key>UINewsstandBindingType</key>
+			<string>UINewsstandBindingTypeMagazine</string>
+			<key>UINewsstandBindingEdge</key>
+			<string>UINewsstandBindingEdgeLeft</string>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>org.callistasoftware.ios.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -39,13 +60,13 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NCStartPage</key>
-	<string>/netcare-web/netcare/mobile/start</string>
+	<string>/netcare/mobile/start</string>
 	<key>NCSecurityRealm</key>
 	<string>Spring Security Application</string>
 	<key>NCCheckCredentialsPage</key>
-	<string>/netcare-web/netcare/mobile/checkcredentials</string>
+	<string>/netcare/mobile/checkcredentials</string>
 	<key>NCPushRegistrationPage</key>
-	<string>/netcare-web/api/push/register/apns</string>
+	<string>/api/push/register/apns</string>
 	<key>NCPort</key>
 	<string>8080</string>
 	<key>NCHost</key>
