@@ -20,6 +20,7 @@ import org.callistasoftware.netcare.core.spi.EmailNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,12 +31,23 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
 
 	private static Logger log = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
 	
+	@Value("${support.email}")
+	private String supportEmail;
+	
 	@Autowired
 	private JavaMailSender mailSender;
 	
 	@Override
 	public void sendEmail(String message, String subject, String toAddress) {
-		
+		this.doSendEmail(message, subject, toAddress);
+	}
+
+	@Override
+	public void sendSupportEmail(String message) {
+		this.doSendEmail(message, "NETCARE ERROR", this.supportEmail);
+	}
+	
+	private void doSendEmail(final String message, final String subject, final String toAddress) {
 		log.info("Delivering email message '{}' to {}", subject, toAddress);
 		
 		final SimpleMailMessage smm = new SimpleMailMessage();
