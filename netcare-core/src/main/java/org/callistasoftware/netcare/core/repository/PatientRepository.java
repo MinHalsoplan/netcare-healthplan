@@ -29,7 +29,9 @@ public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	 * @param search
 	 * @return
 	 */
-	@Query(value="select e from PatientEntity as e where lower(e.firstName) like :search or lower(e.civicRegistrationNumber) like :search or lower(e.surName) like :search or lower(e.email) like :search")
+	@Query(value="select e from PatientEntity as e where lower(e.firstName) like lower(:search) " +
+			"or lower(e.civicRegistrationNumber) like lower(:search) or lower(e.surName) like lower(:search) " +
+			"or lower(e.email) like lower(:search)")
 	List<PatientEntity> findPatients(@Param("search") final String search);
 	
 	/**

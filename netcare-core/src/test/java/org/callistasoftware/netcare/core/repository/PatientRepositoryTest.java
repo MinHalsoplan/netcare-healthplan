@@ -138,7 +138,7 @@ public class PatientRepositoryTest extends TestSupport {
 		search = "%Arn%";
 		result = this.repo.findPatients(search);
 		assertNotNull(result);
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 	}
 	
 	@Test
