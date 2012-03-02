@@ -44,7 +44,7 @@ NC.Support = function() {
 		msg.record = record;
 		msg.fields = fields;
 				
-		_ajax.postSynchronous(url, msg, function(data) { onLoaded(data.data); }, false);
+		_ajax.postSynchronous(url, msg, function(data) { onLoaded(data.data); });
 	};
 	
 	var _createOptions = function(options, selectElem) {

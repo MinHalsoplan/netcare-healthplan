@@ -63,5 +63,5 @@ public interface ActivityTypeService {
 	 * the system
 	 * @return
 	 */
-	ServiceResult<ActivityType[]> loadAllActivityTypes();
+	ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId);
 }

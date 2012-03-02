@@ -42,9 +42,9 @@ public class ActivityTypeApi extends ApiSupport {
 	
 	@RequestMapping(value="/load", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityType[]> loadActivityTypes() {
+	public ServiceResult<ActivityType[]> loadActivityTypes(@RequestParam(value="hsa") final String hsaId) {
 		log.info("User {} (care giver: {}) is loading activity types", getUser().getFirstName(), getUser().isCareGiver());
-		return this.service.loadAllActivityTypes();
+		return this.service.loadAllActivityTypes(hsaId);
 	}
 	
 	@RequestMapping(value="/search", method=RequestMethod.GET, produces="application/json")

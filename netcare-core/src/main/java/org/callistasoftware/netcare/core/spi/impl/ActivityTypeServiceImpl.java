@@ -69,9 +69,13 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	private CareUnitRepository cuRepo;
 	
 	@Override
-	public ServiceResult<ActivityType[]> loadAllActivityTypes() {
+	public ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId) {
 		log.info("Loading all activity types from repository...");
-		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(getCareGiver().getCareUnit().getHsaId());
+		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(hsaId);
+		
+		if (!all.isEmpty()) {
+			this.verifyReadAccess(all.get(0));
+		}
 		
 		log.debug("Found {} activity types in repository. Converting to dtos", all.size());
 		final ActivityType[] types = new ActivityType[all.size()];

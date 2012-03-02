@@ -36,7 +36,8 @@
 				var serviceClient = new NC.Patient();
 				
 				var updateForm = function(data) {
-					$('#userprofile input[name="name"]').val(data.data.name);
+					$('#userprofile input[name="firstName"]').val(data.data.firstName);
+					$('#userprofile input[name="surName"]').val(data.data.surName);
 					$('#userprofile input[name="cnr"]').val(new NC.Util().formatCnr(data.data.civicRegistrationNumber));
 					$('#userprofile input[name="email"]').val(data.data.email);
 					$('#userprofile input[name="phoneNumber"]').val(data.data.phoneNumber);
@@ -73,7 +74,8 @@
 					event.preventDefault();
 					
 					var formData = new Object();
-					formData.name = $('#userprofile input[name="name"]').val();
+					formData.firstName = $('#userprofile input[name="firstName"]').val();
+					formData.surName = $('#userprofile input[name="surName"]').val();
 					formData.email = $('#userprofile input[name="email"]').val();
 					formData.phoneNumber = $('#userprofile input[name="phoneNumber"]').val();
 					formData.mobile = $('#userprofile input[name="mobile"]:checked').val();
@@ -111,14 +113,19 @@
 					<form class="form-stacked">
 					
 						<netcare:row>
-							<netcare:col span="5">
-								<netcare:field name="name" label="Namn">
-									<input type="text" name="name" />
+							<netcare:col span="3">
+								<netcare:field name="firstName" label="Förnamn">
+									<input type="text" name="firstName" class="medium"/>
 								</netcare:field>
 							</netcare:col>
-							<netcare:col span="5">
+							<netcare:col span="3">
+								<netcare:field name="surName" label="Efternamn">
+									<input type="text" name="surName" class="medium"/>
+								</netcare:field>
+							</netcare:col>
+							<netcare:col span="3">
 								<netcare:field name="cnr" label="Cnr">
-									<input type="text" name="cnr" disabled/>
+									<input type="text" name="cnr" disabled class="medium"/>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>

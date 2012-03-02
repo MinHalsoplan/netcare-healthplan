@@ -45,7 +45,7 @@ NC.Ajax = function() {
 	
 	var _showMessages = function(show) {
 		var showMessages;
-		if (show === undefined || show == null) {
+		if (show === undefined || show == null || show == false) {
 			showMessages = false;
 		} else {
 			showMessages = true;

@@ -76,7 +76,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu));
 		}
 		
-		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();
+		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes(savedCu.getHsaId());
 		assertTrue(result.isSuccess());
 		assertEquals(10, result.getData().length);
 	}

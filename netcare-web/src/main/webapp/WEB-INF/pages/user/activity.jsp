@@ -193,6 +193,111 @@
 				};
 				
 				var types = NC.ActivityTypes();
+				var activityTypes = new Array();
+				
+				/*
+				 * Fill activity types in drop down
+				 */ 
+				var cUnit = '<c:out value="${requestScope.result.data.careUnit.hsaId}" />';
+				types.load(cUnit, function(data) {
+					$.each(data.data, function(i, v) {
+						activityTypes.push(v);
+						$('select[name="activityType"]').append(
+							$('<option>').attr('value', v.id).html(v.name)		
+						);	
+					});
+					
+					/* Trigger change when page loads */
+					$('select[name="activityType"]').change();
+				});
+				
+				/*
+				 * When user selects an activity type
+				 */
+				var selectActivityType = function(id, itemData) {
+					$('input[name="activityTypeId"]').attr('value', id);
+					$('#measureValues').remove();
+					
+					var minValue = '';
+					var maxValue = '';
+					var value = '';
+					var title = '';
+					new NC.Support().loadCaptions('result', ['targetMinValue', 'targetMaxValue', 'value', 'title'], function(data) {
+						minValue = data.targetMinValue;
+						maxValue = data.targetMaxValue;
+						value = data.value;
+					});
+					
+					/*
+					 * Loop through all measure values
+					 */
+					var data = itemData;
+					NC.log("Selected data is: " + data);
+					
+					var fieldset = $('<fieldset>').attr('id', 'measureValues');
+					fieldset.append(
+						$('<legend>').html(title)
+					);
+					
+					$.each(data.measureValues, function(i, v) {
+						NC.log("Processing " + v.name);
+						
+						var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
+						var row = $('<div>').addClass('row').append(
+							$('<div>').addClass('span10').append(
+								rowCol
+							)
+						);
+						
+						rowCol.append(
+							$('<div>').addClass('span2').append(
+								$('<div>').addClass('clearfix').append(
+									$('<label>').html('&nbsp')
+								).append(
+									$('<span>').css('vertical-align', 'middle').append($('<strong>').html(v.name)) 
+								)
+							)
+						);
+						
+						if (v.valueType.code == "INTERVAL") {
+							
+							addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
+							addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
+							
+						} else if (v.valueType.code == "SINGLE_VALUE") {
+							
+							addMeasureValueInput(v.id + '-1', rowCol, value, v);
+							
+						} else {
+							throw new Error("Unsupported value type");
+						}
+						
+						fieldset.append(row);
+						
+					});
+					
+					$('#activityFieldset').append(fieldset);
+					
+					/*
+					 * Move focus to the first measure value
+					 */
+					$('#measureValues input').get(0).focus();
+				};
+				
+				/*
+				 * The user selected an activity type. Update to reflect measure values etc
+				 */
+				$('select').change(function(e) {
+					var value = $('select[name="activityType"] option:selected').attr('value');
+					var obj = new Object();
+					$.each(activityTypes, function(i, v) {
+						if (v.id == value) {
+							obj = v;
+						}
+					});
+					
+					selectActivityType(value, obj);
+				});
 				
 				/*
 				 * Auto complete activity type field
@@ -207,74 +312,7 @@
 						});
 					},
 					select : function(event, ui) {
-						
-						$('input[name="activityTypeId"]').attr('value', ui.item.data.id);
-						$('#measureValues').remove();
-						
-						var minValue = '';
-						var maxValue = '';
-						var value = '';
-						var title = '';
-						new NC.Support().loadCaptions('result', ['targetMinValue', 'targetMaxValue', 'value', 'title'], function(data) {
-							minValue = data.targetMinValue;
-							maxValue = data.targetMaxValue;
-							value = data.value;
-						});
-						
-						/*
-						 * Loop through all measure values
-						 */
-						var data = ui.item.data;
-						NC.log("Selected data is: " + data);
-						
-						var fieldset = $('<fieldset>').attr('id', 'measureValues');
-						fieldset.append(
-							$('<legend>').html(title)
-						);
-						
-						$.each(data.measureValues, function(i, v) {
-							NC.log("Processing " + v.name);
-							
-							var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
-							var row = $('<div>').addClass('row').append(
-								$('<div>').addClass('span10').append(
-									rowCol
-								)
-							);
-							
-							rowCol.append(
-								$('<div>').addClass('span2').append(
-									$('<div>').addClass('clearfix').append(
-										$('<label>').html('&nbsp')
-									).append(
-										$('<span>').css('vertical-align', 'middle').append($('<strong>').html(v.name)) 
-									)
-								)
-							);
-							
-							if (v.valueType.code == "INTERVAL") {
-								
-								addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
-								addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
-								
-							} else if (v.valueType.code == "SINGLE_VALUE") {
-								
-								addMeasureValueInput(v.id + '-1', rowCol, value, v);
-								
-							} else {
-								throw new Error("Unsupported value type");
-							}
-							
-							fieldset.append(row);
-							
-						});
-						
-						$('#activityFieldset').append(fieldset);
-						
-						/*
-						 * Move focus to the first measure value
-						 */
-						$('#measureValues input').get(0).focus();
+						selectActivityType(ui.item.data.id, ui.item.data);
 					}
 				});
 				
@@ -412,8 +450,9 @@
 						<netcare:col span="3">
 							<spring:message code="what" var="what" scope="page" />
 							<netcare:field name="activityType" label="${what}">
-								<input type="text" name="activityType" class="medium nc-autocomplete" />
-								<input type="hidden" name="activityTypeId" />	
+								<select name="activityType" class="medium"></select>
+<!-- 								<input type="text" name="activityType" class="medium nc-autocomplete" /> -->
+<!-- 								<input type="hidden" name="activityTypeId" />	 -->
 								<p><a href="<c:url value="/netcare/admin/activitytypes" />">Lägg till ny aktivitetstyp</a></p>
 							</netcare:field>
 						</netcare:col>

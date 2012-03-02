@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -46,6 +47,7 @@ public class HealthPlanImpl implements HealthPlan {
 	private int duration;
 	private Option durationUnit;
 	
+	private CareUnit careUnit;
 	private CareGiverBaseView issuedBy;
 	private PatientBaseView patient;
 	private ActivityDefinition[] activityDefintions;
@@ -59,6 +61,9 @@ public class HealthPlanImpl implements HealthPlan {
 		dto.setDuration(entity.getDuration());
 		dto.setDurationUnit(new Option(entity.getDurationUnit().name(), l));
 		dto.setStartDate(sdf.format(entity.getStartDate()));
+		
+		final CareUnit cu = CareUnitImpl.newFromEntity(entity.getCareUnit());
+		dto.setCareUnit(cu);
 		
 		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getFirstName(), entity.getIssuedBy().getSurName());
 		cg.setHsaId(entity.getIssuedBy().getHsaId());
@@ -145,6 +150,15 @@ public class HealthPlanImpl implements HealthPlan {
 	
 	public void setPatient(final PatientBaseView patient) {
 		this.patient = patient;
+	}
+
+	@Override
+	public CareUnit getCareUnit() {
+		return this.careUnit;
+	}
+	
+	public void setCareUnit(final CareUnit careUnit) {
+		this.careUnit = careUnit;
 	}
 
 }

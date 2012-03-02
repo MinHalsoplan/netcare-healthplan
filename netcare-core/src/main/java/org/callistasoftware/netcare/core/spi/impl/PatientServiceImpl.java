@@ -142,6 +142,7 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		this.verifyWriteAccess(p);
 		
 		p.setFirstName(patient.getFirstName());
+		p.setSurName(patient.getSurName());
 		p.setEmail(patient.getEmail());
 		p.setMobile(patient.isMobile());
 		p.setPhoneNumber(patient.getPhoneNumber());

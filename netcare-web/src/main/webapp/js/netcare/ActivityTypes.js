@@ -48,8 +48,8 @@ NC.ActivityTypes = function() {
 	var _ajax = new NC.Ajax();
 	
 	public = {
-		load : function(callback) {
-			_ajax.get('/activityType/load', callback, true);
+		load : function(hsaId, callback, showPageMessages) {
+			_ajax.getWithParams('/activityType/load', {hsa : hsaId}, callback);
 		},
 		
 		search : function(searchString, callback) {
