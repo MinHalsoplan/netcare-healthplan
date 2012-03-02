@@ -33,7 +33,8 @@
 				var util = new NC.Util();
 				var support = new NC.Support();
 				
-				util.bindNotEmptyField($('#nameContainer'), $('input[name="name"]'));
+				util.bindNotEmptyField($('#nameContainer'), $('input[name="firstName"]'));
+				util.bindNotEmptyField($('#nameContainer'), $('input[name="surName"]'));
 				util.bindNotEmptyField($('#cnrContainer'), $('input[name="cnr"]'));
 				util.bindLengthField($('#cnrContainer'), $('input[name="cnr"]'), 12);
 				
@@ -67,7 +68,8 @@
 								
 								var tr = $('<tr>');
 								
-								var name = $('<td>' + value.name + '</td>');
+								var name = $('<td>' + value.surName + '</td>');
+								var firstName = $('<td>' + value.firstName + '</td>');
 								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 								var phone = $('<td>' + value.phoneNumber + '</td>');
 								
@@ -106,7 +108,7 @@
 								actionCol.append(loginAsIcon);
 								actionCol.append(deleteIcon);
 								
-								tr.append(name).append(cnr).append(phone).append(actionCol);
+								tr.append(name).append(firstName).append(cnr).append(phone).append(actionCol);
 								
 								$('#patientsTable tbody').append(tr);
 							});
@@ -126,7 +128,8 @@
 					event.preventDefault();
 					
 					var formData = new Object();
-					formData.name = $('input[name="name"]').val();
+					formData.firstName = $('input[name="firstName"]').val();
+					formData.surName = $('input[name="surName"]').val();
 					formData.civicRegistrationNumber = $('input[name="cnr"]').val();
 					formData.phoneNumber = $('input[name="phoneNumber"]').val();
 					
@@ -160,20 +163,35 @@
 					<legend><spring:message code="newPatient" /></legend>
 				</fieldset>
 				
-				<spring:message code="patient.name" var="name" scope="page"/>
-				<netcare:field containerId="nameContainer" name="name" label="${name}">
-					<input type="text" name="name" />
-				</netcare:field>
+				<netcare:row>
+					<netcare:col span="5">
+						<spring:message code="patient.firstName" var="name" scope="page"/>
+						<netcare:field containerId="nameContainer" name="firstName" label="${name}">
+							<input type="text" name="firstName" />
+						</netcare:field>
+					</netcare:col>
+					<netcare:col span="5">
+						<spring:message code="patient.surName" var="surName" scope="page"/>
+						<netcare:field containerId="nameContainer" name="surName" label="${surName}">
+							<input type="text" name="surName" />
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
 				
-				<spring:message code="patient.cnr" var="cnr" scope="page" />
-				<netcare:field containerId="cnrContainer" name="cnr" label="${cnr}">
-					<input type="text" name="cnr" />
-				</netcare:field>
-				
-				<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
-				<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
-					<input type="tel" name="phoneNumber" />
-				</netcare:field>
+				<netcare:row>
+					<netcare:col span="5">
+						<spring:message code="patient.cnr" var="cnr" scope="page" />
+						<netcare:field containerId="cnrContainer" name="cnr" label="${cnr}">
+							<input type="text" name="cnr" />
+						</netcare:field>
+					</netcare:col>
+					<netcare:col span="5">
+						<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
+						<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
+							<input type="tel" name="phoneNumber" />
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
 				
 				<div class="actions">
 					<input type="submit" class="btn primary" value="<spring:message code="create" />" />
@@ -189,7 +207,8 @@
 				</div>
 				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
-						<th><spring:message code="patient.name" /></th>
+						<th><spring:message code="patient.surName" /></th>
+						<th><spring:message code="patient.firstName" /></th>
 						<th><spring:message code="patient.cnr" /></th>
 						<th><spring:message code="patient.phoneNumber" />
 						<th>&nbsp;</th>
