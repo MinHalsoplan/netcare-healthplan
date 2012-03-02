@@ -27,16 +27,6 @@
 
 	<beans profile="qa">
 		<security:http security="none" pattern="/netcare/mvk/token/**" />
-		
-		<bean id="mvkPreAuthFilter" class="org.callistasoftware.netcare.mvk.authentication.web.filter.AuthenticationFilterQA">
-			<property name="authenticationManager" ref="mvkAuthenticationManager" />
-		</bean>
-	</beans>
-	
-	<beans profile="prod">
-		<bean id="mvkPreAuthFilter" class="org.callistasoftware.netcare.mvk.authentication.web.filter.AuthenticationFilter">
-			<property name="authenticationManager" ref="mvkAuthenticationManager" />
-		</bean>
 	</beans>
 	
 	<beans profile="qa,prod">
@@ -51,6 +41,10 @@
 		
 		<bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 
 			name="http403ForbiddenEntryPoint">
+		</bean>
+		
+		<bean id="mvkPreAuthFilter" class="org.callistasoftware.netcare.mvk.authentication.web.filter.AuthenticationFilter">
+			<property name="authenticationManager" ref="mvkAuthenticationManager" />
 		</bean>
 		
 		<bean id="preAuthAuthProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">

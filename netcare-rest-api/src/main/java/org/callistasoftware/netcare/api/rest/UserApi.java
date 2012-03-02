@@ -99,7 +99,7 @@ public class UserApi extends ApiSupport {
 		}
 	}
 	
-	@RequestMapping(value="/saveUserData", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@RequestMapping(value="/saveUserData", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<Boolean> saveUserData(@RequestParam(value="firstName") final String firstName, @RequestParam(value="surName") final String surName) {
 		this.logAccess("save", "user data");

@@ -32,10 +32,10 @@
 					e.preventDefault();
 					
 					var firstName = $('input[name="firstName"]').val();
-					var surName = $('input[name="lastName"]').val();
+					var surName = $('input[name="surName"]').val();
 					
 					var ajax = new NC.Ajax();
-					ajax.postWithParams('/user/saveUserData', { firstName : firstName, lastName : lastName }, function(data) {
+					ajax.postWithParams('/user/saveUserData', { firstName : firstName, surName : surName }, function(data) {
 						window.location = NC.getContextPath() + '/netcare/home';
 					}, false);
 					
@@ -47,7 +47,7 @@
 		<div class="modal-backdrop fade in"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
 				<div class="modal-header">
-					<h3><spring:message code="setup.title" /></h3>
+					<h3><spring:message code="setup.header" /></h3>
 					<p>
 						<span class="label notice"><spring:message code="information" /></span>
 						<spring:message code="setup.description" />
@@ -56,22 +56,24 @@
 				
 				<div class="modal-body">
 					<form id="userForm" method="post" action="#" class="form-stacked">
+					<fieldset>
+						<legend><spring:message code="setup.title" /></legend>
 					
-					<input type="hidden" name="username" value="<sec:authentication property="principal.username" />">
-					
-					<div class="clearfix">
-						<label for="firstName"><spring:message code="setup.firstName" /></label>
-						<div class="input">
-							<input name="firstName" type="text" class="xlarge" />
+						<div class="clearfix">
+							<label for="firstName"><spring:message code="setup.firstName" /></label>
+							<div class="input">
+								<input name="firstName" type="text" class="xlarge" />
+							</div>
 						</div>
-					</div>
 					
-					<div class="clearfix">
-						<label for="surName"><spring:message code="setup.surName" /></label>
-						<div class="input">
-							<input name="surName" type="text" class="xlarge" />
+						<div class="clearfix">
+							<label for="surName"><spring:message code="setup.surName" /></label>
+							<div class="input">
+								<input name="surName" type="text" class="xlarge" />
+							</div>
 						</div>
-					</div>
+						
+					</fieldset>
 				</div>
 				<div class="modal-footer">
 					<input class="btn primary" type="submit" value="<spring:message code="setup.proceed" />" />

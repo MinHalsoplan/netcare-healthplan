@@ -18,11 +18,20 @@ package org.callistasoftware.netcare.mvk.authentication.service;
 
 
 public interface MvkTokenService {
-
+	
 	/**
-	 * Creates an authentication token that is
-	 * used for authenticating users
+	 * Create an auth token for a patient with the given civic registration number
+	 * @param userId
 	 * @return
 	 */
-	String createAuthenticationToken();
+	String createAuthenticationTokenForPatient(final String userId);
+	
+	/**
+	 * Create an auth token for a care giver with the given hsa id
+	 * @param userId
+	 * @param careUnitHsaId
+	 * @param careUnitName
+	 * @return
+	 */
+	String createAuthenticationTokenForCareGiver(final String userId, final String careUnitHsaId, final String careUnitName);
 }

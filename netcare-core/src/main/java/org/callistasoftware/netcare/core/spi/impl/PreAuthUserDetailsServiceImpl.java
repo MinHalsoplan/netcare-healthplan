@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
+import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
@@ -47,10 +49,20 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 	private PatientRepository pRepo;
 	
 	@Override
-	public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken arg0)
+	public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken authToken)
 			throws UsernameNotFoundException {
 		getLog().info("Retrieve information about user. The user is pre-authenticated...");
-		final AuthenticationResult preAuthenticated = (AuthenticationResult) arg0.getPrincipal();
+		
+		final AuthenticationResult preAuthenticated;
+		if (authToken.getPrincipal() instanceof AuthenticationResult) {
+			preAuthenticated = (AuthenticationResult) authToken.getPrincipal();
+		} else if (authToken.getPrincipal() instanceof CareGiverBaseViewImpl) {
+			return (CareGiverBaseView) authToken.getPrincipal();
+		} else if (authToken.getPrincipal() instanceof PatientBaseViewImpl) {
+			return (PatientBaseView) authToken.getPrincipal();
+		} else {
+			throw new RuntimeException("Unknown authentication...");
+		}
 		
 		/*
 		 * Username will be civic registration number

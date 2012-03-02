@@ -20,6 +20,7 @@ import java.net.URL;
 
 import javax.xml.ws.BindingProvider;
 
+import mvk.asb.common.base._1.InitiatorUserInfoType;
 import mvk.asb.common.base._1.MvkRequestHeaderType;
 import mvk.asb.common.base._1.ResultCodeEnum;
 import mvk.asb.sso.v100.core.HealthCareFacilityType;
@@ -44,8 +45,31 @@ public class MvkTokenServiceImpl implements MvkTokenService {
 	private String endpointAddress;
 	
 	@Override
-	public String createAuthenticationToken() {
+	public String createAuthenticationTokenForPatient(String userId) {
+		return this.createAuthenticationToken(userId, "INV", "PNR_RNR", "", "");
+	}
+
+	@Override
+	public String createAuthenticationTokenForCareGiver(String userId,
+			String careUnitHsaId, String careUnitName) {
+		return this.createAuthenticationToken(userId, "VARDAKTOR", "HSAID", careUnitHsaId, careUnitName);
+	}
+	
+	String createAuthenticationToken(final String userId
+			, final String userType
+			, final String userIdType
+			, final String careUniHsaId
+			, final String careUnitName) {
+		
 		log.info("Getting MVK authentication token from url: {}", this.endpointAddress);
+		
+		final InitiatorUserInfoType userInfo = new InitiatorUserInfoType();
+		userInfo.setUserId(userId);
+		userInfo.setUserType(userType);
+		userInfo.setUserIdType(userIdType);
+		
+		final MvkRequestHeaderType reqHeader = new MvkRequestHeaderType();
+		reqHeader.setInitiatorUserInfo(userInfo);
 		
 		final SSOObjectType sso = new SSOObjectType();
 		sso.setSysId("MVK");
@@ -54,8 +78,8 @@ public class MvkTokenServiceImpl implements MvkTokenService {
 		sso.setCert("");
 		
 		final HealthCareFacilityType hcf = new HealthCareFacilityType();
-		hcf.setHealthCareFacilityId("hsa-test");
-		hcf.setHealthCareFacilityName("jkpg");
+		hcf.setHealthCareFacilityId(careUniHsaId);
+		hcf.setHealthCareFacilityName(careUnitName);
 		hcf.setResourceId("");
 		hcf.setResourceName("");
 		
@@ -65,7 +89,7 @@ public class MvkTokenServiceImpl implements MvkTokenService {
 		pushId.setTokenSize("12");
 		pushId.setSsoObject(sso);
 		
-		final PushIdResponseType response = this.getService(endpointAddress).pushId(new MvkRequestHeaderType(), pushId);
+		final PushIdResponseType response = this.getService(endpointAddress).pushId(reqHeader, pushId);
 		
 		if (response.getStatus().getResultCode().equals(ResultCodeEnum.ERROR)) {
 			log.error("The response from MVK indicated errors...");
@@ -95,5 +119,7 @@ public class MvkTokenServiceImpl implements MvkTokenService {
 			throw new RuntimeException(e);
 		}	
 	}
+
+	
 
 }

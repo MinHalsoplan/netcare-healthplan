@@ -109,10 +109,10 @@ NC.Ajax = function() {
 			postWithParams : function(url, data, callback, displayMessage) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessage);
-				opts.contentType = _contentType;
+				//opts.contentType = _contentType;
 				opts.dataType = _dataType;
 				if (data != null) {
-					opts.data = JSON.stringify(data);
+					opts.data = data;
 				}
 				
 				$.ajax(opts);

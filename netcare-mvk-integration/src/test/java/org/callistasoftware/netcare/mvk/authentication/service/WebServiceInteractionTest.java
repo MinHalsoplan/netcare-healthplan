@@ -43,7 +43,7 @@ public class WebServiceInteractionTest extends TestCase {
 	
 	@Test
 	public void testWebServiceInteraction() throws Exception {
-		final String token = this.service.createAuthenticationToken();
+		final String token = this.service.createAuthenticationTokenForPatient("1234-mvk");
 		assertNotNull(token);
 		assertEquals("1234-mvk", token);
 		
