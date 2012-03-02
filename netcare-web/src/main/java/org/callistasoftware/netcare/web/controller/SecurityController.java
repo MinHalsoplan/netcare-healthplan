@@ -33,18 +33,24 @@ public class SecurityController extends ControllerSupport {
 	public String login(@RequestParam(value="guid", required=false) final String guid, final HttpSession sc, final Model m) {
 		getLog().info("Display login page");
 		
-		if (this.isProfileActive(sc.getServletContext(), "prod") || this.isProfileActive(sc.getServletContext(), "qa")) {
-			if (guid == null) {
-				return "redirect:/netcare/security/denied";
-			} else {
-				m.addAttribute("guid", guid);
-				return "redirect:/netcare/setup";
-			}
-		} else if (this.isProfileActive(sc.getServletContext(), "qa")) {
+		if ((this.isProfileActive(sc.getServletContext(), "prod") || this.isProfileActive(sc.getServletContext(), "qa")) && guid != null) {
+			m.addAttribute("guid", guid);
+			return "redirect:/netcare/setup";
+		}
+		
+		if (this.isProfileActive(sc.getServletContext(), "prod") && guid == null) {
+			return "redirect:/netcare/security/denied";
+		}
+		
+		if (this.isProfileActive(sc.getServletContext(), "qa")) {
 			return "redirect:/netcare/mvk/token/forPatient";
-		} else {
+		}
+		
+		if (this.isProfileActive(sc.getServletContext(), "test")) {
 			return "login";
 		}
+		
+		throw new RuntimeException("Could not determine application mode.");
 	}
 	
 	@RequestMapping(value="/logout")

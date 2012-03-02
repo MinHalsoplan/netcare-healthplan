@@ -41,7 +41,6 @@
 			use-expressions="true"
 			create-session="stateless"
 			entry-point-ref="httpBasicAuthEntryPoint">
-			<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
 			<security:custom-filter ref="mobileLoginFilter" position="BASIC_AUTH_FILTER"/>
 		</security:http>
 		

@@ -45,11 +45,6 @@ public class HomeController extends ControllerSupport {
 	@Autowired
 	private HealthPlanService service;
 	
-	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String displayLoginForm() {
-		return "login";
-	}
-	
 	@RequestMapping(value="/home", method=RequestMethod.GET)
 	public String goHome() {
 		

@@ -54,7 +54,7 @@ public class MvkAuthenticationServiceImpl implements MvkAuthenticationService {
 			log.error("The response from MVK indicated errors...");
 			log.error("Error message: {}", response.getStatusText());
 			
-			return null;
+			throw new RuntimeException("Error while exchanging information with MVK. Please see error log.");
 		}
 		
 		return AuthenticationResultImpl.createFromResponse(response);

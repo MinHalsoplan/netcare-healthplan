@@ -41,7 +41,7 @@
 			<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
 			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>
-			
+			<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
 			<security:logout logout-url="/netcare/security/logout"/>
 		</security:http>
 		
