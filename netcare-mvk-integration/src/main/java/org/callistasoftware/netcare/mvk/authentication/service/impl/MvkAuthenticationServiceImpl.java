@@ -49,6 +49,14 @@ public class MvkAuthenticationServiceImpl implements MvkAuthenticationService {
 		req.setGuid(request.getAuthenticationToken());
 		
 		final ValidateIdResponseType response = this.getService(this.endpointAddress).validate(req);
+		
+		if (response.getStatusCode().equals("ERROR")) {
+			log.error("The response from MVK indicated errors...");
+			log.error("Error message: {}", response.getStatusText());
+			
+			return null;
+		}
+		
 		return AuthenticationResultImpl.createFromResponse(response);
 	}
 	

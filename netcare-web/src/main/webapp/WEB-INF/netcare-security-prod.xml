@@ -24,19 +24,25 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-
+	
 	<beans profile="qa">
 		<security:http security="none" pattern="/netcare/mvk/token/**" />
 	</beans>
 	
-	<beans profile="qa,prod">
-		<security:http use-expressions="true" entry-point-ref="entryPoint">
+	<beans profile="qa, prod">
+		<security:http pattern="/netcare/setup*" entry-point-ref="entryPoint" access-denied-page="/netcare/denied">
 			<security:custom-filter position="PRE_AUTH_FILTER" ref="mvkPreAuthFilter"/>
-			
+		</security:http>
+	</beans>
+	
+	<beans profile="qa,prod">
+	
+		<security:http use-expressions="true" entry-point-ref="entryPoint" access-denied-page="/netcare/security/denied">
 			<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
 			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>
-			<security:logout logout-success-url="/netcare/login"/>
+			
+			<security:logout logout-url="/netcare/security/logout"/>
 		</security:http>
 		
 		<bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 

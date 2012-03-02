@@ -28,6 +28,7 @@ public class ValidateTokenServiceImpl implements ValidateToken {
 		final String guid = requestpayload.getGuid();
 		
 		final ValidateIdResponseType resp = new ValidateIdResponseType();
+		resp.setStatusCode("OK");
 		final SSOObjectType sso = new SSOObjectType();
 		sso.setGuid(guid);
 		sso.setUserType("INV");
