@@ -77,7 +77,7 @@
 				var hps = new NC.HealthPlan();
 				
 
-				$('#sendReplyId :submit').click(function(event) {
+				$('#sendComment').click(function(event) {
 					event.preventDefault();
 					
 					NC.log("Submitting reply...");
@@ -210,8 +210,7 @@
 						</netcare:field>
 				</div>
 				<div class="modal-footer">
-					<input type="submit" class="btn primary"
-						value="<spring:message code="comments.reply" />" />
+					<input id="sendComment" type="submit" class="btn primary" value="<spring:message code="comments.reply" />" />
 					</form>
 				</div>
 			</div>

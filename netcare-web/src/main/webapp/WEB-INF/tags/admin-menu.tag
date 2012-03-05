@@ -128,7 +128,7 @@
 				<span id="cnr"></span>
 			</p>
 			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthplan.title" /></a></li>
+				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
 			</ul>
 		</div>
 		</c:when>
@@ -142,14 +142,14 @@
 	</c:choose>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
-		<form id="pickPatientForm" class="form-stacked">
 			<div class="modal-header">
 				<a href="#" class="close">x</a>
-				<h3><spring:message code="pickPatient" /></h3>
+				<h3><spring:message code="admin.menu.patient.search" /></h3>
 			</div>
 			<div class="modal-body">
+				<form id="pickPatientForm" class="form-stacked">
 				<div class="clearfix">
-					<label for="pickPatient"><spring:message code="search" /></label>
+					<label for="pickPatient"><spring:message code="admin.menu.patient.searchValue" /></label>
 					<div class="input">
 						<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
 						<input name="selectedPatient" type="hidden" />
@@ -157,9 +157,9 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn primary"/>
+				<input name="pickSubmit" type="submit" value="<spring:message code="admin.menu.patient.pickFromSearch" />" class="btn primary"/>
+				</form>
 			</div>
-		</form>
 	</div>
 	
 	<div id="system">

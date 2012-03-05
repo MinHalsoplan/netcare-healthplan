@@ -65,7 +65,7 @@
 							var processIcon = util.createIcon('trash', '24', function() {
 								NC.log("Resolving alarm...");
 								alarms.resolve(value.id, loadAlarms);
-							});
+							}, 'alarm.delete');
 							
 							var actionCol = $('<td>').css('text-align', 'right');
 							
@@ -117,9 +117,9 @@
 								hp.deleteComment(value.id, function(data) {
 									loadReplies();
 								});
-							});
+							}, 'comments.delete');
 							
-							var actionCol = $('<td>');
+							var actionCol = $('<td>').css('text-align', 'right');
 							actionCol.append(deleteIcon);
 							
 							tr.append(actionCol);
