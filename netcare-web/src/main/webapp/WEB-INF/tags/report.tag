@@ -25,10 +25,14 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
+<br />
+
 <div id="historyOptions">
 	<input id="historyBoxId" type="checkbox" />
-	<spring:message code="report.showHistory" />
+	<strong><spring:message code="report.showHistory" /></strong>
 </div>
+
+<br />
 
 <div id="reportFormDiv" class="modal hide fade" style="display: none;">
 	<form id="reportFormId" class="form-stacked">
