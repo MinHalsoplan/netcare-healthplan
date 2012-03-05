@@ -58,7 +58,7 @@
 </script>
 
 <div class="span4">
-	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
+	<h3 class="menu"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
 		<a href="#"><sec:authentication property="principal.name" /></a> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	</p>
@@ -70,13 +70,13 @@
 		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
 	</ul>
 	
-	<h3><spring:message code="patient.menu.healthplans" /></h3>
+	<h3 class="menu"><spring:message code="patient.menu.healthplans" /></h3>
 	<ul class="menu">
 		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
 		<li><netcare:image name="results" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
 	</ul>
 	
-	<h3><spring:message code="patient.menu.addActivities" /></h3>
+	<h3 class="menu"><spring:message code="patient.menu.addActivities" /></h3>
 	<ul id="menuHealthplans" class="menu"></ul>
 </div>
 	

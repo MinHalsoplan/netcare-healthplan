@@ -84,7 +84,7 @@ table td {
 	vertical-align: middle;
 }
 
-h3 {
+h3.menu {
 	width: 100%;
 	margin-bottom: 10px;
 	border-bottom: 1px solid #eee;
