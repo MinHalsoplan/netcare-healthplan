@@ -42,10 +42,10 @@ public abstract class UserEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length=64, nullable=false)
+	@Column(name="first_name", length=64, nullable=false)
 	private String firstName;
 	
-	@Column(length=64, nullable=false)
+	@Column(name="sur_name", length=64, nullable=false)
 	private String surName;
 	
 	@Column(length=256, unique=true)
