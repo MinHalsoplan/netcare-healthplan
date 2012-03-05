@@ -102,10 +102,13 @@
 	<netcare:body>
 		<netcare:content>
 			<section id="profile">
-				<h2><sec:authentication property="principal.name" /></h2>
+				<sec:authentication property="principal.name" var="currentPrincipal" scope="page"/>
+				<spring:message code="profile.update" var="update" scope="page" />
+				
+				<h2><spring:message code="profile.title" arguments="${currentPrincipal}"/></h2>
 				<p>
 					<span class="label info"><spring:message code="information" /></span>
-					På den här sidan anger du...
+					<spring:message code="profile.desc" arguments="${update}"/>
 				</p>
 				
 				
@@ -114,17 +117,20 @@
 					
 						<netcare:row>
 							<netcare:col span="3">
-								<netcare:field name="firstName" label="Förnamn">
+								<spring:message code="profile.firstName" var="firstName" scope="page" />
+								<netcare:field name="firstName" label="${firstName}">
 									<input type="text" name="firstName" class="medium"/>
 								</netcare:field>
 							</netcare:col>
 							<netcare:col span="3">
-								<netcare:field name="surName" label="Efternamn">
+								<spring:message code="profile.surName" var="surName" scope="page" />
+								<netcare:field name="surName" label="${surName}">
 									<input type="text" name="surName" class="medium"/>
 								</netcare:field>
 							</netcare:col>
 							<netcare:col span="3">
-								<netcare:field name="cnr" label="Cnr">
+								<spring:message code="profile.crn" var="crn" scope="page" />
+								<netcare:field name="cnr" label="${crn}">
 									<input type="text" name="cnr" disabled class="medium"/>
 								</netcare:field>
 							</netcare:col>
@@ -132,12 +138,14 @@
 						
 						<netcare:row>
 							<netcare:col span="5">
-								<netcare:field name="email" label="E-post">
+								<spring:message code="profile.email" var="email" scope="page" />
+								<netcare:field name="email" label="${email}">
 									<input type="email" name="email" />
 								</netcare:field>
 							</netcare:col>							
 							<netcare:col span="5">
-								<netcare:field name="phoneNumber" label="Telefonnummer">
+								<spring:message code="profile.phone" var="phone" scope="page" />
+								<netcare:field name="phoneNumber" label="${phone}">
 									<input type="tel" name="phoneNumber" />
 								</netcare:field>
 							</netcare:col>
@@ -146,25 +154,27 @@
 						<br />
 						
 						<fieldset>
-							<legend>Mobil konfiguration</legend>
+							<legend><spring:message code="profile.mobile.title" /></legend>
 							
 							<netcare:row>
 								<netcare:col span="12">
 									<p>
-									<input type="checkbox" name="mobile" value="true"> <span>Jag vill använda min mobiltelefon för att rapportera utförda aktiviteter.</span>
+									<input type="checkbox" name="mobile" value="true"> <span><spring:message code="profile.mobile.enable" /></span>
 									</p>
 								</netcare:col>
 							</netcare:row>
 							
 							<netcare:row>
 								<netcare:col span="5">
-									<netcare:field name="password" label="Pin kod">
+									<spring:message code="profile.mobile.pin" var="pin" scope="page" />
+									<netcare:field name="password" label="${pin}">
 										<input type="password" name="password" />
 									</netcare:field>
 								</netcare:col>
 								
 								<netcare:col span="5">
-									<netcare:field name="password2" label="Pin kod (igen)">
+									<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
+									<netcare:field name="password2" label="${pin2}">
 										<input type="password" name="password2" />
 									</netcare:field>
 								</netcare:col>
@@ -172,7 +182,8 @@
 						</fieldset>
 						
 						<div class="actions">
-							<input type="submit" class="btn primary" value="Spara"/>
+							<button type="submit" class="btn primary"><spring:message code="profile.update" /></button>
+							<button type="reset" class="btn"><spring:message code="clear" /></button>
 						</div>
 						
 					</form>

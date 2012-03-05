@@ -224,7 +224,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 						
 						$('#commentActivity').modal('show');
 						$('#commentActivity input[name="comment"]').focus();
-					});
+					}, 'comments.sendComment');
 					
 					var actionCol = $('<td>').css('text-align', 'right');
 					actionCol.append(likeIcon);

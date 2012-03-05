@@ -110,7 +110,7 @@
 </script>
 
 <div class="span4">
-	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
+	<h3 class="menu"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
 		<a href="#"><sec:authentication property="principal.name" /></a> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	</p>
@@ -119,7 +119,7 @@
 		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
 	</p>
 		
-	<h3 id="patientName"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
+	<h3 id="patientName" class="menu"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
 	<c:choose>
 		<c:when test="${not empty sessionScope.currentPatient}">
 			<div id="workWith" class="shadow-box" style="padding-left: 5px;">
@@ -128,28 +128,28 @@
 				<span id="cnr"></span>
 			</p>
 			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthplan.title" /></a></li>
+				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
 			</ul>
 		</div>
 		</c:when>
 		<c:otherwise>
 			<ul class="menu">
-				<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
-				<li><a data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
+				<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
+				<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
 				<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
 			</ul>
 		</c:otherwise>
 	</c:choose>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
-		<form id="pickPatientForm" class="form-stacked">
 			<div class="modal-header">
 				<a href="#" class="close">x</a>
-				<h3><spring:message code="pickPatient" /></h3>
+				<h3><spring:message code="admin.menu.patient.search" /></h3>
 			</div>
 			<div class="modal-body">
+				<form id="pickPatientForm" class="form-stacked">
 				<div class="clearfix">
-					<label for="pickPatient"><spring:message code="search" /></label>
+					<label for="pickPatient"><spring:message code="admin.menu.patient.searchValue" /></label>
 					<div class="input">
 						<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
 						<input name="selectedPatient" type="hidden" />
@@ -157,16 +157,16 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn primary"/>
+				<input name="pickSubmit" type="submit" value="<spring:message code="admin.menu.patient.pickFromSearch" />" class="btn primary"/>
+				</form>
 			</div>
-		</form>
 	</div>
 	
 	<div id="system">
-		<h3><spring:message code="admin.menu.create" /></h3>
+		<h3 class="menu"><spring:message code="admin.menu.create" /></h3>
 		<ul class="menu">
-			<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
-			<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
+			<li><netcare:image name="gtk-add" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
+			<li><netcare:image name="gtk-add" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
 		</ul>
 	</div>
 </div>

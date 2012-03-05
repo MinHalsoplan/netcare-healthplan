@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
@@ -430,17 +431,18 @@
 					<legend><spring:message code="activity.form.nameAndGoal" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
-							<spring:message code="what" var="what" scope="page" />
+							<spring:message code="activity.form.type" var="what" scope="page" />
 							<netcare:field name="activityType" label="${what}">
 								<select name="activityType" class="medium"></select>
-								<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
+								</sec:authorize>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
 				</fieldset>
 				
 				<fieldset id="scheduleFieldset">
-					<legend><spring:message code="schedule" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
 							<spring:message code="startDate" var="start" scope="page" />
@@ -459,15 +461,15 @@
 				</fieldset>
 				
 				
-				<spring:message code="addTime" var="addTime" scope="page" />
+				<spring:message code="activity.form.time" var="addTime" scope="page" />
 				
 				<fieldset>
-					<legend><spring:message code="pickDaysAndTimes" /></legend>
+					<legend><spring:message code="activity.form.specifyTimes" /></legend>
 					<netcare:row id="mondayContainer">
 						<netcare:col span="1">
 							<spring:message code="monday" var="monday" scope="page" />
 							<netcare:field name="day" label="${monday}">
-								<input type="checkbox" name="day" value="monday"/>
+								<input type="checkbox" name="day" value="monday" placeholder="<spring:message code="pattern.time" />"/>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="3">
@@ -477,7 +479,7 @@
 							</netcare:field>
 						</netcare:col>
 						<div id="mondayAddedTimes" class="span6" style="display: none">
-							<p><strong><spring:message code="times" /></strong></p>
+							<p><strong><spring:message code="activity.form.times" /></strong></p>
 						</div>
 					</netcare:row>
 					
@@ -497,7 +499,7 @@
 									</netcare:field>
 								</div>
 								<div id="tuesdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -520,7 +522,7 @@
 									</netcare:field>
 								</div>
 								<div id="wednesdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -543,7 +545,7 @@
 									</netcare:field>
 								</div>
 								<div id="thursdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -566,7 +568,7 @@
 									</netcare:field>
 								</div>
 								<div id="fridayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -589,7 +591,7 @@
 									</netcare:field>
 								</div>
 								<div id="saturdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -612,7 +614,7 @@
 									</netcare:field>
 								</div>
 								<div id="sundayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -621,7 +623,8 @@
 				
 				<netcare:row id="publicDefinitionContainer">
 					<netcare:col span="5">
-						<netcare:field name="publicDefinition" label="Ska vårdgivare få ta del av denna aktiviteten?">
+						<spring:message code="activity.form.permission" var="permission" scope="page" />
+						<netcare:field name="publicDefinition" label="${permission}">
 							<input type="checkbox" name="publicDefinition" value="true" checked="checked"/>
 						</netcare:field>
 					</netcare:col>

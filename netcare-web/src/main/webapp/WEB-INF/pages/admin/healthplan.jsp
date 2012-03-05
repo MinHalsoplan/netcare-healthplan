@@ -149,7 +149,7 @@
 			<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
 			<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
 			
-			<h2><spring:message code="healthplan.title" /> för <c:out value="${curPatient}" /></h2>
+			<h2><spring:message code="healthplan.title" arguments="${curPatient}"/></h2>
 			<p>
 				<span class="label notice"><spring:message code="information" /></span>
 				
@@ -157,10 +157,11 @@
 			</p>
 			
 			<spring:message code="clear" var="clear" scope="page" />
-			<spring:message code="duration" var="duration" scope="page" />
+			<spring:message code="healthplan.duration" var="duration" scope="page" />
 			<spring:message code="healthplan.name" var="name" scope="page" />
-			<spring:message code="type" var="type" scope="page" />
-			<spring:message code="startDate" var="startDate" scope="page" />
+			<spring:message code="healthplan.type" var="type" scope="page" />
+			<spring:message code="healthplan.start" var="startDate" scope="page" />
+			<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
@@ -203,15 +204,15 @@
 			
 			<div id="healthPlanContainer">
 				<div style="display: none;" class="alert-message info">
-					<p><spring:message code="noHealthPlans" /></p>
+					<p><spring:message code="healthplan.none" /></p>
 				</div>
 				<table id="ordinationTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<tr>
-							<th><spring:message code="name" /></th>
-							<th><spring:message code="duration" /></th>
-							<th><spring:message code="startDate" /></th>
-							<th><spring:message code="issuedBy" /></th>
+							<th><c:out value="${name}" /></th>
+							<th><c:out value="${duration}" /></th>
+							<th><c:out value="${startDate}" /></th>
+							<th><c:out value="${issuedBy}" /></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
