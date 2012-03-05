@@ -23,6 +23,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Planerade Hälsoaktiviteter</title>
 	
+	<link rel="icon" href="<c:url value="/favicon.ico" />" type="image/vnd.microsoft.icon"/>
+	
 	<!-- Include Twitter bootstrap -->
 	<c:url value="/css/bootstrap.min.css" var="bootstrapCss" scope="page" />
 	<link rel="stylesheet" href="${bootstrapCss}" />

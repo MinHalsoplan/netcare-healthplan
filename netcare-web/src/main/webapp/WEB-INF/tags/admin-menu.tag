@@ -74,7 +74,7 @@
 			/* Redirect to home in order to prevent weird stuff
 			 * to happen
 			 */
-			window.location = NC.getContextPath() + '/netcare/home';
+			window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
 		}
 		
 		/*
@@ -119,25 +119,27 @@
 		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
 	</p>
 		
-	<h3 id="patientName"><netcare:image name="user" size="16"/><spring:message code="patient" /></h3>
-	<c:if test="${not empty sessionScope.currentPatient}">
-		<div id="workWith" class="shadow-box" style="padding-left: 5px;">
+	<h3 id="patientName"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
+	<c:choose>
+		<c:when test="${not empty sessionScope.currentPatient}">
+			<div id="workWith" class="shadow-box" style="padding-left: 5px;">
 			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
 			<p>
 				<span id="cnr"></span>
 			</p>
 			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a></li>
+				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthplan.title" /></a></li>
 			</ul>
 		</div>
-		<br />
-	</c:if>
-	
-	<p>
-		<a data-backdrop="true" data-controls-modal="modal-from-dom">
-			<spring:message code="clickHere" /></a> <spring:message code="toPickPatient" />
-		</a>
-	</p>
+		</c:when>
+		<c:otherwise>
+			<ul class="menu">
+				<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
+				<li><a data-backdrop="true" data-controls-modal="modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
+				<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
+			</ul>
+		</c:otherwise>
+	</c:choose>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
 		<form id="pickPatientForm" class="form-stacked">
@@ -161,11 +163,11 @@
 	</div>
 	
 	<div id="system">
-		<h3><spring:message code="workWith" /></h3>
-		<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="startPage" /></a></li>
-		<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="patients" /></a></li>
-		<li><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="activityType.title" /></a></li>
-		<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
+		<h3><spring:message code="admin.menu.create" /></h3>
+		<ul class="menu">
+			<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
+			<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
+		</ul>
 	</div>
 </div>
 </body>

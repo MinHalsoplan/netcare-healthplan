@@ -20,7 +20,7 @@ NC.ActivityCategories = function() {
 	
 	var public = {
 		load : function(callback) {
-			_ajax.get('/activityCategory/load', callback, true);
+			_ajax.get('/activityCategory/load', callback);
 		},
 		
 		loadAsOptions : function(selectElem) {

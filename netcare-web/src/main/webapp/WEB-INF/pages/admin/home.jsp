@@ -145,7 +145,7 @@
 					<spring:message code="admin.home.description" />
 				</p>
 				<p>
-					<span class="label important">Viktigt!</span>
+					<span class="label important"><spring:message code="important" /></span>
 					<spring:message code="admin.home.important" />
 				</p>
 				
@@ -176,22 +176,22 @@
 			<br />
 			
 			<section id="aktiviteter">
-				<h2><spring:message code="performedActivities" /></h2>
+				<h2><spring:message code="activity.reported.title" /></h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
-					<spring:message code="performedActivities.description" />
+					<spring:message code="activity.reported.desc" />
 				</p>
 				
 				<div id="reportedActivities">
 					<div id="noReportedActivities" style="display: none;" class="alert-message info">
-						<p><spring:message code="noReportedActivities" /></p>
+						<p><spring:message code="activity.reported.none" /></p>
 					</div>
 					<table class="bordered-table zebra-striped shadow-box" style="display: none">
 						<thead>
-							<th><spring:message code="patient" /></th>
-							<th><spring:message code="performedActivities.type" /></th>
-							<th><spring:message code="reportedValue" /></th>
-							<th><spring:message code="performedActivities.when" /></th>
+							<th><spring:message code="activity.reported.patient" /></th>
+							<th><spring:message code="activity.reported.type" /></th>
+							<th><spring:message code="activity.reported.value" /></th>
+							<th><spring:message code="activity.reported.when" /></th>
 							<th>&nbsp;</th>
 						</thead>
 						<tbody></tbody>
@@ -221,20 +221,20 @@
 			<br />
 			
 			<section id="alarms">
-				<h2><spring:message code="alarm.overview" /></h2>
+				<h2><spring:message code="alarm.title" /></h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
-					<spring:message code="alarm.information" />
+					<spring:message code="alarm.desc" />
 				</p>
 				
 				<div id="alarmContainer">					
 					<div class="alert-message info" style="display:none;">
-						<p><spring:message code="alarm.noAlarms" /></p>
+						<p><spring:message code="alarm.none" /></p>
 					</div>
 					<table class="bordered-table zebra-striped shadow-box" style="display: none;">
 						<thead>
-							<th><spring:message code="patient" /></th>
-							<th><spring:message code="contactInformation" /></th>
+							<th><spring:message code="alarm.patient" /></th>
+							<th><spring:message code="alarm.contact" /></th>
 							<th><spring:message code="alarm.cause" /></th>
 							<th><spring:message code="alarm.created" /></th>
 							<th>&nbsp;</th>

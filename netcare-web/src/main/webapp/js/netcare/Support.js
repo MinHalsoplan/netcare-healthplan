@@ -129,6 +129,10 @@ NC.Support = function() {
 				NC.log("Got result: " + data);
 				callback(data);
 			});
+		},
+		
+		loadMessage : function(code, callback) {
+			_ajax.getWithParams('/support/message', { code : code }, callback, false);
 		}
 	};
 	

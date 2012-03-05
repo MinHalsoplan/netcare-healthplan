@@ -21,8 +21,6 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value="/activityType")
 public class ActivityTypeApi extends ApiSupport {
-
-	private static final Logger log = LoggerFactory.getLogger(ActivityTypeApi.class);
 	
 	@Autowired
 	private ActivityTypeService service;
@@ -43,7 +39,7 @@ public class ActivityTypeApi extends ApiSupport {
 	@RequestMapping(value="/load", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityType[]> loadActivityTypes(@RequestParam(value="hsa") final String hsaId) {
-		log.info("User {} (care giver: {}) is loading activity types", getUser().getFirstName(), getUser().isCareGiver());
+		this.logAccess("load", "activity types");
 		return this.service.loadAllActivityTypes(hsaId);
 	}
 	
@@ -58,6 +54,6 @@ public class ActivityTypeApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityType> createNewActivityType(@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("create", "activity type");
-		return this.service.createActivityType(activityType, (CareGiverBaseView)getUser());
+		return this.service.createActivityType(activityType, (CareGiverBaseView) getUser());
 	}
 }

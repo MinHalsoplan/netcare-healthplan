@@ -36,7 +36,6 @@
 						NC.log("Processing " + value.name + "...");
 						
 						var tr = $('<tr>');
-						//var id = $('<td>' + value.id + '</td>');
 						var name = $('<td>' + value.name + '</td>');
 						
 						tr.append(name);
@@ -66,29 +65,41 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="activityCategories" /></h2>
-			<p>På den här sidan lägger du till nya aktivitetskategorier. Varje aktivitetskategori kan sedan innehålla flera aktivitetstyper. Etc...</p>
+			<h2><spring:message code="category.title" /></h2>
+			<p>
+				<span class="label notice"><spring:message code="information" /></span>
+				<spring:message code="category.desc" />
+			</p>
+			<p>
+				<span class="label important"><spring:message code="important" /></span>
+				<spring:message code="category.important" />
+			</p>
 			
 			<form id="activityCategoryForm" class="form-stacked">
 				<fieldset>
-					<legend><spring:message code="create" /></legend>
+					<legend><spring:message code="category.new" /></legend>
 				</fieldset>
 				
-				<netcare:field name="name">
+				<spring:message code="category.name" var="categoryName" scope="page" />
+				<netcare:field name="name" label="${categoryName}">
 					<input type="text" name="name" />
-					
 					<spring:message code="create" var="create" scope="page" />
 				</netcare:field>
-				<input type="submit" class="btn primary" value="${create}" />
+				
+				<div class="actions">
+					<button type="submit" class="btn primary"><spring:message code="category.new" /></button>
+					<button type="reset" class="btn"><spring:message code="clear" /></button>
+				</div>
 				
 			</form>
 			
 			<table id="categoryTable" class="bordered-table zebra-striped shadow-box">
 				<thead>
-					<th><spring:message code="name" /></th>
+					<tr>
+						<th><spring:message code="name" /></th>
+					</tr>
 				</thead>
-				<tbody>		
-				</tbody>
+				<tbody></tbody>
 			</table>
 		</netcare:content>
 		

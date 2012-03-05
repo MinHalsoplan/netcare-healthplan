@@ -125,19 +125,18 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="myStatistics" /></h2>
+			<h2><spring:message code="result.title" /></h2>
 			<p>
-				<span class="label notice">Information</span>
-				Nedan visas hur din hälsoplan är fördelad. Din hälsoplan innehåller aktiviteter och diagrammet visar hur stor del
-				dessa aktiviteter utgör av hälsoplanen.
+				<span class="label notice"><spring:message code="information" /></span>
+				<spring:message code="result.desc" />
 			</p>
 			<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
 			
 			<section id="filter" style="display:none;">
-				<h2>Filtrera</h2>
+				<h2><spring:message code="result.filter" /></h2>
 				<p>
-					<span class="label notice">Information</span>
-					Markera de diagram som du vill visa genom att klicka på respektive aktivitets kryssruta.
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="result.filter.desc" />
 				</p>
 				<form class="form-stacked">
 					<netcare:row id="filter-row">

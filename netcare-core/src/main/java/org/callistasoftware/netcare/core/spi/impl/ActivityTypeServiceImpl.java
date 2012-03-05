@@ -70,21 +70,14 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	
 	@Override
 	public ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId) {
-		log.info("Loading all activity types from repository...");
+		log.info("Loading all activity types from repository belongin to {}...", hsaId);
 		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(hsaId);
 		
 		if (!all.isEmpty()) {
 			this.verifyReadAccess(all.get(0));
 		}
 		
-		log.debug("Found {} activity types in repository. Converting to dtos", all.size());
-		final ActivityType[] types = new ActivityType[all.size()];
-		for (int i = 0; i < all.size(); i++) {
-			final ActivityTypeEntity ent = all.get(i);
-			types[i] = ActivityTypeImpl.newFromEntity(ent, LocaleContextHolder.getLocale());
-		}
-		
-		return ServiceResultImpl.createSuccessResult(types, new ListEntitiesMessage(ActivityTypeEntity.class, types.length));
+		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
 
 	@Override

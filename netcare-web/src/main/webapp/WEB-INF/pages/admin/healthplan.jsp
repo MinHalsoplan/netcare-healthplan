@@ -55,11 +55,11 @@
 						
 						var resultIcon = util.createIcon('results', 24, function() {
 							healthPlans.results(value.id);
-						});
+						}, 'healthplan.icons.result');
 						
 						var editIcon = util.createIcon('edit', 24, function() {
 							healthPlans.view(value.id);
-						});
+						}, 'healthplan.icons.edit');
 						
 						var deleteIcon = util.createIcon('trash', 24, function() {
 							healthPlans.remove(value.id, function(data) {
@@ -146,26 +146,28 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="healthPlans" /> för <c:out value="${sessionScope.currentPatient.name}" /></h2>
+			<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
+			<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
+			
+			<h2><spring:message code="healthplan.title" /> för <c:out value="${curPatient}" /></h2>
 			<p>
-				<span class="label notice">Information</span>
-				Den här sidan visar hälsoplaner för <c:out value="${sessionScope.currentPatient.name}" />. Du kan även skapa
-				till en ny hälsoplan genom att klicka på "Skapa hälsoplan" länken nedan.
+				<span class="label notice"><spring:message code="information" /></span>
+				
+				<spring:message code="healthplan.desc" arguments="${curPatient},${newHealthPlan}" />
 			</p>
 			
-			<spring:message code="newHealthPlan" var="title" scope="page"/>
 			<spring:message code="clear" var="clear" scope="page" />
 			<spring:message code="duration" var="duration" scope="page" />
-			<spring:message code="name" var="name" scope="page" />
+			<spring:message code="healthplan.name" var="name" scope="page" />
 			<spring:message code="type" var="type" scope="page" />
 			<spring:message code="startDate" var="startDate" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px;">
-				<a id="showCreateForm" class="btn addButton"><c:out value="${title}" /></a>
+				<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
 			</p>
 			<netcare:form id="createHealthPlanForm" classes="form-stacked">
 				<fieldset>
-					<legend>${title}</legend>
+					<legend><spring:message code="healthplan.new" /></legend>
 					<netcare:field name="name" label="${name}">
 						<input type="text" name="name" class="xlarge" />
 					</netcare:field>
@@ -193,7 +195,7 @@
 				</fieldset>
 				
 				<div class="actions">
-					<input type="submit" class="btn primary" value="${title}" />
+					<input type="submit" class="btn primary" value="${newHealthPlan}" />
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				

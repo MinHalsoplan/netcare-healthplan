@@ -300,23 +300,6 @@
 				});
 				
 				/*
-				 * Auto complete activity type field
-				 */
-				$('input[name="activityType"]').autocomplete('option', {
-					source : function(request, response) {
-						types.search(request.term, function(data) {
-							NC.log("Found " + data.data.length + " activity types");
-							response($.map(data.data, function(item) {
-								return { label : item.name + ' (' + item.category.name + ')', value : item.name, data : item}
-							}));
-						});
-					},
-					select : function(event, ui) {
-						selectActivityType(ui.item.data.id, ui.item.data);
-					}
-				});
-				
-				/*
 				 * Bind the form submission and package what is going
 				 * to be sent to the server as a JSON object
 				 */
@@ -429,31 +412,28 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><c:out value="${requestScope.result.data.name}" /> : <spring:message code="activities" /></h2>
+			<c:set var="healthPlanName" value="${requestScope.result.data.name}" scope="page"/>
+			<spring:message code="activity.new" var="title" scope="page" />
+		
+			<h2><c:out value="${healthPlanName}" /> : <spring:message code="activity.title" /></h2>
 			<p>
-				<span class="label notice">Information</span>
-				Den här sidan låter dig schemalägga aktiviteter som ingår i hälsoplanen. Du anger
-				dagar samt tider som aktiviteten skall utföras.
+				<span class="label notice"><spring:message code="information" /></span>
+				<spring:message code="activity.desc" arguments="${healthPlanName},${title}" />
 			</p>
-			
-			<spring:message code="newActivity" var="title" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px">
 				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			
 			<netcare:form id="activityForm" classes="form-stacked">
-			
 				<fieldset id="activityFieldset">
-					<legend><spring:message code="activity" /> <spring:message code="and" /> <spring:message code="goal" /></legend>
+					<legend><spring:message code="activity.form.nameAndGoal" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
 							<spring:message code="what" var="what" scope="page" />
 							<netcare:field name="activityType" label="${what}">
 								<select name="activityType" class="medium"></select>
-<!-- 								<input type="text" name="activityType" class="medium nc-autocomplete" /> -->
-<!-- 								<input type="hidden" name="activityTypeId" />	 -->
-								<p><a href="<c:url value="/netcare/admin/activitytypes" />">Lägg till ny aktivitetstyp</a></p>
+								<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
@@ -648,11 +628,8 @@
 				</netcare:row>
 			
 				<div class="actions">
-					<spring:message code="create" var="create" scope="page" />
-					<spring:message code="clear" var="clear" scope="page" />
-				
-					<input type="submit" class="btn primary" value="${create}"/>
-					<input type="reset" class="btn" value="${clear}"/>
+					<button type="submit" class="btn primary"><spring:message code="activity.form.submit" /></button>
+					<button type="reset" class="btn"><spring:message code="clear" /></button>
 				</div>
 			
 			</netcare:form>

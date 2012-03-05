@@ -73,40 +73,16 @@
 								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 								var phone = $('<td>' + value.phoneNumber + '</td>');
 								
-								var loginAsIcon = util.createIcon('loginAs', 24, function() {
-									new NC.Patient().selectPatient(value.id, function(data) {
+								var loginAsIcon = $('<button>').addClass('btn primary').html('Välj patient').click(function(e) {
+									e.preventDefault();
+									patients.selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
-										
-										window.location = NC.getContextPath() + '/netcare/home';
-									});
-								});
-								
-								var deleteIcon = util.createIcon('trash', 24, function() {
-									NC.log("Delete patient.");
-									
-									support.loadCaptions(null, ['patientDelete'], function(data) {
-										var result = confirm(data.patientDelete);
-										if (result) {
-											NC.log("Deleting patient...");
-											patients.deletePatient(value.id, function(data) {
-												
-												NC.log("Comparing " + value.id + " " + currentPatientId);
-												if (value.id == currentPatientId) {
-													patients.unselect(function(data) {
-														window.location = NC.getContextPath() + '/netcare/home';
-													});
-												}
-												
-												NC.log("Patient deleted. Reload patients...");
-												patients.load(updatePatientTable);
-											});
-										}
+										window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
 									});
 								});
 								
 								var actionCol = $('<td>').css('text-align', 'right');
 								actionCol.append(loginAsIcon);
-								actionCol.append(deleteIcon);
 								
 								tr.append(name).append(firstName).append(cnr).append(phone).append(actionCol);
 								
@@ -130,7 +106,7 @@
 					var formData = new Object();
 					formData.firstName = $('input[name="firstName"]').val();
 					formData.surName = $('input[name="surName"]').val();
-					formData.civicRegistrationNumber = $('input[name="cnr"]').val();
+					formData.civicRegistrationNumber = $('input[name="crn"]').val();
 					formData.phoneNumber = $('input[name="phoneNumber"]').val();
 					
 					patients.create(formData, updatePatientTable);
@@ -149,18 +125,18 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="patients" /></h2>
-			<p>På den här sidan lägger du till nya patienter. Etc...</p>
+			<h2><spring:message code="admin.patients.new" /></h2>
+			<p><spring:message code="admin.patients.desc" /></p>
 			
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton">
-					<spring:message code="newPatient" />
+					<spring:message code="admin.patients.new" />
 				</a>
 			</p>
 			
 			<form id="patientForm" class="form-stacked">
 				<fieldset>
-					<legend><spring:message code="newPatient" /></legend>
+					<legend><spring:message code="admin.patients.new" /></legend>
 				</fieldset>
 				
 				<netcare:row>
@@ -180,9 +156,9 @@
 				
 				<netcare:row>
 					<netcare:col span="5">
-						<spring:message code="patient.cnr" var="cnr" scope="page" />
-						<netcare:field containerId="cnrContainer" name="cnr" label="${cnr}">
-							<input type="text" name="cnr" />
+						<spring:message code="patient.crn" var="cnr" scope="page" />
+						<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
+							<input type="text" name="crn" />
 						</netcare:field>
 					</netcare:col>
 					<netcare:col span="5">
@@ -201,15 +177,15 @@
 			</form>
 			
 			<section id="patients">
-				<h3><spring:message code="patients" /></h3>
+				<h3><spring:message code="admin.patients.list" /></h3>
 				<div class="alert-message info" style="display: none;">
-					<p><spring:message code="noPatients" /></p>
+					<p><spring:message code="admin.patients.noPatients" /></p>
 				</div>
 				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<th><spring:message code="patient.surName" /></th>
 						<th><spring:message code="patient.firstName" /></th>
-						<th><spring:message code="patient.cnr" /></th>
+						<th><spring:message code="patient.crn" /></th>
 						<th><spring:message code="patient.phoneNumber" />
 						<th>&nbsp;</th>
 					</thead>

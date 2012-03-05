@@ -26,6 +26,9 @@
 
 <netcare:page>
 	<netcare:header>
+	
+		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />;
+	
 		<script type="text/javascript">
 			$(function() {
 				var measureValues = new Array();
@@ -289,13 +292,14 @@
 					formData.measureValues = measureValues;
 					
 					new NC.ActivityTypes().create(formData, function(data) {
-						NC.log("Creation successful!");
 						loadExistingTypes();
 					});
 				});
 				
+				
+				var hsaId = '<c:out value="${currentHsaId}" />';
 				var loadExistingTypes = function() {
-					new NC.ActivityTypes().load(function(data) {
+					new NC.ActivityTypes().load(hsaId, function(data) {
 						if (data.data.length > 0) {
 							
 							$('#existingTypesContainer table tbody').empty();
@@ -340,6 +344,17 @@
 						}
 					});
 				};
+				
+				var resetForm = function() {
+					$('#measureValues tbody').empty();
+					$('#measureValues').hide();
+					
+					$('#measureValueForm').hide();
+				}
+				
+				$(':reset').click(function(e) {
+					resetForm();
+				});
 				
 				loadExistingTypes();
 				
@@ -442,8 +457,9 @@
 							<tbody></tbody>
 						</table>
 						<br />
-						<div class="modal-footer">
-							<button id="createActivityType" class="btn primary"><spring:message code="activityType.create" /></button>
+						<div class="actions">
+							<button id="createActivityType" class="btn primary"><spring:message code="activityType.new" /></button>
+							<button type="reset" class="btn"><spring:message code="clear" /></button>
 						</div>
 						
 					</form>					
