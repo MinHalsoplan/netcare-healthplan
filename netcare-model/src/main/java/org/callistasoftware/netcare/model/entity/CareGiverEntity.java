@@ -29,7 +29,7 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name="id")
 public class CareGiverEntity extends UserEntity {
 
-	@Column(length=64, nullable=false, unique=true)
+	@Column(name="hsa_id", length=64, nullable=false, unique=true)
 	private String hsaId;
 		
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)

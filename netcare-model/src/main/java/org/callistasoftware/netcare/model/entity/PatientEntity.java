@@ -41,7 +41,7 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="phoneNumber", unique=true)
+	@Column(name="phone_number", unique=true)
 	private String phoneNumber;
 	
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="forPatient", cascade=CascadeType.REMOVE, orphanRemoval=true)
