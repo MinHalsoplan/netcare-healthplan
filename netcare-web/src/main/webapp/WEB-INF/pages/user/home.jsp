@@ -114,25 +114,24 @@
 						var tr = $('<tr>');
 						
 						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
-						
 
 						var icon = util.createIcon('comment', 24, function() {
 							$('#sendReplyId input[name="commentId"]').attr('value', value.id);
 							$('#sendReply').modal('show');
 							$('#sendReplyId input[name="reply"]').focus();
-						});
+						}, 'comments.sendComment');
 												
 						var deleteIcon = util.createIcon('trash', 24, function() {
 							hps.deleteComment(value.id, function(data) {
 								hps.loadLatestComments(patientId, loadComments);
 							});
-						});
+						}, 'comments.delete');
 						
 						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
 						tr.append($('<td>').html(activity));
 						tr.append($('<td>').html(value.commentedBy));
 						
-						var actionCol = $('<td>');
+						var actionCol = $('<td>').css('text-align', 'right');
 						actionCol.append(icon);
 						actionCol.append(deleteIcon);
 						
@@ -196,25 +195,25 @@
 	<netcare:body>
 		<netcare:content>
 			<div id="sendReply" class="modal hide fade" style="display: none;">
-				<form id="sendReplyId" action="#" method="post">
-					<div class="modal-header">
-						<a href="#" class="close">x</a>
-						<h3>
-							<spring:message code="comments.sendReply" />
-						</h3>
-					</div>
-					<div class="modal-body">
+				<div class="modal-header">
+					<a href="#" class="close">x</a>
+					<h3>
+						<spring:message code="comments.sendReply" />
+					</h3>
+				</div>
+				<div class="modal-body">
+					<form id="sendReplyId" action="#" method="post">
 						<input type="hidden" name="commentId" />
 						<spring:message code="comments.reply" var="reply" scope="page" />
 						<netcare:field name="reply" label="${reply}:">
 							<input type="text" class="xlarge" name="reply" />
 						</netcare:field>
-					</div>
-					<div class="modal-footer">
-						<input type="submit" class="btn primary"
-							value="<spring:message code="comments.reply" />" />
-					</div>
-				</form>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn primary"
+						value="<spring:message code="comments.reply" />" />
+					</form>
+				</div>
 			</div>
 
 			<section id="report">
@@ -224,12 +223,12 @@
 			</section>
 			
 			<section id="comments">
-				<h2><spring:message code="comments.comments" /></h2>
+				<h2><spring:message code="comments.title" /></h2>
 				<p>
 					<span class="label notice"><spring:message code="information" /></span>
-					<spring:message code="comments.commentDesc" />
+					<spring:message code="comments.desc" />
 				<div id="noCommentId" class="alert-message info">
-					<p><spring:message code="comments.noComments" /></p>
+					<p><spring:message code="comments.none" /></p>
 				</div>
 				<table id="commentTableId" class="bordered-table zebra-striped shadow-box" style="display: none;">
 					<thead>
@@ -270,16 +269,6 @@
 				<div style="text-align: right">
 					<a href="<c:out value="${GLOB_CTX_PATH}" />/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a>
 				</div>
-			</section>
-			
-			<section id="activities">
-				<h2><spring:message code="phome.activities" /></h2>
-				<p>
-					<span class="label notice"><spring:message code="information" /></span>
-					<spring:message code="phome.activitiesDesc" />
-				</p>
-				<ul id="healthplan-menu">
-				</ul>
 			</section>
 		</netcare:content>
 	</netcare:body>

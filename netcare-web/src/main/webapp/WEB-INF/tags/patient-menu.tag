@@ -26,10 +26,34 @@
 
 <script type="text/javascript">
 	$(function() {
-		var cnr = "<sec:authentication property="principal.civicRegistrationNumber" />";
-		var format = new NC.Util().formatCnr(cnr);
+		var patientId = "<sec:authentication property='principal.id' />";
+		var crn = "<sec:authentication property="principal.civicRegistrationNumber" />";
 		
-		$('#cnr').html(format);
+		var format = new NC.Util().formatCnr(crn);
+		
+		$('#crn').html(format);
+		
+		var hps = new NC.HealthPlan();
+		hps.list(patientId, function(data) {
+			var util = new NC.Util();
+			$.each(data.data, function(i, v) {
+				
+				var li = $('<li>');
+				li.append(
+					util.createIcon('add', 16)
+				);
+				
+				var link = $('<a>').html(v.name);
+				link.click(function(e) {
+					window.location = NC.getContextPath() + '/netcare/user/healthplan/' + v.id + '/view';
+				});
+				
+				li.append(link);
+				
+				$('#menuHealthplans').append(li);
+			});
+			
+		}, false);
 	});
 </script>
 
@@ -39,19 +63,21 @@
 		<a href="#"><sec:authentication property="principal.name" /></a> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	</p>
 	<p>
-		<strong><spring:message code="cnr" />:</strong> <span id="cnr"></span>
+		<strong><spring:message code="cnr" />:</strong> <span id="crn"></span>
 	</p>
 	
-	<h3><spring:message code="workWith" /></h3>
-	<ul>
-		<li><a id="homeLink" href="<spring:url value="/netcare/user/home" />"><spring:message code="phome.header" /></a></li>
-		<li><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="report.header" /></a></li>
-		<li><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="result.title" /></a></li>
+	<ul class="menu">
+		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
 	</ul>
 	
-	<ul>
-		<li><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a></li>
+	<h3><spring:message code="patient.menu.healthplans" /></h3>
+	<ul class="menu">
+		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
+		<li><netcare:image name="results" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
 	</ul>
+	
+	<h3><spring:message code="patient.menu.addActivities" /></h3>
+	<ul id="menuHealthplans" class="menu"></ul>
 </div>
 	
 </body>

@@ -48,7 +48,6 @@
 							$('#alarmContainer div').show();
 						}
 						
-						
 						$('#alarmContainer table tbody').empty();
 						
 						$.each(data.data, function(index, value) {
@@ -68,7 +67,7 @@
 								alarms.resolve(value.id, loadAlarms);
 							});
 							
-							var actionCol = $('<td>');
+							var actionCol = $('<td>').css('text-align', 'right');
 							
 							actionCol.append(processIcon);
 							
@@ -204,16 +203,16 @@
 						<h3><spring:message code="comments.comment" /></h3>
 					</div>
 
-					<form action="post">
-						<div class="modal-body">
-							<input type="text" name="comment" class="xlarge" />
-						</div>
-						<div class="modal-footer">
-							<button class="btn primary">
-								<spring:message code='comments.sendComment' />
-							</button>
-						</div>
-					</form>
+					<div class="modal-body">
+						<form action="post">
+						<input type="text" name="comment" class="xlarge" />
+					</div>
+					<div class="modal-footer">
+						<button class="btn primary">
+							<spring:message code='comments.sendComment' />
+						</button>
+						</form>
+					</div>
 				</div>
 				
 			</section>

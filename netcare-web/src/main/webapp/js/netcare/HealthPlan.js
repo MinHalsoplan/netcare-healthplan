@@ -71,8 +71,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			_ajax.get('/healthplan/' + healthPlanId + '/load', callback, true);
 		},
 		
-		list : function(currentPatient, callback) {
-			_ajax.get('/healthplan/' + currentPatient + '/list', callback, true);
+		list : function(currentPatient, callback, display) {
+			if (display === undefined || display == null || display == true) {
+				_ajax.get('/healthplan/' + currentPatient + '/list', callback, true);
+			} else {
+				_ajax.get('/healthplan/' + currentPatient + '/list', callback, display);
+			}
 		},
 	
 		/**
@@ -199,19 +203,18 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					reported.css('background-color', ms.alarm ? '#F2DEDE' : '#DFF0D8');
 					var at = $('<td>' + reportedAt + '</td>');
 					
-					var likeIcon = _util.createIcon('like', 24, function() {
-						
-						NC.log("Clicked on " + value.id);
+					var likeIcon = _util.createIcon('comment', 24, function() {
 						
 						$('#commentActivity button').click(function(event) {
 							event.preventDefault();
 							
-							NC.log("Executing... " + value.id);
+							var title = $('#commentActivity h3').html();
+							title += ' (' + patient + ', ' + typeName + ')';
+							
+							$('#commentActivity h3').html(title);
 							
 							var comment = $('#commentActivity input[name="comment"]').val();
 							public.sendComment(value.id, comment, function(data) {
-								NC.log("Successfully posted " + comment);
-								
 								$('#commentActivity input[name="comment"]').val('');
 								$('#commentActivity').modal('hide');
 								
@@ -223,7 +226,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 						$('#commentActivity input[name="comment"]').focus();
 					});
 					
-					var actionCol = $('<td>');
+					var actionCol = $('<td>').css('text-align', 'right');
 					actionCol.append(likeIcon);
 					
 					tr.append(name);

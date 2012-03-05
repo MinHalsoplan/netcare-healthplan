@@ -636,15 +636,15 @@
 			
 			<div id="activityContainer">
 				<div class="alert-message info" style="display: none;">
-					<p><spring:message code="noActivities" />
+					<p><spring:message code="activity.none" />
 				</div>
 				<table id="activitiesTable" class="bordered-table zebra-striped shadow-box">
 					<thead>
 						<tr>
-							<th><spring:message code="type" /></th>
-							<th><spring:message code="activityCategory" /></th>
-							<th><spring:message code="startDate" /></th>
-							<th><spring:message code="phome.frequency" /></th>
+							<th><spring:message code="activity.type" /></th>
+							<th><spring:message code="activity.category" /></th>
+							<th><spring:message code="activity.start" /></th>
+							<th><spring:message code="activity.frequency" /></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
