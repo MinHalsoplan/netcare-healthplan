@@ -178,8 +178,12 @@
 			
 			<section id="patients">
 				<h3><spring:message code="admin.patients.list" /></h3>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="admin.patients.list.desc" />
+				</p>
 				<div class="alert-message info" style="display: none;">
-					<p><spring:message code="admin.patients.noPatients" /></p>
+					<p><spring:message code="admin.patients.none" /></p>
 				</div>
 				<table id="patientsTable" class="bordered-table zebra-striped shadow-box">
 					<thead>

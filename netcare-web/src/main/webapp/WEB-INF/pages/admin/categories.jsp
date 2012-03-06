@@ -93,14 +93,22 @@
 				
 			</form>
 			
-			<table id="categoryTable" class="bordered-table zebra-striped shadow-box">
-				<thead>
-					<tr>
-						<th><spring:message code="name" /></th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
+			<section id="categoryList">
+				<h3><spring:message code="category.list.title" /></h3>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="category.list.desc" />
+				</p>
+				<table id="categoryTable" class="bordered-table zebra-striped shadow-box">
+					<thead>
+						<tr>
+							<th><spring:message code="name" /></th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</section>
+			
 		</netcare:content>
 		
 	</netcare:body>	

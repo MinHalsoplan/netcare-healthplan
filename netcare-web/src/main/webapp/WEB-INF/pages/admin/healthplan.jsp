@@ -61,18 +61,10 @@
 							healthPlans.view(value.id);
 						}, 'healthplan.icons.edit');
 						
-						var deleteIcon = util.createIcon('trash', 24, function() {
-							healthPlans.remove(value.id, function(data) {
-								healthPlans.list(value.patient.id, listCallback);
-							});
-						});
-						
-						var actionCol = $('<td>');
-						actionCol.css('text-align', 'right');
+						var actionCol = $('<td>').css('text-align', 'right');
 						
 						resultIcon.appendTo(actionCol);
 						editIcon.appendTo(actionCol);
-						deleteIcon.appendTo(actionCol);
 						
 						$('#ordinationTable tbody').append(
 								$('<tr>').append(
