@@ -34,7 +34,7 @@
 			<div class="page-header">
 				<div class="row">
 					<div class="span9">
-						<h1><a href="<spring:url value="/netcare/home" />"><spring:message code="system.name" /></a></h1>
+						<h1 style="padding-left: 40px"><a href="<spring:url value="/netcare/home" />"><spring:message code="system.name" /></a></h1>
 					</div>
 					<div id="ajaxInProgress" class="span3" style="text-align: right; vertical-align: middle; display: none;">
 						<span><spring:message code="loading" /><img src="<c:url value="/img/ajax-loader-small.gif" />" /></span>
