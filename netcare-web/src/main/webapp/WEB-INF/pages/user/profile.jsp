@@ -116,6 +116,15 @@
 					<form>
 					
 						<netcare:row>
+							<netcare:col span="2">
+								<spring:message code="profile.crn" var="crn" scope="page" />
+								<netcare:field name="cnr" label="${crn}">
+									<input type="text" name="cnr" disabled class="span2"/>
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+					
+						<netcare:row>
 							<netcare:col span="3">
 								<spring:message code="profile.firstName" var="firstName" scope="page" />
 								<netcare:field name="firstName" label="${firstName}">
@@ -128,25 +137,19 @@
 									<input type="text" name="surName" class="medium"/>
 								</netcare:field>
 							</netcare:col>
-							<netcare:col span="3">
-								<spring:message code="profile.crn" var="crn" scope="page" />
-								<netcare:field name="cnr" label="${crn}">
-									<input type="text" name="cnr" disabled class="medium"/>
-								</netcare:field>
-							</netcare:col>
 						</netcare:row>
 						
 						<netcare:row>
-							<netcare:col span="5">
+							<netcare:col span="3">
 								<spring:message code="profile.email" var="email" scope="page" />
 								<netcare:field name="email" label="${email}">
 									<input type="email" name="email" />
 								</netcare:field>
 							</netcare:col>							
-							<netcare:col span="5">
+							<netcare:col span="2">
 								<spring:message code="profile.phone" var="phone" scope="page" />
 								<netcare:field name="phoneNumber" label="${phone}">
-									<input type="tel" name="phoneNumber" />
+									<input type="tel" name="phoneNumber" class="span2"/>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>
@@ -157,7 +160,7 @@
 							<legend><spring:message code="profile.mobile.title" /></legend>
 							
 							<netcare:row>
-								<netcare:col span="12">
+								<netcare:col span="5">
 									<p>
 									<input type="checkbox" name="mobile" value="true"> <span><spring:message code="profile.mobile.enable" /></span>
 									</p>
@@ -165,17 +168,17 @@
 							</netcare:row>
 							
 							<netcare:row>
-								<netcare:col span="5">
+								<netcare:col span="2">
 									<spring:message code="profile.mobile.pin" var="pin" scope="page" />
 									<netcare:field name="password" label="${pin}">
-										<input type="password" name="password" />
+										<input type="password" name="password" class="span2"/>
 									</netcare:field>
 								</netcare:col>
 								
-								<netcare:col span="5">
+								<netcare:col span="2">
 									<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
 									<netcare:field name="password2" label="${pin2}">
-										<input type="password" name="password2" />
+										<input type="password" name="password2" class="span2"/>
 									</netcare:field>
 								</netcare:col>
 							</netcare:row>
