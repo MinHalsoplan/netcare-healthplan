@@ -109,7 +109,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 
 					$('#' + tableId + ' tbody').append(
 							$('<tr>').append(
-									$('<td>').html(icon)).append(
+									$('<td>').css('width', 40).html(icon)).append(
 											$('<td>').html(value.healthPlanName + '<br/><i>' + value.issuedBy.careUnit.name + '<br/>' + value.issuedBy.name + '</i>')).append(
 													$('<td>').html(actText)).append(
 															$('<td>').html(period)).append(
