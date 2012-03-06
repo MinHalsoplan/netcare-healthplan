@@ -43,7 +43,7 @@
 				var disableWeekdays = function() {
 					$('input[name $= "TimeField"]').attr('disabled', 'disabled');
 					$('input[name $= "TimeField"]').next().hide();
-				}
+				};
 				
 				/*
 				 * Method that will completely reset the
@@ -57,25 +57,7 @@
 					var rootId = 'div[id$=AddedTimes]';
 					$(rootId + ' div').remove();
 					$(rootId).hide();
-				}
-				
-				/*
-				 * Create date picker for start date
-				 */
-				/*$('#startDate input[name="startDate"]').datepicker({
-					dateFormat : 'yy-mm-dd',
-					firstDay : 1,
-					minDate : +0,
-					buttonImage : NC.getContextPath() + '/img/icons/16/date.png'
-				});
-				
-				support.loadMonths(function(data) {
-					$('#startDate input[name="startDate"]').datepicker('option', 'monthNames', data);
-				});
-				
-				support.loadWeekdays(function(data) {
-					$('#startDate input[name="startDate"]').datepicker('option', 'dayNamesMin', data);
-				});*/
+				};
 				
 				/*
 				 * Disable time input field as well as "add" icon next to it
@@ -375,14 +357,12 @@
 						}
 					}
 					
-					NC.log("Public definition: " + activity.publicDefinition);
-					
 					var hp = new NC.HealthPlan();
 					hp.addActivity(healthPlan, activity, function(data) {
 						NC.log("Success callback is executing...");
 						NC.log("Resetting form");
 						
-						$('input:reset').click();
+						$('button:reset').click();
 						
 						resetForm();
 						
@@ -392,6 +372,10 @@
 					
 					$('#activityForm').hide();
 					
+				});
+				
+				$(':reset').click(function(e) {
+					resetForm();
 				});
 				
 				$('#showActivityForm').click(function(event) {
@@ -468,7 +452,7 @@
 								<input type="checkbox" name="day" value="monday"/>
 							</netcare:field>
 						</netcare:col>
-						<netcare:col span="3">
+						<netcare:col span="2">
 							<netcare:field name="mondayTimeField" label="${addTime}">
 								<netcare:timeInput name="mondayTimeField" classes="span1"/>
 								<netcare:image name="add" icon="true" cursor="pointer"/>
@@ -593,28 +577,23 @@
 						</div>
 					</div>
 					
-					
-					<div id="sundayContainer" class="row">
-						<div class="span9">
-							<div class="row">
-								<div class="span1">
-									<spring:message code="sunday" var="sunday" scope="page" />
-									<netcare:field name="day" label="${sunday}">
-										<input type="checkbox" name="day" value="sunday"/>
-									</netcare:field>
-								</div>
-								<div class="span2">
-									<netcare:field name="sundayTimeField" label="${addTime}">
-										<netcare:timeInput name="sundayTimeField" classes="span1"/>
-										<netcare:image name="add" icon="true"/>
-									</netcare:field>
-								</div>
-								<div id="sundayAddedTimes" class="span5" style="display: none">
-									<p><strong><spring:message code="activity.form.times" /></strong></p>
-								</div>
-							</div>
-						</div>
-					</div>
+					<netcare:row id="sundayContainer">
+						<netcare:col span="1">
+							<spring:message code="sunday" var="sunday" scope="page" />
+							<netcare:field name="day" label="${sunday}">
+								<input type="checkbox" name="day" value="sunday"/>
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="2">
+							<netcare:field name="sundayTimeField" label="${addTime}">
+								<netcare:timeInput name="sundayTimeField" classes="span1"/>
+								<netcare:image name="add" icon="true"/>
+							</netcare:field>
+						</netcare:col>
+						<netcare:col id="sundayAddedTimes" span="5" style="display: none;">
+							<p><strong><spring:message code="activity.form.times" /></strong></p>
+						</netcare:col>
+					</netcare:row>
 				</fieldset>
 				
 				<netcare:row id="publicDefinitionContainer">

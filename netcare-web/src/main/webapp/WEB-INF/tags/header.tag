@@ -18,22 +18,17 @@
 --%>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Planerade Hälsoaktiviteter</title>
+	<title><spring:message code="system.name" /></title>
 	
 	<link rel="icon" href="<c:url value="/favicon.ico" />" type="image/vnd.microsoft.icon"/>
 	
-	<!-- Include Twitter bootstrap -->
 	<link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css" />" />
-	
-	<!-- Include JQuery UI Css -->
 	<link href="<c:url value="/css/smoothness/jquery-ui-1.8.17.custom.css" />" type="text/css" rel="stylesheet" />
-	
-	<!-- Include our CSS -->
-	<c:url value="/css/netcare.css" var="netcareCss" scope="page" />
-	<link href="${netcareCss}" type="text/css" rel="stylesheet" />
+	<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
 	
 	<style type="text/css">
 		/* Override some defaults */
@@ -79,23 +74,14 @@
       }
 	</style>
 	
-	<!-- Json -->
-	<c:url value="/js/json2.js" var="json" scope="page"/>
-	<script type="text/javascript" src="${json}"></script>
-	
-	<!-- Google Javascript API -->
+	<script type="text/javascript" src="<c:url value="/js/json2.js" />"></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	
-	<!-- Include JQuery -->
 	<script type="text/javascript" src="<c:url value="/js/jquery-1.7.1.min.js" />"></script>
-	
-	<!-- Include JQuery UI Widgets -->
 	<script type="text/javascript" src="<c:url value="/js/jquery-ui-1.8.17.custom.min.js" />"></script>
 	
-	<!-- Twitter Bootstrap -->
 	<script type="text/javascript" src="<c:url value="/js/bootstrap.min.js" />"></script>
 	
-	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Ajax.js' />"></script>

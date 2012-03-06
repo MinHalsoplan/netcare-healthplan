@@ -118,7 +118,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				$('#' + tableId + ' tbody > tr').empty();
 				
 				var msgs = new Array();
-				new NC.Support().loadMessages('activity.suspended, activity.suspend', function(messages) {
+				new NC.Support().loadMessages('activity.suspended, activity.suspend, activity.update', function(messages) {
 					msgs = messages;
 				});
 				
@@ -128,9 +128,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							public.deleteActivity(tableId, healthPlanId, value.id);
 						}, msgs['activity.suspend'], true);
 						
+						var updateIcon = _util.createIcon('update-activity', 24, function() {
+							
+						}, msgs['activity.update'], true);
+						
 						var actionCol = $('<td>').css('text-align', 'right');
 						var showSuspend = (isPatient === undefined || !isPatient) && value.active;
 						if (showSuspend) {
+							updateIcon.appendTo(actionCol);
 							deleteIcon.appendTo(actionCol);
 						}
 						
