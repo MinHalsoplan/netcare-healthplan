@@ -62,7 +62,7 @@
 				/*
 				 * Create date picker for start date
 				 */
-				$('#startDate input[name="startDate"]').datepicker({
+				/*$('#startDate input[name="startDate"]').datepicker({
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0,
@@ -75,7 +75,7 @@
 				
 				support.loadWeekdays(function(data) {
 					$('#startDate input[name="startDate"]').datepicker('option', 'dayNamesMin', data);
-				});
+				});*/
 				
 				/*
 				 * Disable time input field as well as "add" icon next to it
@@ -304,7 +304,7 @@
 					NC.log("Form submission...");
 					event.preventDefault();
 					
-					var activityType = $('input[name="activityTypeId"]').val();
+					var activityType = $('select[name="activityType"] option:selected').prop('value');
 					var goal = $('#activityForm input[name="activityGoal"]').val();
 					var startDate = $('input[name="startDate"]').val();
 					var activityRepeat = $('input[name="activityRepeat"]').val();

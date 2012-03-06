@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.util.Collection;
 
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 public abstract class UserBaseViewImpl implements UserBaseView {
@@ -44,6 +45,7 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	@Override
 	public abstract Collection<? extends GrantedAuthority> getAuthorities();
 
+	@JsonIgnore
 	@Override
 	public abstract String getPassword();
 
@@ -52,21 +54,25 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 		return this.getFirstName();
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return true;

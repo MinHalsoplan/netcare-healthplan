@@ -66,7 +66,7 @@ NC.Util = function() {
 			$('#currentpatient').show();
 		},
 		
-		createIcon : function(name, size, onClickFunction, messageCode) {
+		createIcon : function(name, size, onClickFunction, messageCode, isResolved) {
 			var icon = $('<img>', {
 				src : NC.getContextPath() + '/img/icons/' + size + '/' + name + '.png'
 			}).css('padding-left', '10px');
@@ -76,11 +76,15 @@ NC.Util = function() {
 				icon.click(onClickFunction);
 			}
 			
-			if (messageCode !== undefined || messageCode != null) {
-				var support = new NC.Support();
-				support.loadMessages(messageCode, function(messages) {
-					icon.attr('title', messages[messageCode]);
-				}, false);
+			if (isResolved === undefined || isResolved == null || isResolved == false) {			
+				if (messageCode !== undefined || messageCode != null) {
+					var support = new NC.Support();
+					support.loadMessages(messageCode, function(messages) {
+						icon.attr('title', messages[messageCode]);
+					}, false);
+				}
+			} else {
+				icon.prop('title', messageCode);
 			}
 			
 			return icon;

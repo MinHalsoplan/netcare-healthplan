@@ -60,6 +60,8 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private boolean issuedByPatient;
 	private boolean publicDefinition;
 	
+	private boolean active;
+	
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
@@ -78,6 +80,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		dto.setHealthPlanId(entity.getHealthPlan().getId());
+		dto.setActive(!entity.isRemovedFlag());
 		
 		List<MeasurementDefinitionEntity> mdl = entity.getMeasurementDefinitions();
 		final MeasurementDefinition[] goalValues = new MeasurementDefinitionImpl[mdl.size()];
@@ -275,5 +278,14 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	public void setPublicDefinition(final boolean publicDefinition) {
 		this.publicDefinition = publicDefinition;
+	}
+
+	@Override
+	public boolean isActive() {
+		return this.active;
+	}
+	
+	public void setActive(final boolean active) {
+		this.active = active;
 	}
 }

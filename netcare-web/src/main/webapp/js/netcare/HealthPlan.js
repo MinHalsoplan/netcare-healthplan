@@ -117,6 +117,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				NC.log("Emptying the activity table");
 				$('#' + tableId + ' tbody > tr').empty();
 				
+				var msgs = new Array();
+				new NC.Support().loadMessages('activity.suspended, activity.suspend', function(messages) {
+					msgs = messages;
+					NC.log("Messages loaded");
+				});
+				
+				NC.log("Outside");
+				
 				$.each(data.data, function(index, value) {
 					
 					NC.log("Processing id: " + value.id);
@@ -126,14 +134,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					
 					if ((!value.publicDefinition && isPatient) || value.publicDefinition) {
 						var deleteIcon = _util.createIcon('trash', 24, function() {
-							NC.log("Delete icon clicked");
 							public.deleteActivity(tableId, healthPlanId, value.id);
-						});
+						}, msgs['activity.suspend'], true);
 						
-						var actionCol = $('<td>');
-						actionCol.css('text-align', 'right');
-						
-						if (isPatient === undefined || !isPatient) {
+						var actionCol = $('<td>').css('text-align', 'right');
+						var showSuspend = (isPatient === undefined || !isPatient) && value.active;
+						if (showSuspend) {
 							deleteIcon.appendTo(actionCol);
 						}
 						
@@ -144,9 +150,17 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							$('<td>').html(value.type.category.name)
 						).append(
 							$('<td>').html(value.startDate)
-						).append(
-							$('<td>').html(_util.formatFrequency(value))
 						);
+						
+						if (value.active) {
+							tr.append(
+								$('<td>').html(_util.formatFrequency(value))
+							);
+						} else {
+							tr.append(
+								$('<td>').css('font-style', 'italic').html(msgs['activity.suspended'])
+							);
+						}
 						
 						tr.append(actionCol);
 						$('#' + tableId + ' tbody').append(tr);

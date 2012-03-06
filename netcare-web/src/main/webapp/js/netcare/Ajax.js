@@ -96,7 +96,7 @@ NC.Ajax = function() {
 			getWithParamsSynchronous : function(url, data, callback, displayMessages) {
 				var opts = _getDefaultOpts(_contextPath + _basePath + url, callback, displayMessages);
 				opts.data = data;
-				opts.async = true;
+				opts.async = false;
 				
 				$.ajax(opts);
 			},

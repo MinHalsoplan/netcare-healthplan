@@ -119,5 +119,11 @@ public interface ActivityDefinition extends Serializable {
 	/**
 	 * Returns number of done activities
 	 */
-	int getNumDone();	
+	int getNumDone();
+	
+	/**
+	 * Whether the activity is active or not
+	 * @return
+	 */
+	boolean isActive();
 }

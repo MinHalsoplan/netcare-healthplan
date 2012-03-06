@@ -31,7 +31,6 @@
 </div>
 
 <div id="reportFormDiv" class="modal hide fade" style="display: none;">
-	<form id="reportFormId">
 	<div class="modal-header">
 		<a href="#" class="close" data-dismiss="modal">x</a>
 		<h3>
@@ -40,6 +39,7 @@
 		<h5 id="plannedId"></h5>
 	</div>
 	<div class="modal-body">
+		<form id="reportFormId">
 			<input type="hidden" name="activityId" />
 			<input type="hidden" name="numValueId" />
 
@@ -92,8 +92,8 @@
 		<div class="modal-footer">
 			<input type="submit" name="save"
 				value="<spring:message code="report.save" />" class="btn btn-primary" />
+			</form>
 		</div>
-	</form>
 </div>
 
 <netcare:table id="schemaTable">

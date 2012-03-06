@@ -301,6 +301,7 @@
 					
 					new NC.ActivityTypes().create(formData, function(data) {
 						loadExistingTypes();
+						$(':reset').click();
 					});
 				});
 				

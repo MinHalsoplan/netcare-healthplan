@@ -89,6 +89,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
     	uuid = UUID.randomUUID().toString();
     	createdTime = new Date();
     	publicDefinition = true;
+    	removedFlag = false;
 	}
     
     public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency, UserEntity createdBy) {
