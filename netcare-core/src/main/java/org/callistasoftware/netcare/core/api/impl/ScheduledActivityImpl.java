@@ -100,6 +100,62 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	public long getId() {
 		return id;
 	}
+	
+	public ActivityDefinition getActivityDefinition() {
+		return activityDefinition;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setDue(boolean due) {
+		this.due = due;
+	}
+
+	public void setReported(String reported) {
+		this.reported = reported;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public void setDay(Option day) {
+		this.day = day;
+	}
+
+	public void setActivityDefinition(ActivityDefinition activityDefinition) {
+		this.activityDefinition = activityDefinition;
+	}
+
+	public void setPatient(PatientBaseView patient) {
+		this.patient = patient;
+	}
+
+	public void setActualTime(String actualTime) {
+		this.actualTime = actualTime;
+	}
+
+	public void setSense(int sense) {
+		this.sense = sense;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void setMeasurements(Measurement[] measurements) {
+		this.measurements = measurements;
+	}
+
+	public void setRejected(boolean rejected) {
+		this.rejected = rejected;
+	}
 
 	@Override
 	public String getTime() {

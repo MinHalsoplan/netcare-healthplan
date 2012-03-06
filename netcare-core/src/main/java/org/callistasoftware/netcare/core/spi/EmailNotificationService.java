@@ -25,4 +25,10 @@ public interface EmailNotificationService {
 	 * @param toAddress
 	 */
 	void sendEmail(final String message, final String subject, final String toAddress);
+	
+	/**
+	 * Sends an email to support
+	 * @param message
+	 */
+	void sendSupportEmail(final String message);
 }

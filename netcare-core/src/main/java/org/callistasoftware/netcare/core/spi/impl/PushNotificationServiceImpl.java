@@ -36,6 +36,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.notnoop.apns.APNS;
+import com.notnoop.apns.ApnsServiceBuilder;
+import com.notnoop.apns.EnhancedApnsNotification;
+import com.notnoop.apns.PayloadBuilder;
+
 /**
  * Implementation of service interface
  * 
@@ -49,11 +54,18 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 	@Autowired
 	private UserRepository repo;
 	
+	// C2DM
 	@Value("${c2dm.username}") private String c2dmUsername;
 	@Value("${c2dm.password}") private String c2dmPassword;
 	@Value("${c2dm.auth-url}") private String c2dmAuthUrl;
 	@Value("${c2dm.url}") private String c2dmUrl;
 	@Value("${c2dm.client-app}") private String c2dmClientApp;
+	
+	// APNS
+	@Value("${apns.cert-file}") private String apnsCertFile;
+	@Value("${apns.cert-password}") private String apnsCertPassword;
+	@Value("${apns.production}") private boolean apnsProduction;
+	private int apnsCount = 1;
 	
 	@Override
 	public void sendPushNotification(String subject, String message,
@@ -72,7 +84,14 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 			return;
 		}
 		
-		throw new UnsupportedOperationException("Only implemented for c2dm so far...");
+		final boolean apns = user.getProperties().containsKey("apnsRegistrationId");
+		if (apns) {
+			final String registrationId = user.getProperties().get("apnsRegistrationId");
+			this.sendApnsNotification(registrationId, message);
+			return;
+		}
+		
+		log.error("Unable to find mobile push registration id för user {}", user.getId());
 	}
 
 	String fetchGoogleAuthToken() {
@@ -136,6 +155,29 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 		return null;
 	}
 	
+	//
+	void sendApnsNotification(final String registrationId, final String message) {
+		 log.info("Preparing to send APNS message: {}", apnsCount);
+		 ApnsServiceBuilder sb = APNS.newService();
+		 
+		 sb.withCert(apnsCertFile, apnsCertPassword);
+		 if (apnsProduction) {
+			 sb.withProductionDestination();
+		 } else {
+			 sb.withSandboxDestination();
+		 }
+		 
+		 PayloadBuilder pb = APNS.newPayload();
+		 pb.alertBody(message);
+		 pb.sound("default");
+		 pb.badge(1);
+		 		 
+		 sb.build().push(new EnhancedApnsNotification(apnsCount, 900, registrationId, pb.build()));
+		 log.info("APNS Message {} successfully delivered", apnsCount);
+		 apnsCount++;
+	}
+	
+	//
 	void sendGooglePushNotification(
 			final String authToken
 			, final String registrationId

@@ -40,17 +40,17 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	private String password;
 	private String civicRegistrationNumber;
 
-	PatientBaseViewImpl() {
-		super(null, null);
+	public PatientBaseViewImpl() {
+		super(null, null, null);
 	}
 	
-	PatientBaseViewImpl(final Long id, final String name, final String civicRegistrationNumber) {
-		super(id, name);
+	PatientBaseViewImpl(final Long id, final String name, final String surName, final String civicRegistrationNumber) {
+		super(id, name, surName);
 		this.setCivicRegistrationNumber(civicRegistrationNumber);
 	}
 	
 	PatientBaseViewImpl(final PatientEntity entity) {
-		super(entity.getId(), entity.getName());
+		super(entity.getId(), entity.getFirstName(), entity.getSurName());
 		this.mobile = entity.isMobile();
 		this.setCivicRegistrationNumber(entity.getCivicRegistrationNumber());
 		this.setPassword(entity.getPassword());
@@ -69,14 +69,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return dtos;
 	}
 	
-	void setId(final Long id) {
-		this.id = id;
-	}
-	
-	void setName(final String name) {
-		this.name = name;
-	}
-
 	@Override
 	public boolean isCareGiver() {
 		return false;
@@ -87,7 +79,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return this.civicRegistrationNumber;
 	}
 	
-	void setCivicRegistrationNumber(final String civicRegistrationNumber) {
+	public void setCivicRegistrationNumber(final String civicRegistrationNumber) {
 		this.civicRegistrationNumber = civicRegistrationNumber;
 	}
 
@@ -106,7 +98,11 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 		return this.password;
 	}
 	
-	void setPassword(final String password) {
+	public void setPassword(final String password) {
 		this.password = password;
+	}
+
+	public void setMobile(boolean mobile) {
+		this.mobile = mobile;
 	}
 }

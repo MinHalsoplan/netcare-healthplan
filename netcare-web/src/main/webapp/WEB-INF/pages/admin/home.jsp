@@ -48,7 +48,6 @@
 							$('#alarmContainer div').show();
 						}
 						
-						
 						$('#alarmContainer table tbody').empty();
 						
 						$.each(data.data, function(index, value) {
@@ -63,12 +62,12 @@
 							}
 							var cause = $('<td>' + info + '</td>');
 							
-							var processIcon = util.createIcon('clear', '24', function() {
+							var processIcon = util.createIcon('trash', '24', function() {
 								NC.log("Resolving alarm...");
 								alarms.resolve(value.id, loadAlarms);
-							});
+							}, 'alarm.delete');
 							
-							var actionCol = $('<td>');
+							var actionCol = $('<td>').css('text-align', 'right');
 							
 							actionCol.append(processIcon);
 							
@@ -118,9 +117,9 @@
 								hp.deleteComment(value.id, function(data) {
 									loadReplies();
 								});
-							});
+							}, 'comments.delete');
 							
-							var actionCol = $('<td>');
+							var actionCol = $('<td>').css('text-align', 'right');
 							actionCol.append(deleteIcon);
 							
 							tr.append(actionCol);
@@ -142,14 +141,11 @@
 			<section id="dashboard">
 				<h2>Start</h2>
 				<p>
-					Välkommen till planerade hälsotjänster. I menyn till höger anges vem du är
-					inloggad som, vilken patient du för närvarande arbetar med samt en meny där
-					du anger vad du vill arbeta med.
+					<spring:message code="admin.home.description" />
 				</p>
 				<p>
-					<span class="label label-important">Viktigt!</span>
-					Du måste ha valt en patient att arbeta med innan du kan utföra andra
-					aktiviteter i systemet.
+					<span class="label label-important"><spring:message code="important" /></span>
+					<spring:message code="admin.home.important" />
 				</p>
 				
 			</section>
@@ -181,26 +177,24 @@
 			<br />
 			
 			<section id="aktiviteter">
-				<h2>Genomförda aktiviteter</h2>
+				<h2><spring:message code="activity.reported.title" /></h2>
 				<p>
 					<span class="label label-info"><spring:message code="information" /></span>
-					Nedan visas en översikt över de patienter som har rapporterat och genomfört
-					aktiviteter det senaste dygnet.
+					<spring:message code="activity.reported.desc" />
 				</p>
 				
 				<div id="reportedActivities">
 					<div id="noReportedActivities" style="display: none;" class="alert alert-info">
-						<p><spring:message code="noReportedActivities" /></p>
+						<p><spring:message code="activity.reported.none" /></p>
 					</div>
 					<netcare:table style="display: none;">
 						<thead>
 							<tr>
-								<th><spring:message code="patient" /></th>
-								<th><spring:message code="type" /></th>
-								<th><spring:message code="reportedValue" /></th>
-								<th><spring:message code="when" /></th>
+								<th><spring:message code="activity.reported.patient" /></th>
+								<th><spring:message code="activity.reported.type" /></th>
+								<th><spring:message code="activity.reported.value" /></th>
+								<th><spring:message code="activity.reported.when" /></th>
 								<th>&nbsp;</th>
-							</tr>
 						</thead>
 						<tbody></tbody>
 					</netcare:table>
@@ -211,14 +205,13 @@
 						<a href="#" class="close" data-dismiss="modal">x</a>
 						<h3><spring:message code="comments.comment" /></h3>
 					</div>
+
 					<div class="modal-body">
 						<form action="post">
-							<input type="text" name="comment" class="xlarge" />
+						<input type="text" name="comment" class="xlarge" />
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-primary">
-							<spring:message code='comments.sendComment' />
-						</button>
+						<button class="btn btn-primary"><spring:message code='comments.sendComment' /></button>
 						</form>
 					</div>
 				</div>
@@ -228,23 +221,25 @@
 			<br />
 			
 			<section id="alarms">
-				<h2><spring:message code="alarm.overview" /></h2>
+				<h2><spring:message code="alarm.title" /></h2>
 				<p>
 					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="alarm.information" />
+					<spring:message code="alarm.desc" />
 				</p>
 				
 				<div id="alarmContainer">					
 					<div class="alert alert-info" style="display:none;">
-						<p><spring:message code="alarm.noAlarms" /></p>
+						<p><spring:message code="alarm.none" /></p>
 					</div>
 					<netcare:table style="display: none;">
 						<thead>
-							<th><spring:message code="patient" /></th>
-							<th><spring:message code="contactInformation" /></th>
-							<th><spring:message code="alarm.cause" /></th>
-							<th><spring:message code="alarm.created" /></th>
-							<th>&nbsp;</th>
+							<tr>
+								<th><spring:message code="alarm.patient" /></th>
+								<th><spring:message code="alarm.contact" /></th>
+								<th><spring:message code="alarm.cause" /></th>
+								<th><spring:message code="alarm.created" /></th>
+								<th>&nbsp;</th>
+							</tr>
 						</thead>
 						<tbody></tbody>
 					</netcare:table>

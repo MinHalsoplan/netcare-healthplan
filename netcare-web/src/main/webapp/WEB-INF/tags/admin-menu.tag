@@ -74,7 +74,7 @@
 			/* Redirect to home in order to prevent weird stuff
 			 * to happen
 			 */
-			window.location = '/netcare-web/netcare/home';
+			window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
 		}
 		
 		/*
@@ -110,43 +110,46 @@
 </script>
 
 <div class="span3 menu">
-	<h3><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
+	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
-		<a href="#"><sec:authentication property="principal.username" /></a> | <a href="<spring:url value="/j_spring_security_logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
+		<a href="#"><sec:authentication property="principal.name" /></a> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	</p>
 	<p>
 		<strong><spring:message code="careUnit" />:</strong><br />
 		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
 	</p>
 		
-	<h3 id="patientName"><netcare:image name="user" size="16"/><spring:message code="patient" /></h3>
-	<c:if test="${not empty sessionScope.currentPatient}">
-		<div id="workWith" class="shadow-box" style="padding-left: 5px;">
+	<h3 id="patientName" class="menuHeader"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
+	<c:choose>
+		<c:when test="${not empty sessionScope.currentPatient}">
+			<div id="workWith" class="shadow-box" style="padding-left: 5px;">
 			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
 			<p>
 				<span id="cnr"></span>
 			</p>
 			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="healthPlans" /></a></li>
+				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
 			</ul>
 		</div>
-		<br />
-	</c:if>
-	
-	<p>
-		<a data-toggle="modal" data-target="#modal-from-dom">
-			<spring:message code="clickHere" /></a> <spring:message code="toPickPatient" />
-	</p>
+		</c:when>
+		<c:otherwise>
+			<ul class="menuList">
+				<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
+				<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
+				<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
+			</ul>
+		</c:otherwise>
+	</c:choose>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
 			<div class="modal-header">
-				<a href="#" class="close">x</a>
-				<h3><spring:message code="pickPatient" /></h3>
+				<a href="#" class="close" data-dismiss="modal">x</a>
+				<h3><spring:message code="admin.menu.patient.search" /></h3>
 			</div>
 			<div class="modal-body">
 				<form id="pickPatientForm">
 				<div class="clearfix">
-					<label for="pickPatient"><spring:message code="search" /></label>
+					<label for="pickPatient"><spring:message code="admin.menu.patient.searchValue" /></label>
 					<div class="input">
 						<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
 						<input name="selectedPatient" type="hidden" />
@@ -154,18 +157,17 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<input name="pickSubmit" type="submit" value="<spring:message code="pick" />" class="btn btn-primary"/>
+				<input name="pickSubmit" type="submit" value="<spring:message code="admin.menu.patient.pickFromSearch" />" class="btn btn-primary"/>
 				</form>
 			</div>
-		
 	</div>
 	
 	<div id="system">
-		<h3><spring:message code="workWith" /></h3>
-		<li><a href="<spring:url value="/netcare/admin/home" />"><spring:message code="startPage" /></a></li>
-		<li><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="patients" /></a></li>
-		<li><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="activityType.title" /></a></li>
-		<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
+		<h3 class="menuHeader"><spring:message code="admin.menu.create" /></h3>
+		<ul class="menuList">
+			<li><netcare:image name="gtk-add" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
+			<li><netcare:image name="gtk-add" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
+		</ul>
 	</div>
 </div>
 </body>

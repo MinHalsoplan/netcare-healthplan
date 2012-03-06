@@ -45,11 +45,11 @@ public class AlarmRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void findByReportedTimeIsNotNull() {
-		final PatientEntity patient = PatientEntity.newEntity("Peter", "123456");
+		final PatientEntity patient = PatientEntity.newEntity("Peter", "", "123456");
 		patientRepo.save(patient);
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		cuRepo.save(cu);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 		
 		AlarmEntity e = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, patient, "hsa-123", 42L);

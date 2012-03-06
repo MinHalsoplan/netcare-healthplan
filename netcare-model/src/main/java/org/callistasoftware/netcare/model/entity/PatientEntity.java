@@ -41,7 +41,7 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="phoneNumber", unique=true)
+	@Column(name="phone_number", unique=true)
 	private String phoneNumber;
 	
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="forPatient", cascade=CascadeType.REMOVE, orphanRemoval=true)
@@ -50,8 +50,8 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="patient", cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<AlarmEntity> alarms;
 	
-	public static PatientEntity newEntity(final String name, final String civicRegistrationNumber) {
-		return new PatientEntity(name, civicRegistrationNumber);
+	public static PatientEntity newEntity(final String firstName, final String surName, final String civicRegistrationNumber) {
+		return new PatientEntity(firstName, surName, civicRegistrationNumber);
 	}
 	
 	PatientEntity() {
@@ -59,8 +59,8 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 		this.setHealthPlans(new ArrayList<HealthPlanEntity>());
 	}
 	
-	PatientEntity(final String name, final String civicRegistrationNumber) {
-		super(name);
+	PatientEntity(final String name, final String surName, final String civicRegistrationNumber) {
+		super(name, surName);
 		this.setCivicRegistrationNumber(civicRegistrationNumber);
 	}
 
@@ -136,5 +136,10 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 		}
 		
 		return user.getId().equals(this.getId());
+	}
+
+	@Override
+	public String getUsername() {
+		return this.getCivicRegistrationNumber();
 	}
 }

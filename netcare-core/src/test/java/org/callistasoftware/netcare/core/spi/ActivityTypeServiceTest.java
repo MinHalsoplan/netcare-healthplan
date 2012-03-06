@@ -67,7 +67,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "hsa-id-cg", cu));
+		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
 		final CareGiverBaseView cgb = CareGiverBaseViewImpl.newFromEntity(cg);
 		
 		this.runAs(cgb);
@@ -76,7 +76,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu));
 		}
 		
-		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes();
+		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes(savedCu.getHsaId());
 		assertTrue(result.isSuccess());
 		assertEquals(10, result.getData().length);
 	}

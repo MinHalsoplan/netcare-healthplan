@@ -34,10 +34,22 @@ public interface UserBaseView extends UserDetails, Serializable {
 	Long getId();
 	
 	/**
-	 * The name of the user
+	 * The full name of the patient
 	 * @return
 	 */
 	String getName();
+	
+	/**
+	 * The name of the user
+	 * @return
+	 */
+	String getFirstName();
+	
+	/**
+	 * The surname of the user
+	 * @return
+	 */
+	String getSurName();
 	
 	/**
 	 * Whether the user is a care giver or not

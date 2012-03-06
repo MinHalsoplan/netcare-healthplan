@@ -72,7 +72,7 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadHealthPlan(healthPlan);
 	}
 	
-	@RequestMapping(value="/{healthPlan}/delete", method=RequestMethod.POST)
+    @RequestMapping(value="/{healthPlan}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
 		this.logAccess("delete", "health plan");
@@ -87,7 +87,7 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
 	}
 	
-	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/delete", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
 		this.logAccess("delete", "activity definition");
@@ -108,7 +108,7 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
 	}
 	
-	@RequestMapping(value="/activity/reported/comment/{comment}/reply", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/activity/reported/comment/{comment}/reply", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityComment> sendCommentReply(@PathVariable(value="comment") final Long comment, @RequestParam(value="reply") final String reply) {
 		this.logAccess("reply", "comment");
@@ -122,7 +122,7 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadScheduledActivity(activity);
 	}
 	
-	@RequestMapping(value="/activity/{activity}/comment", produces="application/json", method=RequestMethod.POST)
+    @RequestMapping(value="/activity/{activity}/comment", produces="application/json", method=RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="comment") final String comment) {
 		this.logAccess("comment", "activity");
@@ -137,7 +137,7 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadRepliesForCareGiver();
 	}
 	
-	@RequestMapping(value="/activity/reported/comments/{comment}/delete", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/activity/reported/comments/{comment}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityComment> deleteComment(@PathVariable(value="comment") final Long comment) {
 		this.logAccess("delete", "comment");

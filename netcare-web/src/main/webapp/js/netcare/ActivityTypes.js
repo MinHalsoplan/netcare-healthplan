@@ -15,13 +15,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.ActivityCategories = function() {
-	var _baseUrl = '/netcare-web/api/activityCategory';
 	var _this = this;
 	var _ajax = new NC.Ajax();
 	
 	var public = {
 		load : function(callback) {
-			_ajax.get('/activityCategory/load', callback, true);
+			_ajax.get('/activityCategory/load', callback);
 		},
 		
 		loadAsOptions : function(selectElem) {
@@ -46,13 +45,11 @@ NC.ActivityCategories = function() {
 };
 
 NC.ActivityTypes = function() {
-	
-	var _baseUrl = '/netcare-web/api/activityType';
 	var _ajax = new NC.Ajax();
 	
 	public = {
-		load : function(callback) {
-			_ajax.get('/activityType/load', callback, true);
+		load : function(hsaId, callback, showPageMessages) {
+			_ajax.getWithParams('/activityType/load', {hsa : hsaId}, callback);
 		},
 		
 		search : function(searchString, callback) {

@@ -38,6 +38,8 @@ public interface HealthPlan extends Serializable {
 	
 	Option getDurationUnit();
 	
+	CareUnit getCareUnit();
+	
 	CareGiverBaseView getIssuedBy();
 	
 	PatientBaseView getPatient();

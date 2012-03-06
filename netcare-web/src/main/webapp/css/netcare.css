@@ -21,12 +21,9 @@ a:hover {
 }
 
 .spinner {
-	background: url('/netcare-web/img/ajax-loader-small.gif') no-repeat right;
 }
 
 .addButton, .addButton:hover {
-	padding-left: 24px;
-	background: url('/netcare-web/img/icons/16/add.png') no-repeat 3px;
 }
 
 .cool .shadow {
@@ -54,6 +51,27 @@ a:hover {
 	box-shadow: 2px 2px 5px #333;
 }
 
+h1 > a:link, 
+h1 > a:visited,
+h1 > a:hover,
+h1 > a:active {
+	color: black;
+	text-decoration: none;
+}
+
+ul.menuList {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+ul.menuList > li {
+	vertical-align: middle;
+	margin-left: 3px;
+	padding-left: 3px;
+	padding-bottom: 10px;
+	list-style-type: none;
+}
+
 li.ui-menu-item,
 a.ui-state-default,
 a.ui-state-highlight {
@@ -64,5 +82,11 @@ a.ui-state-highlight {
 
 table td {
 	vertical-align: middle;
+}
+
+h3.menuHeader {
+	width: 100%;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #eee;
 }
 

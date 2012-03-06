@@ -15,7 +15,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.Patient = function() {
-	var _baseUrl = "/netcare-web/api/user";
 	var _ajax = new NC.Ajax();
 	
 	var public = {

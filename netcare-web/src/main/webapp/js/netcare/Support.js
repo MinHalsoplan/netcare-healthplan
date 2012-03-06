@@ -40,13 +40,11 @@ NC.Support = function() {
 	 */
 	var _loadCaptions = function(url, record, fields, onLoaded) {
 		NC.log("Loading support captions from url: " + url);
-		var data = new Object();
-		data.record = record;
-		data.fields = fields;
-		
-		_ajax.postSynchronous(url, JSON.stringify(data), function(data) {
-			onLoaded(data.data, null);
-		});
+		var msg = new Object();
+		msg.record = record;
+		msg.fields = fields;
+				
+		_ajax.postSynchronous(url, msg, function(data) { onLoaded(data.data); });
 	};
 	
 	var _createOptions = function(options, selectElem) {
@@ -108,7 +106,7 @@ NC.Support = function() {
 			var url = '/support/caption';
 			_loadCaptions(url, record, fields, function(data) {
 				callback(data);
-			});
+			}); 
 		},
 		
 		/**
@@ -131,6 +129,10 @@ NC.Support = function() {
 				NC.log("Got result: " + data);
 				callback(data);
 			});
+		},
+		
+		loadMessage : function(code, callback) {
+			_ajax.getWithParams('/support/message', { code : code }, callback, false);
 		}
 	};
 	

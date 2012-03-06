@@ -36,6 +36,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -151,5 +152,11 @@ public class SupportApi extends ApiSupport {
 			map.put(field, o.getValue());
 		}
 		return ServiceResultImpl.createSuccessResult(map, new GenericSuccessMessage());	
+	}
+	
+	@RequestMapping(value="/message", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<String> loadMessage(@RequestParam(value="code") final String code, final Locale locale) {
+		return ServiceResultImpl.createSuccessResult(this.messageSource.getMessage(code, null, locale), new GenericSuccessMessage());
 	}
 }

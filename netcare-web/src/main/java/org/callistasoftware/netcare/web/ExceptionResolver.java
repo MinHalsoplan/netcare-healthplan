@@ -26,16 +26,12 @@ import org.callistasoftware.netcare.core.spi.EmailNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 public class ExceptionResolver extends SimpleMappingExceptionResolver {
 
 	private static final Logger log = LoggerFactory.getLogger(ExceptionResolver.class);
-	
-	@Value("#{application['support.email']}")
-	private String email;
 	
 	@Autowired
 	private EmailNotificationService emailService;
@@ -49,8 +45,7 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 		ex.printStackTrace(new PrintWriter(sw));
 		
 		log.error("Internal error", ex);
-		
-		this.emailService.sendEmail(sw.toString(), "Netcare Exception", email);
+		this.emailService.sendSupportEmail(sw.toString());
 		
 		final ModelAndView mav = super.resolveException(request, response, handler, ex);
 		mav.setViewName("error/error");

@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
@@ -65,7 +66,7 @@
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0,
-					buttonImage : '/netcare-web/img/icons/16/date.png'
+					buttonImage : NC.getContextPath() + '/img/icons/16/date.png'
 				});
 				
 				support.loadMonths(function(data) {
@@ -193,89 +194,106 @@
 				};
 				
 				var types = NC.ActivityTypes();
+				var activityTypes = new Array();
 				
 				/*
-				 * Auto complete activity type field
+				 * Fill activity types in drop down
+				 */ 
+				var cUnit = '<c:out value="${requestScope.result.data.careUnit.hsaId}" />';
+				types.load(cUnit, function(data) {
+					$.each(data.data, function(i, v) {
+						activityTypes.push(v);
+						$('select[name="activityType"]').append(
+							$('<option>').attr('value', v.id).html(v.name)		
+						);	
+					});
+					
+					/* Trigger change when page loads */
+					$('select[name="activityType"]').change();
+				});
+				
+				/*
+				 * When user selects an activity type
 				 */
-				$('input[name="activityType"]').autocomplete('option', {
-					source : function(request, response) {
-						types.search(request.term, function(data) {
-							NC.log("Found " + data.data.length + " activity types");
-							response($.map(data.data, function(item) {
-								return { label : item.name + ' (' + item.category.name + ')', value : item.name, data : item}
-							}));
-						});
-					},
-					select : function(event, ui) {
+				var selectActivityType = function(id, itemData) {
+					$('input[name="activityTypeId"]').attr('value', id);
+					$('#measureValues').remove();
+					
+					var minValue = '';
+					var maxValue = '';
+					var value = '';
+					var title = '';
+					new NC.Support().loadCaptions('result', ['targetMinValue', 'targetMaxValue', 'value', 'title'], function(data) {
+						minValue = data.targetMinValue;
+						maxValue = data.targetMaxValue;
+						value = data.value;
+					});
+					
+					/*
+					 * Loop through all measure values
+					 */
+					var data = itemData;
+					NC.log("Selected data is: " + data);
+					
+					var fieldset = $('<fieldset>').attr('id', 'measureValues');
+					fieldset.append(
+						$('<legend>').html(title)
+					);
+					
+					$.each(data.measureValues, function(i, v) {
+						NC.log("Processing " + v.name);
 						
-						$('input[name="activityTypeId"]').attr('value', ui.item.data.id);
-						$('#measureValues').remove();
-						
-						var minValue = '';
-						var maxValue = '';
-						var value = '';
-						var title = '';
-						new NC.Support().loadCaptions('measureValue', ['minValue', 'maxValue', 'value', 'title'], function(data) {
-							minValue = data.minValue;
-							maxValue = data.maxValue;
-							value = data.value;
-						});
-						
-						/*
-						 * Loop through all measure values
-						 */
-						var data = ui.item.data;
-						NC.log("Selected data is: " + data);
-						
-						var fieldset = $('<fieldset>').attr('id', 'measureValues');
-						fieldset.append(
-							$('<legend>').html(title)
+						var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
+						var row = $('<div>').addClass('row').append(
+							$('<div>').addClass('span10').append(
+								rowCol
+							)
 						);
 						
-						$.each(data.measureValues, function(i, v) {
-							NC.log("Processing " + v.name);
-							
-							var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
-							var row = $('<div>').addClass('row').append(
-								$('<div>').addClass('span9').append(
-									rowCol
+						rowCol.append(
+							$('<div>').addClass('span2').append(
+								$('<div>').addClass('clearfix').append(
+									$('<label>').html('&nbsp')
+								).append(
+									$('<span>').css('vertical-align', 'middle').append($('<strong>').html(v.name)) 
 								)
-							);
-							
-							rowCol.append(
-								$('<div>').addClass('span2').append(
-									$('<div>').addClass('clearfix').append(
-										$('<label>').html('&nbsp')
-									).append(
-										$('<span>').css('vertical-align', 'middle').append($('<strong>').html(v.name)) 
-									)
-								)
-							);
-							
-							if (v.valueType.code == "INTERVAL") {
-								
-								addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
-								addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
-								
-							} else if (v.valueType.code == "SINGLE_VALUE") {
-								
-								addMeasureValueInput(v.id + '-1', rowCol, value, v);
-								
-							} else {
-								throw new Error("Unsupported value type");
-							}
-							
-							fieldset.append(row);
-							
-						});
+							)
+						);
 						
-						$('#activityFieldset').append(fieldset);
+						if (v.valueType.code == "INTERVAL") {
+							addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
+							addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
+						} else if (v.valueType.code == "SINGLE_VALUE") {
+							addMeasureValueInput(v.id + '-1', rowCol, value, v);
+						} else {
+							throw new Error("Unsupported value type");
+						}
 						
-						/*
-						 * Move focus to the first measure value
-						 */
-						$('#measureValues input').get(0).focus();
-					}
+						fieldset.append(row);
+						
+					});
+					
+					$('#activityFieldset').append(fieldset);
+					
+					/*
+					 * Move focus to the first measure value
+					 */
+					$('#measureValues input').get(0).focus();
+				};
+				
+				/*
+				 * The user selected an activity type. Update to reflect measure values etc
+				 */
+				$('select').change(function(e) {
+					var value = $('select[name="activityType"] option:selected').attr('value');
+					var obj = new Object();
+					$.each(activityTypes, function(i, v) {
+						if (v.id == value) {
+							obj = v;
+						}
+					});
+					
+					selectActivityType(value, obj);
 				});
 				
 				/*
@@ -359,11 +377,8 @@
 					
 					NC.log("Public definition: " + activity.publicDefinition);
 					
-					var jsonObj = JSON.stringify(activity);
-					NC.log("JSON: " + jsonObj.toString());
-					
 					var hp = new NC.HealthPlan();
-					hp.addActivity(healthPlan, jsonObj, function(data) {
+					hp.addActivity(healthPlan, activity, function(data) {
 						NC.log("Success callback is executing...");
 						NC.log("Resetting form");
 						
@@ -394,37 +409,36 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><c:out value="${requestScope.result.data.name}" /> : <spring:message code="activities" /></h2>
+			<c:set var="healthPlanName" value="${requestScope.result.data.name}" scope="page"/>
+			<spring:message code="activity.new" var="title" scope="page" />
+		
+			<h2><c:out value="${healthPlanName}" /> : <spring:message code="activity.title" /></h2>
 			<p>
-				<span class="label label-info">Information</span>
-				Den här sidan låter dig schemalägga aktiviteter som ingår i hälsoplanen. Du anger
-				dagar samt tider som aktiviteten skall utföras.
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="activity.desc" arguments="${healthPlanName},${title}" />
 			</p>
-			
-			<spring:message code="newActivity" var="title" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px">
 				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			
 			<netcare:form id="activityForm">
-			
 				<fieldset id="activityFieldset">
-					<legend><spring:message code="activity" /> <spring:message code="and" /> <spring:message code="goal" /></legend>
+					<legend><spring:message code="activity.form.nameAndGoal" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
-							<spring:message code="what" var="what" scope="page" />
+							<spring:message code="activity.form.type" var="what" scope="page" />
 							<netcare:field name="activityType" label="${what}">
-								<input type="text" name="activityType" class="medium nc-autocomplete" />
-								<input type="hidden" name="activityTypeId" />	
-								<p><a href="<c:url value="/netcare/admin/activitytypes" />">Lägg till ny aktivitetstyp</a></p>
+								<select name="activityType" class="medium"></select>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
+								</sec:authorize>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
 				</fieldset>
 				
 				<fieldset id="scheduleFieldset">
-					<legend><spring:message code="schedule" /></legend>
 					<netcare:row>
 						<netcare:col span="3">
 							<spring:message code="startDate" var="start" scope="page" />
@@ -443,15 +457,15 @@
 				</fieldset>
 				
 				
-				<spring:message code="addTime" var="addTime" scope="page" />
+				<spring:message code="activity.form.time" var="addTime" scope="page" />
 				
 				<fieldset>
-					<legend><spring:message code="pickDaysAndTimes" /></legend>
+					<legend><spring:message code="activity.form.specifyTimes" /></legend>
 					<netcare:row id="mondayContainer">
 						<netcare:col span="1">
 							<spring:message code="monday" var="monday" scope="page" />
 							<netcare:field name="day" label="${monday}">
-								<input type="checkbox" name="day" value="monday"/>
+								<input type="checkbox" name="day" value="monday" placeholder="<spring:message code="pattern.time" />"/>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="3">
@@ -461,7 +475,7 @@
 							</netcare:field>
 						</netcare:col>
 						<div id="mondayAddedTimes" class="span6" style="display: none">
-							<p><strong><spring:message code="times" /></strong></p>
+							<p><strong><spring:message code="activity.form.times" /></strong></p>
 						</div>
 					</netcare:row>
 					
@@ -481,7 +495,7 @@
 									</netcare:field>
 								</div>
 								<div id="tuesdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -504,7 +518,7 @@
 									</netcare:field>
 								</div>
 								<div id="wednesdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -527,7 +541,7 @@
 									</netcare:field>
 								</div>
 								<div id="thursdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -550,7 +564,7 @@
 									</netcare:field>
 								</div>
 								<div id="fridayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -573,7 +587,7 @@
 									</netcare:field>
 								</div>
 								<div id="saturdayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -596,7 +610,7 @@
 									</netcare:field>
 								</div>
 								<div id="sundayAddedTimes" class="span6" style="display: none">
-									<p><strong><spring:message code="times" /></strong></p>
+									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
 						</div>
@@ -605,33 +619,31 @@
 				
 				<netcare:row id="publicDefinitionContainer">
 					<netcare:col span="5">
-						<netcare:field name="publicDefinition" label="Ska vårdgivare få ta del av denna aktiviteten?">
+						<spring:message code="activity.form.permission" var="permission" scope="page" />
+						<netcare:field name="publicDefinition" label="${permission}">
 							<input type="checkbox" name="publicDefinition" value="true" checked="checked"/>
 						</netcare:field>
 					</netcare:col>
 				</netcare:row>
-			
-				<div class="form-actions">
-					<spring:message code="create" var="create" scope="page" />
-					<spring:message code="clear" var="clear" scope="page" />
 				
-					<input type="submit" class="btn btn-primary" value="${create}"/>
-					<input type="reset" class="btn" value="${clear}"/>
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary"><spring:message code="activity.form.submit" /></button>
+					<button type="reset" class="btn"><spring:message code="clear" /></button>
 				</div>
 			
 			</netcare:form>
 			
 			<div id="activityContainer">
 				<div class="alert alert-info" style="display: none;">
-					<p><spring:message code="noActivities" />
+					<p><spring:message code="activity.none" />
 				</div>
 				<netcare:table id="activitiesTable">
 					<thead>
 						<tr>
-							<th><spring:message code="type" /></th>
-							<th><spring:message code="activityCategory" /></th>
-							<th><spring:message code="startDate" /></th>
-							<th><spring:message code="phome.frequency" /></th>
+							<th><spring:message code="activity.type" /></th>
+							<th><spring:message code="activity.category" /></th>
+							<th><spring:message code="activity.start" /></th>
+							<th><spring:message code="activity.frequency" /></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>

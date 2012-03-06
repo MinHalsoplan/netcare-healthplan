@@ -40,15 +40,15 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	private CareUnit careUnit;
 	
 	public CareGiverBaseViewImpl() {
-		super(null, null);
+		super(null, null, null);
 	}
 	
-	public CareGiverBaseViewImpl(final Long id, final String name) {
-		super(id, name);
+	public CareGiverBaseViewImpl(final Long id, final String name, final String surname) {
+		super(id, name, surname);
 	}
 	
 	public static CareGiverBaseView newFromEntity(final CareGiverEntity entity) {
-		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getId(), entity.getName());
+		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getId(), entity.getFirstName(), entity.getSurName());
 		cg.setHsaId(entity.getHsaId());
 		cg.setCareUnit(CareUnitImpl.newFromEntity(entity.getCareUnit()));
 

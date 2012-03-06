@@ -35,7 +35,12 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h1><spring:message code="report.header" /></h1>
+			<h2><spring:message code="report.header" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="report.desc" />
+			</p>
+			
 			<netcare:report />	
 		</netcare:content>
 	</netcare:body>

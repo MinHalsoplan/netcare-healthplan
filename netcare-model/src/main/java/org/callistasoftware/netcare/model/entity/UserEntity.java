@@ -42,8 +42,11 @@ public abstract class UserEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@Column(length=64, nullable=false)
-	private String name;
+	@Column(name="first_name", length=64, nullable=false)
+	private String firstName;
+	
+	@Column(name="sur_name", length=64, nullable=false)
+	private String surName;
 	
 	@Column(length=256, unique=true)
 	private String email;
@@ -57,8 +60,9 @@ public abstract class UserEntity {
 	UserEntity() {
 	}
 	
-	UserEntity(final String name) {
-		this.setName(name);
+	UserEntity(final String firstName, final String surName) {
+		this.setFirstName(firstName);
+		this.setSurName(surName);
 		this.properties = new HashMap<String, String>();
 	}
 	
@@ -70,12 +74,20 @@ public abstract class UserEntity {
 		this.id = id;
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getFirstName() {
+		return this.firstName;
 	}
 	
-	public void setName(final String name) {
-		this.name = name;
+	public void setFirstName(final String name) {
+		this.firstName = name;
+	}
+	
+	public String getSurName() {
+		return this.surName;
+	}
+	
+	public void setSurName(final String surName) {
+		this.surName = surName;
 	}
 	
 	public String getEmail() {
@@ -100,4 +112,6 @@ public abstract class UserEntity {
 	}
 	
 	public abstract boolean isCareGiver();
+	
+	public abstract String getUsername();
 }

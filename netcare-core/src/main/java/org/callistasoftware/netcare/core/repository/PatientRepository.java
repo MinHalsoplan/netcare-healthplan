@@ -25,13 +25,14 @@ import org.springframework.data.repository.query.Param;
 
 public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	/**
-	 * Find patients by name, email or civic registration number
-	 * @param name
-	 * @param email
-	 * @param civicRegistrationNumber
+	 * Find patients by a free text search
+	 * @param search
 	 * @return
 	 */
-	List<PatientEntity> findByNameLikeOrEmailLikeOrCivicRegistrationNumberLike(final String name, final String email, final String civicRegistrationNumber);
+	@Query(value="select e from PatientEntity as e where lower(e.firstName) like lower(:search) " +
+			"or lower(e.civicRegistrationNumber) like lower(:search) or lower(e.surName) like lower(:search) " +
+			"or lower(e.email) like lower(:search)")
+	List<PatientEntity> findPatients(@Param("search") final String search);
 	
 	/**
 	 * Find a patient by its civic registration number

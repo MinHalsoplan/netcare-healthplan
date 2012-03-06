@@ -36,7 +36,6 @@
 						NC.log("Processing " + value.name + "...");
 						
 						var tr = $('<tr>');
-						//var id = $('<td>' + value.id + '</td>');
 						var name = $('<td>' + value.name + '</td>');
 						
 						tr.append(name);
@@ -54,8 +53,7 @@
 					var formData = new Object();
 					formData.name = $('input[name="name"]').val();
 					
-					var jsonObj = JSON.stringify(formData);
-					categories.create(jsonObj, function(data) {
+					categories.create(formData, function(data) {
 						categories.load(loadCallback);
 					});
 					
@@ -67,31 +65,48 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="activityCategories" /></h2>
-			<p>På den här sidan lägger du till nya aktivitetskategorier. Varje aktivitetskategori kan sedan innehålla flera aktivitetstyper. Etc...</p>
+			<h2><spring:message code="category.title" /></h2>
+			<p>
+				<span class="label notice"><spring:message code="information" /></span>
+				<spring:message code="category.desc" />
+			</p>
+			<p>
+				<span class="label important"><spring:message code="important" /></span>
+				<spring:message code="category.important" />
+			</p>
 			
 			<form id="activityCategoryForm">
 				<fieldset>
-					<legend><spring:message code="create" /></legend>
+					<legend><spring:message code="category.new" /></legend>
 				</fieldset>
 				
-				<netcare:field name="name">
+				<spring:message code="category.name" var="categoryName" scope="page" />
+				<netcare:field name="name" label="${categoryName}">
 					<input type="text" name="name" />
 				</netcare:field>
 				
 				<div class="form-actions">
-					<input type="submit" class="btn btn-primary" value="<spring:message code="create" />" />
+					<button type="submit" class="btn btn-primary"><spring:message code="category.new" /></button>
+					<button type="reset" class="btn"><spring:message code="clear" /></button>
 				</div>
 				
 			</form>
-			<netcare:table id="categoryTable">
-				<thead>
-					<tr>
-						<th><spring:message code="name" /></th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</netcare:table>
+			
+			<section id="categoryList">
+				<h3><spring:message code="category.list.title" /></h3>
+				<p>
+					<span class="label notice"><spring:message code="information" /></span>
+					<spring:message code="category.list.desc" />
+				</p>
+				<netcare:table id="categoryTable">
+					<thead>
+						<tr>
+							<th><spring:message code="name" /></th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</netcare:table>
+			</section>
 		</netcare:content>
 		
 	</netcare:body>	

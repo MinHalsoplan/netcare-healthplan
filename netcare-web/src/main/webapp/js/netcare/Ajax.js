@@ -16,7 +16,7 @@
  */
 NC.Ajax = function() {
 	
-	var _contextPath = '/netcare-web';
+	var _contextPath = NC.getContextPath();
 	var _basePath = '/api';
 	
 	var _dataType = 'json';
@@ -45,7 +45,7 @@ NC.Ajax = function() {
 	
 	var _showMessages = function(show) {
 		var showMessages;
-		if (show === undefined || show == null) {
+		if (show === undefined || show == null || show == false) {
 			showMessages = false;
 		} else {
 			showMessages = true;
@@ -58,7 +58,6 @@ NC.Ajax = function() {
 		NC.log("==== AJAX GET " + url + " ====");
 		return {
 			url : url,
-			dataType : _dataType,
 			cache : false,
 			success : function(data) {
 				_defaultSuccess(data, _showMessages(displayMessages), callback);
@@ -97,9 +96,11 @@ NC.Ajax = function() {
 			post : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
-				opts.contentType = 'application/json';
+				opts.contentType = _contentType;
+				opts.dataType = _dataType;
 				if (data != null) {
-					opts.data = data;
+					opts.data = JSON.stringify(data);
+					NC.log("data: " + opts.data);
 				}
 				
 				$.ajax(opts);
@@ -108,6 +109,8 @@ NC.Ajax = function() {
 			postWithParams : function(url, data, callback, displayMessage) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessage);
+				//opts.contentType = _contentType;
+				opts.dataType = _dataType;
 				if (data != null) {
 					opts.data = data;
 				}
@@ -119,10 +122,10 @@ NC.Ajax = function() {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
 				opts.async = false;
-				opts.contentType = 'application/json';
-				
+				opts.contentType = _contentType;
+				opts.dataType = _dataType;
 				if (data != null) {
-					opts.data = data;
+					opts.data = JSON.stringify(data);
 				}
 				
 				$.ajax(opts);

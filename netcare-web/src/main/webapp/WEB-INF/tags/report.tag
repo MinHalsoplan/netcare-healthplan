@@ -27,7 +27,7 @@
 
 <div id="historyOptions">
 	<input id="historyBoxId" type="checkbox" />
-	<spring:message code="report.showHistory" />
+	<strong><spring:message code="report.showHistory" /></strong>
 </div>
 
 <div id="reportFormDiv" class="modal hide fade" style="display: none;">

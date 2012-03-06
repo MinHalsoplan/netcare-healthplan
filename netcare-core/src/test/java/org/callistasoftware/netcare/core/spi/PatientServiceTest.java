@@ -55,11 +55,11 @@ public class PatientServiceTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789001");
-		final PatientEntity p2 = PatientEntity.newEntity("Peter", "123456789002");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "", "123456789001");
+		final PatientEntity p2 = PatientEntity.newEntity("Peter", "", "123456789002");
 		
 		this.patientRepository.save(p1);
 		this.patientRepository.save(p2);
@@ -69,7 +69,7 @@ public class PatientServiceTest extends TestSupport {
 		assertEquals(1, result.getData().length);
 		
 		final PatientBaseView p = result.getData()[0];
-		assertEquals(p1.getName(), p.getName());
+		assertEquals(p1.getFirstName(), p.getFirstName());
 		assertEquals(p1.getCivicRegistrationNumber(), p.getCivicRegistrationNumber());
 		assertEquals(p1.getId(), p.getId());
 	}
@@ -81,10 +81,10 @@ public class PatientServiceTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "123456789004");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "", "123456789004");
 		final PatientEntity saved = this.patientRepository.save(p1);
 		
 		final ServiceResult<Patient> bv = this.service.loadPatient(saved.getId());
@@ -93,7 +93,7 @@ public class PatientServiceTest extends TestSupport {
 		assertNotNull(bv.getData());
 		
 		final PatientBaseView data = bv.getData();
-		assertEquals(saved.getName(), data.getName());
+		assertEquals(saved.getFirstName(), data.getFirstName());
 		assertEquals(saved.getId(), data.getId());
 		assertEquals(saved.getCivicRegistrationNumber(), data.getCivicRegistrationNumber());
 	}

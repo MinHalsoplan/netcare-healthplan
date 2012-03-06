@@ -21,8 +21,6 @@ import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,17 +32,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value="/activityType")
 public class ActivityTypeApi extends ApiSupport {
-
-	private static final Logger log = LoggerFactory.getLogger(ActivityTypeApi.class);
 	
 	@Autowired
 	private ActivityTypeService service;
 	
 	@RequestMapping(value="/load", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityType[]> loadActivityTypes() {
-		log.info("User {} (care giver: {}) is loading activity types", getUser().getName(), getUser().isCareGiver());
-		return this.service.loadAllActivityTypes();
+	public ServiceResult<ActivityType[]> loadActivityTypes(@RequestParam(value="hsa") final String hsaId) {
+		this.logAccess("load", "activity types");
+		return this.service.loadAllActivityTypes(hsaId);
 	}
 	
 	@RequestMapping(value="/search", method=RequestMethod.GET, produces="application/json")
@@ -54,10 +50,10 @@ public class ActivityTypeApi extends ApiSupport {
 		return this.service.searchForActivityTypes(text);
 	}
 	
-	@RequestMapping(value="/create", method=RequestMethod.POST)
+    @RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityType> createNewActivityType(@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("create", "activity type");
-		return this.service.createActivityType(activityType, (CareGiverBaseView)getUser());
+		return this.service.createActivityType(activityType, (CareGiverBaseView) getUser());
 	}
 }

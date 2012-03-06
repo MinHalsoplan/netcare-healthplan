@@ -70,15 +70,6 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 				var currentHealthPlanId = '';
 				$.each(data.data, function(index, value) {
 					
-					if (currentHealthPlanId != value.healthPlanId) {
-						var link = $('<a>').attr('href', '/netcare-web/netcare/user/healthplan/' + value.healthPlanId + '/view').html(value.healthPlanName);
-						$('#healthplan-menu').append(
-							$('<li>').append(link)
-						);
-						
-						currentHealthPlanId = value.healthPlanId;
-					}
-					
 					var period;
 					if (value.activityRepeat == 0) {
 						period = value.startDate;
@@ -142,7 +133,8 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 					$('#' + _eventBodyId).hide();
 				} else {
 					var msg = $('<a>');
-					msg.css('color', 'white');
+					msg.css('text-decoration', 'underline');
+					
 					var caps = _util.getCaptions();
 					msg.text(caps.newEvents);
 					msg.attr('href', 'report');

@@ -33,7 +33,8 @@
 				var util = new NC.Util();
 				var support = new NC.Support();
 				
-				util.bindNotEmptyField($('#nameContainer'), $('input[name="name"]'));
+				util.bindNotEmptyField($('#nameContainer'), $('input[name="firstName"]'));
+				util.bindNotEmptyField($('#nameContainer'), $('input[name="surName"]'));
 				util.bindNotEmptyField($('#cnrContainer'), $('input[name="cnr"]'));
 				util.bindLengthField($('#cnrContainer'), $('input[name="cnr"]'), 12);
 				
@@ -48,7 +49,7 @@
 							 */
 							patients.selectPatient(data.data.id, function(data) {
 								NC.log("Created patient selected. Go to home...");
-								window.location = '/netcare-web/netcare/home';
+								window.location = NC.getContextPath() + '/netcare/home';
 							});
 						}
 					}
@@ -67,46 +68,23 @@
 								
 								var tr = $('<tr>');
 								
-								var name = $('<td>' + value.name + '</td>');
+								var name = $('<td>' + value.surName + '</td>');
+								var firstName = $('<td>' + value.firstName + '</td>');
 								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 								var phone = $('<td>' + value.phoneNumber + '</td>');
 								
-								var loginAsIcon = util.createIcon('loginAs', 24, function() {
-									new NC.Patient().selectPatient(value.id, function(data) {
+								var loginAsIcon = $('<button>').addClass('btn primary').html('Välj patient').click(function(e) {
+									e.preventDefault();
+									patients.selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
-										
-										window.location = '/netcare-web/netcare/home';
-									});
-								});
-								
-								var deleteIcon = util.createIcon('trash', 24, function() {
-									NC.log("Delete patient.");
-									
-									support.loadCaptions(null, ['patientDelete'], function(data) {
-										var result = confirm(data.patientDelete);
-										if (result) {
-											NC.log("Deleting patient...");
-											patients.deletePatient(value.id, function(data) {
-												
-												NC.log("Comparing " + value.id + " " + currentPatientId);
-												if (value.id == currentPatientId) {
-													patients.unselect(function(data) {
-														window.location = '/netcare-web/netcare/home';
-													});
-												}
-												
-												NC.log("Patient deleted. Reload patients...");
-												patients.load(updatePatientTable);
-											});
-										}
+										window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
 									});
 								});
 								
 								var actionCol = $('<td>').css('text-align', 'right');
 								actionCol.append(loginAsIcon);
-								actionCol.append(deleteIcon);
 								
-								tr.append(name).append(cnr).append(phone).append(actionCol);
+								tr.append(name).append(firstName).append(cnr).append(phone).append(actionCol);
 								
 								$('#patientsTable tbody').append(tr);
 							});
@@ -126,12 +104,12 @@
 					event.preventDefault();
 					
 					var formData = new Object();
-					formData.name = $('input[name="name"]').val();
-					formData.civicRegistrationNumber = $('input[name="cnr"]').val();
+					formData.firstName = $('input[name="firstName"]').val();
+					formData.surName = $('input[name="surName"]').val();
+					formData.civicRegistrationNumber = $('input[name="crn"]').val();
 					formData.phoneNumber = $('input[name="phoneNumber"]').val();
 					
-					var jsonObj = JSON.stringify(formData);
-					patients.create(jsonObj, updatePatientTable);
+					patients.create(formData, updatePatientTable);
 					
 					$('#patientForm :reset').click();
 				});
@@ -147,37 +125,52 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="patients" /></h2>
+			<h2><spring:message code="admin.patients.new" /></h2>
 			<p>
 				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="patient.titleDesc" />
+				<spring:message code="admin.patients.desc" />
 			</p>
 			
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton">
-					<spring:message code="newPatient" />
+					<spring:message code="admin.patients.new" />
 				</a>
 			</p>
 			
 			<form id="patientForm">
 				<fieldset>
-					<legend><spring:message code="newPatient" /></legend>
+					<legend><spring:message code="admin.patients.new" /></legend>
 				</fieldset>
 				
-				<spring:message code="patient.name" var="name" scope="page"/>
-				<netcare:field containerId="nameContainer" name="name" label="${name}">
-					<input type="text" name="name" />
-				</netcare:field>
+				<netcare:row>
+					<netcare:col span="5">
+						<spring:message code="patient.firstName" var="name" scope="page"/>
+						<netcare:field containerId="nameContainer" name="firstName" label="${name}">
+							<input type="text" name="firstName" />
+						</netcare:field>
+					</netcare:col>
+					<netcare:col span="5">
+						<spring:message code="patient.surName" var="surName" scope="page"/>
+						<netcare:field containerId="nameContainer" name="surName" label="${surName}">
+							<input type="text" name="surName" />
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
 				
-				<spring:message code="patient.cnr" var="cnr" scope="page" />
-				<netcare:field containerId="cnrContainer" name="cnr" label="${cnr}">
-					<input type="text" name="cnr" />
-				</netcare:field>
-				
-				<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
-				<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
-					<input type="tel" name="phoneNumber" />
-				</netcare:field>
+				<netcare:row>
+					<netcare:col span="5">
+						<spring:message code="patient.crn" var="cnr" scope="page" />
+						<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
+							<input type="text" name="crn" />
+						</netcare:field>
+					</netcare:col>
+					<netcare:col span="5">
+						<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
+						<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
+							<input type="tel" name="phoneNumber" />
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
 				
 				<div class="form-actions">
 					<input type="submit" class="btn btn-primary" value="<spring:message code="create" />" />
@@ -187,15 +180,23 @@
 			</form>
 			
 			<section id="patients">
+				<h3><spring:message code="admin.patients.list" /></h3>
+				<p>
+					<span class="label label-info"><spring:message code="information" /></span>
+					<spring:message code="admin.patients.list.desc" />
+				</p>
 				<div class="alert alert-info" style="display: none;">
-					<p><spring:message code="noPatients" /></p>
+					<p><spring:message code="admin.patients.none" /></p>
 				</div>
 				<netcare:table id="patientsTable">
 					<thead>
-						<th><spring:message code="patient.name" /></th>
-						<th><spring:message code="patient.cnr" /></th>
-						<th><spring:message code="patient.phoneNumber" />
-						<th>&nbsp;</th>
+						<tr>
+							<th><spring:message code="patient.surName" /></th>
+							<th><spring:message code="patient.firstName" /></th>
+							<th><spring:message code="patient.crn" /></th>
+							<th><spring:message code="patient.phoneNumber" />
+							<th>&nbsp;</th>
+						</tr>
 					</thead>
 					<tbody>
 					

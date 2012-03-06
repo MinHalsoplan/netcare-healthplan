@@ -48,7 +48,7 @@ public class AlarmApi extends ApiSupport {
 		throw new SecurityException("Illegal to access alarms for care unit. No logged in user or user is not a care giver.");
 	}
 	
-	@RequestMapping(value="/{alarm}/resolve", produces="application/json", consumes="application/json", method=RequestMethod.POST)
+	@RequestMapping(value="/{alarm}/resolve", produces="application/json",  method=RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<Alarm> resolveAlarm(@PathVariable(value="alarm") final Long alarm) {
 		this.logAccess("resolve", "alarm");

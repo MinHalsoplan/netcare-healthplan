@@ -45,6 +45,9 @@ public class ActivityTypeImpl implements ActivityType {
 	
 	private MeasurementType[] measureValues;
 	
+	//
+	public ActivityTypeImpl() {}
+	
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
@@ -129,6 +132,14 @@ public class ActivityTypeImpl implements ActivityType {
 	}
 	
 	public void setMeasureValues(final MeasurementTypeImpl[] measureValues) {
+		this.measureValues = measureValues;
+	}
+	
+	public void setMeasuringSense(boolean measuringSense) {
+		this.measuringSense = measuringSense;
+	}
+
+	public void setMeasureValues(MeasurementType[] measureValues) {
 		this.measureValues = measureValues;
 	}
 }

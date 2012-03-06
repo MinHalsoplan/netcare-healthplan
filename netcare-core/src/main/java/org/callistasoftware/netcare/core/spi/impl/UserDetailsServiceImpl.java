@@ -16,19 +16,23 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
+import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.UserDetailsService;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +45,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserDetailsServiceImpl extends ServiceSupport implements UserDetailsService {
 	
-	private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
-	
 	@Autowired
 	private PatientRepository patientRepository;
 	
@@ -53,7 +55,7 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		
-		log.info("Lookup user {}", username);
+		getLog().info("Lookup user {}", username);
 		
 		/*
 		 * Username will be civic registration number
@@ -61,18 +63,18 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		 */
 		final PatientEntity patient = this.patientRepository.findByCivicRegistrationNumber(username);
 		if (patient == null) {
-			log.debug("Could not find any patients matching {}. Trying with care givers...", username);
+			getLog().debug("Could not find any patients matching {}. Trying with care givers...", username);
 			
 			final CareGiverEntity cg = this.careGiverRepository.findByHsaId(username);
 			if (cg == null) {
-				log.debug("Could not find any care giver matching {}", username);
+				getLog().debug("Could not find any care giver matching {}", username);
 			} else {
 				return CareGiverBaseViewImpl.newFromEntity(cg);
 			}
 		} else {
 			
-			log.debug("Patient found.");
-			log.debug("Mobile user: " + patient.isMobile());
+			getLog().debug("Patient found.");
+			getLog().debug("Mobile user: " + patient.isMobile());
 			
 			return PatientBaseViewImpl.newFromEntity(patient);
 		}
@@ -85,8 +87,41 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 	public void registerForC2dmPush(String c2dmRegistrationId) {
 		final UserEntity user = this.getCurrentUser();
 		
-		log.info("User: {} registers for c2dm push using reg id: {}", user.getName(), c2dmRegistrationId);
+		getLog().info("User: {} registers for c2dm push using reg id: {}", user.getFirstName(), c2dmRegistrationId);
 		user.getProperties().put("c2dmRegistrationId", c2dmRegistrationId);
+	}
+
+	@Override
+	public void registerForApnsPush(String apnsRegistrationId) {
+		final UserEntity user = this.getCurrentUser();
+		
+		getLog().info("User: {} registers for apns push using reg id: {}", user.getFirstName(), apnsRegistrationId);
+		user.getProperties().put("apnsRegistrationId", apnsRegistrationId);
+	}
+
+	@Override
+	public ServiceResult<Boolean> saveUserData(String firstName, String surName) {
+		final UserEntity user = this.getCurrentUser();
+		
+		getLog().info("Updating user data for user {}", user.getUsername());
+		
+		user.setFirstName(firstName);
+		user.setSurName(surName);
+		
+		final UserBaseView ubv;
+		if (user.isCareGiver()) {
+			ubv = CareGiverBaseViewImpl.newFromEntity((CareGiverEntity) user);
+		} else {
+			ubv = PatientBaseViewImpl.newFromEntity((PatientEntity) user);
+		}
+		
+		/*
+		 * Refresh security context
+		 */
+		getLog().debug("Refreshing security context with updated firstname/surname");
+		SecurityContextHolder.getContext().setAuthentication(new PreAuthenticatedAuthenticationToken(ubv, "n/a"));
+		
+		return ServiceResultImpl.createSuccessResult(Boolean.TRUE, new GenericSuccessMessage());
 	}
 
 }

@@ -46,14 +46,14 @@ public class ActivityCommentImpl implements ActivityComment {
 		this.activityName = entity.getActivity().getActivityDefinitionEntity().getActivityType().getName();
 		this.activityReportedAt = DateUtil.toDateTime(entity.getActivity().getReportedTime());
 		this.commentedAt = DateUtil.toDateTime(entity.getCommentedAt());
-		this.commentedBy = entity.getCommentedBy().getName();
+		this.commentedBy = entity.getCommentedBy().getFirstName();
 		
 		if (entity.getRepliedAt() != null) {
 			this.reply = entity.getReply();
 			this.repliedAt = DateUtil.toDateTime(entity.getRepliedAt());
 			
 			final PatientEntity p = entity.getActivity().getActivityDefinitionEntity().getHealthPlan().getForPatient();
-			this.repliedBy = p.getName() + " (" + p.getCivicRegistrationNumber() + ")";
+			this.repliedBy = p.getFirstName() + " (" + p.getCivicRegistrationNumber() + ")";
 		}
 	}
 	

@@ -19,6 +19,10 @@ NC = {
 		log : function(msg) {
 			console.log(msg);
 		},
+		
+		getContextPath : function() {
+			return GLOB_CTX_PATH;
+		},
 
 		focusGained : function(inputField) {
 			$(inputField).css('background', '#D9EDF7');
@@ -61,7 +65,6 @@ $(document).ready(function() {
 	/*
 	 * Bind all autocomplete boxes
 	 */
-	NC.log("Bind autocomplete fields...");
 	$('.nc-autocomplete').autocomplete({
 		search : function(event, ui) {
 			$(this).addClass('spinner');
@@ -74,10 +77,9 @@ $(document).ready(function() {
 	$('.nc-autocomplete').blur(function() {
 		$(this).removeClass('spinner');
 	});
-	NC.log("done.");
 	
 	var handleErrorCode = function(code) {
-		window.location.href = '/netcare-web/netcare/error/' + code;
+		window.location.href = NC.getContextPath() + '/netcare/error/' + code;
 		return false;
 	};
 	
@@ -114,7 +116,6 @@ $(document).ready(function() {
 	/*
 	 * Setup ajax status mappings
 	 */
-	NC.log("Setting upp ajax...");
 	$.ajaxSetup({
 		dataType : 'json',
 		statusCode : {
@@ -130,7 +131,8 @@ $(document).ready(function() {
 		}
 	});
 	
-	NC.log("done.");
+	$('.addButton').css('background', 'url(' + NC.getContextPath() + '/img/icons/16/add.png) no-repeat 3px').css('padding-left', '24px');;
+	$('.spinner').css('background', 'url(' + NC.getContextPath() + '/img/ajax-loader-small.gif) no-repeat right');
 });
 
 

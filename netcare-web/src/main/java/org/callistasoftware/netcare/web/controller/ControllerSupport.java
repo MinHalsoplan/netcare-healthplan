@@ -16,19 +16,49 @@
  */
 package org.callistasoftware.netcare.web.controller;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 abstract class ControllerSupport {
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	protected Logger getLog() {
+		return this.log;
+	}
+	
 	protected UserBaseView getLoggedInUser() {
 		return (UserBaseView) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 	
 	protected PatientBaseView getCurrentPatient(final HttpSession session) {
 		return (PatientBaseView) session.getAttribute("currentPatient");
+	}
+	
+	protected WebApplicationContext getWebRequest(final ServletContext sc) {
+		return WebApplicationContextUtils.getWebApplicationContext(sc);
+	}
+	
+	protected String[] getActiveProfiles(final ServletContext sc) {
+		return this.getWebRequest(sc).getEnvironment().getActiveProfiles();
+	}
+	
+	protected boolean isProfileActive(final ServletContext sc, final String name) {
+		final String[] profiles = this.getActiveProfiles(sc);
+		for (final String s : profiles) {
+			if (s.equals(name)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

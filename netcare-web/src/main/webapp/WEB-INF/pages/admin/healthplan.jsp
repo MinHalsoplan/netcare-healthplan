@@ -55,24 +55,16 @@
 						
 						var resultIcon = util.createIcon('results', 24, function() {
 							healthPlans.results(value.id);
-						});
+						}, 'healthplan.icons.result');
 						
 						var editIcon = util.createIcon('edit', 24, function() {
 							healthPlans.view(value.id);
-						});
+						}, 'healthplan.icons.edit');
 						
-						var deleteIcon = util.createIcon('trash', 24, function() {
-							healthPlans.remove(value.id, function(data) {
-								healthPlans.list(value.patient.id, listCallback);
-							});
-						});
-						
-						var actionCol = $('<td>');
-						actionCol.css('text-align', 'right');
+						var actionCol = $('<td>').css('text-align', 'right');
 						
 						resultIcon.appendTo(actionCol);
 						editIcon.appendTo(actionCol);
-						deleteIcon.appendTo(actionCol);
 						
 						$('#ordinationTable tbody').append(
 								$('<tr>').append(
@@ -100,7 +92,7 @@
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0,
-					buttonImage : '/netcare-web/img/icons/16/date.png',
+					buttonImage : NC.getContextPath() + '/img/icons/16/date.png',
 					buttonImageOnly : true
 				});
 				
@@ -127,10 +119,7 @@
 					formData.durationUnit.code = $('#createHealthPlanForm select option:selected').attr('value');
 					formData.durationUnit.value = $('#createHealthPlanForm select option:selected').val();
 					
-					var jsonObj = JSON.stringify(formData);
-					NC.log("JSON: " + jsonObj.toString());
-					
-					healthPlans.create(jsonObj, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
+					healthPlans.create(formData, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
 						$('#createHealthPlanForm :reset').click();
 						healthPlans.view(data.data.id);
 					});
@@ -149,26 +138,28 @@
 	</netcare:header>
 	<netcare:body>
 		<netcare:content>
-			<h2><spring:message code="healthPlans" /> för <c:out value="${sessionScope.currentPatient.name}" /></h2>
+			<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
+			<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
+			
+			<h2><spring:message code="healthplan.title" arguments="${curPatient}"/></h2>
 			<p>
-				<span class="label label-info">Information</span>
-				Den här sidan visar hälsoplaner för <c:out value="${sessionScope.currentPatient.name}" />. Du kan även skapa
-				till en ny hälsoplan genom att klicka på "Skapa hälsoplan" länken nedan.
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="healthplan.desc" arguments="${curPatient},${newHealthPlan}" />
 			</p>
 			
-			<spring:message code="newHealthPlan" var="title" scope="page"/>
 			<spring:message code="clear" var="clear" scope="page" />
-			<spring:message code="duration" var="duration" scope="page" />
-			<spring:message code="name" var="name" scope="page" />
-			<spring:message code="type" var="type" scope="page" />
-			<spring:message code="startDate" var="startDate" scope="page" />
+			<spring:message code="healthplan.duration" var="duration" scope="page" />
+			<spring:message code="healthplan.name" var="name" scope="page" />
+			<spring:message code="healthplan.type" var="type" scope="page" />
+			<spring:message code="healthplan.start" var="startDate" scope="page" />
+			<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px;">
-				<a id="showCreateForm" class="btn addButton"><c:out value="${title}" /></a>
+				<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
 			</p>
 			<netcare:form id="createHealthPlanForm">
 				<fieldset>
-					<legend>${title}</legend>
+					<legend><spring:message code="healthplan.new" /></legend>
 					<netcare:field name="name" label="${name}">
 						<input type="text" name="name" class="xlarge" />
 					</netcare:field>
@@ -196,7 +187,7 @@
 				</fieldset>
 				
 				<div class="form-actions">
-					<input type="submit" class="btn btn-primary" value="${title}" />
+					<input type="submit" class="btn btn-primary" value="${newHealthPlan}" />
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				
@@ -204,15 +195,15 @@
 			
 			<div id="healthPlanContainer">
 				<div style="display: none;" class="alert alert-info">
-					<p><spring:message code="noHealthPlans" /></p>
+					<p><spring:message code="healthplan.none" /></p>
 				</div>
 				<netcare:table id="ordinationTable">
 					<thead>
 						<tr>
-							<th><spring:message code="name" /></th>
-							<th><spring:message code="duration" /></th>
-							<th><spring:message code="startDate" /></th>
-							<th><spring:message code="issuedBy" /></th>
+							<th><c:out value="${name}" /></th>
+							<th><c:out value="${duration}" /></th>
+							<th><c:out value="${startDate}" /></th>
+							<th><c:out value="${issuedBy}" /></th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>

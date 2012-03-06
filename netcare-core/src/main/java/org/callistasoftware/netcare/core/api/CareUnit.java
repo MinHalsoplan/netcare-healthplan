@@ -16,7 +16,9 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-public interface CareUnit {
+import java.io.Serializable;
+
+public interface CareUnit extends Serializable {
 
 	/**
 	 * Get the hsa id of the care unit

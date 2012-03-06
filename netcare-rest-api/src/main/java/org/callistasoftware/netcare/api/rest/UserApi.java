@@ -27,6 +27,7 @@ import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.PatientService;
+import org.callistasoftware.netcare.core.spi.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class UserApi extends ApiSupport {
 	
 	@Autowired
 	private PatientService patientService;
+	
+	@Autowired
+	private UserDetailsService userService;
 	
 	@RequestMapping(value = "/find", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
@@ -75,7 +79,7 @@ public class UserApi extends ApiSupport {
 		return this.patientService.loadPatient(patient);
 	}
 	
-	@RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+    @RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<Patient> updatePatient(@PathVariable(value="patient") final Long patient, @RequestBody final PatientImpl patientData) {
 		this.logAccess("update", "patient");
@@ -95,14 +99,21 @@ public class UserApi extends ApiSupport {
 		}
 	}
 	
-	@RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
+	@RequestMapping(value="/saveUserData", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<Boolean> saveUserData(@RequestParam(value="firstName") final String firstName, @RequestParam(value="surName") final String surName) {
+		this.logAccess("save", "user data");
+		return this.userService.saveUserData(firstName, surName);
+	}
+	
+    @RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<Patient> deletePatient(@PathVariable(value="patient") final Long patient) {
 		this.logAccess("delete", "patient");
 		return this.patientService.deletePatient(patient);
 	}
 	
-	@RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<? extends PatientBaseView> selectPatient(@PathVariable(value="patient") final Long patientId, final HttpSession session) {
 		log.info("Selecting patient {}", patientId);
@@ -113,11 +124,11 @@ public class UserApi extends ApiSupport {
 		if (result.isSuccess()) {
 			if (currentPatient == null) {
 				if (result.isSuccess()) {
-					log.debug("Setting new current patient in session scope. New patient is: {}", result.getData().getName());
+					log.debug("Setting new current patient in session scope. New patient is: {}", result.getData().getFirstName());
 					session.setAttribute("currentPatient", result.getData());
 				}
 			} else {
-				log.debug("Replacing patient {} with {} as current patient in session scope", currentPatient.getName(), result.getData().getName());
+				log.debug("Replacing patient {} with {} as current patient in session scope", currentPatient.getFirstName(), result.getData().getFirstName());
 				session.setAttribute("currentPatient", result.getData());
 			}
 		}
@@ -125,7 +136,7 @@ public class UserApi extends ApiSupport {
 		return result;
 	}
 	
-	@RequestMapping(value="/unselect", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/unselect", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<PatientBaseView> unselect(final HttpSession session) {
 		session.removeAttribute("currentPatient");

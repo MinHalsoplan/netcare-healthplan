@@ -125,7 +125,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 */
 	public static String CSV_EOL = "\r\n";
 	
-	@org.springframework.beans.factory.annotation.Value("#{application['csv.delimiter']}")
+	@org.springframework.beans.factory.annotation.Value("${csv.delimiter}")
 	private String CSV_SEP;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
@@ -767,7 +767,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<ActivityComment[]> loadRepliesForCareGiver() {
 		final CareGiverEntity cg = this.getCareGiver();
-		log.info("Loading replies for care giver {}", cg.getName());
+		log.info("Loading replies for care giver {}", cg.getFirstName());
 		
 		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg);
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments), new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions name="ValidateToken" targetNamespace="urn:mvk:asb:mvksso:ValidateToken:1:0:mvkasb10" xmlns:bons1="urn:mvk:asb:mvksso:ValidateToken:1:0:mvkasb10" xmlns:bons2="urn:mvk:asb:mvksso:ValidateIDResponder:1" xmlns:bons3="urn:mvk:asb:interaction:ValidateIdResponder:1:0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+    <xsd:schema targetNamespace="urn:mvk:asb:mvksso:ValidateToken:1:0:mvkasb10" xmlns:tns="urn:mvk:asb:mvksso:ValidateToken:1:0:mvkasb10">
+      <xsd:import namespace="urn:mvk:asb:interaction:ValidateIdResponder:1:0" schemaLocation="../se/modul1/mvk/asb/sso/ValidateIdResponseType.xsd"/>
+      <xsd:import namespace="urn:mvk:asb:mvksso:ValidateIDResponder:1" schemaLocation="../se/modul1/mvk/asb/sso/ValidateIDType.xsd"/>
+      <xsd:element name="validate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="requestpayload" nillable="true" type="bons2:ValidateIDType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="validateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="responsepayload" nillable="true" type="bons3:ValidateIdResponseType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+    <wsdl:message name="validateRequestMsg">
+    <wsdl:part element="bons1:validate" name="validateParameters"/>
+  </wsdl:message>
+    <wsdl:message name="validateResponseMsg">
+    <wsdl:part element="bons1:validateResponse" name="validateResult"/>
+  </wsdl:message>
+    <wsdl:portType name="ValidateToken">
+    <wsdl:operation name="validate">
+      <wsdl:input message="bons1:validateRequestMsg" name="validateRequest"/>
+      <wsdl:output message="bons1:validateResponseMsg" name="validateResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

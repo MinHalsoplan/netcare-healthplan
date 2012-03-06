@@ -57,11 +57,11 @@ public abstract class ApiSupport {
 	
 	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareGiverBaseView careGiver) {
 		log.info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
-				, new Object[] {careGiver.getName()
+				, new Object[] {careGiver.getFirstName()
 						, careGiver.getHsaId()
 						, action
 						, what
-						, target.getName()
+						, target.getFirstName()
 						, target.getCivicRegistrationNumber()});
 	}
 }

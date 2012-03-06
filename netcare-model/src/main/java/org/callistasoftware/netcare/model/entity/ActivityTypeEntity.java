@@ -34,7 +34,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="nc_activity_type")
-public class ActivityTypeEntity {
+public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -150,5 +150,35 @@ public class ActivityTypeEntity {
 
 	void setCareUnit(CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
+	}
+
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		if (!user.isCareGiver()) {
+			final PatientEntity p = (PatientEntity) user;
+			for (final HealthPlanEntity hp : p.getHealthPlans()) {
+				if (hp.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
+					return true;
+				}
+			}
+			
+			return false;
+		} else {
+			return this.isWriteAllowed(user);
+		}
+	}
+
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		if (!user.isCareGiver()) {
+			return false;
+		}
+		
+		final CareGiverEntity cg = (CareGiverEntity) user;
+		if (cg.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
+			return true;
+		}
+		
+		return false;
 	}
 }

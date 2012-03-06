@@ -23,13 +23,13 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Planerade Hälsoaktiviteter</title>
 	
+	<link rel="icon" href="<c:url value="/favicon.ico" />" type="image/vnd.microsoft.icon"/>
+	
 	<!-- Include Twitter bootstrap -->
-	<c:url value="/css/bootstrap.min.css" var="bootstrapCss" scope="page" />
-	<link rel="stylesheet" href="${bootstrapCss}" />
+	<link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css" />" />
 	
 	<!-- Include JQuery UI Css -->
-	<c:url value="/css/ui-lightness/jquery-ui-1.8.16.custom.css" var="jqueryUiCss" scope="page" />
-	<link href="${jqueryUiCss}" type="text/css" rel="stylesheet" />
+	<link href="<c:url value="/css/smoothness/jquery-ui-1.8.17.custom.css" />" type="text/css" rel="stylesheet" />
 	
 	<!-- Include our CSS -->
 	<c:url value="/css/netcare.css" var="netcareCss" scope="page" />
@@ -90,7 +90,7 @@
 	<script type="text/javascript" src="<c:url value="/js/jquery-1.7.1.min.js" />"></script>
 	
 	<!-- Include JQuery UI Widgets -->
-	<script type="text/javascript" src="<c:url value="/js/jquery-ui-1.8.16.custom.min.js" />"></script>
+	<script type="text/javascript" src="<c:url value="/js/jquery-ui-1.8.17.custom.min.js" />"></script>
 	
 	<!-- Twitter Bootstrap -->
 	<script type="text/javascript" src="<c:url value="/js/bootstrap.min.js" />"></script>
@@ -108,6 +108,12 @@
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientReport.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
+	
+	<script type="text/javascript">
+		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
+	</script>
+	
+	<c:set var="GLOB_CTX_PATH" value="${pageContext.request.contextPath}" />
 	
 	<jsp:doBody />
 </head>
