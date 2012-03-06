@@ -38,11 +38,11 @@
 	<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 
 	<jaxws:endpoint 
-		address="http://localhost:8080/validatetoken" 
+		address="http://localhost:8123/validatetoken" 
 		implementor="org.callistasoftware.netcare.mvk.authentication.service.ValidateTokenServiceImpl" />
 		
 	<jaxws:endpoint 
-		address="http://localhost:8080/createtoken" 
+		address="http://localhost:8123/createtoken" 
 		implementor="org.callistasoftware.netcare.mvk.authentication.service.PushIdServiceImpl" />	
 	
 	<cxf:bus>
