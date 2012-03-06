@@ -131,8 +131,15 @@ NC.Support = function() {
 			});
 		},
 		
-		loadMessage : function(code, callback) {
-			_ajax.getWithParams('/support/message', { code : code }, callback, false);
+		loadMessages : function(c, callback) {
+			var messages = new Array();
+			_ajax.getWithParamsSynchronous('/support/message', { codes : c }, function(data) {
+				$.each(data.data, function(i, v) {
+					messages[v.code] = v.value;
+				});
+				
+				callback(messages);
+			}, false);
 		}
 	};
 	

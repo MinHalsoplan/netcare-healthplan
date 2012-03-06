@@ -31,17 +31,24 @@
 	
 		<script type="text/javascript">
 			$(function() {
+				
+				var support = new NC.Support();
+				var captions;
+				support.loadMessages('measureValue.new, measureValue.unit, measureValue.alarm, label.yes, label.no, label.add', function(messages) {
+					captions = messages;
+				});
+				
 				var measureValues = new Array();
 				
 				var unitOpts = new Array();
-				new NC.Support().getUnits(function(data) {
+				support.getUnits(function(data) {
 					$.each(data.data, function(i, v) {
 						unitOpts.push($('<option>').attr('value', v.code).html(v.value));
 					});
 				});
 				
 				var typeOpts = new Array();
-				new NC.Support().getMeasureValueTypes(function(data) {
+				support.getMeasureValueTypes(function(data) {
 					$.each(data.data, function(i, v) {
 						NC.log("Adding " + v.code + " " + v.value);
 						typeOpts.push($('<option>').attr('value', v.code).html(v.value));
@@ -103,16 +110,17 @@
 								$('<td>').html(unitLabel)
 							);
 							
-							if (v.alarm == "on") {
-								row.append($('<td>').html('Ja'));
+							
+							if (v.alarm == "on" || v.alarm == true) {
+								row.append($('<td>').html(captions['label.yes']));
 							} else {
-								row.append($('<td>').html('Nej'));
+								row.append($('<td>').html(captions['label.no']));
 							}
 							
 							var deleteIcon = new NC.Util().createIcon('trash', '24', function() {
 								removeMeasuredValue(i);
 								updateMeasureValueTable();
-							});
+							}, 'measureValue.remove');
 							
 							row.append(
 								$('<td>').css('text-align', 'right').append(deleteIcon)
@@ -136,7 +144,7 @@
 				var createMeasureUnit = function() {
 					var div = $('<div>').addClass('span2');
 					
-					var label = $('<label>').attr('for', 'measureUnit').html('Enhet');
+					var label = $('<label>').attr('for', 'measureUnit').html(captions['measureValue.unit']);
 					div.append(label);
 					
 					var input = $('<select>').attr('name', 'measureUnit').attr('id', 'measureUnit').addClass('span2');
@@ -152,7 +160,7 @@
 				
 				var createAlarmBox = function() {
 					var div = $('<div>').addClass('span1');
-					var label = $('<label>').attr('for', 'measureAlarm').html('Alarm');
+					var label = $('<label>').attr('for', 'measureAlarm').html(captions['measureValue.alarm']);
 					div.append(label);
 					
 					var input = $('<input>').attr('type', 'checkbox').attr('name', 'measaureAlarm').attr('id', 'measureAlarm');
@@ -167,7 +175,7 @@
 				
 				var createActionButton = function() {
 					var div = $('<div>').addClass('span1');
-					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-primary').attr('value', 'Lägg till');
+					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-primary').attr('value', captions['label.add']);
 					btn.click(function(e) {
 						e.preventDefault();
 						NC.log("Add measure value");

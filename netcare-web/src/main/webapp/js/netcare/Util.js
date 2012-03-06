@@ -78,8 +78,8 @@ NC.Util = function() {
 			
 			if (messageCode !== undefined || messageCode != null) {
 				var support = new NC.Support();
-				support.loadMessage(messageCode, function(data) {
-					icon.attr('title', data.data);
+				support.loadMessages(messageCode, function(messages) {
+					icon.attr('title', messages[messageCode]);
 				}, false);
 			}
 			
@@ -184,9 +184,6 @@ NC.Util = function() {
 			if (input.val() == '' || input.val() == null || input.val() == undefined) {
 				var id = input.attr('id');
 				var existingText = $('label[for="' + id + '"]').html();
-				
-				//$('label[for="' + id + '"]').html(existingText + ' ' + 'Vänligen fyll i ett värde');
-				
 				$('label[for="' + id + '"]').parent().addClass('error');
 				return false;
 			}

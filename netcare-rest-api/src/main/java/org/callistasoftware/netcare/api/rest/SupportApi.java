@@ -27,8 +27,6 @@ import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -48,21 +46,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value="/support")
 public class SupportApi extends ApiSupport {
 	
-	private static final Logger log = LoggerFactory.getLogger(SupportApi.class);
-	
 	@Autowired
 	private MessageSource messageSource;
 
 	@RequestMapping(value="/units/load", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<Option[]> loadUnits() {
-		
-		log.info("Loading measure units...");
-		
 		final MeasureUnit[] units = MeasureUnit.values();
 		final Option[] opts = new Option[units.length];
 		for (int i = 0; i < units.length; i++) {
-			log.debug("Processing {}", units[i].name());
 			opts[i] = new Option(units[i].name(), LocaleContextHolder.getLocale());
 		}
 		
@@ -85,13 +77,10 @@ public class SupportApi extends ApiSupport {
 	@RequestMapping(value="/durations/load", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<Option[]> loadDurations(final Locale locale) {
-		log.info("Loading duration units...");
-		
 		final DurationUnit[] units = DurationUnit.values();
 		final Option[] durationUnits = new Option[units.length];
 		int count = 0;
 		for (final DurationUnit du : units) {
-			log.debug("Processing {}", du.name());
 			durationUnits[count++] = new Option(du.name(), locale);
 		}
 		
@@ -156,7 +145,13 @@ public class SupportApi extends ApiSupport {
 	
 	@RequestMapping(value="/message", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public ServiceResult<String> loadMessage(@RequestParam(value="code") final String code, final Locale locale) {
-		return ServiceResultImpl.createSuccessResult(this.messageSource.getMessage(code, null, locale), new GenericSuccessMessage());
+	public ServiceResult<Option[]> loadMessage(@RequestParam(value="codes") final String codes, final Locale locale) {
+		final String[] sep = codes.split(",");
+		final Option[] resolved = new Option[sep.length];
+		for (int i = 0; i < sep.length; i++) {
+			resolved[i] = new Option(sep[i].trim(), locale);
+		}
+		
+		return ServiceResultImpl.createSuccessResult(resolved, new GenericSuccessMessage());
 	}
 }

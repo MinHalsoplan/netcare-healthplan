@@ -93,6 +93,14 @@ NC.Ajax = function() {
 				$.ajax(opts);
 			},
 			
+			getWithParamsSynchronous : function(url, data, callback, displayMessages) {
+				var opts = _getDefaultOpts(_contextPath + _basePath + url, callback, displayMessages);
+				opts.data = data;
+				opts.async = true;
+				
+				$.ajax(opts);
+			},
+			
 			post : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
@@ -109,7 +117,6 @@ NC.Ajax = function() {
 			postWithParams : function(url, data, callback, displayMessage) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessage);
-				//opts.contentType = _contentType;
 				opts.dataType = _dataType;
 				if (data != null) {
 					opts.data = data;
