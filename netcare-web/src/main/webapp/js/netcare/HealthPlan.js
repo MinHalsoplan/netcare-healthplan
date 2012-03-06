@@ -120,18 +120,9 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				var msgs = new Array();
 				new NC.Support().loadMessages('activity.suspended, activity.suspend', function(messages) {
 					msgs = messages;
-					NC.log("Messages loaded");
 				});
 				
-				NC.log("Outside");
-				
 				$.each(data.data, function(index, value) {
-					
-					NC.log("Processing id: " + value.id);
-					
-					NC.log("Public: " + value.publicDefinition);
-					NC.log("Patient: " + isPatient);
-					
 					if ((!value.publicDefinition && isPatient) || value.publicDefinition) {
 						var deleteIcon = _util.createIcon('trash', 24, function() {
 							public.deleteActivity(tableId, healthPlanId, value.id);

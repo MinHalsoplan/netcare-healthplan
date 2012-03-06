@@ -24,6 +24,11 @@
   	</dependency>
   
   	<dependency>
+  		<groupId>org.codehaus.jackson</groupId>
+  		<artifactId>jackson-mapper-lgpl</artifactId>
+  	</dependency>
+  
+  	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-context</artifactId>
   	</dependency>
