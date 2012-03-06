@@ -51,6 +51,9 @@ $(document).ready(function() {
 		console.log = function() {};
 	}
 	
+	var _util = new NC.Util();
+	var _support = new NC.Support();
+	
 	$('#pageLoading').css('height', $(window).height()).show();
 	$('#pageLoadingBox').show();
 	
@@ -133,6 +136,34 @@ $(document).ready(function() {
 	
 	$('.addButton').css('background', 'url(' + NC.getContextPath() + '/img/icons/16/add.png) no-repeat 3px').css('padding-left', '24px');;
 	$('.spinner').css('background', 'url(' + NC.getContextPath() + '/img/ajax-loader-small.gif) no-repeat right');
+	
+	/*
+	 * Process all date fields that exist on the
+	 * current page.
+	 */
+	$('.dateInput').each(function(i, v) {
+		
+		$(v).datepicker({
+			dateFormat : 'yy-mm-dd',
+			firstDay : 1,
+			minDate : +0
+		});
+		
+		_support.loadMonths(function(data) { $(v).datepicker('option', 'monthNames', data); });
+		_support.loadWeekdays(function(data) { $(v).datepicker('option', 'dayNamesMin', data); });
+		
+		$(v).siblings('span').css('cursor', 'pointer').click(function(e) {
+			$(v).datepicker('show');
+		});
+		
+	});
+	
+	/*
+	 * Bind all time fields on the page
+	 */
+	$('.timeInput').each(function(i, v) {
+		_util.validateTimeField($(v));
+	});
 });
 
 

@@ -106,6 +106,13 @@
 			NC.log("Displaying patient cnr");
 			$('#cnr').html('<strong>Personnummer:</strong> ' + util.formatCnr(cnr));
 		}
+		
+		$('#quitPatientSession').click(function(e) {
+			e.preventDefault();
+			patient.unselect(function(d) {
+				window.location = NC.getContextPath() + '/netcare/home';
+			});
+		});
 	});
 </script>
 
@@ -120,26 +127,25 @@
 	</p>
 		
 	<h3 id="patientName" class="menuHeader"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
-	<c:choose>
-		<c:when test="${not empty sessionScope.currentPatient}">
-			<div id="workWith" class="shadow-box" style="padding-left: 5px;">
-			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
-			<p>
-				<span id="cnr"></span>
-			</p>
-			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
-			</ul>
-		</div>
-		</c:when>
-		<c:otherwise>
-			<ul class="menuList">
-				<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
-				<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
-				<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
-			</ul>
-		</c:otherwise>
-	</c:choose>
+	
+		<c:if test="${not empty sessionScope.currentPatient}">
+			<div id="workWith" style="padding-left: 5px;">
+				<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
+				<p>
+					<span id="cnr"></span>
+				</p>
+				<ul>
+					<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
+					<li><a id="quitPatientSession" href="#"><spring:message code="admin.menu.patient.quit" /></a></li>
+				</ul>
+			</div>
+		</c:if>
+		
+		<ul class="menuList">
+			<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
+			<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
+			<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
+		</ul>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
 			<div class="modal-header">

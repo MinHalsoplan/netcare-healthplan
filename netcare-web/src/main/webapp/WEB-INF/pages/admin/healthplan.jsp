@@ -86,25 +86,6 @@
 				updateDescription(0);
 				
 				/*
-				 * Bind date picker to start date field
-				 */
-				$('#createHealthPlanForm input[name="startDate"]').datepicker({
-					dateFormat : 'yy-mm-dd',
-					firstDay : 1,
-					minDate : +0,
-					buttonImage : NC.getContextPath() + '/img/icons/16/date.png',
-					buttonImageOnly : true
-				});
-				
-				support.loadMonths(function(data) {
-					$('#createHealthPlanForm input[name="startDate"]').datepicker('option', 'monthNames', data);
-				});
-				
-				support.loadWeekdays(function(data) {
-					$('#createHealthPlanForm input[name="startDate"]').datepicker('option', 'dayNamesMin', data);
-				});
-				
-				/*
 				 * Bind create button
 				 */
 				$('#createHealthPlanForm :submit').click(function(event) {
@@ -165,7 +146,7 @@
 					</netcare:field>
 					
 					<netcare:field name="startDate" label="${startDate}">
-						<input type="text" name="startDate" class="xlarge" placeholder="<spring:message code="pattern.date" />"/>
+						<netcare:dateInput name="startDate" />
 					</netcare:field>
 					
 					<div class="row">

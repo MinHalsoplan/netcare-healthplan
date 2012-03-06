@@ -94,3 +94,9 @@ fieldset > legend {
 	margin-bottom: 10px;
 }
 
+#workWith {
+	border: 1px solid #eee;
+	margin-bottom: 10px;
+	background-color: #FDF5D9;
+}
+
