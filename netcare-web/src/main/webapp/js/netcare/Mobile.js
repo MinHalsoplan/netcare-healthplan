@@ -50,6 +50,11 @@ NC.Mobile = function() {
 		},
 		
 		createListRow : function(parent, href, value, clickCallback) {
+			
+			if (!value.active) {
+				return false;
+			}
+			
 			var activityContainer = $('<li>').attr('data-theme', 'c')
 			.addClass('ui-btn')
 			.addClass('ui-btn-icon-right')

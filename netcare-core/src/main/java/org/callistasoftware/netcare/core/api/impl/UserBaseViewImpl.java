@@ -42,6 +42,7 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 		this.surName = surName;
 	}
 	
+	@JsonIgnore
 	@Override
 	public abstract Collection<? extends GrantedAuthority> getAuthorities();
 

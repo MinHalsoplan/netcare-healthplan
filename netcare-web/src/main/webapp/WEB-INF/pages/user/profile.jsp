@@ -70,7 +70,7 @@
 				/*
 				 * Form submission
 				 */
-				$('#userprofile input:submit').click(function(event) {
+				$('#userprofile :submit').click(function(event) {
 					event.preventDefault();
 					
 					var formData = new Object();
@@ -168,17 +168,17 @@
 							</netcare:row>
 							
 							<netcare:row>
-								<netcare:col span="2">
+								<netcare:col span="1">
 									<spring:message code="profile.mobile.pin" var="pin" scope="page" />
 									<netcare:field name="password" label="${pin}">
-										<input type="password" name="password" class="span2"/>
+										<input type="password" name="password" class="span1" min="0000" max="9999" />
 									</netcare:field>
 								</netcare:col>
 								
 								<netcare:col span="2">
 									<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
 									<netcare:field name="password2" label="${pin2}">
-										<input type="password" name="password2" class="span2"/>
+										<input type="password" name="password2" class="span1" min="0000" max="9999"/>
 									</netcare:field>
 								</netcare:col>
 							</netcare:row>
