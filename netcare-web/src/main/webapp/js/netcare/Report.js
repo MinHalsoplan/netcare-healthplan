@@ -43,8 +43,11 @@ NC.Reports = function(statistics, captions) {
 			
 			dataOverview.addRows(arr);
 			
+			var opts = _getDefaultOptions();
+			opts.colors = ['#B94A48', '#3A87AD', '#468847', '#C09853'];
+			
 			var diagram = new google.visualization.PieChart(document.getElementById(elementId));
-			diagram.draw(dataOverview, _getDefaultOptions());
+			diagram.draw(dataOverview, opts);
 		},
 		
 		/**
@@ -68,26 +71,32 @@ NC.Reports = function(statistics, captions) {
 			 * Process each measure type. One diagram for each type
 			 */
 			$.each(measureValueType, function(i, v) {
+				
+				var unit = v.unit.value;
 				var entries = new Array();
 				
 				var chart = new google.visualization.DataTable();
-				chart.addColumn('string', captions.date);
+				chart.addColumn('string', _captions.date);
 				if (v.interval) {
 					
-					chart.addColumn('number', _captions.targetMinValue);
-					chart.addColumn('number', _captions.targetMaxValue);
-					chart.addColumn('number', _captions.reportedValue);
+					chart.addColumn('number', _captions.targetMinValue + ' (' + unit + ')');
+					chart.addColumn('number', _captions.targetMaxValue + ' (' + unit + ')');
+					chart.addColumn('number', _captions.reportedValue + ' (' + unit + ')');
 					
 					$.each(v.reportedValues, function(idx, val) {
-						entries.push([val.reportedAt, val.minTargetValue, val.maxTargetValue, val.reportedValue]);
+						if (val.reportedValue !== undefined && val.reportedValue != null && val.reportedValue != 0) {
+							entries.push([val.reportedAt, val.minTargetValue, val.maxTargetValue, val.reportedValue]);
+						}
 					});
 				} else {
 					
-					chart.addColumn('number', captions.targetValue);
-					chart.addColumn('number', captions.reportedValue);
+					chart.addColumn('number', _captions.targetValue + ' (' + unit + ')');
+					chart.addColumn('number', _captions.reportedValue + ' (' + unit + ')');
 					
 					$.each(v.reportedValues, function(idx, val) {
-						entries.push([val.reportedAt, val.targetValue, val.reportedValue]);
+						if (val.reportedValue !== undefined && val.reportedValue != null && val.reportedValue != 0) {
+							entries.push([val.reportedAt, val.targetValue, val.reportedValue]);
+						}
 					});
 				}
 				
@@ -114,7 +123,12 @@ NC.Reports = function(statistics, captions) {
 				$('#filter-for-'+ id).attr('checked', 'checked');
 				
 				var opts = _getDefaultOptions();
-				opts.title = v.valueType.code;
+				opts.title = v.valueType.code + ' (' + unit + ')';
+				if (v.interval) {
+					opts.colors = ['#B94A48', '#B94A48', '#3A87AD'];
+				} else {
+					opts.colors = ['#B94A48', '#3A87AD'];
+				}
 				
 				var diagram = new google.visualization.LineChart(document.getElementById(id));
 				diagram.draw(chart, opts);
