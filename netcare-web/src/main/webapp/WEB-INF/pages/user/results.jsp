@@ -72,7 +72,6 @@
 									var link = $('<a>').attr('href', NC.getContextPath() + '/api/patient/result/' + v.definitionId + '/resultat.csv');
 									link.html(captions.resultLink);
 									div2.append(link);
-									NC.log('added div2 ' + div2);
 									
 									$('#activities').append(
 										$('<h2>').html(v.name)
@@ -81,7 +80,7 @@
 									setupFilter($('#activity-' + i), v.name);
 									
 									NC.log("Drawing diagrams for: " + v.name);
-									reports.getResultsForActivityType(v.name, 'activity-' + i, 600, 300);
+									reports.getResultsForActivityType(v.name, 'activity-' + i);
 									
 									processed = v.name;
 								}
