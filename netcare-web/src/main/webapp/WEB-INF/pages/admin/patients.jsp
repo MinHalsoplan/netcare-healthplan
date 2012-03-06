@@ -73,7 +73,7 @@
 								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 								var phone = $('<td>' + value.phoneNumber + '</td>');
 								
-								var loginAsIcon = $('<button>').addClass('btn primary').html('Välj patient').click(function(e) {
+								var loginAsIcon = $('<button>').addClass('btn btn-primary').html('Välj patient').click(function(e) {
 									e.preventDefault();
 									patients.selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
@@ -143,13 +143,13 @@
 				</fieldset>
 				
 				<netcare:row>
-					<netcare:col span="5">
+					<netcare:col span="4">
 						<spring:message code="patient.firstName" var="name" scope="page"/>
 						<netcare:field containerId="nameContainer" name="firstName" label="${name}">
 							<input type="text" name="firstName" />
 						</netcare:field>
 					</netcare:col>
-					<netcare:col span="5">
+					<netcare:col span="4">
 						<spring:message code="patient.surName" var="surName" scope="page"/>
 						<netcare:field containerId="nameContainer" name="surName" label="${surName}">
 							<input type="text" name="surName" />
@@ -158,13 +158,13 @@
 				</netcare:row>
 				
 				<netcare:row>
-					<netcare:col span="5">
+					<netcare:col span="4">
 						<spring:message code="patient.crn" var="cnr" scope="page" />
 						<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
-							<input type="text" name="crn" />
+							<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />"/>
 						</netcare:field>
 					</netcare:col>
-					<netcare:col span="5">
+					<netcare:col span="4">
 						<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
 						<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
 							<input type="tel" name="phoneNumber" />

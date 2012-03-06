@@ -80,7 +80,7 @@ a.ui-state-highlight {
 	font-weight:normal;
 }
 
-table td {
+table tbody tr td {
 	vertical-align: middle;
 }
 
@@ -88,5 +88,9 @@ h3.menuHeader {
 	width: 100%;
 	margin-bottom: 10px;
 	border-bottom: 1px solid #eee;
+}
+
+fieldset > legend {
+	margin-bottom: 10px;
 }
 

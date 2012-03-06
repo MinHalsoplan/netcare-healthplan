@@ -165,7 +165,7 @@
 					</netcare:field>
 					
 					<netcare:field name="startDate" label="${startDate}">
-						<input type="text" name="startDate" class="xlarge"/>
+						<input type="text" name="startDate" class="xlarge" placeholder="<spring:message code="pattern.date" />"/>
 					</netcare:field>
 					
 					<div class="row">

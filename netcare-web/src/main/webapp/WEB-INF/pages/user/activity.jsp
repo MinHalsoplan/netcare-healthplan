@@ -99,7 +99,7 @@
 						// Show icon
 						icon.show();
 					} else {
-						elem.attr('disabled', 'disabled');
+						elem.prop('disabled', 'disabled');
 						icon.hide();
 					}
 				});
@@ -181,7 +181,7 @@
 					);
 					
 					var inputDiv = $('<div>').addClass('input');
-					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('span1');
+					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('span2');
 					
 					inputDiv.append(input);
 					inputDiv.append($('<span>').html(' ' + value.unit.value));
@@ -189,7 +189,7 @@
 					clearfix.append(inputDiv);
 					
 					rowCol.append(
-						$('<div>').addClass('span2').append(clearfix)
+						$('<div>').addClass('span3').append(clearfix)
 					);
 				};
 				
@@ -245,13 +245,13 @@
 						
 						var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
 						var row = $('<div>').addClass('row').append(
-							$('<div>').addClass('span10').append(
+							$('<div>').addClass('span9').append(
 								rowCol
 							)
 						);
 						
 						rowCol.append(
-							$('<div>').addClass('span2').append(
+							$('<div>').addClass('span1').append(
 								$('<div>').addClass('clearfix').append(
 									$('<label>').html('&nbsp')
 								).append(
@@ -443,7 +443,7 @@
 						<netcare:col span="3">
 							<spring:message code="startDate" var="start" scope="page" />
 							<netcare:field containerId="startDate" name="startDate" label="${start}">
-								<input name="startDate" type="text" class="medium"/>
+								<input name="startDate" type="text" class="medium" placeholder="<spring:message code="pattern.date" />"/>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="5">
@@ -465,16 +465,16 @@
 						<netcare:col span="1">
 							<spring:message code="monday" var="monday" scope="page" />
 							<netcare:field name="day" label="${monday}">
-								<input type="checkbox" name="day" value="monday" placeholder="<spring:message code="pattern.time" />"/>
+								<input type="checkbox" name="day" value="monday"/>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="3">
 							<netcare:field name="mondayTimeField" label="${addTime}">
-								<input type="text" name="mondayTimeField" class="span1" />
+								<input type="text" name="mondayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 								<netcare:image name="add" icon="true" cursor="pointer"/>
 							</netcare:field>
 						</netcare:col>
-						<div id="mondayAddedTimes" class="span6" style="display: none">
+						<div id="mondayAddedTimes" class="span5" style="display: none">
 							<p><strong><spring:message code="activity.form.times" /></strong></p>
 						</div>
 					</netcare:row>
@@ -490,11 +490,11 @@
 								</div>
 								<div class="span2">
 									<netcare:field name="tuesdayTimeField" label="${addTime}">
-										<input type="text" name="tuesdayTimeField" class="span1" />
+										<input type="text" name="tuesdayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
-								<div id="tuesdayAddedTimes" class="span6" style="display: none">
+								<div id="tuesdayAddedTimes" class="span5" style="display: none">
 									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
@@ -513,11 +513,11 @@
 								</div>
 								<div class="span2">
 									<netcare:field name="wednesdayTimeField" label="${addTime}">
-										<input type="text" name="wednesdayTimeField" class="span1" />
+										<input type="text" name="wednesdayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
-								<div id="wednesdayAddedTimes" class="span6" style="display: none">
+								<div id="wednesdayAddedTimes" class="span5" style="display: none">
 									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
@@ -536,11 +536,11 @@
 								</div>
 								<div class="span2">
 									<netcare:field name="thursdayTimeField" label="${addTime}">
-										<input type="text" name="thursdayTimeField" class="span1" />
+										<input type="text" name="thursdayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
-								<div id="thursdayAddedTimes" class="span6" style="display: none">
+								<div id="thursdayAddedTimes" class="span5" style="display: none">
 									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
@@ -559,11 +559,11 @@
 								</div>
 								<div class="span2">
 									<netcare:field name="fridayTimeField" label="${addTime}">
-										<input type="text" name="fridayTimeField" class="span1" />
+										<input type="text" name="fridayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
-								<div id="fridayAddedTimes" class="span6" style="display: none">
+								<div id="fridayAddedTimes" class="span5" style="display: none">
 									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
@@ -582,11 +582,11 @@
 								</div>
 								<div class="span2">
 									<netcare:field name="saturdayTimeField" label="${addTime}">
-										<input type="text" name="saturdayTimeField" class="span1" />
+										<input type="text" name="saturdayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
-								<div id="saturdayAddedTimes" class="span6" style="display: none">
+								<div id="saturdayAddedTimes" class="span5" style="display: none">
 									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
@@ -605,11 +605,11 @@
 								</div>
 								<div class="span2">
 									<netcare:field name="sundayTimeField" label="${addTime}">
-										<input type="text" name="sundayTimeField" class="span1" />
+										<input type="text" name="sundayTimeField" class="span1" placeholder="<spring:message code="pattern.time" />"/>
 										<netcare:image name="add" icon="true"/>
 									</netcare:field>
 								</div>
-								<div id="sundayAddedTimes" class="span6" style="display: none">
+								<div id="sundayAddedTimes" class="span5" style="display: none">
 									<p><strong><spring:message code="activity.form.times" /></strong></p>
 								</div>
 							</div>
