@@ -445,132 +445,15 @@
 				
 				<fieldset>
 					<legend><spring:message code="activity.form.specifyTimes" /></legend>
+
+					<netcare:timeContainer name="monday" />
+					<netcare:timeContainer name="tuesday" />
+					<netcare:timeContainer name="wednesday" />
+					<netcare:timeContainer name="thursday" />
+					<netcare:timeContainer name="friday" />
+					<netcare:timeContainer name="saturday" />
+					<netcare:timeContainer name="sunday" />
 					
-					<netcare:row id="mondayContainer">
-						<netcare:col span="1">
-							<spring:message code="monday" var="monday" scope="page" />
-							<netcare:field name="day" label="${monday}">
-								<input type="checkbox" name="day" value="monday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="mondayTimeField" label="${addTime}">
-								<netcare:timeInput name="mondayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="mondayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row id="tuesdayContainer">
-						<netcare:col span="1">
-							<spring:message code="tuesday" var="tuesday" scope="page" />
-							<netcare:field name="day" label="${tuesday}">
-								<input type="checkbox" name="day" value="tuesday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="tuesdayTimeField" label="${addTime}">
-								<netcare:timeInput name="tuesdayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="tuesdayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row id="wednesdayContainer">
-						<netcare:col span="1">
-							<spring:message code="wednesday" var="wednesday" scope="page" />
-							<netcare:field name="day" label="${wednesday}">
-								<input type="checkbox" name="day" value="wednesday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="wednesdayTimeField" label="${addTime}">
-								<netcare:timeInput name="wednesdayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="wednesdayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row id="thursdayContainer">
-						<netcare:col span="1">
-							<spring:message code="thursday" var="thursday" scope="page" />
-							<netcare:field name="day" label="${thursday}">
-								<input type="checkbox" name="day" value="thursday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="thursdayTimeField" label="${addTime}">
-								<netcare:timeInput name="thursdayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="thursdayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row id="fridayContainer">
-						<netcare:col span="1">
-							<spring:message code="friday" var="friday" scope="page" />
-							<netcare:field name="day" label="${friday}">
-								<input type="checkbox" name="day" value="friday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="fridayTimeField" label="${addTime}">
-								<netcare:timeInput name="fridayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="fridayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row id="saturdayContainer">
-						<netcare:col span="1">
-							<spring:message code="saturday" var="saturday" scope="page" />
-							<netcare:field name="day" label="${saturday}">
-								<input type="checkbox" name="day" value="saturday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="saturdayTimeField" label="${addTime}">
-								<netcare:timeInput name="saturdayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="saturdayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row id="sundayContainer">
-						<netcare:col span="1">
-							<spring:message code="sunday" var="sunday" scope="page" />
-							<netcare:field name="day" label="${sunday}">
-								<input type="checkbox" name="day" value="sunday"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="2">
-							<netcare:field name="sundayTimeField" label="${addTime}">
-								<netcare:timeInput name="sundayTimeField" classes="span1"/>
-								<netcare:image name="add" icon="true"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col id="sundayAddedTimes" span="5" style="display: none;">
-							<p><strong><spring:message code="activity.form.times" /></strong></p>
-						</netcare:col>
-					</netcare:row>
 				</fieldset>
 				
 				<netcare:row id="publicDefinitionContainer">
