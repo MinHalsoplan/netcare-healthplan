@@ -61,6 +61,9 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="duration_unit", nullable=false)
 	private DurationUnit durationUnit;
 	
+	@Column(name="auto_renewal")
+	private boolean autoRenewal;
+	
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
 	private CareGiverEntity issuedBy;
@@ -198,6 +201,24 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		return forPatient;
 	}
 
+	/**
+	 * Returns if this health plan shall renew itself automatically. <p>
+	 * 
+	 * @return true if automatically renewal is enabled, otherwise false.
+	 */
+	public boolean isAutoRenewal() {
+		return autoRenewal;
+	}
+
+
+	/**
+	 * Sets the auto renewal property.
+	 * 
+	 * @param autoRenewal true if automatically renewal is enabled, otherwise false.
+	 */
+	public void setAutoRenewal(boolean autoRenewal) {
+		this.autoRenewal = autoRenewal;
+	}
 
 	@Override
 	public boolean isReadAllowed(UserEntity userId) {
@@ -214,4 +235,5 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		
 		return this.getForPatient().getId().equals(userId.getId());
 	}
+
 }

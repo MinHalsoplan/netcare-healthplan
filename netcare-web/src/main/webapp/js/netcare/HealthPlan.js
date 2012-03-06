@@ -39,7 +39,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		var rc = new Object();
 		rc.alarm = false;
 		rc.html = '';
-		
 		$.each(data, function(index, value) {
 			var target;
 			var alarm;
@@ -193,6 +192,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		loadLatestReportedActivities : function(containerId) {
 			_ajax.get('/healthplan/activity/reported/latest', function(data) {
+				var msgs;
+				new NC.Support().loadMessages('report.reject', function(messages) {
+					msgs = messages;
+				});
+				
 				$.each(data.data, function(index, value) {
 					NC.log("Processing value: " + value);
 					
@@ -203,7 +207,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					var tr = $('<tr>');
 					var name = $('<td>' + patient + '</td>');
 					var type = $('<td>' + typeName + '</td>');
-					var ms = _formatMeasurements(value.measurements);
+					var ms;
+					if (value.rejected) {
+						ms = new Object();
+						ms.alarm = true;
+						ms.html = msgs['report.reject'];
+					} else {
+						ms = _formatMeasurements(value.measurements);
+					}
 					var reported = $('<td>').css('font-size', '11px').html(ms.html);
 					reported.css('background-color', ms.alarm ? '#F2DEDE' : '#DFF0D8');
 					var at = $('<td>' + reportedAt + '</td>');

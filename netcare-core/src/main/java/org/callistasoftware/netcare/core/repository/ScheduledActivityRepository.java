@@ -19,7 +19,6 @@ package org.callistasoftware.netcare.core.repository;
 import java.util.Date;
 import java.util.List;
 
-import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.data.domain.Sort;
@@ -28,28 +27,45 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ScheduledActivityRepository extends JpaRepository<ScheduledActivityEntity, Long> {
-	
-	List<ScheduledActivityEntity> findByActivityDefinition(ActivityDefinitionEntity activityDefinitionEntity);
-	
+		
+	/**
+	 * Used to display activities and report back results for the patient. <p>
+	 *  
+	 * @param patient the patient.
+	 * @param start start date.
+	 * @param end end date.
+	 * @return the list.
+	 */
 	@Query("select e from ScheduledActivityEntity as e inner join " +
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
+			"ad.removedFlag = 'false' and " +
 			"e.scheduledTime between :start and :end and e.status != 1")
 	List<ScheduledActivityEntity> findByPatientAndScheduledTimeBetween(
 			@Param("patient") final PatientEntity patient,
 			@Param("start") final Date start,
 			@Param("end") final Date end);
-			
+		
+	/**
+	 * Used to display actvivity reports for a care giver.
+	 * 
+	 * @param careUnitthe unit.
+	 * @return the list.
+	 */
 	@Query("select e from ScheduledActivityEntity as e inner join " +
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp inner join " +
 			"hp.careUnit as c where c.hsaId = :careUnit " +
+			"and ad.removedFlag = 'false' " +
 			"and e.reportedTime != null and e.status != 1")
 	List<ScheduledActivityEntity> findByCareUnit(@Param("careUnit") final String careUnit);
 	
 	/**
-	 * Returns a list of unreported activities before a certain timestamp.
+	 * Returns a list of unreported activities before a certain timestamp. <p>
+	 * 
+	 * Used for batch handling of notifications and alarms.
+	 * 
 	 * @param scheduledTime the timestamp.
 	 * @return the list
 	 */
@@ -57,11 +73,15 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 	
 	
 	/**
-	 * Find reported activities for a certain activity defintion within a specified interval
-	 * @param activityDefintionId
-	 * @param start
-	 * @param end
-	 * @return
+	 * Find reported activities for a certain activity definition within a specified interval <p>
+	 * 
+	 * Used to build result graphs.
+	 * 
+	 * @param activityDefintionId the id.
+	 * @param start the start time.
+	 * @param end the end time.
+	 * 
+	 * @return the list.
 	 */
 	@Query("select e from ScheduledActivityEntity as e inner join " +
 			"e.activityDefinition as ad inner join " +
@@ -74,6 +94,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 	@Query("select e from ScheduledActivityEntity as e inner join " +
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp where " +
+			"ad.removedFlag = 'false' and " +
 			"hp.id = :healthPlanId")
 	List<ScheduledActivityEntity> findScheduledActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId);
 }

@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -98,7 +96,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementation of service defintion
+ * Implementation of service definition
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
@@ -200,26 +198,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareGiverBaseView careGiver, final Long patientId) {		
 		log.info("Creating new ordination {}", o.getName());
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		
-		try {
-			final Date start = sdf.parse(o.getStartDate());
-			final DurationUnit du = DurationUnit.valueOf(o.getDurationUnit().getCode());
-			
-			final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
-			
-			final PatientEntity patient = this.patientRepository.findOne(patientId);
-			
-			final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
-			
-			final HealthPlanEntity saved = this.repo.save(newEntity);
-			final HealthPlan dto = HealthPlanImpl.newFromEntity(saved, null);
-			
-			return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
-			
-		} catch (ParseException e1) {
-			throw new IllegalArgumentException("Could not parse date.", e1);
-		}
+
+		final Date start = ApiUtil.parseDate(o.getStartDate());
+		final DurationUnit du = DurationUnit.valueOf(o.getDurationUnit().getCode());
+
+		final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
+
+		final PatientEntity patient = this.patientRepository.findOne(patientId);
+
+		final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
+
+		final HealthPlanEntity saved = this.repo.save(newEntity);
+		final HealthPlan dto = HealthPlanImpl.newFromEntity(saved, null);
+
+		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 
 	@Override
@@ -294,7 +286,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		newEntity.setPublicDefinition(dto.isPublicDefinition());
 		
 		/*
-		 * Process measurement defintions
+		 * Process measurement definitions
 		 */
 		for (final MeasurementDefinitionEntity mde : newEntity.getMeasurementDefinitions()) {
 			for (final MeasurementDefinition md : dto.getGoalValues()) {
