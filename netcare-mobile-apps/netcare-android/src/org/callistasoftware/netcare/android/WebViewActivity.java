@@ -39,7 +39,7 @@ public class WebViewActivity extends Activity {
 		
 		if (username == null || password == null) {
 			Log.d(TAG, "Credentials empty, bring to home screen.");
-			Toast.makeText(getApplicationContext(), "Inga användaruppgifter sparade. Vänligen logga in igen...", 3000);
+			Toast.makeText(getApplicationContext(), getString(R.string.provideCredentials), 3000);
 			startActivity(new Intent(getApplicationContext(), StartActivity.class));
 		}
 		
@@ -48,6 +48,8 @@ public class WebViewActivity extends Activity {
 		wv.clearFormData();
 		wv.clearHistory();
 		wv.clearCache(true);
+		
+
 		
 		wv.setDownloadListener(new DownloadListener() {
 			@Override
@@ -58,6 +60,7 @@ public class WebViewActivity extends Activity {
 		});
 		
 		wv.setWebViewClient(new WebViewClient() {
+			
 			@Override
 			public void onReceivedHttpAuthRequest(WebView view,
 					HttpAuthHandler handler, String host, String realm) {
@@ -90,8 +93,8 @@ public class WebViewActivity extends Activity {
 		});
 		
 		Log.d(TAG, "Displaying url in web view.");
-		p = ProgressDialog.show(this, "Laddar", "Vänligen vänta medan sidan laddar klart.");
-		final String url = ApplicationUtil.getServerBaseUrl(getApplicationContext()) + "/netcare/mobile/start";
+		p = ProgressDialog.show(this, getString(R.string.loading), getString(R.string.loadingActivities));
+		final String url = ApplicationUtil.getServerBaseUrl(getApplicationContext()) + "/mobile/start";
 		Log.d(TAG, "Load url: " + url);
 		
 		wv.loadUrl(url);

@@ -28,12 +28,12 @@
 <netcare:page>
 	<mobile:header>
 		<script type="text/javascript">
+		
+			var reportedLabel = '<spring:message code="mobile.activity.reported" />';
+		
 			var mobile = new NC.Mobile();
 		
 			var buildListView = function(value, buildHeader) {
-				
-				NC.log('Building list. Build header: ' + buildHeader);
-				
 				if (buildHeader) {
 					mobile.createListHeader($('#schema'), value.day.value + '<br/>' + value.date);
 				}
@@ -75,8 +75,6 @@
 				$('#sendReport').click(function(e) {
 					
 					$.mobile.showPageLoadingMsg();
-					
-					NC.log("Submitting form...");
 					e.preventDefault();
 					
 					var formData = new Object();
@@ -101,10 +99,7 @@
 										$('<h3>' + data.successMessages[0].message + '</h3>')
 								);
 								
-								$('#schema').before(
-									msg
-								);
-								
+								$('#schema').before(msg);
 
 								$('#back').click();
 								$('#actual').click();
@@ -204,18 +199,18 @@
 	</mobile:header>
 	<body>
 		<mobile:page id="start">
-			<mobile:page-header title="Aktiviteter" id="today-header">
-<!-- 				<a rel="external" href="/netcare-web/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a> -->
+			<mobile:page-header title="mobile.activity.title" id="today-header">
+<!-- 				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a> -->
 				<div data-role="navbar" class="ui-navbar" role="navigation">
 					<ul class="ui-grid-b">
 						<li class="ui-block-a">
-							<a id="actual" href="#" data-icon="home" data-theme="a" class="ui-btn ui-btn-up-a">Aktuella</a>
+							<a id="actual" href="#" data-icon="home" data-theme="a" class="ui-btn ui-btn-up-a"><spring:message code="mobile.activity.active" /></a>
 						</li>
 						<li class="ui-block-b">
-							<a id="due" href="#" data-icon="alert" data-theme="a" class="ui-btn ui-btn-up-a">Ej klara</a>
+							<a id="due" href="#" data-icon="alert" data-theme="a" class="ui-btn ui-btn-up-a"><spring:message code="mobile.activity.unfinished" /></a>
 						</li>
 						<li class="ui-block-b">
-							<a id="reported" href="#" data-icon="check" data-theme="a" class="ui-btn ui-btn-up-a">Klara</a>
+							<a id="reported" href="#" data-icon="check" data-theme="a" class="ui-btn ui-btn-up-a"><spring:message code="mobile.activity.done" /></a>
 						</li>
 					</ul>
 				</div>
@@ -230,7 +225,7 @@
 		</mobile:page>
 		
 		<mobile:page id="report">
-			<mobile:page-header title="Rapportera" id="report-header">
+			<mobile:page-header title="mobile.report.title" id="report-header">
 			</mobile:page-header>
 			<mobile:page-body id="report-body">
 				<div class="ui-bar ui-bar-b">
@@ -241,28 +236,28 @@
 					
 					<form id="reportForm" method="post">
 						<div data-role="fieldcontain">
-							<label for="date">Datum</label>
+							<label for="date"><spring:message code="mobile.report.form.date" /></label>
 							<input type="date" id="date" name="date" />
 						</div>
 						
 						<div data-role="fieldcontain">
-							<label for="time">Tid</label>
+							<label for="time"><spring:message code="mobile.report.form.time" /></label>
 							<input type="time" id="time" name="time" />
 						</div>
 						
 						<div data-role="fieldcontain">
-							<label for="slider" id="slider-label" class="ui-slider ui-input-text">Känsla</label>
+							<label for="slider" id="slider-label" class="ui-slider ui-input-text"><spring:message code="mobile.report.form.sense" /></label>
 							<input type="number" data-type="range" name="slider" id="slider" value="3" min="1" max="5" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
 						</div>
 						
 						<div data-role="fieldcontain">
-							<label for="note" class="ui-input-text">Anteckning</label>
+							<label for="note" class="ui-input-text"><spring:message code="mobile.report.form.note" /></label>
 							<textarea name="note" id="note" class="ui-input-text"></textarea>
 						</div>
 						
 						
-						<a id="sendReport" href="#" data-theme="b" data-role="button" data-icon="check">Rapportera</a>
-						<a id="back" data-rel="back" data-theme="c" data-icon="arrow-l" data-role="button">Tillbaka</a>
+						<a id="sendReport" href="#" data-theme="b" data-role="button" data-icon="check"><spring:message code="mobile.report.title" /></a>
+						<a id="back" data-rel="back" data-theme="c" data-icon="arrow-l" data-role="button"><spring:message code="mobile.back" /></a>
 					</form>
 				</div>
 			</mobile:page-body>
