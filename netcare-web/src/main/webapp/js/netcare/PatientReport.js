@@ -208,7 +208,8 @@ NC.PatientReport = function(tableId, shortVersion) {
 					_reportCallback(data.definition.id, 0, last);
 				}
 			});
-		});
+		}).css('padding-left', '10px');
+		
 		cbtn.attr('cbtn-' + act.id);
 		cbtn.attr('title', _captions.reject);
 		cbtn.attr('disabled', act.rejected);

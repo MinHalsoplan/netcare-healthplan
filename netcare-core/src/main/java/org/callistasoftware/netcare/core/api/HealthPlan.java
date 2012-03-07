@@ -36,6 +36,8 @@ public interface HealthPlan extends Serializable {
 	
 	int getDuration();
 	
+	boolean isAutoRenewal();
+	
 	Option getDurationUnit();
 	
 	CareUnit getCareUnit();

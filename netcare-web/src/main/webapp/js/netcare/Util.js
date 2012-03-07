@@ -84,7 +84,7 @@ NC.Util = function() {
 		createIcon : function(name, size, onClickFunction, messageCode, isResolved) {
 			var icon = $('<img>', {
 				src : NC.getContextPath() + '/img/icons/' + size + '/' + name + '.png'
-			}).css('padding-left', '10px');
+			});
 			
 			if (onClickFunction != null) {
 				icon.css('cursor', 'pointer');

@@ -34,10 +34,6 @@ import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
  *
  */
 public class HealthPlanImpl implements HealthPlan {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -51,6 +47,8 @@ public class HealthPlanImpl implements HealthPlan {
 	private CareGiverBaseView issuedBy;
 	private PatientBaseView patient;
 	private ActivityDefinition[] activityDefintions;
+
+	private boolean autoRenewal;
 	
 	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -73,8 +71,7 @@ public class HealthPlanImpl implements HealthPlan {
 		
 		/*
 		 * Process defintions
-		 */
-		
+		 */		
 		
 		return dto;
 	}
@@ -159,6 +156,15 @@ public class HealthPlanImpl implements HealthPlan {
 	
 	public void setCareUnit(final CareUnit careUnit) {
 		this.careUnit = careUnit;
+	}
+
+	@Override
+	public boolean isAutoRenewal() {
+		return autoRenewal;
+	}
+	
+	public void isAutoRenewal(boolean autoRenewal) {
+		this.autoRenewal = autoRenewal;
 	}
 
 }

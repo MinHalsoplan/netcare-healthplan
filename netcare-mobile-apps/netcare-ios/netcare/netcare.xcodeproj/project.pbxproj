@@ -20,6 +20,7 @@
 		D05D40BD14FC22BD00335899 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40BC14FC22BD00335899 /* HTTPConnection.m */; };
 		D05D40C014FD059B00335899 /* HTTPAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40BF14FD059B00335899 /* HTTPAuthentication.m */; };
 		D05D40C314FD08D200335899 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40C214FD08D200335899 /* Util.m */; };
+		D061895A1504F394002030EB /* icon-transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = D06189591504F394002030EB /* icon-transparent.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		D05D40BF14FD059B00335899 /* HTTPAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPAuthentication.m; sourceTree = "<group>"; };
 		D05D40C114FD08D200335899 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		D05D40C214FD08D200335899 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
+		D06189591504F394002030EB /* icon-transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-transparent.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		D05D409B14FA4B3D00335899 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D06189591504F394002030EB /* icon-transparent.png */,
 				D001251814FFA0A100750D49 /* icon.png */,
 				D05D409C14FA4B3D00335899 /* netcare-Info.plist */,
 				D05D409D14FA4B3D00335899 /* InfoPlist.strings */,
@@ -174,6 +177,7 @@
 				D05D409F14FA4B3D00335899 /* InfoPlist.strings in Resources */,
 				D05D40A814FA4B3D00335899 /* MainStoryboard.storyboard in Resources */,
 				D001251914FFA0A100750D49 /* icon.png in Resources */,
+				D061895A1504F394002030EB /* icon-transparent.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
