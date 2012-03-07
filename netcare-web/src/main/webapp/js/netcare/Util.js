@@ -35,6 +35,21 @@ NC.Util = function() {
 	};
 	
 	var public = {
+			
+		createInputField : function(label, helpText, inputElement) {
+			var container = $('<div>').addClass('control-group');
+			container.append(
+				$('<label>').prop('for', name).addClass('control-label').html(label)
+			);
+			
+			container.append(
+				$('<div>').addClass('controls').append(inputElement).append(
+					$('<span>').addClass('help-inline').html(helpText)
+				)
+			);
+			
+			return container;
+		},
 		
 		/**
 		 * Check if current logged in user is a patient or not

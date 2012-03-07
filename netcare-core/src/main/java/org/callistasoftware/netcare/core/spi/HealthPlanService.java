@@ -90,6 +90,13 @@ public interface HealthPlanService {
 	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user);
 	
 	/**
+	 * Updates an existing activity definition
+	 * @param dto
+	 * @return
+	 */
+	ServiceResult<ActivityDefinition> updateActivity(final ActivityDefinition dto);
+	
+	/**
 	 * Removes an activity definition. All scheduled activities that not yet has been reported will
 	 * be deleted from the system.
 	 * @param activityDefinitionId

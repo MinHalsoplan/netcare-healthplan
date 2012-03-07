@@ -64,6 +64,112 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		});		
 		return rc;
 	};
+	
+	var _initModalForGoalUpdates = function(data, callback) {
+		
+		var msgs;
+		new NC.Support().loadMessages('result.targetValue, result.targetMinValue, result.targetMaxValue', function(messages) {
+			msgs = messages;
+		});
+		
+		/*
+		 * Update modal header
+		 */
+		var title = $('#update-goal-values h3').html();
+		$('#update-goal-values h3').html(title + ' : ' + data.type.name);
+		
+		/*
+		 * Build modal form based on goal values 
+		 */
+		$.each(data.goalValues, function(i, v) {
+			var row = $('<div>').prop('id', 'goal-values').addClass('row');
+			var inner = $('<div>').addClass('span9');
+			
+			inner.append(
+				$('<div>').addClass('span1').append($('<label>').html('&nbsp;')).append(
+					$('<span>').html('<strong>' + v.measurementType.name + '</strong>')
+				)
+			);
+			
+			if (v.measurementType.valueType.code == "SINGLE_VALUE") {
+				
+				var col = $('<div>').addClass('span3');
+				
+				var input = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-1').prop('value', v.target).addClass('span2');
+				var div = _util.createInputField(msgs['result.targetValue'], '(' + v.measurementType.unit.value + ')', input);
+				
+				col.append(div);
+				inner.append(col);
+				
+			} else if (v.measurementType.valueType.code == "INTERVAL") {
+				
+				var col = $('<div>').addClass('span3');
+				
+				var inputMin = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-1').prop('value', v.minTarget).addClass('span2');
+				var divMin = _util.createInputField(msgs['result.targetMinValue'], '(' + v.measurementType.unit.value + ')', inputMin);
+				
+				col.append(divMin);
+				
+				var col2 = $('<div>').addClass('span3');
+				
+				var inputMax = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-2').prop('value', v.maxTarget).addClass('span2');
+				var divMax = _util.createInputField(msgs['result.targetMaxValue'], '(' + v.measurementType.unit.value + ')', inputMax);
+				
+				col2.append(divMax);
+				
+				inner.append(col).append(col2);
+				
+			} else {
+				throw new Error("Value type is not single value nor interval. Undefined value type found.");
+			}
+			
+			$('#update-goal-values div.modal-body').append(row.append(inner));
+		});
+		
+		$('#update-goal-values').find('.btn-primary').click(function(e) {
+			e.preventDefault();
+			
+			var measureValues = new Array();
+			var processed = 0;
+			$.each($('#goal-values input'), function(i, v) {
+				var id = $(v).prop('id').split('-')[2];
+				if (id != processed) {
+					var measure = new Object();
+					measure.measurementType = new Object();
+					measure.measurementType.id = id;
+					
+					var val1 = $(v).val();
+					var val2 = $('#goal-value-' + id + '-2').val();
+					if (typeof val2 === 'undefined') {
+						measure.target = val1;
+					} else {
+						measure.minTarget = val1;
+						measure.maxTarget = val2;
+					}
+					
+					measureValues.push(measure);
+					processed = id;
+				}
+			});
+			
+			var activity = new Object();
+			activity.id = data.id;
+			activity.goalValues = measureValues;
+			
+			_ajax.post('/healthplan/' + data.healthPlanId + '/activity/' + data.id + '/updateGoalValues', activity, function(data) {
+				$('#update-goal-values').modal('hide');
+				
+				/*
+				 * Reload activities
+				 */
+				callback();
+				
+			}, true);
+			
+		});
+		
+		$('#update-goal-values').modal('show');
+	};
 
 	var public = {
 			
@@ -129,6 +235,10 @@ NC.HealthPlan = function(descriptionId, tableId) {
 						}, msgs['activity.suspend'], true);
 						
 						var updateIcon = _util.createIcon('update-activity', 24, function() {
+							
+							_initModalForGoalUpdates(value, function() {
+								public.listActivities(healthPlanId, tableId, isPatient);
+							});
 							
 						}, msgs['activity.update'], true);
 						

@@ -157,21 +157,12 @@
 				
 				
 				var addMeasureValueInput = function(id, rowCol, label, value) {
-					var clearfix = $('<div>').addClass('clearfix');
-					clearfix.append(
-						$('<label>').attr('for', id).html(label)
-					);
 					
-					var inputDiv = $('<div>').addClass('input');
 					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('span2');
-					
-					inputDiv.append(input);
-					inputDiv.append($('<span>').html(' ' + value.unit.value));
-					
-					clearfix.append(inputDiv);
+					var div = util.createInputField(label, '(' + value.unit.value + ')', input);
 					
 					rowCol.append(
-						$('<div>').addClass('span3').append(clearfix)
+						$('<div>').addClass('span3').append(div)
 					);
 				};
 				
@@ -317,7 +308,7 @@
 					var processed = 0;
 					$.each($('#measureValues input'), function(i, v) {
 						var attr = $(v).attr('id');
-						var id = attr.substr(0, 1);
+						var id = attr.split("-")[0];
 						
 						NC.log("Checking " + id + " with " + processed + " to determine whether to process...");
 						if (id != processed) {
@@ -388,6 +379,16 @@
 				});
 				
 				$('#activityForm').hide();
+				
+				/*
+				 * Destroy update-goal-value modal
+				 * on close
+				 */
+				$('#update-goal-values').on('hidden', function() {
+					$(this).find('.btn-primary').unbind('click');
+					$(this).find('h3').html('<spring:message code="activity.update" />');
+					$(this).find('.modal-body').empty();
+				});
 			});
 		</script>
 	</netcare:header>
@@ -489,6 +490,13 @@
 					<tbody></tbody>
 				</netcare:table>
 			</div>
+			
+			<netcare:modal titleCode="activity.update" confirmCode="label.update" id="update-goal-values">
+				<p>
+					<span class="label label-info"><spring:message code="label.information" /></span>
+					<spring:message code="activity.update.desc" />
+				</p>
+			</netcare:modal>
 		</netcare:content>
 	</netcare:body>
 </netcare:page>

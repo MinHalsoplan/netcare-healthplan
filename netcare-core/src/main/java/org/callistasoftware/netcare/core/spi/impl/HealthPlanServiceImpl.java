@@ -296,26 +296,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		/*
 		 * Process measurement defintions
 		 */
-		for (final MeasurementDefinitionEntity mde : newEntity.getMeasurementDefinitions()) {
-			for (final MeasurementDefinition md : dto.getGoalValues()) {
-				if (mde.getMeasurementType().getId().equals(md.getMeasurementType().getId())) {	
-					
-					log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType().getName(), mde.getMeasurementType().getActivityType().getName());
-					
-					switch (mde.getMeasurementType().getValueType()) {
-					case INTERVAL:
-						log.debug("Setting values for measure defintion: {}-{}", md.getMinTarget(), md.getMaxTarget());
-						mde.setMaxTarget(md.getMaxTarget());
-						mde.setMinTarget(md.getMinTarget());
-						break;
-					case SINGLE_VALUE:
-						log.debug("Setting values for measure defintion: {}", md.getTarget());
-						mde.setTarget(md.getTarget());
-						break;
-					}
-				}
-			}
-		}
+		this.updateMeasureValues(newEntity, dto);
 		
 		if (dto.getStartDate() != null) {
 			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));		
@@ -863,5 +844,49 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		hb.append(CSV_EOL);
 		
 		return hb.append(sb).toString();
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> updateActivity(
+			ActivityDefinition dto) {
+		this.getLog().info("Updating activity definition {}", dto.getId());
+		
+		final ActivityDefinitionEntity entity = this.activityDefintionRepository.findOne(dto.getId());
+		if (entity == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, dto.getId()));
+		}
+		
+		/*
+		 * Update measure values
+		 */
+		this.updateMeasureValues(entity, dto);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(entity), new GenericSuccessMessage());
+	}
+	
+	private void updateMeasureValues(final ActivityDefinitionEntity entity, final ActivityDefinition dto) {
+		/*
+		 * Process measurement defintions
+		 */
+		for (final MeasurementDefinitionEntity mde : entity.getMeasurementDefinitions()) {
+			for (final MeasurementDefinition md : dto.getGoalValues()) {
+				if (mde.getMeasurementType().getId().equals(md.getMeasurementType().getId())) {	
+					
+					log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType().getName(), mde.getMeasurementType().getActivityType().getName());
+					
+					switch (mde.getMeasurementType().getValueType()) {
+					case INTERVAL:
+						log.debug("Setting values for measure defintion: {}-{}", md.getMinTarget(), md.getMaxTarget());
+						mde.setMaxTarget(md.getMaxTarget());
+						mde.setMinTarget(md.getMinTarget());
+						break;
+					case SINGLE_VALUE:
+						log.debug("Setting values for measure defintion: {}", md.getTarget());
+						mde.setTarget(md.getTarget());
+						break;
+					}
+				}
+			}
+		}
 	}
 }

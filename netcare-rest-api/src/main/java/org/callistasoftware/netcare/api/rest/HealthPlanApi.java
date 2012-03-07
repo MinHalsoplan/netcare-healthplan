@@ -87,6 +87,15 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
 	}
 	
+	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/updateGoalValues", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityDefinition> updateGoalValuesOnActivityDefinition(@PathVariable("healthPlanId") final Long healthPlanId
+			, @PathVariable("activityDefinitionId") final Long activityDefinitionId
+			, @RequestBody final ActivityDefintionImpl ad) {
+		this.logAccess("update", "goal-values");
+		return this.service.updateActivity(ad);
+	}
+	
 	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/delete", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
