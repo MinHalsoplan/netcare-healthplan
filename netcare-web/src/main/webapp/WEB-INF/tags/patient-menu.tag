@@ -60,7 +60,7 @@
 <div class="span3 menu">
 	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
-		<a href="#"><sec:authentication property="principal.name" /></a> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
+		<sec:authentication property="principal.name" /> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
 	</p>
 	<p>
 		<strong><spring:message code="cnr" />:</strong> <span id="crn"></span>

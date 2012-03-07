@@ -19,8 +19,8 @@ package org.callistasoftware.netcare.core.spi;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.PatientProfile;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 
 public interface PatientService {
 
@@ -64,5 +64,5 @@ public interface PatientService {
 	 * @param patient
 	 * @return
 	 */
-	ServiceResult<Patient> updatePatient(final Long id, final PatientImpl patient);
+	ServiceResult<Patient> updatePatient(final Long id, final PatientProfile patient);
 }

@@ -39,7 +39,7 @@
 				<h3><spring:message code="denied.title" /></h3>
 			</div>
 			<div class="modal-body">
-				<span class="label notice"><spring:message code="information" /></span>
+				<span class="label label-info"><spring:message code="information" /></span>
 				<spring:message code="denied.description" arguments="http://www.minavardkontakter.se" />
 			</div>
 		</div>

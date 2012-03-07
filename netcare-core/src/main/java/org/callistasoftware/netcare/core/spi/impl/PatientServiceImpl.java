@@ -22,6 +22,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.PatientProfile;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientImpl;
@@ -132,7 +133,7 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 	}
 
 	@Override
-	public ServiceResult<Patient> updatePatient(Long id, PatientImpl patient) {
+	public ServiceResult<Patient> updatePatient(Long id, PatientProfile patient) {
 		log.info("Updating patient {}", id);
 		final PatientEntity p = this.patientRepository.findOne(id);
 		if (p == null) {
@@ -141,16 +142,27 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		
 		this.verifyWriteAccess(p);
 		
-		p.setFirstName(patient.getFirstName());
-		p.setSurName(patient.getSurName());
+		p.setFirstName(patient.getFirstname());
+		p.setSurName(patient.getSurname());
 		p.setEmail(patient.getEmail());
 		p.setMobile(patient.isMobile());
-		p.setPhoneNumber(patient.getPhoneNumber());
+		p.setPhoneNumber(patient.getPhone());
+		
+		final Object salt = this.saltSource.getSalt((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		
 		if (patient.isMobile()) {
-			String pw = this.passwordEncoder.encodePassword(patient.getPassword()
-					, this.saltSource.getSalt((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
 			
+			if (patient.getPassword() == null || patient.getPassword2() == null) {
+				throw new NullPointerException("User password must not be null");
+			}
+			
+			if (!patient.getPassword().equals(patient.getPassword2())) {
+				throw new IllegalArgumentException("User password must not be null and the two entered values must match.");
+			}
+			
+			String pw = this.passwordEncoder.encodePassword(patient.getPassword2(), salt);
+			
+			log.debug("Encrypted password is {}", pw);
 			p.setPassword(pw);
 		}
 		

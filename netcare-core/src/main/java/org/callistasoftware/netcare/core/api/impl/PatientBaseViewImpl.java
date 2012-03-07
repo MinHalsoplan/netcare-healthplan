@@ -105,4 +105,9 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	public void setMobile(boolean mobile) {
 		this.mobile = mobile;
 	}
+
+	@Override
+	public String getUsername() {
+		return this.getCivicRegistrationNumber();
+	}
 }

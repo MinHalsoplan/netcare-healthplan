@@ -36,17 +36,17 @@
 				var serviceClient = new NC.Patient();
 				
 				var updateForm = function(data) {
-					$('#userprofile input[name="firstName"]').val(data.data.firstName);
-					$('#userprofile input[name="surName"]').val(data.data.surName);
+					$('#userprofile input[name="firstname"]').val(data.data.firstName);
+					$('#userprofile input[name="surname"]').val(data.data.surName);
 					$('#userprofile input[name="cnr"]').val(new NC.Util().formatCnr(data.data.civicRegistrationNumber));
 					$('#userprofile input[name="email"]').val(data.data.email);
-					$('#userprofile input[name="phoneNumber"]').val(data.data.phoneNumber);
+					$('#userprofile input[name="phone"]').val(data.data.phoneNumber);
 					
 					var mobile = data.data.mobile;
 					if (mobile) {
 						$('#userprofile input[name="mobile"]').attr('checked', 'checked');
-						$('#userprofile input[name="pinCode"]').val(data.data.password);
-						$('#userprofile input[name="pinCode2"]').val(data.data.password);
+						$('#userprofile input[name="password"]').val(data.data.password);
+						$('#userprofile input[name="password2"]').val(data.data.password);
 					} else {
 						$('#userprofile input[type="password"]').attr('disabled', 'disabled');
 					}
@@ -74,10 +74,10 @@
 					event.preventDefault();
 					
 					var formData = new Object();
-					formData.firstName = $('#userprofile input[name="firstName"]').val();
-					formData.surName = $('#userprofile input[name="surName"]').val();
+					formData.firstname = $('#userprofile input[name="firstname"]').val();
+					formData.surname = $('#userprofile input[name="surname"]').val();
 					formData.email = $('#userprofile input[name="email"]').val();
-					formData.phoneNumber = $('#userprofile input[name="phoneNumber"]').val();
+					formData.phone = $('#userprofile input[name="phone"]').val();
 					formData.mobile = $('#userprofile input[name="mobile"]:checked').val();
 					formData.password = $('#userprofile input[name="password"]').val();
 					formData.password2 = $('#userprofile input[name="password2"]').val();
@@ -128,13 +128,13 @@
 							<netcare:col span="3">
 								<spring:message code="profile.firstName" var="firstName" scope="page" />
 								<netcare:field name="firstName" label="${firstName}">
-									<input type="text" name="firstName" class="medium"/>
+									<input type="text" name="firstname" class="medium"/>
 								</netcare:field>
 							</netcare:col>
 							<netcare:col span="3">
 								<spring:message code="profile.surName" var="surName" scope="page" />
 								<netcare:field name="surName" label="${surName}">
-									<input type="text" name="surName" class="medium"/>
+									<input type="text" name="surname" class="medium"/>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>
@@ -148,8 +148,8 @@
 							</netcare:col>							
 							<netcare:col span="2">
 								<spring:message code="profile.phone" var="phone" scope="page" />
-								<netcare:field name="phoneNumber" label="${phone}">
-									<input type="tel" name="phoneNumber" class="span2"/>
+								<netcare:field name="phone" label="${phone}">
+									<input type="tel" name="phone" class="span2"/>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>
@@ -171,14 +171,14 @@
 								<netcare:col span="1">
 									<spring:message code="profile.mobile.pin" var="pin" scope="page" />
 									<netcare:field name="password" label="${pin}">
-										<input type="password" name="password" class="span1" min="0000" max="9999" />
+										<input type="password" name="password" class="span1" />
 									</netcare:field>
 								</netcare:col>
 								
 								<netcare:col span="2">
 									<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
 									<netcare:field name="password2" label="${pin2}">
-										<input type="password" name="password2" class="span1" min="0000" max="9999"/>
+										<input type="password" name="password2" class="span1" />
 									</netcare:field>
 								</netcare:col>
 							</netcare:row>

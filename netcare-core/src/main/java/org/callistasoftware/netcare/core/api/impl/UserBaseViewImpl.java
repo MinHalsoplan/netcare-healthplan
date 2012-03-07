@@ -51,9 +51,7 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	public abstract String getPassword();
 
 	@Override
-	public String getUsername() {
-		return this.getFirstName();
-	}
+	public abstract String getUsername();
 
 	@JsonIgnore
 	@Override

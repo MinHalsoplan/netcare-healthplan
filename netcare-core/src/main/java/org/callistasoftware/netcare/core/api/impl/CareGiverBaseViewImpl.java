@@ -88,4 +88,9 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 		return null;
 		//throw new UnsupportedOperationException("Care givers should never use basic authentication. This method is most likely called from the mobile authentication manager");
 	}
+
+	@Override
+	public String getUsername() {
+		return this.getHsaId();
+	}
 }
