@@ -115,10 +115,15 @@ public class StartActivity extends Activity {
 			@Override
 			public ServiceResult<Boolean> doCall(final Context ctx) {
 				
-				final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(
-						Integer.valueOf(ApplicationUtil.getProperty(getApplicationContext(), "port"))
-						, username
-						, password);
+				Integer port;
+				try {
+					port = Integer.valueOf(ApplicationUtil.getProperty(getApplicationContext(), "port"));
+				} catch (ClassCastException e) {
+					Log.w(TAG, "Port could not be resolved. Fallback to port 80");
+					port = 80;
+				}
+				
+				final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(port, username, password);
 				
 				final ServiceClient sc = ServiceFactory.newServiceClient(ctx, config);
 				return sc.login();

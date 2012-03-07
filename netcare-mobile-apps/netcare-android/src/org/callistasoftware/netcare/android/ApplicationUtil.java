@@ -18,7 +18,7 @@ public class ApplicationUtil {
 			builder.append("http://");
 		}
 		
-		builder.append(getProperty(ctx, "host")).append(":").append(getProperty(ctx, "port")).append("/netcare-web");
+		builder.append(getProperty(ctx, "host")).append(":").append(getProperty(ctx, "port"));
 		return builder.toString();
 	}
 	

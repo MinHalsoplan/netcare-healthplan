@@ -49,9 +49,8 @@ NC.Mobile = function() {
 			parent.append(header);
 		},
 		
-		createListRow : function(parent, href, value, clickCallback) {
-			
-			if (!value.active) {
+		createListRow : function(parent, href, value, clickCallback, reportedLabel) {
+			if (!value.definition.active) {
 				return false;
 			}
 			
@@ -115,7 +114,7 @@ NC.Mobile = function() {
 				});
 				
 				activityText.append(
-					$('<p>').addClass('ui-li-desc').html('Rapporterade värden: ' + reported)
+					$('<p>').addClass('ui-li-desc').html(reportedLabel + ': ' + reported)
 				);
 			}
 			

@@ -33,14 +33,16 @@
 		<security:http security="none" pattern="/netcare/security/**" />
 	
 		<security:http pattern="/api/**" use-expressions="true" create-session="never">
-			<security:intercept-url pattern="/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
+			<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:http-basic/>
 		</security:http>
 		
-		<security:http pattern="/netcare/mobile/**" 
+		<security:http 
+			pattern="/mobile/**"
 			use-expressions="true"
 			create-session="stateless"
 			entry-point-ref="httpBasicAuthEntryPoint">
+			<security:intercept-url pattern="/mobile/**" access="hasRole('ROLE_USER')"/>
 			<security:custom-filter ref="mobileLoginFilter" position="BASIC_AUTH_FILTER"/>
 		</security:http>
 		
@@ -62,7 +64,6 @@
 		<bean id="mobileLoginFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
 			<property name="authenticationManager" ref="mobileAuthenticationManager" />
 			<property name="authenticationEntryPoint" ref="httpBasicAuthEntryPoint" />
-			
 		</bean>
 	</beans>
 </beans>

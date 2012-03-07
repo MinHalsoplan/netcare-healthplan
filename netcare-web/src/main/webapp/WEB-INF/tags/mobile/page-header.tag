@@ -20,9 +20,10 @@
 <%@ attribute name="id" required="true" %>
 <%@ attribute name="title" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <div id="${id}" data-role="header">
-	<h1>${title}</h1>
+	<h1><spring:message code="${title}" /></h1>
 	<jsp:doBody />
 </div>
