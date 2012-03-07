@@ -24,6 +24,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<script type="text/javascript">
+
+	$(function() {
+		$('.modal-footer').find('.btn-primary').click(function(e) {
+			
+			e.preventDefault();
+			
+			/*
+			 * Submit if we have a form elem as parent
+			 */
+			var parent = $('#${id}').parent();
+			if (parent.is('form')) {
+				parent.submit();
+			}
+		});
+	});
+
+</script>
+
 <div id="${id}" class="modal fade">
 	<div class="modal-header">
 		<a class="close" data-dismiss="modal">×</a>
