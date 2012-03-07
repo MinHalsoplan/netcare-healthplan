@@ -27,11 +27,11 @@
 <netcare:page>
 	<netcare:header />
 	<netcare:body>
-		<netcare:content>
+		<div class="span12">
 			<h1><spring:message code="denied" /></h1>
 			<p>
 				<spring:message code="deniedText" />
 			</p>
-		</netcare:content>
+		</div>
 	</netcare:body>
 </netcare:page>

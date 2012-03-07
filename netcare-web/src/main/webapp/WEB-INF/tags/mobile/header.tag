@@ -22,11 +22,11 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Planerade Hälsoaktiviteter</title>
+	<title><spring:message code="system.name" /></title>
 	
 	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.0.min.css" />" />
 		
-	<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.2.min.js" />"></script>
+	<script type="text/javascript" src="<spring:url value="/js/jquery-1.7.1.min.js" />"></script>
 	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.min.js" />"></script>
 	
 	<script type="text/javascript">

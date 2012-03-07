@@ -26,12 +26,12 @@
 <netcare:page>
 	<netcare:header />
 	<netcare:body>
-		<netcare:content>
+		<div class="span12">
 			<h1><spring:message code="internalError" /></h1>
 			<p>
 				<spring:message code="generalError" /><br />
 			</p>
-		</netcare:content>
+		</div>
 	</netcare:body>
 </netcare:page>
 

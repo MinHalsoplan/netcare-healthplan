@@ -26,11 +26,11 @@
 <netcare:page>
 	<netcare:header />
 	<netcare:body>
-		<netcare:content>
+		<div class="span12">
 			<h1><spring:message code="notFound" /></h1>
 			<p>
 				<spring:message code="notFoundDesc" />
 			</p>
-		</netcare:content>
+		</div>
 	</netcare:body>
 </netcare:page>
