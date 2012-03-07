@@ -32,6 +32,8 @@
 		
 			var buildListView = function(value, buildHeader) {
 				
+				NC.log('Building list. Build header: ' + buildHeader);
+				
 				if (buildHeader) {
 					mobile.createListHeader($('#schema'), value.day.value + '<br/>' + value.date);
 				}

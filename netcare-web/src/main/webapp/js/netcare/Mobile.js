@@ -50,8 +50,7 @@ NC.Mobile = function() {
 		},
 		
 		createListRow : function(parent, href, value, clickCallback) {
-			
-			if (!value.active) {
+			if (!value.definition.active) {
 				return false;
 			}
 			

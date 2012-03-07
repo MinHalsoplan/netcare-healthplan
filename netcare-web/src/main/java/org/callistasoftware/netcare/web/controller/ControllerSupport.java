@@ -27,7 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-abstract class ControllerSupport {
+public abstract class ControllerSupport {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

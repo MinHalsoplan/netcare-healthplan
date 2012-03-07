@@ -43,6 +43,12 @@
     	<load-on-startup>1</load-on-startup>
     </servlet>
     
+    <servlet>
+    	<servlet-name>mobile</servlet-name>
+    	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>netcare</servlet-name>
         <url-pattern>/netcare/*</url-pattern>
@@ -51,6 +57,11 @@
 	<servlet-mapping>
 		<servlet-name>api</servlet-name>
 		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>mobile</servlet-name>
+		<url-pattern>/mobile/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>

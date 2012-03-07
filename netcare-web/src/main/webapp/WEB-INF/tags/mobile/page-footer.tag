@@ -23,5 +23,5 @@
 
 
 <div id="${id}" data-role="footer">
-	<h4><sec:authentication property="principal.name" /></h4>
+<%-- 	<h4><sec:authentication property="principal.name" /></h4> --%>
 </div>
