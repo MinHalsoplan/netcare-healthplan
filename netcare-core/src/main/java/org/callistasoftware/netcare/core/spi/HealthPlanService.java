@@ -224,4 +224,15 @@ public interface HealthPlanService {
 	 * @return the results as a comma separated text (text/csv).
 	 */
 	String getPlanReports(UserBaseView user, Long activityDefinitionId);
+
+	/**
+	 * Performs a renewal, adding another iteration.
+	 * 
+	 * @param healthPlanId the health plan id.
+	 * @param stop, indicates if renewal shall be terminated.
+	 * 
+	 * @return the result.
+	 * 
+	 */
+	ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop);
 }

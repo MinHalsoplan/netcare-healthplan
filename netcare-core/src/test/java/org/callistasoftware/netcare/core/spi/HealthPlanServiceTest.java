@@ -118,6 +118,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -30);
 		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		hp.setAutoRenewal(true);
 		ordinationRepo.save(hp);
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
@@ -171,13 +172,15 @@ public class HealthPlanServiceTest extends TestSupport {
 	public void testCreateHealthPlan() throws Exception {
 		
 		final HealthPlanImpl o = createHealthPlan("Test", "2011-12-12", 12, DurationUnit.WEEK.name());
-
+		o.setAutoRenewal(true);
 		final ServiceResult<HealthPlan> saved = createHealthPlan(o);
 		
 		assertEquals(o.getName(), saved.getData().getName());
 		assertEquals(o.getStartDate(), saved.getData().getStartDate());
 		assertEquals(o.getDuration(), saved.getData().getDuration());
 		assertEquals(o.getDurationUnit().getCode(), saved.getData().getDurationUnit().getCode());
+		assertEquals(o.isAutoRenewal(), saved.getData().isAutoRenewal());
+		assertEquals(o.getIteration(), saved.getData().getIteration());
 	}
 	
 	@Test
@@ -356,6 +359,33 @@ public class HealthPlanServiceTest extends TestSupport {
 		Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 		assertEquals(true, (event.getNumReports() > 0 && (day == 2 || day == 5)) || event.getNumReports() == 0);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testHealthPlanRenewal() {
+		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
+		HealthPlanEntity hp = ad.getHealthPlan();
+		assertEquals(true, hp.isAutoRenewal());
+		assertEquals(0,  hp.getIteration());
+				
+		Date startDate = hp.getStartDate();
+		Date endDate = hp.getEndDate();
+		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
+		int n = scheduledActivities.size();
+		assertEquals(79, n);
+		
+		List<ScheduledActivityEntity> list = hp.performRenewal();
+		schedRepo.save(list);
+		
+		endDate = hp.getEndDate();
+		scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
+		int newActivities = scheduledActivities.size();
+		
+		// number of days should be approx. 2 times more after renewal, but ... 5 is good enough during a 6 month period
+		assertTrue(newActivities > ((n*2)-5));
+		assertEquals(1, hp.getIteration());
 	}
 	
 	@Test

@@ -72,7 +72,7 @@ public class SystemAlarmJob {
 	
 	@Autowired
 	private AlarmRepository alRepo;
-	
+		
 	@Autowired
 	private MessageSource messageBundle;
 
@@ -176,9 +176,16 @@ public class SystemAlarmJob {
 		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThan(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
-			AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId());
-			ae.setInfo(hpe.getName());
-			al.add(ae);
+			if (hpe.isAutoRenewal()) {
+				log.info("Perform auto-renewal: health-plan {} for patient {}", hpe.getName(), hpe.getForPatient().getFirstName() + " " + hpe.getForPatient().getSurName());
+				List<ScheduledActivityEntity> sal = hpe.performRenewal();
+				hpRepo.save(hpe);
+				saRepo.save(sal);
+			} else {
+				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId());
+				ae.setInfo(hpe.getName());
+				al.add(ae);
+			}
 		}
 		log.info("Alarm plan job ready: {} new plan alarms!", al.size());
 		if (al.size() > 0) {

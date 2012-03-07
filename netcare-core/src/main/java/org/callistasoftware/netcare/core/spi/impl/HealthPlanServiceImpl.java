@@ -207,7 +207,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final PatientEntity patient = this.patientRepository.findOne(patientId);
 
 		final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
-
+		newEntity.setAutoRenewal(o.isAutoRenewal());
+		
 		final HealthPlanEntity saved = this.repo.save(newEntity);
 		final HealthPlan dto = HealthPlanImpl.newFromEntity(saved, null);
 
@@ -305,6 +306,34 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		log.debug("Creating result. Success!");
 		final HealthPlan result = HealthPlanImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());
+		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
+	}
+	
+	
+	@Override
+	public ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop) {
+		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
+		
+		if (entity == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+		}
+
+		List<ScheduledActivityEntity> list = null;
+		
+		if (stop) {
+			log.debug("Health plan {} renewal terminated", entity.getName());
+			entity.setAutoRenewal(false);
+		} else {
+			list = entity.performRenewal();
+			log.debug("Health plan {} perform renewal, iteration {}", entity.getName(), entity.getIteration());
+		}
+		HealthPlanEntity savedEntity = this.repo.save(entity);
+		
+		if (list != null) {
+			this.scheduledActivityRepository.save(list);
+		}
+		
+		final HealthPlan result = HealthPlanImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
 	}
 	

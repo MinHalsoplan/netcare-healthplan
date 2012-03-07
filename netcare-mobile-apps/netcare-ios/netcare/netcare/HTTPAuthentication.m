@@ -53,6 +53,7 @@ static NSURLProtectionSpace *protectionSpace = nil;
 {
     if (protectionSpace != nil) 
     {
+        NSLog(@"Clean session");
         NSURLCredential *credential = [[NSURLCredentialStorage sharedCredentialStorage]defaultCredentialForProtectionSpace:protectionSpace];
         
         if (credential)
@@ -93,7 +94,7 @@ static NSURLProtectionSpace *protectionSpace = nil;
                                        persistence: NSURLCredentialPersistenceForSession]; 
         
         [[NSURLCredentialStorage sharedCredentialStorage] setDefaultCredential:credential forProtectionSpace:protectionSpace];
-        
+
         [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];        
     }
 }

@@ -70,7 +70,7 @@
 	<key>NCPort</key>
 	<string>8080</string>
 	<key>NCHost</key>
-	<string>localhost</string>
+	<string>192.168.0.22</string>
 	<key>NCProtocol</key>
 	<string>http</string>
 </dict>
