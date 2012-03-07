@@ -167,7 +167,8 @@
 							<th><spring:message code="comments.reply" /></th>
 							<th><spring:message code="comments.from" />
 							<th><spring:message code="comments.activity" /></th>
-							<th>&nbsp;</th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="32px">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
@@ -194,7 +195,8 @@
 								<th><spring:message code="activity.reported.type" /></th>
 								<th><spring:message code="activity.reported.value" /></th>
 								<th><spring:message code="activity.reported.when" /></th>
-								<th>&nbsp;</th>
+								<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+								<th width="32px">&nbsp;</th>
 						</thead>
 						<tbody></tbody>
 					</netcare:table>
@@ -238,7 +240,8 @@
 								<th><spring:message code="alarm.contact" /></th>
 								<th><spring:message code="alarm.cause" /></th>
 								<th><spring:message code="alarm.created" /></th>
-								<th>&nbsp;</th>
+								<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+								<th width="32px">&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody></tbody>

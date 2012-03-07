@@ -185,7 +185,8 @@
 							<th><c:out value="${duration}" /></th>
 							<th><c:out value="${startDate}" /></th>
 							<th><c:out value="${issuedBy}" /></th>
-							<th>&nbsp;</th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="64px">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>

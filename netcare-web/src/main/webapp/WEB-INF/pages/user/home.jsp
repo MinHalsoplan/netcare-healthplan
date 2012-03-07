@@ -125,8 +125,8 @@
 							hps.deleteComment(value.id, function(data) {
 								hps.loadLatestComments(patientId, loadComments);
 							});
-						}, 'comments.delete');
-						
+						}, 'comments.delete').css('padding-left', '10px');
+				
 						tr.append($('<td>').css('font-style', 'italic').html('"' + value.comment + '"'));
 						tr.append($('<td>').html(activity));
 						tr.append($('<td>').html(value.commentedBy));
@@ -234,7 +234,8 @@
 							<th><spring:message code="comments.comment" /></th>
 							<th><spring:message code="comments.activity" /></th>
 							<th><spring:message code="comments.from" /></th>
-							<th>&nbsp;</th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="64px">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
@@ -253,7 +254,8 @@
 				<netcare:table id="planTable">
 					<thead>
 						<tr>
-							<th>&nbsp;</th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="40px">&nbsp;</th>
 							<th><spring:message code="phome.plan" /></th>
 							<th><spring:message code="phome.activity" /></th>
 							<th><spring:message code="phome.until" /></th>
