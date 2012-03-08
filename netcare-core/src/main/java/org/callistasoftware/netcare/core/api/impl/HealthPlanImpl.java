@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Option;
@@ -50,16 +51,16 @@ public class HealthPlanImpl implements HealthPlan {
 
 	private boolean autoRenewal;
 	private int iteration;
+	private boolean active;
 	
-	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		
+	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {		
 		final HealthPlanImpl dto = new HealthPlanImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setDuration(entity.getDuration());
 		dto.setDurationUnit(new Option(entity.getDurationUnit().name(), l));
-		dto.setStartDate(sdf.format(entity.getStartDate()));
+		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
+		dto.setEndDate(ApiUtil.formatDate(entity.getEndDate()));
 		
 		final CareUnit cu = CareUnitImpl.newFromEntity(entity.getCareUnit());
 		dto.setCareUnit(cu);
@@ -71,7 +72,7 @@ public class HealthPlanImpl implements HealthPlan {
 		dto.setPatient(PatientBaseViewImpl.newFromEntity(entity.getForPatient()));
 		dto.setIteration(entity.getIteration());
 		dto.setAutoRenewal(entity.isAutoRenewal());
-		
+		dto.setActive(entity.isActive());
 		/*
 		 * Process defintions
 		 */		
@@ -109,6 +110,10 @@ public class HealthPlanImpl implements HealthPlan {
 	@Override
 	public String getEndDate() {
 		return this.endDate;
+	}
+	
+	public void setEndDate(final String endDate) {
+		this.endDate = endDate;
 	}
 
 	@Override
@@ -177,6 +182,15 @@ public class HealthPlanImpl implements HealthPlan {
 
 	public void setIteration(int iteration) {
 		this.iteration = iteration;
+	}
+
+	@Override
+	public boolean isActive() {
+		return active;
+	}
+
+	void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

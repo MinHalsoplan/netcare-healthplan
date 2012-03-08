@@ -201,6 +201,20 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		},
 		
 		/**
+		 * Stops auto renewal.
+		 */
+		stopAutoRenewal : function(healthPlanId, callback) {
+			_ajax.post('/healthplan/' + healthPlanId + '/stopAutoRenewal', null, callback, true);			
+		},
+		
+		/**
+		 * Performs manual renewal.
+		 */
+		performExplicitRenewal : function(healthPlanId, callback) {
+			_ajax.post('/healthplan/' + healthPlanId + '/renew', null, callback, true);			
+		},
+		
+		/**
 		 * View a single ordination
 		 */
 		view : function(healthPlanId) {

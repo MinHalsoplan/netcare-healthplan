@@ -374,7 +374,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		Date endDate = hp.getEndDate();
 		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
 		int n = scheduledActivities.size();
-		assertTrue(n > 75 && n < 81);
+		assertTrue(n > 75 && n < 82);
 		
 		List<ScheduledActivityEntity> list = hp.performRenewal();
 		schedRepo.save(list);

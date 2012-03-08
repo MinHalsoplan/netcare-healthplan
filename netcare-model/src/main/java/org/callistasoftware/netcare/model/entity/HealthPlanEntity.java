@@ -64,7 +64,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="auto_renewal")
 	private boolean autoRenewal;
 	
-	@Column(name="iteration", nullable=false)
+	@Column(name="iteration")
 	private int iteration;
 	
 	@ManyToOne
@@ -180,6 +180,15 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		calculateEnd();
 	}
 
+	/**
+	 * Returns if this health-plan is active expired.
+	 * @return true if active, otherwise false.
+	 */
+	public boolean isActive() {
+		Date today = EntityUtil.dayEnd(Calendar.getInstance()).getTime();
+		return (today.compareTo(getEndDate()) <= 0);
+	}
+	
 	public DurationUnit getDurationUnit() {
 		return durationUnit;
 	}
@@ -206,12 +215,17 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	 * @return the list of added activities.
 	 */
 	public List<ScheduledActivityEntity> performRenewal() {
-		Date endDate = getEndDate();
 		Calendar c = Calendar.getInstance();
-		c.setTime(endDate);
+		c.setTime(getEndDate());
 		c.add(Calendar.DATE, 1);
 		
 		Date newStartDate =  EntityUtil.dayBegin(c).getTime();
+		Date today = EntityUtil.dayBegin(Calendar.getInstance()).getTime();
+		
+		// wind time to now, if start date is in the past
+		if (today.compareTo(newStartDate) > 0) {
+			newStartDate = today;
+		}
 		
 		// set iteration & new end date.
 		setIteration(getIteration() + 1);

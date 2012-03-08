@@ -48,6 +48,13 @@
 					/* Empty the result list */
 					$('#ordinationTable tbody > tr').empty();
 					
+					var infoMessages;
+					
+					support.loadMessages('healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.confirm.performRenewal, healthplan.confirm.stopAutoRenewal', function(messages) {
+						infoMessages = messages;
+					});
+
+					
 					$.each(data.data, function(index, value) {
 						NC.log("Processing index " + index + " value: " + value.name);
 						
@@ -59,18 +66,64 @@
 						
 						var editIcon = util.createIcon('edit', 24, function() {
 							healthPlans.view(value.id);
-						}, 'healthplan.icons.edit');
+						}, 'healthplan.icons.edit').css('padding-left', '10px');
+						
+						var renewalIcon;
+						if (value.autoRenewal) {
+							renewalIcon = util.createIcon('exit', 24, function() {
+								var answer = confirm(infoMessages['healthplan.confirm.stopAutoRenewal']);
+								if (answer) {
+									healthPlans.stopAutoRenewal(value.id, function(data) {
+										$('#hn-' + value.id).html('<strong>' + data.data.name + '</strong>');
+										renewalIcon.addClass('ui-state-disabled');
+										renewalIcon.unbind('click');
+								});
+								}
+							}, 'healthplan.icons.stopRenewal');
+						} else {
+							renewalIcon = util.createIcon('renew', 24, function() {
+								var answer = confirm(infoMessages['healthplan.confirm.performRenewal']);								
+								if (answer) {
+									healthPlans.performExplicitRenewal(value.id, function(data) {
+										NC.log('Renewal : ' + data.data.endDate);
+										var dur = '<strong>' + data.data.endDate + '<br/>' 
+											+ ((data.data.iteration > 0) ? (data.data.iteration+1) + 'x' : '') 
+											+ value.duration + ' ' + value.durationUnit.value
+											+ '</strong>';
+										$('#hd-' + value.id).html(dur);
+										renewalIcon.addClass('ui-state-disabled');
+										renewalIcon.unbind('click');
+									});
+								}
+							}, 'healthplan.icons.performRenewal');							
+						}
+						renewalIcon.css('padding-left','10px');
+						
+						if (!value.active) {
+							editIcon.addClass('ui-state-disabled');
+							editIcon.unbind('click');
+						}
 						
 						var actionCol = $('<td>').css('text-align', 'right');
 						
 						resultIcon.appendTo(actionCol);
 						editIcon.appendTo(actionCol);
+						renewalIcon.appendTo(actionCol);
+						
+
+						var duration = value.endDate + '<br/>' + ((value.iteration > 0) ? (value.iteration+1) + 'x' : '') + value.duration + ' ' + value.durationUnit.value;
+						var name = value.name;
+						if (value.autoRenewal) {
+							name += '<br/><i style="font-size: 10px;">'+ infoMessages['healthplan.autoRenewal'] + '</i>';
+						} else if (!value.active) {
+							name += '<br/><i style="font-size: 10px;">'+ infoMessages['healthplan.inActiveInfo'] + '</i>';							
+						}
 						
 						$('#ordinationTable tbody').append(
 								$('<tr>').append(
-									$('<td>').html(value.name)).append(
-										$('<td>').html(value.duration + ' ' + value.durationUnit.value)).append(
-												$('<td>').html(value.startDate)).append(
+									$('<td>').attr('id', 'hn-' + value.id).html(name)).append(
+										$('<td>').html(value.startDate)).append(
+												$('<td>').attr('id', 'hd-' + value.id).html(duration)).append(
 														$('<td>').html(value.issuedBy.name)).append(
 																actionCol));
 					});
@@ -188,11 +241,11 @@
 					<thead>
 						<tr>
 							<th><c:out value="${name}" /></th>
-							<th><c:out value="${duration}" /></th>
 							<th><c:out value="${startDate}" /></th>
+							<th><c:out value="${duration}" /></th>
 							<th><c:out value="${issuedBy}" /></th>
 							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-							<th width="64px">&nbsp;</th>
+							<th width="96px">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
