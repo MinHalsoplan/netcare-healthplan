@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import java.util.Date;
+
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityReport;
@@ -167,7 +169,7 @@ public interface HealthPlanService {
 	 * has health plans belonging to the caller's care unit
 	 * @return
 	 */
-	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit);
+	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit, final Date start, final Date end);
 	
 	/**
 	 * Returns actual activity definitions.

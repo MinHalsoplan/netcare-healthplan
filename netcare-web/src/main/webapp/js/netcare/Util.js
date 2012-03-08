@@ -364,6 +364,43 @@ NC.Util = function() {
 			);
 			
 			return container;
+		},
+		
+		formatMeasurements : function(rejectedLabel, rejected, data) {
+			
+			var rc = new Object();
+			rc.alarm = rejected;
+			rc.html = '';
+			
+			if (rejected) {
+				rc.html = rejectedLabel;
+				return rc;
+			}
+			
+			$.each(data, function(index, value) {
+				var target;
+				var alarm;
+				if (value.measurementDefinition.measurementType.valueType.code == 'INTERVAL') {
+					target = value.minTarget + '-' + value.maxTarget;
+					alarm = (value.reportedValue < value.minTarget || value.reportedValue> value.maxTarget);
+					if (alarm) {
+						rc.alarm = true;
+					}
+				} else {
+					target = value.target;
+				}
+				if (index > 0) {
+					rc.html += '<br/>'
+				}
+				
+				var report = alarm ? '<i style="font-weight: bold">' + value.reportedValue + '</i>' : value.reportedValue ;
+				
+				rc.html += value.measurementDefinition.measurementType.name + ':&nbsp;' + report + '&nbsp;' 
+					+ public.formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
+				
+			});
+			
+			return rc;
 		}
 	};
 	

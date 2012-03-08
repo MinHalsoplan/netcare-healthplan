@@ -48,9 +48,25 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			@Param("end") final Date end);
 		
 	/**
+	 * Used to display activity reports for a care giver within a time interval.
+	 * 
+	 * @param careUnit the unit.
+	 * @return the list.
+	 */
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp inner join " +
+			"hp.careUnit as c where c.hsaId = :careUnit " +
+			"and ad.removedFlag = 'false' " +
+			"and e.reportedTime != null and e.status != 1 and (e.reportedTime between :start and :end)")
+	List<ScheduledActivityEntity> findByCareUnitBetween(@Param("careUnit") final String careUnit
+			, @Param("start") final Date start
+			, @Param("end") final Date end);
+	
+	/**
 	 * Used to display actvivity reports for a care giver.
 	 * 
-	 * @param careUnitthe unit.
+	 * @param careUnit the unit.
 	 * @return the list.
 	 */
 	@Query("select e from ScheduledActivityEntity as e inner join " +

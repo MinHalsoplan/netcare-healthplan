@@ -16,44 +16,27 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless"%>
-<%@ attribute name="id" required="true" %>
+<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ attribute name="titleCode" required="true" %>
-<%@ attribute name="confirmCode" required="true" %>
-
+<%@ attribute name="descriptionCode" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<script type="text/javascript">
+<section id="list-header">
+	<h2><spring:message code="${titleCode}" /></h2>
+	<p>
+		<span class="label label-info"><spring:message code="label.information" /></span>
+		<spring:message code="${descriptionCode}" />
+	</p>
+</section>
 
-	$(function() {
-		$('.modal-footer').find('.btn-primary').click(function(e) {
-			
-			e.preventDefault();
-			
-			/*
-			 * Submit if we have a form elem as parent
-			 */
-			var parent = $('#${id}').parent();
-			if (parent.is('form')) {
-				parent.submit();
-				$('#${id}').modal('hide');
-			}
-		});
-	});
-
-</script>
-
-<div id="${id}" class="modal fade">
-	<div class="modal-header">
-		<a class="close" data-dismiss="modal">×</a>
-		<h3><spring:message code="${titleCode}" /></h3>
+<section id="list-content">
+	<div id="list-status">
+		<div id="list-info" class="alert alert-info" style="display: none;"></div>
+		<div id="list-empty" class="alert alert-info" style="display: none;"></div>
 	</div>
-	<div class="modal-body">
-		<jsp:doBody />
-	</div>
-	<div class="modal-footer">
-		<a href="#" class="btn btn-primary"><spring:message code="${confirmCode}" /></a>
-		<a data-dismiss="modal" class="btn"><spring:message code="label.close" /></a>
-	</div>
-</div>
+	<jsp:doBody />
+</section>
+
+

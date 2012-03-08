@@ -46,20 +46,6 @@ NC.Patient = function() {
 		},
 		
 		/**
-		 * Called when care giver selects a patient to
-		 * work with. This method adds the selected patient
-		 * to the session scope and the menu should always
-		 * display the selected patient
-		 */
-		selectPatient : function(patientId, successFunction) {
-			_ajax.post('/user/' + patientId + '/select', null, successFunction, false);
-		},
-		
-		unselect : function(callback) {
-			_ajax.post('/user/unselect', null, callback, false);
-		},
-		
-		/**
 		 * Deletes a patient from the system
 		 */
 		deletePatient : function(patientId, successFunction) {

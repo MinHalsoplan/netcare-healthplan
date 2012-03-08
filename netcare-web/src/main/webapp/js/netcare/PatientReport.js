@@ -103,7 +103,8 @@ NC.PatientReport = function(tableId, shortVersion) {
 	
 	var createButtons = function(act) {
 		var div = $('<div>');
-		var rbtn = _util.createIcon('edit', 24, function() {
+		
+		var rbtn = _util.createIcon('change-result', 24, function() {
 
 			$('#reportFormDiv input[name="activityId"]').attr('value', act.id);
 			$('#reportFormDiv input[name="note"]').attr('value', (act.note == null) ? '' : act.note);

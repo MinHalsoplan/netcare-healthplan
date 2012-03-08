@@ -94,6 +94,7 @@
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientReport.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare/ReportedActivities.js' />"></script>
 	
 	<script type="text/javascript">
 		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';

@@ -73,7 +73,7 @@
 	<h3 class="menuHeader"><spring:message code="patient.menu.healthplans" /></h3>
 	<ul class="menuList">
 		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
-		<li><netcare:image name="results" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
+		<li><netcare:image name="result-overview" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
 	</ul>
 	
 	<h3 class="menuList"><spring:message code="patient.menu.addActivities" /></h3>

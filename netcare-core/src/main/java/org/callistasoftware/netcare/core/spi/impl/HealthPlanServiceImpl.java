@@ -390,7 +390,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit) {
+	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit, final Date start, final Date end) {
 		log.info("Loading latest reported activities for all patients belonging to care unit {}", careUnit.getHsaId());
 		
 		final CareUnitEntity entity = this.careUnitRepository.findByHsaId(careUnit.getHsaId());
@@ -400,7 +400,13 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		this.verifyReadAccess(entity);
 		
-		final List<ScheduledActivityEntity> activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
+		final List<ScheduledActivityEntity> activities;
+		if (start == null || end == null) {
+			activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
+		} else {
+			activities = this.scheduledActivityRepository.findByCareUnitBetween(entity.getHsaId(), start, end);
+		}
+		
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
 	}
 

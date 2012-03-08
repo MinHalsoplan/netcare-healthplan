@@ -27,18 +27,48 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
-				
+				var hp = new NC.HealthPlan();
+				var alarms = new NC.Alarm();
+				var _support = new NC.Support();
 				var util = new NC.Util();
+				var _patient = new NC.Patient();
 				
 				var name = "<c:out value="${sessionScope.currentPatient.name}" />";
 				if (name.length != 0) {
 					util.updateCurrentPatient(name);
 				}
 				
-				var hp = new NC.HealthPlan();
-				hp.loadLatestReportedActivities('reportedActivities');
+				var _ra
+				var msgs;
+				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit', function(messages) {
+					msgs = messages;
+					_ra = new NC.ReportedActivities(msgs);
+				});
 				
-				var alarms = new NC.Alarm();
+				_ra.loadData('latest', function(data) {
+					_ra.loadUI(data, function(row) {
+						$('#latest-activities tbody').append(row);	
+					},
+					function(data) {
+						$('#commentActivity').modal('show');
+						$('#commentActivity a.btn-primary').click(function(e) {
+							e.preventDefault();
+							
+							var val = $('#commentActivity input[name="comment"]').val();
+							
+							_ra.sendComment(data.id, val, function() {
+								$('#commentActivity input[name="comment"]').val('');
+								$('#commentActivity').modal('hide');
+								
+								$('#commentActivity a.btn-primary').unbind('click');
+							});
+						});
+					});
+				}, 
+				function() {
+					$('#latest-activities').hide();
+					$('#noReportedActivities').show();
+				});
 				
 				var loadAlarms = function() {
 					alarms.loadAlarms(function(data) {
@@ -89,7 +119,6 @@
 				
 				loadAlarms();
 				
-				//$('#commentActivity').modal();
 				$('#commentActivity').bind('shown', function() {
 					$('#commentActivity input[name="comment"]').focus();
 				});
@@ -183,16 +212,19 @@
 					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="activity.reported.desc" />
 				</p>
-				
+				<div class="alert alert-warning">
+					<a href="/netcare/admin/activity/list"><spring:message code="activity.reported.list" /></a>
+				</div>
 				<div id="reportedActivities">
 					<div id="noReportedActivities" style="display: none;" class="alert alert-info">
-						<p><spring:message code="activity.reported.none" /></p>
+						<p><spring:message code="activity.reported.noneLastDay" /></p>
 					</div>
-					<netcare:table style="display: none;">
+					<netcare:table id="latest-activities">
 						<thead>
 							<tr>
 								<th><spring:message code="activity.reported.patient" /></th>
 								<th><spring:message code="activity.reported.type" /></th>
+								<th><spring:message code="activity.reported.healthplan" /></th>
 								<th><spring:message code="activity.reported.value" /></th>
 								<th><spring:message code="activity.reported.when" /></th>
 								<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
@@ -202,21 +234,9 @@
 					</netcare:table>
 				</div>
 				
-				<div id="commentActivity" class="modal hide fade" style="display: none;">
-					<div class="modal-header">
-						<a href="#" class="close" data-dismiss="modal">x</a>
-						<h3><spring:message code="comments.comment" /></h3>
-					</div>
-
-					<div class="modal-body">
-						<form action="post">
-						<input type="text" name="comment" class="xlarge" />
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-primary"><spring:message code='comments.sendComment' /></button>
-						</form>
-					</div>
-				</div>
+				<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
+					<input type="text" name="comment" class="xlarge" />
+				</netcare:modal>
 				
 			</section>
 			
