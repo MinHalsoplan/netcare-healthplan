@@ -16,15 +16,14 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
-import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 
