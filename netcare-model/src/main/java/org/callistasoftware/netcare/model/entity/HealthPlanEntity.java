@@ -64,6 +64,9 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="auto_renewal")
 	private boolean autoRenewal;
 	
+	@Column(name="iteration", nullable=false)
+	private int iteration;
+	
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
 	private CareGiverEntity issuedBy;
@@ -82,6 +85,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	
 	HealthPlanEntity() {
 		activityDefinitions = new LinkedList<ActivityDefinitionEntity>();
+		iteration = 0;
 	}
 	
 
@@ -184,7 +188,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		if (durationUnit != null && startDate != null) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(startDate);
-			c.add(durationUnit == DurationUnit.MONTH ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration);
+			c.add(durationUnit == DurationUnit.MONTH ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration * (1 + getIteration()));
 			endDate = EntityUtil.dayEnd(c).getTime();
 		} else {
 			endDate = null;
@@ -196,6 +200,30 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		this.forPatient = EntityUtil.notNull(forPatient);
 	}
 
+	/**
+	 * Extends the health plan with another period.
+	 * 
+	 * @return the list of added activities.
+	 */
+	public List<ScheduledActivityEntity> performRenewal() {
+		Date endDate = getEndDate();
+		Calendar c = Calendar.getInstance();
+		c.setTime(endDate);
+		c.add(Calendar.DATE, 1);
+		
+		Date newStartDate =  EntityUtil.dayBegin(c).getTime();
+		
+		// set iteration & new end date.
+		setIteration(getIteration() + 1);
+
+		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
+		for (ActivityDefinitionEntity ad : getActivityDefinitions()) {
+			if (!ad.isRemovedFlag()) {
+				list.addAll(ad.scheduleActivities0(newStartDate));
+			}
+		}
+		return list;
+	}
 
 	public PatientEntity getForPatient() {
 		return forPatient;
@@ -234,6 +262,22 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		}
 		
 		return this.getForPatient().getId().equals(userId.getId());
+	}
+
+
+	/**
+	 * Returns the iteration starting with zero (0).
+	 * 
+	 * @return the iteration starting with zero (0).
+	 */
+	public int getIteration() {
+		return iteration;
+	}
+
+
+	private void setIteration(int iteration) {
+		this.iteration = iteration;
+		calculateEnd();
 	}
 
 }

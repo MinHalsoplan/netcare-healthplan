@@ -60,6 +60,7 @@ NC.Ajax = function() {
 			url : url,
 			cache : false,
 			success : function(data) {
+				NC.log('....success');
 				_defaultSuccess(data, _showMessages(displayMessages), callback);
 			}
 		}
@@ -108,7 +109,6 @@ NC.Ajax = function() {
 				opts.dataType = _dataType;
 				if (data != null) {
 					opts.data = JSON.stringify(data);
-					NC.log("data: " + opts.data);
 				}
 				
 				$.ajax(opts);

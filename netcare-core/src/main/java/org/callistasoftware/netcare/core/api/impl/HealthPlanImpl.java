@@ -49,6 +49,7 @@ public class HealthPlanImpl implements HealthPlan {
 	private ActivityDefinition[] activityDefintions;
 
 	private boolean autoRenewal;
+	private int iteration;
 	
 	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,6 +69,8 @@ public class HealthPlanImpl implements HealthPlan {
 		
 		dto.setIssuedBy(cg);
 		dto.setPatient(PatientBaseViewImpl.newFromEntity(entity.getForPatient()));
+		dto.setIteration(entity.getIteration());
+		dto.setAutoRenewal(entity.isAutoRenewal());
 		
 		/*
 		 * Process defintions
@@ -163,8 +166,17 @@ public class HealthPlanImpl implements HealthPlan {
 		return autoRenewal;
 	}
 	
-	public void isAutoRenewal(boolean autoRenewal) {
+	public void setAutoRenewal(boolean autoRenewal) {
 		this.autoRenewal = autoRenewal;
+	}
+
+	@Override
+	public int getIteration() {
+		return iteration;
+	}
+
+	public void setIteration(int iteration) {
+		this.iteration = iteration;
 	}
 
 }

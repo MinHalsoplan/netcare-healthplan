@@ -24,7 +24,7 @@ NC.Patient = function() {
 		},
 		
 		loadSingle : function(patientId, callback) {
-			_ajax.get('/user/' + patientId + '/load', callback);
+			_ajax.get('/user/' + patientId + '/load', callback, false);
 		},
 		
 		create : function(formData, successCallback) {
@@ -42,29 +42,29 @@ NC.Patient = function() {
 			if (searchValue.length < 3) {
 				return false;
 			}
-			_ajax.getWithParams('/user/find', { search : searchValue }, successFunction);
+			_ajax.getWithParams('/user/find', { search : searchValue }, successFunction, false);
 		},
 		
 		/**
 		 * Deletes a patient from the system
 		 */
 		deletePatient : function(patientId, successFunction) {
-			_ajax.post('/user/' + patientId + '/delete', null, successFunction);
+			_ajax.post('/user/' + patientId + '/delete', null, successFunction, false);
 		},
 		
 		/**
 		 * List activities for a patient
 		 */
 		listActivities : function(callback) {
-			_ajax.get('/patient/schema', callback);
+			_ajax.get('/patient/schema', callback, false);
 		},
 		
 		reportActivity : function(activityId, formData, callback) {
-			_ajax.post('/patient/schema/' + activityId + '/accept', formData, callback);
+			_ajax.post('/patient/schema/' + activityId + '/accept', formData, callback, true);
 		},
 		
 		getCalendar : function(callback) {
-			_ajax.get('/patient/schema/min-halso-plan', callback);
+			_ajax.get('/patient/schema/min-halso-plan', callback, false);
 		}
 	};
 	

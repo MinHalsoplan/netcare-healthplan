@@ -99,6 +99,7 @@
 					formData.durationUnit = new Object();
 					formData.durationUnit.code = $('#createHealthPlanForm select option:selected').attr('value');
 					formData.durationUnit.value = $('#createHealthPlanForm select option:selected').val();
+					formData.autoRenewal = $('#createHealthPlanForm input[name="autoRenewal"]').is(':checked');
 					
 					healthPlans.create(formData, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
 						$('#createHealthPlanForm :reset').click();
@@ -134,6 +135,7 @@
 			<spring:message code="healthplan.type" var="type" scope="page" />
 			<spring:message code="healthplan.start" var="startDate" scope="page" />
 			<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
+			<spring:message code="healthplan.autoRenewal" var="autoRenewal" scope="page" />
 			
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
@@ -165,6 +167,10 @@
 							</div>
 						</div>
 					</div>
+
+					<netcare:field name="autoRenewal" label="${autoRenewal}">
+						<input type="checkbox" name="autoRenewal" />
+					</netcare:field>
 				</fieldset>
 				
 				<div class="form-actions">

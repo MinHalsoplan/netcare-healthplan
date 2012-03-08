@@ -221,14 +221,17 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		return Collections.unmodifiableList(measurementDefinitions);		
 	}
 	
+
 	/**
-	 * Returns scheduled activities.
+	 * Schedules activities from a specified start date.
 	 * 
+	 * @param startDate the start date.
+	 * @return the list of scheduled activities.
 	 */
-	public List<ScheduledActivityEntity> scheduleActivities() {	
-		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
+	protected List<ScheduledActivityEntity> scheduleActivities0(Date startDate) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getStartDate());
+		cal.setTime(startDate);
+		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
 		Frequency freq = getFrequency();
 		while (cal.getTime().compareTo(getHealthPlan().getEndDate()) <= 0) {
 			if (freq.isDaySet(cal)) {
@@ -245,7 +248,14 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 				cal.add(Calendar.DATE, 1);
 			}
 		}
-		return list;
+		return list;		
+	}
+	
+	/**
+	 * Returns scheduled activities.
+	 */
+	public List<ScheduledActivityEntity> scheduleActivities() {	
+		return scheduleActivities0(getStartDate());
 	}
 	
 	/**

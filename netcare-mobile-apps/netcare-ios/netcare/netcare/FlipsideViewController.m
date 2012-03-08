@@ -77,6 +77,17 @@
 - (BOOL)webView:(UIWebView *)webView
 shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
+ 
+    NSString *requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    
+    NSLog(@"%@\n", requestString);
+    
+    if ([requestString hasPrefix:@"ios-log:"]) {
+        NSString* logString = [[requestString componentsSeparatedByString:@":#iOS#"] objectAtIndex:1];
+        NSLog(@"UIWebView console: %@", logString);
+        return NO;
+    }
+    
     return YES;
 }
 
