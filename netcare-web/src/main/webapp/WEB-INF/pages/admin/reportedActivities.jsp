@@ -61,7 +61,7 @@
 				}, 
 				function() {
 					$('#activity-table').hide();
-					$('#list-empty').show();
+					$('#list-empty').append($('<p>').html()).show();
 				});
 				
 			});
