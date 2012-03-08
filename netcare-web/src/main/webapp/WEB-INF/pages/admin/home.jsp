@@ -212,10 +212,12 @@
 					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="activity.reported.desc" />
 				</p>
-				
+				<div class="alert alert-warning">
+					<a href="/netcare/admin/activity/list"><spring:message code="activity.reported.list" /></a>
+				</div>
 				<div id="reportedActivities">
 					<div id="noReportedActivities" style="display: none;" class="alert alert-info">
-						<p><spring:message code="activity.reported.none" /></p>
+						<p><spring:message code="activity.reported.noneLastDay" /></p>
 					</div>
 					<netcare:table id="latest-activities">
 						<thead>
