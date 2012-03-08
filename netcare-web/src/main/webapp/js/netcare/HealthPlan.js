@@ -302,95 +302,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			_ajax.get('/healthplan/activity/' + activityId + '/load', callback);
 		},
 		
-		/**
-		 * Load the latest reported activities
-		 */
-		loadLatestReportedActivities : function(containerId) {
-			_ajax.get('/healthplan/activity/reported/latest', function(data) {
-				var msgs;
-				new NC.Support().loadMessages('report.reject', function(messages) {
-					msgs = messages;
-				});
-				
-				$.each(data.data, function(index, value) {
-					NC.log("Processing value: " + value);
-					
-					var patient = value.patient.name + '<br/>' + _util.formatCnr(value.patient.civicRegistrationNumber);
-					var typeName = value.definition.type.name;
-					var reportedAt = value.reported;
-					
-					var tr = $('<tr>');
-					var name = $('<td>' + patient + '</td>');
-					var type = $('<td>' + typeName + '</td>');
-					var ms;
-					if (value.rejected) {
-						ms = new Object();
-						ms.alarm = true;
-						ms.html = msgs['report.reject'];
-					} else {
-						ms = _formatMeasurements(value.measurements);
-					}
-					var reported = $('<td>').css('font-size', '11px').html(ms.html);
-					reported.css('background-color', ms.alarm ? '#F2DEDE' : '#DFF0D8');
-					var at = $('<td>' + reportedAt + '</td>');
-					
-					var likeIcon = _util.createIcon('comment', 24, function() {
-						
-						$('#commentActivity button').click(function(event) {
-							event.preventDefault();
-							
-							var title = $('#commentActivity h3').html();
-							title += ' (' + patient + ', ' + typeName + ')';
-							
-							$('#commentActivity h3').html(title);
-							
-							var comment = $('#commentActivity input[name="comment"]').val();
-							public.sendComment(value.id, comment, function(data) {
-								$('#commentActivity input[name="comment"]').val('');
-								$('#commentActivity').modal('hide');
-								
-								$('#commentActivity button').unbind('click');
-							});
-						});
-						
-						$('#commentActivity').modal('show');
-						$('#commentActivity input[name="comment"]').focus();
-					}, 'comments.sendComment');
-					
-					var actionCol = $('<td>').css('text-align', 'right');
-					actionCol.append(likeIcon);
-					
-					tr.append(name);
-					tr.append(type);
-					tr.append(reported);
-					tr.append(at);
-					tr.append(actionCol);
-					
-					$('#' + containerId + ' table tbody').append(tr);
-					NC.log("Appended to table body");
-				});
-				
-				var count = $('#' + containerId + ' table tbody tr').size();
-				if(count > 0) {
-					$('#' + containerId + ' table').show();
-					$('#' + containerId + ' div').hide();
-				} else {
-					$('#' + containerId + ' table').hide();
-					$('#' + containerId + ' div').show();
-				}
-			}, true);
-		},
-		
 		loadLatestComments : function(patientId, callback) {
 			_ajax.get('/healthplan/activity/reported/' + patientId + '/comments', callback, true);
 		},
 		
 		loadNewReplies : function(callback) {
 			_ajax.get('/healthplan/activity/reported/comments/newreplies', callback, true);
-		},
-		
-		sendComment : function(activityId, comment, callback) {
-			_ajax.postWithParams('/healthplan/activity/' + activityId + '/comment', { comment : comment }, callback, true);
 		},
 		
 		sendCommentReply : function(commentId, reply, callback) {

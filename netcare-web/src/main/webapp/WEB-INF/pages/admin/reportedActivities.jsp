@@ -30,21 +30,38 @@
 				
 				var _support = new NC.Support();
 				
+				var _ra
 				var msgs;
-				var _ra;
-				_support.loadMessages('report.reject, activity.reported.none', function(messages) {
+				_support.loadMessages('report.reject', function(messages) {
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
 				});
 				
-				_ra.loadData('all', function(data) {
+				_ra.loadData('latest', function(data) {
+					
 					_ra.loadUI(data, function(row) {
-						$('#activity-table tbody').append(row);
+						NC.log('Appending row');
+						$('#activity-table tbody').append(row);	
 					},
-					function() {
-						$('#list-empty').append('<p>').html(msgs['activity.reported.none']).show();
-						$('#activity-table').hide();
+					function(data) {
+						$('#commentActivity').modal('show');
+						$('#commentActivity a.btn-primary').click(function(e) {
+							e.preventDefault();
+							
+							var val = $('#commentActivity input[name="comment"]').val();
+							
+							_ra.sendComment(data.id, val, function() {
+								$('#commentActivity input[name="comment"]').val('');
+								$('#commentActivity').modal('hide');
+								
+								$('#commentActivity a.btn-primary').unbind('click');
+							});
+						});
 					});
+				}, 
+				function() {
+					$('#activity-table').hide();
+					$('#list-empty').show();
 				});
 				
 			});
@@ -61,10 +78,15 @@
 							<th><spring:message code="activity.reported.healthplan" /></th>
 							<th><spring:message code="activity.reported.value" /></th>
 							<th><spring:message code="activity.reported.when" /></th>
+							<th>&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
 				</netcare:table>
+				
+				<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
+					<input type="text" name="comment" class="xlarge" />
+				</netcare:modal>
 			</netcare:list-content>
 		</netcare:content>
 		

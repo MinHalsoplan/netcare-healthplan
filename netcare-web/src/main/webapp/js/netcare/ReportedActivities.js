@@ -65,7 +65,7 @@ NC.ReportedActivities = function(messages) {
 				});	
 			},
 			
-			loadUI : function(objectArray, onRowCreated) {
+			loadUI : function(objectArray, onRowCreated, onCommentClick) {
 				
 				$.each(objectArray, function(i, v) {
 					
@@ -102,8 +102,20 @@ NC.ReportedActivities = function(messages) {
 						$('<td>').html(v.reportedAt)		
 					);
 					
+					var commentIcon = _util.createIcon('comment', 24, function() {
+						onCommentClick(v);
+					});
+					
+					row.append(
+						$('<td>').css('text-align', 'right').append(commentIcon)
+					);
+					
 					onRowCreated(row);
 				});
+			},
+			
+			sendComment : function(activityId, message, onComplete) {
+				_ajax.postWithParams('/healthplan/activity/' + activityId + '/comment', { comment : message }, onComplete, true);
 			}
 	};
 	

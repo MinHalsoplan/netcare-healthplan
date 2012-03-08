@@ -37,6 +37,7 @@
 			var parent = $('#${id}').parent();
 			if (parent.is('form')) {
 				parent.submit();
+				$('#${id}').modal('hide');
 			}
 		});
 	});
