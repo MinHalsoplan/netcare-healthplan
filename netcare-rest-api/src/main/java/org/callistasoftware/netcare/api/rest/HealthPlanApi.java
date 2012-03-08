@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import java.util.Date;
+
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
@@ -25,6 +27,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
+import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +117,19 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
 		this.logAccess("load", "reported activities");
-		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit());
+		
+		long n = System.currentTimeMillis();
+		final Date start = new Date(n - DateUtil.MILLIS_PER_DAY);
+		final Date end = new Date(n);
+		
+		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit(), start, end);
+	}
+	
+	@RequestMapping(value="/activity/reported/all", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ScheduledActivity[]> loadAllReportedActivities() {
+		this.logAccess("load", "reported activities");
+		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit(), null, null);
 	}
 	
     @RequestMapping(value="/activity/reported/comment/{comment}/reply", method=RequestMethod.POST, produces="application/json")

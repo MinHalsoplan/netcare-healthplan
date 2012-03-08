@@ -89,7 +89,6 @@
 				
 				loadAlarms();
 				
-				//$('#commentActivity').modal();
 				$('#commentActivity').bind('shown', function() {
 					$('#commentActivity input[name="comment"]').focus();
 				});

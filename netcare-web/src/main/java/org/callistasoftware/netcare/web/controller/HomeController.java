@@ -118,6 +118,11 @@ public class HomeController extends ControllerSupport {
 		return "admin/types";
 	}
 	
+	@RequestMapping(value="/admin/activity/list", method=RequestMethod.GET)
+	public String displayReportedActivities() {
+		return "admin/reportedActivities";
+	}
+	
 	@RequestMapping(value="/user/results", method=RequestMethod.GET)
 	public String displayPatientResults() {
 		return "user/results";
