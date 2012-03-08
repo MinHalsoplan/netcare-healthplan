@@ -26,6 +26,7 @@
 
 <script type="text/javascript">
 	$(function() {
+		var support = new NC.Support();
 		var util = new NC.Util();
 		var patient = new NC.Patient();
 		var patientSearchInput = $('#pickPatientForm input[name="pickPatient"]'); 
@@ -66,7 +67,7 @@
 		var selectPatient = function(event) {
 			NC.log("Selecting patient...");
 			event.preventDefault();
-			patient.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
+			support.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
 			
 			NC.log("Hide modal.");
 			$('#modal-from-dom').modal('hide');
@@ -109,7 +110,7 @@
 		
 		$('#quitPatientSession').click(function(e) {
 			e.preventDefault();
-			patient.unselect(function(d) {
+			support.unselect(function(d) {
 				window.location = NC.getContextPath() + '/netcare/home';
 			});
 		});

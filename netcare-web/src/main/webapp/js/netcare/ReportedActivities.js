@@ -46,6 +46,7 @@ NC.ReportedActivities = function(messages) {
 						var report = new Object();
 						report.id = v.id;
 						report.patient = new Object();
+						report.patient.id = v.patient.id;
 						report.patient.firstName = v.patient.firstName;
 						report.patient.surName = v.patient.surName;
 						report.patient.crn = v.patient.civicRegistrationNumber;
@@ -62,7 +63,7 @@ NC.ReportedActivities = function(messages) {
 					});
 					
 					onComplete(arr);
-				});	
+				}, true);	
 			},
 			
 			loadUI : function(objectArray, onRowCreated, onCommentClick) {
@@ -82,12 +83,21 @@ NC.ReportedActivities = function(messages) {
 					)
 					
 					var resultIcon = _util.createIcon('results', 24, function() {
-						_hp.results(v.healthPlan.id);
-					}, 'healthplan.icons.result');
+						
+						_support.selectPatient(v.patient.id, function() {
+							_hp.results(v.healthPlan.id);
+						});
+						
+						
+					}, _msgs['healthplan.icons.result'], true);
 					
 					var editIcon = _util.createIcon('edit', 24, function() {
-						_hp.view(v.healthPlan.id);
-					}, 'healthplan.icons.edit');
+						
+						_support.selectPatient(v.patient.id, function() {
+							_hp.view(v.healthPlan.id);
+						});
+						
+					}, _msgs['healthplan.icons.edit'], true);
 					
 					row.append(
 						$('<td>').append(resultIcon).append(editIcon)

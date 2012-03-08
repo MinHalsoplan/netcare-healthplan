@@ -27,9 +27,11 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				var hp = new NC.HealthPlan();
+				var alarms = new NC.Alarm();
 				var _support = new NC.Support();
-				
 				var util = new NC.Util();
+				var _patient = new NC.Patient();
 				
 				var name = "<c:out value="${sessionScope.currentPatient.name}" />";
 				if (name.length != 0) {
@@ -38,7 +40,7 @@
 				
 				var _ra
 				var msgs;
-				_support.loadMessages('report.reject', function(messages) {
+				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit', function(messages) {
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
 				});
@@ -67,11 +69,6 @@
 					$('#latest-activities').hide();
 					$('#noReportedActivities').show();
 				});
-				
-				var hp = new NC.HealthPlan();
-				//hp.loadLatestReportedActivities('reportedActivities');
-				
-				var alarms = new NC.Alarm();
 				
 				var loadAlarms = function() {
 					alarms.loadAlarms(function(data) {

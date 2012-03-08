@@ -34,7 +34,7 @@
 <section id="list-content">
 	<div id="list-status">
 		<div id="list-info" class="alert alert-info" style="display: none;"></div>
-		<div id="list-empty" class="alert alert-error" style="display: none;"></div>
+		<div id="list-empty" class="alert alert-info" style="display: none;"></div>
 	</div>
 	<jsp:doBody />
 </section>

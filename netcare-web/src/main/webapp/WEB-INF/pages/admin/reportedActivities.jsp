@@ -32,7 +32,7 @@
 				
 				var _ra
 				var msgs;
-				_support.loadMessages('report.reject', function(messages) {
+				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,activity.reported.none', function(messages) {
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
 				});
@@ -61,7 +61,7 @@
 				}, 
 				function() {
 					$('#activity-table').hide();
-					$('#list-empty').append($('<p>').html()).show();
+					$('#list-empty').append($('<p>').html(msgs['activity.reported.none'])).show();
 				});
 				
 			});

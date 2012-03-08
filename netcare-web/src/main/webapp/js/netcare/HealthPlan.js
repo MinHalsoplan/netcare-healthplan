@@ -243,6 +243,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 						
 						var actionCol = $('<td>').css('text-align', 'right');
 						var showSuspend = (isPatient === undefined || !isPatient) && value.active;
+						alert('Show suspend : ' + showSuspend + ' is patient: ' + isPatient);
 						if (showSuspend) {
 							updateIcon.appendTo(actionCol);
 							deleteIcon.appendTo(actionCol);

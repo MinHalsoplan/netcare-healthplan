@@ -140,6 +140,20 @@ NC.Support = function() {
 				
 				callback(messages);
 			}, false);
+		},
+		
+		/**
+		 * Called when care giver selects a patient to
+		 * work with. This method adds the selected patient
+		 * to the session scope and the menu should always
+		 * display the selected patient
+		 */
+		selectPatient : function(patientId, successFunction) {
+			_ajax.post('/user/' + patientId + '/select', null, successFunction);
+		},
+		
+		unselect : function(callback) {
+			_ajax.post('/user/unselect', null, callback);
 		}
 	};
 	
