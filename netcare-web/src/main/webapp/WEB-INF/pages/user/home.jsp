@@ -115,7 +115,7 @@
 						
 						var activity = value.activityName + ' (' + value.activityReportedAt + ')';
 
-						var icon = util.createIcon('comment', 24, function() {
+						var icon = util.createIcon('send-reply', 24, function() {
 							$('#sendReplyId input[name="commentId"]').attr('value', value.id);
 							$('#sendReply').modal('show');
 							$('#sendReplyId input[name="reply"]').focus();

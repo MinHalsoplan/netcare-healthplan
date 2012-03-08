@@ -112,7 +112,7 @@ NC.ReportedActivities = function(messages) {
 						$('<td>').html(v.reportedAt)		
 					);
 					
-					var commentIcon = _util.createIcon('comment', 24, function() {
+					var commentIcon = _util.createIcon('send-message', 24, function() {
 						onCommentClick(v);
 					});
 					

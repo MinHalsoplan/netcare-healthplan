@@ -145,7 +145,7 @@
 		<ul class="menuList">
 			<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
 			<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
-			<li><netcare:image name="add" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
+			<li><netcare:image name="new-patient" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
 		</ul>
 	
 	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
@@ -172,8 +172,8 @@
 	<div id="system">
 		<h3 class="menuHeader"><spring:message code="admin.menu.create" /></h3>
 		<ul class="menuList">
-			<li><netcare:image name="gtk-add" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
-			<li><netcare:image name="gtk-add" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
+			<li><netcare:image name="new-activity" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
+			<li><netcare:image name="new-category" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
 		</ul>
 	</div>
 </div>
