@@ -370,6 +370,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		for (Value value : report.getValues()) {
 			MeasurementEntity me = entity.lookupMeasurement(value.getSeqno()); 
 			me.setReportedValue(value.getValue());
+			
+			switch (me.getMeasurementDefinition().getMeasurementType().getValueType()) {
+			case INTERVAL:
+				me.setMaxTarget(me.getMeasurementDefinition().getMaxTarget());
+				me.setMinTarget(me.getMeasurementDefinition().getMinTarget());
+				break;
+			case SINGLE_VALUE:
+				me.setTarget(me.getMeasurementDefinition().getTarget());
+				break;
+			};
+			
 			log.debug("Alarm status: enabled {} raised {}", me.getMeasurementDefinition().getMeasurementType().isAlarmEnabled(), me.isAlarm());
 			if (!report.isRejected() && me.isAlarm()) {
 				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, 

@@ -101,7 +101,7 @@
 					var elem = $('#' + day + 'AddedTimes');
 					
 					var addedTimeContainer = $('<div>').css('padding-right', '10px').css('float', 'left');
-					var addedTime = $('<span>' + text + '</span>');
+					var addedTime = $('<span>' + text + '</span>').css('margin-right', '3px');
 					var removeTime = util.createIcon('trash', 16, function() {
 						NC.log("Delete time");
 						addedTimeContainer.remove();
