@@ -47,7 +47,7 @@
 							/*
 							 * Select the patient and navigate to home
 							 */
-							patients.selectPatient(data.data.id, function(data) {
+							support.selectPatient(data.data.id, function(data) {
 								NC.log("Created patient selected. Go to home...");
 								window.location = NC.getContextPath() + '/netcare/home';
 							});
@@ -75,7 +75,7 @@
 								
 								var loginAsIcon = $('<button>').addClass('btn btn-primary').html('Välj patient').click(function(e) {
 									e.preventDefault();
-									patients.selectPatient(value.id, function(data) {
+									support.selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
 										window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
 									});
