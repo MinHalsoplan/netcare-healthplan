@@ -241,7 +241,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 					if ((!value.publicDefinition && isPatient) || value.publicDefinition) {
 						var deleteIcon = _util.createIcon('trash', 24, function() {
 							public.deleteActivity(tableId, healthPlanId, value.id);
-						}, _msgs['activity.suspend'], true);
+						}, _msgs['activity.suspend'], true).css('padding-left', '10px');
 						
 						var updateIcon = _util.createIcon('update-activity', 24, function() {
 							

@@ -165,7 +165,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				input.attr('name', 'mval-' + type.seqno);
 				input.attr('type', 'number');
 				input.attr('step', '1');
-				input.attr('class', 'span1');
+				input.attr('class', 'span2');
 				
 				input.focusin(function() {
 					NC.focusGained(input);
