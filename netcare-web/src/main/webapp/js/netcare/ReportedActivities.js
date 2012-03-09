@@ -114,7 +114,7 @@ NC.ReportedActivities = function(messages) {
 					
 					var commentIcon = _util.createIcon('send-message', 24, function() {
 						onCommentClick(v);
-					});
+					}, _msgs['comments.sendComment'], true);
 					
 					row.append(
 						$('<td>').css('text-align', 'right').append(commentIcon)

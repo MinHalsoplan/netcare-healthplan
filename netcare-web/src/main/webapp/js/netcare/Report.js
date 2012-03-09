@@ -100,7 +100,9 @@ NC.Reports = function(statistics, captions) {
 					});
 				}
 				
-				chart.addRows(entries);
+				if (entries.length > 1) {
+					chart.addRows(entries);
+				}
 				
 				/*
 				 * Append new div for the diagram

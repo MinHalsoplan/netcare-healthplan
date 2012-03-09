@@ -32,7 +32,7 @@
 				
 				var _ra
 				var msgs;
-				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,activity.reported.none', function(messages) {
+				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,activity.reported.none,comments.sendComment', function(messages) {
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
 				});

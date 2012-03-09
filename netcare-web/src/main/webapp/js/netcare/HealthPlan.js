@@ -20,6 +20,12 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	
 	var _ajax = new NC.Ajax();
 	var _util = new NC.Util();
+	var _support = new NC.Support();
+	
+	var _msgs;
+	_support.loadMessages('result.targetValue, result.targetMinValue, result.targetMaxValue,activity.suspended, activity.suspend, activity.update', function(m) {
+		_msgs = m;
+	});
 	
 	var _updateActivityTable = function(tableId) {
 		NC.log("Updating activity table. Activity count = " + _activityCount);
@@ -66,11 +72,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	
 	var _initModalForGoalUpdates = function(data, callback) {
 		
-		var msgs;
-		new NC.Support().loadMessages('result.targetValue, result.targetMinValue, result.targetMaxValue', function(messages) {
-			msgs = messages;
-		});
-		
 		/*
 		 * Update modal header
 		 */
@@ -95,7 +96,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				var col = $('<div>').addClass('span3');
 				
 				var input = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-1').prop('value', v.target).addClass('span2');
-				var div = _util.createInputField(msgs['result.targetValue'], '(' + v.measurementType.unit.value + ')', input);
+				var div = _util.createInputField(_msgs['result.targetValue'], '(' + v.measurementType.unit.value + ')', input);
 				
 				col.append(div);
 				inner.append(col);
@@ -105,14 +106,14 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				var col = $('<div>').addClass('span3');
 				
 				var inputMin = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-1').prop('value', v.minTarget).addClass('span2');
-				var divMin = _util.createInputField(msgs['result.targetMinValue'], '(' + v.measurementType.unit.value + ')', inputMin);
+				var divMin = _util.createInputField(_msgs['result.targetMinValue'], '(' + v.measurementType.unit.value + ')', inputMin);
 				
 				col.append(divMin);
 				
 				var col2 = $('<div>').addClass('span3');
 				
 				var inputMax = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-2').prop('value', v.maxTarget).addClass('span2');
-				var divMax = _util.createInputField(msgs['result.targetMaxValue'], '(' + v.measurementType.unit.value + ')', inputMax);
+				var divMax = _util.createInputField(_msgs['result.targetMaxValue'], '(' + v.measurementType.unit.value + ')', inputMax);
 				
 				col2.append(divMax);
 				
@@ -236,16 +237,11 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				NC.log("Emptying the activity table");
 				$('#' + tableId + ' tbody > tr').empty();
 				
-				var msgs = new Array();
-				new NC.Support().loadMessages('activity.suspended, activity.suspend, activity.update', function(messages) {
-					msgs = messages;
-				});
-				
 				$.each(data.data, function(index, value) {
 					if ((!value.publicDefinition && isPatient) || value.publicDefinition) {
 						var deleteIcon = _util.createIcon('trash', 24, function() {
 							public.deleteActivity(tableId, healthPlanId, value.id);
-						}, msgs['activity.suspend'], true);
+						}, _msgs['activity.suspend'], true);
 						
 						var updateIcon = _util.createIcon('update-activity', 24, function() {
 							
@@ -253,7 +249,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 								public.listActivities(healthPlanId, tableId, isPatient);
 							});
 							
-						}, msgs['activity.update'], true);
+						}, _msgs['activity.update'], true);
 						
 						var actionCol = $('<td>').css('text-align', 'right');
 						var showSuspend = (isPatient === undefined || !isPatient) && value.active;
@@ -277,7 +273,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 							);
 						} else {
 							tr.append(
-								$('<td>').css('font-style', 'italic').html(msgs['activity.suspended'])
+								$('<td>').css('font-style', 'italic').html(_msgs['activity.suspended'])
 							);
 						}
 						

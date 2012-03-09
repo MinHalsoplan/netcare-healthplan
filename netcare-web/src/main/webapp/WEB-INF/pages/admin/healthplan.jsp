@@ -50,7 +50,7 @@
 					
 					var infoMessages;
 					
-					support.loadMessages('healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.confirm.performRenewal, healthplan.confirm.stopAutoRenewal', function(messages) {
+					support.loadMessages('healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.confirm.performRenewal, healthplan.confirm.stopAutoRenewal, healthplan.icons.result, healthplan.icons.edit', function(messages) {
 						infoMessages = messages;
 					});
 
@@ -62,11 +62,11 @@
 						
 						var resultIcon = util.createIcon('results', 24, function() {
 							healthPlans.results(value.id);
-						}, 'healthplan.icons.result');
+						}, infoMessages['healthplan.icons.result'], true);
 						
 						var editIcon = util.createIcon('edit', 24, function() {
 							healthPlans.view(value.id);
-						}, 'healthplan.icons.edit').css('padding-left', '10px');
+						}, infoMessages['healthplan.icons.edit'], true).css('padding-left', '10px');
 						
 						var renewalIcon;
 						if (value.autoRenewal) {
@@ -79,7 +79,7 @@
 										renewalIcon.unbind('click');
 								});
 								}
-							}, 'healthplan.icons.stopRenewal');
+							}, infoMessages['healthplan.icons.stopRenewal'], true);
 						} else {
 							renewalIcon = util.createIcon('renew', 24, function() {
 								var answer = confirm(infoMessages['healthplan.confirm.performRenewal']);								
@@ -95,7 +95,7 @@
 										renewalIcon.unbind('click');
 									});
 								}
-							}, 'healthplan.icons.performRenewal');							
+							}, infoMessages['healthplan.icons.performRenewal'], true);							
 						}
 						renewalIcon.css('padding-left','10px');
 						

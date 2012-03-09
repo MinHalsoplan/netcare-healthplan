@@ -40,7 +40,7 @@
 				
 				var _ra
 				var msgs;
-				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit', function(messages) {
+				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,comments.sendComment,alarm.delete', function(messages) {
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
 				});
@@ -95,7 +95,7 @@
 							var processIcon = util.createIcon('trash', '24', function() {
 								NC.log("Resolving alarm...");
 								alarms.resolve(value.id, loadAlarms);
-							}, 'alarm.delete');
+							}, msgs['alarm.delete'], true);
 							
 							var actionCol = $('<td>').css('text-align', 'right');
 							
