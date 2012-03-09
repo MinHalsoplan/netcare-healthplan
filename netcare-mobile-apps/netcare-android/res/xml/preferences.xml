@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     
     <PreferenceCategory android:title="@string/user_settings">
-	    <CheckBoxPreference android:title="@string/push" android:persistent="true" android:defaultValue="true"/>
+	    <CheckBoxPreference android:title="@string/push" android:key="push" android:persistent="true" android:defaultValue="true"/>
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/server_settings">

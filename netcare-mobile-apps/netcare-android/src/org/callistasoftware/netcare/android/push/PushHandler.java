@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.callistasoftware.netcare.android.ApplicationUtil;
+import org.callistasoftware.netcare.android.R;
 import org.callistasoftware.netcare.android.WebViewActivity;
 
 import android.app.Notification;
@@ -50,8 +51,9 @@ public class PushHandler implements
 		final Intent notificationIntent = new Intent(context, WebViewActivity.class);
 		final PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, 0);
 		
-		final Notification notification = new Notification(android.R.drawable.sym_def_app_icon, message, Long.valueOf(when));
+		final Notification notification = new Notification(R.drawable.icon, message, Long.valueOf(when));
 		notification.defaults |= Notification.DEFAULT_ALL;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		
 		notification.setLatestEventInfo(context.getApplicationContext(), subject, message, contentIntent);
 		notificationManager.notify(1, notification);
