@@ -50,7 +50,7 @@
 					
 					var infoMessages;
 					
-					support.loadMessages('healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.confirm.performRenewal, healthplan.confirm.stopAutoRenewal, healthplan.icons.result, healthplan.icons.edit', function(messages) {
+					support.loadMessages('healthplan.icons.performRenewal, healthplan.icons.stopRenewal, healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.icons.result, healthplan.icons.edit', function(messages) {
 						infoMessages = messages;
 					});
 
@@ -71,19 +71,23 @@
 						var renewalIcon;
 						if (value.autoRenewal) {
 							renewalIcon = util.createIcon('exit', 24, function() {
-								var answer = confirm(infoMessages['healthplan.confirm.stopAutoRenewal']);
-								if (answer) {
+								$('#stop-renewal').modal('show');
+								$('#stop-renewal a.btn-primary').click(function(e) {
+									e.preventDefault();
 									healthPlans.stopAutoRenewal(value.id, function(data) {
 										$('#hn-' + value.id).html('<strong>' + data.data.name + '</strong>');
 										renewalIcon.addClass('ui-state-disabled');
 										renewalIcon.unbind('click');
-								});
-								}
+									});
+									$('#stop-renewal a.btn-primary').unbind('click');
+									$('#stop-renewal').modal('hide');
+								})
 							}, infoMessages['healthplan.icons.stopRenewal'], true);
 						} else {
 							renewalIcon = util.createIcon('renew', 24, function() {
-								var answer = confirm(infoMessages['healthplan.confirm.performRenewal']);								
-								if (answer) {
+								$('#perform-renewal').modal('show');
+								$('#perform-renewal a.btn-primary').click(function(e) {
+									e.preventDefault();
 									healthPlans.performExplicitRenewal(value.id, function(data) {
 										NC.log('Renewal : ' + data.data.endDate);
 										var dur = '<strong>' + data.data.endDate + '<br/>' 
@@ -94,8 +98,10 @@
 										renewalIcon.addClass('ui-state-disabled');
 										renewalIcon.unbind('click');
 									});
-								}
-							}, infoMessages['healthplan.icons.performRenewal'], true);							
+									$('#perform-renewal a.btn-primary').unbind('click');
+									$('#perform-renewal').modal('hide');
+								})
+							}, infoMessages['healthplan.icons.performRenewal'], true);								
 						}
 						renewalIcon.css('padding-left','10px');
 						
@@ -253,5 +259,20 @@
 				</netcare:table>
 			</div>
 		</netcare:content>
+		
+		<netcare:modal titleCode="healthplan.icons.performRenewal" confirmCode="label.yes" id="perform-renewal">
+				<p>
+					<span class="label label-info"><spring:message code="label.information" /></span>
+					<spring:message code="healthplan.confirm.performRenewal" />
+				</p>
+		</netcare:modal>
+		
+		<netcare:modal titleCode="healthplan.icons.stopRenewal" confirmCode="label.yes" id="stop-renewal">
+				<p>
+					<span class="label label-info"><spring:message code="label.information" /></span>
+					<spring:message code="healthplan.confirm.stopAutoRenewal" />
+				</p>
+		</netcare:modal>
+		
 	</netcare:body>
 </netcare:page>
