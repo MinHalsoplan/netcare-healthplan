@@ -23,6 +23,9 @@
 		D061895A1504F394002030EB /* icon-transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = D06189591504F394002030EB /* icon-transparent.png */; };
 		D08E69A91509525D00209FE0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69A81509525D00209FE0 /* Default@2x.png */; };
 		D08E69AD150A04A700209FE0 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69AC150A04A700209FE0 /* icon@2x.png */; };
+		D0F4E57E150A2A4F00DD1B94 /* icon57.png in Resources */ = {isa = PBXBuildFile; fileRef = D0F4E57D150A2A4F00DD1B94 /* icon57.png */; };
+		D0F4E580150A2A5900DD1B94 /* icon114.png in Resources */ = {isa = PBXBuildFile; fileRef = D0F4E57F150A2A5900DD1B94 /* icon114.png */; };
+		D0F4E582150A2A6800DD1B94 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D0F4E581150A2A6800DD1B94 /* Default.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,9 @@
 		D08E69A71509514B00209FE0 /* netcare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = netcare.entitlements; sourceTree = "<group>"; };
 		D08E69A81509525D00209FE0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		D08E69AC150A04A700209FE0 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		D0F4E57D150A2A4F00DD1B94 /* icon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57.png; sourceTree = "<group>"; };
+		D0F4E57F150A2A5900DD1B94 /* icon114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon114.png; sourceTree = "<group>"; };
+		D0F4E581150A2A6800DD1B94 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +77,9 @@
 		D05D408514FA4B3D00335899 = {
 			isa = PBXGroup;
 			children = (
+				D0F4E581150A2A6800DD1B94 /* Default.png */,
+				D0F4E57F150A2A5900DD1B94 /* icon114.png */,
+				D0F4E57D150A2A4F00DD1B94 /* icon57.png */,
 				D02D13AA150A1084008EA674 /* icon.png */,
 				D08E69AC150A04A700209FE0 /* icon@2x.png */,
 				D08E69A81509525D00209FE0 /* Default@2x.png */,
@@ -188,6 +197,9 @@
 				D08E69A91509525D00209FE0 /* Default@2x.png in Resources */,
 				D08E69AD150A04A700209FE0 /* icon@2x.png in Resources */,
 				D02D13AB150A1084008EA674 /* icon.png in Resources */,
+				D0F4E57E150A2A4F00DD1B94 /* icon57.png in Resources */,
+				D0F4E580150A2A5900DD1B94 /* icon114.png in Resources */,
+				D0F4E582150A2A6800DD1B94 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
