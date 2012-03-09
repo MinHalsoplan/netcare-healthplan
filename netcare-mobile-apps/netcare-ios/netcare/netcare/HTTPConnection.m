@@ -69,7 +69,7 @@
     NSLog(@"synchronizedPost: %@\n", data);
  
     NSError* error;
-    NSData *resp = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:&error];
+    [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:&error];
     
     if (error)
     {
@@ -80,7 +80,6 @@
     {
         [self ready:200 connection:nil];        
     }
-    resp = nil;
     error = nil;
 }
 
