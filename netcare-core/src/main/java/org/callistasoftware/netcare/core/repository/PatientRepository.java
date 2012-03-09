@@ -41,6 +41,6 @@ public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	 */
 	PatientEntity findByCivicRegistrationNumber(final String civicRegistrationNumber);
 	
-	@Query("select e from PatientEntity as e inner join e.healthPlans as hp inner join hp.careUnit as cu where cu.hsaId = :hsaId")
+	@Query("select distinct e from PatientEntity as e inner join e.healthPlans as hp inner join hp.careUnit as cu where cu.hsaId = :hsaId")
 	List<PatientEntity> findByCareUnit(@Param("hsaId") final String hsaId);
 }

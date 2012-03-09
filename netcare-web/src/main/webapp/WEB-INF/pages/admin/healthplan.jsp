@@ -50,7 +50,7 @@
 					
 					var infoMessages;
 					
-					support.loadMessages('healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.confirm.performRenewal, healthplan.confirm.stopAutoRenewal, healthplan.icons.result, healthplan.icons.edit', function(messages) {
+					support.loadMessages('healthplan.icons.performRenewal, healthplan.icons.stopRenewal, healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.icons.result, healthplan.icons.edit', function(messages) {
 						infoMessages = messages;
 					});
 
