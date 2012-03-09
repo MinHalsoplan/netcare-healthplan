@@ -51,7 +51,7 @@ public class PushHandler implements
 		final Intent notificationIntent = new Intent(context, WebViewActivity.class);
 		final PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, 0);
 		
-		final Notification notification = new Notification(R.drawable.icon, message, Long.valueOf(when));
+		final Notification notification = new Notification(R.drawable.jkpg_icon, message, Long.valueOf(when));
 		notification.defaults |= Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		
