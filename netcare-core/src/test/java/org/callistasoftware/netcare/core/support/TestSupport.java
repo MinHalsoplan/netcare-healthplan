@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
-@ActiveProfiles("test")
+@ActiveProfiles(profiles={"db-embedded","test"}, inheritProfiles=true)
 public abstract class TestSupport {
 
 	protected void runAs(final UserBaseView user) {

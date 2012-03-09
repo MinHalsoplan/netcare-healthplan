@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.web.listener;
 
 import java.util.Calendar;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.callistasoftware.netcare.core.job.SystemAlarmJob;
@@ -52,11 +53,41 @@ public class ApplicationListener extends ContextLoaderListener {
 
 	private static final Logger log = LoggerFactory.getLogger(ApplicationListener.class);
 
+	protected WebApplicationContext getWebRequest(final ServletContext sc) {
+		return WebApplicationContextUtils.getWebApplicationContext(sc);
+	}
+	
+	protected String[] getActiveProfiles(final ServletContext sc) {
+		return this.getWebRequest(sc).getEnvironment().getActiveProfiles();
+	}
+	
+	protected boolean isProfileActive(final ServletContext sc, final String name) {
+		final String[] profiles = this.getActiveProfiles(sc);
+		for (final String s : profiles) {
+			if (s.equals(name)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		super.contextInitialized(event);
-		
 		final WebApplicationContext wc = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+		// start background house-keeping task
+		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
+		job.init();	
+		if (this.isProfileActive(event.getServletContext(), "db-embedded")) {
+			createTestData(wc);
+		}
+		
+		log.info("======== NETCARE STARTED ========");
+	}
+
+	//
+	private void createTestData(final WebApplicationContext wc) {
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
@@ -66,7 +97,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
 
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");
@@ -135,11 +165,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
-		
-		// start background house-keeping task
-		job.init();
-		
-		log.info("======== NETCARE STARTED ========");
 	}
 	
 	@Override
