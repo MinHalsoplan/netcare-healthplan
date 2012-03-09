@@ -21,6 +21,7 @@
 		D05D40C014FD059B00335899 /* HTTPAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40BF14FD059B00335899 /* HTTPAuthentication.m */; };
 		D05D40C314FD08D200335899 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40C214FD08D200335899 /* Util.m */; };
 		D061895A1504F394002030EB /* icon-transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = D06189591504F394002030EB /* icon-transparent.png */; };
+		D08E69A91509525D00209FE0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69A81509525D00209FE0 /* Default@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,8 @@
 		D05D40C114FD08D200335899 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		D05D40C214FD08D200335899 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 		D06189591504F394002030EB /* icon-transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-transparent.png"; sourceTree = "<group>"; };
+		D08E69A71509514B00209FE0 /* netcare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = netcare.entitlements; sourceTree = "<group>"; };
+		D08E69A81509525D00209FE0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +69,7 @@
 		D05D408514FA4B3D00335899 = {
 			isa = PBXGroup;
 			children = (
+				D08E69A81509525D00209FE0 /* Default@2x.png */,
 				D05D409A14FA4B3D00335899 /* netcare */,
 				D05D409314FA4B3D00335899 /* Frameworks */,
 				D05D409114FA4B3D00335899 /* Products */,
@@ -93,6 +97,7 @@
 		D05D409A14FA4B3D00335899 /* netcare */ = {
 			isa = PBXGroup;
 			children = (
+				D08E69A71509514B00209FE0 /* netcare.entitlements */,
 				D05D40A314FA4B3D00335899 /* AppDelegate.h */,
 				D05D40A414FA4B3D00335899 /* AppDelegate.m */,
 				D05D40A614FA4B3D00335899 /* MainStoryboard.storyboard */,
@@ -178,6 +183,7 @@
 				D05D40A814FA4B3D00335899 /* MainStoryboard.storyboard in Resources */,
 				D001251914FFA0A100750D49 /* icon.png in Resources */,
 				D061895A1504F394002030EB /* icon-transparent.png in Resources */,
+				D08E69A91509525D00209FE0 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +278,7 @@
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -283,9 +290,44 @@
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
+		};
+		D08E69A515094E7200209FE0 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		D08E69A615094E7200209FE0 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Peter Larsson";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
+				INFOPLIST_FILE = "netcare/netcare-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "BD4B0970-7520-4BC3-8F1C-07330998BEA4";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
 		};
 /* End XCBuildConfiguration section */
 
@@ -295,6 +337,7 @@
 			buildConfigurations = (
 				D05D40AF14FA4B3E00335899 /* Debug */,
 				D05D40B014FA4B3E00335899 /* Release */,
+				D08E69A515094E7200209FE0 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -304,6 +347,7 @@
 			buildConfigurations = (
 				D05D40B214FA4B3E00335899 /* Debug */,
 				D05D40B314FA4B3E00335899 /* Release */,
+				D08E69A615094E7200209FE0 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
