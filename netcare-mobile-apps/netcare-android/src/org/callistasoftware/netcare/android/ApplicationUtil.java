@@ -37,4 +37,12 @@ public class ApplicationUtil {
 		Log.d(TAG, "Resolved property "+ property + " to " + val);
 		return val;
 	}
+	
+	public static final boolean isWhitespace(final String s) {
+		if (s == null) {
+			return true;
+		}
+		
+		return s.trim().length() == 0;
+	}
 }

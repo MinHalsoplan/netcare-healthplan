@@ -1,10 +1,24 @@
 package org.callistasoftware.netcare.android.push;
 
-import org.callistasoftware.android.net.HttpClientConfiguration;
-import org.callistasoftware.android.net.HttpConfigurationFactory;
+import java.io.IOException;
+import java.util.Collections;
+
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthState;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HttpContext;
 import org.callistasoftware.netcare.android.ApplicationUtil;
 import org.callistasoftware.netcare.android.WebViewActivity;
-import org.callistasoftware.netcare.android.serviceclient.ServiceFactory;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -50,10 +64,34 @@ public class PushHandler implements
 		final String username = ApplicationUtil.getProperty(context, "crn");
 		final String pin = ApplicationUtil.getProperty(context, "pin");
 		
-		final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(8080, username, pin);
-		
-		Log.d(TAG, "Sending registrationn id to server...");
-		ServiceFactory.newServiceClient(context, config).registerForPush(registrationId);
+		try {
+			final DefaultHttpClient client = new DefaultHttpClient();
+			client.addRequestInterceptor(new HttpRequestInterceptor() {
+				
+				@Override
+				public void process(HttpRequest request, HttpContext context)
+						throws HttpException, IOException {
+					final AuthState state = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+					state.setAuthScheme(new BasicScheme());
+					state.setCredentials(new UsernamePasswordCredentials(username, pin));
+				}
+			}, 0);
+			
+			final String baseUrl = ApplicationUtil.getServerBaseUrl(context);
+            final HttpPost post = new HttpPost(baseUrl + "/api/push/register/c2dm");           
+            post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("c2dmRegistrationId", registrationId))));
+            
+            final HttpResponse response = client.execute(post);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            	Log.i(TAG, "Successfully registered for push notifications.");
+            } else {
+            	Log.w(TAG, "Could not register for push notifications. Response code: " + response.getStatusLine().getStatusCode());
+            }
+            
+	    } catch (final Exception e) {
+	            e.printStackTrace();
+	            Log.d(TAG, "Failed to register for push. Exception is: " + e.getMessage());
+	    }
 	}
 
 	@Override

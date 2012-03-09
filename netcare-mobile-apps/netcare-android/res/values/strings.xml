@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Planerade hälsoaktiviteter</string>
+    <string name="app_name">Min hälsoplan</string>
     <string name="cnr">Personnummer</string>
     <string name="error">Fel</string>
     <string name="host">Host</string>
     <string name="port">Port</string>
     <string name="pin">Pin-kod</string>
-    <string name="remember">Kom ihåg</string>
     <string name="login">Logga in</string>
     <string name="loginProgress">Loggar in...</string>
-    <string name="loadingActivities">Laddar dina hälsoaktiviteter...</string>
+    <string name="loadingActivities">Laddar dina aktiviteter...</string>
     <string name="loading">Vänligen vänta</string>
     
+    <string name="credentialsError">Användarnamn och/eller lösenord är felaktiga. Vänligen försök igen</string>
     <string name="provideCredentials">Du måste ange ditt personnummer samt pin-kod för att logga in</string>
     
     <string name="push">Push-notifieringar</string>

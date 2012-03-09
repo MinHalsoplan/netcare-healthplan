@@ -1,16 +1,9 @@
 package org.callistasoftware.netcare.android;
 
-import org.callistasoftware.android.ServiceCallTask;
-import org.callistasoftware.android.ServiceCallback;
-import org.callistasoftware.android.net.HttpClientConfiguration;
-import org.callistasoftware.android.net.HttpConfigurationFactory;
-import org.callistasoftware.android.serviceclient.ServiceResult;
-import org.callistasoftware.netcare.android.serviceclient.ServiceClient;
-import org.callistasoftware.netcare.android.serviceclient.ServiceFactory;
+import org.apache.http.HttpResponse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -23,6 +16,7 @@ import android.view.View;
 import android.webkit.WebViewDatabase;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Start activity for the netcare app. Prompts for username and
@@ -84,16 +78,35 @@ public class StartActivity extends Activity {
 				final String username = cnr.getText().toString().trim();
 				final String password = pin.getText().toString().trim();
 				
-				/*
-				 * Save credentials
-				 */
-				Log.d(TAG, "Storing user / pin for user.");
-				final Editor edit = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
-				edit.putString("crn", username);
-				edit.putString("pin", password);
-				edit.commit();
+				if (ApplicationUtil.isWhitespace(username) || ApplicationUtil.isWhitespace(password)) {
+					Log.d(TAG, "Display toast to inform user that blanks are not allowed.");
+					Toast.makeText(StartActivity.this.getApplicationContext(), getString(R.string.provideCredentials), 5000).show();
+					return;
+				}
 				
-				login(username, password);
+				new LoginTask(StartActivity.this, new ServiceCallback<HttpResponse>() {
+					
+					@Override
+					public void onSuccess(HttpResponse response) {
+						/*
+						 * Save credentials
+						 */
+						Log.d(TAG, "Storing user / pin for user.");
+						final Editor edit = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
+						edit.putString("crn", username);
+						edit.putString("pin", password);
+						edit.commit();
+						
+						startActivity(new Intent(StartActivity.this, WebViewActivity.class));
+					}
+					
+					@Override
+					public void onFailure(String reason) {
+						Log.d(TAG, "Display toast to inform user that blanks are not allowed.");
+						Toast.makeText(StartActivity.this.getApplicationContext(), getString(R.string.credentialsError), 5000).show();
+						return;
+					}
+				}).execute(username, password);
 			}
 		});
     }
@@ -102,43 +115,5 @@ public class StartActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
     	startActivity(new Intent(getApplicationContext(), PreferenceActivity.class));
     	return true;
-    }
-    
-    public void login(final String username, final String password) {
-    	new ServiceCallTask<Boolean>(this, new ServiceCallback<Boolean>() {
-
-			@Override
-			public String getProgressMessage() {
-				return getApplicationContext().getString(R.string.loginProgress);
-			}
-
-			@Override
-			public ServiceResult<Boolean> doCall(final Context ctx) {
-				
-				Integer port;
-				try {
-					port = Integer.valueOf(ApplicationUtil.getProperty(getApplicationContext(), "port"));
-				} catch (ClassCastException e) {
-					Log.w(TAG, "Port could not be resolved. Fallback to port 80");
-					port = 80;
-				}
-				
-				final HttpClientConfiguration config = HttpConfigurationFactory.newPlainConfigurationWithBasicAuthentication(port, username, password);
-				
-				final ServiceClient sc = ServiceFactory.newServiceClient(ctx, config);
-				return sc.login();
-			}
-
-			@Override
-			public void onSuccess(ServiceResult<Boolean> result) {
-				/*
-				 * We're fine. If the user saved the credentials
-				 * save them. Otherwise just keep them in memory
-				 */
-				if (result.getData().equals(Boolean.TRUE)) {
-					startActivity(new Intent(getApplicationContext(), WebViewActivity.class));
-				}
-			}
-		}).execute();
     }
 }

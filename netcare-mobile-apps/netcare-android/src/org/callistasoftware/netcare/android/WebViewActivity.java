@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.webkit.DownloadListener;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class WebViewActivity extends Activity {
 
@@ -26,7 +24,15 @@ public class WebViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.webview);
 		
-		final boolean push = true;
+		final String username = ApplicationUtil.getProperty(getApplicationContext(), "crn");
+		final String password = ApplicationUtil.getProperty(getApplicationContext(), "pin");
+		
+		if (ApplicationUtil.isWhitespace(username)|| ApplicationUtil.isWhitespace(password)) {
+			Log.d(TAG, "Credentials empty, bring to home screen.");
+			startActivity(new Intent(getApplicationContext(), StartActivity.class));
+		}
+		
+		final boolean push = ApplicationUtil.getBooleanProperty(getApplicationContext(), "push");
 		if (push) {
 			Log.d(TAG, "Registering for push");
 			final Intent i = new Intent(this.getApplicationContext(), org.callistasoftware.netcare.android.push.PushService.class);
@@ -34,30 +40,11 @@ public class WebViewActivity extends Activity {
 			startService(i);
 		}
 		
-		final String username = ApplicationUtil.getProperty(getApplicationContext(), "crn");
-		final String password = ApplicationUtil.getProperty(getApplicationContext(), "pin");
-		
-		if (username == null || password == null) {
-			Log.d(TAG, "Credentials empty, bring to home screen.");
-			Toast.makeText(getApplicationContext(), getString(R.string.provideCredentials), 3000);
-			startActivity(new Intent(getApplicationContext(), StartActivity.class));
-		}
-		
 		final WebView wv = (WebView) this.findViewById(R.id.webview);
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.clearFormData();
 		wv.clearHistory();
 		wv.clearCache(true);
-		
-
-		
-		wv.setDownloadListener(new DownloadListener() {
-			@Override
-			public void onDownloadStart(String url, String userAgent,
-					String contentDisposition, String mimetype, long contentLength) {
-				Log.d(TAG, "Download " + mimetype + " " + url);
-			}
-		});
 		
 		wv.setWebViewClient(new WebViewClient() {
 			
