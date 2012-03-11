@@ -46,7 +46,14 @@
 	</beans>
 
   	<beans profile="test">
-  		<context:property-placeholder location="classpath:/application.properties,classpath:/database.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
+  	</beans>
+
+  	<beans profile="db-embedded">
+  		<context:property-placeholder location="classpath:/db-embedded.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
+  	</beans>
+
+  	<beans profile="db-psql">
+  		<context:property-placeholder location="classpath:/db-psql.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
   	</beans>
   	
   	<beans>
