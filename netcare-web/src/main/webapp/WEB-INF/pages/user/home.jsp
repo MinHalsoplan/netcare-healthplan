@@ -215,7 +215,10 @@
 			</div>
 
 			<section id="report">
-				<div id="eventBody" class="alert alert-info"></div>
+				<netcare:block-message type="info" id="eventBody">
+				
+				</netcare:block-message>
+				
 				<netcare:report />
 				<br />
 			</section>
@@ -225,9 +228,10 @@
 				<p>
 					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="comments.desc" />
-				<div id="noCommentId" class="alert alert-info">
-					<p><spring:message code="comments.none" /></p>
-				</div>
+				</p>
+				<netcare:block-message type="info" id="noCommentId">
+					<spring:message code="comments.none" />
+				</netcare:block-message>
 				<netcare:table id="commentTableId" style="display: none;">
 					<thead>
 						<tr>

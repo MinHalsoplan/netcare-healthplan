@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.web.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.callistasoftware.netcare.web.util.WebUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,20 +34,20 @@ public class SecurityController extends ControllerSupport {
 	public String login(@RequestParam(value="guid", required=false) final String guid, final HttpSession sc, final Model m) {
 		getLog().info("Display login page");
 		
-		if ((this.isProfileActive(sc.getServletContext(), "prod") || this.isProfileActive(sc.getServletContext(), "qa")) && guid != null) {
+		if ((WebUtil.isProfileActive(sc.getServletContext(), "prod") || WebUtil.isProfileActive(sc.getServletContext(), "qa")) && guid != null) {
 			m.addAttribute("guid", guid);
 			return "redirect:/netcare/setup";
 		}
 		
-		if (this.isProfileActive(sc.getServletContext(), "prod") && guid == null) {
+		if (WebUtil.isProfileActive(sc.getServletContext(), "prod") && guid == null) {
 			return "redirect:/netcare/security/denied";
 		}
 		
-		if (this.isProfileActive(sc.getServletContext(), "qa")) {
+		if (WebUtil.isProfileActive(sc.getServletContext(), "qa")) {
 			return "redirect:/netcare/mvk/token/forPatient";
 		}
 		
-		if (this.isProfileActive(sc.getServletContext(), "test")) {
+		if (WebUtil.isProfileActive(sc.getServletContext(), "test")) {
 			return "login";
 		}
 		
@@ -58,7 +59,7 @@ public class SecurityController extends ControllerSupport {
 		getLog().info("Logout");
 		SecurityContextHolder.clearContext();
 		
-		if (this.isProfileActive(sc.getServletContext(), "qa") || this.isProfileActive(sc.getServletContext(), "prod")) {
+		if (WebUtil.isProfileActive(sc.getServletContext(), "qa") || WebUtil.isProfileActive(sc.getServletContext(), "prod")) {
 			request.getSession(false).invalidate();
 			return "redirect:/netcare/security/denied";
 		} else {

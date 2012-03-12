@@ -479,9 +479,9 @@
 			
 			<section id="existingTypes">
 				<div id="existingTypesContainer">
-					<div class="alert alert-info" style="display:none;">
-						<p><spring:message code="activityType.noTypes" />
-					</div>
+					<netcare:block-message type="info" style="display:none;">
+						<spring:message code="activityType.noTypes" />
+					</netcare:block-message>
 				
 					<netcare:table>
 						<thead>

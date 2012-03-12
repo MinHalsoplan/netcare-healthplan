@@ -24,7 +24,7 @@ NC.PageMessages = function() {
 		var exist = $('#pageMessages div[class*="' + type + '"]').size() == 1;
 		if (!exist) {
 			$('#pageMessages').append(
-				$('<div>').addClass('alert').addClass('alert-block').addClass('alert-' + type).append(
+				$('<div>').addClass('alert').addClass('alert-' + type).append(
 					$('<a>').addClass('close').attr('href', '#').html('×').click(function(e) {
 						e.preventDefault();
 						$('#pageMessages div[class*="' + type + '"]').slideUp('slow');

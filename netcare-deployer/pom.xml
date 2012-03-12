@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <artifactId>netcare</artifactId>
+    <groupId>org.callistasoftware.netcare</groupId>
+    <version>1.0-SNAPSHOT</version>
+  
+  </parent>
+  <packaging>pom</packaging>
+  <artifactId>netcare-deployer</artifactId>
+  <name>Netcare Deployer</name>
+  <description>Installation Engine for Netcare. This module allows deployment to the various production servers.</description>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.callistasoftware.netcare</groupId>
+  		<artifactId>netcare-web</artifactId>
+  		<version>${project.version}</version>
+  		<type>war</type>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.codehaus.cargo</groupId>
+  			<artifactId>cargo-maven2-plugin</artifactId>
+  			<version>1.2.0</version>
+  			<configuration>
+  			
+  				<container>
+					<containerId>tomcat7x</containerId>
+					<type>remote</type>
+				</container>
+				
+				<configuration>
+					<type>runtime</type>
+					<properties>
+						<cargo.hostname>${remote.hostname}</cargo.hostname>
+						<cargo.protocol>${remote.protocol}</cargo.protocol>
+						<cargo.servlet.port>${remote.port}</cargo.servlet.port>
+						<cargo.remote.username>${remote.user}</cargo.remote.username>
+						<cargo.remote.password>${remote.pass}</cargo.remote.password>
+					</properties>
+				</configuration>
+				
+				<deployer>
+					<type>remote</type>
+					<deployables>
+						<deployable>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>netcare-web</artifactId>
+							<type>war</type>
+							<properties>
+								<context>${remote.context}</context>
+							</properties>
+						</deployable>
+					</deployables>
+				</deployer>
+  			
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+  
+  <profiles>
+  	<profile>
+  		<id>netcare-prod</id>
+  		<activation>
+  			<property>
+  				<name>env</name>
+  				<value>prod</value>
+  			</property>
+  		</activation>
+  		<properties>
+  			<remote.protocol>https</remote.protocol>
+  			<remote.port>443</remote.port>
+  			<remote.hostname>netcare.callistasoftware.org</remote.hostname>
+  			<remote.context>/</remote.context>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>netcare-qa</id>
+  		<activation>
+  			<property>
+  				<name>env</name>
+  				<value>qa</value>
+  			</property>
+  		</activation>
+  		<properties>
+  			<remote.protocol>http</remote.protocol>
+  			<remote.hostname>netcare-dev.callistasoftware.org</remote.hostname>
+  			<remote.port>8080</remote.port>
+  			<remote.context>/netcare-web</remote.context>
+  		</properties>
+  	</profile>
+  </profiles>
+  
+</project>

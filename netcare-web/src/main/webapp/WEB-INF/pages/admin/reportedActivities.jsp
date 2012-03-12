@@ -61,7 +61,7 @@
 				}, 
 				function() {
 					$('#activity-table').hide();
-					$('#list-empty').append($('<p>').html(msgs['activity.reported.none'])).show();
+					$('#list-empty').html(msgs['activity.reported.none']).show();
 				});
 				
 			});
