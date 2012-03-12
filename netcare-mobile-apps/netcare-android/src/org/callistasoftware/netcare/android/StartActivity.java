@@ -84,7 +84,7 @@ public class StartActivity extends Activity {
 					return;
 				}
 				
-				new LoginTask(StartActivity.this, new ServiceCallback<HttpResponse>() {
+				new LoginTask(v.getContext(), new ServiceCallback<HttpResponse>() {
 					
 					@Override
 					public void onSuccess(HttpResponse response) {

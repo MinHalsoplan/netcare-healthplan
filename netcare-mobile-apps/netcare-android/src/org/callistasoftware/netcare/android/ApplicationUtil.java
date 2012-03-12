@@ -12,13 +12,29 @@ public class ApplicationUtil {
 	public static String getServerBaseUrl(final Context ctx) {
 		final StringBuilder builder = new StringBuilder();
 		
-		if (getBooleanProperty(ctx, "secure")) {
+		boolean secure = getBooleanProperty(ctx, "secure");
+		String host = getProperty(ctx, "host");
+		String port = getProperty(ctx, "port");
+		
+		Log.d(TAG, "Secure " + secure);
+		Log.d(TAG, "Host: " + host);
+		Log.d(TAG, "Port: " + port);
+		
+		if (secure) {
 			builder.append("https://");
 		} else {
 			builder.append("http://");
 		}
 		
-		builder.append(getProperty(ctx, "host")).append(":").append(getProperty(ctx, "port"));
+		if (isWhitespace(host)) {
+			host = "netcare.callistasoftware.org";
+		}
+		
+		if (isWhitespace(port)) {
+			port = "443";
+		}
+		
+		builder.append(host).append(":").append(port);
 		return builder.toString();
 	}
 	
@@ -32,7 +48,7 @@ public class ApplicationUtil {
 	
 	public static boolean getBooleanProperty(final Context ctx, final String property) {
 		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-		final boolean val = sp.getBoolean(property, false);
+		final boolean val = sp.getBoolean(property, true);
 		
 		Log.d(TAG, "Resolved property "+ property + " to " + val);
 		return val;
