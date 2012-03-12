@@ -185,9 +185,9 @@
 					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="comments.repliesDescription" />
 				</p>
-				<div id="noReplyId" class="alert alert-info">
-					<p><spring:message code="comments.noReplies" />
-				</div>
+				<netcare:block-message id="noReplyId" type="info">
+					<spring:message code="comments.noReplies" />
+				</netcare:block-message>
 				
 				<netcare:table id="replyTableId">
 					<thead>
@@ -212,13 +212,15 @@
 					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="activity.reported.desc" />
 				</p>
-				<div class="alert alert-warning">
+				
+				<netcare:block-message type="warning">
 					<a href="/netcare/admin/activity/list"><spring:message code="activity.reported.list" /></a>
-				</div>
+				</netcare:block-message>
+				
 				<div id="reportedActivities">
-					<div id="noReportedActivities" style="display: none;" class="alert alert-info">
-						<p><spring:message code="activity.reported.noneLastDay" /></p>
-					</div>
+					<netcare:block-message id="noReportedActivities" type="info" style="display: none;">
+						<spring:message code="activity.reported.noneLastDay" />
+					</netcare:block-message>
 					<netcare:table id="latest-activities">
 						<thead>
 							<tr>
@@ -249,10 +251,10 @@
 					<spring:message code="alarm.desc" />
 				</p>
 				
-				<div id="alarmContainer">					
-					<div class="alert alert-info" style="display:none;">
-						<p><spring:message code="alarm.none" /></p>
-					</div>
+				<div id="alarmContainer">	
+					<netcare:block-message type="info" style="display: none;">
+						<spring:message code="alarm.none" />
+					</netcare:block-message>
 					<netcare:table style="display: none;">
 						<thead>
 							<tr>

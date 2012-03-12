@@ -33,8 +33,8 @@
 
 <section id="list-content">
 	<div id="list-status">
-		<div id="list-info" class="alert alert-info" style="display: none;"></div>
-		<div id="list-empty" class="alert alert-info" style="display: none;"></div>
+		<netcare:block-message id="list-info" type="info" style="display:none;"></netcare:block-message>
+		<netcare:block-message id="list-empty" type="info" style="display:none;"></netcare:block-message>
 	</div>
 	<jsp:doBody />
 </section>

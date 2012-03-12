@@ -474,9 +474,9 @@
 			</netcare:form>
 			
 			<div id="activityContainer">
-				<div class="alert alert-info" style="display: none;">
-					<p><spring:message code="activity.none" />
-				</div>
+				<netcare:block-message type="info" style="display:none">
+					<spring:message code="activity.none" />
+				</netcare:block-message>
 				<netcare:table id="activitiesTable">
 					<thead>
 						<tr>

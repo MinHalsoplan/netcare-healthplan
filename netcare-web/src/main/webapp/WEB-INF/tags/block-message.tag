@@ -17,16 +17,11 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
+<%@ attribute name="id" required="false" %>
+<%@ attribute name="style" required="false" %>
 <%@ attribute name="type" required="true" %>
-<%@ attribute name="title" required="false" %>
-<%@ attribute name="message" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-
-<div class="alert alert-${type}">
-	<c:if test="${not empty title}">
-		<strong>${title}</strong>
-	</c:if>
-	${message}
+<div id="${id}" class="alert alert-${type}" style="${style}">
+	<jsp:doBody />
 </div>

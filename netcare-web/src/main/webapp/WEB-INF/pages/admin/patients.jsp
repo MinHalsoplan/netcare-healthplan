@@ -185,9 +185,9 @@
 					<span class="label label-info"><spring:message code="information" /></span>
 					<spring:message code="admin.patients.list.desc" />
 				</p>
-				<div class="alert alert-info" style="display: none;">
-					<p><spring:message code="admin.patients.none" /></p>
-				</div>
+				<netcare:block-message type="info" style="display:none;">
+					<spring:message code="admin.patients.none" />
+				</netcare:block-message>
 				<netcare:table id="patientsTable">
 					<thead>
 						<tr>
