@@ -19,12 +19,10 @@ package org.callistasoftware.netcare.web.listener;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import org.callistasoftware.netcare.core.job.SystemAlarmJob;
 import org.callistasoftware.netcare.web.util.WebUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
 
 public class ApplicationListener extends ContextLoaderListener {
 
@@ -35,11 +33,6 @@ public class ApplicationListener extends ContextLoaderListener {
 		super.contextInitialized(event);
 		
 		final ServletContext sc = event.getServletContext();
-		final WebApplicationContext wc = WebUtil.getWebRequest(sc);
-		
-		// start background house-keeping task
-		final SystemAlarmJob job = wc.getBean(SystemAlarmJob.class);
-		job.init();	
 		
 		if (WebUtil.isProfileActive(sc, "db-embedded") || (WebUtil.isProfileActive(sc, "test") && WebUtil.isProfileActive(sc, "db-psql"))) {
 			log.debug("Setting up application test data...");
