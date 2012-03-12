@@ -38,6 +38,8 @@
 					<type>runtime</type>
 					<properties>
 						<cargo.hostname>${remote.hostname}</cargo.hostname>
+						<cargo.protocol>${remote.protocol}</cargo.protocol>
+						<cargo.servlet.port>${remote.port}</cargo.servlet.port>
 						<cargo.remote.username>${remote.user}</cargo.remote.username>
 						<cargo.remote.password>${remote.pass}</cargo.remote.password>
 					</properties>
@@ -72,6 +74,8 @@
   			</property>
   		</activation>
   		<properties>
+  			<remote.protocol>https</remote.protocol>
+  			<remote.port>443</remote.port>
   			<remote.hostname>netcare.callistasoftware.org</remote.hostname>
   			<remote.context>/</remote.context>
   		</properties>
@@ -85,7 +89,9 @@
   			</property>
   		</activation>
   		<properties>
+  			<remote.protocol>http</remote.protocol>
   			<remote.hostname>netcare-dev.callistasoftware.org</remote.hostname>
+  			<remote.port>8080</remote.port>
   			<remote.context>/netcare-web</remote.context>
   		</properties>
   	</profile>
