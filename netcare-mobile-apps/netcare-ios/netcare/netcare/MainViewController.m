@@ -44,6 +44,13 @@
 - (NSString*)retrievePersonalNumber {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *s = [prefs stringForKey:@"personalNumber"];
+    if (s == nil) 
+    {
+        [personNumberTextEdit becomeFirstResponder];
+    }
+    else {
+        [pinCodeTextEdit becomeFirstResponder];
+    }
     return (s == nil) ? @"" : s;
 }
 

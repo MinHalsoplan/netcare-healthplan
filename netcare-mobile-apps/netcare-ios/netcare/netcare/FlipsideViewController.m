@@ -112,6 +112,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     //NSURLErrorDomain                                                                                                       
     // load error, hide the activity indicator in the status bar                                                             
     NSLog(@"Load failed: %@\n", [error localizedDescription]);
+    [self done:nil];
 }
 
 
