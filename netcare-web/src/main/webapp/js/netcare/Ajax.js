@@ -60,7 +60,6 @@ NC.Ajax = function() {
 			url : url,
 			cache : false,
 			success : function(data) {
-				NC.log('....success');
 				_defaultSuccess(data, _showMessages(displayMessages), callback);
 			}
 		}
