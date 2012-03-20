@@ -200,7 +200,7 @@
 	<body>
 		<mobile:page id="start">
 			<mobile:page-header title="mobile.activity.title" id="today-header">
-<!-- 				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a> -->
+ 				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a>
 				<div data-role="navbar" class="ui-navbar" role="navigation">
 					<ul class="ui-grid-b">
 						<li class="ui-block-a">
