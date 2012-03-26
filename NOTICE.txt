@@ -1,3 +1,44 @@
+Netcare 1.0
+Copyright (c) 2011-2012 Callista Enterprise AB
 
-AspectJ, Eclipse
+This application includes the following software:
+
+Springsource, Spring Framework 3.1
+Licensed under Apache Software License 2.0
+http://www.springsource.org/
+
+Apache Software Foundation, Apache CXF 2.5
+Licensed under Apache Software License 2.0
+http://www.apache.org/
+
+FasterXML, Jackson Core, Mapper 1.9
+Licensed under Apache Software License 2.0
+http://jackson.codehaus.org/
+
+Apache Software Foundation, Log for Java 1.6
+Licensed under Apache Software License 2.0
+http://logging.apache.org/
+
+Apache Foundation, Commons Project 2.5
+Licensed under Apache Software License 2.0
+http://commons.apache.org/
+
+
+OW2 Consortium, ASM 3.3, Copyright (c) 2000-2011 INRIA, France Telecom
+Licensed under http://asm.ow2.org/license.html
+http://asm.ow2.org/
+
+AOP Alliance, AOP 1.0
+Licensed as Public Domain
+http://aopalliance.sourceforge.net/
+
+
+
+
+
+
+
+
+
+
 
