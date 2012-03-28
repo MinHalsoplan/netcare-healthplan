@@ -54,7 +54,7 @@ $(document).ready(function() {
 	var _util = new NC.Util();
 	var _support = new NC.Support();
 	
-	$('.page-header h1').css('background', 'url(' + NC.getContextPath() + '/img/icons/32/pha.png) no-repeat left');
+	$('.page-header h1').css('background', 'url(' + NC.getContextPath() + '/img/icons/32/heart-logo.png) no-repeat left');
 	
 	$('#pageLoading').css('height', $(window).height()).show();
 	$('#pageLoadingBox').show();
