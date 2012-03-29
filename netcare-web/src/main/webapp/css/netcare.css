@@ -33,7 +33,8 @@ a:hover {
 }
 
 .label-info {
-	background-color: rgb(141,0,23);
+	background-color: #eee;
+	color: rgb(141,0,23);
 }
 
 .cool .shadow {
