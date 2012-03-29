@@ -80,12 +80,12 @@
 												48, 49, 50, 51, 52, 53, 54, 55,
 												56, 57 ])) {
 											event.preventDefault();
-											$(v).css('background', 'rgb(177,0,30)');
+											$(v).css('background', '#F2DEDE');
 											setTimeout(function() {
-												$(v).css('background', 'transparent');												
+												$(v).css('background', '#D9EDF7');												
 											}, 100);
-										} else if ($(v).css('background') != 'transparent') {
-											$(v).css('background', 'transparent');												
+										} else if ($(v).css('background') != '#D9EDF7') {
+											$(v).css('background', '#D9EDF7');
 										}
 									});
 						});
@@ -124,8 +124,8 @@
 									// FIXME: hard-coded text
 									if (formData.mobile == "true") {
 										if (formData.password !== formData.password2) {
-											$('#userprofile input[name="password"]').css('background', 'rgb(177,0,30)');
-											$('#userprofile input[name="password2"]').css('background', 'rgb(177,0,30)');
+											$('#userprofile input[name="password"]').css('background', '#F2DEDE');
+											$('#userprofile input[name="password2"]').css('background', '#F2DEDE');
 											new NC.PageMessages().addMessage('error', [{ message : 'Pin-koderna är inte lika!' }]);
 											return;
 										}

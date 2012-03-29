@@ -95,19 +95,35 @@ $(document).ready(function() {
 	$('input:text').focus( function (event) { 
 		NC.focusGained($(this));
 	});
-	
-	$('input[type=number]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
 
 	$('input:text').focusout( function () { 
 		NC.focusLost($(this));
 	});
-	
-	$('input[type=number]').focusout( function () { 
+
+	$('input:password').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input:password').focusout( function () { 
 		NC.focusLost($(this));
 	});
 	
+	$('input[type="tel"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input[type="tel"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+
+	$('input[type="email"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input[type="email"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+
 	/*
 	 * Fix for IE8, make sure enter submits a form.
 	 */
