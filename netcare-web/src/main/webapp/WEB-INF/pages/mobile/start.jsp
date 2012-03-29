@@ -47,6 +47,8 @@
 				new NC.HealthPlan().loadScheduledActivity(activityId, function(data) {
 					$('#report div h3').html(data.data.definition.type.name);
 					$('#report div p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
+					var senseLabel = $('#slider-label').html();
+					$('#slider-label').html(senseLabel + '&nbsp;(' + data.data.definition.type.minScaleText + '-' + data.data.definition.type.maxScaleText + ')');
 					
 					$.each(data.data.measurements, function(i, v) {
 						
@@ -247,7 +249,7 @@
 						
 						<div data-role="fieldcontain">
 							<label for="slider" id="slider-label" class="ui-slider ui-input-text"><spring:message code="mobile.report.form.sense" /></label>
-							<input type="number" data-type="range" name="slider" id="slider" value="3" min="1" max="5" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
+							<input type="number" data-type="range" name="slider" id="slider" value="5" min="1" max="10" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
 						</div>
 						
 						<div data-role="fieldcontain">
