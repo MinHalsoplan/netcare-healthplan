@@ -112,7 +112,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 
 			if (act.definition.type.measuringSense) {
 				if (act.sense == 0) {
-					act.sense = 3;
+					act.sense = 5;
 				}
 				$('input:radio[name=gsense]').filter('[value=' + act.sense + ']').attr('checked', true);
 				$('#senseLowId').html(act.definition.type.minScaleText);
