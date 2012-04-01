@@ -127,18 +127,15 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
 }
 
 //
-// combo: on a forms page, go back to main page and reload.... 
-// reloading a reporting page makes no sense, but a fast back button makes
+// on a forms page, go back to main page and reload.... 
+// reloading a reporting page makes no sense
 - (IBAction)refresh:(id)sender
 {
     if ([webView canGoBack]) 
     {
         [webView goBack];
     } 
-    else 
-    {
-        [webView reload];
-    }
+    [webView reload];
 }
 
 @end

@@ -41,9 +41,9 @@
         [prefs synchronize];
     }
 // sandbox dev. token each time for iphone device test
-    [prefs setValue:token forKey:@"deviceToken"];
-    [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
-    [prefs synchronize];
+//    [prefs setValue:token forKey:@"deviceToken"];
+//    [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
+//    [prefs synchronize];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
@@ -58,12 +58,6 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
-// dummy token for simulator test    
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setValue:@"dummy-token" forKey:@"deviceToken"];
-//    [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
-//    [prefs synchronize];
-   
     return YES;
 }
 							
