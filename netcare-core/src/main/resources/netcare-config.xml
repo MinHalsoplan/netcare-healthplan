@@ -48,6 +48,9 @@
   	<beans profile="test">
   	</beans>
 
+  	<beans profile="ios-testdata">
+  	</beans>
+
   	<beans profile="db-embedded">
   		<context:property-placeholder location="classpath:/db-embedded.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
   	</beans>

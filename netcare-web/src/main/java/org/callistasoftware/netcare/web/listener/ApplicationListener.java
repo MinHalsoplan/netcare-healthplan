@@ -39,6 +39,9 @@ public class ApplicationListener extends ContextLoaderListener {
 			WebUtil.setupTestData(sc);
 			log.debug("Test data setup completed.");
 		}
+		if (WebUtil.isProfileActive(sc, "ios-testdata")) {
+			WebUtil.setupIosTestData(sc);			
+		}
 		
 		log.info("======== NETCARE STARTED ========");
 	}
