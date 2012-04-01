@@ -30,7 +30,7 @@ NC = {
 		},
 
 		focusLost : function(inputField) {
-			$(inputField).css('background', 'transparent');
+			$(inputField).css('background', 'white');
 		}
 
 };
@@ -108,6 +108,14 @@ $(document).ready(function() {
 		NC.focusLost($(this));
 	});
 	
+	$('input[type="number"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input[type="number"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+
 	$('input[type="tel"]').focus( function (event) { 
 		NC.focusGained($(this));
 	});

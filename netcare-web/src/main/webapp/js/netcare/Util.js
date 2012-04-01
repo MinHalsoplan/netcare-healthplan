@@ -105,6 +105,13 @@ NC.Util = function() {
 			return icon;
 		},
 		
+		/**
+		 * Returns true if char is numeric, otherwise false
+		 */
+		isNumeric : function(char) {
+			return (char >= 48 && char <= 57);
+		},
+		
 		/*
 		 * Check whether the char is numeric
 		 * or not.
@@ -134,6 +141,32 @@ NC.Util = function() {
 			});
 			
 			return result;
+		},
+		
+		/**
+		 * Validates numeric input with max length, flash field background on invalid input.
+		 */
+		validateNumericField : function(numericField, maxLen) {
+			numericField.focusout( function () { 
+				NC.focusLost($(this));
+			});
+
+			numericField.focus( function (event) { 
+				NC.focusGained($(this));
+			});
+
+			numericField.keypress(function(event) {
+				var val = numericField.val();
+				if (val.length >= maxLen || !public.isNumeric(event.which)) {
+					event.preventDefault();
+					numericField.css('background', '#F2DEDE');
+					setTimeout(function() {
+						numericField.css('background', '#D9EDF7');												
+					}, 100);
+				} else if (numericField.css('background') != '#D9EDF7') {
+					numericField.css('background', '#D9EDF7');
+				}
+			});
 		},
 		
 		/**

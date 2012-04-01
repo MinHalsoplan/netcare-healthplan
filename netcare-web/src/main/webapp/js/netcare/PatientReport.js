@@ -174,6 +174,9 @@ NC.PatientReport = function(tableId, shortVersion) {
 				input.focusout( function () { 
 					NC.focusLost(input);
 				});
+				
+				_util.validateNumericField(input, 6);
+				
 				if (type.valueType.code == 'INTERVAL') {
 					input.attr('value', act.reported != null ? m.reportedValue : Math.round((m.maxTarget + m.minTarget) / 2) );
 				} else {
