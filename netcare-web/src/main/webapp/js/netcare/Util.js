@@ -118,10 +118,9 @@ NC.Util = function() {
 		 */
 		isCharAllowed : function(char, allowedCharacters) {
 			NC.log("Checking if " + char + " is allowed.");
-			NC.log("Allowed characters: " + allowedCharacters);
 			var numerics;
 			if (allowedCharacters == undefined) {
-				// 0-9 and :
+				// 0-9
 				numerics = [48,49,50,51,52,53,54,55,56,57];
 			} else {
 				numerics = allowedCharacters;
@@ -129,18 +128,14 @@ NC.Util = function() {
 			
 			NC.log("Allowed characters are: " + numerics);
 			
-			var result = false;
-			$.each(numerics, function(index, value) {
-				if (!result) {
-					NC.log("Processing char: " + char + " against: " + value);
-					if (char == value) {
-						NC.log("Character allowed!");
-						result = true;
-					}
+			for (var i = 0; i < numerics.length; i++) {
+				if (char == numerics[i]) {
+					NC.log("Character allowed!");
+					return true;
 				}
-			});
-			
-			return result;
+			}
+			NC.log("Character not allowed!");
+			return false;
 		},
 		
 		/**
