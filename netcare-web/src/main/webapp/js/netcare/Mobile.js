@@ -15,15 +15,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.Mobile = function() {
-	
+		
+	var validateNumericField = function(numericField, maxLen) {
+		numericField.keypress(function(event) {
+			if (numericField.val().length >= maxLen || event.which < 48 || event.which > 57) {
+				event.preventDefault();
+				numericField.css('background', '#F2DEDE');
+				setTimeout(function() {
+					numericField.css('background', 'white');												
+				}, 100);
+			} else if (numericField.css('background') != 'white') {
+				numericField.css('background', 'white');
+			}
+		});
+	}
+
 	var public = {
 			
 		createReportField : function(id, parent, label, value) {
+			var input = $('<input>').attr('type', 'number').attr('id', id).attr('name', name).attr('value', value).addClass('ui-input-text').addClass('ui-body-d').addClass('ui-corner-all').addClass('ui-shadow-inset');
+			validateNumericField(input, 6);		
 			var div = $('<div>').attr('id', id).attr('data-role', 'fieldcontain').append(
 				$('<label>').attr('for', id).html(label).addClass('ui-input-text')
-			).append(
-				$('<input>').attr('type', 'number').attr('id', id).attr('name', name).attr('value', value).addClass('ui-input-text').addClass('ui-body-d').addClass('ui-corner-all').addClass('ui-shadow-inset')
-			);
+			).append(input);
 			
 			div.addClass('ui-field-contain').addClass('ui-body').addClass('ui-br');
 			

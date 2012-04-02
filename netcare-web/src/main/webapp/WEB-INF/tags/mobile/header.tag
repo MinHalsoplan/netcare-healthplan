@@ -25,7 +25,30 @@
 	<title><spring:message code="system.name" /></title>
 	
 	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.0.1.min.css" />" />
+
+	<style>
+		.ui-body {
+	        background: #eee;
+		}
 		
+		.ui-li-has-count {
+	        background: #8d0017;
+		}
+		
+		.ui-btn-c {
+			background: #8d0017;
+		}
+		
+		.ui-bar-b {
+        	border: 1px solid #8d0017  /*{a-bar-border}*/;
+        	background: #8d0017 /*{a-bar-background-color}*/;
+		}		
+		.ui-btn-active {
+	        background: #8d0017;
+		}
+				
+	</style>
+			
 	<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.4.min.js" />"></script>
 	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.1.min.js" />"></script>
 	

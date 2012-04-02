@@ -33,6 +33,7 @@
 			var senseLabel = '<spring:message code="mobile.report.form.sense" />';
 		
 			var mobile = new NC.Mobile();
+			var util = new NC.Util();
 		
 			var buildListView = function(value, buildHeader) {
 				if (buildHeader) {
@@ -50,10 +51,16 @@
 					$('#report div p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
 					$('#slider-label').html(senseLabel + '&nbsp;(' + data.data.definition.type.minScaleText + '-' + data.data.definition.type.maxScaleText + ')');
 					
+					if (data.data.definition.type.measuringSense) {
+						$('#slider-div').show();
+					} else {
+						$('#slider-div').hide();
+					}
 					$.each(data.data.measurements, function(i, v) {
 						
 						var id = 'report-' + v.measurementDefinition.measurementType.seqno;
-						
+						// remove existing
+						$('#' + id).remove();
 						if (v.measurementDefinition.measurementType.valueType.code == "INTERVAL") {
 							mobile.createReportField(id
 									, $('#reportForm')
@@ -202,7 +209,7 @@
 	<body>
 		<mobile:page id="start">
 			<mobile:page-header title="mobile.activity.title" id="today-header">
- 				<!-- doesn't work, other integration method has to be used 
+ 				<!-- doesn't work, other integration method has to be used
  				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a>
  				 -->
 				<div data-role="navbar" class="ui-navbar" role="navigation">
@@ -249,7 +256,7 @@
 							<input type="time" id="time" name="time" />
 						</div>
 						
-						<div data-role="fieldcontain">
+						<div id="slider-div" data-role="fieldcontain">
 							<label for="slider" id="slider-label" class="ui-slider ui-input-text"></label>
 							<input type="number" data-type="range" name="slider" id="slider" value="5" min="1" max="10" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
 						</div>
@@ -260,7 +267,7 @@
 						</div>
 						
 						
-						<a id="sendReport" href="#" data-theme="b" data-role="button" data-icon="check"><spring:message code="mobile.report.title" /></a>
+						<a id="sendReport" href="#" class="ui-btn-active" data-theme="b" data-role="button" data-icon="check"><spring:message code="mobile.report.title" /></a>
 						<a id="back" data-rel="back" data-theme="c" data-icon="arrow-l" data-role="button"><spring:message code="mobile.back" /></a>
 					</form>
 				</div>
