@@ -25,7 +25,30 @@
 	<title><spring:message code="system.name" /></title>
 	
 	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.0.1.min.css" />" />
+
+	<style>
+		.ui-body {
+	        background: #eee;
+		}
 		
+		.ui-li-has-count {
+	        background: #8d0017;
+		}
+		
+		.ui-btn-c {
+			background: #8d0017;
+		}
+		
+		.ui-bar {
+	        background: #8d0017;
+		}
+
+		.ui-btn-active {
+	        background: #8d0017;
+		}
+				
+	</style>
+			
 	<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.4.min.js" />"></script>
 	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.1.min.js" />"></script>
 	
@@ -49,6 +72,12 @@
 		};
 	</script>
 	
+	<style>
+		.ui-back {
+			background-color: rgb(141,0,23);
+		}
+	</style>
+
 	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare/PageMessages.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Mobile.js' />"></script>
