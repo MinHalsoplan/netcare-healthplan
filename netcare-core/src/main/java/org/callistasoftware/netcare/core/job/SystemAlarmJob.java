@@ -100,7 +100,6 @@ public class SystemAlarmJob {
 	/**
 	 * Notifies mobile users about it's time to perform an activity.
 	 */
-	//@Scheduled(fixedDelay=300000)
 	@Scheduled(fixedDelay=60000)
 	public void reminderJob() {
 		log.info("======== REMINDER JOB STARTED =========");
@@ -116,7 +115,7 @@ public class SystemAlarmJob {
 		for (ScheduledActivityEntity sae : list) {
 			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
 			log.debug("Reminder: for patient {}, activity {}", patient.getFirstName(), sae.getActivityDefinitionEntity().getActivityType().getName());
-			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null) {
+			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null && patient.isPushEnbaled()) {
 				Integer i = patients.get(patient);
 				log.debug("Reminder: for patient {} -- add to send list", patient.getFirstName());
 				patients.put(patient, (i == null) ? 1 : i.intValue()+1);

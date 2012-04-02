@@ -111,6 +111,10 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	void setAlarms(final List<AlarmEntity> alarms) {
 		this.alarms = alarms;
 	}
+	
+	public boolean isPushEnbaled() {
+		return this.getProperties().containsKey("apnsRegistrationId") || this.getProperties().containsKey("c2dmRegistrationId");
+	}
 
 	@Override
 	public boolean isCareGiver() {
