@@ -72,12 +72,6 @@
 		};
 	</script>
 	
-	<style>
-		.ui-back {
-			background-color: rgb(141,0,23);
-		}
-	</style>
-
 	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare/PageMessages.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Mobile.js' />"></script>
