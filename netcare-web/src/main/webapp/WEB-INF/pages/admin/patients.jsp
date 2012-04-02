@@ -39,6 +39,19 @@
 				util.bindLengthField($('#cnrContainer'), $('input[name="cnr"]'), 12);
 				
 				var patients = new NC.Patient();
+							
+				var validateMandatory = function(field) {
+					field.focusout(function() {
+						var first = $('input[name="firstName"]');
+						var sur = $('input[name="surName"]');
+						var crn = $('input[name="crn"]');
+						if (first.val() != '' && sur.val() != '' && crn.val().length == 12) {
+							$('#patientForm :submit').removeAttr('disabled');						
+						} else {
+							$('#patientForm :submit').attr('disabled', 'disbaled');						
+						}
+					});
+				}
 				
 				var updatePatientTable = function(data) {
 					
@@ -106,6 +119,13 @@
 					util.validateNumericField($(v), 12);
 				});
 
+				/**
+				 * Disable.
+				 */
+				$('#patientForm :submit').attr('disabled', 'disabled');
+				validateMandatory($('input[name="crn"]'));
+				validateMandatory($('input[name="firstName"]'));
+				validateMandatory($('input[name="surName"]'));
 				
 				$('#patientForm :submit').click(function(event) {
 					NC.log("Submitting form...");
