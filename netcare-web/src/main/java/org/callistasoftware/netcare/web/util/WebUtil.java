@@ -87,13 +87,13 @@ public final class WebUtil {
 		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
-		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
 		if (cgRepo.findByHsaId(careGiverHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 		
+		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit");
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
@@ -145,13 +145,13 @@ public final class WebUtil {
 		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
-		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
 		if (cgRepo.findByHsaId(careGiverHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 		
+		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
@@ -167,7 +167,7 @@ public final class WebUtil {
 		atRepo.save(ate);
 		atRepo.flush();
 		
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Testgren", "hsa-id-1234", cu);
+		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Testgren", careGiverHsa, cu);
 		cgRepo.save(cg1);
 
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Peter", "Hook", "12345-67", cu);
