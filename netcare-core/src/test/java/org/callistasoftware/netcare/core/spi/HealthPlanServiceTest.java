@@ -336,7 +336,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		      + "DTSTART;TZID=Europe/Stockholm:20111206T190000\r\n"
 		      + "DURATION:PT30M\r\n"
 		      + "SUMMARY:Löpning 1200 METER\r\n"
-		      + "TRANSP:TRANSPARENT\r\n"
+		      + "TRANSP:OPAQUE\r\n"
 		      + "CLASS:CONFIDENTIAL\r\n"
 		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
 		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n"

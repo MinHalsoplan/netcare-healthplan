@@ -56,13 +56,15 @@ public class PatientRepositoryTest extends TestSupport {
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
 		cgRepo.save(cg);
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus","", "123456789004");
+		final PatientEntity p1 = PatientEntity.newEntity("Marcus","", "19121212-1212");
 		
 		this.repo.save(p1);
 		
 		final List<PatientEntity> all = this.repo.findAll();
+		
 		assertNotNull(all);
 		assertEquals(1, all.size());
+		assertEquals(all.get(0).getCivicRegistrationNumber(), "191212121212");
 		assertFalse(all.get(0).isMobile());
 	}
 	

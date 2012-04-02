@@ -214,7 +214,7 @@
 				</p>
 				
 				<netcare:block-message type="warning">
-					<a href="/netcare/admin/activity/list"><spring:message code="activity.reported.list" /></a>
+					<a href="<spring:url value="/netcare/admin/activity/list" />"><spring:message code="activity.reported.list" /></a>
 				</netcare:block-message>
 				
 				<div id="reportedActivities">

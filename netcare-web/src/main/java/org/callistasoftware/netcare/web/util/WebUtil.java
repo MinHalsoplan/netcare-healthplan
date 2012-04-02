@@ -68,6 +68,69 @@ public final class WebUtil {
 		
 		return false;
 	}
+
+	/**
+	 * Creates test data for app.store tests (app. approval process).
+	 * 
+	 * @param sc the servlet context.
+	 */
+	public static final void setupIosTestData(final ServletContext sc) {
+		final WebApplicationContext wc = getWebRequest(sc);
+		
+		final String careGiverHsa = "app-test-giver";
+		
+		final PatientRepository bean = wc.getBean(PatientRepository.class);
+		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
+		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
+		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
+		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
+		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
+		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
+		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
+
+		if (cgRepo.findByHsaId(careGiverHsa) != null) {
+			log.info("Test data already setup. Aborting...");
+			return;
+		}
+		
+		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit");
+		cu.setName("Jönköpings vårdcentral");
+		cuRepo.save(cu);
+		cuRepo.flush();
+
+		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
+		ate.setMeasuringSense(true);
+		ate.setSenseLabelLow("Lätt");
+		ate.setSenseLabelHigh("Tufft");
+		atRepo.save(ate);
+		atRepo.flush();
+		
+		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Läkare", careGiverHsa, cu);
+		cgRepo.save(cg1);		
+		cgRepo.flush();
+				
+		final PatientEntity p2 = PatientEntity.newEntity("AppDemo", "Patient", "191112121212");
+		p2.setPhoneNumber("0700000000");
+		bean.save(p2);
+		
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -30);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg1, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		hpRepo.save(hp);
+		
+		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg1);
+		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
+			if (md.getMeasurementType().getName().equals("Distans")) {
+				md.setTarget(1200);
+			}
+		}
+		adRepo.save(ad);
+		hps.scheduleActivities(ad);		
+	}
 	
 	public static final void setupTestData(final ServletContext sc) {
 		final WebApplicationContext wc = getWebRequest(sc);

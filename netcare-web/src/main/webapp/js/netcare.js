@@ -30,7 +30,7 @@ NC = {
 		},
 
 		focusLost : function(inputField) {
-			$(inputField).css('background', 'transparent');
+			$(inputField).css('background', 'white');
 		}
 
 };
@@ -54,7 +54,7 @@ $(document).ready(function() {
 	var _util = new NC.Util();
 	var _support = new NC.Support();
 	
-	$('.page-header h1').css('background', 'url(' + NC.getContextPath() + '/img/icons/32/pha.png) no-repeat left');
+	$('.page-header h1').css('background', 'url(' + NC.getContextPath() + '/img/icons/32/heart-logo.png) no-repeat left');
 	
 	$('#pageLoading').css('height', $(window).height()).show();
 	$('#pageLoadingBox').show();
@@ -95,19 +95,43 @@ $(document).ready(function() {
 	$('input:text').focus( function (event) { 
 		NC.focusGained($(this));
 	});
-	
-	$('input[type=number]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
 
 	$('input:text').focusout( function () { 
 		NC.focusLost($(this));
 	});
-	
-	$('input[type=number]').focusout( function () { 
+
+	$('input:password').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input:password').focusout( function () { 
 		NC.focusLost($(this));
 	});
 	
+	$('input[type="number"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input[type="number"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+
+	$('input[type="tel"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input[type="tel"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+
+	$('input[type="email"]').focus( function (event) { 
+		NC.focusGained($(this));
+	});
+
+	$('input[type="email"]').focusout( function () { 
+		NC.focusLost($(this));
+	});
+
 	/*
 	 * Fix for IE8, make sure enter submits a form.
 	 */

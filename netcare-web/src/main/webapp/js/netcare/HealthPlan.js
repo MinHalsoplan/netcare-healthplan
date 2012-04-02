@@ -96,6 +96,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				var col = $('<div>').addClass('span3');
 				
 				var input = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-1').prop('value', v.target).addClass('span2');
+				_util.validateNumericField(input, 6);
 				var div = _util.createInputField(_msgs['result.targetValue'], '(' + v.measurementType.unit.value + ')', input);
 				
 				col.append(div);
@@ -106,6 +107,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				var col = $('<div>').addClass('span3');
 				
 				var inputMin = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-1').prop('value', v.minTarget).addClass('span2');
+				_util.validateNumericField(inputMin, 6);
 				var divMin = _util.createInputField(_msgs['result.targetMinValue'], '(' + v.measurementType.unit.value + ')', inputMin);
 				
 				col.append(divMin);
@@ -113,6 +115,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				var col2 = $('<div>').addClass('span3');
 				
 				var inputMax = $('<input>').prop('type', 'text').prop('id', 'goal-value-' + v.id + '-2').prop('value', v.maxTarget).addClass('span2');
+				_util.validateNumericField(inputMax, 6);
 				var divMax = _util.createInputField(_msgs['result.targetMaxValue'], '(' + v.measurementType.unit.value + ')', inputMax);
 				
 				col2.append(divMax);

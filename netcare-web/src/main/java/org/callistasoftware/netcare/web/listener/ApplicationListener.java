@@ -34,7 +34,9 @@ public class ApplicationListener extends ContextLoaderListener {
 		
 		final ServletContext sc = event.getServletContext();
 		
-		if (WebUtil.isProfileActive(sc, "db-embedded") || (WebUtil.isProfileActive(sc, "test") && WebUtil.isProfileActive(sc, "db-psql"))) {
+		if (WebUtil.isProfileActive(sc, "ios-testdata")) {
+			WebUtil.setupIosTestData(sc);			
+		} else if (WebUtil.isProfileActive(sc, "db-embedded") || (WebUtil.isProfileActive(sc, "test") && WebUtil.isProfileActive(sc, "db-psql"))) {
 			log.debug("Setting up application test data...");
 			WebUtil.setupTestData(sc);
 			log.debug("Test data setup completed.");

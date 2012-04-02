@@ -159,6 +159,7 @@
 				var addMeasureValueInput = function(id, rowCol, label, value) {
 					
 					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('span2');
+					util.validateNumericField(input, 6);
 					var div = util.createInputField(label, '(' + value.unit.value + ')', input);
 					
 					rowCol.append(

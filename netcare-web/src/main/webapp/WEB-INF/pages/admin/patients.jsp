@@ -99,6 +99,14 @@
 				 */
 				updatePatientTable(null);
 				
+				/**
+				 * Validate crn, only allow [0-9], maxlength of 6
+				 */
+				$('.numericInput').each(function(i, v) {
+					util.validateNumericField($(v), 12);
+				});
+
+				
 				$('#patientForm :submit').click(function(event) {
 					NC.log("Submitting form...");
 					event.preventDefault();
@@ -161,7 +169,7 @@
 					<netcare:col span="4">
 						<spring:message code="patient.crn" var="cnr" scope="page" />
 						<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
-							<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />"/>
+							<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
 						</netcare:field>
 					</netcare:col>
 					<netcare:col span="4">

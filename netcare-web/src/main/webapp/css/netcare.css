@@ -26,6 +26,17 @@ a:hover {
 .addButton, .addButton:hover {
 }
 
+.alert-info {
+	color: rgb(141,0,23);
+	background-color: #eee;
+	border-color: #eee;
+}
+
+.label-info {
+	background-color: #eee;
+	color: rgb(141,0,23);
+}
+
 .cool .shadow {
 	color: black;
 	border-radius: 10px;

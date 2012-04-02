@@ -34,7 +34,7 @@
 				 */
 				var patientId = <sec:authentication property="principal.id" />;
 				var serviceClient = new NC.Patient();
-				
+				var util = new NC.Util();
 				var updateForm = function(data) {
 					$('#userprofile input[name="firstname"]').val(data.data.firstName);
 					$('#userprofile input[name="surname"]').val(data.data.surName);
@@ -67,35 +67,73 @@
 					
 				});
 				
+
+
+				/**
+				 * Validate pin, only allow [0-9], maxlength of 6
+				 */
+				$('.numericInput').each(function(i, v) {
+					util.validateNumericField($(v), 6);
+				});
+
 				/*
 				 * Form submission
 				 */
-				$('#userprofile :submit').click(function(event) {
-					event.preventDefault();
-					
-					var formData = new Object();
-					formData.firstname = $('#userprofile input[name="firstname"]').val();
-					formData.surname = $('#userprofile input[name="surname"]').val();
-					formData.email = $('#userprofile input[name="email"]').val();
-					formData.phone = $('#userprofile input[name="phone"]').val();
-					formData.mobile = $('#userprofile input[name="mobile"]:checked').val();
-					formData.password = $('#userprofile input[name="password"]').val();
-					formData.password2 = $('#userprofile input[name="password2"]').val();
-					
-					if (formData.mobile == "true") {
-						
-						if (formData.password !== formData.password2) {
-							NC.log("Password mismatch. Add error handling...");
-						}
-						
-					}
-					
-					serviceClient.update(patientId, formData, function(data) {
-						updateForm(data);
-					});
-					
-					
-				});
+				$('#userprofile :submit')
+						.click(
+								function(event) {
+									event.preventDefault();
+
+									var formData = new Object();
+									formData.firstname = $(
+											'#userprofile input[name="firstname"]')
+											.val();
+									formData.surname = $(
+											'#userprofile input[name="surname"]')
+											.val();
+									formData.email = $(
+											'#userprofile input[name="email"]')
+											.val();
+									formData.phone = $(
+											'#userprofile input[name="phone"]')
+											.val();
+									formData.mobile = $(
+											'#userprofile input[name="mobile"]:checked')
+											.val();
+									formData.password = $(
+											'#userprofile input[name="password"]')
+											.val();
+									formData.password2 = $(
+											'#userprofile input[name="password2"]')
+											.val();
+
+									// FIXME: hard-coded text
+									if (formData.mobile == "true") {
+										if (formData.password !== formData.password2) {
+											$(
+													'#userprofile input[name="password"]')
+													.css('background',
+															'#F2DEDE');
+											$(
+													'#userprofile input[name="password2"]')
+													.css('background',
+															'#F2DEDE');
+											new NC.PageMessages()
+													.addMessage(
+															'error',
+															[ {
+																message : 'Pin-koderna är inte lika!'
+															} ]);
+											return;
+										}
+									}
+
+									serviceClient.update(patientId, formData,
+											function(data) {
+												updateForm(data);
+											});
+
+								});
 			});
 		</script>
 	</netcare:header>
@@ -171,14 +209,14 @@
 								<netcare:col span="1">
 									<spring:message code="profile.mobile.pin" var="pin" scope="page" />
 									<netcare:field name="password" label="${pin}">
-										<input type="password" name="password" class="span1" />
+										<input type="password" name="password" class="span1 numericInput" />
 									</netcare:field>
 								</netcare:col>
 								
 								<netcare:col span="2">
 									<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
 									<netcare:field name="password2" label="${pin2}">
-										<input type="password" name="password2" class="span1" />
+										<input type="password" name="password2" class="span1 numericInput" />
 									</netcare:field>
 								</netcare:col>
 							</netcare:row>

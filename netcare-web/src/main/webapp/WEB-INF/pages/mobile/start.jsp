@@ -30,6 +30,7 @@
 		<script type="text/javascript">
 		
 			var reportedLabel = '<spring:message code="mobile.activity.reported" />';
+			var senseLabel = '<spring:message code="mobile.report.form.sense" />';
 		
 			var mobile = new NC.Mobile();
 		
@@ -47,6 +48,7 @@
 				new NC.HealthPlan().loadScheduledActivity(activityId, function(data) {
 					$('#report div h3').html(data.data.definition.type.name);
 					$('#report div p').html(data.data.day.value + ', ' + data.data.date + ' ' + data.data.time);
+					$('#slider-label').html(senseLabel + '&nbsp;(' + data.data.definition.type.minScaleText + '-' + data.data.definition.type.maxScaleText + ')');
 					
 					$.each(data.data.measurements, function(i, v) {
 						
@@ -200,7 +202,9 @@
 	<body>
 		<mobile:page id="start">
 			<mobile:page-header title="mobile.activity.title" id="today-header">
-<!-- 				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a> -->
+ 				<!-- doesn't work, other integration method has to be used 
+ 				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a>
+ 				 -->
 				<div data-role="navbar" class="ui-navbar" role="navigation">
 					<ul class="ui-grid-b">
 						<li class="ui-block-a">
@@ -246,8 +250,8 @@
 						</div>
 						
 						<div data-role="fieldcontain">
-							<label for="slider" id="slider-label" class="ui-slider ui-input-text"><spring:message code="mobile.report.form.sense" /></label>
-							<input type="number" data-type="range" name="slider" id="slider" value="3" min="1" max="5" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
+							<label for="slider" id="slider-label" class="ui-slider ui-input-text"></label>
+							<input type="number" data-type="range" name="slider" id="slider" value="5" min="1" max="10" class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
 						</div>
 						
 						<div data-role="fieldcontain">

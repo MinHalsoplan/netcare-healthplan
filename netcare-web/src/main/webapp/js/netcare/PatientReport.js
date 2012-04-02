@@ -112,7 +112,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 
 			if (act.definition.type.measuringSense) {
 				if (act.sense == 0) {
-					act.sense = 3;
+					act.sense = 5;
 				}
 				$('input:radio[name=gsense]').filter('[value=' + act.sense + ']').attr('checked', true);
 				$('#senseLowId').html(act.definition.type.minScaleText);
@@ -174,6 +174,9 @@ NC.PatientReport = function(tableId, shortVersion) {
 				input.focusout( function () { 
 					NC.focusLost(input);
 				});
+				
+				_util.validateNumericField(input, 6);
+				
 				if (type.valueType.code == 'INTERVAL') {
 					input.attr('value', act.reported != null ? m.reportedValue : Math.round((m.maxTarget + m.minTarget) / 2) );
 				} else {

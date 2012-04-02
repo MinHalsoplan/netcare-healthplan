@@ -105,16 +105,22 @@ NC.Util = function() {
 			return icon;
 		},
 		
+		/**
+		 * Returns true if char is numeric, otherwise false
+		 */
+		isNumeric : function(char) {
+			return (char >= 48 && char <= 57);
+		},
+		
 		/*
 		 * Check whether the char is numeric
 		 * or not.
 		 */
 		isCharAllowed : function(char, allowedCharacters) {
 			NC.log("Checking if " + char + " is allowed.");
-			NC.log("Allowed characters: " + allowedCharacters);
 			var numerics;
 			if (allowedCharacters == undefined) {
-				// 0-9 and :
+				// 0-9
 				numerics = [48,49,50,51,52,53,54,55,56,57];
 			} else {
 				numerics = allowedCharacters;
@@ -122,18 +128,40 @@ NC.Util = function() {
 			
 			NC.log("Allowed characters are: " + numerics);
 			
-			var result = false;
-			$.each(numerics, function(index, value) {
-				if (!result) {
-					NC.log("Processing char: " + char + " against: " + value);
-					if (char == value) {
-						NC.log("Character allowed!");
-						result = true;
-					}
+			for (var i = 0; i < numerics.length; i++) {
+				if (char == numerics[i]) {
+					NC.log("Character allowed!");
+					return true;
+				}
+			}
+			NC.log("Character not allowed!");
+			return false;
+		},
+		
+		/**
+		 * Validates numeric input with max length, flash field background on invalid input.
+		 */
+		validateNumericField : function(numericField, maxLen) {
+			numericField.focusout( function () { 
+				NC.focusLost($(this));
+			});
+
+			numericField.focus( function (event) { 
+				NC.focusGained($(this));
+			});
+
+			numericField.keypress(function(event) {
+				var val = numericField.val();
+				if (val.length >= maxLen || !public.isNumeric(event.which)) {
+					event.preventDefault();
+					numericField.css('background', '#F2DEDE');
+					setTimeout(function() {
+						numericField.css('background', '#D9EDF7');												
+					}, 100);
+				} else if (numericField.css('background') != '#D9EDF7') {
+					numericField.css('background', '#D9EDF7');
 				}
 			});
-			
-			return result;
 		},
 		
 		/**

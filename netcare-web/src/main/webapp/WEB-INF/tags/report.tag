@@ -66,6 +66,11 @@
 								<th>3</th>
 								<th>4</th>
 								<th>5</th>
+								<th>6</th>
+								<th>7</th>
+								<th>8</th>
+								<th>9</th>
+								<th>10</th>
 								<th>&nbsp;</th>
 							</tr>
 						</thead>
@@ -77,6 +82,11 @@
 								<td><input type="radio" name="gsense" value="3" /></td>
 								<td><input type="radio" name="gsense" value="4" /></td>
 								<td><input type="radio" name="gsense" value="5" /></td>
+								<td><input type="radio" name="gsense" value="6" /></td>
+								<td><input type="radio" name="gsense" value="7" /></td>
+								<td><input type="radio" name="gsense" value="8" /></td>
+								<td><input type="radio" name="gsense" value="9" /></td>
+								<td><input type="radio" name="gsense" value="10" /></td>
 								<td id="senseHighId">&nbsp;</td>
 							</tr>
 						</tbody>
