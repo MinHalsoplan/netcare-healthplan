@@ -26,7 +26,7 @@
 @synthesize window = _window;
 
 
-// push
+// push registration
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
     NSString *token = [Util toHexString:deviceToken]; 
@@ -40,10 +40,6 @@
         [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
         [prefs synchronize];
     }
-// sandbox dev. token each time for iphone device test
-//    [prefs setValue:token forKey:@"deviceToken"];
-//    [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
-//    [prefs synchronize];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
