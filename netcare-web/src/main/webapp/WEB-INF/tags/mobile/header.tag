@@ -39,10 +39,6 @@
 			background: #8d0017;
 		}
 		
-		.ui-bar {
-	        background: #8d0017;
-		}
-
 		.ui-btn-active {
 	        background: #8d0017;
 		}
