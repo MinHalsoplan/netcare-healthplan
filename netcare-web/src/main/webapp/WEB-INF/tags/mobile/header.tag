@@ -39,6 +39,10 @@
 			background: #8d0017;
 		}
 		
+		.ui-bar-b {
+        	border: 1px solid #8d0017  /*{a-bar-border}*/;
+        	background: #8d0017 /*{a-bar-background-color}*/;
+		}		
 		.ui-btn-active {
 	        background: #8d0017;
 		}
