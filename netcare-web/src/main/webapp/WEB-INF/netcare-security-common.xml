@@ -33,9 +33,8 @@
 		<security:http security="none" pattern="/netcare/error/**" />
 		<security:http security="none" pattern="/netcare/security/**" />
 	
-		<security:http pattern="/api/**" use-expressions="true" create-session="never" realm="netcare-mobile">
+		<security:http pattern="/api/**" use-expressions="true">
 			<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
-			<security:http-basic/>
 		</security:http>
 
 		<security:http 
