@@ -38,6 +38,7 @@
 	<beans profile="qa,prod">
 	
 		<security:http use-expressions="true" entry-point-ref="entryPoint" access-denied-page="/netcare/security/denied">
+			<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
 			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>

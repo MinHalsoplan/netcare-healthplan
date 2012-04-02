@@ -32,15 +32,11 @@
 		<security:http security="none" pattern="/favicon.ico" />
 		<security:http security="none" pattern="/netcare/error/**" />
 		<security:http security="none" pattern="/netcare/security/**" />
-	
-		<security:http pattern="/api/**" use-expressions="true">
-			<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
-		</security:http>
 
 		<security:http 
 			pattern="/mobile/**"
 			use-expressions="true"
-			create-session="stateless"
+			create-session="never"
 			entry-point-ref="httpBasicAuthEntryPoint">
 			<security:intercept-url pattern="/mobile/**" access="hasRole('ROLE_USER')"/>
 			<security:custom-filter ref="mobileLoginFilter" position="BASIC_AUTH_FILTER"/>

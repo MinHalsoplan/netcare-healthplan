@@ -28,6 +28,7 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<security:http use-expressions="true">
+		<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 		<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 		<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>
