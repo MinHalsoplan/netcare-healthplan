@@ -200,7 +200,7 @@
 {
     [HTTPAuthentication cleanSession];
     NSURL *url = [self logoutURL];
-    HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:self];
+    HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:nil];
     [conn get];
     // reset pinCode
     [pinCodeTextEdit setText:@""];
