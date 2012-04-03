@@ -10,6 +10,10 @@
   	Netcare modules.
   </description>
   
+  <scm>
+  	<developerConnection>scm:git:https://code.google.com/p/netcare</developerConnection>
+  </scm>
+  
   <modules>
   	<module>../netcare-mvk-integration</module>
   	<module>../netcare-model</module>
