@@ -11,6 +11,7 @@
   </description>
   
   <scm>
+  	<url>http://code.google.com/p/netcare/source/browse/</url>
   	<developerConnection>scm:git:https://code.google.com/p/netcare</developerConnection>
   </scm>
   
