@@ -5,8 +5,9 @@
     <artifactId>netcare</artifactId>
     <groupId>org.callistasoftware.netcare</groupId>
     <version>1.0-SNAPSHOT</version>
-  
+  	<relativePath>../netcare</relativePath>
   </parent>
+  
   <packaging>pom</packaging>
   <artifactId>netcare-deployer</artifactId>
   <name>Netcare Deployer</name>

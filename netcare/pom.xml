@@ -2,13 +2,18 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.callistasoftware.netcare</groupId>
   <artifactId>netcare</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>pom</packaging>
   <name>Netcare</name>
   <description>
   	Netcare Root Project - The parent of all other 
   	Netcare modules.
   </description>
+  
+  <scm>
+  	<url>http://code.google.com/p/netcare/source/browse/</url>
+  	<developerConnection>scm:git:https://code.google.com/p/netcare</developerConnection>
+  </scm>
   
   <modules>
   	<module>../netcare-mvk-integration</module>
@@ -340,7 +345,7 @@
   									</goals>
   								</pluginExecutionFilter>
   								<action>
-  									<ignore></ignore>
+  									<ignore />
   								</action>
   							</pluginExecution>
 						</pluginExecutions>
@@ -363,7 +368,7 @@
 	  								</goals>
 	  							</pluginExecutionFilter>
 	  							<action>
-	  								<ignore></ignore>
+	  								<ignore />
 	  							</action>
 	  						</pluginExecution>
 	  					</pluginExecutions>
