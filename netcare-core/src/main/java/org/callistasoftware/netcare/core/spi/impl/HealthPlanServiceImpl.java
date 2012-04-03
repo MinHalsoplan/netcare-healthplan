@@ -894,6 +894,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, dto.getId()));
 		}
 		
+		this.verifyWriteAccess(entity);
+		
 		/*
 		 * Update measure values
 		 */

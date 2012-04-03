@@ -80,6 +80,11 @@
       	<groupId>ch.qos.logback</groupId>
       	<artifactId>logback-classic</artifactId>
     </dependency>
+    
+    <dependency>
+    	<groupId>postgresql</groupId>
+    	<artifactId>postgresql</artifactId>
+    </dependency>
   		
   	<dependency>
   		<groupId>hsqldb</groupId>

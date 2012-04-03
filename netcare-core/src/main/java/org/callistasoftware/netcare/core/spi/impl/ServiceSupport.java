@@ -60,11 +60,15 @@ public abstract class ServiceSupport {
 	}
 	
 	protected void verifyWriteAccess(final PermissionRestrictedEntity object) {
+		log.debug("=== VERIFY WRITE ACCESS ===");
 		this.verifyAccess(getCurrentUser(), object, true);
+		log.debug("===========================");
 	}
 	
 	protected void verifyReadAccess(final PermissionRestrictedEntity object) {
+		log.debug("=== VERIFY READ ACCESS ===");
 		this.verifyAccess(getCurrentUser(), object, false);
+		log.debug("==========================");
 	}
 	
 	private void verifyAccess(final UserEntity entity, final PermissionRestrictedEntity object, final boolean write) {
