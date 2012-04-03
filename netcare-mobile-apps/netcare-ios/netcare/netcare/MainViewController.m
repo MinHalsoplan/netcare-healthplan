@@ -122,6 +122,15 @@
 }
 
 //
+- (NSURL*)logoutURL
+{
+    NSString *urlString = [self  baseURLString];
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCLogoutPage"]]; 
+    NSLog(@"Logout:  URL --> %@\n", urlString);
+    return [NSURL URLWithString:urlString];         
+}
+
+//
 - (NSURL*)pushRegistrationURL
 {
     NSString *urlString = [self  baseURLString];
@@ -189,7 +198,10 @@
 // to prepare for a new session
 - (void)cleanSession
 {
-    [HTTPAuthentication cleanSession];   
+    [HTTPAuthentication cleanSession];
+    NSURL *url = [self logoutURL];
+    HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:self];
+    [conn get];
     // reset pinCode
     [pinCodeTextEdit setText:@""];
 }
@@ -230,6 +242,7 @@
 {
     [self dismissModalViewControllerAnimated:YES];
     [self cleanSession];
+    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

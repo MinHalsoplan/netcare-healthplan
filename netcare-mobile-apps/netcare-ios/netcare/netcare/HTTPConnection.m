@@ -53,7 +53,10 @@
         [connection cancel];
     }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [connDelegate connReady:code];
+    if (connDelegate)
+    {
+        [connDelegate connReady:code];
+    }
     conn = nil;
 }
 
