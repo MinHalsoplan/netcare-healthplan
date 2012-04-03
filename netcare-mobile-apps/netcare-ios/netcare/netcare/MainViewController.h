@@ -28,6 +28,7 @@
 // a point to maintain a storyboard sequence, which really is invoked
 // upon a proper authenitcation
 @property (weak, nonatomic) IBOutlet UIButton *nextPageButton;
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
 
 - (IBAction)login:(id)sender;
 - (IBAction)textFieldReturn:(id)sender;
