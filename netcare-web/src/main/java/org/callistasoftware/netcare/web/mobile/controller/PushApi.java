@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.api.rest;
+package org.callistasoftware.netcare.web.mobile.controller;
 
+import org.callistasoftware.netcare.api.rest.ApiSupport;
 import org.callistasoftware.netcare.core.spi.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
