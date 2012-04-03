@@ -80,7 +80,7 @@ public class PushHandler implements
 			}, 0);
 			
 			final String baseUrl = ApplicationUtil.getServerBaseUrl(context);
-            final HttpPost post = new HttpPost(baseUrl + "/api/push/register/c2dm");           
+            final HttpPost post = new HttpPost(baseUrl + "/mobile/push/register/c2dm");           
             post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("c2dmRegistrationId", registrationId))));
             
             final HttpResponse response = client.execute(post);
