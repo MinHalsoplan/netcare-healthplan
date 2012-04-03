@@ -51,7 +51,7 @@
 	<key>NCProtocol</key>
 	<string>https</string>
 	<key>NCPushRegistrationPage</key>
-	<string>/api/push/register/apns</string>
+	<string>/mobile/push/register/apns</string>
 	<key>NCSecurityRealm</key>
 	<string>netcare-mobile</string>
 	<key>NCStartPage</key>

@@ -69,18 +69,20 @@
     NSLog(@"synchronizedPost: %@\n", data);
  
     NSError* error;
-    [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:&error];
-    
-    if (error)
+    NSHTTPURLResponse* response;
+    [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
+    int code = (error) ? [error code] : [response statusCode];
+    if (code != 200)
     {
-        NSLog(@"Error synchronizedPost: %@\n", error);
-        [self ready:[error code] connection:nil];
+        NSLog(@"Error synchronizedPost: %d (%@)\n", code, error);
+        [self ready:code connection:nil];
     }
     else
     {
-        [self ready:200 connection:nil];        
+        [self ready:code connection:nil];        
     }
     error = nil;
+    response = nil;
 }
 
 
