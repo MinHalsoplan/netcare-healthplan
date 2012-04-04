@@ -51,9 +51,13 @@
 	<key>NCProtocol</key>
 	<string>https</string>
 	<key>NCPushRegistrationPage</key>
-	<string>/api/push/register/apns</string>
+	<string>/mobile/push/register/apns</string>
 	<key>NCSecurityRealm</key>
 	<string>netcare-mobile</string>
+	<key>NCLogoutPage</key>
+	<string>/netcare/security/logout</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>NCStartPage</key>
 	<string>/mobile/start</string>
 	<key>UIMainStoryboardFile</key>
