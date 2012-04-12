@@ -55,10 +55,13 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 		
 		final AuthenticationResult preAuthenticated;
 		if (authToken.getPrincipal() instanceof AuthenticationResult) {
+			getLog().debug("Not yet authenticated. We have an authentication result from MVK.");
 			preAuthenticated = (AuthenticationResult) authToken.getPrincipal();
 		} else if (authToken.getPrincipal() instanceof CareGiverBaseViewImpl) {
+			getLog().debug("Already authenticated as a care giver. Return principal object.");
 			return (CareGiverBaseView) authToken.getPrincipal();
 		} else if (authToken.getPrincipal() instanceof PatientBaseViewImpl) {
+			getLog().debug("Already authenticated as a patient. Return principal object.");
 			return (PatientBaseView) authToken.getPrincipal();
 		} else {
 			throw new RuntimeException("Unknown authentication...");
@@ -68,10 +71,8 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 		 * Username will be civic registration number
 		 * for patients and hsa id for care givers
 		 */
-		final PatientEntity patient = this.pRepo.findByCivicRegistrationNumber(preAuthenticated.getUsername());
-		if (patient == null) {
-			getLog().debug("Could not find any patients matching {}. Trying with care givers...", preAuthenticated.getUsername());
-			
+		if (preAuthenticated.isCareGiver()) {
+			getLog().debug("The authentication result indicates that the user is a care giver. Check for the user in care giver repository");
 			final CareGiverEntity cg = this.cgRepo.findByHsaId(preAuthenticated.getUsername());
 			if (cg == null) {
 				getLog().debug("Could not find any care giver matching {}", preAuthenticated.getUsername());
@@ -79,7 +80,13 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 				return CareGiverBaseViewImpl.newFromEntity(cg);
 			}
 		} else {
-			return PatientBaseViewImpl.newFromEntity(patient);
+			getLog().debug("The authentication result indicates that the user is a patient. Check for the user in patient repository");
+			final PatientEntity patient = this.pRepo.findByCivicRegistrationNumber(preAuthenticated.getUsername());
+			if (patient == null) {
+				getLog().debug("Could not find any patients matching {}. Trying with care givers...", preAuthenticated.getUsername());
+			} else {
+				return PatientBaseViewImpl.newFromEntity(patient);
+			}
 		}
 		
 		/*
