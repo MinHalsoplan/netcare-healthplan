@@ -55,7 +55,7 @@
 			},
 			select : function(event, ui) {
 				NC.log("Setting hidden field value to: " + ui.item.patientId);
-				$('#pickPatientForm input[name="selectedPatient"]').attr('value', ui.item.patientId);
+				$('#pickPatientForm input[name="selectedPatient"]').prop('value', ui.item.patientId);
 			}
 		});
 		
@@ -117,6 +117,16 @@
 	});
 </script>
 
+<form id="pickPatientForm" action="#" method="post">
+	<netcare:modal id="modal-from-dom" confirmCode="admin.menu.patient.pickFromSearch" titleCode="admin.menu.patient.search">
+		<spring:message code="admin.menu.patient.searchValue" var="pick" scope="page"/>
+		<netcare:field name="pickPatient" label="${pick}">
+			<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
+			<input name="selectedPatient" type="hidden" />
+		</netcare:field>
+	</netcare:modal>
+</form>
+
 <div class="span3 menu">
 	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
 	<p>
@@ -129,45 +139,24 @@
 		
 	<h3 id="patientName" class="menuHeader"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
 	
-		<c:if test="${not empty sessionScope.currentPatient}">
-			<div id="workWith" style="padding-left: 5px;">
-				<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
-				<p>
-					<span id="cnr"></span>
-				</p>
-				<ul>
-					<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
-					<li><a id="quitPatientSession" href="#"><spring:message code="admin.menu.patient.quit" /></a></li>
-				</ul>
-			</div>
-		</c:if>
-		
-		<ul class="menuList">
-			<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
-			<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
-			<li><netcare:image name="new-patient" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
-		</ul>
+	<c:if test="${not empty sessionScope.currentPatient}">
+		<div id="workWith" style="padding-left: 5px;">
+			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
+			<p>
+				<span id="cnr"></span>
+			</p>
+			<ul>
+				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
+				<li><a id="quitPatientSession" href="#"><spring:message code="admin.menu.patient.quit" /></a></li>
+			</ul>
+		</div>
+	</c:if>
 	
-	<div id="modal-from-dom" class="modal hide fade" style="display: none;">
-			<div class="modal-header">
-				<a href="#" class="close" data-dismiss="modal">x</a>
-				<h3><spring:message code="admin.menu.patient.search" /></h3>
-			</div>
-			<div class="modal-body">
-				<form id="pickPatientForm">
-				<div class="clearfix">
-					<label for="pickPatient"><spring:message code="admin.menu.patient.searchValue" /></label>
-					<div class="input">
-						<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
-						<input name="selectedPatient" type="hidden" />
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<input name="pickSubmit" type="submit" value="<spring:message code="admin.menu.patient.pickFromSearch" />" class="btn btn-primary"/>
-				</form>
-			</div>
-	</div>
+	<ul class="menuList">
+		<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
+		<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
+		<li><netcare:image name="new-patient" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.new" /></a>
+	</ul>
 	
 	<div id="system">
 		<h3 class="menuHeader"><spring:message code="admin.menu.create" /></h3>

@@ -149,11 +149,11 @@ NC.Support = function() {
 		 * display the selected patient
 		 */
 		selectPatient : function(patientId, successFunction) {
-			_ajax.post('/user/' + patientId + '/select', null, successFunction);
+			_ajax.postSynchronous('/user/' + patientId + '/select', null, successFunction);
 		},
 		
 		unselect : function(callback) {
-			_ajax.post('/user/unselect', null, callback);
+			_ajax.postSynchronous('/user/unselect', null, callback);
 		}
 	};
 	

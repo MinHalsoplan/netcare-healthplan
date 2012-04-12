@@ -71,7 +71,7 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	void setCivicRegistrationNumber(String civicRegistrationNumber) {
 		String crn = EntityUtil.notNull(civicRegistrationNumber);
 		// clean dash from number (if any).
-		this.civicRegistrationNumber = (crn.indexOf("-") == -1) ? crn : crn.replaceAll("-", "");
+		this.civicRegistrationNumber = EntityUtil.formatCrn(crn);
 	}
 
 	public boolean isMobile() {

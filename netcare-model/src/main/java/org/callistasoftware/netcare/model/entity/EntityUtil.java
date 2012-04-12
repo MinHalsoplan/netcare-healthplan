@@ -28,6 +28,10 @@ import java.util.Date;
 public class EntityUtil {
 	static SimpleDateFormat iCalTimeFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
 	
+	public static String formatCrn(final String crn) {
+		return (crn.indexOf("-") == -1) ? crn : crn.replaceAll("-", "");
+	}
+	
 	/**
 	 * Returns a non null object.
 	 * 
