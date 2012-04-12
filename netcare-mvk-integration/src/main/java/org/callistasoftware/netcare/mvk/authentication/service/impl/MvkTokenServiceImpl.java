@@ -34,9 +34,11 @@ import org.callistasoftware.netcare.mvk.authentication.service.MvkTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile({"qa"})
 public class MvkTokenServiceImpl implements MvkTokenService {
 	
 	private static final Logger log = LoggerFactory.getLogger(MvkTokenServiceImpl.class);

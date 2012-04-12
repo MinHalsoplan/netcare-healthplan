@@ -57,6 +57,16 @@ public class MvkAuthenticationServiceImpl implements MvkAuthenticationService {
 			throw new RuntimeException("Error while exchanging information with MVK. Please see error log.");
 		}
 		
+		final String userId = response.getSsoobject().getUserId();
+		final String userType = response.getSsoobject().getUserType();
+		
+		log.debug("==== MVK SUCCESSFUL AUTHENTICATION ====");
+		log.debug("User id: " + userId);
+		log.debug("User type: " + userType);
+		log.debug("Healthcare id: " + (userType.equals("VA") ? response.getSsoobject().getHealthcareFacility().getHealthcareFacilityId() : ""));
+		log.debug("Healthcare name: " + (userType.equals("VA") ? response.getSsoobject().getHealthcareFacility().getHealthcareFacilityName() : ""));
+		log.debug("========================================");
+		
 		return AuthenticationResultImpl.createFromResponse(response);
 	}
 	
