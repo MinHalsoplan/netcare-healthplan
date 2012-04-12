@@ -109,7 +109,12 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 				getLog().debug("Could not find care unit {}, create it.", careUnit);
 				
 				cu = CareUnitEntity.newEntity(careUnit);
-				cu.setName(preAuthenticated.getCareUnitName());
+				
+				if (preAuthenticated.getCareUnitName() == null) {
+					cu.setName("Vårdenhetsnamn saknas");
+				} else {
+					cu.setName(preAuthenticated.getCareUnitName());
+				}
 				
 				cu = this.cuRepo.save(CareUnitEntity.newEntity(careUnit));
 				getLog().debug("Created care unit {}, {}", cu.getHsaId(), cu.getName());
