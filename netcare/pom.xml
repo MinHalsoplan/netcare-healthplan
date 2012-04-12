@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.callistasoftware.netcare</groupId>
   <artifactId>netcare</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>pom</packaging>
   <name>Netcare</name>
   <description>
@@ -16,6 +16,7 @@
   </scm>
   
   <modules>
+	<module>../netcare-deployer</module>
   	<module>../netcare-mvk-integration</module>
   	<module>../netcare-model</module>
   	<module>../netcare-core</module>

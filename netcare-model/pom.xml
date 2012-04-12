@@ -3,7 +3,7 @@
   <parent>
     <artifactId>netcare</artifactId>
     <groupId>org.callistasoftware.netcare</groupId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <relativePath>../netcare</relativePath>
   </parent>
   <artifactId>netcare-model</artifactId>
