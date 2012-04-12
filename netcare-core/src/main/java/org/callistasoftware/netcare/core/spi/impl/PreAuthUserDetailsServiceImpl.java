@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 			}
 		} else {
 			getLog().debug("The authentication result indicates that the user is a patient. Check for the user in patient repository");
-			final PatientEntity patient = this.pRepo.findByCivicRegistrationNumber(preAuthenticated.getUsername());
+			final PatientEntity patient = this.pRepo.findByCivicRegistrationNumber(EntityUtil.formatCrn(preAuthenticated.getUsername()));
 			if (patient == null) {
 				getLog().debug("Could not find any patients matching {}. Trying with care givers...", preAuthenticated.getUsername());
 			} else {
