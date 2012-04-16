@@ -51,9 +51,8 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 		
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
-		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
-		me.setAlarmEnabled(true);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		final ActivityTypeEntity savedEnt = this.repo.save(ent);
 		
 		assertNotNull(savedEnt);

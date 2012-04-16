@@ -143,7 +143,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			final MeasurementTypeEntity mte = MeasurementTypeEntity.newEntity(entity
 					, t.getName()
 					, MeasurementValueType.valueOf(t.getValueType().getCode())
-					, MeasureUnit.valueOf(t.getUnit().getCode()));
+					, MeasureUnit.valueOf(t.getUnit().getCode()), t.isAlarm());
 			
 			log.debug("Adding measurement type {}", t.getName());
 			entity.addMeasurementType(mte);
