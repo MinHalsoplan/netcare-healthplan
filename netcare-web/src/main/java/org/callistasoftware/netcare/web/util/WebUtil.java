@@ -152,7 +152,7 @@ public final class WebUtil {
 		}
 		
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Psykisk aktivitet"));
+		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Mental träning"));
 		final ActivityCategoryEntity cat3 = catRepo.save(ActivityCategoryEntity.newEntity("Provtagning"));
 		
 		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-1");
