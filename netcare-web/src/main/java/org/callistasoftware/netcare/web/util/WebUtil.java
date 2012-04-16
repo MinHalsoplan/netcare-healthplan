@@ -163,6 +163,7 @@ public final class WebUtil {
 		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-cu-2");
 		cu2.setName("Primärvårdsrehab Gibraltar");
 		cuRepo.save(cu2);
+		cuRepo.flush();
 
 		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu);
 		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
@@ -182,6 +183,7 @@ public final class WebUtil {
 		t2.setSenseLabelHigh("Behagligt");
 		
 		atRepo.save(t2);
+		atRepo.flush();
 		
 		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck", cat3, cu);
 		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
@@ -190,6 +192,7 @@ public final class WebUtil {
 		t3.setMeasuringSense(false);
 		
 		atRepo.save(t3);
+		atRepo.flush();
 		
 		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Peter", "Abrahamsson", careGiverHsa, cu);
 		cgRepo.save(cg1);
