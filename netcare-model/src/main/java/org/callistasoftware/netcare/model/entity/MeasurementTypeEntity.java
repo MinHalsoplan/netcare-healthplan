@@ -61,15 +61,16 @@ public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> 
 	 * 
 	 * @param name the name.
 	 * @param intervalTarget indicates if the target is an interval.
-s	 * @param unit the unit.
+	 * @param unit the unit.
 	 * @return the entity.
 	 */
-	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name, MeasurementValueType valueType, MeasureUnit unit) {
+	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name, MeasurementValueType valueType, MeasureUnit unit, final boolean alarmEnabled) {
 		MeasurementTypeEntity entity = new MeasurementTypeEntity();
 		entity.setActivityType(activityType);
 		entity.setName(name);
 		entity.setValueType(valueType);
 		entity.setUnit(unit);
+		entity.setAlarmEnabled(alarmEnabled);
 		activityType.addMeasurementType(entity);
 		return entity;
 	}

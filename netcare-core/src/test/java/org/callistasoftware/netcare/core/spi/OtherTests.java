@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
-import org.junit.Test;
 
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsServiceBuilder;

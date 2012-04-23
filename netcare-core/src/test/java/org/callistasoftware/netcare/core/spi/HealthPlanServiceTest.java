@@ -123,9 +123,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
 		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
-		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
-		me.setAlarmEnabled(true);
+		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		at.setMeasuringSense(true);
 		at.setSenseLabelHigh("Mycket Trötthet");
 		at.setSenseLabelLow("Väldigt Lätt");
@@ -192,9 +191,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		this.cuRepo.save(cu);
 		
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
-		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
-		me.setAlarmEnabled(true);
+		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123", cu);
@@ -503,7 +501,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	
 	private ActivityTypeEntity createActivityType() {
 		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), createCareUnit("123"));
-		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE);
+		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		return this.typeRepo.save(at);
 	}
 	

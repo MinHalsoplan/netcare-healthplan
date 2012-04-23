@@ -100,7 +100,7 @@ public final class WebUtil {
 		cuRepo.flush();
 
 		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
+		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		ate.setMeasuringSense(true);
 		ate.setSenseLabelLow("Lätt");
 		ate.setSenseLabelHigh("Tufft");
@@ -135,7 +135,7 @@ public final class WebUtil {
 	public static final void setupTestData(final ServletContext sc) {
 		final WebApplicationContext wc = getWebRequest(sc);
 		
-		final String careGiverHsa = "hsa-id-1234";
+		final String careGiverHsa = "hsa-cg-1";
 		
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
@@ -152,51 +152,67 @@ public final class WebUtil {
 		}
 		
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
-		cu.setName("Jönköpings vårdcentral");
+		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Mental träning"));
+		final ActivityCategoryEntity cat3 = catRepo.save(ActivityCategoryEntity.newEntity("Provtagning"));
+		
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-1");
+		cu.setName("Rosenhälsan i Huskvarna");
 		cuRepo.save(cu);
 		cuRepo.flush();
+		
+		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-cu-2");
+		cu2.setName("Primärvårdsrehab Gibraltar");
+		cuRepo.save(cu2);
+		cuRepo.flush();
 
-		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER);
-		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(ate, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM);
+		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		me.setAlarmEnabled(true);
-		ate.setMeasuringSense(true);
-		ate.setSenseLabelLow("Lätt");
-		ate.setSenseLabelHigh("Tufft");
-		atRepo.save(ate);
+		t1.setMeasuringSense(true);
+		t1.setSenseLabelLow("Lätt");
+		t1.setSenseLabelHigh("Tufft");
+		atRepo.save(t1);
 		atRepo.flush();
 		
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Testgren", careGiverHsa, cu);
+		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Meditation", cat2, cu);
+		MeasurementTypeEntity.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
+		
+		t2.setMeasuringSense(true);
+		t2.setSenseLabelLow("Obehagligt");
+		t2.setSenseLabelHigh("Behagligt");
+		
+		atRepo.save(t2);
+		atRepo.flush();
+		
+		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck", cat3, cu);
+		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
+		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
+		
+		t3.setMeasuringSense(false);
+		
+		atRepo.save(t3);
+		atRepo.flush();
+		
+		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Peter", "Abrahamsson", careGiverHsa, cu);
 		cgRepo.save(cg1);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Peter", "Hook", "12345-67", cu);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", cu2);
 		cgRepo.save(cg);
 		
 		cgRepo.flush();
 		
-		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "Krantz", "198212121213");
-		p1.setPhoneNumber("0733 - 12 08 90");
-		bean.save(p1);
-		
-		final PatientEntity p2 = PatientEntity.newEntity("Peter", "Larsson", "191212121212");
+		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
 		bean.save(p2);
 		
-		final PatientEntity p3 = PatientEntity.newEntity("Arne", "Andersson", "123456789003");
-		p3.getProperties().put("testKey", "[Test Value]");
-		bean.save(p3);
-		
-		final PatientEntity p4 = PatientEntity.newEntity("Anders", "Arnesson", "123456789004");
-		bean.save(p4);
-		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -30);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Rehabilitering höger axel", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
 		
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg);
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, t1, frequency, cg);
 		// FIXME: multi-values
 		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
 			if (md.getMeasurementType().getName().equals("Vikt")) {
@@ -210,8 +226,8 @@ public final class WebUtil {
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
 		
-		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu);
-		MeasurementTypeEntity.newEntity(at2, "Längd", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE);
+		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2);
+		MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		atRepo.save(at2);
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
 		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);
