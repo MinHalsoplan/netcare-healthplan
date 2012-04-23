@@ -48,7 +48,7 @@ public abstract class UserEntity {
 	@Column(name="sur_name", length=64, nullable=false)
 	private String surName;
 	
-	@Column(length=256, unique=true)
+	@Column(length=256)
 	private String email;
 	
 	@ElementCollection(fetch=FetchType.LAZY)
