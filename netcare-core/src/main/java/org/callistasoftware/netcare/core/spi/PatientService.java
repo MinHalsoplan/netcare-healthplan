@@ -46,8 +46,8 @@ public interface PatientService {
 	
 	/**
 	 * Create a new patient
-	 * @param patient
-	 * @return
+	 * @param patient the patient.
+	 * @return the created patient, or the already existing patient.
 	 */
 	ServiceResult<Patient> createPatient(final Patient patient);
 	

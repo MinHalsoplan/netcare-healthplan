@@ -105,16 +105,13 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 	@Override
 	public ServiceResult<Patient> createPatient(Patient patient) {
 		log.info("Creating new patient {}", patient.getCivicRegistrationNumber());
-		final PatientEntity ent = this.patientRepository.findByCivicRegistrationNumber(patient.getCivicRegistrationNumber());
-		if (ent != null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotUniqueMessage(PatientEntity.class, "cnr"));
-		}
-		
-		final PatientEntity newPatient = PatientEntity.newEntity(patient.getFirstName(), patient.getSurName(), patient.getCivicRegistrationNumber());
-		newPatient.setPhoneNumber(patient.getPhoneNumber());
-		
-		final PatientEntity p = this.patientRepository.save(newPatient);
-		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
+		PatientEntity ent = this.patientRepository.findByCivicRegistrationNumber(patient.getCivicRegistrationNumber());
+		if (ent == null) {
+			final PatientEntity newPatient = PatientEntity.newEntity(patient.getFirstName(), patient.getSurName(), patient.getCivicRegistrationNumber());
+			newPatient.setPhoneNumber(patient.getPhoneNumber());
+			ent = this.patientRepository.save(newPatient);
+		}		
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(ent), new GenericSuccessMessage());
 	}
 
 	@Override
