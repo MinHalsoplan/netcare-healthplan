@@ -62,7 +62,7 @@
 							 */
 							support.selectPatient(data.data.id, function(data) {
 								NC.log("Created patient selected. Go to home...");
-								window.location = NC.getContextPath() + '/netcare/home';
+								window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
 							});
 						}
 					}
