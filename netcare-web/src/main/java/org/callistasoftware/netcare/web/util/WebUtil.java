@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.web.util;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 
@@ -26,7 +27,9 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareGiverRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
+import org.callistasoftware.netcare.core.repository.MeasurementRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
@@ -38,9 +41,12 @@ import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -145,6 +151,8 @@ public final class WebUtil {
 		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
+		final ScheduledActivityRepository sar = wc.getBean(ScheduledActivityRepository.class);
+		final MeasurementRepository mRepo = wc.getBean(MeasurementRepository.class);
 
 		if (cgRepo.findByHsaId(careGiverHsa) != null) {
 			log.info("Test data already setup. Aborting...");
@@ -207,8 +215,8 @@ public final class WebUtil {
 		bean.save(p2);
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -30);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Rehabilitering höger axel", cal.getTime(), 6, DurationUnit.MONTH);
+		cal.add(Calendar.DATE, -90);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Viktprogram", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
 		
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
@@ -223,8 +231,51 @@ public final class WebUtil {
 				md.setTarget(1200);
 			}
 		}
+		ad.setStartDate(hp.getStartDate());
 		adRepo.save(ad);
 		hps.scheduleActivities(ad);
+		
+		Date now = new Date();
+		log.debug("Create history reports for scheduled activities: " + ad.getScheduledActivities().size());
+		int currentWeight = 0;
+		int distance = 1000;
+		int runNumber = 0;
+		for (ScheduledActivityEntity sce : ad.getScheduledActivities()) {
+			if (sce.getScheduledTime().compareTo(now) < 0) {
+				sce.setNote("Anteckning");
+				int sense = (int)Math.round(Math.random() * 10);
+				sce.setPerceivedSense(sense == 0 ? 1 : sense);
+				Calendar c = Calendar.getInstance();
+				c.setTime(sce.getScheduledTime());
+				int offset = (int)Math.round(Math.random() * 240) + 30;
+				c.add(Calendar.MINUTE, offset);
+				sce.setReportedTime(c.getTime());
+				sce.setStatus(ScheduledActivityStatus.OPEN);
+				sce.setActualTime(sce.getScheduledTime());
+				for (MeasurementEntity m : sce.getMeasurements()) {
+					MeasurementDefinitionEntity md = m.getMeasurementDefinition();
+					int target;
+					int diff = 0;
+					if (md.getMeasurementType().getName().equals("Distans")) {
+						target = distance;
+						runNumber++;
+						if ((runNumber % 5) == 0) {
+							distance += 100;
+						}
+					} else {
+						currentWeight = (currentWeight == 0) ? m.getMeasurementDefinition().getMaxTarget() + 2 : currentWeight - 1;
+						target = currentWeight;
+						diff = (Math.random() < 0.3) ? -1 : 1;
+					}
+					m.setReportedValue(target + diff);
+					log.debug("Reported value: " + m.getReportedValue());
+				}
+				mRepo.save(sce.getMeasurements());
+				sar.save(sce);
+			}
+		}
+		sar.flush();
+		adRepo.flush();
 		
 		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2);
 		MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
