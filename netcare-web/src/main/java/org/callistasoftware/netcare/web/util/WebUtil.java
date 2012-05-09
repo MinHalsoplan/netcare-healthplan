@@ -213,7 +213,7 @@ public final class WebUtil {
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
 		bean.save(p2);
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -90);
 		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Viktprogram", cal.getTime(), 6, DurationUnit.MONTH);
@@ -240,6 +240,7 @@ public final class WebUtil {
 		int currentWeight = 0;
 		int distance = 1000;
 		int runNumber = 0;
+		int modulo = 5;
 		for (ScheduledActivityEntity sce : ad.getScheduledActivities()) {
 			if (sce.getScheduledTime().compareTo(now) < 0) {
 				sce.setNote("Anteckning");
@@ -259,8 +260,12 @@ public final class WebUtil {
 					if (md.getMeasurementType().getName().equals("Distans")) {
 						target = distance;
 						runNumber++;
-						if ((runNumber % 5) == 0) {
+						if ((runNumber % modulo) == 0) {
 							distance += 100;
+						}
+						m.setTarget(md.getTarget());
+						if (target > 1400) {
+							md.setTarget(1600);
 						}
 					} else {
 						currentWeight = (currentWeight == 0) ? m.getMeasurementDefinition().getMaxTarget() + 2 : currentWeight - 1;
