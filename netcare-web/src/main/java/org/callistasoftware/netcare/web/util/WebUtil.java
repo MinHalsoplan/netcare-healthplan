@@ -173,7 +173,7 @@ public final class WebUtil {
 		cuRepo.save(cu2);
 		cuRepo.flush();
 
-		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu2);
 		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		me.setAlarmEnabled(true);
@@ -183,17 +183,17 @@ public final class WebUtil {
 		atRepo.save(t1);
 		atRepo.flush();
 		
-		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Meditation", cat2, cu);
+		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, cu2);
 		MeasurementTypeEntity.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		
 		t2.setMeasuringSense(true);
-		t2.setSenseLabelLow("Obehagligt");
-		t2.setSenseLabelHigh("Behagligt");
-		
+		t2.setSenseLabelLow("Lätt");
+		t2.setSenseLabelHigh("Jobbigt");
+
 		atRepo.save(t2);
 		atRepo.flush();
 		
-		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck", cat3, cu);
+		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, cu2);
 		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
 		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
 		
