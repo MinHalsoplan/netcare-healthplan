@@ -129,7 +129,7 @@ NC.Reports = function(statistics, captions) {
 				if (v.interval) {
 					opts.colors = ['#ff8c00', '#B94A48', '#3A87AD'];
 				} else {
-					opts.colors = ['#B94A48', '#3A87AD'];
+					opts.colors = ['#ff8c00', '#3A87AD'];
 				}
 				
 				var diagram = new google.visualization.LineChart(document.getElementById(id));
