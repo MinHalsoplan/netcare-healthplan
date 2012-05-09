@@ -79,23 +79,26 @@ NC.Reports = function(statistics, captions) {
 				chart.addColumn('string', _captions.date);
 				if (v.interval) {
 					
-					chart.addColumn('number', _captions.targetMinValue + ' (' + unit + ')');
-					chart.addColumn('number', _captions.targetMaxValue + ' (' + unit + ')');
+					chart.addColumn('number', 'Max målvärde');
+					chart.addColumn({type: 'boolean', role: 'certainty'});
+					chart.addColumn('number', 'Min målvärde');
+					chart.addColumn({type: 'boolean', role: 'certainty'});
 					chart.addColumn('number', _captions.reportedValue + ' (' + unit + ')');
-					
+
 					$.each(v.reportedValues, function(idx, val) {
 						if (val.reportedValue !== undefined && val.reportedValue != null && val.reportedValue != 0) {
-							entries.push([val.reportedAt, val.minTargetValue, val.maxTargetValue, val.reportedValue]);
+							entries.push([val.reportedAt, val.minTargetValue, false, val.maxTargetValue, false, val.reportedValue]);
 						}
 					});
 				} else {
 					
-					chart.addColumn('number', _captions.targetValue + ' (' + unit + ')');
+					chart.addColumn('number', _captions.targetValue);
+					chart.addColumn({type: 'boolean', role: 'certainty'});
 					chart.addColumn('number', _captions.reportedValue + ' (' + unit + ')');
 					
 					$.each(v.reportedValues, function(idx, val) {
 						if (val.reportedValue !== undefined && val.reportedValue != null && val.reportedValue != 0) {
-							entries.push([val.reportedAt, val.targetValue, val.reportedValue]);
+							entries.push([val.reportedAt, val.targetValue, false, val.reportedValue]);
 						}
 					});
 				}
@@ -127,9 +130,9 @@ NC.Reports = function(statistics, captions) {
 				var opts = _getDefaultOptions();
 				opts.title = v.valueType.code + ' (' + unit + ')';
 				if (v.interval) {
-					opts.colors = ['#ff8c00', '#B94A48', '#3A87AD'];
+					opts.colors = ['#556b2f', '#556b2f', '#3A87AD'];
 				} else {
-					opts.colors = ['#ff8c00', '#3A87AD'];
+					opts.colors = ['#556b2f', '#3A87AD'];
 				}
 				
 				var diagram = new google.visualization.LineChart(document.getElementById(id));
