@@ -127,7 +127,7 @@ NC.Reports = function(statistics, captions) {
 				var opts = _getDefaultOptions();
 				opts.title = v.valueType.code + ' (' + unit + ')';
 				if (v.interval) {
-					opts.colors = ['#B94A48', '#B94A48', '#3A87AD'];
+					opts.colors = ['#ff8c00', '#B94A48', '#3A87AD'];
 				} else {
 					opts.colors = ['#B94A48', '#3A87AD'];
 				}
