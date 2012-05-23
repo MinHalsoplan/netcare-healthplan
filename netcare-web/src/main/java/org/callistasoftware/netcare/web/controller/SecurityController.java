@@ -61,12 +61,20 @@ public class SecurityController extends ControllerSupport {
 		
 		if (WebUtil.isProfileActive(sc.getServletContext(), "qa") || WebUtil.isProfileActive(sc.getServletContext(), "prod")) {
 			request.getSession(false).invalidate();
-			return "redirect:/netcare/security/denied";
+			return "redirect:/netcare/security/loggedout";
 		} else {
 			request.getSession(false).invalidate();
 			return "redirect:/netcare/security/login";
 		}
 	}
+	
+	
+	
+	@RequestMapping(value="/loggedout")
+	public String loggedout() {
+		return "loggedout";
+	}
+	
 	
 	@RequestMapping(value="/denied")
 	public String denied() {

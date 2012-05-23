@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
@@ -164,14 +165,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
 		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 		
-		final HealthPlan[] dtos = new HealthPlan[entities.size()];
-		int count = 0;
+		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
-			final HealthPlanImpl dto = HealthPlanImpl.newFromEntity(ent, LocaleContextHolder.getLocale());
-			dtos[count++] = dto;
+			if (ent.isReadAllowed(this.getCurrentUser())) {
+				final HealthPlanImpl dto = HealthPlanImpl.newFromEntity(ent, LocaleContextHolder.getLocale());
+				plans.add(dto);
+			}
 		}
 		
-		return ServiceResultImpl.createSuccessResult(dtos, new ListEntitiesMessage(HealthPlanEntity.class, dtos.length));
+		return ServiceResultImpl.createSuccessResult(plans.toArray(new HealthPlan[plans.size()]), new ListEntitiesMessage(HealthPlanEntity.class, plans.size()));
 	}
 	
 	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient(PatientBaseView patient) {

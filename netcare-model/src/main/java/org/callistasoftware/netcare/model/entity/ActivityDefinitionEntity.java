@@ -231,11 +231,11 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	protected List<ScheduledActivityEntity> scheduleActivities0(Date startDate) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
-		this.scheduledActivities = new LinkedList<ScheduledActivityEntity>();
+		LinkedList<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
 		Frequency freq = getFrequency();
 		while (cal.getTime().compareTo(getHealthPlan().getEndDate()) <= 0) {
 			if (freq.isDaySet(cal)) {
-				scheduleActivity(this.scheduledActivities, cal, freq.getDay(cal.get(Calendar.DAY_OF_WEEK)));
+				scheduleActivity(list, cal, freq.getDay(cal.get(Calendar.DAY_OF_WEEK)));
 				// single event.
 				if (freq.getWeekFrequency() == 0) {
 					break;
@@ -248,7 +248,9 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 				cal.add(Calendar.DATE, 1);
 			}
 		}
-		return this.scheduledActivities;		
+		this.scheduledActivities.addAll(list);
+		
+		return list;		
 	}
 	
 	/**

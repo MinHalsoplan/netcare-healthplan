@@ -378,8 +378,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		schedRepo.save(list);
 		
 		endDate = hp.getEndDate();
-		scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
-		int newActivities = scheduledActivities.size();
+		List<ScheduledActivityEntity> scheduledActivities2 = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
+		int newActivities = scheduledActivities2.size();
 		
 		// number of days should be approx. 2 times more after renewal, but ... 5 is good enough during a 6 month period
 		assertTrue(newActivities > ((n*2)-5));

@@ -35,11 +35,11 @@
 		<div class="modal-backdrop fade in"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
 			<div class="modal-header">
-				<h3><spring:message code="denied.title" /></h3>
+				<h3><spring:message code="loggedout.title" /></h3>
 			</div>
 			<div class="modal-body">
 				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="denied.description" arguments="http://www.lj.se/minhalsoplan" />
+				<spring:message code="loggedout.description" />
 			</div>
 		</div>
 	</body>
