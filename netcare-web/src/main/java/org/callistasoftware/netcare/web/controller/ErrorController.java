@@ -30,7 +30,7 @@ public class ErrorController extends ControllerSupport {
 	
 	@RequestMapping(value="/403")
 	public String getPermissionDeniedPage() {
-		return "error/denied";
+		return "denied";
 	}
 	
 	@RequestMapping(value="/500")
