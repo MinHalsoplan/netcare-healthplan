@@ -37,4 +37,6 @@ public enum MeasureUnit {
 	FLOW_MLMIN,
 	LITER,
 	MILLILITER,
+	MMOL_LITER,
+	QUANTIY,
 }
