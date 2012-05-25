@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.mvk.web.controller;
+package org.callistasoftware.netcare.web.controller;
 
 import org.callistasoftware.netcare.mvk.authentication.service.MvkTokenService;
 import org.slf4j.Logger;
@@ -47,7 +47,7 @@ public class CreateTokenController {
 	@RequestMapping(value="/token/forCareGiver", method=RequestMethod.GET)
 	public String createTokenForCareGiver(final Model m) {
 		log.info("Generating a guid by calling mvk push id service...");
-		m.addAttribute("guid", service.createAuthenticationTokenForCareGiver("hsa-id-1234", "care-unit-hsa", "Callista Vårdcentral"));
+		m.addAttribute("guid", service.createAuthenticationTokenForCareGiver("hsa-id-1234", "care-unit-hsa", "Callista Vï¿½rdcentral"));
 		
 		return "redirect:/netcare/setup";
 	}

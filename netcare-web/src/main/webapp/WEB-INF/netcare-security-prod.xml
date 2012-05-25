@@ -29,15 +29,14 @@
 		<security:http security="none" pattern="/netcare/mvk/token/**" />
 	</beans>
 	
-	<beans profile="qa, prod">
-		<security:http pattern="/netcare/setup*" entry-point-ref="entryPoint" access-denied-page="/netcare/denied">
+	<beans profile="qa,prod">
+		<import resource="classpath*:/netcare-mvk-integration-security-config.xml"/>
+	
+		<security:http pattern="/netcare/setup*" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/denied">
 			<security:custom-filter position="PRE_AUTH_FILTER" ref="mvkPreAuthFilter"/>
 		</security:http>
-	</beans>
 	
-	<beans profile="qa,prod">
-	
-		<security:http use-expressions="true" entry-point-ref="entryPoint" access-denied-page="/netcare/security/denied">
+		<security:http use-expressions="true" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/security/denied">
 			<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
 			<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
@@ -45,21 +44,5 @@
 			<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
 			<security:logout logout-url="/netcare/security/logout"/>
 		</security:http>
-		
-		<bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 
-			name="http403ForbiddenEntryPoint">
-		</bean>
-		
-		<bean id="mvkPreAuthFilter" class="org.callistasoftware.netcare.mvk.authentication.web.filter.AuthenticationFilter">
-			<property name="authenticationManager" ref="mvkAuthenticationManager" />
-		</bean>
-		
-		<bean id="preAuthAuthProvider" class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
-			<property name="preAuthenticatedUserDetailsService" ref="preAuthUserDetailsServiceImpl" />
-		</bean>
-		
-		<security:authentication-manager alias="mvkAuthenticationManager">
-			<security:authentication-provider ref="preAuthAuthProvider" />
-		</security:authentication-manager>
 	</beans>
 </beans>

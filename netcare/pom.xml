@@ -17,7 +17,6 @@
   
   <modules>
 	<module>../netcare-deployer</module>
-  	<module>../netcare-mvk-integration</module>
   	<module>../netcare-model</module>
   	<module>../netcare-core</module>
   	<module>../netcare-rest-api</module>
@@ -259,6 +258,21 @@
   		
   	</dependencies>
   </dependencyManagement>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.mockito</groupId>
+  		<artifactId>mockito-core</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-test</artifactId>
+  	</dependency>
+  </dependencies>
   
   <build>
   	<pluginManagement>

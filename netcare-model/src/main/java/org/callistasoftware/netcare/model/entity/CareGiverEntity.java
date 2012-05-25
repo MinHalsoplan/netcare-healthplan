@@ -64,7 +64,7 @@ public class CareGiverEntity extends UserEntity {
 		return this.careUnit;
 	}
 	
-	void setCareUnit(final CareUnitEntity careUnit) {
+	public void setCareUnit(final CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
 	}
 

@@ -28,18 +28,17 @@ import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
+import org.callistasoftware.netcare.mvk.authentication.service.api.PreAuthenticationCallback;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
-	
+public class MvkPreAuthenticationCallback extends ServiceSupport implements PreAuthenticationCallback {
+
 	@Autowired
 	private CareUnitRepository cuRepo;
 	
@@ -50,53 +49,7 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 	private PatientRepository pRepo;
 	
 	@Override
-	public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken authToken)
-			throws UsernameNotFoundException {
-		getLog().info("Retrieve information about user. The user is pre-authenticated...");
-		
-		final AuthenticationResult preAuthenticated;
-		if (authToken.getPrincipal() instanceof AuthenticationResult) {
-			getLog().debug("Not yet authenticated. We have an authentication result from MVK.");
-			preAuthenticated = (AuthenticationResult) authToken.getPrincipal();
-		} else if (authToken.getPrincipal() instanceof CareGiverBaseViewImpl) {
-			getLog().debug("Already authenticated as a care giver. Return principal object.");
-			return (CareGiverBaseView) authToken.getPrincipal();
-		} else if (authToken.getPrincipal() instanceof PatientBaseViewImpl) {
-			getLog().debug("Already authenticated as a patient. Return principal object.");
-			return (PatientBaseView) authToken.getPrincipal();
-		} else {
-			throw new RuntimeException("Unknown authentication...");
-		}
-		
-		/*
-		 * Username will be civic registration number
-		 * for patients and hsa id for care givers
-		 */
-		if (preAuthenticated.isCareGiver()) {
-			getLog().debug("The authentication result indicates that the user is a care giver. Check for the user in care giver repository");
-			final CareGiverEntity cg = this.cgRepo.findByHsaId(preAuthenticated.getUsername());
-			if (cg == null) {
-				getLog().debug("Could not find any care giver matching {}", preAuthenticated.getUsername());
-			} else {
-				return CareGiverBaseViewImpl.newFromEntity(cg);
-			}
-		} else {
-			getLog().debug("The authentication result indicates that the user is a patient. Check for the user in patient repository");
-			final PatientEntity patient = this.pRepo.findByCivicRegistrationNumber(EntityUtil.formatCrn(preAuthenticated.getUsername()));
-			if (patient == null) {
-				getLog().debug("Could not find any patients matching {}. Trying with care givers...", preAuthenticated.getUsername());
-			} else {
-				return PatientBaseViewImpl.newFromEntity(patient);
-			}
-		}
-		
-		/*
-		 * We could not find the user, create
-		 */
-		return this.createMissingUser(preAuthenticated);
-	}
-	
-	public UserDetails createMissingUser(final AuthenticationResult preAuthenticated) {
+	public UserDetails createMissingUser(AuthenticationResult preAuthenticated) {
 		getLog().info("User {} has not been here before, create the user...", preAuthenticated.getUsername());
 		
 		if (preAuthenticated.isCareGiver()) {
@@ -107,17 +60,7 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 			CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit);
 			if (cu == null) {
 				getLog().debug("Could not find care unit {}, create it.", careUnit);
-				
-				cu = CareUnitEntity.newEntity(careUnit);
-				
-				if (preAuthenticated.getCareUnitName() == null) {
-					cu.setName("Vårdenhetsnamn saknas");
-				} else {
-					cu.setName(preAuthenticated.getCareUnitName());
-				}
-				
-				cu = this.cuRepo.save(CareUnitEntity.newEntity(careUnit));
-				getLog().debug("Created care unit {}, {}", cu.getHsaId(), cu.getName());
+				cu = this.createCareUnit(careUnit, preAuthenticated.getCareUnitName());
 			}
 			
 			final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("system-generated-name", "system-generated-name", preAuthenticated.getUsername(), cu));
@@ -132,5 +75,77 @@ public class PreAuthUserDetailsServiceImpl extends ServiceSupport implements Aut
 			
 			return PatientBaseViewImpl.newFromEntity(p);
 		}
+	}
+	
+	private CareUnitEntity createCareUnit(final String hsaId, final String name) {
+		getLog().debug("Creating new care unit {} - {}", hsaId, name);
+		
+		CareUnitEntity cu = CareUnitEntity.newEntity(hsaId);
+		
+		if (name == null) {
+			cu.setName("Vårdenhetsnamn saknas");
+		} else {
+			cu.setName(name);
+		}
+		
+		cu = this.cuRepo.save(cu);
+		getLog().debug("Created care unit {}, {}", cu.getHsaId(), cu.getName());
+		
+		return cu;
+	}
+
+	@Override
+	public UserDetails verifyPrincipal(Object principal) {
+		if (principal instanceof CareGiverBaseViewImpl) {
+			getLog().debug("Already authenticated as a care giver. Return principal object.");
+			return (CareGiverBaseView) principal;
+		} else if (principal instanceof PatientBaseViewImpl) {
+			getLog().debug("Already authenticated as a patient. Return principal object.");
+			return (PatientBaseView) principal;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public UserDetails lookupPrincipal(AuthenticationResult auth) throws UsernameNotFoundException {
+		if (auth.isCareGiver()) {
+			getLog().debug("The authentication result indicates that the user is a care giver. Check for the user in care giver repository");
+			final CareGiverEntity cg = this.cgRepo.findByHsaId(auth.getUsername());
+			if (cg == null) {
+				getLog().debug("Could not find any care giver matching {}", auth.getUsername());
+			} else {
+				
+				/*
+				 * If the user logged in on a different care unit than last time, we
+				 * must handle this here
+				 */
+				if (!cg.getCareUnit().getHsaId().equals(auth.getCareUnitHsaId())) {
+					
+					CareUnitEntity newCareUnit = this.cuRepo.findByHsaId(auth.getCareUnitHsaId());
+					if (newCareUnit == null) {
+						/*
+						 * The user logged in from a care unit that does not exist, create it
+						 */
+						newCareUnit = this.createCareUnit(auth.getCareUnitHsaId(), auth.getCareUnitName());
+					}
+					
+					cg.setCareUnit(newCareUnit);
+				}
+				
+				return CareGiverBaseViewImpl.newFromEntity(cg);
+			}
+			
+		} else {
+			getLog().debug("The authentication result indicates that the user is a patient. Check for the user in patient repository");
+			final PatientEntity patient = this.pRepo.findByCivicRegistrationNumber(EntityUtil.formatCrn(auth.getUsername()));
+			if (patient == null) {
+				getLog().debug("Could not find any patients matching {}. Trying with care givers...", auth.getUsername());
+			} else {
+				return PatientBaseViewImpl.newFromEntity(patient);
+			}
+		}
+		
+		throw new UsernameNotFoundException("User " + auth.getUsername() + " could not be found in the system.");
 	}
 }
