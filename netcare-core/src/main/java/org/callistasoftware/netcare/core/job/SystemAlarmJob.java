@@ -100,7 +100,7 @@ public class SystemAlarmJob {
 	/**
 	 * Notifies mobile users about it's time to perform an activity.
 	 */
-	@Scheduled(fixedDelay=60000)
+	@Scheduled(fixedDelay=300000)
 	public void reminderJob() {
 		log.info("======== REMINDER JOB STARTED =========");
 		HashMap<PatientEntity, Integer> patients = new HashMap<PatientEntity, Integer>();
