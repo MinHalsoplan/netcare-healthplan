@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
  * @author marcuskrantz
  *
  */
-public class Option {
+public class Option implements Comparable<Option> {
 
 	private String code;
 	private String value;
@@ -54,5 +54,10 @@ public class Option {
 	
 	public void setValue(final String value) {
 		this.value = value;
+	}
+
+	@Override
+	public int compareTo(Option o) {
+		return this.getValue().compareTo(o.getValue());
 	}
 }

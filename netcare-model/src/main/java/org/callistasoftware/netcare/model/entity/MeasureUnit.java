@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.model.entity;
 
 
+
 /**
  * Known units for measurements. <p>
  * 

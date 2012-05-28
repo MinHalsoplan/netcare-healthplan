@@ -37,6 +37,6 @@ public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity
 	 * @param hsaId
 	 * @return
 	 */
-	@Query("select e from ActivityTypeEntity as e where e.careUnit.hsaId = :hsaId")
+	@Query("select e from ActivityTypeEntity as e where e.careUnit.hsaId = :hsaId order by e.name asc")
 	List<ActivityTypeEntity> findByCareUnit(@Param("hsaId") final String hsaId);
 }

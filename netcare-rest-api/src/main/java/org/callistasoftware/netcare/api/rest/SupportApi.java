@@ -16,7 +16,10 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.MessageFields;
@@ -58,7 +61,10 @@ public class SupportApi extends ApiSupport {
 			opts[i] = new Option(units[i].name(), LocaleContextHolder.getLocale());
 		}
 		
-		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
+		final List<Option> list = Arrays.asList(opts);
+		Collections.sort(list);
+		
+		return ServiceResultImpl.createSuccessResult(list.toArray(new Option[list.size()]), new GenericSuccessMessage());
 	}
 	
 	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET, produces="application/json")
