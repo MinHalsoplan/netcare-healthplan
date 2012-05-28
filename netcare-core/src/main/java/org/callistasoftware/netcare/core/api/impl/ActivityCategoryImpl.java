@@ -66,5 +66,16 @@ public class ActivityCategoryImpl implements ActivityCategory {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+		buf.append("==== ActivityCategory ====\n");
+		buf.append("Id: ").append(this.getId()).append("\n");
+		buf.append("Name: ").append(this.getName()).append("\n");
+		buf.append("==========================\n");
+		
+		return buf.toString();
+	}
 
 }

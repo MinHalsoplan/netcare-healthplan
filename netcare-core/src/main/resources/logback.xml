@@ -36,6 +36,7 @@
 	<logger name="org.springframework.http" level="WARN" />
 	
 	<logger name="org.callistasoftware.netcare" level="DEBUG" />
+	<logger name="org.callistasoftware.netcare.core.job" level="INFO" />
 	
 	<root level="WARN">
 		<appender-ref ref="STDOUT" />

@@ -46,7 +46,9 @@ public class ActivityTypeImpl implements ActivityType {
 	private MeasurementType[] measureValues;
 	
 	//
-	public ActivityTypeImpl() {}
+	public ActivityTypeImpl() {
+		this.measureValues = new MeasurementTypeImpl[0];
+	}
 	
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
@@ -141,5 +143,24 @@ public class ActivityTypeImpl implements ActivityType {
 
 	public void setMeasureValues(MeasurementType[] measureValues) {
 		this.measureValues = measureValues;
+	}
+	
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+		buf.append("==== Activity Type ====\n");
+		buf.append("Id: ").append(this.getId()).append("\n");
+		buf.append("Name: ").append(this.getName()).append("\n");
+		buf.append("Measuring sense: ").append(this.isMeasuringSense()).append("\n");
+		buf.append("Sense min: ").append(this.getMinScaleText()).append("\n");
+		buf.append("Sense max: ").append(this.getMaxScaleText()).append("\n");
+		
+		buf.append(this.getCategory());
+		
+		for (final MeasurementType t : this.getMeasureValues()) {
+			buf.append(t);
+		}
+		
+		return buf.toString();
 	}
 }

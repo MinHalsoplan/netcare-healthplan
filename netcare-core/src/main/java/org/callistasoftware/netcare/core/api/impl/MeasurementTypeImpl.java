@@ -95,4 +95,18 @@ public class MeasurementTypeImpl implements MeasurementType {
 	void setSeqno(int seqno) {
 		this.seqno = seqno;
 	}
+	
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+		
+		buf.append("==== Measurement type ====\n");
+		buf.append("Id: ").append(this.getId()).append("\n");
+		buf.append("Name: ").append(this.getName()).append("\n");
+		buf.append("Unit: ").append(this.getUnit().getCode()).append("\n");
+		buf.append("Type: ").append(this.getValueType().getCode()).append("\n");
+		buf.append("==========================\n");
+		
+		return buf.toString();
+	}
 }

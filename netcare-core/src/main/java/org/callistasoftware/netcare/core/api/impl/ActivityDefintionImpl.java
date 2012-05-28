@@ -300,4 +300,21 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public Date getHealthPlanStartDate() {
 		return this.healthPlanStartDate;
 	}
+	
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+		
+		buf.append("==== Activity Definition ====\n");
+		buf.append("Health plan: ").append(this.healthPlanName).append("\n");
+		buf.append("Start date: ").append(this.startDate).append("\n");
+		buf.append("Issued by care giver: ").append(this.issuedBy).append("\n");
+		buf.append("Issued by patient: ").append(this.issuedByPatient).append("\n");
+		buf.append("Is public: ").append(this.publicDefinition).append("\n");
+		
+		buf.append(this.getType());
+		buf.append("=============================\n");
+		
+		return buf.toString();
+	}
 }

@@ -249,6 +249,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	public ServiceResult<HealthPlan> addActvitiyToHealthPlan(
 			final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user) {
 		log.info("Adding activity defintion to existing ordination with id {}", healthPlanId);
+		
+		
 		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
@@ -256,14 +258,14 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		this.verifyWriteAccess(entity);
 		
-		log.debug("Health plan entity found and resolved.");
+		log.debug("Health plan entity found and resolved. Id is {}", entity.getId());
 
 		final ActivityTypeEntity typeEntity = this.activityTypeRepository.findOne(dto.getType().getId());
 		if (typeEntity == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, dto.getType().getId()));
 		}
 		
-		log.debug("Activity type entity found and resolved");
+		log.debug("Activity type entity found and resolved. Id is {}", typeEntity.getId());
 		
 		/*
 		 * Create the day frequency based on what the user
