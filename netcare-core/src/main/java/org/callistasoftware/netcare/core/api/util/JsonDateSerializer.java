@@ -16,30 +16,20 @@
  */
 package org.callistasoftware.netcare.core.api.util;
 
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.Date;
 
-public final class DateUtil {
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.JsonSerializer;
+import org.codehaus.jackson.map.SerializerProvider;
 
-	public static final long MILLIS_PER_MINUTE = 60000;
-	public static final long MILLIS_PER_HOUR = 600000;
-	public static final long MILLIS_PER_DAY = MILLIS_PER_HOUR * 24;
-	
-	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
-	public static final String DATE_PATTERN = "yyyy-MM-dd";
-	
-	/**
-	 * Format the give date object. Return null if date is null
-	 * @param date
-	 * @return
-	 */
-	public static String toDateTime(final Date date) {
-		final SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_PATTERN);
-		return date != null ? sdf.format(date) : null;
-	}
-	
-	public static final String toDate(final Date date) {
-		final SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
-		return date != null ? sdf.format(date) : null;
+public class JsonDateSerializer extends JsonSerializer<Date> {
+
+	@Override
+	public void serialize(Date value, JsonGenerator jgen,
+			SerializerProvider provider) throws IOException,
+			JsonProcessingException {
+		jgen.writeString(DateUtil.toDate(value));
 	}
 }

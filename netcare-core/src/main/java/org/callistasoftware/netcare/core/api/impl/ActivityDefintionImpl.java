@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
@@ -25,6 +26,7 @@ import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
+import org.callistasoftware.netcare.core.api.util.JsonDateSerializer;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
@@ -32,6 +34,7 @@ import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
@@ -51,6 +54,10 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private String endDate;
 	private Long healthPlanId;
 	private String healthPlanName;
+	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	private Date healthPlanStartDate;
+	
 	private int numTotal;
 	private int numDone;
 	private int numTarget;
@@ -287,5 +294,10 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	
 	public void setActive(final boolean active) {
 		this.active = active;
+	}
+
+	@Override
+	public Date getHealthPlanStartDate() {
+		return this.healthPlanStartDate;
 	}
 }

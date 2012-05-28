@@ -151,7 +151,15 @@
 				 * and fill the table
 				 */
 				var healthPlan = <c:out value="${requestScope.result.data.id}" />;
+				var sd = '<c:out value="${requestScope.result.data.startDate}" />';
 				var hp = new NC.HealthPlan();
+				
+				/*
+				 * Set the default start date to health plans
+				 * start date
+				 */
+				NC.log('Setting start date to: ' + sd);
+				$('input[name="startDate"]').datepicker('setDate', sd);
 				
 				hp.listActivities(healthPlan, 'activitiesTable', isPatient);
 				

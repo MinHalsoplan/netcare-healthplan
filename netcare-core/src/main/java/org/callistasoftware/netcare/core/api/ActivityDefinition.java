@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Defines an activity definition how it is represented
@@ -87,6 +88,12 @@ public interface ActivityDefinition extends Serializable {
 	 * @return the health plan name.
 	 */
 	String getHealthPlanName();
+	
+	/**
+	 * The start date of the health plan
+	 * @return
+	 */
+	Date getHealthPlanStartDate();
 	
 	/**
 	 * Returns issued by.

@@ -30,6 +30,11 @@
 				var support = NC.Support();
 				support.loadDurations($('#createHealthPlanForm select'));
 				
+				/*
+				 * Set todays date
+				 */
+				$('input[name="startDate"]').datepicker('setDate', new Date());
+				
 				var updateDescription = function(count) {
 					NC.log("Updating ordination table description");
 					if (count == 0) {

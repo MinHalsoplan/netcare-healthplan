@@ -79,7 +79,7 @@ public class HomeController extends ControllerSupport {
 	
 	@RequestMapping(value="/admin/healthplan/new", method=RequestMethod.GET)
 	public String displayCreateOrdination(final Model m, final HttpSession session, final Locale locale) {
-		log.info("Displaying create new ordination");
+		log.info("Displaying create new health plan");
 		
 		if (session.getAttribute("currentPatient") == null) {
 			m.addAttribute("result", ServiceResultImpl.createFailedResult(new NoCurrentPatientMessage()));
@@ -90,7 +90,7 @@ public class HomeController extends ControllerSupport {
 	
 	@RequestMapping(value="/user/healthplan/{healthplanId}/view", method=RequestMethod.GET)
 	public String displayNewActivityDefinition(@PathVariable(value="healthplanId") final Long healthPlan, final HttpSession session, final Model m) {
-		log.info("Getting ordination {}", healthPlan);
+		log.info("Getting health plan {}", healthPlan);
 		
 		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan);
 		m.addAttribute("result", result);

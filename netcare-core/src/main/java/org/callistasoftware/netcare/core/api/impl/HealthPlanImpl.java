@@ -19,12 +19,12 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 
 /**
@@ -58,8 +58,8 @@ public class HealthPlanImpl implements HealthPlan {
 		dto.setName(entity.getName());
 		dto.setDuration(entity.getDuration());
 		dto.setDurationUnit(new Option(entity.getDurationUnit().name(), l));
-		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
-		dto.setEndDate(ApiUtil.formatDate(entity.getEndDate()));
+		dto.setStartDate(DateUtil.toDate(entity.getStartDate()));
+		dto.setEndDate(DateUtil.toDate(entity.getEndDate()));
 		
 		final CareUnit cu = CareUnitImpl.newFromEntity(entity.getCareUnit());
 		dto.setCareUnit(cu);
