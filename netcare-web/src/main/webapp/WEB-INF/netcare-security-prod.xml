@@ -32,7 +32,7 @@
 	<beans profile="qa,prod">
 		<import resource="classpath*:/netcare-mvk-integration-security-config.xml"/>
 	
-		<security:http pattern="/netcare/setup*" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/denied">
+		<security:http pattern="/netcare/setup*" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/security/denied">
 			<security:custom-filter position="PRE_AUTH_FILTER" ref="mvkPreAuthFilter"/>
 		</security:http>
 	

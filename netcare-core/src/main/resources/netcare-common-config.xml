@@ -60,6 +60,7 @@
 		</property>
 		<property name="jpaPropertyMap">
 			<map>
+<!-- 				<entry key="hibernate.default_schema" value="${database.schema}" /> -->
 				<entry key="hibernate.dialect" value="${database.dialect}" />
 				<entry key="hibernate.show_sql" value="${database.show-sql}" />
 				<entry key="hibernate.format_sql" value="${database.format-sql}" />

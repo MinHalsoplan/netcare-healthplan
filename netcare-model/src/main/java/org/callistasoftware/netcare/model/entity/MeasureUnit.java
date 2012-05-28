@@ -39,4 +39,5 @@ public enum MeasureUnit {
 	MILLILITER,
 	MMOL_LITER,
 	QUANTIY,
+	POINTS,
 }
