@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +34,8 @@ public interface ActivityCommentRepository extends JpaRepository<ActivityComment
 			"ad.healthPlan as hp where hp.forPatient = :patient and e.repliedAt = null")
 	List<ActivityCommentEntity> findCommentsForPatient(@Param("patient") final PatientEntity patient);
 	
-	@Query(value="select e from ActivityCommentEntity as e where e.commentedBy = :careGiver and e.repliedAt != null")
-	List<ActivityCommentEntity> findRepliesForCareGiver(@Param("careGiver") final CareGiverEntity careGiver);
+	@Query(value="select e from ActivityCommentEntity as e where e.commentedBy = :careGiver " +
+			"and e.repliedAt != null " +
+			"and e.activity.activityDefinition.healthPlan.careUnit = :careUnit")
+	List<ActivityCommentEntity> findRepliesForCareGiver(@Param("careGiver") final CareGiverEntity careGiver, @Param("careUnit") final CareUnitEntity careUnit);
 }

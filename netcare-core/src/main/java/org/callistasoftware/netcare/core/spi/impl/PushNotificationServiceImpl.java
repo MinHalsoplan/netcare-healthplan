@@ -29,8 +29,6 @@ import javax.net.ssl.SSLSession;
 import org.callistasoftware.netcare.core.repository.UserRepository;
 import org.callistasoftware.netcare.core.spi.PushNotificationService;
 import org.callistasoftware.netcare.model.entity.UserEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -48,8 +46,6 @@ import com.notnoop.apns.PayloadBuilder;
  */
 @Service
 public class PushNotificationServiceImpl extends ServiceSupport implements PushNotificationService {
-
-	private final static Logger log = LoggerFactory.getLogger(PushNotificationServiceImpl.class);
 	
 	@Autowired
 	private UserRepository repo;
@@ -91,7 +87,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 			return;
 		}
 		
-		log.error("Unable to find mobile push registration id för user {}", user.getId());
+		getLog().error("Unable to find mobile push registration id för user {}", user.getId());
 	}
 
 	String fetchGoogleAuthToken() {
@@ -123,13 +119,13 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 			}
 			
 			if (response == 200) {
-				log.debug("Call was successful");
+				getLog().debug("Call was successful");
 			
 				final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 				String authToken = null;
 				String line = "";
 				
-				log.debug("Parsing input stream");
+				getLog().debug("Parsing input stream");
 				while ((line = reader.readLine()) != null) {
 					
 					final String[] split = line.split("=");
@@ -140,7 +136,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 				}
 				
 				if (authToken != null) {
-					log.debug("Found auth token");
+					getLog().debug("Found auth token");
 					return authToken;
 				} else {
 					throw new IOException("Could not find any auth token in the response");
@@ -148,7 +144,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 			}
 			
 		} catch (IOException e) {
-			log.warn("Caught exception when trying to fetch auth token from Google", e);
+			getLog().warn("Caught exception when trying to fetch auth token from Google", e);
 			throw new RuntimeException("Caught exception when trying to fetch auth token from Google", e);
 		}
 		
@@ -157,7 +153,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 	
 	//
 	void sendApnsNotification(final String registrationId, final String message) {
-		 log.info("Preparing to send APNS message: {}", apnsCount);
+		 getLog().info("Preparing to send APNS message: {}", apnsCount);
 		 ApnsServiceBuilder sb = APNS.newService();
 		 
 		 sb.withCert(apnsCertFile, apnsCertPassword);
@@ -173,7 +169,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 		 pb.badge(1);
 		 		 
 		 sb.build().push(new EnhancedApnsNotification(apnsCount, 900, registrationId, pb.build()));
-		 log.info("APNS Message {} successfully delivered", apnsCount);
+		 getLog().info("APNS Message {} successfully delivered", apnsCount);
 		 apnsCount++;
 	}
 	
@@ -225,7 +221,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 			
 			int response = con.getResponseCode();
 			if (response == 200) {
-				log.debug("Got OK from Google server. Extracting information from the response...");
+				getLog().debug("Got OK from Google server. Extracting information from the response...");
 				
 				final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 				String line = null;
@@ -237,9 +233,10 @@ public class PushNotificationServiceImpl extends ServiceSupport implements PushN
 					}
 				}
 				
+				getLog().info("C2DM push message successfully sent.");
 			}
 		} catch (IOException e) {
-			log.warn("Could not send push notification to Google server.", e);
+			getLog().warn("Could not send push notification to Google server.", e);
 		}
 	}
 }

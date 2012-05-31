@@ -792,7 +792,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final CareGiverEntity cg = this.getCareGiver();
 		log.info("Loading replies for care giver {}", cg.getFirstName());
 		
-		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg);
+		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg, cg.getCareUnit());
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments), new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));
 	}
 
