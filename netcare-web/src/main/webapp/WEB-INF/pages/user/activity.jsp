@@ -67,9 +67,8 @@
 				/*
 				 * If the user clicks a day checkbox, enable that time field
 				 */
-				$('input[name="day"]').click(function(event){
-					var value = $(this).val() + 'TimeField';
-					var enable = $(this).attr('checked');
+				var onDayClick = function(day, enable) {
+					var value = day + 'TimeField';
 					var elem = $('input[name="'+ value +'"]');
 					var icon = elem.next();
 					
@@ -84,6 +83,10 @@
 						elem.prop('disabled', 'disabled');
 						icon.hide();
 					}
+				};
+				 
+				$('input[name="day"]').click(function(event){
+					onDayClick($(this).val(), $(this).attr('checked'));
 				});
 				
 				/*
@@ -91,6 +94,14 @@
 				 * time field and print it together with a delete icon
 				 */
 				var addTime = function(timeField, text) {
+					
+					if (timeField.val().length != 5) {
+						timeField.parent().parent().removeClass('success').addClass('error');
+						return;
+					} else {
+						timeField.parent().parent().removeClass('error').addClass('success');
+					}
+					
 					// Find added times div
 					var inputName = timeField.attr('name');
 					
@@ -113,6 +124,11 @@
 						if (timeCount == 0) {
 							NC.log("No more times, hide container");
 							elem.hide();
+							
+							timeField.parent().parent().removeClass('error success');
+							
+							$('input[value="' + day + '"]').click();
+							onDayClick(day, "unchecked");
 						}
 					});
 					

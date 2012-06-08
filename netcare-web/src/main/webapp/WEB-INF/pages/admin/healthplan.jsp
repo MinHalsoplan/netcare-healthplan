@@ -27,6 +27,39 @@
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
+				
+				var validateField = function(field) {
+					if (field.val().length == 0 || field.val() == "") {
+						field.parent().parent().addClass('error');
+						return true;
+					} else {
+						
+						if (field.hasClass('signedNumeric')) {
+							var value = parseInt(field.val());
+							NC.log('Value of field is: ' + value);
+							
+							if (value <= 0) {
+								field.parent().parent().addClass('error');
+								return true;	
+							}
+						}
+						
+						field.parent().parent().removeClass('error').addClass('success');
+						return false;
+					}
+				};
+				
+				var validateForm = function() {
+					
+					var errors = false;
+					
+					errors = validateField($('input[name="name"]'));
+					errors = validateField($('input[name="startDate"]'));
+					errors = validateField($('input[name="duration"]'));
+					
+					return !errors;
+				};
+				
 				var support = NC.Support();
 				support.loadDurations($('#createHealthPlanForm select'));
 				
@@ -156,6 +189,11 @@
 					NC.log("Submitting form...");
 					event.preventDefault();
 					
+					var result = validateForm();
+					if (!result) {
+						return false;
+					}
+					
 					var formData = new Object();
 					formData.name = $('#createHealthPlanForm input[name="name"]').val();
 					formData.startDate = $('#createHealthPlanForm input[name="startDate"]').val();
@@ -220,7 +258,7 @@
 							<div class="row">
 								<div class="span3">
 									<netcare:field name="duration" label="${duration}">
-										<input type="number" min="1" name="duration" class="medium" />
+										<input type="number" min="1" name="duration" class="medium signedNumeric"/>
 									</netcare:field>
 								</div>
 								<div class="span3">
