@@ -59,13 +59,13 @@ $(document).ready(function() {
 	$('#pageLoading').css('height', $(window).height()).show();
 	$('#pageLoadingBox').show();
 	
-	$('#ajaxInProgress').ajaxStart(function() {
+	/*$('#ajaxInProgress').ajaxStart(function() {
 		$(this).show();
 	});
 	
 	$('#ajaxInProgress').ajaxStop(function() {
 		$(this).hide();
-	});
+	});*/
 
 	/*
 	 * Bind all autocomplete boxes
