@@ -38,7 +38,7 @@ public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> 
 	@JoinColumn(name="activity_type_id")
 	private ActivityTypeEntity activityType;
 	
-	@Column(name="name", length=32)
+	@Column(name="name", length=32, nullable=false)
 	private String name;
 	
 	@Column(name="value_type", nullable=false)

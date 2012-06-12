@@ -47,7 +47,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@Column(name="uuid", length=40, nullable=false)
 	private String uuid;
 	
-	@Column(length=256, nullable=false)
+	@Column(length=2048, nullable=false)
 	private String frequency;
 		
 	@Temporal(TemporalType.TIMESTAMP)

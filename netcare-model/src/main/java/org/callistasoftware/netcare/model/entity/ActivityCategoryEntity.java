@@ -68,6 +68,9 @@ public class ActivityCategoryEntity {
 	}
 	
 	void setName(String name) {
+		if (name == null || name.trim().equals("")) {
+			throw new IllegalArgumentException("Name must not be null or empty.");
+		}
 		this.name = name;
 	}
 
