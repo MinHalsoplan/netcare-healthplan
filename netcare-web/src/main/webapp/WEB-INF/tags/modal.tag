@@ -27,7 +27,7 @@
 <script type="text/javascript">
 
 	$(function() {
-		$('.modal-footer').find('.btn-primary').click(function(e) {
+		$('#${id} .modal-footer').find('.btn-primary').click(function(e) {
 			
 			e.preventDefault();
 			

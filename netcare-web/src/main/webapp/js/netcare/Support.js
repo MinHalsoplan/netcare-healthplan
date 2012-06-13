@@ -149,6 +149,9 @@ NC.Support = function() {
 		 * display the selected patient
 		 */
 		selectPatient : function(patientId, successFunction) {
+			if (patientId === undefined || patientId == '') {
+				throw new Error('Cannot select patient since there is no patient to select');
+			}
 			_ajax.postSynchronous('/user/' + patientId + '/select', null, successFunction);
 		},
 		

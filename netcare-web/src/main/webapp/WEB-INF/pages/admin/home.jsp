@@ -38,7 +38,7 @@
 					util.updateCurrentPatient(name);
 				}
 				
-				var _ra
+				var _ra = null;
 				var msgs;
 				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,comments.sendComment,alarm.delete', function(messages) {
 					msgs = messages;
@@ -50,13 +50,26 @@
 						$('#latest-activities tbody').append(row);	
 					},
 					function(data) {
+						
+						NC.log('Send comment icon clicked');
+						
 						$('#commentActivity').modal('show');
 						$('#commentActivity a.btn-primary').click(function(e) {
+							
+							NC.log('Submit comment');
+							
 							e.preventDefault();
 							
 							var val = $('#commentActivity input[name="comment"]').val();
+							NC.log('Comment value is ' + val);
+							
+							if (val.length == 0) {
+								$('#commentActivity').modal('hide');
+								return;
+							}
 							
 							_ra.sendComment(data.id, val, function() {
+								NC.log('Comment completed.');
 								$('#commentActivity input[name="comment"]').val('');
 								$('#commentActivity').modal('hide');
 								

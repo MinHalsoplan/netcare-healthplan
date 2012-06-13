@@ -76,7 +76,7 @@
 			 * to happen
 			 */
 			window.location = NC.getContextPath() + '/netcare/admin/healthplan/new';
-		}
+		};
 		
 		/*
 		 * When the user presses enter in the search field will cause
@@ -96,7 +96,7 @@
 			selectPatient(event);
 		});
 		
-		var currentPatient = "<c:out value="${sessionScope.currentPatient.name}" />"
+		var currentPatient = '<c:out value="${sessionScope.currentPatient.name}" />';
 		if (currentPatient.length == 0) {
 			$('#workWith').hide();
 		}
