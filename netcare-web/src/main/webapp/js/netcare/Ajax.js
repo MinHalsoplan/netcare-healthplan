@@ -15,16 +15,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 NC.Ajax = function() {
-	
+
 	var _contextPath = NC.getContextPath();
 	var _basePath = '/api';
-	
+
 	var _dataType = 'json';
 	var _contentType = 'application/json'
-	
-	var _util = new NC.Util();
+
+		var _util = new NC.Util();
 	var _pm = new NC.PageMessages();
-		
+
 	var _defaultSuccess = function(data, show, callback) {
 		/*
 		 * Show results
@@ -32,7 +32,7 @@ NC.Ajax = function() {
 		if (show) {
 			_pm.processServiceResult(data);
 		}
-		
+
 		/*
 		 * Execute callback 
 		 */
@@ -42,7 +42,7 @@ NC.Ajax = function() {
 			NC.log("Call was not successful. Data success: " + data.success + " Callback: " + callback);
 		}
 	};
-	
+
 	var _showMessages = function(show) {
 		var showMessages;
 		if (show === undefined || show == null || show == false) {
@@ -50,10 +50,10 @@ NC.Ajax = function() {
 		} else {
 			showMessages = true;
 		}
-		
+
 		return showMessages;
 	};
-	
+
 	var _getDefaultOpts = function(url, callback, displayMessages) {
 		NC.log("==== AJAX GET " + url + " ====");
 		return {
@@ -64,19 +64,28 @@ NC.Ajax = function() {
 			}
 		}
 	};
-	
+
 	var _getDefaultPostOpts = function(url, callback, displayMessages) {
 		NC.log("==== AJAX POST " + url + " ====");
-		
+
 		return {
 			url : url,
 			type : 'post',
-			success : function(data) {
+			success : function(data, textStatus, jqHXR) {
 				_defaultSuccess(data, _showMessages(displayMessages), callback);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				NC.log("Error : " + textStatus);
+				// FIXME: quick fix - at least display an error message. 
+				if (textStatus == 'parsererror') {
+					var m = new Object();
+					m.message = 'Åtgärden misslyckades pga. ett inmatningsfel, var vänlig kontrollera indata och försök igen';
+					_pm.addMessage('error', [ m ]);
+				}
 			}
 		}
 	}
-	
+
 	public = {
 			/**
 			 * Execute a GET request
@@ -85,22 +94,22 @@ NC.Ajax = function() {
 				var call = _contextPath + _basePath + url;
 				$.ajax(_getDefaultOpts(call, callback, displayMessages));
 			},
-			
+
 			getWithParams : function(url, data, callback, displayMessages) {
 				var opts = _getDefaultOpts(_contextPath + _basePath + url, callback, displayMessages);
 				opts.data = data;
-				
+
 				$.ajax(opts);
 			},
-			
+
 			getWithParamsSynchronous : function(url, data, callback, displayMessages) {
 				var opts = _getDefaultOpts(_contextPath + _basePath + url, callback, displayMessages);
 				opts.data = data;
 				opts.async = false;
-				
+
 				$.ajax(opts);
 			},
-			
+
 			post : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
@@ -109,10 +118,10 @@ NC.Ajax = function() {
 				if (data != null) {
 					opts.data = JSON.stringify(data);
 				}
-				
+
 				$.ajax(opts);
 			},
-			
+
 			postWithParams : function(url, data, callback, displayMessage) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessage);
@@ -120,10 +129,10 @@ NC.Ajax = function() {
 				if (data != null) {
 					opts.data = data;
 				}
-				
+
 				$.ajax(opts);
 			},
-			
+
 			postSynchronous : function(url, data, callback, displayMessages) {
 				var call = _contextPath + _basePath + url;
 				var opts = _getDefaultPostOpts(call, callback, displayMessages);
@@ -133,10 +142,10 @@ NC.Ajax = function() {
 				if (data != null) {
 					opts.data = JSON.stringify(data);
 				}
-				
+
 				$.ajax(opts);
 			}
 	};
-	
+
 	return public;
 }
