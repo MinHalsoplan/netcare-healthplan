@@ -73,7 +73,7 @@ public class PatientApi extends ApiSupport {
 		ServiceResult<ScheduledActivity[]> activitiesForPatient = planService.getActivitiesForPatient(pv);
 		
 		for (final ScheduledActivity a : activitiesForPatient.getData()) {
-			log.debug("Returining {} reported {} due {}", new Object[] {a.getId(), a.getReported(), a.isDue()});
+			log.debug("Returning {} reported {} due {}", new Object[] {a.getId(), a.getReported(), a.isDue()});
 		}
 		
 		return activitiesForPatient;
