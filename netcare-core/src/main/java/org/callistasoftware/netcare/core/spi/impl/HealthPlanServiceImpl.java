@@ -415,12 +415,16 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		
 		this.verifyReadAccess(entity);
 		
+		log.info("latest reports: start: {}, end: {}, unit: \"{}\"", new Object[] { start, end, entity.getHsaId() });
+
 		final List<ScheduledActivityEntity> activities;
 		if (start == null || end == null) {
 			activities = this.scheduledActivityRepository.findByCareUnit(entity.getHsaId());
 		} else {
 			activities = this.scheduledActivityRepository.findByCareUnitBetween(entity.getHsaId(), start, end);
 		}
+
+		log.info("latest reports: found {} activities", activities.size());
 		
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
 	}

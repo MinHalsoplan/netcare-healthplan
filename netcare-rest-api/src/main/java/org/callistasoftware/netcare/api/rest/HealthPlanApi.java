@@ -21,6 +21,7 @@ import java.util.Date;
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -135,8 +136,8 @@ public class HealthPlanApi extends ApiSupport {
 		long n = System.currentTimeMillis();
 		final Date start = new Date(n - DateUtil.MILLIS_PER_DAY);
 		final Date end = new Date(n);
-		
-		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit(), start, end);
+		final CareUnit unit = ((CareGiverBaseView)this.getUser()).getCareUnit();
+		return this.service.loadLatestReportedForAllPatients(unit, start, end);
 	}
 	
 	@RequestMapping(value="/activity/reported/all", method=RequestMethod.GET, produces="application/json")

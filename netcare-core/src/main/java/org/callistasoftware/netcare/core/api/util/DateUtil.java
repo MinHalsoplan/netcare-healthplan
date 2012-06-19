@@ -21,8 +21,8 @@ import java.util.Date;
 
 public final class DateUtil {
 
-	public static final long MILLIS_PER_MINUTE = 60000;
-	public static final long MILLIS_PER_HOUR = 600000;
+	public static final long MILLIS_PER_MINUTE = (60L * 1000L);
+	public static final long MILLIS_PER_HOUR = (60L * MILLIS_PER_MINUTE);
 	public static final long MILLIS_PER_DAY = MILLIS_PER_HOUR * 24;
 	
 	public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
