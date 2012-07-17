@@ -65,7 +65,7 @@
 							mobile.createReportField(id
 									, $('#reportForm')
 									, v.measurementDefinition.measurementType.name
-									, (v.measurementDefinition.maxTarget + v.measurementDefinition.minTarget) / 2);
+									, Math.round((v.measurementDefinition.maxTarget + v.measurementDefinition.minTarget) / 2));
 						} else {
 							mobile.createReportField(id
 									, $('#reportForm')

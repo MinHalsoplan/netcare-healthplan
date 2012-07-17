@@ -18,7 +18,8 @@ NC.Mobile = function() {
 		
 	var validateNumericField = function(numericField, maxLen) {
 		numericField.keypress(function(event) {
-			if (numericField.val().length >= maxLen || event.which < 48 || event.which > 57) {
+			if (numericField.val().length >= maxLen || 
+					!((event.which == 46 && numericField.val().indexOf('.') == -1) || (event.which >= 48  && event.which <= 57))) { 
 				event.preventDefault();
 				numericField.css('background', '#F2DEDE');
 				setTimeout(function() {
@@ -28,7 +29,7 @@ NC.Mobile = function() {
 				numericField.css('background', 'white');
 			}
 		});
-	}
+	};
 
 	var public = {
 			
