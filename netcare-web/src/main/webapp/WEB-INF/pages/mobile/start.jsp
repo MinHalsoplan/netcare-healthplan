@@ -40,7 +40,7 @@
 					mobile.createListHeader($('#schema'), value.day.value + '<br/>' + value.date);
 				}
 				
-				mobile.createListRow($('#schema'), '#report', value, loadActivity);
+				mobile.createListRow($('#schema'), '#report', value, loadActivity, reportedLabel);
 			};
 		
 			var loadActivity = function(activityId) {
