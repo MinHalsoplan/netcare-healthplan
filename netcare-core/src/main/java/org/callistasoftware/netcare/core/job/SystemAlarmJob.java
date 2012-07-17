@@ -180,10 +180,12 @@ public class SystemAlarmJob {
 				List<ScheduledActivityEntity> sal = hpe.performRenewal();
 				hpRepo.save(hpe);
 				saRepo.save(sal);
-			} else {
+			} else if (!hpe.isReminderDone()) {
 				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId());
 				ae.setInfo(hpe.getName());
 				al.add(ae);
+				hpe.setReminderDone(true);
+				hpRepo.save(hpe);
 			}
 		}
 		log.info("Alarm plan job ready: {} new plan alarms!", al.size());

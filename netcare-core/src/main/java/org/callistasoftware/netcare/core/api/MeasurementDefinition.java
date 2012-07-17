@@ -33,16 +33,16 @@ public interface MeasurementDefinition {
 	/**
 	 * Returns target if not an interval.
 	 */
-	int getTarget();
+	float getTarget();
 	
 	/**
 	 * Returns min target if there is an interval.
 	 */
-	int getMinTarget();
+	float getMinTarget();
 	
 	/**
 	 * Returns max target if there is an interval.
 	 */
-	int getMaxTarget();
+	float getMaxTarget();
 
 }

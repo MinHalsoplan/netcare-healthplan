@@ -134,7 +134,8 @@ public class HealthPlanApi extends ApiSupport {
 		this.logAccess("load", "reported activities");
 		
 		long n = System.currentTimeMillis();
-		final Date start = new Date(n - DateUtil.MILLIS_PER_DAY);
+		// three days back
+		final Date start = new Date(n - 3*DateUtil.MILLIS_PER_DAY);
 		final Date end = new Date(n);
 		final CareUnit unit = ((CareGiverBaseView)this.getUser()).getCareUnit();
 		return this.service.loadLatestReportedForAllPatients(unit, start, end);

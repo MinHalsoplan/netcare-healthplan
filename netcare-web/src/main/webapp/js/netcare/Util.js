@@ -152,7 +152,8 @@ NC.Util = function() {
 
 			numericField.keypress(function(event) {
 				var val = numericField.val();
-				if (val.length >= maxLen || !public.isNumeric(event.which)) {
+				// FIXME: just terrible logic!
+				if (val.length >= maxLen || !((event.which == 46 && numericField.val().indexOf('.') == -1) || public.isNumeric(event.which))) {
 					event.preventDefault();
 					numericField.css('background', '#F2DEDE');
 					setTimeout(function() {

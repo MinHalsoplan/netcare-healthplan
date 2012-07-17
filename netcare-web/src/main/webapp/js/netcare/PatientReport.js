@@ -19,7 +19,6 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _schemaCount = 0;
 	
 	var _tableId = tableId;
-	var _lastUpdatedId = -1;
 	var _dueActivities;
 	var _shortVersion = shortVersion;
 	var _captions;
@@ -41,18 +40,18 @@ NC.PatientReport = function(tableId, shortVersion) {
 		} else {
 			$('#' + _tableId).show();
 		}
-	}
+	};
 	
 	
 	var _lineColor = function(value) {
-		if ((value.due && value.reported == null)) {
+		if (value.due && value.reported == null) {
 			return 'red';
 		} else if (_today == value.date) {
 			return 'blue';
 		} else {
 			return 'gray';
 		}		
-	}
+	};
 		
 	var _reportText = function(value) {
 		if (value.reported != null) {
@@ -60,11 +59,9 @@ NC.PatientReport = function(tableId, shortVersion) {
 		} else {
 			return '&nbsp;';
 		}
-	}
+	};
 	
 	var _render = function(data) {
-		var curDay = '';
-		var curActivity = '';
 		_dueActivities = new Array();
 		
 		$.each(data, function(index, value) {
@@ -99,7 +96,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 		});
 		
 		return true;
-	}
+	};
 	
 	var createButtons = function(act) {
 		var div = $('<div>');
@@ -178,7 +175,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				_util.validateNumericField(input, 6);
 				
 				if (type.valueType.code == 'INTERVAL') {
-					input.attr('value', act.reported != null ? m.reportedValue : Math.round((m.maxTarget + m.minTarget) / 2) );
+					input.attr('value', act.reported != null ? m.reportedValue : Math.round((m.maxTarget + m.minTarget) / 2.0) );
 				} else {
 					input.attr('value', act.reported != null ? m.reportedValue : m.target);
 				}
@@ -220,7 +217,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 		div.append(cbtn);
 		
 		return div;
-	}
+	};
 	
 
 	
@@ -266,7 +263,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 				for (var i = 0; i < nValues; i++) {
 					var value = new Object();
 					value.seqno = i+1;
-					value.value = parseInt($('#reportFormDiv input[name="mval-' + value.seqno + '"]').val());
+					value.value = parseFloat($('#reportFormDiv input[name="mval-' + value.seqno + '"]').val());
 					rep.values.push(value);
 				}
 

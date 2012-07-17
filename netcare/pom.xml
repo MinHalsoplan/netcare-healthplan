@@ -297,6 +297,7 @@
 	  					<exclude>**/*bootstrap*</exclude>
 	  					<exclude>**/*json2*</exclude>
 	  					<exclude>**/*.xsd</exclude>
+	  					<exclude>**/scripts/*</exclude>
 	  				</excludes>
 	  				<mapping>
 	  					<tag>DYNASCRIPT_STYLE</tag>

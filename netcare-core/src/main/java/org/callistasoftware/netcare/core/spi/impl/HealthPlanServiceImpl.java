@@ -699,7 +699,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	private static String toICalDuration(ActivityDefinitionEntity ad) {	
 		int minutes = 30;
 		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
-			int target = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md.getMaxTarget() : md.getTarget();
+			float t = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md.getMaxTarget() : md.getTarget();
+			int target = Math.round(t);
+			
 			switch (md.getMeasurementType().getUnit()) {
 			case STEP:
 				minutes = Math.max(target / 50, minutes);

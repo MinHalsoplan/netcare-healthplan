@@ -49,16 +49,16 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 	private MeasurementDefinitionEntity measurementDefinition;
 
 	@Column(name="target")
-	private int target;
+	private float target;
 	
 	@Column(name="min_target")
-	private int minTarget;
+	private float minTarget;
 	
 	@Column(name="max_target")
-	private int maxTarget;
+	private float maxTarget;
 
 	@Column(name="reported_value")
-	private int reportedValue;
+	private float reportedValue;
 
 
 	MeasurementEntity() {
@@ -96,31 +96,31 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 		this.measurementDefinition = measurementDefinition;
 	}
 
-	public int getTarget() {
+	public float getTarget() {
 		return target == -1 ? getMeasurementDefinition().getTarget() : target;
 	}
 
-	public void setTarget(int target) {
+	public void setTarget(float target) {
 		this.target = target;
 	}
 
-	public int getMinTarget() {
+	public float getMinTarget() {
 		return minTarget == -1 ? getMeasurementDefinition().getMinTarget() : minTarget;
 	}
 
-	public void setMinTarget(int minTarget) {
+	public void setMinTarget(float minTarget) {
 		this.minTarget = minTarget;
 	}
 
-	public int getMaxTarget() {
+	public float getMaxTarget() {
 		return maxTarget == -1 ? getMeasurementDefinition().getMaxTarget() : maxTarget;
 	}
 
-	public void setMaxTarget(int maxTarget) {
+	public void setMaxTarget(float maxTarget) {
 		this.maxTarget = maxTarget;
 	}
 
-	public int getReportedValue() {
+	public float getReportedValue() {
 		return reportedValue;
 	}
 
@@ -137,7 +137,7 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 		}		
 	}
 
-	public void setReportedValue(int reportedValue) {
+	public void setReportedValue(float reportedValue) {
 		copyActualTargets();
 		this.reportedValue = reportedValue;
 	}

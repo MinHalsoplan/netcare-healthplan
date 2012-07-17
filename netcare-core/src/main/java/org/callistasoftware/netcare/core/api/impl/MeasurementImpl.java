@@ -24,10 +24,10 @@ public class MeasurementImpl implements Measurement {
 
 	private Long id;
 	private MeasurementDefinition measurementDefinition;
-	private int target;
-	private int maxTarget;
-	private int minTarget;
-	private int reportedValue;
+	private float target;
+	private float maxTarget;
+	private float minTarget;
+	private float reportedValue;
 	
 	public static Measurement newFromEntity(MeasurementEntity entity) {
 		MeasurementImpl m = new MeasurementImpl();
@@ -51,19 +51,19 @@ public class MeasurementImpl implements Measurement {
 		this.measurementDefinition = measurementDefinition;
 	}
 
-	public void setTarget(int target) {
+	public void setTarget(float target) {
 		this.target = target;
 	}
 
-	public void setMaxTarget(int maxTarget) {
+	public void setMaxTarget(float maxTarget) {
 		this.maxTarget = maxTarget;
 	}
 
-	public void setMinTarget(int minTarget) {
+	public void setMinTarget(float minTarget) {
 		this.minTarget = minTarget;
 	}
 
-	public void setReportedValue(int reportedValue) {
+	public void setReportedValue(float reportedValue) {
 		this.reportedValue = reportedValue;
 	}
 
@@ -73,22 +73,22 @@ public class MeasurementImpl implements Measurement {
 	}
 
 	@Override
-	public int getTarget() {
+	public float getTarget() {
 		return target;
 	}
 
 	@Override
-	public int getMinTarget() {
+	public float getMinTarget() {
 		return minTarget;
 	}
 
 	@Override
-	public int getMaxTarget() {
+	public float getMaxTarget() {
 		return maxTarget;
 	}
 
 	@Override
-	public int getReportedValue() {
+	public float getReportedValue() {
 		return reportedValue;
 	}
 

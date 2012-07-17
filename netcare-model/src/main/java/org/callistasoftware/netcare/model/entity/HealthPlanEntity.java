@@ -67,6 +67,10 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="iteration")
 	private int iteration;
 	
+	@Column(name="reminder_done")
+	private boolean reminderDone;
+
+	
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
 	private CareGiverEntity issuedBy;
@@ -86,6 +90,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	HealthPlanEntity() {
 		activityDefinitions = new LinkedList<ActivityDefinitionEntity>();
 		iteration = 0;
+		reminderDone = false;
 	}
 	
 
@@ -236,6 +241,9 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 				list.addAll(ad.scheduleActivities0(newStartDate));
 			}
 		}
+		
+		setReminderDone(false);
+		
 		return list;
 	}
 
@@ -292,6 +300,21 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	private void setIteration(int iteration) {
 		this.iteration = iteration;
 		calculateEnd();
+	}
+
+
+	/**
+	 * Returns if a reminder has been sent for this plan (one per plan period only).
+	 * 
+	 * @return true if a reminder has been raised, otherwise false.
+	 */
+	public boolean isReminderDone() {
+		return reminderDone;
+	}
+
+	//
+	public void setReminderDone(boolean reminderDone) {
+		this.reminderDone = reminderDone;
 	}
 
 }

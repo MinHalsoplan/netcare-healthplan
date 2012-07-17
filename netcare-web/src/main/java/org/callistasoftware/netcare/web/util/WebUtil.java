@@ -268,7 +268,7 @@ public final class WebUtil {
 							md.setTarget(1600);
 						}
 					} else {
-						currentWeight = (currentWeight == 0) ? m.getMeasurementDefinition().getMaxTarget() + 2 : currentWeight - 1;
+						currentWeight = (int) ((currentWeight == 0) ? m.getMeasurementDefinition().getMaxTarget() + 2 : currentWeight - 1);
 						target = currentWeight;
 						diff = (Math.random() < 0.3) ? -1 : 1;
 					}

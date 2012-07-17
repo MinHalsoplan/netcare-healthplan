@@ -26,7 +26,7 @@ import java.io.Serializable;
 public class Value implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int seqno;
-	private int value;
+	private float value;
 	
 	public Value() {}
 	
@@ -36,7 +36,7 @@ public class Value implements Serializable {
 	}
 
 	//
-	public void setValue(int value) {
+	public void setValue(float value) {
 		this.value = value;
 	}
 
@@ -51,7 +51,7 @@ public class Value implements Serializable {
 	/**
 	 * Returns the actual value.
 	 */
-	public int getValue() {
+	public float getValue() {
 		return value;
 	}
 }

@@ -23,9 +23,9 @@ import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 public class MeasurementDefinitionImpl implements MeasurementDefinition {
 	private Long id;
 	private MeasurementType measurementType;
-	private int target;
-	private int maxTarget;
-	private int minTarget;
+	private float target;
+	private float maxTarget;
+	private float minTarget;
 
 	//
 	public static MeasurementDefinition newFromEntity(MeasurementDefinitionEntity entity) {
@@ -49,7 +49,7 @@ public class MeasurementDefinitionImpl implements MeasurementDefinition {
 	}
 
 	@Override
-	public int getTarget() {
+	public float getTarget() {
 		return target;
 	}
 	
@@ -62,25 +62,25 @@ public class MeasurementDefinitionImpl implements MeasurementDefinition {
 		this.id = id;
 	}
 
-	public void setTarget(int target) {
+	public void setTarget(float target) {
 		this.target = target;
 	}
 
-	public void setMaxTarget(int maxTarget) {
+	public void setMaxTarget(float maxTarget) {
 		this.maxTarget = maxTarget;
 	}
 
-	public void setMinTarget(int minTarget) {
+	public void setMinTarget(float minTarget) {
 		this.minTarget = minTarget;
 	}
 
 	@Override
-	public int getMinTarget() {
+	public float getMinTarget() {
 		return minTarget;
 	}
 
 	@Override
-	public int getMaxTarget() {
+	public float getMaxTarget() {
 		return maxTarget;
 	}
 

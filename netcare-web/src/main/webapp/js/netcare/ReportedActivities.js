@@ -56,7 +56,14 @@ NC.ReportedActivities = function(messages) {
 						report.reportedAt = v.reported;
 						report.healthPlan = new Object();
 						report.healthPlan.id = v.definition.healthPlanId;
-						report.healthPlan.name = v.definition.healthPlanName
+						report.healthPlan.name = v.definition.healthPlanName;
+						report.measuringSense = v.definition.type.measuringSense;
+						if (report.measuringSense) {
+							report.sense = v.sense;
+							report.senseLow = v.definition.type.minScaleText;
+							report.senseHigh = v.definition.type.maxScaleText;
+						}
+						report.note = v.note;
 						report.measurements = v.measurements;
 						
 						arr.push(report);
@@ -80,7 +87,7 @@ NC.ReportedActivities = function(messages) {
 					
 					row.append(
 						$('<td>').html(v.activity.name)		
-					)
+					);
 					
 					var resultIcon = _util.createIcon('results', 24, function() {
 						
@@ -102,14 +109,17 @@ NC.ReportedActivities = function(messages) {
 					row.append(
 						$('<td>').append(resultIcon).append(editIcon)
 					);
-					
+					var note = "Anm: "+ v.note;
+					if (v.measuringSense) {
+						note += "\nKänsla: " + v.senseLow + "-" + v.senseHigh + " [1-10]: " + v.sense;
+					}
 					var measures = _util.formatMeasurements(_msgs['report.reject'], v.rejected, v.measurements);
 					row.append(
-						$('<td>').css('font-size', '11px').css('background-color', measures.alarm ? '#F2DEDE' : '#DFF0D8').html(measures.html)
+						$('<td>').css('font-size', '11px').css('background-color', measures.alarm ? '#F2DEDE' : '#DFF0D8').attr('title', note).html(measures.html)
 					);
 					
 					row.append(
-						$('<td>').html(v.reportedAt)		
+						$('<td>').html(v.reportedAt)
 					);
 					
 					var commentIcon = _util.createIcon('send-message', 24, function() {
