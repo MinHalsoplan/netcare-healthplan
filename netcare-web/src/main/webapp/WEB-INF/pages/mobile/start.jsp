@@ -56,6 +56,8 @@
 					} else {
 						$('#slider-div').hide();
 					}
+					
+					var reported = (data.data.reported != null);
 					$.each(data.data.measurements, function(i, v) {
 						
 						var id = 'report-' + v.measurementDefinition.measurementType.seqno;
@@ -65,17 +67,18 @@
 							mobile.createReportField(id
 									, $('#reportForm')
 									, v.measurementDefinition.measurementType.name
-									, Math.round((v.measurementDefinition.maxTarget + v.measurementDefinition.minTarget) / 2));
+									, reported ? v.reportedValue : Math.round((v.measurementDefinition.maxTarget + v.measurementDefinition.minTarget) / 2));
 						} else {
 							mobile.createReportField(id
 									, $('#reportForm')
 									, v.measurementDefinition.measurementType.name
-									, v.measurementDefinition.target);
+									, reported ? v.reportedValue : v.measurementDefinition.target);
 						}
 					});
 					
 					$('#date').val(data.data.date);
 					$('#time').val(data.data.time);
+					$('#note').val(data.data.note);
 				});
 				
 				/*
