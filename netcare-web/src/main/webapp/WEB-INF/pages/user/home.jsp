@@ -16,22 +16,33 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c_rt" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript">
 			google.load('visualization', '1', {
 				packages : [ 'gauge' ]
 			});
 		</script>
 		
+		<script type="text/javascript" src="<c:url value="/js/netcare.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/Util.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/Support.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/Ajax.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/PageMessages.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/HealthPlan.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/PatientReport.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/js/netcare/PatientHome.js" />"></script>
+	
 		<script type="text/javascript">
 			 var home;
 			 
@@ -190,7 +201,33 @@
 			});
 
 		</script>
-	</netcare:header>
+	</mvk:header>
+	<mvk:body>
+		
+		<mvk:pageHeader title="Min hälsoplan"
+		loggedInUser="Testar Test"
+		loggedInAsText="Inloggad som : "
+		logoutUrl="/netcare/security/logout"
+		logoutText="Logga ut" />
+		
+		<mvk:pageContent>
+			<mvk:leftMenu>
+				<mvk:menuItem active="true" label="Test" />
+				<mvk:menuItem label="Another test" />
+			</mvk:leftMenu>
+			<mvk:content title="Startsida">
+			
+			</mvk:content>
+		</mvk:pageContent>
+		
+		<mvk:pageFooter>
+		
+		</mvk:pageFooter>
+	</mvk:body>
+</mvk:page>
+
+<%-- <netcare:page>
+	
 	<netcare:body>
 		<netcare:content>
 			<div id="sendReply" class="modal hide fade" style="display: none;">
@@ -277,3 +314,4 @@
 		</netcare:content>
 	</netcare:body>
 </netcare:page>
+--%>

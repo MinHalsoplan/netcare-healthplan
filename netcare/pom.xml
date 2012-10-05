@@ -26,10 +26,14 @@
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	
+  	<!-- Default profile -->
+  	<system.mode>test</system.mode>
+  	<database.mode>db-embedded</database.mode>
+  	
   	<!-- Versions -->
-  	<spring.version>3.1.1.RELEASE</spring.version>
+  	<spring.version>3.1.2.RELEASE</spring.version>
   	<spring.data.version>1.0.1.RELEASE</spring.data.version>
-  	<spring.security.version>3.1.0.RELEASE</spring.security.version>
+  	<spring.security.version>3.1.2.RELEASE</spring.security.version>
   	<hibernate.version>3.6.7.Final</hibernate.version>
   	<hsqldb.version>1.8.0.10</hsqldb.version>
   	<cxf.version>2.5.2</cxf.version>
