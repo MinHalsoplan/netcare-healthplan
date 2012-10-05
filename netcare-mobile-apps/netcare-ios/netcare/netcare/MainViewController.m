@@ -26,6 +26,7 @@
 @synthesize personNumberTextEdit;
 @synthesize pinCodeTextEdit;
 @synthesize nextPageButton;
+@synthesize loginButton;
 
 - (void)didReceiveMemoryWarning
 {
@@ -171,11 +172,13 @@
     {
         [self showAuthError:code];
     }
+    [loginButton setEnabled:YES];
 }
 
 
 //
 - (IBAction)login:(id)sender {
+    [loginButton setEnabled:NO];
     NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
     [self savePersonalNumber];
     [self startAuthentication];
