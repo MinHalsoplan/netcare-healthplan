@@ -23,6 +23,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<table id="${id}" class="table table-bordered table-striped shadow-box" style="${style}">
+<table id="${id}" class="table table-striped" style="${style}">
 	<jsp:doBody />
 </table>
