@@ -22,12 +22,12 @@ NC.PageMessages = function() {
 		}
 		
 		// don't annoy user with info messages
-		if (type == 'info' || type == 'success') {
-			$.each(msg, function(i, v) {
-				NC.log(v.type + ": " + v.message);				
-			});
-			return;
-		}
+//		if (type == 'info' || type == 'success') {
+//			$.each(msg, function(i, v) {
+//				NC.log(v.type + ": " + v.message);				
+//			});
+//			return;
+//		}
 		
 		var exist = $('#pageMessages div[class*="' + type + '"]').size() == 1;
 		if (!exist) {

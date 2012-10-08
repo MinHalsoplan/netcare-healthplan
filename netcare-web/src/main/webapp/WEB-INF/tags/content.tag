@@ -16,14 +16,28 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
 
-<div class="span9">
+<div class="span7">
+	<div id="pageMessages">
+		<c:if test="${not empty requestScope.result and empty requestScope.hideMessages}">
+			<%-- Display any messages that we have --%>
+			<c:forEach items="${requestScope.result.errorMessages}" var="error">
+				<netcare:message type="error" message="${error.message}" />
+			</c:forEach>
+
+			<c:forEach items="${requestScope.result.warningMessages}" var="warning">
+				<netcare:message type="warning" message="${warning.message}" />
+			</c:forEach>
+
+			<c:forEach items="${requestScope.result.infoMessages}" var="info">
+				<netcare:message type="success" message="${info.message}" />
+			</c:forEach>
+		</c:if>
+	</div>
 	<jsp:doBody />
 </div>
-
-<netcare:menu />
