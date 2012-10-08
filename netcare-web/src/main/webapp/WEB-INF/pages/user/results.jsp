@@ -27,6 +27,9 @@
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<netcare:js />
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		
 		<script type="text/javascript">
 			google.load('visualization', '1.0', {'packages' : ['corechart']});
 
@@ -143,7 +146,7 @@
 				<mvk:menuItem label="Resultatöversikt" url="${results}" />
 			</mvk:leftMenu>
 		
-			<mvk:content>
+			<mvk:content title="Resultat">
 				<netcare:content>
 					<h2><spring:message code="result.title" /></h2>
 					<p>
