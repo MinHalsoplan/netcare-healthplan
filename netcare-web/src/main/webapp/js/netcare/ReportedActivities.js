@@ -140,4 +140,4 @@ NC.ReportedActivities = function(messages) {
 	};
 	
 	return public;
-}
+};

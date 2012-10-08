@@ -21,7 +21,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _tableId = tableId;
 	var _dueActivities;
 	var _shortVersion = shortVersion;
-	var _captions;
+	var _captions = null;
 	var _reportCallback = null;
 		
 	var _today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );

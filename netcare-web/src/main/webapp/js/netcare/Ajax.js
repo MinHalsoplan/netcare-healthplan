@@ -20,9 +20,8 @@ NC.Ajax = function() {
 	var _basePath = '/api';
 
 	var _dataType = 'json';
-	var _contentType = 'application/json'
+	var _contentType = 'application/json';
 
-	var _util = new NC.Util();
 	var _pm = new NC.PageMessages();
 
 	var _defaultSuccess = function(data, show, callback) {
@@ -62,7 +61,7 @@ NC.Ajax = function() {
 			success : function(data) {
 				_defaultSuccess(data, _showMessages(displayMessages), callback);
 			}
-		}
+		};
 	};
 
 	var _getDefaultPostOpts = function(url, callback, displayMessages) {
@@ -83,8 +82,8 @@ NC.Ajax = function() {
 					_pm.addMessage('error', [ m ]);
 				}
 			}
-		}
-	}
+		};
+	};
 
 	public = {
 			/**
@@ -148,4 +147,4 @@ NC.Ajax = function() {
 	};
 
 	return public;
-}
+};

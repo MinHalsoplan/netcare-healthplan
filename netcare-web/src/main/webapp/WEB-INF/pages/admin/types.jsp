@@ -355,6 +355,7 @@
 				};
 				
 				var resetForm = function() {
+					measureValues = new Array();
 					$('#measureValues tbody').empty();
 					$('#measureValues').hide();
 					
@@ -425,7 +426,7 @@
 								</netcare:col>
 								<netcare:col span="3">
 									<netcare:field name="maxDescription" label="${maxDesc}">
-										<input type="text" name="maxDescription" id="minDescription" class="xlarge" />
+										<input type="text" name="maxDescription" id="maxDescription" class="xlarge" />
 									</netcare:field>
 								</netcare:col>
 								

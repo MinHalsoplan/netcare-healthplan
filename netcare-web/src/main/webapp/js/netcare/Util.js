@@ -16,7 +16,7 @@
  */
 NC.Util = function() {
 	/** loadCaptions must be used prior to use functions with captions required. */
-	var _captions;
+	var _captions = null;
 	
 	/**
 	 * Loads captions used by util.
@@ -153,7 +153,7 @@ NC.Util = function() {
 			numericField.keypress(function(event) {
 				var val = numericField.val();
 				// FIXME: just terrible logic!
-				if (val.length >= maxLen || !((event.which == 46 && numericField.val().indexOf('.') == -1) || public.isNumeric(event.which))) {
+				if (val.length >= maxLen || !((event.which == 46 && numericField.val().indexOf('.') == -1) || isNumeric(event.which))) {
 					event.preventDefault();
 					numericField.css('background', '#F2DEDE');
 					setTimeout(function() {
@@ -178,23 +178,23 @@ NC.Util = function() {
 				var text = timeField.val();
 				
 				NC.log("Character count: " + text.length);
-				if (text.length == 0 && !public.isCharAllowed(event.which, [48,49,50])) {
+				if (text.length == 0 && !isCharAllowed(event.which, [48,49,50])) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 1 && !public.isCharAllowed(event.which)) {
+				if (text.length == 1 && !isCharAllowed(event.which)) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 2 && !public.isCharAllowed(event.which, [58])) {
+				if (text.length == 2 && !isCharAllowed(event.which, [58])) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 3 && !public.isCharAllowed(event.which, [48,49,50,51,52,53])) {
+				if (text.length == 3 && !isCharAllowed(event.which, [48,49,50,51,52,53])) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 4 && !public.isCharAllowed(event.which)) {
+				if (text.length == 4 && !isCharAllowed(event.which)) {
 					event.preventDefault();
 				}
 				
@@ -231,7 +231,6 @@ NC.Util = function() {
 		validateFieldNotEmpty : function(input) {
 			if (input.val() == '' || input.val() == null || input.val() == undefined) {
 				var id = input.attr('id');
-				var existingText = $('label[for="' + id + '"]').html();
 				$('label[for="' + id + '"]').parent().addClass('error');
 				return false;
 			}
@@ -264,7 +263,7 @@ NC.Util = function() {
 			switch (activityDefinition.activityRepeat) {
 				case 0: text += _captions.freq0; break;
 				case 1: text += _captions.freq1; break;
-				case 2: text +=_captions.freq2; break;
+				case 2: text += _captions.freq2; break;
 				case 3: text += _captions.freq3; break;
 				case 4: text += _captions.freq4; break;
 				case 5: text += _captions.freq5; break;
@@ -326,7 +325,7 @@ NC.Util = function() {
 				} else {
 					containerDiv.removeClass('error');
 				}
-			})
+			});
 		},
 		
 		/**
@@ -408,7 +407,7 @@ NC.Util = function() {
 			
 			$.each(data, function(index, value) {
 				var target;
-				var alarm;
+				var alarm = false;
 				if (value.measurementDefinition.measurementType.valueType.code == 'INTERVAL') {
 					target = value.minTarget + '-' + value.maxTarget;
 					alarm = (value.reportedValue < value.minTarget || value.reportedValue> value.maxTarget);
@@ -419,13 +418,13 @@ NC.Util = function() {
 					target = value.target;
 				}
 				if (index > 0) {
-					rc.html += '<br/>'
+					rc.html += '<br/>';
 				}
 				
 				var report = alarm ? '<i style="font-weight: bold">' + value.reportedValue + '</i>' : value.reportedValue ;
 				
 				rc.html += value.measurementDefinition.measurementType.name + ':&nbsp;' + report + '&nbsp;' 
-					+ public.formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
+					+ formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
 				
 			});
 			
