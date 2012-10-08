@@ -27,14 +27,14 @@ a:hover {
 }
 
 .alert-info {
-	color: rgb(141,0,23);
+	color: #008391;
 	background-color: #eee;
 	border-color: #eee;
 }
 
 .label-info {
 	background-color: #eee;
-	color: rgb(141,0,23);
+	color: #008391;
 }
 
 .cool .shadow {
@@ -51,15 +51,6 @@ a:hover {
 	box-shadow: 2px 2px 5px #333;
 	background-color: white;
 	text-align: center;
-}
-
-
-.shadow-box {
-	margin: 0px auto;
-	/*padding: 10px;*/
-	width: 95%; 
-	border-radius: 10px; 
-	box-shadow: 2px 2px 5px #333;
 }
 
 h1,
