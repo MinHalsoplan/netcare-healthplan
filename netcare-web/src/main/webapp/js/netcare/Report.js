@@ -21,7 +21,7 @@ NC.Reports = function(statistics, captions) {
 	
 	var _getDefaultOptions = function() {
 		return {
-			'width' : 600,
+			'width' : 550,
 			'height' : 300
 		}
 	};
