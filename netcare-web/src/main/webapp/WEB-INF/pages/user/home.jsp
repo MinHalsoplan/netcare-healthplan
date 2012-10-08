@@ -216,7 +216,7 @@
 				<mvk:menuItem label="Another test" />
 			</mvk:leftMenu>
 			<mvk:content title="Startsida">
-			
+				<p>Hej på dig!</p>
 			</mvk:content>
 		</mvk:pageContent>
 		
