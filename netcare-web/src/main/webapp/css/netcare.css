@@ -103,6 +103,10 @@ fieldset > legend {
 	background-color: #FDF5D9;
 }
 
+h1 {
+	color: #008391;
+}
+
 #maincontainerwrapper {
 	margin: 0;
   	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

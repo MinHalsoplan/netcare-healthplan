@@ -99,10 +99,9 @@
 				<input type="text" name="note" class="input-xlarge" />
 			</netcare:field>
 		<div class="modal-footer">
-			<input type="submit" name="save"
-				value="<spring:message code="report.save" />" class="btn btn-primary" />
+			<input type="submit" name="save" value="<spring:message code="report.save" />" class="btn btn-primary" />
+			</form>
 		</div>
-	</form>
 	</div>
 </div>
 

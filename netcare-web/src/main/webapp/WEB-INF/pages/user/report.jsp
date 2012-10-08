@@ -21,27 +21,50 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				var report = new NC.PatientReport('schemaTable', false);
 				report.init();
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
-			<h2><spring:message code="report.header" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="report.desc" />
-			</p>
+	</mvk:header>
+	<mvk:body>
+		<mvk:pageHeader title="Min hälsoplan"
+			loggedInUser="Testar Test"
+			loggedInAsText="Inloggad som : "
+			logoutUrl="/netcare/security/logout"
+			logoutText="Logga ut" />
 			
-			<netcare:report />	
-		</netcare:content>
-	</netcare:body>
-</netcare:page>
+		<mvk:pageContent>
+			<c:url value="/home" var="start" />
+			<c:url value="/netcare/user/profile" var="profile"/>
+			<c:url value="/netcare/user/report" var="report" />
+			<c:url value="/netcare/user/results" var="results" />
+		
+			<mvk:leftMenu>
+				<mvk:menuItem active="true" label="Startsida" url="${start}" />
+				<mvk:menuItem label="Min Profil" url="${profile}" />
+				<mvk:menuItem label="Rapportera resultat" url="${report}" />
+				<mvk:menuItem label="Resultatöversikt" url="${results}" />
+			</mvk:leftMenu>
+			<mvk:content title="Rapportera resultat">
+				<netcare:content>
+					<h2><spring:message code="report.header" /></h2>
+					<p>
+						<span class="label label-info"><spring:message code="information" /></span>
+						<spring:message code="report.desc" />
+					</p>
+					<netcare:report />	
+				</netcare:content>
+			</mvk:content>
+		</mvk:pageContent>
+	</mvk:body>
+</mvk:page>

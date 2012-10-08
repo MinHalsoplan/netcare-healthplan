@@ -21,11 +21,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
 		<script type="text/javascript">
 			google.load('visualization', '1.0', {'packages' : ['corechart']});
 
@@ -121,28 +122,53 @@
 				google.setOnLoadCallback(drawOverview);
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
-			<h2><spring:message code="result.title" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="result.desc" />
-			</p>
-			<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
+	</mvk:header>
+	<mvk:body>
+		<mvk:pageHeader title="Min hälsoplan"
+			loggedInUser="Testar Test"
+			loggedInAsText="Inloggad som : "
+			logoutUrl="/netcare/security/logout"
+			logoutText="Logga ut" />
 			
-			<section id="filter" style="display:none;">
-				<h2><spring:message code="result.filter" /></h2>
-				<p>
-					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="result.filter.desc" />
-				</p>
-				<form>
-					<netcare:row id="filter-row"></netcare:row>
-				</form>
-			</section>
-			<div id="activities"></div>
-		</netcare:content>
+		<mvk:pageContent>
+			<c:url value="/home" var="start" />
+			<c:url value="/netcare/user/profile" var="profile"/>
+			<c:url value="/netcare/user/report" var="report" />
+			<c:url value="/netcare/user/results" var="results" />
 		
-	</netcare:body>	
-</netcare:page>
+			<mvk:leftMenu>
+				<mvk:menuItem active="true" label="Startsida" url="${start}" />
+				<mvk:menuItem label="Min Profil" url="${profile}" />
+				<mvk:menuItem label="Rapportera resultat" url="${report}" />
+				<mvk:menuItem label="Resultatöversikt" url="${results}" />
+			</mvk:leftMenu>
+		
+			<mvk:content>
+				<netcare:content>
+					<h2><spring:message code="result.title" /></h2>
+					<p>
+						<span class="label label-info"><spring:message code="information" /></span>
+						<spring:message code="result.desc" />
+					</p>
+					<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
+					
+					<section id="filter" style="display:none;">
+						<h2><spring:message code="result.filter" /></h2>
+						<p>
+							<span class="label label-info"><spring:message code="information" /></span>
+							<spring:message code="result.filter.desc" />
+						</p>
+						<form>
+							<netcare:row id="filter-row"></netcare:row>
+						</form>
+					</section>
+					<div id="activities"></div>
+				</netcare:content>
+			</mvk:content>
+		</mvk:pageContent>
+		
+		<mvk:pageFooter>
+		
+		</mvk:pageFooter>
+	</mvk:body>	
+</mvk:page>
