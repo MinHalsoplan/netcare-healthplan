@@ -44,5 +44,5 @@ public enum MeasureUnit {
 	MMOL_LITER,
 	QUANTIY,
 	POINTS,
-	PERCENT;
+	PERCENT,
 }

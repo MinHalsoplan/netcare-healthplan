@@ -159,7 +159,7 @@ NC.Util = function() {
 			numericField.keypress(function(event) {
 				var val = numericField.val();
 				// FIXME: just terrible logic!
-				if (val.length >= maxLen || !((event.which == 46 && numericField.val().indexOf('.') == -1) || isNumeric(event.which))) {
+				if (val.length >= maxLen || !((event.which == 46 && numericField.val().indexOf('.') == -1) || public.isNumeric(event.which))) {
 					event.preventDefault();
 					numericField.css('background', '#F2DEDE');
 					setTimeout(function() {
@@ -184,23 +184,23 @@ NC.Util = function() {
 				var text = timeField.val();
 				
 				NC.log("Character count: " + text.length);
-				if (text.length == 0 && !isCharAllowed(event.which, [48,49,50])) {
+				if (text.length == 0 && !public.isCharAllowed(event.which, [48,49,50])) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 1 && !isCharAllowed(event.which)) {
+				if (text.length == 1 && !public.isCharAllowed(event.which)) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 2 && !isCharAllowed(event.which, [58])) {
+				if (text.length == 2 && !public.isCharAllowed(event.which, [58])) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 3 && !isCharAllowed(event.which, [48,49,50,51,52,53])) {
+				if (text.length == 3 && !public.isCharAllowed(event.which, [48,49,50,51,52,53])) {
 					event.preventDefault();
 				}
 				
-				if (text.length == 4 && !isCharAllowed(event.which)) {
+				if (text.length == 4 && !public.isCharAllowed(event.which)) {
 					event.preventDefault();
 				}
 				
@@ -324,7 +324,7 @@ NC.Util = function() {
 				return _units.POINTS;
 			}
 			if (unitOption.code == 'PERCENT') {
-				return _units.PERCENt;
+				return _units.PERCENT;
 			}
 			
 			return unitOption.code;
