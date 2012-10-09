@@ -24,4 +24,4 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<input name="${name}" type="date" placeholder="<spring:message code="pattern.time" />" class="${classes} timeInput" />
+<input name="${name}" type="time" placeholder="<spring:message code="pattern.time" />" class="${classes} timeInput" />

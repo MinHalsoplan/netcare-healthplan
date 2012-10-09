@@ -29,7 +29,6 @@
 		<script type="text/javascript">
 			$(function() {
 				var util = new NC.Util();
-				var support = new NC.Support();
 				
 				/*
 				 * Are we a patient or are a care giver

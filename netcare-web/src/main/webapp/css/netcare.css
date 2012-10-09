@@ -37,6 +37,8 @@ a:hover {
 	color: rgb(141,0,23);
 }
 
+.scroll-items { margin:0 auto; }
+
 .cool .shadow {
 	color: black;
 	border-radius: 10px;

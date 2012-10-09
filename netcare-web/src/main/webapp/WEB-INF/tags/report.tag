@@ -38,7 +38,7 @@
 		</h3>
 		<h5 id="plannedId"></h5>
 	</div>
-	<div class="modal-body">
+	<div class="modal-body scroll-items">
 		<form id="reportFormId">
 			<input type="hidden" name="activityId" />
 			<input type="hidden" name="numValueId" />
@@ -47,11 +47,13 @@
 				<input type="text" name="date" class="input-small" />&nbsp;-
 				<input type="text" name="time" class="input-mini" />				
 			</div>
-			
-			<!--  Space for measurement input -->
-			<table id="measurementTableId" class="table-condensed">
-				<tbody></tbody>
-			</table>
+
+			<div id="inputFields">
+				<!--  Space for measurement input -->
+				<table id="measurementTableId" class="table-condensed">
+					<tbody></tbody>
+				</table>
+			</div>
 
 			<div id="senseSectionId">
 				<spring:message code="report.sense" var="sense" scope="page" />

@@ -17,6 +17,7 @@
 NC.Util = function() {
 	/** loadCaptions must be used prior to use functions with captions required. */
 	var _captions = null;
+	var _units = null;
 	
 	/**
 	 * Loads captions used by util.
@@ -25,13 +26,18 @@ NC.Util = function() {
 		var _support = new NC.Support();
 		
 		_support.loadCaptions('util', ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
-		                               'freq4', 'freq5', 'every', 'meter', 'minute', 
-		                               'step', 'newEvents', 'kilogram', 'gram', 'pressure_mmhg',
-		                               'flow_mlmin', 'milliliter', 'liter'], 
+		                               'freq4', 'freq5', 'every', 'newEvents'], 
 		                               function(data) {
 			_captions = data;
 			NC.log('Localized captions for util loaded.');
 		});
+		_support.loadCaptions(null, ['METER', 'MINUTE', 'STEP', 'KILOGRAM', 'GRAM', 'PRESSURE_MMHG','FLOW_MLMIN', 'MILLILITER', 
+		                               'LITER', 'MMOL_LITER', 'QUANTIY', 'POINTS', 'PERCENT'], 
+		                               function(data) {
+			_units = data;
+			NC.log('Localized captions for util loaded.');
+		});
+
 	};
 	
 	var public = {
@@ -243,7 +249,7 @@ NC.Util = function() {
 		 * Formats a frequency.
 		 */
 		formatFrequency : function (activityDefinition) {
-			if (_captions === undefined) {
+			if (_captions == null) {
 				_loadCaptions();
 			}
 			var text = '';
@@ -278,35 +284,47 @@ NC.Util = function() {
 		}, 
 		
 		formatUnit : function (unitOption) {
-			if (_captions === undefined) {
+			if (_units == null) {
 				_loadCaptions();
 			}
 			if (unitOption.code == 'METER') {
-				return _captions.meter;
+				return _units.METER;
 			}
 			if (unitOption.code == 'MINUTE') {
-				return _captions.minute;
+				return _units.MINUTE;
 			}
 			if (unitOption.code == 'STEP') {
-				return _captions.step;
+				return _units.STEP;
 			}
 			if (unitOption.code == 'KILOGRAM') {
-				return _captions.kilogram;
+				return _units.KILOGRAM;
 			}
 			if (unitOption.code == 'GRAM') {
-				return _captions.gram;
+				return _units.GRAM;
 			}
 			if (unitOption.code == 'PRESSURE_MMHG') {
-				return _captions.pressure_mmhg;
+				return _units.PRESSURE_MMHG;
 			}
 			if (unitOption.code == 'FLOW_MLMIN') {
-				return _captions.flow_mlmin;
+				return _units.FLOW_MLMIN;
 			}
 			if (unitOption.code == 'MILLILITER') {
-				return _captions.milliliter;
+				return _units.MILLILITER;
 			}
 			if (unitOption.code == 'LITER') {
-				return _captions.liter;
+				return _units.LITER;
+			}
+			if (unitOption.code == 'MMOL_LITER') {
+				return _units.MMOL_LITER;
+			}
+			if (unitOption.code == 'QUANTIY') {
+				return _units.QUANTIY;
+			}
+			if (unitOption.code == 'POINTS') {
+				return _units.POINTS;
+			}
+			if (unitOption.code == 'PERCENT') {
+				return _units.PERCENt;
 			}
 			
 			return unitOption.code;
@@ -375,7 +393,7 @@ NC.Util = function() {
 		},
 		
 		getCaptions : function() {
-			if (_captions === undefined) {
+			if (_captions == null) {
 				_loadCaptions();
 			}
 			return _captions;
@@ -424,7 +442,7 @@ NC.Util = function() {
 				var report = alarm ? '<i style="font-weight: bold">' + value.reportedValue + '</i>' : value.reportedValue ;
 				
 				rc.html += value.measurementDefinition.measurementType.name + ':&nbsp;' + report + '&nbsp;' 
-					+ formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
+					+ public.formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
 				
 			});
 			

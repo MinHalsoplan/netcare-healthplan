@@ -88,7 +88,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 					pdata.data = null;
 					_perfData.push(pdata);
 
-					var result = (pdata.numTarget > 0) ? pctDone: -1;
+					var result = (pdata.numTarget > 1) ? pctDone: -1;
 					var icon;
 					if (result == -1) {
 						icon = _util.createIcon("face-smile", 32, null);

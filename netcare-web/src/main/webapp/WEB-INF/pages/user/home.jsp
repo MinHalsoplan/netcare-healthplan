@@ -207,10 +207,10 @@
 						<netcare:field name="reply" label="${reply}:">
 							<input type="text" class="xlarge" name="reply" />
 						</netcare:field>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<input id="sendComment" type="submit" class="btn btn-primary" value="<spring:message code="comments.reply" />" />
-					</form>
 				</div>
 			</div>
 
