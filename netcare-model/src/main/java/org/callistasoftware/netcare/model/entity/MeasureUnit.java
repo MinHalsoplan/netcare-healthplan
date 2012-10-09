@@ -23,7 +23,10 @@ package org.callistasoftware.netcare.model.entity;
  * 
  * Please Note: this unit has to be well known with a well defined semantics in order to provide
  * more qualified user-experience down the road. As an example can the mobile device be used as 
- * a measurement device.
+ * a measurement device. <p>
+ * 
+ * Caution: Modifying this class (change names or add/remove units) most certainly requires you to update
+ * captions in message.properties and also caption mapping at the client side in Util.js (function formatUnit).
  * 
  * @author Peter
  *
