@@ -89,7 +89,7 @@
 								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
 								var phone = $('<td>' + value.phoneNumber + '</td>');
 								
-								var loginAsIcon = $('<button>').addClass('btn btn-primary').html('Välj patient').click(function(e) {
+								var loginAsIcon = $('<button>').addClass('btn btn-info').html('Välj patient').click(function(e) {
 									e.preventDefault();
 									support.selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
@@ -220,7 +220,7 @@
 				</netcare:row>
 				
 				<div class="form-actions">
-					<input type="submit" class="btn btn-primary" value="<spring:message code="create" />" />
+					<input type="submit" class="btn btn-info" value="<spring:message code="create" />" />
 					<input type="reset" class="btn" value="<spring:message code="reset" />" />
 				</div>
 				

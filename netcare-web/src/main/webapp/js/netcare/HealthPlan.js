@@ -129,7 +129,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$('#update-goal-values div.modal-body').append(row.append(inner));
 		});
 		
-		$('#update-goal-values').find('.btn-primary').click(function(e) {
+		$('#update-goal-values').find('.btn-info').click(function(e) {
 			e.preventDefault();
 			
 			var measureValues = new Array();

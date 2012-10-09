@@ -57,7 +57,7 @@
 						NC.log('Send comment icon clicked');
 						
 						$('#commentActivity').modal('show');
-						$('#commentActivity a.btn-primary').click(function(e) {
+						$('#commentActivity a.btn-info').click(function(e) {
 							
 							NC.log('Submit comment');
 							
@@ -76,7 +76,7 @@
 								$('#commentActivity input[name="comment"]').val('');
 								$('#commentActivity').modal('hide');
 								
-								$('#commentActivity a.btn-primary').unbind('click');
+								$('#commentActivity a.btn-info').unbind('click');
 							});
 						});
 					});

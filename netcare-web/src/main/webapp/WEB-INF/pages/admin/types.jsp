@@ -177,7 +177,7 @@
 				
 				var createActionButton = function() {
 					var div = $('<div>').addClass('span1');
-					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-primary').attr('value', captions['label.add']);
+					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-info').attr('value', captions['label.add']);
 					btn.click(function(e) {
 						e.preventDefault();
 						NC.log("Add measure value");
@@ -486,7 +486,7 @@
 						<br />
 						
 						<div class="form-actions">
-							<button id="createActivityType" class="btn btn-primary"><spring:message code="activityType.new" /></button>
+							<button id="createActivityType" class="btn info"><spring:message code="activityType.new" /></button>
 							<button type="reset" class="btn"><spring:message code="clear" /></button>
 						</div>
 						

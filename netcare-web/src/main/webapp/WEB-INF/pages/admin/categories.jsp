@@ -105,7 +105,7 @@
 				</netcare:field>
 				
 				<div class="form-actions">
-					<button type="submit" class="btn btn-primary"><spring:message code="category.new" /></button>
+					<button type="submit" class="btn btn-info"><spring:message code="category.new" /></button>
 					<button type="reset" class="btn"><spring:message code="clear" /></button>
 				</div>
 				

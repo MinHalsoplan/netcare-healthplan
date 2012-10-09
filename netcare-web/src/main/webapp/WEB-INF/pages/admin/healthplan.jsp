@@ -113,21 +113,21 @@
 						if (value.autoRenewal) {
 							renewalIcon = util.createIcon('exit', 24, function() {
 								$('#stop-renewal').modal('show');
-								$('#stop-renewal a.btn-primary').click(function(e) {
+								$('#stop-renewal a.btn-info').click(function(e) {
 									e.preventDefault();
 									healthPlans.stopAutoRenewal(value.id, function(data) {
 										$('#hn-' + value.id).html('<strong>' + data.data.name + '</strong>');
 										renewalIcon.addClass('ui-state-disabled');
 										renewalIcon.unbind('click');
 									});
-									$('#stop-renewal a.btn-primary').unbind('click');
+									$('#stop-renewal a.btn-info').unbind('click');
 									$('#stop-renewal').modal('hide');
 								})
 							}, infoMessages['healthplan.icons.stopRenewal'], true);
 						} else {
 							renewalIcon = util.createIcon('renew', 24, function() {
 								$('#perform-renewal').modal('show');
-								$('#perform-renewal a.btn-primary').click(function(e) {
+								$('#perform-renewal a.btn-info').click(function(e) {
 									e.preventDefault();
 									healthPlans.performExplicitRenewal(value.id, function(data) {
 										NC.log('Renewal : ' + data.data.endDate);
@@ -139,7 +139,7 @@
 										renewalIcon.addClass('ui-state-disabled');
 										renewalIcon.unbind('click');
 									});
-									$('#perform-renewal a.btn-primary').unbind('click');
+									$('#perform-renewal a.btn-info').unbind('click');
 									$('#perform-renewal').modal('hide');
 								})
 							}, infoMessages['healthplan.icons.performRenewal'], true);								
@@ -295,7 +295,7 @@
 				</fieldset>
 				
 				<div class="form-actions">
-					<input type="submit" class="btn btn-primary" value="${newHealthPlan}" />
+					<input type="submit" class="btn info" value="${newHealthPlan}" />
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				
