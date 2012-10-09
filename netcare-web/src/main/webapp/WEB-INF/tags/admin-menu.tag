@@ -128,14 +128,6 @@
 </form>
 
 <div class="span3 menu">
-	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
-	<p>
-		<sec:authentication property="principal.name" /> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
-	</p>
-	<p>
-		<strong><spring:message code="careUnit" />:</strong><br />
-		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
-	</p>
 		
 	<h3 id="patientName" class="menuHeader"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
 	
@@ -165,5 +157,15 @@
 			<li><netcare:image name="new-category" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
 		</ul>
 	</div>
+
+	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
+	<p>
+		<sec:authentication property="principal.name" /> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
+	</p>
+	<p>
+		<strong><spring:message code="careUnit" />:</strong><br />
+		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
+	</p>
+
 </div>
 </body>
