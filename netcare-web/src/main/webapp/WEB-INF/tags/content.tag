@@ -22,7 +22,7 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
 
 
-<div class="span7">
+<div class="row-fluid">
 	<div id="pageMessages">
 		<c:if test="${not empty requestScope.result and empty requestScope.hideMessages}">
 			<%-- Display any messages that we have --%>

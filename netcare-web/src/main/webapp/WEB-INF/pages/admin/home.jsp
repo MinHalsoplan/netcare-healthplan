@@ -22,9 +22,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				var hp = new NC.HealthPlan();
@@ -176,12 +179,27 @@
 				loadReplies();
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
-			
+	</mvk:header>
+	<mvk:body>
+		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
+			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
+
+		<mvk:pageContent>
+			<mvk:leftMenu>
+				<c:url value="/netcare/admin/home" var="start" />
+				<c:url value="/netcare/admin/patients" var="patients" />
+				<c:url value="/netcare/admin/activitytypes" var="activitytypes" />
+				<c:url value="/netcare/admin/categories" var="categories" />
+
+				<mvk:menuItem active="true" label="Startsida" url="${start}" />
+				<mvk:menuItem label="Patienter" url="${patients}" />
+				<mvk:menuItem label="Skapa ny aktivitet" url="${activitytypes}" />
+				<mvk:menuItem label="Skapa ny aktivitetskategori" url="${categories}" />
+			</mvk:leftMenu>
+			<mvk:content title="Start">
+			<netcare:content>
+	
 			<section id="dashboard">
-				<h2>Start</h2>
 				<p>
 					<spring:message code="admin.home.description" />
 				</p>
@@ -283,6 +301,8 @@
 					</netcare:table>
 				</div>
 			</section>
-		</netcare:content>
-	</netcare:body>	
-</netcare:page>
+			</netcare:content>
+			</mvk:content>
+		</mvk:pageContent>
+	</mvk:body>	
+</mvk:page>
