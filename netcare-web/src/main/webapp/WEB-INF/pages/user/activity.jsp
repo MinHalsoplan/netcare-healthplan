@@ -21,11 +21,14 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<netcare:js />
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
 		<script type="text/javascript">
 			$(function() {
 				var util = new NC.Util();
@@ -410,15 +413,35 @@
 				 * on close
 				 */
 				$('#update-goal-values').on('hidden', function() {
-					$(this).find('.btn-primary').unbind('click');
+					$(this).find('.btn-info').unbind('click');
 					$(this).find('h3').html('<spring:message code="activity.update" />');
 					$(this).find('.modal-body').empty();
 				});
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
+	</mvk:header>
+	<mvk:body>
+		<mvk:pageHeader title="Min hälsoplan"
+			loggedInUser="Testar Test"
+			loggedInAsText="Inloggad som : "
+			logoutUrl="/netcare/security/logout"
+			logoutText="Logga ut" />
+			
+		<mvk:pageContent>
+			<c:url value="/home" var="start" />
+			<c:url value="/netcare/user/profile" var="profile"/>
+			<c:url value="/netcare/user/report" var="report" />
+			<c:url value="/netcare/user/results" var="results" />
+		
+			<mvk:leftMenu>
+				<mvk:menuItem active="true" label="Startsida" url="${start}" />
+				<mvk:menuItem label="Min Profil" url="${profile}" />
+				<mvk:menuItem label="Rapportera resultat" url="${report}" />
+				<mvk:menuItem label="Resultatöversikt" url="${results}" />
+			</mvk:leftMenu>
+		
+			<mvk:content title="Resultat">
+			<netcare:content>
 			<c:set var="healthPlanName" value="${requestScope.result.data.name}" scope="page"/>
 			<spring:message code="activity.new" var="title" scope="page" />
 		
@@ -492,7 +515,7 @@
 				</netcare:row>
 				
 				<div class="form-actions">
-					<button type="submit" class="btn btn-primary"><spring:message code="activity.form.submit" /></button>
+					<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
 					<button type="reset" class="btn"><spring:message code="clear" /></button>
 				</div>
 			
@@ -523,5 +546,9 @@
 				</p>
 			</netcare:modal>
 		</netcare:content>
-	</netcare:body>
-</netcare:page>
+		</mvk:content>
+		</mvk:pageContent>
+		<mvk:pageFooter>
+		</mvk:pageFooter>
+	</mvk:body>	
+</mvk:page>

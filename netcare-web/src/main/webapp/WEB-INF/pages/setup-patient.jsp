@@ -76,7 +76,7 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
-					<input class="btn btn-primary" type="submit" value="<spring:message code="setup.proceed" />" />
+					<input class="btn btn-info" type="submit" value="<spring:message code="setup.proceed" />" />
 				</div>
 			</form>	
 		</div>

@@ -235,7 +235,7 @@
 							</netcare:field>
 					</div>
 					<div class="modal-footer">
-						<input id="sendComment" type="submit" class="btn btn-primary" value="<spring:message code="comments.reply" />" />
+						<input id="sendComment" type="submit" class="btn info" value="<spring:message code="comments.reply" />" />
 						</form>
 					</div>
 				</div>
@@ -330,7 +330,7 @@
 						</netcare:field>
 				</div>
 				<div class="modal-footer">
-					<input id="sendComment" type="submit" class="btn btn-primary" value="<spring:message code="comments.reply" />" />
+					<input id="sendComment" type="submit" class="btn btn-info" value="<spring:message code="comments.reply" />" />
 					</form>
 				</div>
 			</div>

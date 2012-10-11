@@ -27,7 +27,7 @@
 <script type="text/javascript">
 
 	$(function() {
-		$('#${id} .modal-footer').find('.btn-primary').click(function(e) {
+		$('#${id} .modal-footer').find('.btn-info').click(function(e) {
 			
 			e.preventDefault();
 			
@@ -53,7 +53,7 @@
 		<jsp:doBody />
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn btn-primary"><spring:message code="${confirmCode}" /></a>
+		<a href="#" class="btn btn-info"><spring:message code="${confirmCode}" /></a>
 		<a data-dismiss="modal" class="btn"><spring:message code="label.close" /></a>
 	</div>
 </div>

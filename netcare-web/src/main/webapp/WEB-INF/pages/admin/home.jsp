@@ -22,9 +22,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				var hp = new NC.HealthPlan();
@@ -54,7 +57,7 @@
 						NC.log('Send comment icon clicked');
 						
 						$('#commentActivity').modal('show');
-						$('#commentActivity a.btn-primary').click(function(e) {
+						$('#commentActivity a.btn-info').click(function(e) {
 							
 							NC.log('Submit comment');
 							
@@ -73,7 +76,7 @@
 								$('#commentActivity input[name="comment"]').val('');
 								$('#commentActivity').modal('hide');
 								
-								$('#commentActivity a.btn-primary').unbind('click');
+								$('#commentActivity a.btn-info').unbind('click');
 							});
 						});
 					});
@@ -176,12 +179,19 @@
 				loadReplies();
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
-			
+	</mvk:header>
+	<mvk:body>
+		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
+			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
+
+		<mvk:pageContent>
+			<mvk:leftMenu>
+				<netcare:menu />
+			</mvk:leftMenu>
+			<mvk:content title="Start">
+			<netcare:content>
+	
 			<section id="dashboard">
-				<h2>Start</h2>
 				<p>
 					<spring:message code="admin.home.description" />
 				</p>
@@ -283,6 +293,8 @@
 					</netcare:table>
 				</div>
 			</section>
-		</netcare:content>
-	</netcare:body>	
-</netcare:page>
+			</netcare:content>
+			</mvk:content>
+		</mvk:pageContent>
+	</mvk:body>	
+</mvk:page>

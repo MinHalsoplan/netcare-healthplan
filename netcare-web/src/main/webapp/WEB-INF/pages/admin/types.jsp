@@ -23,10 +23,12 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
-<netcare:page>
-	<netcare:header>
-	
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
+		<netcare:js />
 		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />;
 	
 		<script type="text/javascript">
@@ -175,7 +177,7 @@
 				
 				var createActionButton = function() {
 					var div = $('<div>').addClass('span1');
-					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-primary').attr('value', captions['label.add']);
+					var btn = $('<input>').attr('id', 'addMeasureValue').attr('name', 'addMeasureValue').attr('type', 'submit').addClass('btn-info').attr('value', captions['label.add']);
 					btn.click(function(e) {
 						e.preventDefault();
 						NC.log("Add measure value");
@@ -376,8 +378,24 @@
 				
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
+	</mvk:header>
+	<mvk:body>
+		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
+			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
+
+		<mvk:pageContent>
+			<mvk:leftMenu>
+				<c:url value="/netcare/admin/home" var="start" />
+				<c:url value="/netcare/admin/patients" var="patients" />
+				<c:url value="/netcare/admin/activitytypes" var="activitytypes" />
+				<c:url value="/netcare/admin/categories" var="categories" />
+
+				<mvk:menuItem label="Startsida" url="${start}" />
+				<mvk:menuItem label="Patienter" url="${patients}" />
+				<mvk:menuItem active="true" label="Skapa ny aktivitet" url="${activitytypes}" />
+				<mvk:menuItem label="Skapa ny aktivitetskategori" url="${categories}" />
+			</mvk:leftMenu>
+			<mvk:content title="Aktivitetskategorier">
 		<netcare:content>
 			<section id="types">
 				<h2><spring:message code="activityType.title" /></h2>
@@ -468,7 +486,7 @@
 						<br />
 						
 						<div class="form-actions">
-							<button id="createActivityType" class="btn btn-primary"><spring:message code="activityType.new" /></button>
+							<button id="createActivityType" class="btn info"><spring:message code="activityType.new" /></button>
 							<button type="reset" class="btn"><spring:message code="clear" /></button>
 						</div>
 						
@@ -498,5 +516,7 @@
 			</section>	
 			
 		</netcare:content>
-	</netcare:body>
-</netcare:page>
+		</mvk:content>
+		</mvk:pageContent>
+	</mvk:body>	
+</mvk:page>
