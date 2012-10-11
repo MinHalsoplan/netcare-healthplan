@@ -22,9 +22,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
+<mvk:page>
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
@@ -74,11 +75,11 @@
 						</div>
 						
 					</fieldset>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<input class="btn btn-info" type="submit" value="<spring:message code="setup.proceed" />" />
 				</div>
-			</form>	
 		</div>
 	</body>
-</netcare:page>
+</mvk:page>

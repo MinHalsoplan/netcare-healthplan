@@ -21,9 +21,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
+<mvk:page>
 	<netcare:header>
 		<script type="text/javascript">
 			$(function() {
@@ -43,4 +44,4 @@
 			</div>
 		</div>
 	</body>
-</netcare:page>
+</mvk:page>

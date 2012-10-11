@@ -22,9 +22,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
+<mvk:page>
 	<netcare:header />
 	<netcare:body>
 		<div class="span12">
@@ -34,4 +35,4 @@
 			</p>
 		</div>
 	</netcare:body>
-</netcare:page>
+</mvk:page>

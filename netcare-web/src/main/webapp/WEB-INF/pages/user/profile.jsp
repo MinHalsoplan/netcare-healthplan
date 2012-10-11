@@ -158,15 +158,7 @@
 
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<c:url value="/home" var="start" />
-				<c:url value="/netcare/user/profile" var="profile" />
-				<c:url value="/netcare/user/report" var="report" />
-				<c:url value="/netcare/user/results" var="results" />
-
-				<mvk:menuItem label="Startsida" url="${start}" />
-				<mvk:menuItem active="true" label="Min Profil" url="${profile}" />
-				<mvk:menuItem label="Rapportera resultat" url="${report}" />
-				<mvk:menuItem label="Resultatöversikt" url="${results}" />
+				<netcare:menu />
 			</mvk:leftMenu>
 			<mvk:content title="Profil">
 				<netcare:content>
