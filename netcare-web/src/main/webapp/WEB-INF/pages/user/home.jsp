@@ -199,8 +199,9 @@
 	</mvk:header>
 	<mvk:body>
 		
+		<sec:authentication property="principal.username" var="username"/>
 		<mvk:pageHeader title="Min hälsoplan"
-			loggedInUser="Testar Test"
+			loggedInUser="${username}"
 			loggedInAsText="Inloggad som : "
 			logoutUrl="/netcare/security/logout"
 			logoutText="Logga ut" />

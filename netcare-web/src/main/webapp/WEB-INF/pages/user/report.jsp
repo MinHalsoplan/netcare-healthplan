@@ -22,9 +22,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
-<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
@@ -38,8 +38,9 @@
 		</script>
 	</mvk:header>
 	<mvk:body>
+		<sec:authentication property="principal.username" var="username"/>
 		<mvk:pageHeader title="Min hälsoplan"
-			loggedInUser="Testar Test"
+			loggedInUser="${username}"
 			loggedInAsText="Inloggad som : "
 			logoutUrl="/netcare/security/logout"
 			logoutText="Logga ut" />
