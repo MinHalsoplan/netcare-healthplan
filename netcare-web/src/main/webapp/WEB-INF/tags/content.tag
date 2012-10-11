@@ -20,10 +20,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
-
-
-	<div class="span7">
-	<div id="pageMessages">
+<!-- netcare:content -->
+	<div class="row-fluid">
+		<div class="span12">
+			<div id="pageMessages">
 		<c:if test="${not empty requestScope.result and empty requestScope.hideMessages}">
 			<%-- Display any messages that we have --%>
 			<c:forEach items="${requestScope.result.errorMessages}" var="error">
@@ -38,6 +38,8 @@
 				<netcare:message type="success" message="${info.message}" />
 			</c:forEach>
 		</c:if>
+			</div>
+			<jsp:doBody />
+		</div>
 	</div>
-	<jsp:doBody />
-	</div>
+<!-- netcare:content / -->
