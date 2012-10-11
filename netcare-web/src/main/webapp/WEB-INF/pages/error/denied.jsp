@@ -26,13 +26,16 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <mvk:page>
-	<netcare:header />
-	<netcare:body>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:js />
+	</mvk:header>		
+	<mvk:body>
 		<div class="span12">
 			<h1><spring:message code="denied" /></h1>
 			<p>
 				<spring:message code="deniedText" />
 			</p>
 		</div>
-	</netcare:body>
+	</mvk:body>
 </mvk:page>

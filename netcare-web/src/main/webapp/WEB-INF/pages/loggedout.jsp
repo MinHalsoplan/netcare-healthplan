@@ -25,13 +25,16 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <mvk:page>
-	<netcare:header>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				$('#modal-from-dom').modal('show');
+				$('input[name="j_username"]').focus();
 			});
 		</script>
-	</netcare:header>
+	</mvk:header>
 	<body>
 		<div class="modal-backdrop fade in"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">

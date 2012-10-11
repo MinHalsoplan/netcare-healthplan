@@ -447,7 +447,7 @@
 				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
 			</p>
 			
-			<netcare:form id="activityForm">
+			<form id="activityForm" action="#" method="post">
 				<fieldset id="activityFieldset">
 					<legend><spring:message code="activity.form.nameAndGoal" /></legend>
 					<netcare:row>
@@ -511,7 +511,7 @@
 					<button type="reset" class="btn"><spring:message code="clear" /></button>
 				</div>
 			
-			</netcare:form>
+			</form>
 			
 			<div id="activityContainer">
 				<netcare:block-message type="info" style="display:none">

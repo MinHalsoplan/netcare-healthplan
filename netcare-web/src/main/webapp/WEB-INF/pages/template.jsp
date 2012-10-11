@@ -26,15 +26,17 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
 <mvk:page>
-	<netcare:header>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
+	</mvk:header>
+	<mvk:body>
 		<netcare:content>
 		</netcare:content>
-	</netcare:body>
+	</mvk:body>
 </mvk:page>

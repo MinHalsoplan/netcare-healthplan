@@ -302,8 +302,6 @@
 </mvk:page>
 
 <%-- 
-
-	<netcare:body>
 		<netcare:content>
 			<div id="sendReply" class="modal hide fade" style="display: none;">
 				<div class="modal-header">
@@ -325,8 +323,5 @@
 					</form>
 				</div>
 			</div>
-
-			
 		</netcare:content>
-	</netcare:body>
 --%>

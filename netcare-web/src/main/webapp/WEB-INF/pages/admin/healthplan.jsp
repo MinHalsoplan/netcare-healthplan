@@ -253,7 +253,7 @@
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
 			</p>
-			<netcare:form id="createHealthPlanForm">
+			<form id="createHealthPlanForm" action="#" method="post">
 				<fieldset>
 					<legend><spring:message code="healthplan.new" /></legend>
 					<netcare:field name="name" label="${name}">
@@ -291,7 +291,7 @@
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				
-			</netcare:form>
+			</form>
 			
 			<div id="healthPlanContainer">
 				<div style="display: none;" class="alert alert-info">

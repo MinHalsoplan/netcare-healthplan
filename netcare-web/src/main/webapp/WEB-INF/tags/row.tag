@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
+<!-- netcare:row -->
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ attribute name="id" required="false" %>
 <%@ attribute name="style" required="false" %>
@@ -31,10 +32,11 @@
 		<div class="row">
 	</c:otherwise>
 </c:choose>
-
-	<div class="span9" style="${style}">
-		<div class="row">
-			<jsp:doBody />
+			<div class="span9" style="${style}">
+				<div class="row">
+					<jsp:doBody />
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
+<!-- netcare:row / -->
+		
