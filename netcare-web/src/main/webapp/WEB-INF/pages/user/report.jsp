@@ -46,16 +46,8 @@
 			logoutText="Logga ut" />
 			
 		<mvk:pageContent>
-			<c:url value="/home" var="start" />
-			<c:url value="/netcare/user/profile" var="profile"/>
-			<c:url value="/netcare/user/report" var="report" />
-			<c:url value="/netcare/user/results" var="results" />
-		
 			<mvk:leftMenu>
-				<mvk:menuItem active="true" label="Startsida" url="${start}" />
-				<mvk:menuItem label="Min Profil" url="${profile}" />
-				<mvk:menuItem label="Rapportera resultat" url="${report}" />
-				<mvk:menuItem label="Resultatöversikt" url="${results}" />
+				<netcare:menu />
 			</mvk:leftMenu>
 			<mvk:content title="Rapportera resultat">
 				<netcare:content>

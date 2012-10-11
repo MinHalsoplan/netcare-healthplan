@@ -229,15 +229,7 @@
 
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<c:url value="/netcare/admin/home" var="start" />
-				<c:url value="/netcare/admin/patients" var="patients" />
-				<c:url value="/netcare/admin/activitytypes" var="activitytypes" />
-				<c:url value="/netcare/admin/categories" var="categories" />
-
-				<mvk:menuItem label="Startsida" url="${start}" />
-				<mvk:menuItem active="true" label="Patienter" url="${patients}" />
-				<mvk:menuItem label="Skapa ny aktivitet" url="${activitytypes}" />
-				<mvk:menuItem label="Skapa ny aktivitetskategori" url="${categories}" />
+				<netcare:menu />
 			</mvk:leftMenu>
 			<mvk:content title="Aktivitetskategorier">
 			<netcare:content>
@@ -261,7 +253,7 @@
 			<p style="text-align: right; padding-right: 20px;">
 				<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
 			</p>
-			<netcare:form id="createHealthPlanForm">
+			<form id="createHealthPlanForm" action="#" method="post">
 				<fieldset>
 					<legend><spring:message code="healthplan.new" /></legend>
 					<netcare:field name="name" label="${name}">
@@ -299,7 +291,7 @@
 					<input type="reset" class="btn" value="${clear}" />
 				</div>
 				
-			</netcare:form>
+			</form>
 			
 			<div id="healthPlanContainer">
 				<div style="display: none;" class="alert alert-info">

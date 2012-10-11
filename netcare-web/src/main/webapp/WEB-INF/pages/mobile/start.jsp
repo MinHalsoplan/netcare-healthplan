@@ -25,7 +25,7 @@
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="mobile" tagdir="/WEB-INF/tags/mobile" %>
 
-<netcare:page>
+<netcare:page-simple>
 	<mobile:header>
 		<script type="text/javascript">
 		
@@ -281,4 +281,4 @@
 			
 		</mobile:page>
 	</body>
-</netcare:page>
+</netcare:page-simple>

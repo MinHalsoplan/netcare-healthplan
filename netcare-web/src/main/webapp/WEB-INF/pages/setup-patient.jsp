@@ -22,10 +22,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				$('#userForm').submit(function(e) {
@@ -42,7 +45,7 @@
 				});
 			});
 		</script>
-	</netcare:header>
+	</mvk:header>
 	<body>
 		<div class="modal-backdrop fade in"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
@@ -74,11 +77,11 @@
 						</div>
 						
 					</fieldset>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<input class="btn btn-info" type="submit" value="<spring:message code="setup.proceed" />" />
 				</div>
-			</form>	
 		</div>
 	</body>
-</netcare:page>
+</mvk:page>

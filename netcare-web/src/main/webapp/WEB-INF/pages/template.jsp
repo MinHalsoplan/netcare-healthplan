@@ -22,18 +22,21 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
-	<netcare:header>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:js />
 		<script type="text/javascript">
 			$(function() {
 				
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
+	</mvk:header>
+	<mvk:body>
 		<netcare:content>
 		</netcare:content>
-	</netcare:body>
-</netcare:page>
+	</mvk:body>
+</mvk:page>

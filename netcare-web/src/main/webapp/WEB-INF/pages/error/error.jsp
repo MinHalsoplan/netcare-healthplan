@@ -21,17 +21,19 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<netcare:page>
-	<netcare:header />
-	<netcare:body>
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+	</mvk:header>
+	<mvk:body>
 		<div class="span12">
 			<h1><spring:message code="internalError" /></h1>
 			<p>
 				<spring:message code="generalError" /><br />
 			</p>
 		</div>
-	</netcare:body>
-</netcare:page>
-
+	</mvk:body>
+</mvk:page>
