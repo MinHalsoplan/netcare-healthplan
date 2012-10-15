@@ -21,20 +21,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
 <sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
 <c:choose>
 	<c:when test="${isAdmin}">
-		<netcare:admin-menu />
+		<hp:admin-menu />
 	</c:when>
 	<c:otherwise>
-		<netcare:patient-menu />
+		<hp:patient-menu />
 	</c:otherwise>
 </c:choose>
 
 <sec:authorize access="hasRole('ROLE_SYSTEM_ADMINISTRATOR')">
-	<netcare:system-administrator-menu />
+	<hp:system-administrator-menu />
 </sec:authorize>
 
 

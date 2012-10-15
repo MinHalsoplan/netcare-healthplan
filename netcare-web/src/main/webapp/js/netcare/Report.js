@@ -61,8 +61,8 @@ NC.Reports = function(statistics, captions) {
 				}
 			});
 			
-			var filterRow = $('<div>').attr('id', 'filter-row-' + elementId).addClass('row').append(
-					$('<div>').addClass('span9')
+			var filterRow = $('<div>').attr('id', 'filter-row-' + elementId).addClass('row-fluid').append(
+					$('<div>').addClass('span12')
 			);
 			
 			$('#' + elementId).prepend(filterRow);

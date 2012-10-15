@@ -22,12 +22,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
+
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
+		<netcare:css resourcePath="/netcare/resources" />
+		<netcare:js resourcePath="/netcare/resources"/>
+		<hp:healthplan-js />
 	
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript">
@@ -35,8 +40,6 @@
 				packages : [ 'gauge' ]
 			});
 		</script>
-		
-		<netcare:js />
 	
 		<script type="text/javascript">
 			 var home;
@@ -208,8 +211,9 @@
 		
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<netcare:menu />
+				<hp:menu />
 			</mvk:leftMenu>
+			
 			<mvk:content title="Startsida">
 				<div id="sendReply" class="modal hide fade" style="display: none;">
 					<div class="modal-header">
@@ -301,28 +305,3 @@
 		</mvk:pageFooter>
 	</mvk:body>
 </mvk:page>
-
-<%-- 
-		<netcare:content>
-			<div id="sendReply" class="modal hide fade" style="display: none;">
-				<div class="modal-header">
-					<a href="#" class="close" data-dismiss="modal">x</a>
-					<h3>
-						<spring:message code="comments.sendReply" />
-					</h3>
-				</div>
-				<div class="modal-body">
-					<form id="sendReplyId" action="#" method="post">
-						<input type="hidden" name="commentId" />
-						<spring:message code="comments.reply" var="reply" scope="page" />
-						<netcare:field name="reply" label="${reply}:">
-							<input type="text" class="xlarge" name="reply" />
-						</netcare:field>
-				</div>
-				<div class="modal-footer">
-					<input id="sendComment" type="submit" class="btn btn-info" value="<spring:message code="comments.reply" />" />
-					</form>
-				</div>
-			</div>
-		</netcare:content>
---%>

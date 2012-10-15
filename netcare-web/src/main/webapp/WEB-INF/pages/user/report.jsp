@@ -21,15 +21,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
-		<netcare:js />
+		<netcare:css resourcePath="/netcare/resources" />
+		<netcare:js resourcePath="/netcare/resources"/>
+		
+		<hp:healthplan-js />
+		
 		<script type="text/javascript">
 			$(function() {
 				var report = new NC.PatientReport('schemaTable', false);
@@ -47,18 +52,16 @@
 			
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<netcare:menu />
+				<hp:menu />
 			</mvk:leftMenu>
 			<mvk:content title="Rapportera resultat">
-				<netcare:content>
-					<h2><spring:message code="report.header" /></h2>
+				<h2><spring:message code="report.header" /></h2>
 
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="report.desc" />
-					</p>
-					<netcare:report />
-				</netcare:content>
+				<p>
+					<span class="label label-info"><spring:message code="information" /></span>
+					<spring:message code="report.desc" />
+				</p>
+				<hp:report />
 			</mvk:content>
 		</mvk:pageContent>
 	</mvk:body>

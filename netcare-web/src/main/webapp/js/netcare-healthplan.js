@@ -14,27 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-NC = {		
-		log : function(msg) {
-			console.log(msg);
-		},
-		
-		getContextPath : function() {
-			return GLOB_CTX_PATH;
-		},
-
-		focusGained : function(inputField) {
-			$(inputField).css('background', '#D9EDF7');
-			$(inputField).select();		
-		},
-
-		focusLost : function(inputField) {
-			$(inputField).css('background', 'white');
-		}
-
-};
-
 $(window).load(function() {
 	$('#pageLoading').fadeOut('fast', function(e) {
 		$(this).hide();

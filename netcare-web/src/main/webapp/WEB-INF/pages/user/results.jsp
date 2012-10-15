@@ -21,14 +21,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:js />
-		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:css resourcePath="/netcare/resources" />
+		<netcare:js resourcePath="/netcare/resources"/>
+		<hp:healthplan-js />
 		
 		<script type="text/javascript">
 			google.load('visualization', '1.0', {'packages' : ['corechart']});
@@ -136,30 +139,28 @@
 			
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<netcare:menu />
+				<hp:menu />
 			</mvk:leftMenu>
 		
 			<mvk:content title="Resultat">
-				<netcare:content>
-					<h2><spring:message code="result.title" /></h2>
+				<h2><spring:message code="result.title" /></h2>
+				<p>
+					<span class="label label-info"><spring:message code="information" /></span>
+					<spring:message code="result.desc" />
+				</p>
+				<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
+				
+				<section id="filter" style="display:none;">
+					<h2><spring:message code="result.filter" /></h2>
 					<p>
 						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="result.desc" />
+						<spring:message code="result.filter.desc" />
 					</p>
-					<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
-					
-					<section id="filter" style="display:none;">
-						<h2><spring:message code="result.filter" /></h2>
-						<p>
-							<span class="label label-info"><spring:message code="information" /></span>
-							<spring:message code="result.filter.desc" />
-						</p>
-						<form>
-							<netcare:row id="filter-row"></netcare:row>
-						</form>
-					</section>
-					<div id="activities"></div>
-				</netcare:content>
+					<form>
+						<netcare:row id="filter-row"></netcare:row>
+					</form>
+				</section>
+				<div id="activities"></div>
 			</mvk:content>
 		</mvk:pageContent>
 		

@@ -23,12 +23,16 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:js />
-		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
+		<netcare:css resourcePath="/netcare/resources" />
+		<netcare:js resourcePath="/netcare/resources"/>
+		<hp:healthplan-js />
 		<script type="text/javascript">
 			$(function() {
 				var util = new NC.Util();
@@ -185,13 +189,11 @@
 				
 				var addMeasureValueInput = function(id, rowCol, label, value) {
 					
-					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('span2');
+					var input = $('<input>').attr('type', 'number').attr('step', '1').attr('name', id).attr('id', id).addClass('input-medium');
 					util.validateNumericField(input, 6);
 					var div = util.createInputField(label, '(' + value.unit.value + ')', input);
 					
-					rowCol.append(
-						$('<div>').addClass('span3').append(div)
-					);
+					rowCol.append( $('<div>').addClass('span5').append(div) );
 				};
 				
 				var types = NC.ActivityTypes();
@@ -244,15 +246,10 @@
 					$.each(data.measureValues, function(i, v) {
 						NC.log("Processing " + v.name);
 						
-						var rowCol = $('<div>').addClass('row').css('background', '#FDF5D9');
-						var row = $('<div>').addClass('row').append(
-							$('<div>').addClass('span9').append(
-								rowCol
-							)
-						);
+						var row = $('<div>').addClass('row-fluid').css('background', '#FDF5D9');
 						
-						rowCol.append(
-							$('<div>').addClass('span1').append(
+						row.append(
+							$('<div>').addClass('span2').append(
 								$('<div>').addClass('clearfix').append(
 									$('<label>').html('&nbsp')
 								).append(
@@ -262,10 +259,10 @@
 						);
 						
 						if (v.valueType.code == "INTERVAL") {
-							addMeasureValueInput(v.id + '-1', rowCol, minValue, v);
-							addMeasureValueInput(v.id + '-2', rowCol, maxValue, v);
+							addMeasureValueInput(v.id + '-1', row, minValue, v);
+							addMeasureValueInput(v.id + '-2', row, maxValue, v);
 						} else if (v.valueType.code == "SINGLE_VALUE") {
-							addMeasureValueInput(v.id + '-1', rowCol, value, v);
+							addMeasureValueInput(v.id + '-1', row, value, v);
 						} else {
 							throw new Error("Unsupported value type");
 						}
@@ -429,116 +426,115 @@
 			
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<netcare:menu />
+				<hp:menu />
 			</mvk:leftMenu>
 		
 			<mvk:content title="Resultat">
-			<netcare:content>
-			<c:set var="healthPlanName" value="${requestScope.result.data.name}" scope="page"/>
-			<spring:message code="activity.new" var="title" scope="page" />
-		
-			<h2><c:out value="${healthPlanName}" /> : <spring:message code="activity.title" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="activity.desc" arguments="${healthPlanName},${title}" />
-			</p>
 			
-			<p style="text-align: right; padding-right: 20px">
-				<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
-			</p>
+				<c:set var="healthPlanName" value="${requestScope.result.data.name}" scope="page"/>
+				<spring:message code="activity.new" var="title" scope="page" />
 			
-			<form id="activityForm" action="#" method="post">
-				<fieldset id="activityFieldset">
-					<legend><spring:message code="activity.form.nameAndGoal" /></legend>
-					<netcare:row>
-						<netcare:col span="3">
-							<spring:message code="activity.form.type" var="what" scope="page" />
-							<netcare:field name="activityType" label="${what}">
-								<select name="activityType" class="medium"></select>
-								<sec:authorize access="hasRole('ROLE_ADMIN')">
-									<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
-								</sec:authorize>
-							</netcare:field>
-						</netcare:col>
-					</netcare:row>
-				</fieldset>
-				
-				<fieldset id="scheduleFieldset">
-					<netcare:row>
-						<netcare:col span="3">
-							<spring:message code="startDate" var="start" scope="page" />
-							<netcare:field containerId="startDate" name="startDate" label="${start}">
-								<netcare:dateInput name="startDate" classes="span2"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="3">
-							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
-							<netcare:field name="activityRepeat" label="${repeat}">
-								<input name="activityRepeat" type="number" class="span1" value="1"/>
-								<span><spring:message code="week" /></span>
-							</netcare:field>
-						</netcare:col>
-					</netcare:row>
-				</fieldset>
-				
-				
-				<spring:message code="activity.form.time" var="addTime" scope="page" />
-				
-				<fieldset>
-					<legend><spring:message code="activity.form.specifyTimes" /></legend>
-
-					<netcare:timeContainer name="monday" />
-					<netcare:timeContainer name="tuesday" />
-					<netcare:timeContainer name="wednesday" />
-					<netcare:timeContainer name="thursday" />
-					<netcare:timeContainer name="friday" />
-					<netcare:timeContainer name="saturday" />
-					<netcare:timeContainer name="sunday" />
-					
-				</fieldset>
-				
-				<netcare:row id="publicDefinitionContainer">
-					<netcare:col span="5">
-						<spring:message code="activity.form.permission" var="permission" scope="page" />
-						<netcare:field name="publicDefinition" label="${permission}">
-							<input type="checkbox" name="publicDefinition" value="true" checked="checked"/>
-						</netcare:field>
-					</netcare:col>
-				</netcare:row>
-				
-				<div class="form-actions">
-					<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
-					<button type="reset" class="btn"><spring:message code="clear" /></button>
-				</div>
-			
-			</form>
-			
-			<div id="activityContainer">
-				<netcare:block-message type="info" style="display:none">
-					<spring:message code="activity.none" />
-				</netcare:block-message>
-				<netcare:table id="activitiesTable">
-					<thead>
-						<tr>
-							<th><spring:message code="activity.type" /></th>
-							<th><spring:message code="activity.category" /></th>
-							<th><spring:message code="activity.start" /></th>
-							<th><spring:message code="activity.frequency" /></th>
-							<th>&nbsp;</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</netcare:table>
-			</div>
-			
-			<netcare:modal titleCode="activity.update" confirmCode="label.update" id="update-goal-values">
+				<h2><c:out value="${healthPlanName}" /> : <spring:message code="activity.title" /></h2>
 				<p>
-					<span class="label label-info"><spring:message code="label.information" /></span>
-					<spring:message code="activity.update.desc" />
+					<span class="label label-info"><spring:message code="information" /></span>
+					<spring:message code="activity.desc" arguments="${healthPlanName},${title}" />
 				</p>
-			</netcare:modal>
-		</netcare:content>
-		</mvk:content>
+				
+				<p style="text-align: right; padding-right: 20px">
+					<a id="showActivityForm" class="btn addButton"><c:out value="${title}" /></a>
+				</p>
+				
+				<form id="activityForm" action="#" method="post">
+					<fieldset id="activityFieldset">
+						<legend><spring:message code="activity.form.nameAndGoal" /></legend>
+						<netcare:row>
+							<netcare:col span="6">
+								<spring:message code="activity.form.type" var="what" scope="page" />
+								<netcare:field name="activityType" label="${what}">
+									<select name="activityType" class="input-medium"></select>
+									<sec:authorize access="hasRole('ROLE_ADMIN')">
+										<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
+									</sec:authorize>
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+					</fieldset>
+					
+					<fieldset id="scheduleFieldset">
+						<netcare:row>
+							<netcare:col span="6">
+								<spring:message code="startDate" var="start" scope="page" />
+								<netcare:field containerId="startDate" name="startDate" label="${start}">
+									<netcare:dateInput name="startDate" />
+								</netcare:field>
+							</netcare:col>
+							<netcare:col span="6">
+								<spring:message code="repeatSchedule" var="repeat" scope="page"/>
+								<netcare:field name="activityRepeat" label="${repeat}">
+									<input name="activityRepeat" type="number" value="1"/>
+									<span><spring:message code="week" /></span>
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+					</fieldset>
+					
+					
+					<spring:message code="activity.form.time" var="addTime" scope="page" />
+					
+					<fieldset>
+						<legend><spring:message code="activity.form.specifyTimes" /></legend>
+	
+						<hp:timeContainer name="monday" />
+						<hp:timeContainer name="tuesday" />
+						<hp:timeContainer name="wednesday" />
+						<hp:timeContainer name="thursday" />
+						<hp:timeContainer name="friday" />
+						<hp:timeContainer name="saturday" />
+						<hp:timeContainer name="sunday" />
+						
+					</fieldset>
+					
+					<netcare:row id="publicDefinitionContainer">
+						<netcare:col span="6">
+							<spring:message code="activity.form.permission" var="permission" scope="page" />
+							<netcare:field name="publicDefinition" label="${permission}">
+								<input type="checkbox" name="publicDefinition" value="true" checked="checked"/>
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
+					
+					<div class="form-actions">
+						<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
+						<button type="reset" class="btn"><spring:message code="clear" /></button>
+					</div>
+				
+				</form>
+				
+				<div id="activityContainer">
+					<netcare:block-message type="info" style="display:none">
+						<spring:message code="activity.none" />
+					</netcare:block-message>
+					<netcare:table id="activitiesTable">
+						<thead>
+							<tr>
+								<th><spring:message code="activity.type" /></th>
+								<th><spring:message code="activity.category" /></th>
+								<th><spring:message code="activity.start" /></th>
+								<th><spring:message code="activity.frequency" /></th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</netcare:table>
+				</div>
+				
+				<netcare:modal titleCode="activity.update" confirmCode="label.update" id="update-goal-values">
+					<p>
+						<span class="label label-info"><spring:message code="label.information" /></span>
+						<spring:message code="activity.update.desc" />
+					</p>
+				</netcare:modal>
+			</mvk:content>
 		</mvk:pageContent>
 		<mvk:pageFooter>
 		</mvk:pageFooter>
