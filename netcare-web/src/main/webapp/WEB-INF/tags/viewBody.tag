@@ -34,6 +34,7 @@
 	logoutText="Logga ut" />
 
 <mvk:pageContent>
+	
 	<mvk:leftMenu>
 		<hp:menu />
 	</mvk:leftMenu>
