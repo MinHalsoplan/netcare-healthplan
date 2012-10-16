@@ -16,34 +16,23 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.io.Serializable;
-
-/**
- * Definition of an activity type
- * 
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public interface ActivityType extends Serializable {
+public interface ActivityItemType {
 
 	/**
-	 * Get the id of this activity type
+	 * Returns id.
+	 * 
 	 */
 	Long getId();
-	
+
 	/**
-	 * Get the name of this activity type
-	 */
-	String getName();
-	
-	/**
-	 * Get the name of the category where this type belongs
-	 */
-	ActivityCategory getCategory();
-	
-	/**
-	 * The measure values bound to this activity type
+	 * Get the name of this measurement
+	 * 
 	 * @return
 	 */
-	ActivityItemType[] getActivityItems();
+	String getName();
+
+	/**
+	 * Returns sequence number.
+	 */
+	int getSeqno();
 }

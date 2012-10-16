@@ -20,10 +20,11 @@ import java.util.List;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
+import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 
 /**
@@ -42,15 +43,12 @@ public class ActivityTypeImpl implements ActivityType {
 	private Long id;
 	private String name;
 	private ActivityCategoryImpl category;
-	private boolean measuringSense;
-	private String minScaleText;
-	private String maxScaleText;
 
-	private MeasurementType[] measureValues;
+	private ActivityItemType[] activityItems;
 
 	//
 	public ActivityTypeImpl() {
-		this.measureValues = new MeasurementTypeImpl[0];
+		this.activityItems = new ActivityItemTypeImpl[0];
 	}
 
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
@@ -58,19 +56,18 @@ public class ActivityTypeImpl implements ActivityType {
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
-		dto.measuringSense = entity.isMeasuringSense();
-		dto.setMinScaleText(entity.getSenseLabelLow());
-		dto.setMaxScaleText(entity.getSenseLabelHigh());
-
-		final MeasurementType[] values = new MeasurementTypeImpl[entity.getActivityItemTypes().size()];
+		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
 			ActivityItemTypeEntity activityItemTypeEntity = entity.getActivityItemTypes().get(i);
 			if (activityItemTypeEntity instanceof MeasurementTypeEntity) {
 				values[i] = MeasurementTypeImpl.newFromEntity((MeasurementTypeEntity) activityItemTypeEntity);
-			} // TODO JCTODO
+			} else if (activityItemTypeEntity instanceof EstimationTypeEntity) {
+				values[i] = EstimationTypeImpl.newFromEntity((EstimationTypeEntity) activityItemTypeEntity);
+			}
+			// TODO JCTODO
 		}
 
-		dto.measureValues = values;
+		dto.activityItems = values;
 
 		return dto;
 	}
@@ -111,44 +108,18 @@ public class ActivityTypeImpl implements ActivityType {
 		this.category = category;
 	}
 
-	@Override
-	public boolean isMeasuringSense() {
-		return measuringSense;
-	}
 
 	@Override
-	public String getMinScaleText() {
-		return this.minScaleText;
+	public ActivityItemType[] getActivityItems() {
+		return this.activityItems;
 	}
 
-	public void setMinScaleText(final String minScaleText) {
-		this.minScaleText = minScaleText;
+	public void setActivityItems(final ActivityItemTypeImpl[] activityItems) {
+		this.activityItems = activityItems;
 	}
 
-	@Override
-	public String getMaxScaleText() {
-		return this.maxScaleText;
-	}
-
-	public void setMaxScaleText(final String maxScaleText) {
-		this.maxScaleText = maxScaleText;
-	}
-
-	@Override
-	public MeasurementType[] getMeasureValues() {
-		return this.measureValues;
-	}
-
-	public void setMeasureValues(final MeasurementTypeImpl[] measureValues) {
-		this.measureValues = measureValues;
-	}
-
-	public void setMeasuringSense(boolean measuringSense) {
-		this.measuringSense = measuringSense;
-	}
-
-	public void setMeasureValues(MeasurementType[] measureValues) {
-		this.measureValues = measureValues;
+	public void setActivityItems(ActivityItemType[] activityItems) {
+		this.activityItems = activityItems;
 	}
 
 	@Override
@@ -157,13 +128,13 @@ public class ActivityTypeImpl implements ActivityType {
 		buf.append("==== Activity Type ====\n");
 		buf.append("Id: ").append(this.getId()).append("\n");
 		buf.append("Name: ").append(this.getName()).append("\n");
-		buf.append("Measuring sense: ").append(this.isMeasuringSense()).append("\n");
-		buf.append("Sense min: ").append(this.getMinScaleText()).append("\n");
-		buf.append("Sense max: ").append(this.getMaxScaleText()).append("\n");
-
+//		buf.append("Measuring sense: ").append(this.isMeasuringSense()).append("\n");
+//		buf.append("Sense min: ").append(this.getMinScaleText()).append("\n");
+//		buf.append("Sense max: ").append(this.getMaxScaleText()).append("\n");
+//TODO JCTODO
 		buf.append(this.getCategory());
 
-		for (final MeasurementType t : this.getMeasureValues()) {
+		for (final ActivityItemType t : this.getActivityItems()) {
 			buf.append(t);
 		}
 

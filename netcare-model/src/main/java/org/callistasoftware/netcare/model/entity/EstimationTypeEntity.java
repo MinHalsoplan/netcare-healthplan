@@ -24,21 +24,21 @@ import javax.persistence.Entity;
 @DiscriminatorValue("estimation")
 public class EstimationTypeEntity extends ActivityItemTypeEntity {
 
-	@Column(name = "measuring_sense")
-	private boolean measuringSense;
-
 	@Column(name = "sense_label_low")
 	private String senseLabelLow;
 
 	@Column(name = "sense_label_high")
 	private String senseLabelHigh;
 
-	public boolean isMeasuringSense() {
-		return measuringSense;
-	}
+	public static EstimationTypeEntity newEntity(ActivityTypeEntity activityTypeEntity, String minScaleText,
+			String maxScaleText) {
+		EstimationTypeEntity entity = new EstimationTypeEntity();
+		entity.setActivityType(activityTypeEntity);
+		entity.setSenseLabelLow(minScaleText);
+		entity.setSenseLabelHigh(maxScaleText);
 
-	public void setMeasuringSense(boolean measuringSense) {
-		this.measuringSense = measuringSense;
+		activityTypeEntity.addActivityItemType(entity);
+		return entity;
 	}
 
 	public String getSenseLabelLow() {

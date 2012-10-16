@@ -42,15 +42,6 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@Column(length = 64, nullable = false)
 	private String name;
 
-	@Column(name = "measuring_sense")
-	private boolean measuringSense;
-
-	@Column(name = "sense_label_low")
-	private String senseLabelLow;
-
-	@Column(name = "sense_label_high")
-	private String senseLabelHigh;
-
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private ActivityCategoryEntity category;
@@ -100,30 +91,6 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	void setId(Long id) {
 		this.id = id;
-	}
-
-	public boolean isMeasuringSense() {
-		return measuringSense;
-	}
-
-	public void setMeasuringSense(boolean measuringSense) {
-		this.measuringSense = measuringSense;
-	}
-
-	public String getSenseLabelLow() {
-		return senseLabelLow;
-	}
-
-	public void setSenseLabelLow(String senseLabelLow) {
-		this.senseLabelLow = senseLabelLow;
-	}
-
-	public String getSenseLabelHigh() {
-		return senseLabelHigh;
-	}
-
-	public void setSenseLabelHigh(String senseLabelHigh) {
-		this.senseLabelHigh = senseLabelHigh;
 	}
 
 	public boolean addActivityItemType(ActivityItemTypeEntity activityItemType) {
