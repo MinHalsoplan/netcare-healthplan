@@ -241,7 +241,7 @@
 					
 					</netcare:block-message>
 					
-					<netcare:report />
+					<hp:report />
 					<br />
 				</section>
 				

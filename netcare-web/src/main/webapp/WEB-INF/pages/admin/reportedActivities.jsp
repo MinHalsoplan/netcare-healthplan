@@ -21,13 +21,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<link rel="stylesheet" href="<c:url value="/css/netcare.css" />" />
-		<netcare:js />
+		<netcare:css resourcePath="/netcare/resources" />
+		<netcare:js resourcePath="/netcare/resources"/>
+		<hp:healthplan-js />
+		
 		<script type="text/javascript">
 			$(function() {
 				
@@ -76,11 +80,10 @@
 
 		<mvk:pageContent>
 			<mvk:leftMenu>
-				<netcare:menu />
+				<hp:menu />
 			</mvk:leftMenu>
 		<mvk:content title="Genomförda aktiviteter">
-		<netcare:content>
-			<netcare:list-content descriptionCode="activity.reported.desc2" titleCode="activity.reported.title">
+			<hp:list-content descriptionCode="activity.reported.desc2" titleCode="activity.reported.title">
 				<netcare:table id="activity-table">
 					<thead>
 						<tr>
@@ -98,8 +101,7 @@
 				<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
 					<input type="text" name="comment" class="xlarge" />
 				</netcare:modal>
-			</netcare:list-content>
-		</netcare:content>
+			</hp:list-content>
 		</mvk:content>
 		</mvk:pageContent>
 	</mvk:body>	
