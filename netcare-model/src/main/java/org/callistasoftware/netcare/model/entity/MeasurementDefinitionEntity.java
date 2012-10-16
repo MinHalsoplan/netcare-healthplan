@@ -27,36 +27,37 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_measurement_definition")
+@Table(name = "nc_measurement_definition")
 public class MeasurementDefinitionEntity implements Comparable<MeasurementDefinitionEntity> {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="activity_def_id")
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "activity_def_id")
 	private ActivityDefinitionEntity activityDefinition;
 
-	@ManyToOne(optional=false)
-	@JoinColumn(name="measurement_type_id")
-	private MeasurementTypeEntity measurementType;
-		
-	@Column(name="target")
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "measurement_type_id")
+	private ActivityItemTypeEntity activityItemType;
+
+	@Column(name = "target")
 	private float target;
-	
-	@Column(name="min_target")
+
+	@Column(name = "min_target")
 	private float minTarget;
-	
-	@Column(name="max_target")
+
+	@Column(name = "max_target")
 	private float maxTarget;
-	
+
 	MeasurementDefinitionEntity() {
 	}
 
-	public static MeasurementDefinitionEntity newEntity(ActivityDefinitionEntity activityDefinition, MeasurementTypeEntity measurementType) {
+	public static MeasurementDefinitionEntity newEntity(ActivityDefinitionEntity activityDefinition,
+			ActivityItemTypeEntity activityItemType) {
 		MeasurementDefinitionEntity entity = new MeasurementDefinitionEntity();
 		entity.setActivityDefinition(activityDefinition);
-		entity.setMeasurementType(measurementType);
+		entity.setActivityItemType(activityItemType);
 		return entity;
 	}
 
@@ -71,7 +72,6 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 	void setActivityDefinition(ActivityDefinitionEntity activityDefinition) {
 		this.activityDefinition = activityDefinition;
 	}
-
 
 	public float getTarget() {
 		return target;
@@ -106,12 +106,19 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 		this.maxTarget = maxTarget;
 	}
 
-	public MeasurementTypeEntity getMeasurementType() {
-		return measurementType;
+	public ActivityItemTypeEntity getActivityItemType() {
+		return activityItemType;
 	}
 
-	void setMeasurementType(MeasurementTypeEntity measurementType) {
-		this.measurementType = measurementType;
+	public void setActivityItemType(ActivityItemTypeEntity activityItemType) {
+		this.activityItemType = activityItemType;
+	}
+
+	public MeasurementTypeEntity getMeasurementType() {
+		if (getActivityItemType() instanceof MeasurementTypeEntity)
+			return (MeasurementTypeEntity) getActivityItemType();
+		else
+			throw new RuntimeException("TODO_EXCEPTION");
 	}
 
 	@Override

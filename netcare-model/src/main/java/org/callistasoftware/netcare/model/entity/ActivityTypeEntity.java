@@ -33,48 +33,48 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_activity_type")
+@Table(name = "nc_activity_type")
 public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@Column(length=64, nullable=false)
-	private String name;
-	
-	@Column(name="measuring_sense")
-	private boolean measuringSense;
-		
-	@Column(name="sense_label_low")
-	private String senseLabelLow;
-	
-	@Column(name="sense_label_high")
-	private String senseLabelHigh;
-	
-	@ManyToOne
-	@JoinColumn(name="category_id")
-	private ActivityCategoryEntity category;
-	
-	@OneToMany(mappedBy="activityType", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
-	private List<MeasurementTypeEntity> measurementTypes;
 
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	@JoinColumn(name="care_unit_id")
+	@Column(length = 64, nullable = false)
+	private String name;
+
+	@Column(name = "measuring_sense")
+	private boolean measuringSense;
+
+	@Column(name = "sense_label_low")
+	private String senseLabelLow;
+
+	@Column(name = "sense_label_high")
+	private String senseLabelHigh;
+
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private ActivityCategoryEntity category;
+
+	@OneToMany(mappedBy = "activityType", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
+	private List<ActivityItemTypeEntity> activityItemTypes;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "care_unit_id")
 	private CareUnitEntity careUnit;
 
-	
 	ActivityTypeEntity() {
-		measurementTypes = new LinkedList<MeasurementTypeEntity>();
+		activityItemTypes = new LinkedList<ActivityItemTypeEntity>();
 	}
-	
+
 	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final CareUnitEntity careUnit) {
 		this();
 		this.setName(name);
 		this.setCategory(category);
 		this.setCareUnit(careUnit);
 	}
-	
-	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category, final CareUnitEntity careUnit) {
+
+	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category,
+			final CareUnitEntity careUnit) {
 		return new ActivityTypeEntity(name, category, careUnit);
 	}
 
@@ -126,24 +126,24 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		this.senseLabelHigh = senseLabelHigh;
 	}
 
-	public boolean addMeasurementType(MeasurementTypeEntity measurementType) {
-		if (!measurementTypes.contains(measurementType)) {
-			int seqno = measurementTypes.size() + 1;
-			measurementType.setSeqno(seqno);
-			return measurementTypes.add(measurementType);
+	public boolean addActivityItemType(ActivityItemTypeEntity activityItemType) {
+		if (!activityItemTypes.contains(activityItemType)) {
+			int seqno = activityItemTypes.size() + 1;
+			activityItemType.setSeqno(seqno);
+			return activityItemTypes.add(activityItemType);
 		}
 		return false;
 	}
-	
-	public boolean removeMeasurementType(MeasurementTypeEntity measurementType) {
-		return measurementTypes.remove(measurementType);
+
+	public boolean removeActivityItemType(ActivityItemTypeEntity activityItemType) {
+		return activityItemTypes.remove(activityItemType);
 	}
-	
-	public List<MeasurementTypeEntity> getMeasurementTypes() {
-		Collections.sort(measurementTypes);
-		return Collections.unmodifiableList(measurementTypes);
+
+	public List<ActivityItemTypeEntity> getActivityItemTypes() {
+		Collections.sort(activityItemTypes);
+		return Collections.unmodifiableList(activityItemTypes);
 	}
-	
+
 	public CareUnitEntity getCareUnit() {
 		return careUnit;
 	}
@@ -161,7 +161,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 					return true;
 				}
 			}
-			
+
 			return false;
 		} else {
 			return this.isWriteAllowed(user);
@@ -173,12 +173,12 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		if (!user.isCareGiver()) {
 			return false;
 		}
-		
+
 		final CareGiverEntity cg = (CareGiverEntity) user;
 		if (cg.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
 			return true;
 		}
-		
+
 		return false;
 	}
 }

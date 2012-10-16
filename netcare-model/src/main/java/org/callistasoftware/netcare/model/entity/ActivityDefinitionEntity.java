@@ -38,80 +38,83 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="nc_activity_definition")
+@Table(name = "nc_activity_definition")
 public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name="uuid", length=40, nullable=false)
+	@Column(name = "uuid", length = 40, nullable = false)
 	private String uuid;
-	
-	@Column(length=2048, nullable=false)
+
+	@Column(length = 2048, nullable = false)
 	private String frequency;
-		
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_time", nullable=false)
+	@Column(name = "created_time", nullable = false)
 	private Date createdTime;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="start_date")
+	@Column(name = "start_date")
 	private Date startDate;
 
-	@Column(name="removed_flag")
+	@Column(name = "removed_flag")
 	private boolean removedFlag;
-	
-	@Column(name="is_public_definition", nullable=false)
-	private boolean publicDefinition;
-	
-	@ManyToOne
-	@JoinColumn(name="health_plan_id")
-	private HealthPlanEntity healthPlan;
-	
-	@ManyToOne
-	@JoinColumn(name="activity_type_id")
-	private ActivityTypeEntity activityType;
-	
-	@ManyToOne
-	@JoinColumn(name="created_by_id")
-	private UserEntity createdBy;
-    
-	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
-	private List<ScheduledActivityEntity> scheduledActivities;
-	
-	@OneToMany(mappedBy="activityDefinition", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
-	private List<MeasurementDefinitionEntity> measurementDefinitions;
-	
 
-    ActivityDefinitionEntity() {
-    	scheduledActivities = new LinkedList<ScheduledActivityEntity>();
-    	measurementDefinitions = new LinkedList<MeasurementDefinitionEntity>();
-    	uuid = UUID.randomUUID().toString();
-    	createdTime = new Date();
-    	publicDefinition = true;
-    	removedFlag = false;
+	@Column(name = "is_public_definition", nullable = false)
+	private boolean publicDefinition;
+
+	@ManyToOne
+	@JoinColumn(name = "health_plan_id")
+	private HealthPlanEntity healthPlan;
+
+	@ManyToOne
+	@JoinColumn(name = "activity_type_id")
+	private ActivityTypeEntity activityType;
+
+	@ManyToOne
+	@JoinColumn(name = "created_by_id")
+	private UserEntity createdBy;
+
+	@OneToMany(mappedBy = "activityDefinition", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<ScheduledActivityEntity> scheduledActivities;
+
+	@OneToMany(mappedBy = "activityDefinition", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.REMOVE }, orphanRemoval = true)
+	private List<MeasurementDefinitionEntity> measurementDefinitions;
+
+	ActivityDefinitionEntity() {
+		scheduledActivities = new LinkedList<ScheduledActivityEntity>();
+		measurementDefinitions = new LinkedList<MeasurementDefinitionEntity>();
+		uuid = UUID.randomUUID().toString();
+		createdTime = new Date();
+		publicDefinition = true;
+		removedFlag = false;
 	}
-    
-    public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity, ActivityTypeEntity activityType, Frequency frequency, UserEntity createdBy) {
-    	ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
-    	entity.setHealthPlan(healthPlanEntity);
-    	entity.setActivityType(activityType);
-    	entity.setFrequency(frequency);
-    	entity.setStartDate(healthPlanEntity.getStartDate());
-    	entity.setCreatedBy(createdBy);
-    	for (MeasurementTypeEntity measurementType : activityType.getMeasurementTypes()) {
-    		MeasurementDefinitionEntity e = MeasurementDefinitionEntity.newEntity(entity, measurementType);
-    		entity.measurementDefinitions.add(e);
-    	}
-    	healthPlanEntity.addActivityDefinition(entity);
-    	
-    	return entity;
-    }
+
+	public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity,
+			ActivityTypeEntity activityType, Frequency frequency, UserEntity createdBy) {
+		ActivityDefinitionEntity entity = new ActivityDefinitionEntity();
+		entity.setHealthPlan(healthPlanEntity);
+		entity.setActivityType(activityType);
+		entity.setFrequency(frequency);
+		entity.setStartDate(healthPlanEntity.getStartDate());
+		entity.setCreatedBy(createdBy);
+		for (ActivityItemTypeEntity activityItemType : activityType.getActivityItemTypes()) {
+			if (activityItemType instanceof MeasurementTypeEntity) {
+				MeasurementDefinitionEntity e = MeasurementDefinitionEntity.newEntity(entity, activityItemType);
+				entity.measurementDefinitions.add(e);
+			} //TODO JCTODO else if()
+		}
+		healthPlanEntity.addActivityDefinition(entity);
+
+		return entity;
+	}
 
 	public Long getId() {
 		return id;
 	}
-	
+
 	protected void setHealthPlan(HealthPlanEntity healthPlan) {
 		this.healthPlan = EntityUtil.notNull(healthPlan);
 	}
@@ -135,28 +138,28 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	public Frequency getFrequency() {
 		return Frequency.unmarshal(frequency);
 	}
-	
+
 	public ScheduledActivityEntity createScheduledActivityEntity(Date scheduledTime) {
 		ScheduledActivityEntity entity = ScheduledActivityEntity.newEntity(this, scheduledTime);
 		return entity;
 	}
-	
-	
+
 	/**
 	 * Sets the start date of this activity.
 	 * 
-	 * @param startDate the start date, must be in the interval of the health plan.
+	 * @param startDate
+	 *            the start date, must be in the interval of the health plan.
 	 */
 	public void setStartDate(Date startDate) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(EntityUtil.notNull(startDate));
 		startDate = EntityUtil.dayBegin(cal).getTime();
-		
+
 		Date min = getHealthPlan().getStartDate();
 		Date max = getHealthPlan().getEndDate();
 		if (startDate.compareTo(min) < 0 || startDate.compareTo(max) > 0) {
 			throw new IllegalArgumentException("Invalid start date, out of health plan range: " + startDate);
-		}		
+		}
 		this.startDate = startDate;
 	}
 
@@ -168,7 +171,6 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	public Date getStartDate() {
 		return startDate;
 	}
-
 
 	void setCreatedBy(UserEntity createdBy) {
 		this.createdBy = createdBy;
@@ -210,7 +212,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		Collections.sort(scheduledActivities);
 		return Collections.unmodifiableList(scheduledActivities);
 	}
-	
+
 	/**
 	 * Returns the list of {@link MeasurementDefinitionEntity}
 	 * 
@@ -218,14 +220,14 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	 */
 	public List<MeasurementDefinitionEntity> getMeasurementDefinitions() {
 		Collections.sort(measurementDefinitions);
-		return Collections.unmodifiableList(measurementDefinitions);		
+		return Collections.unmodifiableList(measurementDefinitions);
 	}
-	
 
 	/**
 	 * Schedules activities from a specified start date.
 	 * 
-	 * @param startDate the start date.
+	 * @param startDate
+	 *            the start date.
 	 * @return the list of scheduled activities.
 	 */
 	protected List<ScheduledActivityEntity> scheduleActivities0(Date startDate) {
@@ -241,30 +243,32 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 					break;
 				}
 			}
-			if (freq.getWeekFrequency() > 1 && cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY &&
-					cal.getTime().compareTo(getStartDate()) > 0) {
-				cal.add(Calendar.DATE, 8*(freq.getWeekFrequency()-1));
+			if (freq.getWeekFrequency() > 1 && cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+					&& cal.getTime().compareTo(getStartDate()) > 0) {
+				cal.add(Calendar.DATE, 8 * (freq.getWeekFrequency() - 1));
 			} else {
 				cal.add(Calendar.DATE, 1);
 			}
 		}
 		this.scheduledActivities.addAll(list);
-		
-		return list;		
+
+		return list;
 	}
-	
+
 	/**
 	 * Returns scheduled activities.
 	 */
-	public List<ScheduledActivityEntity> scheduleActivities() {	
+	public List<ScheduledActivityEntity> scheduleActivities() {
 		return scheduleActivities0(getStartDate());
 	}
-	
+
 	/**
 	 * Appends scheduled activities to a list.
 	 * 
-	 * @param list the list to append activities to.
-	 * @param day the actual day.
+	 * @param list
+	 *            the list to append activities to.
+	 * @param day
+	 *            the actual day.
 	 * @return a list of scheduled activities, empty if none is applicable.
 	 */
 	private void scheduleActivity(List<ScheduledActivityEntity> list, Calendar day, FrequencyDay fday) {
@@ -287,7 +291,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 			final CareGiverEntity cg = (CareGiverEntity) user;
 			return cg.getCareUnit().getId().equals(this.getHealthPlan().getIssuedBy().getCareUnit().getId());
 		}
-		
+
 		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
 	}
 

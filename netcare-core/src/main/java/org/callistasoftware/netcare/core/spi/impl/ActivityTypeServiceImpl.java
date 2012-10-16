@@ -146,7 +146,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 					, MeasureUnit.valueOf(t.getUnit().getCode()), t.isAlarm());
 			
 			log.debug("Adding measurement type {}", t.getName());
-			entity.addMeasurementType(mte);
+			entity.addActivityItemType(mte);
 		}
 		
 		

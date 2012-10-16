@@ -22,12 +22,15 @@ import java.util.Locale;
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.MeasurementType;
+import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 
 /**
  * Implementation of an activity type
+ * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
 public class ActivityTypeImpl implements ActivityType {
 
@@ -35,21 +38,21 @@ public class ActivityTypeImpl implements ActivityType {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 	private String name;
 	private ActivityCategoryImpl category;
 	private boolean measuringSense;
 	private String minScaleText;
 	private String maxScaleText;
-	
+
 	private MeasurementType[] measureValues;
-	
+
 	//
 	public ActivityTypeImpl() {
 		this.measureValues = new MeasurementTypeImpl[0];
 	}
-	
+
 	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
@@ -58,31 +61,34 @@ public class ActivityTypeImpl implements ActivityType {
 		dto.measuringSense = entity.isMeasuringSense();
 		dto.setMinScaleText(entity.getSenseLabelLow());
 		dto.setMaxScaleText(entity.getSenseLabelHigh());
-		
-		final MeasurementType[] values = new MeasurementTypeImpl[entity.getMeasurementTypes().size()];
+
+		final MeasurementType[] values = new MeasurementTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
-			values[i] = MeasurementTypeImpl.newFromEntity(entity.getMeasurementTypes().get(i));
+			ActivityItemTypeEntity activityItemTypeEntity = entity.getActivityItemTypes().get(i);
+			if (activityItemTypeEntity instanceof MeasurementTypeEntity) {
+				values[i] = MeasurementTypeImpl.newFromEntity((MeasurementTypeEntity) activityItemTypeEntity);
+			} // TODO JCTODO
 		}
-		
+
 		dto.measureValues = values;
-		
+
 		return dto;
 	}
-	
+
 	public static ActivityType[] newFromEntities(final List<ActivityTypeEntity> entities, final Locale l) {
 		final ActivityType[] dtos = new ActivityTypeImpl[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
 			dtos[i] = ActivityTypeImpl.newFromEntity(entities.get(i), l);
 		}
-		
+
 		return dtos;
 	}
-	
+
 	@Override
 	public Long getId() {
 		return this.id;
 	}
-	
+
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -91,7 +97,7 @@ public class ActivityTypeImpl implements ActivityType {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public void setName(final String name) {
 		this.name = name;
 	}
@@ -100,7 +106,7 @@ public class ActivityTypeImpl implements ActivityType {
 	public ActivityCategory getCategory() {
 		return this.category;
 	}
-	
+
 	public void setCategory(final ActivityCategoryImpl category) {
 		this.category = category;
 	}
@@ -114,7 +120,7 @@ public class ActivityTypeImpl implements ActivityType {
 	public String getMinScaleText() {
 		return this.minScaleText;
 	}
-	
+
 	public void setMinScaleText(final String minScaleText) {
 		this.minScaleText = minScaleText;
 	}
@@ -123,7 +129,7 @@ public class ActivityTypeImpl implements ActivityType {
 	public String getMaxScaleText() {
 		return this.maxScaleText;
 	}
-	
+
 	public void setMaxScaleText(final String maxScaleText) {
 		this.maxScaleText = maxScaleText;
 	}
@@ -132,11 +138,11 @@ public class ActivityTypeImpl implements ActivityType {
 	public MeasurementType[] getMeasureValues() {
 		return this.measureValues;
 	}
-	
+
 	public void setMeasureValues(final MeasurementTypeImpl[] measureValues) {
 		this.measureValues = measureValues;
 	}
-	
+
 	public void setMeasuringSense(boolean measuringSense) {
 		this.measuringSense = measuringSense;
 	}
@@ -144,7 +150,7 @@ public class ActivityTypeImpl implements ActivityType {
 	public void setMeasureValues(MeasurementType[] measureValues) {
 		this.measureValues = measureValues;
 	}
-	
+
 	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
@@ -154,13 +160,13 @@ public class ActivityTypeImpl implements ActivityType {
 		buf.append("Measuring sense: ").append(this.isMeasuringSense()).append("\n");
 		buf.append("Sense min: ").append(this.getMinScaleText()).append("\n");
 		buf.append("Sense max: ").append(this.getMaxScaleText()).append("\n");
-		
+
 		buf.append(this.getCategory());
-		
+
 		for (final MeasurementType t : this.getMeasureValues()) {
 			buf.append(t);
 		}
-		
+
 		return buf.toString();
 	}
 }
