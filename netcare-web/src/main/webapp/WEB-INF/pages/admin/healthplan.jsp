@@ -26,11 +26,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				
@@ -225,111 +222,99 @@
 				
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
+	</hp:viewHeader>
+	<hp:viewBody title="Hälsoplaner">
+		<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
+		<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
+		
+		<h2><spring:message code="healthplan.title" arguments="${curPatient}"/></h2>
+		<p>
+			<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="healthplan.desc" arguments="${curPatient},${newHealthPlan}" />
+		</p>
+		
+		<spring:message code="clear" var="clear" scope="page" />
+		<spring:message code="healthplan.duration" var="duration" scope="page" />
+		<spring:message code="healthplan.name" var="name" scope="page" />
+		<spring:message code="healthplan.type" var="type" scope="page" />
+		<spring:message code="healthplan.start" var="startDate" scope="page" />
+		<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
+		<spring:message code="healthplan.autoRenewal" var="autoRenewal" scope="page" />
+		
+		<p style="text-align: right; padding-right: 20px;">
+			<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
+		</p>
+		<form id="createHealthPlanForm" action="#" method="post">
+			<fieldset>
+				<legend><spring:message code="healthplan.new" /></legend>
+				<netcare:field name="name" label="${name}">
+					<input type="text" name="name" class="xlarge" />
+				</netcare:field>
+				
+				<netcare:field name="startDate" label="${startDate}">
+					<netcare:dateInput name="startDate" />
+				</netcare:field>
+				
+				<netcare:row>
+					<netcare:col span="6">
+						<netcare:field name="duration" label="${duration}">
+							<input type="number" min="1" name="duration" class="medium signedNumeric"/>
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
+				
+				<netcare:row>
+					<netcare:col span="6">
+						<netcare:field name="type" label="${type}">
+							<select name="type"></select>
+						</netcare:field>
+					</netcare:col>
+				</netcare:row>
 
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Aktivitetskategorier">
+				<netcare:field name="autoRenewal" label="${autoRenewal}">
+					<input type="checkbox" name="autoRenewal" />
+				</netcare:field>
+			</fieldset>
 			
-				<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
-				<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
-				
-				<h2><spring:message code="healthplan.title" arguments="${curPatient}"/></h2>
-				<p>
-					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="healthplan.desc" arguments="${curPatient},${newHealthPlan}" />
-				</p>
-				
-				<spring:message code="clear" var="clear" scope="page" />
-				<spring:message code="healthplan.duration" var="duration" scope="page" />
-				<spring:message code="healthplan.name" var="name" scope="page" />
-				<spring:message code="healthplan.type" var="type" scope="page" />
-				<spring:message code="healthplan.start" var="startDate" scope="page" />
-				<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
-				<spring:message code="healthplan.autoRenewal" var="autoRenewal" scope="page" />
-				
-				<p style="text-align: right; padding-right: 20px;">
-					<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
-				</p>
-				<form id="createHealthPlanForm" action="#" method="post">
-					<fieldset>
-						<legend><spring:message code="healthplan.new" /></legend>
-						<netcare:field name="name" label="${name}">
-							<input type="text" name="name" class="xlarge" />
-						</netcare:field>
-						
-						<netcare:field name="startDate" label="${startDate}">
-							<netcare:dateInput name="startDate" />
-						</netcare:field>
-						
-						<netcare:row>
-							<netcare:col span="6">
-								<netcare:field name="duration" label="${duration}">
-									<input type="number" min="1" name="duration" class="medium signedNumeric"/>
-								</netcare:field>
-							</netcare:col>
-						</netcare:row>
-						
-						<netcare:row>
-							<netcare:col span="6">
-								<netcare:field name="type" label="${type}">
-									<select name="type"></select>
-								</netcare:field>
-							</netcare:col>
-						</netcare:row>
-	
-						<netcare:field name="autoRenewal" label="${autoRenewal}">
-							<input type="checkbox" name="autoRenewal" />
-						</netcare:field>
-					</fieldset>
-					
-					<div class="form-actions">
-						<input type="submit" class="btn btn-info" value="${newHealthPlan}" />
-						<input type="reset" class="btn" value="${clear}" />
-					</div>
-					
-				</form>
-				
-				<div id="healthPlanContainer">
-					<div style="display: none;" class="alert alert-info">
-						<p><spring:message code="healthplan.none" /></p>
-					</div>
-					<netcare:table id="ordinationTable">
-						<thead>
-							<tr>
-								<th><c:out value="${name}" /></th>
-								<th><c:out value="${startDate}" /></th>
-								<th><c:out value="${duration}" /></th>
-								<th><c:out value="${issuedBy}" /></th>
-								<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-								<th width="96px">&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</netcare:table>
-				</div>
+			<div class="form-actions">
+				<input type="submit" class="btn btn-info" value="${newHealthPlan}" />
+				<input type="reset" class="btn" value="${clear}" />
+			</div>
+			
+		</form>
 		
-				<netcare:modal titleCode="healthplan.icons.performRenewal" confirmCode="label.yes" id="perform-renewal">
-					<p>
-						<span class="label label-info"><spring:message code="label.information" /></span>
-						<spring:message code="healthplan.confirm.performRenewal" />
-					</p>
-				</netcare:modal>
-		
-				<netcare:modal titleCode="healthplan.icons.stopRenewal" confirmCode="label.yes" id="stop-renewal">
-					<p>
-						<span class="label label-info"><spring:message code="label.information" /></span>
-						<spring:message code="healthplan.confirm.stopAutoRenewal" />
-					</p>
-				</netcare:modal>
-		
-			</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>	
-</mvk:page>
+		<div id="healthPlanContainer">
+			<div style="display: none;" class="alert alert-info">
+				<p><spring:message code="healthplan.none" /></p>
+			</div>
+			<netcare:table id="ordinationTable">
+				<thead>
+					<tr>
+						<th><c:out value="${name}" /></th>
+						<th><c:out value="${startDate}" /></th>
+						<th><c:out value="${duration}" /></th>
+						<th><c:out value="${issuedBy}" /></th>
+						<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+						<th width="96px">&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</netcare:table>
+		</div>
+
+		<netcare:modal titleCode="healthplan.icons.performRenewal" confirmCode="label.yes" id="perform-renewal">
+			<p>
+				<span class="label label-info"><spring:message code="label.information" /></span>
+				<spring:message code="healthplan.confirm.performRenewal" />
+			</p>
+		</netcare:modal>
+
+		<netcare:modal titleCode="healthplan.icons.stopRenewal" confirmCode="label.yes" id="stop-renewal">
+			<p>
+				<span class="label label-info"><spring:message code="label.information" /></span>
+				<spring:message code="healthplan.confirm.stopAutoRenewal" />
+			</p>
+		</netcare:modal>
+	</hp:viewBody>
+</hp:view>

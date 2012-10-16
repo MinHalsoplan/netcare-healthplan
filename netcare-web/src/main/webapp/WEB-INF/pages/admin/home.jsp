@@ -26,11 +26,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				var hp = new NC.HealthPlan();
@@ -182,120 +179,109 @@
 				loadReplies();
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
-
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Start">
-	
-				<section id="dashboard">
-					<p>
-						<spring:message code="admin.home.description" />
-					</p>
-					<p>
-						<span class="label label-important"><spring:message code="important" /></span>
-						<spring:message code="admin.home.important" />
-					</p>
-					
-				</section>
-				
-				<section id="replies">
-					<h2><spring:message code="comments.replies" /></h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="comments.repliesDescription" />
-					</p>
-					<netcare:block-message id="noReplyId" type="info">
-						<spring:message code="comments.noReplies" />
-					</netcare:block-message>
-					
-					<netcare:table id="replyTableId">
-						<thead>
-							<tr>
-								<th><spring:message code="comments.comment" /></th>
-								<th><spring:message code="comments.reply" /></th>
-								<th><spring:message code="comments.from" />
-								<th><spring:message code="comments.activity" /></th>
-								<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-								<th width="32px">&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</netcare:table>
-				</section>
-				
-				<br />
-				
-				<section id="aktiviteter">
-					<h2><spring:message code="activity.reported.title" /></h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="activity.reported.desc" />
-					</p>
-					
-					<netcare:block-message type="warning">
-						<a href="<spring:url value="/netcare/admin/activity/list" />"><spring:message code="activity.reported.list" /></a>
-					</netcare:block-message>
-					
-					<div id="reportedActivities">
-						<netcare:block-message id="noReportedActivities" type="info" style="display: none;">
-							<spring:message code="activity.reported.noneLastDay" />
-						</netcare:block-message>
-						<netcare:table id="latest-activities">
-							<thead>
-								<tr>
-									<th><spring:message code="activity.reported.patient" /></th>
-									<th><spring:message code="activity.reported.type" /></th>
-									<th><spring:message code="activity.reported.healthplan" /></th>
-									<th><spring:message code="activity.reported.value" /></th>
-									<th><spring:message code="activity.reported.when" /></th>
-									<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-									<th width="32px">&nbsp;</th>
-							</thead>
-							<tbody></tbody>
-						</netcare:table>
-					</div>
-					
-					<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
-						<input type="text" name="comment" class="xlarge" />
-					</netcare:modal>
-					
-				</section>
-				
-				<br />
-				
-				<section id="alarms">
-					<h2><spring:message code="alarm.title" /></h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="alarm.desc" />
-					</p>
-					
-					<div id="alarmContainer">	
-						<netcare:block-message type="info" style="display: none;">
-							<spring:message code="alarm.none" />
-						</netcare:block-message>
-						<netcare:table style="display: none;">
-							<thead>
-								<tr>
-									<th><spring:message code="alarm.patient" /></th>
-									<th><spring:message code="alarm.contact" /></th>
-									<th><spring:message code="alarm.cause" /></th>
-									<th><spring:message code="alarm.created" /></th>
-									<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-									<th width="32px">&nbsp;</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</netcare:table>
-					</div>
-				</section>
-			</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>	
-</mvk:page>
+	</hp:viewHeader>
+	<hp:viewBody title="Min hälsoplan - Profil">
+		<section id="dashboard">
+			<p>
+				<spring:message code="admin.home.description" />
+			</p>
+			<p>
+				<span class="label label-important"><spring:message code="important" /></span>
+				<spring:message code="admin.home.important" />
+			</p>
+			
+		</section>
+		
+		<section id="replies">
+			<h2><spring:message code="comments.replies" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="comments.repliesDescription" />
+			</p>
+			<netcare:block-message id="noReplyId" type="info">
+				<spring:message code="comments.noReplies" />
+			</netcare:block-message>
+			
+			<netcare:table id="replyTableId">
+				<thead>
+					<tr>
+						<th><spring:message code="comments.comment" /></th>
+						<th><spring:message code="comments.reply" /></th>
+						<th><spring:message code="comments.from" />
+						<th><spring:message code="comments.activity" /></th>
+						<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+						<th width="32px">&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</netcare:table>
+		</section>
+		
+		<br />
+		
+		<section id="aktiviteter">
+			<h2><spring:message code="activity.reported.title" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="activity.reported.desc" />
+			</p>
+			
+			<netcare:block-message type="warning">
+				<a href="<spring:url value="/netcare/admin/activity/list" />"><spring:message code="activity.reported.list" /></a>
+			</netcare:block-message>
+			
+			<div id="reportedActivities">
+				<netcare:block-message id="noReportedActivities" type="info" style="display: none;">
+					<spring:message code="activity.reported.noneLastDay" />
+				</netcare:block-message>
+				<netcare:table id="latest-activities">
+					<thead>
+						<tr>
+							<th><spring:message code="activity.reported.patient" /></th>
+							<th><spring:message code="activity.reported.type" /></th>
+							<th><spring:message code="activity.reported.healthplan" /></th>
+							<th><spring:message code="activity.reported.value" /></th>
+							<th><spring:message code="activity.reported.when" /></th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="32px">&nbsp;</th>
+					</thead>
+					<tbody></tbody>
+				</netcare:table>
+			</div>
+			
+			<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
+				<input type="text" name="comment" class="xlarge" />
+			</netcare:modal>
+			
+		</section>
+		
+		<br />
+		
+		<section id="alarms">
+			<h2><spring:message code="alarm.title" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="alarm.desc" />
+			</p>
+			
+			<div id="alarmContainer">	
+				<netcare:block-message type="info" style="display: none;">
+					<spring:message code="alarm.none" />
+				</netcare:block-message>
+				<netcare:table style="display: none;">
+					<thead>
+						<tr>
+							<th><spring:message code="alarm.patient" /></th>
+							<th><spring:message code="alarm.contact" /></th>
+							<th><spring:message code="alarm.cause" /></th>
+							<th><spring:message code="alarm.created" /></th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="32px">&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</netcare:table>
+			</div>
+		</section>
+	</hp:viewBody>
+</hp:view>

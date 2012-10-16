@@ -26,11 +26,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				var categories = new NC.ActivityCategories();
@@ -68,60 +65,49 @@
 				
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
-
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Aktivitetskategorier">
+	</hp:viewHeader>
+	<hp:viewBody title="Kategorier">
+		<h2><spring:message code="category.title" /></h2>
+		<p>
+			<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="category.desc" />
+		</p>
+		<p>
+			<span class="label label-important"><spring:message code="important" /></span>
+			<spring:message code="category.important" />
+		</p>
+		
+		<form id="activityCategoryForm">
+			<fieldset>
+				<legend><spring:message code="category.new" /></legend>
+			</fieldset>
 			
-				<h2><spring:message code="category.title" /></h2>
-				<p>
-					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="category.desc" />
-				</p>
-				<p>
-					<span class="label label-important"><spring:message code="important" /></span>
-					<spring:message code="category.important" />
-				</p>
-				
-				<form id="activityCategoryForm">
-					<fieldset>
-						<legend><spring:message code="category.new" /></legend>
-					</fieldset>
-					
-					<spring:message code="category.name" var="categoryName" scope="page" />
-					<netcare:field name="name" label="${categoryName}">
-						<input type="text" name="name" />
-					</netcare:field>
-					
-					<div class="form-actions">
-						<button type="submit" class="btn btn-info"><spring:message code="category.new" /></button>
-						<button type="reset" class="btn"><spring:message code="clear" /></button>
-					</div>
-					
-				</form>
-				
-				<section id="categoryList">
-					<h3><spring:message code="category.list.title" /></h3>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="category.list.desc" />
-					</p>
-					<netcare:table id="categoryTable">
-						<thead>
-							<tr>
-								<th><spring:message code="name" /></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</netcare:table>
-				</section>
-			</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>	
-</mvk:page>
+			<spring:message code="category.name" var="categoryName" scope="page" />
+			<netcare:field name="name" label="${categoryName}">
+				<input type="text" name="name" />
+			</netcare:field>
+			
+			<div class="form-actions">
+				<button type="submit" class="btn btn-info"><spring:message code="category.new" /></button>
+				<button type="reset" class="btn"><spring:message code="clear" /></button>
+			</div>
+			
+		</form>
+		
+		<section id="categoryList">
+			<h3><spring:message code="category.list.title" /></h3>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="category.list.desc" />
+			</p>
+			<netcare:table id="categoryTable">
+				<thead>
+					<tr>
+						<th><spring:message code="name" /></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</netcare:table>
+		</section>
+	</hp:viewBody>
+</hp:view>

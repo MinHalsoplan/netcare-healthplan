@@ -23,12 +23,15 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
+
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
 <mvk:page>
 	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<link href="<c:url value="/css/netcare.css" />" type="text/css" rel="stylesheet" />
-		<netcare:js />
+		<netcare:css resourcePath="${resourcePath}" />
+		<netcare:js resourcePath="${resourcePath}"/>
+		<hp:healthplan-js />
 		<script type="text/javascript">
 			$(function() {
 				$('#userForm').submit(function(e) {

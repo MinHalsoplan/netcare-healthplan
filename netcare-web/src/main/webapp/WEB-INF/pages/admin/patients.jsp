@@ -26,11 +26,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				
@@ -156,96 +153,85 @@
 				
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
-
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Aktivitetskategorier">
+	</hp:viewHeader>
+	<hp:viewBody title="Patienter">
+		<h2><spring:message code="admin.patients.new" /></h2>
+		<p>
+			<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="admin.patients.desc" />
+		</p>
 		
-				<h2><spring:message code="admin.patients.new" /></h2>
-				<p>
-					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="admin.patients.desc" />
-				</p>
+		<p style="text-align: right; padding-right: 20px;">
+			<a id="showCreateForm" class="btn addButton">
+				<spring:message code="admin.patients.new" />
+			</a>
+		</p>
+		
+		<form id="patientForm">
+			<fieldset>
+				<legend><spring:message code="admin.patients.new" /></legend>
+			</fieldset>
+			
+			<netcare:row>
+				<netcare:col span="4">
+					<spring:message code="patient.firstName" var="name" scope="page"/>
+					<netcare:field containerId="nameContainer" name="firstName" label="${name}">
+						<input type="text" name="firstName" />
+					</netcare:field>
+				</netcare:col>
+				<netcare:col span="4">
+					<spring:message code="patient.surName" var="surName" scope="page"/>
+					<netcare:field containerId="nameContainer" name="surName" label="${surName}">
+						<input type="text" name="surName" />
+					</netcare:field>
+				</netcare:col>
+			</netcare:row>
+			
+			<netcare:row>
+				<netcare:col span="4">
+					<spring:message code="patient.crn" var="cnr" scope="page" />
+					<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
+						<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
+					</netcare:field>
+				</netcare:col>
+				<netcare:col span="4">
+					<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
+					<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
+						<input type="tel" name="phoneNumber" />
+					</netcare:field>
+				</netcare:col>
+			</netcare:row>
+			
+			<div class="form-actions">
+				<input type="submit" class="btn btn-info" value="<spring:message code="create" />" />
+				<input type="reset" class="btn" value="<spring:message code="reset" />" />
+			</div>
+			
+		</form>
+		
+		<section id="patients">
+			<h3><spring:message code="admin.patients.list" /></h3>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="admin.patients.list.desc" />
+			</p>
+			<netcare:block-message type="info" style="display:none;">
+				<spring:message code="admin.patients.none" />
+			</netcare:block-message>
+			<netcare:table id="patientsTable">
+				<thead>
+					<tr>
+						<th><spring:message code="patient.surName" /></th>
+						<th><spring:message code="patient.firstName" /></th>
+						<th><spring:message code="patient.crn" /></th>
+						<th><spring:message code="patient.phoneNumber" />
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
 				
-				<p style="text-align: right; padding-right: 20px;">
-					<a id="showCreateForm" class="btn addButton">
-						<spring:message code="admin.patients.new" />
-					</a>
-				</p>
-				
-				<form id="patientForm">
-					<fieldset>
-						<legend><spring:message code="admin.patients.new" /></legend>
-					</fieldset>
-					
-					<netcare:row>
-						<netcare:col span="4">
-							<spring:message code="patient.firstName" var="name" scope="page"/>
-							<netcare:field containerId="nameContainer" name="firstName" label="${name}">
-								<input type="text" name="firstName" />
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="4">
-							<spring:message code="patient.surName" var="surName" scope="page"/>
-							<netcare:field containerId="nameContainer" name="surName" label="${surName}">
-								<input type="text" name="surName" />
-							</netcare:field>
-						</netcare:col>
-					</netcare:row>
-					
-					<netcare:row>
-						<netcare:col span="4">
-							<spring:message code="patient.crn" var="cnr" scope="page" />
-							<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
-								<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="4">
-							<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
-							<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
-								<input type="tel" name="phoneNumber" />
-							</netcare:field>
-						</netcare:col>
-					</netcare:row>
-					
-					<div class="form-actions">
-						<input type="submit" class="btn btn-info" value="<spring:message code="create" />" />
-						<input type="reset" class="btn" value="<spring:message code="reset" />" />
-					</div>
-					
-				</form>
-				
-				<section id="patients">
-					<h3><spring:message code="admin.patients.list" /></h3>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="admin.patients.list.desc" />
-					</p>
-					<netcare:block-message type="info" style="display:none;">
-						<spring:message code="admin.patients.none" />
-					</netcare:block-message>
-					<netcare:table id="patientsTable">
-						<thead>
-							<tr>
-								<th><spring:message code="patient.surName" /></th>
-								<th><spring:message code="patient.firstName" /></th>
-								<th><spring:message code="patient.crn" /></th>
-								<th><spring:message code="patient.phoneNumber" />
-								<th>&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-						
-						</tbody>
-					</netcare:table>
-				</section>
-			</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>	
-</mvk:page>
+				</tbody>
+			</netcare:table>
+		</section>
+	</hp:viewBody>
+</hp:view>

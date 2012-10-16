@@ -16,24 +16,33 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ attribute name="title" required="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-	</mvk:header>
-	<mvk:body>
-		<div class="span12">
-			<h1><spring:message code="internalError" /></h1>
-			<p>
-				<spring:message code="generalError" /><br />
-			</p>
-		</div>
-	</mvk:body>
-</mvk:page>
+<mvk:body>
+<sec:authentication property="principal.username" var="username"/>
+<mvk:pageHeader title="${title}"
+	loggedInUser="${username}"
+	loggedInAsText="Inloggad som : "
+	logoutUrl="/netcare/security/logout"
+	logoutText="Logga ut" />
+
+<mvk:pageContent>
+	<mvk:leftMenu>
+		<hp:menu />
+	</mvk:leftMenu>
+	
+	<mvk:content title="Startsida">
+		<jsp:doBody/>
+	</mvk:content>
+</mvk:pageContent>
+
+<mvk:pageFooter></mvk:pageFooter>
+
+</mvk:body>

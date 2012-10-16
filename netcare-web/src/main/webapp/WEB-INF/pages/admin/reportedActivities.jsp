@@ -26,12 +26,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
-		
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				
@@ -73,36 +69,26 @@
 				
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
-
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-		<mvk:content title="Genomförda aktiviteter">
-			<hp:list-content descriptionCode="activity.reported.desc2" titleCode="activity.reported.title">
-				<netcare:table id="activity-table">
-					<thead>
-						<tr>
-							<th><spring:message code="activity.reported.patient" /></th>
-							<th><spring:message code="activity.reported.type" /></th>
-							<th><spring:message code="activity.reported.healthplan" /></th>
-							<th><spring:message code="activity.reported.value" /></th>
-							<th><spring:message code="activity.reported.when" /></th>
-							<th>&nbsp;</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</netcare:table>
-				
-				<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
-					<input type="text" name="comment" class="xlarge" />
-				</netcare:modal>
-			</hp:list-content>
-		</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>	
-</mvk:page>
+	</hp:viewHeader>
+	<hp:viewBody title="Genomförda aktiviteter">
+		<hp:list-content descriptionCode="activity.reported.desc2" titleCode="activity.reported.title">
+			<netcare:table id="activity-table">
+				<thead>
+					<tr>
+						<th><spring:message code="activity.reported.patient" /></th>
+						<th><spring:message code="activity.reported.type" /></th>
+						<th><spring:message code="activity.reported.healthplan" /></th>
+						<th><spring:message code="activity.reported.value" /></th>
+						<th><spring:message code="activity.reported.when" /></th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</netcare:table>
+			
+			<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
+				<input type="text" name="comment" class="xlarge" />
+			</netcare:modal>
+		</hp:list-content>
+	</hp:viewBody>
+</hp:view>

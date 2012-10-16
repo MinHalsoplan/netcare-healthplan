@@ -27,14 +27,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources"
-		contextPath="${pageContext.request.contextPath}">
-		
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
-		
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 
@@ -100,181 +94,163 @@
 				 * Form submission
 				 */
 				$('#userprofile :submit')
-						.click(
-								function(event) {
-									event.preventDefault();
+					.click(
+						function(event) {
+							event.preventDefault();
 
-									var formData = new Object();
-									formData.firstname = $(
-											'#userprofile input[name="firstname"]')
-											.val();
-									formData.surname = $(
-											'#userprofile input[name="surname"]')
-											.val();
-									formData.email = $(
-											'#userprofile input[name="email"]')
-											.val();
-									formData.phone = $(
-											'#userprofile input[name="phone"]')
-											.val();
-									formData.mobile = $(
-											'#userprofile input[name="mobile"]:checked')
-											.val();
-									formData.password = $(
+							var formData = new Object();
+							formData.firstname = $(
+									'#userprofile input[name="firstname"]')
+									.val();
+							formData.surname = $(
+									'#userprofile input[name="surname"]')
+									.val();
+							formData.email = $(
+									'#userprofile input[name="email"]')
+									.val();
+							formData.phone = $(
+									'#userprofile input[name="phone"]')
+									.val();
+							formData.mobile = $(
+									'#userprofile input[name="mobile"]:checked')
+									.val();
+							formData.password = $(
+									'#userprofile input[name="password"]')
+									.val();
+							formData.password2 = $(
+									'#userprofile input[name="password2"]')
+									.val();
+
+							// FIXME: hard-coded text
+							if (formData.mobile == "true") {
+								if (formData.password !== formData.password2) {
+									$(
 											'#userprofile input[name="password"]')
-											.val();
-									formData.password2 = $(
+											.css('background',
+													'#F2DEDE');
+									$(
 											'#userprofile input[name="password2"]')
-											.val();
+											.css('background',
+													'#F2DEDE');
+									new NC.PageMessages()
+											.addMessage(
+													'error',
+													[ {
+														message : 'Pin-koderna är inte lika!'
+													} ]);
+									return;
+								}
+							}
 
-									// FIXME: hard-coded text
-									if (formData.mobile == "true") {
-										if (formData.password !== formData.password2) {
-											$(
-													'#userprofile input[name="password"]')
-													.css('background',
-															'#F2DEDE');
-											$(
-													'#userprofile input[name="password2"]')
-													.css('background',
-															'#F2DEDE');
-											new NC.PageMessages()
-													.addMessage(
-															'error',
-															[ {
-																message : 'Pin-koderna är inte lika!'
-															} ]);
-											return;
-										}
-									}
-
-									serviceClient.update(patientId, formData,
-											function(data) {
-												updateForm(data);
-											});
-
+							serviceClient.update(patientId, formData,
+								function(data) {
+									updateForm(data);
 								});
+
+						});
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
+	</hp:viewHeader>
+	<hp:viewBody title="Profil">
+		<section id="profile">
+			<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
+			<spring:message code="profile.update" var="update" scope="page" />
 
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Profil">
-				<section id="profile">
-
-					<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
-					<spring:message code="profile.update" var="update" scope="page" />
-
-					<h2>
-						<spring:message code="profile.title" arguments="${currentPrincipal}" />
-					</h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="profile.desc" arguments="${update}" />
-					</p>
+			<h2>
+				<spring:message code="profile.title" arguments="${currentPrincipal}" />
+			</h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="profile.desc" arguments="${update}" />
+			</p>
 
 
-					<div id="userprofile">
-						<form>
+			<div id="userprofile">
+				<form>
 
-							<netcare:row>
-								<netcare:col span="12">
-									<spring:message code="profile.crn" var="crn" scope="page" />
-									<netcare:field name="cnr" label="${crn}">
-										<input type="text" name="cnr" disabled class="span4" />
-									</netcare:field>
-								</netcare:col>
-							</netcare:row>
+					<netcare:row>
+						<netcare:col span="12">
+							<spring:message code="profile.crn" var="crn" scope="page" />
+							<netcare:field name="cnr" label="${crn}">
+								<input type="text" name="cnr" disabled class="span4" />
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
 
-							<netcare:row>
-								<netcare:col span="6">
-									<spring:message code="profile.firstName" var="firstName" scope="page" />
-									<netcare:field name="firstName" label="${firstName}">
-										<input type="text" name="firstname" class="medium" />
-									</netcare:field>
-								</netcare:col>
-								<netcare:col span="6">
-									<spring:message code="profile.surName" var="surName" scope="page" />
-									<netcare:field name="surName" label="${surName}">
-										<input type="text" name="surname" class="medium" />
-									</netcare:field>
-								</netcare:col>
-							</netcare:row>
+					<netcare:row>
+						<netcare:col span="6">
+							<spring:message code="profile.firstName" var="firstName" scope="page" />
+							<netcare:field name="firstName" label="${firstName}">
+								<input type="text" name="firstname" class="medium" />
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="6">
+							<spring:message code="profile.surName" var="surName" scope="page" />
+							<netcare:field name="surName" label="${surName}">
+								<input type="text" name="surname" class="medium" />
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
 
-							<netcare:row>
-								<netcare:col span="6">
-									<spring:message code="profile.email" var="email" scope="page" />
-									<netcare:field name="email" label="${email}">
-										<input type="email" name="email" />
-									</netcare:field>
-								</netcare:col>
-								<netcare:col span="6">
-									<spring:message code="profile.phone" var="phone" scope="page" />
-									<netcare:field name="phone" label="${phone}">
-										<input type="tel" name="phone" />
-									</netcare:field>
-								</netcare:col>
-							</netcare:row>
+					<netcare:row>
+						<netcare:col span="6">
+							<spring:message code="profile.email" var="email" scope="page" />
+							<netcare:field name="email" label="${email}">
+								<input type="email" name="email" />
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="6">
+							<spring:message code="profile.phone" var="phone" scope="page" />
+							<netcare:field name="phone" label="${phone}">
+								<input type="tel" name="phone" />
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
 
-							<br />
+					<br />
 
-							<fieldset>
-								<legend>
-									<spring:message code="profile.mobile.title" />
-								</legend>
+					<fieldset>
+						<legend>
+							<spring:message code="profile.mobile.title" />
+						</legend>
 
-								<netcare:row>
-									<netcare:col span="12">
-										<p>
-											<input type="checkbox" name="mobile" value="true"> <span><spring:message
-													code="profile.mobile.enable" /></span>
-										</p>
-									</netcare:col>
-								</netcare:row>
+						<netcare:row>
+							<netcare:col span="12">
+								<p>
+									<input type="checkbox" name="mobile" value="true"> <span><spring:message
+											code="profile.mobile.enable" /></span>
+								</p>
+							</netcare:col>
+						</netcare:row>
 
-								<netcare:row>
-									<netcare:col span="2">
-										<spring:message code="profile.mobile.pin" var="pin" scope="page" />
-										<netcare:field name="password" label="${pin}">
-											<input type="password" name="password" class="input-small numericInput" />
-										</netcare:field>
-									</netcare:col>
+						<netcare:row>
+							<netcare:col span="2">
+								<spring:message code="profile.mobile.pin" var="pin" scope="page" />
+								<netcare:field name="password" label="${pin}">
+									<input type="password" name="password" class="input-small numericInput" />
+								</netcare:field>
+							</netcare:col>
 
-									<netcare:col span="2">
-										<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
-										<netcare:field name="password2" label="${pin2}">
-											<input type="password" name="password2" class="input-small numericInput" />
-										</netcare:field>
-									</netcare:col>
-								</netcare:row>
-							</fieldset>
+							<netcare:col span="2">
+								<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
+								<netcare:field name="password2" label="${pin2}">
+									<input type="password" name="password2" class="input-small numericInput" />
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+					</fieldset>
 
-							<div class="form-actions">
-								<button type="submit" class="btn btn-info">
-									<spring:message code="profile.update" />
-								</button>
-								<button type="reset" class="btn">
-									<spring:message code="clear" />
-								</button>
-							</div>
-
-						</form>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-info">
+							<spring:message code="profile.update" />
+						</button>
+						<button type="reset" class="btn">
+							<spring:message code="clear" />
+						</button>
 					</div>
-				</section>
-			</mvk:content>
-		</mvk:pageContent>
 
-		<mvk:pageFooter>
-
-		</mvk:pageFooter>
-
-	</mvk:body>
-</mvk:page>
-
-
+				</form>
+			</div>
+		</section>
+	</hp:viewBody>
+</hp:view>

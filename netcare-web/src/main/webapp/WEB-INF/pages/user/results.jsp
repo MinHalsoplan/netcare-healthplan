@@ -27,12 +27,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
-		
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			google.load('visualization', '1.0', {'packages' : ['corechart']});
 
@@ -128,44 +124,25 @@
 				google.setOnLoadCallback(drawOverview);
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<sec:authentication property="principal.username" var="username"/>
-		<mvk:pageHeader title="Min hälsoplan"
-			loggedInUser="${username}"
-			loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout"
-			logoutText="Logga ut" />
-			
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
+	</hp:viewHeader>
+	<hp:viewBody title="Resultat">
+		<h2><spring:message code="result.title" /></h2>
+		<p>
+			<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="result.desc" />
+		</p>
+		<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
 		
-			<mvk:content title="Resultat">
-				<h2><spring:message code="result.title" /></h2>
-				<p>
-					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="result.desc" />
-				</p>
-				<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
-				
-				<section id="filter" style="display:none;">
-					<h2><spring:message code="result.filter" /></h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="result.filter.desc" />
-					</p>
-					<form>
-						<netcare:row id="filter-row"></netcare:row>
-					</form>
-				</section>
-				<div id="activities"></div>
-			</mvk:content>
-		</mvk:pageContent>
-		
-		<mvk:pageFooter>
-		
-		</mvk:pageFooter>
-	</mvk:body>	
-</mvk:page>
+		<section id="filter" style="display:none;">
+			<h2><spring:message code="result.filter" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="result.filter.desc" />
+			</p>
+			<form>
+				<netcare:row id="filter-row"></netcare:row>
+			</form>
+		</section>
+		<div id="activities"></div>
+	</hp:viewBody>
+</hp:view>

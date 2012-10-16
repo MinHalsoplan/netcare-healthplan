@@ -28,41 +28,21 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		
-		<hp:healthplan-js />
-		
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				var report = new NC.PatientReport('schemaTable', false);
 				report.init();
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<sec:authentication property="principal.username" var="username"/>
-		<mvk:pageHeader title="Min hälsoplan"
-			loggedInUser="${username}"
-			loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout"
-			logoutText="Logga ut" />
-			
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Rapportera resultat">
-				<h2><spring:message code="report.header" /></h2>
-
-				<p>
-					<span class="label label-info"><spring:message code="information" /></span>
-					<spring:message code="report.desc" />
-				</p>
-				<hp:report />
-			</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>
-</mvk:page>
+	</hp:viewHeader>
+	<hp:viewBody title="Rapportera resultat">
+		<h2><spring:message code="report.header" /></h2>
+		<p>
+			<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="report.desc" />
+		</p>
+		<hp:report />
+	</hp:viewBody>
+</hp:view>

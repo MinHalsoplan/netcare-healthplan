@@ -27,12 +27,8 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="/netcare/resources" />
-		<netcare:js resourcePath="/netcare/resources"/>
-		<hp:healthplan-js />
-		
+<hp:view>
+	<hp:viewHeader>
 		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />;
 	
 		<script type="text/javascript">
@@ -382,135 +378,124 @@
 				
 			});
 		</script>
-	</mvk:header>
-	<mvk:body>
-		<mvk:pageHeader title="Min hälsoplan - Profil" loggedInUser="Testar Test" loggedInAsText="Inloggad som : "
-			logoutUrl="/netcare/security/logout" logoutText="Logga ut" />
-
-		<mvk:pageContent>
-			<mvk:leftMenu>
-				<hp:menu />
-			</mvk:leftMenu>
-			<mvk:content title="Aktivitetskategorier">
-		
-				<section id="types">
-					<h2><spring:message code="activityType.title" /></h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="activityType.description" />
-					</p>
-					<p style="text-align: right; padding-right: 20px;">
-						<a id="showTypesForm" class="btn addButton"><spring:message code="activityType.new" /></a>
-					</p>
-					<div id="activityTypesContainer">
-						<form>
-							<div>
-								<netcare:row>
-									<netcare:col span="6">
-										<spring:message code="activityType.name" scope="page" var="activityName" />
-										<netcare:field name="name" label="${activityName}">
-											<input type="text" name="name" id="name" class="xlarge"/>
-										</netcare:field>
-									</netcare:col>
-									<netcare:col span="6">
-										<spring:message code="activityType.category" var="category" scope="page" />
-										<netcare:field name="activityCategory" label="${category}">
-											<select name="activityCategory" id="activityCategory" class="xlarge">
-											
-											</select>
-										</netcare:field>
-									</netcare:col>
-								</netcare:row>
-								<netcare:row>
-									<netcare:col span="6">
-										<spring:message code="activityType.scale" scope="page" var="scale" />
-										<netcare:field name="useSense" label="${scale}">
-											<input type="checkbox" name="useSense" id="useSense" value="1" />
-										</netcare:field>
-									</netcare:col>
-								</netcare:row>
-								<netcare:row id="senseDescriptionContainer">
-									<netcare:col span="6">
-										<spring:message code="activityType.scaleMinDescription" var="minDesc" scope="page" />
-										<spring:message code="activityType.scaleMaxDescription" var="maxDesc" scope="page" />
-										<netcare:field name="minDescription" label="${minDesc}">
-											<input type="text" name="minDescription" id="minDescription" class="xlarge" />
-										</netcare:field>
-									</netcare:col>
-									<netcare:col span="6">
-										<netcare:field name="maxDescription" label="${maxDesc}">
-											<input type="text" name="maxDescription" id="minDescription" class="xlarge" />
-										</netcare:field>
-									</netcare:col>
+	</hp:viewHeader>
+	<hp:viewBody title="Aktivitetskategorier">
+		<section id="types">
+			<h2><spring:message code="activityType.title" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="activityType.description" />
+			</p>
+			<p style="text-align: right; padding-right: 20px;">
+				<a id="showTypesForm" class="btn addButton"><spring:message code="activityType.new" /></a>
+			</p>
+			<div id="activityTypesContainer">
+				<form>
+					<div>
+						<netcare:row>
+							<netcare:col span="6">
+								<spring:message code="activityType.name" scope="page" var="activityName" />
+								<netcare:field name="name" label="${activityName}">
+									<input type="text" name="name" id="name" class="xlarge"/>
+								</netcare:field>
+							</netcare:col>
+							<netcare:col span="6">
+								<spring:message code="activityType.category" var="category" scope="page" />
+								<netcare:field name="activityCategory" label="${category}">
+									<select name="activityCategory" id="activityCategory" class="xlarge">
 									
-								</netcare:row>
+									</select>
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+						<netcare:row>
+							<netcare:col span="6">
+								<spring:message code="activityType.scale" scope="page" var="scale" />
+								<netcare:field name="useSense" label="${scale}">
+									<input type="checkbox" name="useSense" id="useSense" value="1" />
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+						<netcare:row id="senseDescriptionContainer">
+							<netcare:col span="6">
+								<spring:message code="activityType.scaleMinDescription" var="minDesc" scope="page" />
+								<spring:message code="activityType.scaleMaxDescription" var="maxDesc" scope="page" />
+								<netcare:field name="minDescription" label="${minDesc}">
+									<input type="text" name="minDescription" id="minDescription" class="xlarge" />
+								</netcare:field>
+							</netcare:col>
+							<netcare:col span="6">
+								<netcare:field name="maxDescription" label="${maxDesc}">
+									<input type="text" name="maxDescription" id="minDescription" class="xlarge" />
+								</netcare:field>
+							</netcare:col>
 							
-								<a id="addMeasureValue" href="#" class="btn addButton"><spring:message code="measureValue.new" /></a>
-								
-								<br />
-								
-								<div id="measureValueForm" style="display:none;">
-									<netcare:row>
-										<netcare:col span="3">
-											<spring:message code="measureValue.name" var="lbl" scope="page" />
-											<netcare:field name="measureName" label="${lbl}">
-												<input type="text" name="measureName" class="input-medium"/>
-											</netcare:field>
-										</netcare:col>
-										<netcare:col span="3">
-											<label for="valueType"><spring:message code="measureValue.type" /></label>
-											<select name="valueType" id="valueType" class="input-medium">
-											</select>										
-										</netcare:col>
-										<div id="measureValueContainer" class="row-fluid span6"></div>
-									</netcare:row>
-								</div>
-							</div>
-							
-							<netcare:table id="measureValues" style="display: none;">
-								<thead>
-									<tr>
-										<th><spring:message code="measureValue.name" /></th>
-										<th><spring:message code="measureValue.type" /></th>
-										<th><spring:message code="measureValue.unit" /></th>
-										<th><spring:message code="measureValue.alarm" /></th>
-										<th>&nbsp;</th>
-									</tr>
-								</thead>
-								<tbody></tbody>
-							</netcare:table>
-							<br />
-							
-							<div class="form-actions">
-								<button id="createActivityType" class="btn info"><spring:message code="activityType.new" /></button>
-								<button type="reset" class="btn"><spring:message code="clear" /></button>
-							</div>
-							
-						</form>					
+						</netcare:row>
+					
+						<a id="addMeasureValue" href="#" class="btn addButton"><spring:message code="measureValue.new" /></a>
+						
+						<br />
+						
+						<div id="measureValueForm" style="display:none;">
+							<netcare:row>
+								<netcare:col span="3">
+									<spring:message code="measureValue.name" var="lbl" scope="page" />
+									<netcare:field name="measureName" label="${lbl}">
+										<input type="text" name="measureName" class="input-medium"/>
+									</netcare:field>
+								</netcare:col>
+								<netcare:col span="3">
+									<label for="valueType"><spring:message code="measureValue.type" /></label>
+									<select name="valueType" id="valueType" class="input-medium">
+									</select>										
+								</netcare:col>
+								<div id="measureValueContainer" class="row-fluid span6"></div>
+							</netcare:row>
+						</div>
 					</div>
 					
-				</section>
-				
-				<section id="existingTypes">
-					<div id="existingTypesContainer">
-						<netcare:block-message type="info" style="display:none;">
-							<spring:message code="activityType.noTypes" />
-						</netcare:block-message>
+					<netcare:table id="measureValues" style="display: none;">
+						<thead>
+							<tr>
+								<th><spring:message code="measureValue.name" /></th>
+								<th><spring:message code="measureValue.type" /></th>
+								<th><spring:message code="measureValue.unit" /></th>
+								<th><spring:message code="measureValue.alarm" /></th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</netcare:table>
+					<br />
 					
-						<netcare:table>
-							<thead>
-								<tr>
-									<th><spring:message code="activityType.name" /></th>
-									<th><spring:message code="activityType.category" /></th>
-									<th><spring:message code="activityType.scale" /></th>
-									<th><spring:message code="activityType.measureValues" /></th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</netcare:table>
+					<div class="form-actions">
+						<button id="createActivityType" class="btn info"><spring:message code="activityType.new" /></button>
+						<button type="reset" class="btn"><spring:message code="clear" /></button>
 					</div>
-				</section>
-			</mvk:content>
-		</mvk:pageContent>
-	</mvk:body>	
-</mvk:page>
+					
+				</form>					
+			</div>
+			
+		</section>
+		
+		<section id="existingTypes">
+			<div id="existingTypesContainer">
+				<netcare:block-message type="info" style="display:none;">
+					<spring:message code="activityType.noTypes" />
+				</netcare:block-message>
+			
+				<netcare:table>
+					<thead>
+						<tr>
+							<th><spring:message code="activityType.name" /></th>
+							<th><spring:message code="activityType.category" /></th>
+							<th><spring:message code="activityType.scale" /></th>
+							<th><spring:message code="activityType.measureValues" /></th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</netcare:table>
+			</div>
+		</section>
+	</hp:viewBody>
+</hp:view>
