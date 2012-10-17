@@ -28,9 +28,8 @@
 	<beans>
 		<security:http security="none" pattern="/js/**" />
 		<security:http security="none" pattern="/css/**" />
-		<security:http security="none" pattern="/netcare/resources/js/**" />
-		<security:http security="none" pattern="/netcare/resources/css/**" />
 		<security:http security="none" pattern="/img/**" />
+		<security:http security="none" pattern="/netcare/resources/**" />
 		<security:http security="none" pattern="/favicon.ico" />
 		<security:http security="none" pattern="/netcare/error/**" />
 		<security:http security="none" pattern="/netcare/security/**" />
