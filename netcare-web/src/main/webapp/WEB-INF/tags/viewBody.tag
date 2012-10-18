@@ -30,7 +30,7 @@
 <mvk:pageHeader title="${title}"
 	loggedInUser="${username}"
 	loggedInAsText="Inloggad som : "
-	logoutUrl="/netcare/security/logout"
+	logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
 	logoutText="Logga ut" />
 
 <mvk:pageContent>
