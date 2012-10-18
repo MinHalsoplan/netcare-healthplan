@@ -17,29 +17,12 @@
 package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "nc_measurement_definition")
-public class MeasurementDefinitionEntity implements Comparable<MeasurementDefinitionEntity> {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "activity_def_id")
-	private ActivityDefinitionEntity activityDefinition;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "measurement_type_id")
-	private ActivityItemTypeEntity activityItemType;
+@DiscriminatorValue("measurement")
+public class MeasurementDefinitionEntity extends ActivityItemDefinitionEntity {
 
 	@Column(name = "target")
 	private float target;
@@ -59,18 +42,6 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 		entity.setActivityDefinition(activityDefinition);
 		entity.setActivityItemType(activityItemType);
 		return entity;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public ActivityDefinitionEntity getActivityDefinition() {
-		return activityDefinition;
-	}
-
-	void setActivityDefinition(ActivityDefinitionEntity activityDefinition) {
-		this.activityDefinition = activityDefinition;
 	}
 
 	public float getTarget() {
@@ -106,23 +77,8 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 		this.maxTarget = maxTarget;
 	}
 
-	public ActivityItemTypeEntity getActivityItemType() {
-		return activityItemType;
-	}
-
-	public void setActivityItemType(ActivityItemTypeEntity activityItemType) {
-		this.activityItemType = activityItemType;
-	}
-
 	public MeasurementTypeEntity getMeasurementType() {
-		if (getActivityItemType() instanceof MeasurementTypeEntity)
-			return (MeasurementTypeEntity) getActivityItemType();
-		else
-			throw new RuntimeException("TODO_EXCEPTION");
+		return (MeasurementTypeEntity) getActivityItemType();
 	}
 
-	@Override
-	public int compareTo(MeasurementDefinitionEntity m) {
-		return this.getMeasurementType().compareTo(m.getMeasurementType());
-	}
 }

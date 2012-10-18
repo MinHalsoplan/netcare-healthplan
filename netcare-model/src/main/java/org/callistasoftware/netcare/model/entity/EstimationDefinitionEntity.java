@@ -14,41 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.impl;
+package org.callistasoftware.netcare.model.entity;
 
-import org.callistasoftware.netcare.core.api.ActivityItemType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-public class ActivityItemTypeImpl implements ActivityItemType {
+@Entity
+@DiscriminatorValue("estimation")
+public class EstimationDefinitionEntity extends ActivityItemDefinitionEntity {
 
-	private Long id;
-	private String name;
-	private int seqno;
-
-	@Override
-	public Long getId() {
-		return this.id;
+	EstimationTypeEntity getEstimationType() {
+		return (EstimationTypeEntity) getActivityItemType();
 	}
 
-	public void setId(final Long id) {
-		this.id = id;
+	public static ActivityItemDefinitionEntity newEntity(ActivityDefinitionEntity activityDefEntity,
+			ActivityItemTypeEntity activityItemType) {
+		EstimationDefinitionEntity entity = new EstimationDefinitionEntity();
+		entity.setActivityDefinition(activityDefEntity);
+		entity.setActivityItemType(activityItemType);
+		return entity;
 	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	@Override
-	public int getSeqno() {
-		return seqno;
-	}
-
-	public void setSeqno(int seqno) {
-		this.seqno = seqno;
-	}
-
 }

@@ -21,13 +21,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.DayTime;
-import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.core.api.util.JsonDateSerializer;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
@@ -41,7 +43,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * Implementation of an activity definition
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
 public class ActivityDefintionImpl implements ActivityDefinition {
 	private static final long serialVersionUID = 1L;
@@ -49,35 +51,35 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private ActivityTypeImpl type;
 	private String startDate;
 	private int activityRepeat;
-	
+
 	private DayTimeImpl[] dayTimes;
 	private String endDate;
 	private Long healthPlanId;
 	private String healthPlanName;
-	
-	@JsonSerialize(using=JsonDateSerializer.class)
+
+	@JsonSerialize(using = JsonDateSerializer.class)
 	private Date healthPlanStartDate;
-	
+
 	private int numTotal;
 	private int numDone;
 	private int numTarget;
-	private CareGiverBaseView issuedBy;	
-	private MeasurementDefinition[] goalValues;
-	
+	private CareGiverBaseView issuedBy;
+	private ActivityItemValuesDefinition[] goalValues;
+
 	private boolean issuedByPatient;
 	private boolean publicDefinition;
-	
+
 	private boolean active;
-	
+
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
 			dtos[i] = ActivityDefintionImpl.newFromEntity(entities.get(i));
 		}
-		
+
 		return dtos;
 	}
-	
+
 	public static ActivityDefinition newFromEntity(final ActivityDefinitionEntity entity) {
 		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
 		dto.setId(entity.getId());
@@ -88,22 +90,27 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		dto.setHealthPlanId(entity.getHealthPlan().getId());
 		dto.setActive(!entity.isRemovedFlag());
-		
-		List<MeasurementDefinitionEntity> mdl = entity.getMeasurementDefinitions();
-		final MeasurementDefinition[] goalValues = new MeasurementDefinitionImpl[mdl.size()];
+
+		List<ActivityItemDefinitionEntity> mdl = entity.getActivityItemDefinitions();
+		final ActivityItemValuesDefinition[] goalValues = new ActivityItemValuesDefinition[mdl.size()];
 		for (int i = 0; i < goalValues.length; i++) {
-			goalValues[i] = MeasurementDefinitionImpl.newFromEntity(mdl.get(i));
+			if (mdl.get(i) instanceof MeasurementDefinitionEntity) {
+				goalValues[i] = MeasurementDefinitionImpl.newFromEntity((MeasurementDefinitionEntity) mdl.get(i));
+			} else if (mdl.get(i) instanceof EstimationDefinitionEntity) {
+				goalValues[i] = EstimationDefinitionImpl.newFromEntity((EstimationDefinitionEntity) mdl.get(i));
+			}
+
 		}
 		dto.goalValues = goalValues;
-		
+
 		dto.calcCompletion(entity.getScheduledActivities());
 		CareGiverBaseView issuedBy = CareGiverBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
 		dto.setIssuedBy(issuedBy);
-		
+
 		if (!entity.getCreatedBy().isCareGiver()) {
 			dto.setIssuedByPatient(true);
 		}
-		
+
 		dto.setPublicDefinition(entity.isPublicDefinition());
 
 		return dto;
@@ -113,7 +120,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public ActivityType getType() {
 		return this.type;
 	}
-	
+
 	public void setType(final ActivityTypeImpl type) {
 		this.type = type;
 	}
@@ -122,7 +129,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public DayTime[] getDayTimes() {
 		return this.dayTimes;
 	}
-	
+
 	public void setDayTimes(final DayTimeImpl[] dayTimes) {
 		this.dayTimes = dayTimes;
 	}
@@ -131,7 +138,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public String getStartDate() {
 		return this.startDate;
 	}
-	
+
 	public void setStartDate(final String startDate) {
 		this.startDate = startDate;
 	}
@@ -149,7 +156,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public String getEndDate() {
 		return endDate;
 	}
-	
+
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
@@ -162,16 +169,16 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public void setHealthPlanName(String healthPlanMame) {
 		this.healthPlanName = healthPlanMame;
 	}
-	
+
 	@Override
 	public CareGiverBaseView getIssuedBy() {
 		return issuedBy;
 	}
-	
+
 	protected void setIssuedBy(CareGiverBaseView issuedBy) {
 		this.issuedBy = issuedBy;
 	}
-	
+
 	//
 	private void setFrequency(Frequency frequency) {
 		setActivityRepeat(frequency.getWeekFrequency());
@@ -188,9 +195,9 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 			dt.setTimes(times);
 			dayTimes[i] = dt;
 		}
-		setDayTimes(dayTimes);	
+		setDayTimes(dayTimes);
 	}
-	
+
 	//
 	private void calcCompletion(List<ScheduledActivityEntity> list) {
 		int numDone = 0;
@@ -198,12 +205,12 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 
 		Calendar cal = Calendar.getInstance();
 		ApiUtil.dayEnd(cal);
-		
+
 		for (ScheduledActivityEntity a : list) {
 			if (a.getReportedTime() != null && a.getStatus().equals(ScheduledActivityStatus.OPEN)) {
 				numDone++;
 			}
-			
+
 			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
 				numTarget++;
 			}
@@ -214,7 +221,6 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 		setNumTarget(numTarget);
 	}
 
-
 	private void setNumTotal(int numTotal) {
 		this.numTotal = numTotal;
 	}
@@ -222,7 +228,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private void setNumDone(int numDone) {
 		this.numDone = numDone;
 	}
-	
+
 	@Override
 	public int getNumTotal() {
 		return numTotal;
@@ -237,7 +243,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public Long getId() {
 		return this.id;
 	}
-	
+
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -252,11 +258,11 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	}
 
 	@Override
-	public MeasurementDefinition[] getGoalValues() {
+	public ActivityItemValuesDefinition[] getGoalValues() {
 		return this.goalValues;
 	}
-	
-	public void setGoalValues(final MeasurementDefinitionImpl[] goalValues) {
+
+	public void setGoalValues(final ActivityItemValuesDefinition[] goalValues) {
 		this.goalValues = goalValues;
 	}
 
@@ -264,7 +270,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public Long getHealthPlanId() {
 		return this.healthPlanId;
 	}
-	
+
 	public void setHealthPlanId(final Long healthPlanId) {
 		this.healthPlanId = healthPlanId;
 	}
@@ -273,7 +279,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public boolean isIssuedByPatient() {
 		return this.issuedByPatient;
 	}
-	
+
 	public void setIssuedByPatient(final boolean issuedByPatient) {
 		this.issuedByPatient = issuedByPatient;
 	}
@@ -282,7 +288,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public boolean isPublicDefinition() {
 		return this.publicDefinition;
 	}
-	
+
 	public void setPublicDefinition(final boolean publicDefinition) {
 		this.publicDefinition = publicDefinition;
 	}
@@ -291,7 +297,7 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public boolean isActive() {
 		return this.active;
 	}
-	
+
 	public void setActive(final boolean active) {
 		this.active = active;
 	}
@@ -300,21 +306,21 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	public Date getHealthPlanStartDate() {
 		return this.healthPlanStartDate;
 	}
-	
+
 	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
-		
+
 		buf.append("==== Activity Definition ====\n");
 		buf.append("Health plan: ").append(this.healthPlanName).append("\n");
 		buf.append("Start date: ").append(this.startDate).append("\n");
 		buf.append("Issued by care giver: ").append(this.issuedBy).append("\n");
 		buf.append("Issued by patient: ").append(this.issuedByPatient).append("\n");
 		buf.append("Is public: ").append(this.publicDefinition).append("\n");
-		
+
 		buf.append(this.getType());
 		buf.append("=============================\n");
-		
+
 		return buf.toString();
 	}
 }

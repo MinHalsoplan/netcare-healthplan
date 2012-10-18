@@ -108,7 +108,6 @@ public class ActivityTypeImpl implements ActivityType {
 		this.category = category;
 	}
 
-
 	@Override
 	public ActivityItemType[] getActivityItems() {
 		return this.activityItems;
@@ -128,10 +127,6 @@ public class ActivityTypeImpl implements ActivityType {
 		buf.append("==== Activity Type ====\n");
 		buf.append("Id: ").append(this.getId()).append("\n");
 		buf.append("Name: ").append(this.getName()).append("\n");
-//		buf.append("Measuring sense: ").append(this.isMeasuringSense()).append("\n");
-//		buf.append("Sense min: ").append(this.getMinScaleText()).append("\n");
-//		buf.append("Sense max: ").append(this.getMaxScaleText()).append("\n");
-//TODO JCTODO
 		buf.append(this.getCategory());
 
 		for (final ActivityItemType t : this.getActivityItems()) {

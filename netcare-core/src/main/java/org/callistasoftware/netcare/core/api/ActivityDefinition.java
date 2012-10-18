@@ -36,7 +36,7 @@ public interface ActivityDefinition extends Serializable {
 	/**
 	 * The desired goal values of this definition
 	 */
-	MeasurementDefinition[] getGoalValues();
+	ActivityItemValuesDefinition[] getGoalValues();
 	
 	/**
 	 * The activity's type

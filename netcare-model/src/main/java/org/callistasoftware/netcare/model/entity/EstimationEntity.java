@@ -22,39 +22,24 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("estimation")
-public class EstimationTypeEntity extends ActivityItemTypeEntity {
+public class EstimationEntity extends ActivityItemValuesEntity {
 
-	@Column(name = "sense_label_low")
-	private String senseLabelLow;
+	@Column(name = "perceived_sense")
+	private Integer perceivedSense;
 
-	@Column(name = "sense_label_high")
-	private String senseLabelHigh;
+	public int getPerceivedSense() {
+		return perceivedSense;
+	}
 
-	public static EstimationTypeEntity newEntity(ActivityTypeEntity activityTypeEntity, String name,
-			String minScaleText, String maxScaleText) {
-		EstimationTypeEntity entity = new EstimationTypeEntity();
-		entity.setActivityType(activityTypeEntity);
-		entity.setName(name);
-		entity.setSenseLabelLow(minScaleText);
-		entity.setSenseLabelHigh(maxScaleText);
-		activityTypeEntity.addActivityItemType(entity);
+	public void setPerceivedSense(int perceivedSense) {
+		this.perceivedSense = perceivedSense;
+	}
+
+	public static ActivityItemValuesEntity newEntity(ScheduledActivityEntity scheduledActivityEntity,
+			ActivityItemDefinitionEntity activityItemDefinitionEntity) {
+		EstimationEntity entity = new EstimationEntity();
+		entity.setScheduledActivity(scheduledActivityEntity);
+		entity.setActivityItemDefinitionEntity(activityItemDefinitionEntity);
 		return entity;
 	}
-
-	public String getSenseLabelLow() {
-		return senseLabelLow;
-	}
-
-	public void setSenseLabelLow(String senseLabelLow) {
-		this.senseLabelLow = senseLabelLow;
-	}
-
-	public String getSenseLabelHigh() {
-		return senseLabelHigh;
-	}
-
-	public void setSenseLabelHigh(String senseLabelHigh) {
-		this.senseLabelHigh = senseLabelHigh;
-	}
-
 }

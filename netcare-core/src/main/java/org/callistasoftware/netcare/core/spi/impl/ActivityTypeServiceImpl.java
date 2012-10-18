@@ -156,7 +156,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			} else if (type instanceof EstimationType) {
 				EstimationType estimationType = (EstimationType) type;
 				final EstimationTypeEntity entity = EstimationTypeEntity.newEntity(activityTypeEntity,
-						estimationType.getMinScaleText(), estimationType.getMaxScaleText());
+						estimationType.getName(), estimationType.getMinScaleText(), estimationType.getMaxScaleText());
 				activityTypeEntity.addActivityItemType(entity);
 				log.debug("Adding estimation type {}", type.getName());
 			}

@@ -24,10 +24,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("measurement")
 public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 
-	@Column(name = "value_type", nullable = false)
+	@Column(name = "value_type")
 	private MeasurementValueType valueType;
 
-	@Column(name = "unit", nullable = false)
+	@Column(name = "unit")
 	private MeasureUnit unit;
 
 	MeasurementTypeEntity() {

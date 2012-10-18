@@ -14,11 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.repository;
+package org.callistasoftware.netcare.core.api.impl;
 
-import org.callistasoftware.netcare.model.entity.MeasurementEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.callistasoftware.netcare.core.api.ActivityItemType;
+import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 
-public interface MeasurementRepository extends JpaRepository<MeasurementEntity, Long> {
+public class ActivityItemValuesDefinitionImpl implements ActivityItemValuesDefinition {
+	private Long id;
+	private ActivityItemType activityItemType;
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public ActivityItemType getActivityItemType() {
+		return this.activityItemType;
+	}
+
+	public void setActivityItemType(ActivityItemType activityItemType) {
+		this.activityItemType = activityItemType;
+	}
 
 }

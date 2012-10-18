@@ -81,11 +81,11 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 
 	@OneToMany(mappedBy = "activityDefinition", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE }, orphanRemoval = true)
-	private List<MeasurementDefinitionEntity> measurementDefinitions;
+	private List<ActivityItemDefinitionEntity> activityItemDefinitions;
 
 	ActivityDefinitionEntity() {
 		scheduledActivities = new LinkedList<ScheduledActivityEntity>();
-		measurementDefinitions = new LinkedList<MeasurementDefinitionEntity>();
+		activityItemDefinitions = new LinkedList<ActivityItemDefinitionEntity>();
 		uuid = UUID.randomUUID().toString();
 		createdTime = new Date();
 		publicDefinition = true;
@@ -101,10 +101,16 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		entity.setStartDate(healthPlanEntity.getStartDate());
 		entity.setCreatedBy(createdBy);
 		for (ActivityItemTypeEntity activityItemType : activityType.getActivityItemTypes()) {
+			ActivityItemDefinitionEntity activityItemDefinition = null;
 			if (activityItemType instanceof MeasurementTypeEntity) {
-				MeasurementDefinitionEntity e = MeasurementDefinitionEntity.newEntity(entity, activityItemType);
-				entity.measurementDefinitions.add(e);
-			} //TODO JCTODO else if()
+				activityItemDefinition = MeasurementDefinitionEntity.newEntity(entity, activityItemType);
+				entity.activityItemDefinitions.add(activityItemDefinition);
+			} else if (activityItemType instanceof EstimationTypeEntity) {
+				activityItemDefinition = EstimationDefinitionEntity.newEntity(entity, activityItemType);
+			}
+			if (activityItemDefinition != null) {
+				entity.activityItemDefinitions.add(activityItemDefinition);
+			}
 		}
 		healthPlanEntity.addActivityDefinition(entity);
 
@@ -214,13 +220,13 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	}
 
 	/**
-	 * Returns the list of {@link MeasurementDefinitionEntity}
+	 * Returns the list of {@link ActivityItemDefinitionEntity}
 	 * 
 	 * @return the list (unmodifable).
 	 */
-	public List<MeasurementDefinitionEntity> getMeasurementDefinitions() {
-		Collections.sort(measurementDefinitions);
-		return Collections.unmodifiableList(measurementDefinitions);
+	public List<ActivityItemDefinitionEntity> getActivityItemDefinitions() {
+		Collections.sort(activityItemDefinitions);
+		return Collections.unmodifiableList(activityItemDefinitions);
 	}
 
 	/**

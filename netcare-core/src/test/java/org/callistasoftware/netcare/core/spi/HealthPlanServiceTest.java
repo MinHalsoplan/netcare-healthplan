@@ -51,10 +51,12 @@ import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareGiverEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
@@ -72,7 +74,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 public class HealthPlanServiceTest extends TestSupport {
-	
+
 	@Autowired
 	private CareGiverRepository cgRepo;
 	@Autowired
@@ -89,7 +91,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	private ScheduledActivityRepository schedRepo;
 	@Autowired
 	private ActivityDefinitionRepository defRepo;
-	
+
 	@Autowired
 	private HealthPlanService service;
 
@@ -98,17 +100,16 @@ public class HealthPlanServiceTest extends TestSupport {
 		o.setName(name);
 		o.setStartDate(startDate);
 		o.setDuration(duration);
-		o.setDurationUnit(new Option(unit,  LocaleContextHolder.getLocale()));		
+		o.setDurationUnit(new Option(unit, LocaleContextHolder.getLocale()));
 		return o;
 	}
-	
 
 	private ActivityDefinitionEntity createActivityDefinitionEntity() {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
 		cuRepo.flush();
-		
+
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		cgRepo.save(cg);
 
@@ -125,55 +126,56 @@ public class HealthPlanServiceTest extends TestSupport {
 		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu);
 		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
-		at.setMeasuringSense(true);
-		at.setSenseLabelHigh("Mycket Trötthet");
-		at.setSenseLabelLow("Väldigt Lätt");
+		EstimationTypeEntity.newEntity(at, "Känsla", "Väldigt lätt", "Mycket Trötthet");
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
-		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
-			if (md.getMeasurementType().getName().equals("Vikt")) {
-				md.setMinTarget(80);
-				md.setMaxTarget(120);
-			} 
-			if (md.getMeasurementType().getName().equals("Distans")) {
-				md.setTarget(1200);
+		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
+			if (aid instanceof MeasurementDefinitionEntity) {
+				MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
+				if (md.getMeasurementType().getName().equals("Vikt")) {
+					md.setMinTarget(80);
+					md.setMaxTarget(120);
+				}
+				if (md.getMeasurementType().getName().equals("Distans")) {
+					md.setTarget(1200);
+				}
 			}
 		}
 		defRepo.save(ad);
-		
+
 		schedRepo.save(ad.scheduleActivities());
-		
+
 		return ad;
 	}
-	
+
 	private ServiceResult<HealthPlan> createHealthPlan(HealthPlan o) {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
-		
+
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123-id", cu);
 		this.cgRepo.save(cg);
-		
+
 		final CareGiverBaseViewImpl cgDto = new CareGiverBaseViewImpl();
 		cgDto.setHsaId("hsa-123-id");
-				
+
 		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "", "611028");
 		patientRepo.save(patient);
-		
+
 		final ServiceResult<HealthPlan> saved = this.service.createNewHealthPlan(o, cgDto, patient.getId());
-		
+
 		return saved;
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testCreateHealthPlan() throws Exception {
-		
+
 		final HealthPlanImpl o = createHealthPlan("Test", "2011-12-12", 12, DurationUnit.WEEK.name());
 		o.setAutoRenewal(true);
 		final ServiceResult<HealthPlan> saved = createHealthPlan(o);
-		
+
 		assertEquals(o.getName(), saved.getData().getName());
 		assertEquals(o.getStartDate(), saved.getData().getStartDate());
 		assertEquals(o.getDuration(), saved.getData().getDuration());
@@ -181,7 +183,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		assertEquals(o.isAutoRenewal(), saved.getData().isAutoRenewal());
 		assertEquals(o.getIteration(), saved.getData().getIteration());
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -189,112 +191,117 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
-		
+
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, cu);
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
-		
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL,
+				MeasureUnit.KILOGRAM, true);
+
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123", cu);
 		final CareGiverEntity savedCg = this.cgRepo.save(cg);
-		
+
 		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "", "123456789004");
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 
-		// the date and duration can't be changed without breaking the test, see further below.
-		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test", ApiUtil.parseDate("2012-12-01"), 12, DurationUnit.WEEK);
+		// the date and duration can't be changed without breaking the test, see
+		// further below.
+		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test",
+				ApiUtil.parseDate("2012-12-01"), 12, DurationUnit.WEEK);
 		final HealthPlanEntity savedOrd = this.ordinationRepo.save(ord);
-		
+
 		final ActivityTypeImpl typeImpl = new ActivityTypeImpl();
 		typeImpl.setId(savedType.getId());
 		typeImpl.setName("Löpning");
-		
+
 		final MeasurementTypeImpl mdType = new MeasurementTypeImpl();
 		mdType.setId(me.getId());
 		final MeasurementDefinitionImpl md = new MeasurementDefinitionImpl();
 		md.setTarget(1200);
-		md.setMeasurementType(mdType);
-		
+		md.setActivityItemType(mdType);
+
 		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
-		
+
 		impl.setType(typeImpl);
 		impl.setActivityRepeat(2);
 		impl.setGoalValues(new MeasurementDefinitionImpl[] { md });
-		
+
 		// Monday and saturday
 		final DayTimeImpl dt = new DayTimeImpl();
 		dt.setDay("monday");
-		dt.setTimes(new String[]{"12:15", "18:45"});
-		
+		dt.setTimes(new String[] { "12:15", "18:45" });
+
 		final DayTimeImpl dt2 = new DayTimeImpl();
 		dt2.setDay("saturday");
-		
-		dt2.setTimes(new String[]{"12:15", "18:45"});
+
+		dt2.setTimes(new String[] { "12:15", "18:45" });
 		final DayTimeImpl[] dts = new DayTimeImpl[2];
 		dts[0] = dt;
 		dts[1] = dt2;
-		
+
 		impl.setDayTimes(dts);
-		
+
 		final CareGiverBaseView cgbv = CareGiverBaseViewImpl.newFromEntity(savedCg);
 		this.runAs(cgbv);
-		
+
 		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, cgbv);
 		assertTrue(result.isSuccess());
-		
+
 		final ActivityDefintionImpl impl2 = new ActivityDefintionImpl();
 		impl2.setType(typeImpl);
 		impl2.setActivityRepeat(0);
 		impl2.setStartDate("2013-01-30");
 		impl2.setGoalValues(new MeasurementDefinitionImpl[] { md });
-		
+
 		// Wednesday (1 time activity)
 		final DayTimeImpl dt3 = new DayTimeImpl();
 		dt3.setDay("wednesday");
-		dt3.setTimes(new String[] { "07:15", "12:00", "22:45"});
-		impl2.setDayTimes(new DayTimeImpl[] { dt3 });		
-		final ServiceResult<HealthPlan> result2 = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl2, CareGiverBaseViewImpl.newFromEntity(cg));
+		dt3.setTimes(new String[] { "07:15", "12:00", "22:45" });
+		impl2.setDayTimes(new DayTimeImpl[] { dt3 });
+		final ServiceResult<HealthPlan> result2 = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl2,
+				CareGiverBaseViewImpl.newFromEntity(cg));
 		assertTrue(result2.isSuccess());
-		
+
 		this.schedRepo.flush();
 		this.ordinationRepo.flush();
-		
+
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
 		// FIXME: multi-values
-		assertEquals(MeasureUnit.METER, ent.getMeasurementDefinitions().get(0).getMeasurementType().getUnit());
+		assertEquals(MeasureUnit.METER, ((MeasurementTypeEntity) ent.getActivityItemDefinitions().get(0)
+				.getActivityItemType()).getUnit());
 		assertEquals("Löpning", ent.getActivityType().getName());
 		// FIXME: multi-values
 		// assertEquals(12, ent.getActivityTarget());
-		
+
 		final Frequency fr = ent.getFrequency();
 		final List<FrequencyTime> times = fr.getDay(Calendar.MONDAY).getTimes();
 		assertEquals(2, times.size());
-		
+
 		assertEquals("2012-12-01", ApiUtil.formatDate(after.getStartDate()));
 		assertEquals(12, times.get(0).getHour());
 		assertEquals(15, times.get(0).getMinute());
-		
+
 		assertEquals(18, times.get(1).getHour());
 		assertEquals(45, times.get(1).getMinute());
-		
+
 		assertTrue(fr.isDaySet(Calendar.MONDAY));
 		assertTrue(fr.isDaySet(Calendar.SATURDAY));
 		assertEquals(2, fr.getWeekFrequency());
-		
+
 		assertEquals("7,12:15,18:45", FrequencyDay.marshal(fr.getDay(Calendar.SATURDAY)));
-		
-		
-		// check 
+
+		// check
 		Date startDate = after.getStartDate();
 		Date endDate = after.getEndDate();
-		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(savedPatient, startDate, endDate);
+		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(
+				savedPatient, startDate, endDate);
 		Collections.sort(scheduledActivities);
 
 		int n = scheduledActivities.size();
 		// 26 (every other week * 2) + 3 (single day * 3)
 		assertEquals(29, n);
-		assertEquals("2013-02-23", ApiUtil.formatDate(scheduledActivities.get(n-1).getScheduledTime()));
+		assertEquals("2013-02-23", ApiUtil.formatDate(scheduledActivities.get(n - 1).getScheduledTime()));
 	}
 
 	@Test
@@ -303,62 +310,48 @@ public class HealthPlanServiceTest extends TestSupport {
 	public void iCalendar() {
 		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
 		String cal = service.getICalendarEvents(PatientBaseViewImpl.newFromEntity(ad.getHealthPlan().getForPatient()));
-		final String expect = "BEGIN:VCALENDAR\r\n"
-		      + "VERSION:2.0\r\n"
-		      + "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
-		      + "BEGIN:VEVENT\r\n"
-		      + "UID:cae745bc-1278-4828-96f5-86b221af99db@MO.0\r\n"
-		      + "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
-		      + "DTSTART;TZID=Europe/Stockholm:20111206T181500\r\n"
-		      + "DURATION:PT30M\r\n"
-		      + "SUMMARY:Löpning 1200 METER\r\n"
-		      + "TRANSP:TRANSPARENT\r\n"
-		      + "CLASS:CONFIDENTIAL\r\n"
-		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=MO;UNTIL=20120606T235959\r\n"
-		      + "END:VEVENT\r\n"
-		      + "BEGIN:VEVENT\r\n"
-		      + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.0\r\n"
-		      + "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
-		      + "DTSTART;TZID=Europe/Stockholm:20111206T070000\r\n"
-		      + "DURATION:PT30M\r\n"
-		      + "SUMMARY:Löpning 1200 METER\r\n"
-		      + "TRANSP:TRANSPARENT\r\n"
-		      + "CLASS:CONFIDENTIAL\r\n"
-		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n"
-		      + "END:VEVENT\r\n"
-		      + "BEGIN:VEVENT\r\n"
-		      + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.1\r\n"
-		      + "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
-		      + "DTSTART;TZID=Europe/Stockholm:20111206T190000\r\n"
-		      + "DURATION:PT30M\r\n"
-		      + "SUMMARY:Löpning 1200 METER\r\n"
-		      + "TRANSP:OPAQUE\r\n"
-		      + "CLASS:CONFIDENTIAL\r\n"
-		      + "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-		      + "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n"
-		      + "END:VEVENT\r\n"
-		      + "END:VCALENDAR\r\n";
-		
-		// FIXME: better test needed! The generated UID makes it impossible to make a straight comparison.
+		final String expect = "BEGIN:VCALENDAR\r\n" + "VERSION:2.0\r\n"
+				+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n" + "BEGIN:VEVENT\r\n"
+				+ "UID:cae745bc-1278-4828-96f5-86b221af99db@MO.0\r\n"
+				+ "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
+				+ "DTSTART;TZID=Europe/Stockholm:20111206T181500\r\n" + "DURATION:PT30M\r\n"
+				+ "SUMMARY:Löpning 1200 METER\r\n" + "TRANSP:TRANSPARENT\r\n" + "CLASS:CONFIDENTIAL\r\n"
+				+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+				+ "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=MO;UNTIL=20120606T235959\r\n" + "END:VEVENT\r\n"
+				+ "BEGIN:VEVENT\r\n" + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.0\r\n"
+				+ "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
+				+ "DTSTART;TZID=Europe/Stockholm:20111206T070000\r\n" + "DURATION:PT30M\r\n"
+				+ "SUMMARY:Löpning 1200 METER\r\n" + "TRANSP:TRANSPARENT\r\n" + "CLASS:CONFIDENTIAL\r\n"
+				+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+				+ "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n" + "END:VEVENT\r\n"
+				+ "BEGIN:VEVENT\r\n" + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.1\r\n"
+				+ "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
+				+ "DTSTART;TZID=Europe/Stockholm:20111206T190000\r\n" + "DURATION:PT30M\r\n"
+				+ "SUMMARY:Löpning 1200 METER\r\n" + "TRANSP:OPAQUE\r\n" + "CLASS:CONFIDENTIAL\r\n"
+				+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
+				+ "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n" + "END:VEVENT\r\n"
+				+ "END:VCALENDAR\r\n";
+
+		// FIXME: better test needed! The generated UID makes it impossible to
+		// make a straight comparison.
 		assertEquals(expect.split("\r\n").length, cal.split("\r\n").length);
-		
+
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void events() {
 		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
-		ServiceResult<PatientEvent> sr = service.getActualEventsForPatient(PatientBaseViewImpl.newFromEntity(ad.getHealthPlan().getForPatient()));
+		ServiceResult<PatientEvent> sr = service.getActualEventsForPatient(PatientBaseViewImpl.newFromEntity(ad
+				.getHealthPlan().getForPatient()));
 		PatientEvent event = sr.getData();
 		assertEquals(true, event.getDueReports() > 0);
 		Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 		assertEquals(true, (event.getNumReports() > 0 && (day == 2 || day == 5)) || event.getNumReports() == 0);
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -366,65 +359,73 @@ public class HealthPlanServiceTest extends TestSupport {
 		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
 		HealthPlanEntity hp = ad.getHealthPlan();
 		assertEquals(true, hp.isAutoRenewal());
-		assertEquals(0,  hp.getIteration());
-				
+		assertEquals(0, hp.getIteration());
+
 		Date startDate = hp.getStartDate();
 		Date endDate = hp.getEndDate();
-		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
+		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(
+				hp.getForPatient(), startDate, endDate);
 		int n = scheduledActivities.size();
 		assertTrue(n > 75 && n < 82);
-		
+
 		List<ScheduledActivityEntity> list = hp.performRenewal();
 		schedRepo.save(list);
-		
+
 		endDate = hp.getEndDate();
-		List<ScheduledActivityEntity> scheduledActivities2 = schedRepo.findByPatientAndScheduledTimeBetween(hp.getForPatient(), startDate, endDate);
+		List<ScheduledActivityEntity> scheduledActivities2 = schedRepo.findByPatientAndScheduledTimeBetween(
+				hp.getForPatient(), startDate, endDate);
 		int newActivities = scheduledActivities2.size();
-		
-		// number of days should be approx. 2 times more after renewal, but ... 5 is good enough during a 6 month period
-		assertTrue(newActivities > ((n*2)-5));
+
+		// number of days should be approx. 2 times more after renewal, but ...
+		// 5 is good enough during a 6 month period
+		assertTrue(newActivities > ((n * 2) - 5));
 		assertEquals(1, hp.getIteration());
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void deleteActivityDefintion() throws Exception {
-		
+
 		final PatientEntity p = this.createPatient(null);
 		final PatientBaseView pb = PatientBaseViewImpl.newFromEntity(p);
-		
+
 		this.runAs(pb);
-		
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null), p, "Health Plan", new Date(), 6, DurationUnit.MONTH);
+
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null), p, "Health Plan",
+				new Date(), 6, DurationUnit.MONTH);
 		this.ordinationRepo.save(hp);
-		
+
 		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		
-		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(), frequency, hp.getIssuedBy());
-		
+
+		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(),
+				frequency, hp.getIssuedBy());
+
 		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
 		this.schedRepo.save(saved.scheduleActivities());
-		
+
 		this.service.deleteActivity(saved.getId());
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testDeleteActivityDefintionWithNoAccess() throws Exception {
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null), this.createPatient(null), "Health Plan", new Date(), 6, DurationUnit.MONTH);
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null),
+				this.createPatient(null), "Health Plan", new Date(), 6, DurationUnit.MONTH);
 		this.ordinationRepo.save(hp);
-		
-		final PatientBaseView pb = PatientBaseViewImpl.newFromEntity(this.patientRepo.save(this.createPatient("198205133333")));
+
+		final PatientBaseView pb = PatientBaseViewImpl.newFromEntity(this.patientRepo.save(this
+				.createPatient("198205133333")));
 		this.runAs(pb);
-		
+
 		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(), frequency, hp.getIssuedBy());
-		
+		final ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, this.createActivityType(),
+				frequency, hp.getIssuedBy());
+
 		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
 		this.schedRepo.save(saved.scheduleActivities());
-		
+
 		try {
 			this.service.deleteActivity(saved.getId());
 			fail("Should not be possible to delete as another patient.");
@@ -432,30 +433,30 @@ public class HealthPlanServiceTest extends TestSupport {
 			assertTrue(e instanceof SecurityException);
 		}
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testDeleteHealthPlan() throws Exception {
-		
+
 		final CareGiverEntity cg = this.createCareGiver(null, null);
 		final PatientEntity p = this.createPatient("123");
-		
+
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p, "Test", new Date(), 12, DurationUnit.MONTH);
 		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
-		
+
 		final ActivityTypeEntity at = this.createActivityType();
 		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
 		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
-		
+
 		this.runAs(CareGiverBaseViewImpl.newFromEntity(cg));
-		
+
 		this.service.deleteHealthPlan(saved.getId());
-		
+
 		assertEquals(null, this.ordinationRepo.findOne(saved.getId()));
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -463,29 +464,29 @@ public class HealthPlanServiceTest extends TestSupport {
 		final CareGiverEntity cg = this.createCareGiver("hsa", null);
 		final PatientEntity p = this.createPatient("123");
 		final PatientEntity p2 = this.createPatient("345");
-		
+
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p, "Test", new Date(), 12, DurationUnit.MONTH);
 		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
-		
+
 		final ActivityTypeEntity at = this.createActivityType();
 		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
 		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
 		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
-		
+
 		this.runAs(PatientBaseViewImpl.newFromEntity(p2));
-		
+
 		try {
 			this.service.deleteHealthPlan(saved.getId());
 			fail("Patients' must not be able to delete each others health plans.");
 		} catch (Exception e) {
 			assertTrue(e instanceof SecurityException);
 		}
-		
+
 		final CareUnitEntity cu = this.createCareUnit("another-hsa");
 		final CareGiverEntity cg2 = this.createCareGiver("another-hsa-2", cu);
-		
+
 		this.runAs(CareGiverBaseViewImpl.newFromEntity(cg2));
-		
+
 		try {
 			this.service.deleteHealthPlan(saved.getId());
 			fail("Patients' must not be able to delete each others health plans.");
@@ -493,30 +494,32 @@ public class HealthPlanServiceTest extends TestSupport {
 			assertTrue(e instanceof SecurityException);
 		}
 	}
-	
+
 	private ActivityCategoryEntity createActivityCategory() {
 		final ActivityCategoryEntity ac = ActivityCategoryEntity.newEntity("Fysisk aktivitet");
 		return this.catRepo.save(ac);
 	}
-	
+
 	private ActivityTypeEntity createActivityType() {
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(), createCareUnit("123"));
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(),
+				createCareUnit("123"));
 		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		return this.typeRepo.save(at);
 	}
-	
+
 	private PatientEntity createPatient(final String cnr) {
 		final PatientEntity p = PatientEntity.newEntity("Kalle Anka", "", cnr == null ? "191212121212" : cnr);
 		return this.patientRepo.save(p);
 	}
-	
+
 	private CareUnitEntity createCareUnit(final String hsaId) {
 		final CareUnitEntity cu = CareUnitEntity.newEntity(hsaId == null ? "hsa-cu-123" : hsaId);
 		return this.cuRepo.save(cu);
 	}
-	
+
 	private CareGiverEntity createCareGiver(final String hsaId, final CareUnitEntity careUnit) {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "", hsaId == null ? "hsa-id-123" : hsaId, careUnit == null ? this.createCareUnit(null) : careUnit);
+		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "", hsaId == null ? "hsa-id-123" : hsaId,
+				careUnit == null ? this.createCareUnit(null) : careUnit);
 		return this.cgRepo.save(cg);
 	}
 }
