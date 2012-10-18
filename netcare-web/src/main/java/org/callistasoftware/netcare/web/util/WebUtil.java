@@ -156,7 +156,7 @@ public final class WebUtil {
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		final ScheduledActivityRepository sar = wc.getBean(ScheduledActivityRepository.class);
 		final ActivityItemValuesEntityRepository actRepo = wc.getBean(ActivityItemValuesEntityRepository.class);
-		
+
 		if (cgRepo.findByHsaId(careGiverHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
@@ -221,13 +221,15 @@ public final class WebUtil {
 		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, t1, frequency, cg);
 		// FIXME: multi-values
 		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
-			MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
-			if (md.getMeasurementType().getName().equals("Vikt")) {
-				md.setMinTarget(80);
-				md.setMaxTarget(120);
-			}
-			if (md.getMeasurementType().getName().equals("Distans")) {
-				md.setTarget(1200);
+			if (aid instanceof MeasurementDefinitionEntity) {
+				MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
+				if (md.getMeasurementType().getName().equals("Vikt")) {
+					md.setMinTarget(80);
+					md.setMaxTarget(120);
+				}
+				if (md.getMeasurementType().getName().equals("Distans")) {
+					md.setTarget(1200);
+				}
 			}
 		}
 		ad.setStartDate(hp.getStartDate());
@@ -275,7 +277,7 @@ public final class WebUtil {
 						}
 						m.setReportedValue(target + diff);
 						log.debug("Reported value: " + m.getReportedValue());
-					} else if(aiv instanceof EstimationEntity) {
+					} else if (aiv instanceof EstimationEntity) {
 						EstimationEntity est = (EstimationEntity) aiv;
 						int sense = (int) Math.round(Math.random() * 10);
 						est.setPerceivedSense(sense == 0 ? 1 : sense);
