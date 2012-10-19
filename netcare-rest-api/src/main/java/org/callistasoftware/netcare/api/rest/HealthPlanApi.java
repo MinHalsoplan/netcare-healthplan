@@ -25,7 +25,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
@@ -99,7 +99,7 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{healthPlanId}/activity/new", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefintionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
+	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
 		log.info("User {} is adding a new activity defintion for health plan {}", new Object[] {this.getUser(), healthPlanId});
 		
 		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
@@ -109,7 +109,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> updateGoalValuesOnActivityDefinition(@PathVariable("healthPlanId") final Long healthPlanId
 			, @PathVariable("activityDefinitionId") final Long activityDefinitionId
-			, @RequestBody final ActivityDefintionImpl ad) {
+			, @RequestBody final ActivityDefinitionImpl ad) {
 		this.logAccess("update", "goal-values");
 		return this.service.updateActivity(ad);
 	}

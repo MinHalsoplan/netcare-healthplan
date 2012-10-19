@@ -45,7 +45,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  * 
  */
-public class ActivityDefintionImpl implements ActivityDefinition {
+public class ActivityDefinitionImpl implements ActivityDefinition {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private ActivityTypeImpl type;
@@ -72,16 +72,16 @@ public class ActivityDefintionImpl implements ActivityDefinition {
 	private boolean active;
 
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
-		final ActivityDefinition[] dtos = new ActivityDefintionImpl[entities.size()];
+		final ActivityDefinition[] dtos = new ActivityDefinitionImpl[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			dtos[i] = ActivityDefintionImpl.newFromEntity(entities.get(i));
+			dtos[i] = ActivityDefinitionImpl.newFromEntity(entities.get(i));
 		}
 
 		return dtos;
 	}
 
 	public static ActivityDefinition newFromEntity(final ActivityDefinitionEntity entity) {
-		final ActivityDefintionImpl dto = new ActivityDefintionImpl();
+		final ActivityDefinitionImpl dto = new ActivityDefinitionImpl();
 		dto.setId(entity.getId());
 		dto.setType(ActivityTypeImpl.newFromEntity(entity.getActivityType(), LocaleContextHolder.getLocale()));
 		dto.setFrequency(entity.getFrequency());

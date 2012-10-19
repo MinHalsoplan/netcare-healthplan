@@ -41,7 +41,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.Value;
 import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
-import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
@@ -371,7 +371,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		log.debug("Found {} health plan activities for health plan {}", entity.getActivityDefinitions().size(),
 				healthPlanId);
-		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntities(entity
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(entity
 				.getActivityDefinitions()), new ListEntitiesMessage(ActivityDefinitionEntity.class, entity
 				.getActivityDefinitions().size()));
 	}
@@ -460,7 +460,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
 		Date now = new Date();
 		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
-		ActivityDefinition[] arr = ActivityDefintionImpl.newFromEntities(defs);
+		ActivityDefinition[] arr = ActivityDefinitionImpl.newFromEntities(defs);
 		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
 	}
 
@@ -654,7 +654,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		log.debug("Activity definition with id {} marked as rmeoved", activityDefinitionId);
 		this.activityDefintionRepository.save(ent);
 
-		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(ent),
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(ent),
 				new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId));
 	}
 
@@ -949,7 +949,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		 */
 		this.updateActivityItems(entity, dto);
 
-		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(entity),
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(entity),
 				new GenericSuccessMessage());
 	}
 

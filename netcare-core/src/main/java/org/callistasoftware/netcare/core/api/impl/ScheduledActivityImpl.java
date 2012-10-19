@@ -63,7 +63,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		ScheduledActivityImpl scheduledActivity = new ScheduledActivityImpl();
 
 		scheduledActivity.id = entity.getId();
-		scheduledActivity.activityDefinition = ActivityDefintionImpl
+		scheduledActivity.activityDefinition = ActivityDefinitionImpl
 				.newFromEntity(entity.getActivityDefinitionEntity());
 
 		Calendar cal = Calendar.getInstance();

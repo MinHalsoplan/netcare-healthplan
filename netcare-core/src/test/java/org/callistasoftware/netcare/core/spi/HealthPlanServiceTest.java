@@ -32,7 +32,7 @@ import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.DayTimeImpl;
@@ -220,7 +220,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		md.setTarget(1200);
 		md.setActivityItemType(mdType);
 
-		final ActivityDefintionImpl impl = new ActivityDefintionImpl();
+		final ActivityDefinitionImpl impl = new ActivityDefinitionImpl();
 
 		impl.setType(typeImpl);
 		impl.setActivityRepeat(2);
@@ -247,7 +247,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, cgbv);
 		assertTrue(result.isSuccess());
 
-		final ActivityDefintionImpl impl2 = new ActivityDefintionImpl();
+		final ActivityDefinitionImpl impl2 = new ActivityDefinitionImpl();
 		impl2.setType(typeImpl);
 		impl2.setActivityRepeat(0);
 		impl2.setStartDate("2013-01-30");
