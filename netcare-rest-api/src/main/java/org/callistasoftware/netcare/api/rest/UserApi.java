@@ -18,7 +18,7 @@ package org.callistasoftware.netcare.api.rest;
 
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -65,9 +65,9 @@ public class UserApi extends ApiSupport {
 		this.logAccess("load", "patients");
 		
 		final UserBaseView user = this.getUser();
-		if (user.isCareGiver()) {
-			final CareGiverBaseView cg = (CareGiverBaseView) user;
-			return this.patientService.loadPatientsOnCareUnit(cg.getCareUnit());
+		if (user.isCareActor()) {
+			final CareActorBaseView ca = (CareActorBaseView) user;
+			return this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
 		} else {
 			throw new IllegalAccessException();
 		}
@@ -93,7 +93,7 @@ public class UserApi extends ApiSupport {
 		this.logAccess("create", "patient");
 		
 		final UserBaseView user = this.getUser();
-		if (user.isCareGiver()) {
+		if (user.isCareActor()) {
 			return this.patientService.createPatient(patient);
 		} else {
 			throw new IllegalAccessException();

@@ -27,7 +27,7 @@ import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
@@ -48,7 +48,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 	private CareUnitRepository cuRepo;
 
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 
 	@Autowired
 	private PatientRepository pRepo;
@@ -72,8 +72,8 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "", "hsa-id-1234", savedCu);
-		final CareGiverEntity savedCg = this.cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "", "hsa-id-1234", savedCu);
+		final CareActorEntity savedCa = this.careActorRepo.save(ca);
 
 		final PatientEntity p = PatientEntity.newEntity("Marcus", "", "123456789002");
 		final PatientEntity savedPatient = this.pRepo.save(p);
@@ -85,12 +85,12 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
 
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12,
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCa, savedPatient, "Health plan", new Date(), 12,
 				DurationUnit.MONTH);
 		final HealthPlanEntity savedHp = this.hpRepo.save(hp);
 
 		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt,
-				Frequency.unmarshal("1;1"), cg);
+				Frequency.unmarshal("1;1"), ca);
 		final ActivityDefinitionEntity saved = this.adRepo.save(def);
 
 		ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(saved, new Date());

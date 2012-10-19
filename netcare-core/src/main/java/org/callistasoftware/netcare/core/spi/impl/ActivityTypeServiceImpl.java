@@ -21,7 +21,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.EstimationType;
 import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -131,7 +131,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	@Override
-	public ServiceResult<ActivityType> createActivityType(ActivityType dto, CareGiverBaseView careGiver) {
+	public ServiceResult<ActivityType> createActivityType(ActivityType dto, CareActorBaseView careActor) {
 		log.info("Creating new activity type. Name: {}", dto.getName());
 
 		final ActivityCategoryEntity category = this.catRepo.findOne(dto.getCategory().getId());
@@ -140,7 +140,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 					.getCategory().getId()));
 		}
 
-		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(careGiver.getCareUnit().getHsaId());
+		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(careActor.getCareUnit().getHsaId());
 
 		ActivityTypeEntity activityTypeEntity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit);
 

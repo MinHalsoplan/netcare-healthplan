@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="nc_care_giver")
 @PrimaryKeyJoinColumn(name="id")
-public class CareGiverEntity extends UserEntity {
+public class CareActorEntity extends UserEntity {
 
 	@Column(name="hsa_id", length=64, nullable=false, unique=true)
 	private String hsaId;
@@ -36,20 +36,20 @@ public class CareGiverEntity extends UserEntity {
 	@JoinColumn(name="care_unit_id")
 	private CareUnitEntity careUnit;
 	
-	CareGiverEntity() {}
+	CareActorEntity() {}
 	
-	CareGiverEntity(final String firstName, final String surName) {
+	CareActorEntity(final String firstName, final String surName) {
 		super(firstName, surName);
 	}
 	
-	CareGiverEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
+	CareActorEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
 		this(firstName, surName);
 		this.setHsaId(hsaId);
 		this.setCareUnit(careUnit);
 	}
 
-	public static CareGiverEntity newEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
-		return new CareGiverEntity(firstName, surName, hsaId, careUnit);
+	public static CareActorEntity newEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
+		return new CareActorEntity(firstName, surName, hsaId, careUnit);
 	}
 
 	public String getHsaId() {
@@ -69,7 +69,7 @@ public class CareGiverEntity extends UserEntity {
 	}
 
 	@Override
-	public boolean isCareGiver() {
+	public boolean isCareActor() {
 		return true;
 	}
 

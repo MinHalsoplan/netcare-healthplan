@@ -16,7 +16,7 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-public interface CareGiverBaseView extends UserBaseView {
+public interface CareActorBaseView extends UserBaseView {
 
 	/**
 	 * Get the hsa id for the care giver

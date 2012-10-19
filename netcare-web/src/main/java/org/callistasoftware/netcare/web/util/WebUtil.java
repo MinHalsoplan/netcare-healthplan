@@ -24,7 +24,7 @@ import javax.servlet.ServletContext;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepository;
@@ -36,7 +36,7 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
@@ -88,10 +88,10 @@ public final class WebUtil {
 	public static final void setupIosTestData(final ServletContext sc) {
 		final WebApplicationContext wc = getWebRequest(sc);
 
-		final String careGiverHsa = "app-test-giver";
+		final String careActorHsa = "app-test-giver";
 
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
-		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		final CareActorRepository careActorRepo = wc.getBean(CareActorRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
 		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
@@ -99,7 +99,7 @@ public final class WebUtil {
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 
-		if (cgRepo.findByHsaId(careGiverHsa) != null) {
+		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
@@ -116,9 +116,9 @@ public final class WebUtil {
 		atRepo.save(ate);
 		atRepo.flush();
 
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Läkare", careGiverHsa, cu);
-		cgRepo.save(cg1);
-		cgRepo.flush();
+		final CareActorEntity ca1 = CareActorEntity.newEntity("Test", "Läkare", careActorHsa, cu);
+		careActorRepo.save(ca1);
+		careActorRepo.flush();
 
 		final PatientEntity p2 = PatientEntity.newEntity("AppDemo", "Patient", "191112121212");
 		p2.setPhoneNumber("0700000000");
@@ -126,11 +126,11 @@ public final class WebUtil {
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -30);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg1, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(ca1, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
 
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg1);
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, ca1);
 		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
 			MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
 			if (md.getMeasurementType().getName().equals("Distans")) {
@@ -144,10 +144,10 @@ public final class WebUtil {
 	public static final void setupTestData(final ServletContext sc) {
 		final WebApplicationContext wc = getWebRequest(sc);
 
-		final String careGiverHsa = "hsa-cg-1";
+		final String careActorHsa = "hsa-cg-1";
 
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
-		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		final CareActorRepository careActorRepo = wc.getBean(CareActorRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
 		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
@@ -157,7 +157,7 @@ public final class WebUtil {
 		final ScheduledActivityRepository sar = wc.getBean(ScheduledActivityRepository.class);
 		final ActivityItemValuesEntityRepository actRepo = wc.getBean(ActivityItemValuesEntityRepository.class);
 
-		if (cgRepo.findByHsaId(careGiverHsa) != null) {
+		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
@@ -200,13 +200,13 @@ public final class WebUtil {
 		atRepo.save(t3);
 		atRepo.flush();
 
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Peter", "Abrahamsson", careGiverHsa, cu);
-		cgRepo.save(cg1);
+		final CareActorEntity ca1 = CareActorEntity.newEntity("Peter", "Abrahamsson", careActorHsa, cu);
+		careActorRepo.save(ca1);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", cu2);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", cu2);
+		careActorRepo.save(ca);
 
-		cgRepo.flush();
+		careActorRepo.flush();
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
@@ -214,11 +214,11 @@ public final class WebUtil {
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -90);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Viktprogram", cal.getTime(), 6, DurationUnit.MONTH);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p2, "Viktprogram", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
 
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, t1, frequency, cg);
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, t1, frequency, ca);
 		// FIXME: multi-values
 		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
 			if (aid instanceof MeasurementDefinitionEntity) {
@@ -295,7 +295,7 @@ public final class WebUtil {
 				false);
 		atRepo.save(at2);
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
-		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);
+		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, ca);
 		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setTarget(60);
 
 		adRepo.save(ad2);

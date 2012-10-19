@@ -24,7 +24,7 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.util.JsonDateSerializer;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
@@ -63,7 +63,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private int numTotal;
 	private int numDone;
 	private int numTarget;
-	private CareGiverBaseView issuedBy;
+	private CareActorBaseView issuedBy;
 	private ActivityItemValuesDefinition[] goalValues;
 
 	private boolean issuedByPatient;
@@ -104,10 +104,10 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		dto.goalValues = goalValues;
 
 		dto.calcCompletion(entity.getScheduledActivities());
-		CareGiverBaseView issuedBy = CareGiverBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
+		CareActorBaseView issuedBy = CareActorBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
 		dto.setIssuedBy(issuedBy);
 
-		if (!entity.getCreatedBy().isCareGiver()) {
+		if (!entity.getCreatedBy().isCareActor()) {
 			dto.setIssuedByPatient(true);
 		}
 
@@ -171,11 +171,11 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	}
 
 	@Override
-	public CareGiverBaseView getIssuedBy() {
+	public CareActorBaseView getIssuedBy() {
 		return issuedBy;
 	}
 
-	protected void setIssuedBy(CareGiverBaseView issuedBy) {
+	protected void setIssuedBy(CareActorBaseView issuedBy) {
 		this.issuedBy = issuedBy;
 	}
 

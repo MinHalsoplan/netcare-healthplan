@@ -121,7 +121,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
-		if (!user.isCareGiver()) {
+		if (!user.isCareActor()) {
 			final PatientEntity p = (PatientEntity) user;
 			for (final HealthPlanEntity hp : p.getHealthPlans()) {
 				if (hp.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
@@ -137,12 +137,12 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
-		if (!user.isCareGiver()) {
+		if (!user.isCareActor()) {
 			return false;
 		}
 
-		final CareGiverEntity cg = (CareGiverEntity) user;
-		if (cg.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
+		final CareActorEntity ca = (CareActorEntity) user;
+		if (ca.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
 			return true;
 		}
 

@@ -23,11 +23,11 @@ import static org.junit.Assert.assertTrue;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class PatientServiceTest extends TestSupport {
 	@Autowired
 	private PatientRepository patientRepository;
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 	@Autowired
 	private CareUnitRepository cuRepo;
 
@@ -55,8 +55,8 @@ public class PatientServiceTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
+		careActorRepo.save(ca);
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "", "123456789001");
 		final PatientEntity p2 = PatientEntity.newEntity("Peter", "", "123456789002");
@@ -81,8 +81,8 @@ public class PatientServiceTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
+		careActorRepo.save(ca);
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus", "", "123456789004");
 		final PatientEntity saved = this.patientRepository.save(p1);

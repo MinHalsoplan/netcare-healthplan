@@ -119,7 +119,7 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	}
 
 	@Override
-	public boolean isCareGiver() {
+	public boolean isCareActor() {
 		return false;
 	}
 
@@ -130,12 +130,12 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
-		if (user.isCareGiver()) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
+		if (user.isCareActor()) {
+			final CareActorEntity ca = (CareActorEntity) user;
 			final List<HealthPlanEntity> hps = this.getHealthPlans();
 			
 			for (final HealthPlanEntity ent : hps) {
-				if (ent.getCareUnit().getId().equals(cg.getCareUnit().getId())) {
+				if (ent.getCareUnit().getId().equals(ca.getCareUnit().getId())) {
 					return true;
 				}
 			}

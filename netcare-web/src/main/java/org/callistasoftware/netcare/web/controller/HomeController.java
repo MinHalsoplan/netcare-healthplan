@@ -54,7 +54,7 @@ public class HomeController extends ControllerSupport {
 			throw new SecurityException("User is not logged in");
 		}
 		
-		if (user.isCareGiver()) {
+		if (user.isCareActor()) {
 			log.debug("Redirecting to admin home");
 			return "redirect:admin/home";
 		}

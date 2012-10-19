@@ -22,19 +22,19 @@ import static org.junit.Assert.assertTrue;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
-import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 	private CareUnitRepository cuRepo;
 	
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 	
 	@Autowired
 	private ActivityTypeService service;
@@ -67,10 +67,10 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		
-		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
-		final CareGiverBaseView cgb = CareGiverBaseViewImpl.newFromEntity(cg);
+		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
+		final CareActorBaseView cab = CareActorBaseViewImpl.newFromEntity(ca);
 		
-		this.runAs(cgb);
+		this.runAs(cab);
 		
 		for (int i = 0; i < 10; i++) {
 			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu));

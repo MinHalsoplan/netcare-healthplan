@@ -18,7 +18,7 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.repository.UserRepository;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.PermissionRestrictedEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
@@ -92,17 +92,17 @@ public abstract class ServiceSupport {
 	
 	protected PatientEntity getPatient() {
 		final UserEntity user = this.getCurrentUser();
-		if (user.isCareGiver()) {
+		if (user.isCareActor()) {
 			throw new IllegalStateException("Expected a patient in the security context but was a care giver.");
 		}
 		
 		return (PatientEntity) user;
 	}
 	
-	protected CareGiverEntity getCareGiver() {
+	protected CareActorEntity getCareActor() {
 		final UserEntity user = this.getCurrentUser();
-		if (user.isCareGiver()) {
-			return (CareGiverEntity) user;
+		if (user.isCareActor()) {
+			return (CareActorEntity) user;
 		}
 		
 		throw new IllegalStateException("Expected a care giver in the security context but was a patient.");

@@ -28,7 +28,7 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.ApiUtil;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
@@ -61,7 +61,7 @@ import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
@@ -75,7 +75,7 @@ import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
@@ -141,7 +141,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	private ActivityTypeRepository activityTypeRepository;
 
 	@Autowired
-	private CareGiverRepository careGiverRepository;
+	private CareActorRepository careActorRepository;
 
 	@Autowired
 	private CareUnitRepository careUnitRepository;
@@ -204,18 +204,18 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareGiverBaseView careGiver,
+	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareActorBaseView careActor,
 			final Long patientId) {
 		log.info("Creating new ordination {}", o.getName());
 
 		final Date start = ApiUtil.parseDate(o.getStartDate());
 		final DurationUnit du = DurationUnit.valueOf(o.getDurationUnit().getCode());
 
-		final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
+		final CareActorEntity ca = this.careActorRepository.findByHsaId(careActor.getHsaId());
 
 		final PatientEntity patient = this.patientRepository.findOne(patientId);
 
-		final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(),
+		final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(ca, patient, o.getName(), start, o.getDuration(),
 				du);
 		newEntity.setAutoRenewal(o.isAutoRenewal());
 
@@ -294,7 +294,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 		log.debug("Frequency: {}", Frequency.marshal(frequency));
 
-		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId())
+		final UserEntity userEntity = user.isCareActor() ? careActorRepository.findOne(user.getId())
 				: patientRepository.findOne(user.getId());
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency,
 				userEntity);
@@ -531,7 +531,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		actLoop: for (final ScheduledActivity ac : activities) {
 
-			if (!ac.getDefinition().isPublicDefinition() && this.getCurrentUser().isCareGiver()) {
+			if (!ac.getDefinition().isPublicDefinition() && this.getCurrentUser().isCareActor()) {
 				log.debug("Skip activity because the care giver was not allowed to see it.");
 				continue actLoop;
 			}
@@ -562,7 +562,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		for (final ScheduledActivityEntity schedActivityEntity : ents) {
 
 			if (!schedActivityEntity.getActivityDefinitionEntity().isPublicDefinition()
-					&& this.getCurrentUser().isCareGiver()) {
+					&& this.getCurrentUser().isCareActor()) {
 				log.debug("Skip activity because the care giver was not allowed to see it.");
 				continue;
 			}
@@ -786,9 +786,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		this.verifyWriteAccess(ent);
 
 		final UserEntity user = this.getCurrentUser();
-		if (user.isCareGiver()) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
-			ent.getComments().add(ActivityCommentEntity.newEntity(comment, cg, ent));
+		if (user.isCareActor()) {
+			final CareActorEntity ca = (CareActorEntity) user;
+			ent.getComments().add(ActivityCommentEntity.newEntity(comment, ca, ent));
 
 			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent),
 					new GenericSuccessMessage());
@@ -824,12 +824,12 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ActivityComment[]> loadRepliesForCareGiver() {
-		final CareGiverEntity cg = this.getCareGiver();
-		log.info("Loading replies for care giver {}", cg.getFirstName());
+	public ServiceResult<ActivityComment[]> loadRepliesForCareActor() {
+		final CareActorEntity ca = this.getCareActor();
+		log.info("Loading replies for care giver {}", ca.getFirstName());
 
-		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg,
-				cg.getCareUnit());
+		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareActor(ca,
+				ca.getCareUnit());
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments),
 				new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));
 	}

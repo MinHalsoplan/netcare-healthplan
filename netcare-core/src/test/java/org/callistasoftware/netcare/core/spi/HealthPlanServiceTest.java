@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ApiUtil;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -34,7 +34,7 @@ import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
-import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.DayTimeImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.impl.MeasurementDefinitionImpl;
@@ -43,7 +43,7 @@ import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
@@ -53,7 +53,7 @@ import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
@@ -76,7 +76,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HealthPlanServiceTest extends TestSupport {
 
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 	@Autowired
 	private PatientRepository patientRepo;
 	@Autowired
@@ -110,15 +110,15 @@ public class HealthPlanServiceTest extends TestSupport {
 		cuRepo.save(cu);
 		cuRepo.flush();
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
+		careActorRepo.save(ca);
 
 		final PatientEntity p2 = PatientEntity.newEntity("Peter Larsson", "", "191212121212");
 		patientRepo.save(p2);
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -30);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
 		hp.setAutoRenewal(true);
 		ordinationRepo.save(hp);
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
@@ -129,7 +129,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		EstimationTypeEntity.newEntity(at, "Känsla", "Väldigt lätt", "Mycket Trötthet");
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, cg);
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, at, frequency, ca);
 		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
 			if (aid instanceof MeasurementDefinitionEntity) {
 				MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
@@ -153,16 +153,16 @@ public class HealthPlanServiceTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123-id", cu);
-		this.cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Test Testgren", "", "hsa-123-id", cu);
+		this.careActorRepo.save(ca);
 
-		final CareGiverBaseViewImpl cgDto = new CareGiverBaseViewImpl();
-		cgDto.setHsaId("hsa-123-id");
+		final CareActorBaseViewImpl caDto = new CareActorBaseViewImpl();
+		caDto.setHsaId("hsa-123-id");
 
 		final PatientEntity patient = PatientEntity.newEntity("Peter Larsson", "", "611028");
 		patientRepo.save(patient);
 
-		final ServiceResult<HealthPlan> saved = this.service.createNewHealthPlan(o, cgDto, patient.getId());
+		final ServiceResult<HealthPlan> saved = this.service.createNewHealthPlan(o, caDto, patient.getId());
 
 		return saved;
 	}
@@ -198,15 +198,15 @@ public class HealthPlanServiceTest extends TestSupport {
 				MeasureUnit.KILOGRAM, true);
 
 		final ActivityTypeEntity savedType = typeRepo.save(type);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Test Testgren", "", "hsa-123", cu);
-		final CareGiverEntity savedCg = this.cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Test Testgren", "", "hsa-123", cu);
+		final CareActorEntity savedCa = this.careActorRepo.save(ca);
 
 		final PatientEntity patient = PatientEntity.newEntity("Marcus Krantz", "", "123456789004");
 		final PatientEntity savedPatient = this.patientRepo.save(patient);
 
 		// the date and duration can't be changed without breaking the test, see
 		// further below.
-		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCg, savedPatient, "Test",
+		final HealthPlanEntity ord = HealthPlanEntity.newEntity(savedCa, savedPatient, "Test",
 				ApiUtil.parseDate("2012-12-01"), 12, DurationUnit.WEEK);
 		final HealthPlanEntity savedOrd = this.ordinationRepo.save(ord);
 
@@ -241,10 +241,10 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		impl.setDayTimes(dts);
 
-		final CareGiverBaseView cgbv = CareGiverBaseViewImpl.newFromEntity(savedCg);
-		this.runAs(cgbv);
+		final CareActorBaseView cabv = CareActorBaseViewImpl.newFromEntity(savedCa);
+		this.runAs(cabv);
 
-		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, cgbv);
+		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, cabv);
 		assertTrue(result.isSuccess());
 
 		final ActivityDefinitionImpl impl2 = new ActivityDefinitionImpl();
@@ -259,7 +259,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		dt3.setTimes(new String[] { "07:15", "12:00", "22:45" });
 		impl2.setDayTimes(new DayTimeImpl[] { dt3 });
 		final ServiceResult<HealthPlan> result2 = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl2,
-				CareGiverBaseViewImpl.newFromEntity(cg));
+				CareActorBaseViewImpl.newFromEntity(ca));
 		assertTrue(result2.isSuccess());
 
 		this.schedRepo.flush();
@@ -392,7 +392,7 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		this.runAs(pb);
 
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null), p, "Health Plan",
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareActor(null, null), p, "Health Plan",
 				new Date(), 6, DurationUnit.MONTH);
 		this.ordinationRepo.save(hp);
 
@@ -411,7 +411,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testDeleteActivityDefintionWithNoAccess() throws Exception {
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareGiver(null, null),
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(this.createCareActor(null, null),
 				this.createPatient(null), "Health Plan", new Date(), 6, DurationUnit.MONTH);
 		this.ordinationRepo.save(hp);
 
@@ -439,10 +439,10 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testDeleteHealthPlan() throws Exception {
 
-		final CareGiverEntity cg = this.createCareGiver(null, null);
+		final CareActorEntity ca = this.createCareActor(null, null);
 		final PatientEntity p = this.createPatient("123");
 
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p, "Test", new Date(), 12, DurationUnit.MONTH);
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p, "Test", new Date(), 12, DurationUnit.MONTH);
 		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
 
 		final ActivityTypeEntity at = this.createActivityType();
@@ -450,7 +450,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
 		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
 
-		this.runAs(CareGiverBaseViewImpl.newFromEntity(cg));
+		this.runAs(CareActorBaseViewImpl.newFromEntity(ca));
 
 		this.service.deleteHealthPlan(saved.getId());
 
@@ -461,11 +461,11 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testDeleteHealthPlanAsUnathorized() throws Exception {
-		final CareGiverEntity cg = this.createCareGiver("hsa", null);
+		final CareActorEntity ca = this.createCareActor("hsa", null);
 		final PatientEntity p = this.createPatient("123");
 		final PatientEntity p2 = this.createPatient("345");
 
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p, "Test", new Date(), 12, DurationUnit.MONTH);
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p, "Test", new Date(), 12, DurationUnit.MONTH);
 		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
 
 		final ActivityTypeEntity at = this.createActivityType();
@@ -483,9 +483,9 @@ public class HealthPlanServiceTest extends TestSupport {
 		}
 
 		final CareUnitEntity cu = this.createCareUnit("another-hsa");
-		final CareGiverEntity cg2 = this.createCareGiver("another-hsa-2", cu);
+		final CareActorEntity ca2 = this.createCareActor("another-hsa-2", cu);
 
-		this.runAs(CareGiverBaseViewImpl.newFromEntity(cg2));
+		this.runAs(CareActorBaseViewImpl.newFromEntity(ca2));
 
 		try {
 			this.service.deleteHealthPlan(saved.getId());
@@ -517,9 +517,9 @@ public class HealthPlanServiceTest extends TestSupport {
 		return this.cuRepo.save(cu);
 	}
 
-	private CareGiverEntity createCareGiver(final String hsaId, final CareUnitEntity careUnit) {
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Care Giver", "", hsaId == null ? "hsa-id-123" : hsaId,
+	private CareActorEntity createCareActor(final String hsaId, final CareUnitEntity careUnit) {
+		final CareActorEntity ca = CareActorEntity.newEntity("Care Giver", "", hsaId == null ? "hsa-id-123" : hsaId,
 				careUnit == null ? this.createCareUnit(null) : careUnit);
-		return this.cgRepo.save(cg);
+		return this.careActorRepo.save(ca);
 	}
 }

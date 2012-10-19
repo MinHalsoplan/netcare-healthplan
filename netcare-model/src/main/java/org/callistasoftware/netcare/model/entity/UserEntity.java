@@ -111,7 +111,7 @@ public abstract class UserEntity {
 		return (this == o) || o.getId().equals(id); 
 	}
 	
-	public abstract boolean isCareGiver();
+	public abstract boolean isCareActor();
 	
 	public abstract String getUsername();
 }

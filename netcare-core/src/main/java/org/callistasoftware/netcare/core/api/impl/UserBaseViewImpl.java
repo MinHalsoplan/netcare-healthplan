@@ -110,6 +110,6 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	}
 
 	@Override
-	public abstract boolean isCareGiver();
+	public abstract boolean isCareActor();
 
 }

@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
@@ -40,7 +40,7 @@ public class PatientRepositoryTest extends TestSupport {
 	@Autowired
 	private PatientRepository repo;
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 	@Autowired
 	private HealthPlanRepository hpRepo;
 	@Autowired
@@ -53,8 +53,8 @@ public class PatientRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook","", "12345-67", cu);
+		careActorRepo.save(ca);
 		
 		final PatientEntity p1 = PatientEntity.newEntity("Marcus","", "19121212-1212");
 		
@@ -75,8 +75,8 @@ public class PatientRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		cuRepo.save(cu);
 		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook","", "12345-67", cu);
+		careActorRepo.save(ca);
 
 		final PatientEntity p = PatientEntity.newEntity("Arne","", "123456789004");
 		p.getProperties().put("prop1", "val1");
@@ -104,8 +104,8 @@ public class PatientRepositoryTest extends TestSupport {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
 		this.cuRepo.save(cu);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook","", "12345-67", cu);
-		cgRepo.save(cg);
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook","", "12345-67", cu);
+		careActorRepo.save(ca);
 
 		final PatientEntity p1 = PatientEntity.newEntity("Arne","", "123456789004");
 		final PatientEntity p2 = PatientEntity.newEntity("Bjarne","", "123456789005");
@@ -149,12 +149,12 @@ public class PatientRepositoryTest extends TestSupport {
 	public void findPatientsWithHealthPlansAtCareUnit() throws Exception {
 		
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
-		final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("Test","", "hsa-2", cu));
+		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Test","", "hsa-2", cu));
 		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus","", "123456789004"));
 		final PatientEntity patient2 = this.repo.save(PatientEntity.newEntity("Peter","", "123456789005"));
 		
-		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient, "Testplan", new Date(), 12, DurationUnit.WEEK));
-		this.hpRepo.save(HealthPlanEntity.newEntity(cg, patient2, "Testplan", new Date(), 12, DurationUnit.WEEK));
+		this.hpRepo.save(HealthPlanEntity.newEntity(ca, patient, "Testplan", new Date(), 12, DurationUnit.WEEK));
+		this.hpRepo.save(HealthPlanEntity.newEntity(ca, patient2, "Testplan", new Date(), 12, DurationUnit.WEEK));
 		
 		final List<PatientEntity> patients = this.repo.findByCareUnit("hsa-id");
 		assertNotNull(patients);

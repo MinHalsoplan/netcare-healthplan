@@ -75,9 +75,9 @@ public class CareUnitEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
-		if (user instanceof CareGiverEntity) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
-			if (cg.getCareUnit().getId().equals(this.getId())) {
+		if (user instanceof CareActorEntity) {
+			final CareActorEntity ca = (CareActorEntity) user;
+			if (ca.getCareUnit().getId().equals(this.getId())) {
 				return true;
 			}
 		}

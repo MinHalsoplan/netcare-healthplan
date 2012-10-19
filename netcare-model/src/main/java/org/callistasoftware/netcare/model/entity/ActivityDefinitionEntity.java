@@ -293,9 +293,9 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
-		if (user.isCareGiver()) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
-			return cg.getCareUnit().getId().equals(this.getHealthPlan().getIssuedBy().getCareUnit().getId());
+		if (user.isCareActor()) {
+			final CareActorEntity ca = (CareActorEntity) user;
+			return ca.getCareUnit().getId().equals(this.getHealthPlan().getIssuedBy().getCareUnit().getId());
 		}
 
 		return this.getHealthPlan().getForPatient().getId().equals(user.getId());
