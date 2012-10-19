@@ -52,7 +52,7 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 	public UserDetails createMissingUser(AuthenticationResult preAuthenticated) {
 		getLog().info("User {} has not been here before, create the user...", preAuthenticated.getUsername());
 		
-		if (preAuthenticated.isCareGiver()) {
+		if (preAuthenticated.isCareActor()) {
 			
 			getLog().debug("The user is a care giver...");
 			
@@ -80,7 +80,8 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 	private CareUnitEntity createCareUnit(final String hsaId, final String name) {
 		getLog().debug("Creating new care unit {} - {}", hsaId, name);
 		
-		CareUnitEntity cu = CareUnitEntity.newEntity(hsaId);
+		//TODO What should CountyCouncil be here?
+		CareUnitEntity cu = CareUnitEntity.newEntity(hsaId,null);
 		
 		if (name == null) {
 			cu.setName("Vårdenhetsnamn saknas");
@@ -109,7 +110,7 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 
 	@Override
 	public UserDetails lookupPrincipal(AuthenticationResult auth) throws UsernameNotFoundException {
-		if (auth.isCareGiver()) {
+		if (auth.isCareActor()) {
 			getLog().debug("The authentication result indicates that the user is a care giver. Check for the user in care giver repository");
 			final CareActorEntity ca = this.careActorRepo.findByHsaId(auth.getUsername());
 			if (ca == null) {

@@ -31,11 +31,14 @@ import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -45,68 +48,71 @@ public class ActivityTypeServiceTest extends TestSupport {
 
 	@Autowired
 	private ActivityCategoryRepository catRepo;
-	
+
 	@Autowired
 	private ActivityTypeRepository repo;
-	
+
 	@Autowired
 	private CareUnitRepository cuRepo;
-	
+
 	@Autowired
 	private CareActorRepository careActorRepo;
-	
+
 	@Autowired
 	private ActivityTypeService service;
 
+	@Autowired
+	private CountyCouncilRepository ccRepo;
 
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testLoadAllActivityTypes() throws Exception {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		
+
 		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
 		final CareActorBaseView cab = CareActorBaseViewImpl.newFromEntity(ca);
-		
+
 		this.runAs(cab);
-		
+
 		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu));
+			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu, AccessLevel.CAREUNIT));
 		}
-		
+
 		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes(savedCu.getHsaId());
 		assertTrue(result.isSuccess());
 		assertEquals(10, result.getData().length);
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testCreateNewActivityCategory() throws Exception {
-		
+
 		final ActivityCategory impl = ActivityCategoryImpl.createNewDto("Fysisk aktivitet");
 		final ServiceResult<ActivityCategory> result = this.service.createActivityCategory(impl);
-		
+
 		assertTrue(result.isSuccess());
 		assertEquals(impl.getName(), result.getData().getName());
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testCreateDuplicateActivityCategory() throws Exception {
-		
+
 		final ActivityCategory i1 = ActivityCategoryImpl.createNewDto("Fysisk aktivitet");
 		final ServiceResult<ActivityCategory> result = this.service.createActivityCategory(i1);
-		
+
 		assertTrue(result.isSuccess());
-		
+
 		final ServiceResult<ActivityCategory> result2 = this.service.createActivityCategory(i1);
 		assertFalse(result2.isSuccess());
 		assertEquals(1, result2.getErrorMessages().size());
 		assertTrue(result2.getErrorMessages().get(0) instanceof EntityNotUniqueMessage);
-		
+
 	}
 }

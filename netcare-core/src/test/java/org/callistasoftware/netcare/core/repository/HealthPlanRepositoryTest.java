@@ -25,11 +25,13 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
@@ -61,7 +63,9 @@ public class HealthPlanRepositoryTest extends TestSupport {
 	private PatientRepository patientRepo;
 	@Autowired
 	private CareUnitRepository cuRepo;
-	
+	@Autowired
+	private CountyCouncilRepository ccRepo;
+
 	//
 	ActivityDefinitionEntity createActivityDefinition(HealthPlanEntity healthPlan, UserEntity user) {
 		Frequency freq = new Frequency();
@@ -69,10 +73,11 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		FrequencyDay day = FrequencyDay.newFrequencyDay(Calendar.MONDAY);
 		FrequencyTime time = FrequencyTime.unmarshal("10:00");
 		day.addTime(time);
-		
+
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu);
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		typeRepo.save(type);
@@ -80,69 +85,72 @@ public class HealthPlanRepositoryTest extends TestSupport {
 
 		return ActivityDefinitionEntity.newEntity(healthPlan, type, freq, user);
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu-123");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu-123", cc);
 		this.cuRepo.save(cu);
 		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		careActorRepo.save(ca);
 		careActorRepo.flush();
-		
+
 		final PatientEntity patient = PatientEntity.newEntity("Peter", "", "123456");
 		patientRepo.save(patient);
 		patientRepo.flush();
-		
-		final HealthPlanEntity e1 = HealthPlanEntity.newEntity(ca, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK);
-		
-		ActivityDefinitionEntity ad =  createActivityDefinition(e1, ca);
-		
+
+		final HealthPlanEntity e1 = HealthPlanEntity.newEntity(ca, patient, "Hälsoplan B", new Date(), 20,
+				DurationUnit.WEEK);
+
+		ActivityDefinitionEntity ad = createActivityDefinition(e1, ca);
+
 		actRepo.save(ad);
 
 		repo.save(e1);
 		repo.flush();
-		
+
 		final List<HealthPlanEntity> all = repo.findAll();
 		assertNotNull(all);
 		assertEquals(1, all.size());
-		
+
 		HealthPlanEntity e2 = all.get(0);
 		assertEquals("Hälsoplan B", e2.getName());
 		assertEquals(DurationUnit.WEEK, e2.getDurationUnit());
 		assertEquals(20, e2.getDuration());
-		
+
 		Calendar c = Calendar.getInstance();
 		c.setTime(e2.getStartDate());
 		c.add(Calendar.WEEK_OF_YEAR, e2.getDuration());
 		assertEquals(ApiUtil.dayEnd(c).getTime(), e2.getEndDate());
-		
+
 		assertEquals(1, e2.getActivityDefinitions().size());
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testFindByForPatient() throws Exception {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
 		careActorRepo.save(ca);
 		careActorRepo.flush();
-		
+
 		final PatientEntity patient = PatientEntity.newEntity("Peter", "", "123456");
 		patientRepo.save(patient);
 		patientRepo.flush();
-		
+
 		repo.save(HealthPlanEntity.newEntity(ca, patient, "Hälsoplan B", new Date(), 20, DurationUnit.WEEK));
 		repo.save(HealthPlanEntity.newEntity(ca, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTH));
 		repo.flush();
-		
+
 		List<HealthPlanEntity> list = repo.findByForPatient(patient);
-		
+
 		assertEquals(2, list.size());
-		
+
 		assertEquals("Hälsoplan B", list.get(0).getName());
 		assertEquals(DurationUnit.WEEK, list.get(0).getDurationUnit());
 		assertEquals(20, list.get(0).getDuration());

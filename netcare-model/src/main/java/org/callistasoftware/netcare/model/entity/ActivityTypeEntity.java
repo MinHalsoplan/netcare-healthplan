@@ -32,6 +32,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * An ActivityType corresponds to a "template". An ActivityType can be assigned
+ * to a specific CareUnit, available to all care units within a CountyCouncil or
+ * to all county councils, ie national.
+ * 
+ * Each ActivityType holds information on the care unit who created it and what
+ * region that care unit belongs to.
+ * 
+ * Every ActivityType also has an AccessLevel set (NATIONAL, COUNTY_COUNCIL,
+ * CAREUNIT) which decides who has the posiibility to see and use the template.
+ * 
+ * If an ActivityType is copied a new care unit is set together with that care
+ * units regional affilitation.
+ */
 @Entity
 @Table(name = "nc_activity_type")
 public class ActivityTypeEntity implements PermissionRestrictedEntity {
@@ -53,20 +67,30 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@JoinColumn(name = "care_unit_id")
 	private CareUnitEntity careUnit;
 
+	@Column(name = "accessLevel", nullable = false)
+	private AccessLevel accessLevel;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "county_council_id")
+	private CountyCouncilEntity countyCouncil;
+
 	ActivityTypeEntity() {
 		activityItemTypes = new LinkedList<ActivityItemTypeEntity>();
 	}
 
-	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final CareUnitEntity careUnit) {
+	ActivityTypeEntity(final String name, final ActivityCategoryEntity category, final CareUnitEntity careUnit,
+			CountyCouncilEntity countyCouncil, AccessLevel accessLevel) {
 		this();
 		this.setName(name);
 		this.setCategory(category);
 		this.setCareUnit(careUnit);
+		this.setCountyCouncil(careUnit.getCountyCouncil());
+		this.setAccessLevel(accessLevel);
 	}
 
 	public static ActivityTypeEntity newEntity(String name, final ActivityCategoryEntity category,
-			final CareUnitEntity careUnit) {
-		return new ActivityTypeEntity(name, category, careUnit);
+			final CareUnitEntity careUnit, AccessLevel accessLevel) {
+		return new ActivityTypeEntity(name, category, careUnit, careUnit.getCountyCouncil(), accessLevel);
 	}
 
 	public Long getId() {
@@ -117,6 +141,22 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	void setCareUnit(CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
+	}
+
+	public AccessLevel getAccessLevel() {
+		return accessLevel;
+	}
+
+	public void setAccessLevel(AccessLevel accessLevel) {
+		this.accessLevel = accessLevel;
+	}
+
+	public CountyCouncilEntity getCountyCouncil() {
+		return countyCouncil;
+	}
+
+	public void setCountyCouncil(CountyCouncilEntity countyCouncil) {
+		this.countyCouncil = countyCouncil;
 	}
 
 	@Override

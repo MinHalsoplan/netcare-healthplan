@@ -26,11 +26,13 @@ import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
@@ -38,6 +40,7 @@ import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
@@ -98,19 +101,22 @@ public final class WebUtil {
 		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
+		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
 
 		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 
+		final CountyCouncilEntity jkpg = ccRepo.save(CountyCouncilEntity.newEntity("Landstinget i Jönköpings län"));
+
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit", jkpg);
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
 		cuRepo.flush();
 
-		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft");
 		atRepo.save(ate);
@@ -156,27 +162,34 @@ public final class WebUtil {
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		final ScheduledActivityRepository sar = wc.getBean(ScheduledActivityRepository.class);
 		final ActivityItemValuesEntityRepository actRepo = wc.getBean(ActivityItemValuesEntityRepository.class);
+		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
 
 		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 
+		final CountyCouncilEntity jkpg = ccRepo.save(CountyCouncilEntity.newEntity("Landstinget i Jönköpings län"));
+		// final CountyCouncilEntity vbott =
+		// ccRepo.save(CountyCouncilEntity.newEntity("Region Halland"));
+		// final CountyCouncilEntity hall =
+		// ccRepo.save(CountyCouncilEntity.newEntity("Västerbottens läns landsting"));
+
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Mental träning"));
 		final ActivityCategoryEntity cat3 = catRepo.save(ActivityCategoryEntity.newEntity("Provtagning"));
 
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-1");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-1", jkpg);
 		cu.setName("Rosenhälsan i Huskvarna");
 		cuRepo.save(cu);
 		cuRepo.flush();
 
-		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-cu-2");
+		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-cu-2", jkpg);
 		cu2.setName("Primärvårdsrehab Gibraltar");
 		cuRepo.save(cu2);
 		cuRepo.flush();
 
-		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu2);
+		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu2, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
 				MeasureUnit.KILOGRAM, true);
@@ -185,14 +198,16 @@ public final class WebUtil {
 		atRepo.save(t1);
 		atRepo.flush();
 
-		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, cu2);
+		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, cu2,
+				AccessLevel.CAREUNIT);
 		MeasurementTypeEntity
 				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft");
 		atRepo.save(t2);
 		atRepo.flush();
 
-		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, cu2);
+		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, cu2,
+				AccessLevel.CAREUNIT);
 		MeasurementTypeEntity
 				.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
 		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG,
@@ -290,7 +305,7 @@ public final class WebUtil {
 		sar.flush();
 		adRepo.flush();
 
-		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2);
+		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE,
 				false);
 		atRepo.save(at2);

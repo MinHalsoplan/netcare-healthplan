@@ -36,6 +36,7 @@ import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
@@ -142,7 +143,8 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(careActor.getCareUnit().getHsaId());
 
-		ActivityTypeEntity activityTypeEntity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit);
+		ActivityTypeEntity activityTypeEntity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit,
+				AccessLevel.CAREUNIT);
 
 		for (final ActivityItemType type : dto.getActivityItems()) {
 			if (type instanceof MeasurementType) {

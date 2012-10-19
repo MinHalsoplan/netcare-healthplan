@@ -24,11 +24,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
@@ -68,8 +70,12 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 	@Autowired
 	private ScheduledActivityRepository repo;
 
+	@Autowired
+	private CountyCouncilRepository ccRepo;
+
 	private ScheduledActivityEntity setup() {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 
 		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "", "hsa-id-1234", savedCu);
@@ -80,7 +86,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);

@@ -30,6 +30,7 @@
 		<class>org.callistasoftware.netcare.model.entity.ActivityTypeEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.CareActorEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.CareUnitEntity</class>
+		<class>org.callistasoftware.netcare.model.entity.CountyCouncilEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.HealthPlanEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.PatientEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.ScheduledActivityEntity</class>

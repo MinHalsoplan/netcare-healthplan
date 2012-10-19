@@ -45,16 +45,19 @@ import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
@@ -91,6 +94,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	private ScheduledActivityRepository schedRepo;
 	@Autowired
 	private ActivityDefinitionRepository defRepo;
+	@Autowired
+	private CountyCouncilRepository ccRepo;
 
 	@Autowired
 	private HealthPlanService service;
@@ -105,7 +110,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private ActivityDefinitionEntity createActivityDefinitionEntity() {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123", cc);
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
 		cuRepo.flush();
@@ -123,7 +129,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		ordinationRepo.save(hp);
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
-		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		EstimationTypeEntity.newEntity(at, "Känsla", "Väldigt lätt", "Mycket Trötthet");
@@ -150,7 +156,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private ServiceResult<HealthPlan> createHealthPlan(HealthPlan o) {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 
 		final CareActorEntity ca = CareActorEntity.newEntity("Test Testgren", "", "hsa-123-id", cu);
@@ -189,10 +196,11 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testAddActivityDefintion() throws Exception {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 
-		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL,
 				MeasureUnit.KILOGRAM, true);
@@ -502,7 +510,7 @@ public class HealthPlanServiceTest extends TestSupport {
 
 	private ActivityTypeEntity createActivityType() {
 		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(),
-				createCareUnit("123"));
+				createCareUnit("123"), AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		return this.typeRepo.save(at);
 	}
@@ -513,7 +521,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private CareUnitEntity createCareUnit(final String hsaId) {
-		final CareUnitEntity cu = CareUnitEntity.newEntity(hsaId == null ? "hsa-cu-123" : hsaId);
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity(hsaId == null ? "hsa-cu-123" : hsaId, cc);
 		return this.cuRepo.save(cu);
 	}
 
