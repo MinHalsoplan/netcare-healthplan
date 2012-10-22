@@ -357,6 +357,7 @@
 				};
 				
 				var resetForm = function() {
+					measureValues = new Array();
 					$('#measureValues tbody').empty();
 					$('#measureValues').hide();
 					

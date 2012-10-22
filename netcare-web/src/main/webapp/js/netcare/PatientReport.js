@@ -19,9 +19,9 @@ NC.PatientReport = function(tableId, shortVersion) {
 	var _schemaCount = 0;
 	
 	var _tableId = tableId;
-	var _dueActivities;
+	var _dueActivities = null;
 	var _shortVersion = shortVersion;
-	var _captions;
+	var _captions = null;
 	var _reportCallback = null;
 		
 	var _today = $.datepicker.formatDate( 'yy-mm-dd', new Date(), null );
@@ -204,7 +204,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			rep.values = new Array();
 
 			public.performReport(id, rep, function(data, last) {
-				cbtn.attr('disabled', data.rejected);
+				this.attr('disabled', data.rejected);
 				if (_reportCallback != null) {
 					_reportCallback(data.definition.id, 0, last);
 				}
@@ -223,6 +223,26 @@ NC.PatientReport = function(tableId, shortVersion) {
 	
 	var public = {
 		
+			showHistory : function(show) {
+				$.each(_dueActivities, function(index, value) {
+					if (show || (value.reported == null)) {
+						$('#act-' + value.id).show();
+					} else {
+						$('#act-' + value.id).hide();
+					}
+				});
+			},
+			
+			list : function() {
+				_ajax.get('/patient/schema', function(data) {
+					/* Empty the result list */
+					$('#' + tableId + ' tbody > tr').empty();
+					_render(data.data);
+					public.showHistory(_shortVersion);
+					_updateDescription();
+				}, false);
+			},
+
 		init : function() {
 			_updateDescription();
 
@@ -276,8 +296,9 @@ NC.PatientReport = function(tableId, shortVersion) {
 			});
 
 			$('#historyBoxId').click(function() {
-				public.showHistory($(this).is(':checked'));
+				showHistory($(this).is(':checked'));
 			});
+			
 			public.list();
 		},
 		
@@ -299,25 +320,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			}, true);	
 		},
 				
-		list : function() {
-			_ajax.get('/patient/schema', function(data) {
-				/* Empty the result list */
-				$('#' + tableId + ' tbody > tr').empty();
-				_render(data.data);
-				public.showHistory(_shortVersion);
-				_updateDescription();
-			}, false);
-		},
 
-		showHistory : function(show) {
-			$.each(_dueActivities, function(index, value) {
-				if (show || (value.reported == null)) {
-					$('#act-' + value.id).show();
-				} else {
-					$('#act-' + value.id).hide();
-				}
-			});
-		},
 		
 		getCaptions : function() {
 			return _captions;

@@ -144,13 +144,6 @@
 					
 					$('#patientForm :reset').click();
 				});
-				
-				$('#showCreateForm').click(function(event) {
-					$('#patientForm').toggle();
-				});
-				
-				$('#patientForm').hide();
-				
 			});
 		</script>
 	</hp:viewHeader>
@@ -159,12 +152,6 @@
 		<p>
 			<span class="label label-info"><spring:message code="information" /></span>
 			<spring:message code="admin.patients.desc" />
-		</p>
-		
-		<p style="text-align: right; padding-right: 20px;">
-			<a id="showCreateForm" class="btn addButton">
-				<spring:message code="admin.patients.new" />
-			</a>
 		</p>
 		
 		<form id="patientForm">
@@ -192,6 +179,8 @@
 					<spring:message code="patient.crn" var="cnr" scope="page" />
 					<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
 						<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
+						<br />
+						<span class="help-block"><small>Exempel: 191212121212</small></span>
 					</netcare:field>
 				</netcare:col>
 				<netcare:col span="4">
@@ -228,9 +217,7 @@
 						<th>&nbsp;</th>
 					</tr>
 				</thead>
-				<tbody>
-				
-				</tbody>
+				<tbody></tbody>
 			</netcare:table>
 		</section>
 	</hp:viewBody>

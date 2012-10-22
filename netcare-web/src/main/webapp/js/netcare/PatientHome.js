@@ -22,7 +22,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 	var _descriptionId = descriptionId;
 	var _eventBodyId = eventBodyId;
 	var _tableId = tableId;
-	var _perfData;
+	var _perfData = null;
 
 	var _util = new NC.Util();
 	var _ajax = new NC.Ajax();
@@ -36,10 +36,10 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 			$('#' + _descriptionId).hide();
 			$('#' + _tableId).show();
 		}
-	}
+	};
 	
 	var _formatMeasurements = function(data) {
-		NC.log('formatMeasurements()')
+		NC.log('formatMeasurements()');
 		var ms = '<i style="font-size: 10px;">';
 		$.each(data, function(index, value) {
 			var target = '';
@@ -52,7 +52,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 		});
 		ms += '</i>';
 		return ms;
-	}
+	};
 	
 	var public = {
 		
@@ -67,7 +67,6 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 
 				_perfData = new Array();
 
-				var currentHealthPlanId = '';
 				$.each(data.data, function(index, value) {
 					
 					var period;
@@ -89,7 +88,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 					pdata.data = null;
 					_perfData.push(pdata);
 
-					var result = (pdata.numTarget > 0) ? pctDone: -1;
+					var result = (pdata.numTarget > 1) ? pctDone: -1;
 					var icon;
 					if (result == -1) {
 						icon = _util.createIcon("face-smile", 32, null);
@@ -129,7 +128,7 @@ NC.PatientHome = function(descriptionId, tableId, eventBodyId) {
 				var event = data.data;
 				_eventCount = event.numReports + event.dueReports;
 				NC.log('Event Count: ' + _eventCount);
-				if (_eventCount == 0) {
+				if (_eventCount == 0) {
 					$('#' + _eventBodyId).hide();
 				} else {
 					var msg = $('<a>');

@@ -147,4 +147,4 @@ NC.Mobile = function() {
 	
 	return public;
 	
-}
+};

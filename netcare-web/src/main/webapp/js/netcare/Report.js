@@ -142,4 +142,4 @@ NC.Reports = function(statistics, captions) {
 	};
 	
 	return public;
-}
+};
