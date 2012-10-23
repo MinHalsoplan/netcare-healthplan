@@ -117,7 +117,12 @@ public class HomeController extends ControllerSupport {
 	public String displayActivityTypes() {
 		return "admin/types";
 	}
-	
+
+	@RequestMapping(value="/admin/template", method=RequestMethod.GET)
+	public String displayTemplate() {
+		return "admin/template";
+	}
+
 	@RequestMapping(value="/admin/activity/list", method=RequestMethod.GET)
 	public String displayReportedActivities() {
 		return "admin/reportedActivities";
