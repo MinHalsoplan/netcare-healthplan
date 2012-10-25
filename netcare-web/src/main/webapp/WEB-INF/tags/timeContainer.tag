@@ -23,6 +23,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
+<spring:message code="time.pattern" var="timePattern" scope="page" />
 <netcare:row id="${name}Container">
 	<netcare:col span="1">
 		<spring:message code="${name}" var="label" scope="page" />
@@ -33,7 +34,7 @@
 	<netcare:col span="3">
 		<spring:message code="activity.form.time" var="addTime" scope="page" />
 		<netcare:field name="${name}TimeField" label="${addTime}">
-			<netcare:timeInput name="${name}TimeField" classes="input-mini"/>
+			<netcare:timeInput name="${name}TimeField" timePattern="${timePattern}" classes="input-mini"/>
 			<netcare:image name="add" icon="true"/>
 		</netcare:field>
 	</netcare:col>
