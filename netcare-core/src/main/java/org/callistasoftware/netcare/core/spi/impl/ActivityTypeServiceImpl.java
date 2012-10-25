@@ -171,4 +171,17 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 				new GenericSuccessMessage());
 	}
 
+	@Override
+	public ServiceResult<ActivityType> getActivityType(String idAsString) {
+		log.info("Finding activity type by id: " + idAsString);
+		Long id = Long.valueOf(idAsString);
+		final ActivityTypeEntity result = this.repo.findOne(id);
+		if (result == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
+		}
+		System.out.println("Result type: " + result.getName());
+		//TODO Do we have to check access rights here?
+		return ServiceResultImpl.createSuccessResult(
+				ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
+	}
 }

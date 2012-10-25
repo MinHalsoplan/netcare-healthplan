@@ -48,7 +48,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 public class ActivityDefinitionImpl implements ActivityDefinition {
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private ActivityTypeImpl type;
+	private ActivityType type;
 	private String startDate;
 	private int activityRepeat;
 
@@ -121,7 +121,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		return this.type;
 	}
 
-	public void setType(final ActivityTypeImpl type) {
+	public void setType(final ActivityType type) {
 		this.type = type;
 	}
 

@@ -51,7 +51,7 @@ public class ActivityTypeImpl implements ActivityType {
 		this.activityItems = new ActivityItemTypeImpl[0];
 	}
 
-	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
+	public static ActivityType newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());

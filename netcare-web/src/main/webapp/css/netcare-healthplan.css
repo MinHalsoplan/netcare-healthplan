@@ -63,8 +63,8 @@ ul.itemList {
 	padding-top: 20px
 }
 
-/*** Move list item up, down or delete it ***/
-.listItemMoveUp {
+/*** Move list item up, down, delete it or add one ***/
+.listItemBody .listItemMoveUp {
 	background-image: url(../css/images/listNavigationUpBgBlue.png);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -76,7 +76,7 @@ ul.itemList {
 	width: 48px;
 }
 
-.listItemMoveDown {
+.listItemBody .listItemMoveDown {
 	background-image: url(../css/images/listNavigationDownBgBlue.png);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -88,7 +88,7 @@ ul.itemList {
 	width: 48px;
 }
 
-.listItemDelete {
+.listItemBody .listItemDelete {
 	background-image: url(../css/images/toolbarIconsBlue.png);
 	background-position: -96px 0px;
 	background-repeat: no-repeat;
@@ -100,7 +100,7 @@ ul.itemList {
 	width: 48px;
 }
 
-.addListItem {
+#addListItemWrapper .addListItem {
 	background-image: url(../css/images/togglerClosed.png);
 	background-repeat: no-repeat;
 	display: inline;
@@ -110,7 +110,7 @@ ul.itemList {
 	padding-right: 15px;
 }
 
-.addListItem:hover {
+#addListItemWrapper .addListItem:hover {
 	background-image: url(../css/images/togglerClosedBlue.png);
 	text-decoration: none;
 }

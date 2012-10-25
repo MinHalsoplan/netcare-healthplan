@@ -22,46 +22,59 @@ import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
 /**
- * Interface defining service methods for
- * managing activity types
+ * Interface defining service methods for managing activity types
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
 public interface ActivityTypeService {
-	
+
 	/**
 	 * Create a new activity type
+	 * 
 	 * @param dto
-	 * @param careActor the user creating this type.
+	 * @param careActor
+	 *            the user creating this type.
 	 * @return
 	 */
 	ServiceResult<ActivityType> createActivityType(final ActivityType dto, final CareActorBaseView careActor);
-	
+
 	/**
 	 * Searches for activity types
+	 * 
 	 * @param searchString
 	 * @return
 	 */
 	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString);
-	
+
 	/**
 	 * Load all activity categories
+	 * 
 	 * @return
 	 */
 	ServiceResult<ActivityCategory[]> loadAllActivityCategories();
-	
+
 	/**
 	 * Creates a new activity category
+	 * 
 	 * @param dto
 	 * @return
 	 */
 	ServiceResult<ActivityCategory> createActivityCategory(final ActivityCategory dto);
-	
+
 	/**
-	 * Load all activity types that exist in
-	 * the system
+	 * Load all activity types that exist in the system
+	 * 
 	 * @return
 	 */
 	ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId);
+
+	/**
+	 * Get an activityType by its id.
+	 * 
+	 * @param id
+	 *            The activity type id.
+	 * @return An activity type.
+	 */
+	ServiceResult<ActivityType> getActivityType(final String id);
 }

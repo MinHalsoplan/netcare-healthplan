@@ -41,29 +41,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController extends ControllerSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
-	
+
 	@Autowired
 	private HealthPlanService service;
-	
-	@RequestMapping(value="/home", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String goHome() {
-		
+
 		log.info("User {} is being redirected to home");
 		final UserBaseView user = this.getLoggedInUser();
 		if (user == null) {
 			throw new SecurityException("User is not logged in");
 		}
-		
+
 		if (user.isCareActor()) {
 			log.debug("Redirecting to admin home");
 			return "redirect:admin/home";
 		}
-		
+
 		log.debug("Redirecting to user home");
 		return "redirect:user/home";
 	}
-	
-	@RequestMapping(value="/admin/home", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/home", method = RequestMethod.GET)
 	public String displayAdminHome(final HttpSession session) {
 		log.info("Displaying home for admin");
 		final PatientBaseView pbv = this.getCurrentPatient(session);
@@ -72,80 +72,82 @@ public class HomeController extends ControllerSupport {
 		} else {
 			log.debug("Current patient in session is: " + this.getCurrentPatient(session).getFirstName());
 		}
-		
-		
+
 		return "admin/home";
 	}
-	
-	@RequestMapping(value="/admin/healthplan/new", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/healthplan/new", method = RequestMethod.GET)
 	public String displayCreateOrdination(final Model m, final HttpSession session, final Locale locale) {
 		log.info("Displaying create new health plan");
-		
+
 		if (session.getAttribute("currentPatient") == null) {
 			m.addAttribute("result", ServiceResultImpl.createFailedResult(new NoCurrentPatientMessage()));
 		}
-		
+
 		return "admin/healthplan";
 	}
-	
-	@RequestMapping(value="/user/healthplan/{healthplanId}/view", method=RequestMethod.GET)
-	public String displayNewActivityDefinition(@PathVariable(value="healthplanId") final Long healthPlan, final HttpSession session, final Model m) {
+
+	@RequestMapping(value = "/user/healthplan/{healthplanId}/view", method = RequestMethod.GET)
+	public String displayNewActivityDefinition(@PathVariable(value = "healthplanId") final Long healthPlan,
+			final HttpSession session, final Model m) {
 		log.info("Getting health plan {}", healthPlan);
-		
+
 		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan);
 		m.addAttribute("result", result);
 		if (result.isSuccess()) {
 			m.addAttribute("hideMessages", Boolean.TRUE);
 		}
-		
+
 		log.debug("Returning health plan with id: {}", result.getData().getId());
-		
+
 		return "user/activity";
 	}
-	
-	@RequestMapping(value="/admin/categories", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/categories", method = RequestMethod.GET)
 	public String displayActivityCategories() {
 		return "admin/categories";
 	}
-	
-	@RequestMapping(value="/admin/patients", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/patients", method = RequestMethod.GET)
 	public String displayPatients() {
 		return "admin/patients";
 	}
-	
-	@RequestMapping(value="/admin/activitytypes", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/activitytypes", method = RequestMethod.GET)
 	public String displayActivityTypes() {
 		return "admin/types";
 	}
 
-	@RequestMapping(value="/admin/template", method=RequestMethod.GET)
-	public String displayTemplate() {
+	@RequestMapping(value = "/admin/template/{id}", method = RequestMethod.GET)
+	public String displayTemplate(@PathVariable(value = "id") final Long id, Model model) {
+		log.info("Getting activity type with id {}", id);
+		model.addAttribute("currentId", id);
 		return "admin/template";
 	}
 
-	@RequestMapping(value="/admin/activity/list", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/activity/list", method = RequestMethod.GET)
 	public String displayReportedActivities() {
 		return "admin/reportedActivities";
 	}
-	
-	@RequestMapping(value="/user/results", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/user/results", method = RequestMethod.GET)
 	public String displayPatientResults() {
 		return "user/results";
 	}
-	
-	@RequestMapping(value="/user/profile", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public String displayUserProfile() {
 		log.info("Displaying user profile");
 		return "user/profile";
 	}
-	
-	@RequestMapping(value="/user/home", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/user/home", method = RequestMethod.GET)
 	public String displayUserHome() {
 		log.info("Displaying home for user");
 		return "user/home";
 	}
-	
-	@RequestMapping(value="/user/report", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/user/report", method = RequestMethod.GET)
 	public String displayUserReport() {
 		log.info("Displaying home for user");
 		return "user/report";

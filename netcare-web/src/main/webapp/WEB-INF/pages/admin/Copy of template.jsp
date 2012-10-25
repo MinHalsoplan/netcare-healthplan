@@ -30,25 +30,45 @@
 <hp:view>
 	<hp:viewHeader>
 		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />
-		<hp:templates />
 		<script type="text/javascript">
+		
+		 _.templateSettings.variable = "uc";
+		 _.templateSettings = {
+			  interpolate : /\{\{(.+?)\}\}/g
+			};
+		 var templateData = {
+		            listTitle: "Olympic Volleyball Players",
+		            listItems: [
+		                {
+		                    name: "Misty May-Treanor",
+		                    hasOlympicGold: true
+		                },
+		                {
+		                    name: "Kerri Walsh Jennings",
+		                    hasOlympicGold: true
+		                },
+		                {
+		                    name: "Jennifer Kessy",
+		                    hasOlympicGold: false
+		                },
+		                {
+		                    name: "April Ross",
+		                    hasOlympicGold: false
+		                }
+		            ]
+		        };
+		 
 			$(document).ready(function() {
-				var currentId = <c:out value="${currentId}" />;
-				
-				var currentActivityType;
-				var ncActivityTypes = new NC.ActivityTypes();
-
-				var findActivityTypeById = function() {
-					ncActivityTypes.get(currentId, function(data) {
-						NC.log('Loaded type id:' + currentId);
-						currentActivityType = data.data;
-						NC.log(currentActivityType);
-						$("#activityTypeName").val(currentActivityType.name);
-					});
-				};
-				findActivityTypeById();
 				$("#nextChooseName").click(function() {
-					$("#activityTypeWrapper").show();
+					$("#editActivitiesWrapper").show();
+					$("#nextChooseName").hide();
+				});
+				$("#nextchooseActivities").click(function() {
+					$("#chooseSaveWrapper").show();
+					$("#nextchooseActivities").hide();
+				});
+				$("#nextChooseName").click(function() {
+					$("#editActivitiesWrapper").show();
 					$("#nextChooseName").hide();
 				});
 				$("#nextchooseActivities").click(function() {
@@ -57,7 +77,9 @@
 				});
 				$("#addYesNoButton").click(function() {
 					var template = _.template($("#johannesid").html());
-					$("#item1").after(template());
+					$( "#item1" ).after(
+				            template( templateData )
+				        );
 				});
 			});
 			function showYesNoContainer() {
@@ -83,7 +105,7 @@
 						1.
 						<spring:message code="template.select.name" />
 					</h4>
-					<input id="activityTypeName" type="text" size="32">
+					<input type="text" size="32">
 					<div id="nextChooseNameWrapper">
 						<a href="###" id="nextChooseName">
 							<button class="btn btn-info" type="button">Nästa</button>
@@ -95,7 +117,7 @@
 						2.
 						<spring:message code="template.select.activities" />
 					</h4>
-					<div id="activityTypeWrapper" style="display: none; background-color: white; padding: 3px;">
+					<div id="editActivitiesWrapper" style="display: none; background-color: white; padding: 3px;">
 
 						<ul class="itemList facility">
 							<li id="item0" class="item withNavigation" style="cursor: pointer;">

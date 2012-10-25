@@ -56,4 +56,12 @@ public class ActivityTypeApi extends ApiSupport {
 		this.logAccess("create", "activity type");
 		return this.service.createActivityType(activityType, (CareActorBaseView) getUser());
 	}
+
+	@RequestMapping(value="/get", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityType> findActivityTypeById(@RequestParam(value="id") final String id) {
+		this.logAccess("get", "activity type");
+		return this.service.getActivityType(id);
+	}
+
 }

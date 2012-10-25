@@ -58,7 +58,12 @@ NC.ActivityTypes = function() {
 		
 		create : function(formData, callback) {
 			_ajax.post('/activityType/create', formData, callback, true);
-		}
+		},
+
+		get : function(entityId, callback) {
+			_ajax.getWithParams('/activityType/get', {id : entityId}, callback);
+		},
+
 	};
 	
 	return public;
