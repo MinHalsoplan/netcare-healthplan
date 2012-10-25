@@ -19,8 +19,8 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <!-- healthplan:templates -->
-<script id="johannesid" type="text/template" class="johannes">
-							<li id="item2" class="item withNavigation" style="cursor: pointer;">
+<script id="activityTypeItem" type="text/template">
+							<li id="item{{id}}" class="item withNavigation" style="cursor: pointer;">
 								<div class="containerBoxShadow paperSlip">
 									<div class="top">
 										<div class="wrap"></div>
@@ -33,12 +33,12 @@
 												<div class="listItemBase">
 													<div class="mainBody">
 														<h4 class="titel">{{name}}</h4>
-														<div class="subRow">Vikt | Intervall | kg</div>
+														<div class="subRow">Mer info här</div>
 													</div>
 												</div>
 												<div class="listItemMoveUp"></div>
 												<div class="listItemMoveDown"></div>
-												<div class="listItemDelete"></div>
+												<div class="listItemDelete" onclick="deleteListItem('item{{id}}');"></div>
 												<a href="javascript:showYesNoContainer();" class="itemNavigation assistiveText">Uppdatera
 													aktivitet</a>
 											</div>
