@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
@@ -39,6 +40,9 @@ import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -113,6 +117,31 @@ public class ActivityTypeServiceTest extends TestSupport {
 		assertFalse(result2.isSuccess());
 		assertEquals(1, result2.getErrorMessages().size());
 		assertTrue(result2.getErrorMessages().get(0) instanceof EntityNotUniqueMessage);
+
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testGetActivityType() throws Exception {
+		// First create an entity in the database
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
+
+		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Tempkategori"));
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa", cat, cu, AccessLevel.CAREUNIT);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
+		final ActivityTypeEntity savedEnt = this.repo.save(ent);
+		assertNotNull(savedEnt);
+
+		String id = savedEnt.getId().toString();
+		
+		// Then the actual test:
+		ServiceResult<ActivityType> result = this.service.getActivityType(id);
+		assertNotNull("Result should not be null", result);
+		assertTrue(result.isSuccess());
+		assertEquals("Springa", result.getData().getName());
 
 	}
 }

@@ -179,7 +179,6 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		if (result == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
 		}
-		System.out.println("Result type: " + result.getName());
 		//TODO Do we have to check access rights here?
 		return ServiceResultImpl.createSuccessResult(
 				ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
