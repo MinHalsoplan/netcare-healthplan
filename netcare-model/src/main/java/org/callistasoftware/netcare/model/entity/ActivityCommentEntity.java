@@ -43,7 +43,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	private String reply;
 	
 	@ManyToOne
-	private CareGiverEntity commentedBy;
+	private CareActorEntity commentedBy;
 	
 	@Column
 	@Temporal(TemporalType.DATE)
@@ -60,7 +60,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		
 	}
 	
-	public static ActivityCommentEntity newEntity(final String comment, final CareGiverEntity commentedBy, final ScheduledActivityEntity activity) {
+	public static ActivityCommentEntity newEntity(final String comment, final CareActorEntity commentedBy, final ScheduledActivityEntity activity) {
 		final ActivityCommentEntity ent = new ActivityCommentEntity();
 		ent.setActivity(activity);
 		ent.setComment(comment);
@@ -94,11 +94,11 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		this.reply = reply;
 	}
 
-	public CareGiverEntity getCommentedBy() {
+	public CareActorEntity getCommentedBy() {
 		return commentedBy;
 	}
 
-	void setCommentedBy(CareGiverEntity commentedBy) {
+	void setCommentedBy(CareActorEntity commentedBy) {
 		this.commentedBy = commentedBy;
 	}
 
@@ -133,7 +133,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
-		if (user.isCareGiver()) {
+		if (user.isCareActor()) {
 			return user.getId().equals(this.getCommentedBy().getId());
 		}
 		

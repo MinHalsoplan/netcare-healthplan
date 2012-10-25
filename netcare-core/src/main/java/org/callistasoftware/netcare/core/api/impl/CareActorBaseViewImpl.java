@@ -18,9 +18,9 @@ package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiverBaseView {
+public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActorBaseView {
 
 	/**
 	 * 
@@ -39,20 +39,20 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	
 	private CareUnit careUnit;
 	
-	public CareGiverBaseViewImpl() {
+	public CareActorBaseViewImpl() {
 		super(null, null, null);
 	}
 	
-	public CareGiverBaseViewImpl(final Long id, final String name, final String surname) {
+	public CareActorBaseViewImpl(final Long id, final String name, final String surname) {
 		super(id, name, surname);
 	}
 	
-	public static CareGiverBaseView newFromEntity(final CareGiverEntity entity) {
-		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getId(), entity.getFirstName(), entity.getSurName());
-		cg.setHsaId(entity.getHsaId());
-		cg.setCareUnit(CareUnitImpl.newFromEntity(entity.getCareUnit()));
+	public static CareActorBaseView newFromEntity(final CareActorEntity entity) {
+		final CareActorBaseViewImpl ca = new CareActorBaseViewImpl(entity.getId(), entity.getFirstName(), entity.getSurName());
+		ca.setHsaId(entity.getHsaId());
+		ca.setCareUnit(CareUnitImpl.newFromEntity(entity.getCareUnit()));
 
-		return cg;
+		return ca;
 	}
 	
 	@Override
@@ -74,13 +74,13 @@ public class CareGiverBaseViewImpl extends UserBaseViewImpl implements CareGiver
 	}
 
 	@Override
-	public boolean isCareGiver() {
+	public boolean isCareActor() {
 		return true;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Role.getCareGiverRoleSet();
+		return Role.getCareActorRoleSet();
 	}
 
 	@Override

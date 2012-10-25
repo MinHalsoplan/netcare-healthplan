@@ -73,7 +73,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
-	private CareGiverEntity issuedBy;
+	private CareActorEntity issuedBy;
 	
 	@ManyToOne
 	@JoinColumn(name="owned_by_care_unit_id")
@@ -94,7 +94,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	}
 	
 
-	public static HealthPlanEntity newEntity(CareGiverEntity issuedBy, PatientEntity forPatient, String name, Date startDate, int duration, DurationUnit unit) {
+	public static HealthPlanEntity newEntity(CareActorEntity issuedBy, PatientEntity forPatient, String name, Date startDate, int duration, DurationUnit unit) {
 		HealthPlanEntity entity = new HealthPlanEntity();
 		entity.setIssuedBy(issuedBy);
 		entity.setForPatient(forPatient);
@@ -133,11 +133,11 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		return endDate;
 	}
 
-	protected void setIssuedBy(CareGiverEntity issuedBy) {
+	protected void setIssuedBy(CareActorEntity issuedBy) {
 		this.issuedBy = EntityUtil.notNull(issuedBy);
 	}
 
-	public CareGiverEntity getIssuedBy() {
+	public CareActorEntity getIssuedBy() {
 		return issuedBy;
 	}
 	
@@ -278,9 +278,9 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isWriteAllowed(UserEntity userId) {
-		final boolean careGiver = userId.isCareGiver();
-		if (careGiver) {
-			return ((CareGiverEntity) userId).getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId());
+		final boolean careActor = userId.isCareActor();
+		if (careActor) {
+			return ((CareActorEntity) userId).getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId());
 		}
 		
 		return this.getForPatient().getId().equals(userId.getId());

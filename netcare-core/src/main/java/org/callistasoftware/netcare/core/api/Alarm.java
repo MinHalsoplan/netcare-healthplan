@@ -55,7 +55,7 @@ public interface Alarm extends Serializable {
 	 * The care giver who resolved the alarm
 	 * @return
 	 */
-	CareGiverBaseView getResolvedBy();
+	CareActorBaseView getResolvedBy();
 	
 	/**
 	 * The cause of the alarm

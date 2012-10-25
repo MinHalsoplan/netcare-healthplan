@@ -17,61 +17,32 @@
 package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_measurement_definition")
-public class MeasurementDefinitionEntity implements Comparable<MeasurementDefinitionEntity> {
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
+@DiscriminatorValue("measurement")
+public class MeasurementDefinitionEntity extends ActivityItemDefinitionEntity {
 
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="activity_def_id")
-	private ActivityDefinitionEntity activityDefinition;
-
-	@ManyToOne(optional=false)
-	@JoinColumn(name="measurement_type_id")
-	private MeasurementTypeEntity measurementType;
-		
-	@Column(name="target")
+	@Column(name = "target")
 	private float target;
-	
-	@Column(name="min_target")
+
+	@Column(name = "min_target")
 	private float minTarget;
-	
-	@Column(name="max_target")
+
+	@Column(name = "max_target")
 	private float maxTarget;
-	
+
 	MeasurementDefinitionEntity() {
 	}
 
-	public static MeasurementDefinitionEntity newEntity(ActivityDefinitionEntity activityDefinition, MeasurementTypeEntity measurementType) {
+	public static MeasurementDefinitionEntity newEntity(ActivityDefinitionEntity activityDefinition,
+			ActivityItemTypeEntity activityItemType) {
 		MeasurementDefinitionEntity entity = new MeasurementDefinitionEntity();
 		entity.setActivityDefinition(activityDefinition);
-		entity.setMeasurementType(measurementType);
+		entity.setActivityItemType(activityItemType);
 		return entity;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public ActivityDefinitionEntity getActivityDefinition() {
-		return activityDefinition;
-	}
-
-	void setActivityDefinition(ActivityDefinitionEntity activityDefinition) {
-		this.activityDefinition = activityDefinition;
-	}
-
 
 	public float getTarget() {
 		return target;
@@ -107,15 +78,7 @@ public class MeasurementDefinitionEntity implements Comparable<MeasurementDefini
 	}
 
 	public MeasurementTypeEntity getMeasurementType() {
-		return measurementType;
+		return (MeasurementTypeEntity) getActivityItemType();
 	}
 
-	void setMeasurementType(MeasurementTypeEntity measurementType) {
-		this.measurementType = measurementType;
-	}
-
-	@Override
-	public int compareTo(MeasurementDefinitionEntity m) {
-		return this.getMeasurementType().compareTo(m.getMeasurementType());
-	}
 }

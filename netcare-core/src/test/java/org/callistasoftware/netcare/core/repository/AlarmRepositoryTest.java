@@ -21,8 +21,9 @@ import static org.junit.Assert.assertEquals;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmRepositoryTest extends TestSupport {
 
 	@Autowired
-	private AlarmRepository repo;	
+	private AlarmRepository repo;
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 	@Autowired
 	private PatientRepository patientRepo;
 	@Autowired
 	private CareUnitRepository cuRepo;
+	@Autowired
+	private CountyCouncilRepository ccRepo;
 
 	@Test
 	@Transactional
@@ -47,22 +50,29 @@ public class AlarmRepositoryTest extends TestSupport {
 	public void findByReportedTimeIsNotNull() {
 		final PatientEntity patient = PatientEntity.newEntity("Peter", "", "123456");
 		patientRepo.save(patient);
-		final CareUnitEntity cu = CareUnitEntity.newEntity("cu");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		cuRepo.save(cu);
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Doctor Hook", "", "12345-67", cu);
-		cgRepo.save(cg);
-		
-		AlarmEntity e = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, patient, "hsa-123", 42L);
-		
-		e = repo.save(e);
-		
-		assertEquals(1, repo.findByResolvedTimeIsNullAndCareUnitHsaIdLike("hsa-123", new Sort(Sort.Direction.DESC, "createdTime")).size());
+		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
+		careActorRepo.save(ca);
 
-		e.resolve(cg);
-		
+		AlarmEntity e = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, patient, "hsa-123", 42L);
+
+		e = repo.save(e);
+
+		assertEquals(
+				1,
+				repo.findByResolvedTimeIsNullAndCareUnitHsaIdLike("hsa-123",
+						new Sort(Sort.Direction.DESC, "createdTime")).size());
+
+		e.resolve(ca);
+
 		e = repo.save(e);
 		repo.flush();
-		
-		assertEquals(0, repo.findByResolvedTimeIsNullAndCareUnitHsaIdLike("hsa-123", new Sort(Sort.Direction.DESC, "createdTime")).size());
+
+		assertEquals(
+				0,
+				repo.findByResolvedTimeIsNullAndCareUnitHsaIdLike("hsa-123",
+						new Sort(Sort.Direction.DESC, "createdTime")).size());
 	}
 }

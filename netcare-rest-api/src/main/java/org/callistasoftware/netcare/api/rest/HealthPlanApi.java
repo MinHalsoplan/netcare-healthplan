@@ -20,12 +20,12 @@ import java.util.Date;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
@@ -56,7 +56,7 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> createHealthPlan(@RequestBody final HealthPlanImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
 		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getPrincipal(), patient});
 		
-		return this.service.createNewHealthPlan(dto, (CareGiverBaseView) auth.getPrincipal(), patient);
+		return this.service.createNewHealthPlan(dto, (CareActorBaseView) auth.getPrincipal(), patient);
 	}
 	
 	@RequestMapping(value="/{patient}/list", method=RequestMethod.GET)
@@ -99,7 +99,7 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@RequestMapping(value="/{healthPlanId}/activity/new", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefintionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
+	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
 		log.info("User {} is adding a new activity defintion for health plan {}", new Object[] {this.getUser(), healthPlanId});
 		
 		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
@@ -109,7 +109,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> updateGoalValuesOnActivityDefinition(@PathVariable("healthPlanId") final Long healthPlanId
 			, @PathVariable("activityDefinitionId") final Long activityDefinitionId
-			, @RequestBody final ActivityDefintionImpl ad) {
+			, @RequestBody final ActivityDefinitionImpl ad) {
 		this.logAccess("update", "goal-values");
 		return this.service.updateActivity(ad);
 	}
@@ -137,7 +137,7 @@ public class HealthPlanApi extends ApiSupport {
 		// three
 		final Date start = new Date(n - 3*DateUtil.MILLIS_PER_DAY);
 		final Date end = new Date(n);
-		final CareUnit unit = ((CareGiverBaseView)this.getUser()).getCareUnit();
+		final CareUnit unit = ((CareActorBaseView)this.getUser()).getCareUnit();
 		return this.service.loadLatestReportedForAllPatients(unit, start, end);
 	}
 	
@@ -145,7 +145,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> loadAllReportedActivities() {
 		this.logAccess("load", "reported activities");
-		return this.service.loadLatestReportedForAllPatients(((CareGiverBaseView)this.getUser()).getCareUnit(), null, null);
+		return this.service.loadLatestReportedForAllPatients(((CareActorBaseView)this.getUser()).getCareUnit(), null, null);
 	}
 	
     @RequestMapping(value="/activity/reported/comment/{comment}/reply", method=RequestMethod.POST, produces="application/json")
@@ -174,7 +174,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityComment[]> loadReplies() {
 		this.logAccess("list", "replies");
-		return this.service.loadRepliesForCareGiver();
+		return this.service.loadRepliesForCareActor();
 	}
 	
     @RequestMapping(value="/activity/reported/comments/{comment}/delete", method=RequestMethod.POST, produces="application/json")

@@ -20,46 +20,39 @@ import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 
-public class MeasurementDefinitionImpl implements MeasurementDefinition {
-	private Long id;
-	private MeasurementType measurementType;
+public class MeasurementDefinitionImpl extends ActivityItemValuesDefinitionImpl implements MeasurementDefinition {
 	private float target;
 	private float maxTarget;
 	private float minTarget;
 
-	//
 	public static MeasurementDefinition newFromEntity(MeasurementDefinitionEntity entity) {
 		MeasurementDefinitionImpl m = new MeasurementDefinitionImpl();
-		
-		m.id = entity.getId();
-		m.measurementType = MeasurementTypeImpl.newFromEntity(entity.getMeasurementType());
+		m.setId(entity.getId());
+		m.setActivityItemType(MeasurementTypeImpl.newFromEntity(entity.getMeasurementType()));
 		m.target = entity.getTarget();
 		m.maxTarget = entity.getMaxTarget();
 		m.minTarget = entity.getMinTarget();
 		return m;
 	}
-	
+
 	@Override
 	public MeasurementType getMeasurementType() {
-		return measurementType;
-	}
-	
-	public void setMeasurementType(final MeasurementTypeImpl measurementType) {
-		this.measurementType = measurementType;
+		return (MeasurementType) getActivityItemType();
 	}
 
 	@Override
 	public float getTarget() {
 		return target;
 	}
-	
+
 	@Override
-	public Long getId() {
-		return id;
+	public float getMinTarget() {
+		return minTarget;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	@Override
+	public float getMaxTarget() {
+		return maxTarget;
 	}
 
 	public void setTarget(float target) {
@@ -73,15 +66,4 @@ public class MeasurementDefinitionImpl implements MeasurementDefinition {
 	public void setMinTarget(float minTarget) {
 		this.minTarget = minTarget;
 	}
-
-	@Override
-	public float getMinTarget() {
-		return minTarget;
-	}
-
-	@Override
-	public float getMaxTarget() {
-		return maxTarget;
-	}
-
 }

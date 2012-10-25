@@ -42,24 +42,8 @@ public interface ActivityType extends Serializable {
 	ActivityCategory getCategory();
 	
 	/**
-	 * Returns if sense shall be measured.
-	 */
-	boolean isMeasuringSense();
-	
-	/**
-	 * Returns the minimum scale description.
-	 */
-	String getMinScaleText();
-	
-	/**
-	 * Returns the maximum scale description
-	 * @return
-	 */
-	String getMaxScaleText();
-	
-	/**
 	 * The measure values bound to this activity type
 	 * @return
 	 */
-	MeasurementType[] getMeasureValues();
+	ActivityItemType[] getActivityItems();
 }

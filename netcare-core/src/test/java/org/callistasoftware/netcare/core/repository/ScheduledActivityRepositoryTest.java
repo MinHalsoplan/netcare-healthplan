@@ -24,11 +24,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
@@ -46,100 +48,106 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 
 	@Autowired
 	private CareUnitRepository cuRepo;
-	
+
 	@Autowired
-	private CareGiverRepository cgRepo;
-	
+	private CareActorRepository careActorRepo;
+
 	@Autowired
 	private PatientRepository pRepo;
-	
+
 	@Autowired
 	private ActivityCategoryRepository catRepo;
-	
+
 	@Autowired
 	private ActivityTypeRepository atRepo;
-	
+
 	@Autowired
 	private HealthPlanRepository hpRepo;
-	
+
 	@Autowired
 	private ActivityDefinitionRepository adRepo;
-	
+
 	@Autowired
 	private ScheduledActivityRepository repo;
-	
-	
-	
+
+	@Autowired
+	private CountyCouncilRepository ccRepo;
+
 	private ScheduledActivityEntity setup() {
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
 		final CareUnitEntity savedCu = cuRepo.save(cu);
-		
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "", "hsa-id-1234", savedCu);
-		final CareGiverEntity savedCg = this.cgRepo.save(cg);
-		
+
+		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "", "hsa-id-1234", savedCu);
+		final CareActorEntity savedCa = this.careActorRepo.save(ca);
+
 		final PatientEntity p = PatientEntity.newEntity("Marcus", "", "123456789002");
 		final PatientEntity savedPatient = this.pRepo.save(p);
-		
+
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		
-		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu);
+
+		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
-		
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCg, savedPatient, "Health plan", new Date(), 12, DurationUnit.MONTH);
+
+		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCa, savedPatient, "Health plan", new Date(), 12,
+				DurationUnit.MONTH);
 		final HealthPlanEntity savedHp = this.hpRepo.save(hp);
-		
-		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt, Frequency.unmarshal("1;1"), cg);
+
+		final ActivityDefinitionEntity def = ActivityDefinitionEntity.newEntity(savedHp, savedAt,
+				Frequency.unmarshal("1;1"), ca);
 		final ActivityDefinitionEntity saved = this.adRepo.save(def);
-		
+
 		ScheduledActivityEntity e = ScheduledActivityEntity.newEntity(saved, new Date());
-		
+
 		e = this.repo.save(e);
-				
+
 		return e;
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testFindByCareUnit() {
-		
+
 		ScheduledActivityEntity e = setup();
 		e.setReportedTime(new Date());
 		e = this.repo.save(e);
-		
+
 		final List<ScheduledActivityEntity> result = this.repo.findByCareUnit("hsa-id-4321");
 		assertNotNull(result);
 		assertEquals(1, result.size());
-		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId());
-		assertEquals(result.get(0).getMeasurements().get(0).getMeasurementDefinition().getMeasurementType().getSeqno(), 1);
+		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit()
+				.getHsaId());
+		assertEquals(result.get(0).getActivities().get(0).getActivityItemDefinitionEntity().getActivityItemType()
+				.getSeqno(), 1);
 		e.setReportedTime(null);
-		e = this.repo.save(e);		
+		e = this.repo.save(e);
 
 		Calendar cal = Calendar.getInstance();
 		assertEquals(1, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
 		cal.add(Calendar.DATE, -1);
 		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
-		
-		e.setReportedTime(new Date());	
-		
+
+		e.setReportedTime(new Date());
+
 		this.repo.save(e);
-		cal.add(Calendar.DATE, 1);		
+		cal.add(Calendar.DATE, 1);
 		assertEquals(0, repo.findByScheduledTimeLessThanAndReportedTimeIsNull(cal.getTime()).size());
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testFindByScheduledTimeLessThanAndReportedTimeIsNull() {
 		setup();
-		
+
 		final List<ScheduledActivityEntity> result = repo.findByScheduledTimeLessThanAndReportedTimeIsNull(new Date());
-		
+
 		assertEquals(1, result.size());
 		assertEquals(false, result.get(0).isReminderDone());
 
 	}
-	
+
 }

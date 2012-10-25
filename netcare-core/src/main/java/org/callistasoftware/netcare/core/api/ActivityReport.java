@@ -51,13 +51,6 @@ public interface ActivityReport extends Serializable {
 	String getActualTime();
 	
 	/**
-	 * Returns the perceived sense.
-	 * 
-	 * @return the sense.
-	 */
-	int getSense();
-	
-	/**
 	 * Returns a note.
 	 * 
 	 * @return the note, or null if not set.

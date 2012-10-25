@@ -22,3 +22,95 @@
 	background-color: #FDF5D9;
 }
 
+/*** Choose bars ***/
+#chooseName h4,#chooseActivities h4,#chooseSave h4 {
+	font-weight: normal;
+}
+
+#chooseSave h4 {
+	margin-bottom: 0;
+	padding-bottom: 20px;
+}
+
+#chooseName,#chooseActivities,#chooseSave {
+	border-top: 1px #cccccc dotted;
+	padding-left: 5px;
+	width: 94%;
+}
+
+#chooseName {
+	border-top: none;
+}
+
+#nextChooseNameWrapper,#nextchooseActivitiesWrapper {
+	padding-bottom: 10px;
+}
+
+#nextchooseActivitiesWrapper {
+	padding-top: 20px;
+}
+#chooseSaveWrapper {
+	
+}
+ul.itemList {
+	list-style: none;
+	margin: 0 0 0 0;
+	margin-left: 0px;
+	padding: 0;
+}
+
+#addActivityButtons {
+	padding-top: 20px
+}
+
+/*** Move list item up, down, delete it or add one ***/
+.listItemBody .listItemMoveUp {
+	background-image: url(../css/images/listNavigationUpBgBlue.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: 160px;
+	top: 0px;
+	display: block;
+	height: 100%;
+	width: 48px;
+}
+
+.listItemBody .listItemMoveDown {
+	background-image: url(../css/images/listNavigationDownBgBlue.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: 130px;
+	top: 0px;
+	display: block;
+	height: 100%;
+	width: 48px;
+}
+
+.listItemBody .listItemDelete {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -96px 0px;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: 100px;
+	top: 16px;
+	display: block;
+	height: 100%;
+	width: 48px;
+}
+
+#addListItemWrapper .addListItem {
+	background-image: url(../css/images/togglerClosed.png);
+	background-repeat: no-repeat;
+	display: inline;
+	padding-left: 25px;
+	padding-top: 3px;
+	padding-bottom: 4px;
+	padding-right: 15px;
+}
+
+#addListItemWrapper .addListItem:hover {
+	background-image: url(../css/images/togglerClosedBlue.png);
+	text-decoration: none;
+}

@@ -17,12 +17,14 @@
 package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.junit.Ignore;
 
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsServiceBuilder;
 import com.notnoop.apns.EnhancedApnsNotification;
 import com.notnoop.apns.PayloadBuilder;
 
+@Ignore
 public class OtherTests extends TestSupport {
 	//@Test
 	public void sendApnsNotification() {

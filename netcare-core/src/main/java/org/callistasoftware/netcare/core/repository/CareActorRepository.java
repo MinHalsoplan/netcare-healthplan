@@ -14,19 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.core.repository;
 
-public interface CareGiverBaseView extends UserBaseView {
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-	/**
-	 * Get the hsa id for the care giver
-	 * @return
-	 */
-	String getHsaId();
+public interface CareActorRepository extends JpaRepository<CareActorEntity, Long>{
 	
 	/**
-	 * Get the care unit for this care giver
+	 * Find a care giver by its hsa id
+	 * @param hsaId
 	 * @return
 	 */
-	CareUnit getCareUnit();
+	CareActorEntity findByHsaId(final String hsaId);
 }

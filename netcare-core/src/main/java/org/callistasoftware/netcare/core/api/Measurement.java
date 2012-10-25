@@ -16,14 +16,8 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-public interface Measurement {
+public interface Measurement extends ActivityItemValues {
 	
-	/**
-	 * Returns id.
-	 * 
-	 */
-	Long getId();
-
 	/**
 	 * Returns the definition.
 	 * 

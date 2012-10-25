@@ -17,49 +17,34 @@
 package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 /**
- * Keeps a reported measurement value. <p>
+ * Keeps a reported measurement value.
+ * <p>
  * 
- * When the value is reported the current target settings is copied from the definition in question, this behavior supports
- * definitions changes during the life-time of an activity.
+ * When the value is reported the current target settings is copied from the
+ * definition in question, this behavior supports definitions changes during the
+ * life-time of an activity.
  * 
  * @author Peter
  */
 @Entity
-@Table(name="nc_measurement")
-public class MeasurementEntity implements Comparable<MeasurementEntity> {
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
+@DiscriminatorValue("measurement")
+public class MeasurementEntity extends ActivityItemValuesEntity {
 
-	@ManyToOne(optional=false)
-	@JoinColumn(name="scheduled_activity_id")
-	private ScheduledActivityEntity scheduledActivity;
-	
-	@ManyToOne(optional=false)
-	@JoinColumn(name="measurement_definition_id")
-	private MeasurementDefinitionEntity measurementDefinition;
-
-	@Column(name="target")
+	@Column(name = "target")
 	private float target;
-	
-	@Column(name="min_target")
+
+	@Column(name = "min_target")
 	private float minTarget;
-	
-	@Column(name="max_target")
+
+	@Column(name = "max_target")
 	private float maxTarget;
 
-	@Column(name="reported_value")
+	@Column(name = "reported_value")
 	private float reportedValue;
-
 
 	MeasurementEntity() {
 		this.minTarget = -1;
@@ -67,33 +52,12 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 		this.target = -1;
 	}
 
-	static MeasurementEntity newEntity(ScheduledActivityEntity scheduledActivity, MeasurementDefinitionEntity measurementDefinition) {
+	static MeasurementEntity newEntity(ScheduledActivityEntity scheduledActivity,
+			MeasurementDefinitionEntity measurementDefinition) {
 		MeasurementEntity entity = new MeasurementEntity();
-		
 		entity.setScheduledActivity(scheduledActivity);
-		entity.setMeasurementDefinition(measurementDefinition);
-				
+		entity.setActivityItemDefinitionEntity(measurementDefinition);
 		return entity;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public ScheduledActivityEntity getScheduledActivity() {
-		return scheduledActivity;
-	}
-
-	void setScheduledActivity(ScheduledActivityEntity scheduledActivity) {
-		this.scheduledActivity = scheduledActivity;
-	}
-
-	public MeasurementDefinitionEntity getMeasurementDefinition() {
-		return measurementDefinition;
-	}
-
-	void setMeasurementDefinition(MeasurementDefinitionEntity measurementDefinition) {
-		this.measurementDefinition = measurementDefinition;
 	}
 
 	public float getTarget() {
@@ -116,6 +80,15 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 		return maxTarget == -1 ? getMeasurementDefinition().getMaxTarget() : maxTarget;
 	}
 
+	private MeasurementDefinitionEntity getMeasurementDefinition() {
+		if (getActivityItemDefinitionEntity() instanceof MeasurementDefinitionEntity) {
+			return (MeasurementDefinitionEntity) getActivityItemDefinitionEntity();
+		} else {
+			throw new RuntimeException("TODO EXCEPTION");
+			// TODO JCTODO
+		}
+	}
+
 	public void setMaxTarget(float maxTarget) {
 		this.maxTarget = maxTarget;
 	}
@@ -134,7 +107,7 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 			setMaxTarget(getMeasurementDefinition().getMaxTarget());
 		} else {
 			setTarget(getMeasurementDefinition().getTarget());
-		}		
+		}
 	}
 
 	public void setReportedValue(float reportedValue) {
@@ -142,11 +115,6 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 		this.reportedValue = reportedValue;
 	}
 
-	@Override
-	public int compareTo(MeasurementEntity m) {
-		return this.getMeasurementDefinition().compareTo(m.getMeasurementDefinition());
-	}
-	
 	public boolean isAlarm() {
 		MeasurementTypeEntity type = getMeasurementDefinition().getMeasurementType();
 		if (type.isAlarmEnabled()) {
@@ -155,5 +123,3 @@ public class MeasurementEntity implements Comparable<MeasurementEntity> {
 		return false;
 	}
 }
-
-

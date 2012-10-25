@@ -70,7 +70,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	}
 	
 	@Override
-	public boolean isCareGiver() {
+	public boolean isCareActor() {
 		return false;
 	}
 
