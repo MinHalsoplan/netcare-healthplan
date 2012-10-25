@@ -113,9 +113,9 @@ public class HomeController extends ControllerSupport {
 		return "admin/patients";
 	}
 
-	@RequestMapping(value = "/admin/activitytypes", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/templates", method = RequestMethod.GET)
 	public String displayActivityTypes() {
-		return "admin/types";
+		return "admin/activity-template";
 	}
 
 	@RequestMapping(value = "/admin/template/{id}", method = RequestMethod.GET)

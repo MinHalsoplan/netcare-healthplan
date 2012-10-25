@@ -154,7 +154,7 @@
 	<div id="system">
 		<h3 class="menuHeader"><spring:message code="admin.menu.create" /></h3>
 		<ul class="menuList">
-			<li><netcare:image name="new-activity" size="16" /><a href="<spring:url value="/netcare/admin/activitytypes" />"><spring:message code="admin.menu.activityType" /></a></li>
+			<li><netcare:image name="new-activity" size="16" /><a href="<spring:url value="/netcare/admin/templates" />"><spring:message code="admin.menu.activityType" /></a></li>
 			<li><netcare:image name="new-category" size="16" /><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="admin.menu.activityCategory" /></a>
 		</ul>
 	</div>

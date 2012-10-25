@@ -17,6 +17,7 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <!-- healthplan:templates -->
 <script id="johannesid" type="text/template" class="johannes">
 							<li id="item2" class="item withNavigation" style="cursor: pointer;">
@@ -31,7 +32,7 @@
 											<div class="listItemBody">
 												<div class="listItemBase">
 													<div class="mainBody">
-														<h4 class="titel">Mätvärde</h4>
+														<h4 class="titel">{{name}}</h4>
 														<div class="subRow">Vikt | Intervall | kg</div>
 													</div>
 												</div>
@@ -50,5 +51,16 @@
 									</div>
 								</div>
 							</li>
+</script>
+<script id="activityTemplate" type="text/template">
+<mvk:touch-item>
+<div id="item-{{id}}" class="listItemBase">
+	<div class="mainBody">
+		<h4 class="titel">{{name}}</h4>
+		<div class="subRow">{{category.name}}</div>
+	</div>
+</div>
+<a href="#" class="itemNavigation assistiveText"></a>
+</mvk:touch-item>
 </script>
 <!-- healthplan:templates / -->

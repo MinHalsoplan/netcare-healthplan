@@ -14,162 +14,47 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-$(window).load(function() {
-	$('#pageLoading').fadeOut('fast', function(e) {
-		$(this).hide();
-		$('#pageLoadingBox').hide();
-	});
-});
-
-$(document).ready(function() {
-	
-	if (typeof console === "undefined") {
-		console = {};
-	}
-	if (typeof console.log === "undefined") {
-		console.log = function() {};
-	}
-	
-	var _util = new NC.Util();
-	var _support = new NC.Support();
-	
-	$('.page-header h1').css('background', 'url(' + NC.getContextPath() + '/img/icons/32/heart-logo.png) no-repeat left');
-	
-	$('#pageLoading').css('height', $(window).height()).show();
-	$('#pageLoadingBox').show();
-	
-	/*$('#ajaxInProgress').ajaxStart(function() {
-		$(this).show();
-	});
-	
-	$('#ajaxInProgress').ajaxStop(function() {
-		$(this).hide();
-	});*/
-
-	/*
-	 * Bind all autocomplete boxes
-	 */
-	$('.nc-autocomplete').autocomplete({
-		search : function(event, ui) {
-			$(this).addClass('spinner');
-		},
-		open : function(event, ui) {
-			$(this).removeClass('spinner');
-		}
-	});
-	
-	$('.nc-autocomplete').blur(function() {
-		$(this).removeClass('spinner');
-	});
-	
-	var handleErrorCode = function(code) {
-		window.location.href = NC.getContextPath() + '/netcare/error/' + code;
-		return false;
-	};
-	
+var NC_MODULE = {
+	ACTIVITY_TEMPLATE : (function() {
+		var my  = {};
 		
-	/*
-	 * Select content when a text or number input field gains focus.
-	 */
-	$('input:text').focus( function (event) { 
-		NC.focusGained($(this));
-	});
-
-	$('input:text').focusout( function () { 
-		NC.focusLost($(this));
-	});
-
-	$('input:password').focus( function (event) { 
-		NC.focusGained($(this));
-	});
-
-	$('input:password').focusout( function () { 
-		NC.focusLost($(this));
-	});
-	
-	$('input[type="number"]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
-
-	$('input[type="number"]').focusout( function () { 
-		NC.focusLost($(this));
-	});
-
-	$('input[type="tel"]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
-
-	$('input[type="tel"]').focusout( function () { 
-		NC.focusLost($(this));
-	});
-
-	$('input[type="email"]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
-
-	$('input[type="email"]').focusout( function () { 
-		NC.focusLost($(this));
-	});
-
-	/*
-	 * Fix for IE8, make sure enter submits a form.
-	 */
-	$('form').keypress(function(event) {
-		// enter
-		if (event.which == 13) {
-			event.stopPropagation();
-		}
-	});
-	
-	/*
-	 * Setup ajax status mappings
-	 */
-	$.ajaxSetup({
-		dataType : 'json',
-		statusCode : {
-			404 : function() {
-				return handleErrorCode(404);
-			},
-			403 : function() {
-				return handleErrorCode(403);
-			},
-			500 : function() {
-				return handleErrorCode(500);
-			}
-		}
-	});
-	
-	$('.addButton').css('background', 'url(' + NC.getContextPath() + '/img/icons/16/add.png) no-repeat 3px').css('padding-left', '24px');;
-	$('.spinner').css('background', 'url(' + NC.getContextPath() + '/img/ajax-loader-small.gif) no-repeat right');
-	
-	/*
-	 * Process all date fields that exist on the
-	 * current page.
-	 */
-	$('.dateInput').each(function(i, v) {
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.loadCategories();
+			my.loadTemplates(that);
+		};
 		
-		$(v).datepicker({
-			dateFormat : 'yy-mm-dd',
-			firstDay : 1,
-			minDate : +0
-		});
+		my.loadCategories = function() {
+			var tc = new NC.ActivityCategories();
+			tc.loadAsOptions($('select[name="category"]'));
+		};
 		
-		_support.loadMonths(function(data) { $(v).datepicker('option', 'monthNames', data); });
-		_support.loadWeekdays(function(data) { $(v).datepicker('option', 'dayNamesMin', data); });
+		my.loadTemplates = function(my) {
+			/*
+			 * Load activity template
+			 */
+			var at = new NC.ActivityTypes();
+			at.load(my.params.hsaId, function(data) {
+				
+				$.each(data.data, function(i, v) {
+					var template = _.template($("#activityTemplate").html());
+					$('#templateList').append(template(v));
+					
+					$('#item-' + v.id).live('click', function() {
+						window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + v.id;
+					});
+					
+					
+				});
+				
+			}, false);
+		};
 		
-		$(v).siblings('span').css('cursor', 'pointer').click(function(e) {
-			$(v).datepicker('show');
-		});
-		
-	});
-	
-	/*
-	 * Bind all time fields on the page
-	 */
-	$('.timeInput').each(function(i, v) {
-		_util.validateTimeField($(v));
-	});
-});
+		return my;
+	})()
+};
 
 
 
