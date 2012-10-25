@@ -35,4 +35,11 @@
 <script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/ReportedActivities.js' />"></script>
+<script type="text/javascript">
+// Det här ska nog inte ligga här, men funkar så länge.
+_.templateSettings.variable = "us";
+_.templateSettings = {
+	  interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
+};
+</script>
 <!-- healthplan:js / -->
