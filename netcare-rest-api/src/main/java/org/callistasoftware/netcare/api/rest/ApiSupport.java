@@ -18,7 +18,7 @@ package org.callistasoftware.netcare.api.rest;
 
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.slf4j.Logger;
@@ -43,22 +43,22 @@ public abstract class ApiSupport {
 		return patient;
 	}
 	
-	protected boolean isCareGiver() {
-		return this.getUser().isCareGiver();
+	protected boolean isCareActor() {
+		return this.getUser().isCareActor();
 	}
 	
 	protected boolean isPatient() {
-		return !this.getUser().isCareGiver();
+		return !this.getUser().isCareActor();
 	}
 	
 	protected void logAccess(final String action, final String what) {
 		log.info("User {}, Action: {}->{}", new Object[] {this.getUser().getUsername(), action, what});
 	}
 	
-	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareGiverBaseView careGiver) {
+	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareActorBaseView careActor) {
 		log.info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
-				, new Object[] {careGiver.getFirstName()
-						, careGiver.getHsaId()
+				, new Object[] {careActor.getFirstName()
+						, careActor.getHsaId()
 						, action
 						, what
 						, target.getFirstName()

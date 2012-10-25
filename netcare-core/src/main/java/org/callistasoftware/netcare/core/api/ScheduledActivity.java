@@ -99,21 +99,14 @@ public interface ScheduledActivity extends Serializable {
 	PatientBaseView getPatient();
 
 	/**
-	 * Returns the perceived sense.
-	 * 
-	 * @return the sense.
-	 */
-	int getSense();
-
-	/**
 	 * Returns the associated patient notice.
 	 * 
 	 * @return the patient note.
 	 */
 	String getNote();
-	
+
 	/**
-	 * Returns measurements.
+	 * Returns activityItemValues.
 	 */
-	Measurement[] getMeasurements();
+	ActivityItemValues[] getActivityItemValues();
 }

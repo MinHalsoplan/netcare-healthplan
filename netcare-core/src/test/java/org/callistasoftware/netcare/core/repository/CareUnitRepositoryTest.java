@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -31,23 +32,26 @@ public class CareUnitRepositoryTest extends TestSupport {
 
 	@Autowired
 	private CareUnitRepository repo;
-	
+	@Autowired
+	private CountyCouncilRepository ccRepo;
+
 	@Test
 	@Transactional
 	@Rollback
 	public void testFindByHsaId() throws Exception {
-		final CareUnitEntity cu1 = CareUnitEntity.newEntity("hsa-123");
-		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-432");
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu1 = CareUnitEntity.newEntity("hsa-123", cc);
+		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-432", cc);
 		cu2.setName("Vårdcentralen Jönköping");
-		
+
 		this.repo.save(cu1);
 		this.repo.save(cu2);
-		
+
 		final CareUnitEntity res1 = this.repo.findByHsaId("hsa-123");
 		assertNotNull(res1);
 		assertEquals("hsa-123", res1.getHsaId());
 		assertNull(res1.getName());
-		
+
 		final CareUnitEntity res2 = this.repo.findByHsaId("hsa-432");
 		assertNotNull(res2);
 		assertEquals("hsa-432", res2.getHsaId());

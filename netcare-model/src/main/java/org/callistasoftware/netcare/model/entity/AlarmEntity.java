@@ -59,7 +59,7 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="resolved_by_id")
-	private CareGiverEntity resolvedBy;
+	private CareActorEntity resolvedBy;
 	
 	@ManyToOne
 	@JoinColumn(name="patient_id")
@@ -115,11 +115,11 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 		return patient;
 	}
 
-	public void setResolvedBy(CareGiverEntity resolvedBy) {
+	public void setResolvedBy(CareActorEntity resolvedBy) {
 		this.resolvedBy = resolvedBy;
 	}
 
-	public CareGiverEntity getResolvedBy() {
+	public CareActorEntity getResolvedBy() {
 		return resolvedBy;
 	}
 
@@ -128,7 +128,7 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 	 * 
 	 * @param resolvedBy the user  resolving this alarm.
 	 */
-	public void resolve(CareGiverEntity resolvedBy) {
+	public void resolve(CareActorEntity resolvedBy) {
 		setResolvedBy(resolvedBy);
 		setResolvedTime(new Date());
 	}
@@ -140,7 +140,7 @@ public class AlarmEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isWriteAllowed(UserEntity userId) {
-		return userId.isCareGiver() && this.getPatient().isWriteAllowed(userId);
+		return userId.isCareActor() && this.getPatient().isWriteAllowed(userId);
 	}
 
 	public String getInfo() {

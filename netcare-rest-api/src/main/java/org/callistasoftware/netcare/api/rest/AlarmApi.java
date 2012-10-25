@@ -17,7 +17,7 @@
 package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.Alarm;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.spi.AlarmService;
@@ -40,9 +40,9 @@ public class AlarmApi extends ApiSupport {
 	public ServiceResult<Alarm[]> loadAlarmsForCareUnit() {
 		this.logAccess("list", "alarms");
 		final UserBaseView user = this.getUser();
-		if (user != null && user.isCareGiver()) {
-			final CareGiverBaseView cg = (CareGiverBaseView) user;
-			return this.service.getCareUnitAlarms(cg.getCareUnit().getHsaId());
+		if (user != null && user.isCareActor()) {
+			final CareActorBaseView ca = (CareActorBaseView) user;
+			return this.service.getCareUnitAlarms(ca.getCareUnit().getHsaId());
 		}
 		
 		throw new SecurityException("Illegal to access alarms for care unit. No logged in user or user is not a care giver.");

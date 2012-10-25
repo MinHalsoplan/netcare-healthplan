@@ -21,11 +21,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ActivityItemValues;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
+import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
+import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -33,7 +36,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 public class ScheduledActivityImpl implements ScheduledActivity {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private long id;
 	private boolean due;
 	private String reported;
@@ -43,64 +46,71 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private ActivityDefinition activityDefinition;
 	private PatientBaseView patient;
 	private String actualTime;
-	private int sense;
 	private String note;
-	private Measurement[] measurements;
+	private ActivityItemValues[] activityItemValues;
 	private boolean rejected;
-	
+
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
 			dtos[i] = ScheduledActivityImpl.newFromEntity(entities.get(i));
 		}
-		
+
 		return dtos;
 	}
-	
+
 	public static ScheduledActivity newFromEntity(ScheduledActivityEntity entity) {
-		ScheduledActivityImpl a = new ScheduledActivityImpl();
-		
-		a.id = entity.getId();
-		a.activityDefinition = ActivityDefintionImpl.newFromEntity(entity.getActivityDefinitionEntity());
-		
+		ScheduledActivityImpl scheduledActivity = new ScheduledActivityImpl();
+
+		scheduledActivity.id = entity.getId();
+		scheduledActivity.activityDefinition = ActivityDefinitionImpl
+				.newFromEntity(entity.getActivityDefinitionEntity());
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(entity.getScheduledTime());
 		int day = cal.get(Calendar.DAY_OF_WEEK);
-		a.day = new Option("weekday." + day, LocaleContextHolder.getLocale());		
+		scheduledActivity.day = new Option("weekday." + day, LocaleContextHolder.getLocale());
 
 		cal.setTime(new Date());
 		ApiUtil.dayBegin(cal);
 		Date time = entity.getScheduledTime();
-		a.due = (time.compareTo(cal.getTime()) < 0);
-		a.date = ApiUtil.formatDate(time);
-		a.time = ApiUtil.formatTime(time);
+		scheduledActivity.due = (time.compareTo(cal.getTime()) < 0);
+		scheduledActivity.date = ApiUtil.formatDate(time);
+		scheduledActivity.time = ApiUtil.formatTime(time);
 		if (entity.getReportedTime() != null) {
-			a.reported = ApiUtil.formatDate(entity.getReportedTime()) + " " + ApiUtil.formatTime(entity.getReportedTime());
+			scheduledActivity.reported = ApiUtil.formatDate(entity.getReportedTime()) + " "
+					+ ApiUtil.formatTime(entity.getReportedTime());
 		}
 		if (entity.getActualTime() != null) {
-			a.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " " + ApiUtil.formatTime(entity.getActualTime());
+			scheduledActivity.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " "
+					+ ApiUtil.formatTime(entity.getActualTime());
 		}
-		
-		List<MeasurementEntity> mList = entity.getMeasurements();
-		a.measurements = new Measurement[mList.size()];
-		for (int i = 0; i < a.measurements.length; i++) {
-			MeasurementEntity me = mList.get(i);
-			a.measurements[i] = MeasurementImpl.newFromEntity(me);
+
+		List<ActivityItemValuesEntity> activityEntities = entity.getActivities();
+		scheduledActivity.activityItemValues = new Measurement[activityEntities.size()];
+		for (int i = 0; i < scheduledActivity.activityItemValues.length; i++) {
+			ActivityItemValuesEntity activityItemValuesEntity = activityEntities.get(i);
+			if (activityItemValuesEntity instanceof MeasurementEntity) {
+				scheduledActivity.activityItemValues[i] = MeasurementImpl
+						.newFromEntity((MeasurementEntity) activityItemValuesEntity);
+			} else {
+				scheduledActivity.activityItemValues[i] = EstimationImpl
+						.newFromEntity((EstimationEntity) activityItemValuesEntity);
+			}
 		}
-		a.rejected = entity.isRejected();
-		a.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity().getHealthPlan().getForPatient());
-		a.sense = entity.getPerceivedSense();
-		a.note = entity.getNote();
-		
-		return a;
+		scheduledActivity.rejected = entity.isRejected();
+		scheduledActivity.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity()
+				.getHealthPlan().getForPatient());
+		scheduledActivity.note = entity.getNote();
+
+		return scheduledActivity;
 	}
-		
-	
+
 	@Override
 	public long getId() {
 		return id;
 	}
-	
+
 	public ActivityDefinition getActivityDefinition() {
 		return activityDefinition;
 	}
@@ -141,16 +151,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		this.actualTime = actualTime;
 	}
 
-	public void setSense(int sense) {
-		this.sense = sense;
-	}
-
 	public void setNote(String note) {
 		this.note = note;
-	}
-
-	public void setMeasurements(Measurement[] measurements) {
-		this.measurements = measurements;
 	}
 
 	public void setRejected(boolean rejected) {
@@ -162,7 +164,6 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return time;
 	}
 
-	
 	@Override
 	public boolean isDue() {
 		return due;
@@ -199,11 +200,6 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public int getSense() {
-		return sense;
-	}
-
-	@Override
 	public String getNote() {
 		return note;
 	}
@@ -214,7 +210,11 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public Measurement[] getMeasurements() {
-		return measurements;
+	public ActivityItemValues[] getActivityItemValues() {
+		return activityItemValues;
+	}
+
+	public void setActivityItemValues(ActivityItemValues[] activityItemValues) {
+		this.activityItemValues = activityItemValues;
 	}
 }

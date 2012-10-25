@@ -16,15 +16,9 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CareGiverRepository extends JpaRepository<CareGiverEntity, Long>{
-	
-	/**
-	 * Find a care giver by its hsa id
-	 * @param hsaId
-	 * @return
-	 */
-	CareGiverEntity findByHsaId(final String hsaId);
+public interface CountyCouncilRepository extends JpaRepository<CountyCouncilEntity, Long> {
+
 }

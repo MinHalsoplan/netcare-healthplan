@@ -16,13 +16,15 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<!-- netcare:js -->
-<%@ tag language="java" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!-- healthplan:js -->
+<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javascript" src="<c:url value="/js/json2.js" />"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
 
 <script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/Alarm.js' />"></script>
@@ -33,5 +35,4 @@
 <script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/ReportedActivities.js' />"></script>
-
-	
+<!-- healthplan:js / -->

@@ -17,82 +17,43 @@
 package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_measurement_type")
-public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> {
+@DiscriminatorValue("measurement")
+public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="activity_type_id")
-	private ActivityTypeEntity activityType;
-	
-	@Column(name="name", length=32, nullable=false)
-	private String name;
-	
-	@Column(name="value_type", nullable=false)
+	@Column(name = "value_type")
 	private MeasurementValueType valueType;
-	
-	@Column(name="alarm_enabled")
-	private boolean alarmEnabled;
-	
-	@Column(name="unit", nullable=false)
+
+	@Column(name = "unit")
 	private MeasureUnit unit;
-	
-	@Column(name="seqno")
-	private int seqno;
 
 	MeasurementTypeEntity() {
 	}
-	
+
 	/**
 	 * Creates a measurement entity.
 	 * 
-	 * @param name the name.
-	 * @param intervalTarget indicates if the target is an interval.
-	 * @param unit the unit.
+	 * @param name
+	 *            the name.
+	 * @param intervalTarget
+	 *            indicates if the target is an interval.
+	 * @param unit
+	 *            the unit.
 	 * @return the entity.
 	 */
-	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name, MeasurementValueType valueType, MeasureUnit unit, final boolean alarmEnabled) {
+	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name,
+			MeasurementValueType valueType, MeasureUnit unit, final boolean alarmEnabled) {
 		MeasurementTypeEntity entity = new MeasurementTypeEntity();
 		entity.setActivityType(activityType);
 		entity.setName(name);
 		entity.setValueType(valueType);
 		entity.setUnit(unit);
 		entity.setAlarmEnabled(alarmEnabled);
-		activityType.addMeasurementType(entity);
+		activityType.addActivityItemType(entity);
 		return entity;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public ActivityTypeEntity getActivityType() {
-		return activityType;
-	}
-
-	void setActivityType(ActivityTypeEntity activityType) {
-		this.activityType = activityType;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	void setName(String name) {
-		this.name = name;
 	}
 
 	public MeasurementValueType getValueType() {
@@ -103,14 +64,6 @@ public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> 
 		this.valueType = valueType;
 	}
 
-	public boolean isAlarmEnabled() {
-		return alarmEnabled;
-	}
-
-	public void setAlarmEnabled(boolean alarmEnabled) {
-		this.alarmEnabled = alarmEnabled;
-	}
-
 	public MeasureUnit getUnit() {
 		return unit;
 	}
@@ -119,16 +72,4 @@ public class MeasurementTypeEntity implements Comparable<MeasurementTypeEntity> 
 		this.unit = unit;
 	}
 
-	public int getSeqno() {
-		return seqno;
-	}
-
-	public void setSeqno(int seqno) {
-		this.seqno = seqno;
-	}
-
-	@Override
-	public int compareTo(MeasurementTypeEntity m) {
-		return (this.getSeqno() - m.getSeqno());
-	}
 }

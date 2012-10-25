@@ -38,74 +38,82 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Index;
 
 @Entity
-@Table(name="nc_scheduled_activity")
+@Table(name = "nc_scheduled_activity")
 public class ScheduledActivityEntity implements Comparable<ScheduledActivityEntity>, PermissionRestrictedEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name="scheduled_time", nullable=false)
+	@Column(name = "scheduled_time", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Index(name="nc_scheduled_activity_time_ix")
+	@Index(name = "nc_scheduled_activity_time_ix")
 	private Date scheduledTime;
-	
-	@Column(name="reported_time")
+
+	@Column(name = "reported_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date reportedTime = null;
-	
-	@Column(name="actual_time")
+
+	@Column(name = "actual_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date actualTime;
-			
-	@Column(name="note", length=128)
-	private String note;
-	
-	@Column(name="perceived_sense")
-	private int perceivedSense;
-	
-	@Column(name="status", nullable=false)
-	private ScheduledActivityStatus status;
-	
-	@Column(name="reminder_done")
-	private boolean reminderDone;
-	
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="activity_def_id")
-	private ActivityDefinitionEntity activityDefinition;
-	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="activity", orphanRemoval=true, cascade=CascadeType.ALL)
-	private List<ActivityCommentEntity> comments;
-	
-	@OneToMany(mappedBy="scheduledActivity", fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
-	private List<MeasurementEntity> measurements;
 
-	
+	@Column(name = "note", length = 128)
+	private String note;
+
+	@Column(name = "status", nullable = false)
+	private ScheduledActivityStatus status;
+
+	@Column(name = "reminder_done")
+	private boolean reminderDone;
+
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "activity_def_id")
+	private ActivityDefinitionEntity activityDefinition;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "activity", orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<ActivityCommentEntity> comments;
+
+	@OneToMany(mappedBy = "scheduledActivity", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.REMOVE }, orphanRemoval = true)
+	private List<ActivityItemValuesEntity> activities;
+
 	ScheduledActivityEntity() {
 		this.setComments(new LinkedList<ActivityCommentEntity>());
-		this.setMeasurements(new LinkedList<MeasurementEntity>());
+		this.setActivities(new LinkedList<ActivityItemValuesEntity>());
 		this.setStatus(ScheduledActivityStatus.OPEN);
 		this.setReminderDone(false);
 	}
-	
+
 	/**
 	 * Creates a {@link ScheduledActivityEntity}.
 	 * 
-	 * @param activityDefinition the {@link ActivityDefinitionEntity}, must be not null
-	 * @param scheduledTime the scheduled timestamp (datetime)
+	 * @param activityDefinition
+	 *            the {@link ActivityDefinitionEntity}, must be not null
+	 * @param scheduledTime
+	 *            the scheduled timestamp (datetime)
 	 * @return a scheduled activity
 	 */
 	public static ScheduledActivityEntity newEntity(ActivityDefinitionEntity activityDefinition, Date scheduledTime) {
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
 		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
-		for (MeasurementDefinitionEntity measurementDefinition : activityDefinition.getMeasurementDefinitions()) {
-			MeasurementEntity e = MeasurementEntity.newEntity(scheduledActivityEntity, measurementDefinition);
-			scheduledActivityEntity.measurements.add(e);
+		for (ActivityItemDefinitionEntity activityItemDefinitionEntity : activityDefinition
+				.getActivityItemDefinitions()) {
+			ActivityItemValuesEntity itemEntity = null;
+			if (activityItemDefinitionEntity instanceof MeasurementDefinitionEntity) {
+				itemEntity = MeasurementEntity.newEntity(scheduledActivityEntity,
+						(MeasurementDefinitionEntity) activityItemDefinitionEntity);
+			} else if (activityItemDefinitionEntity instanceof EstimationDefinitionEntity) {
+				itemEntity = EstimationEntity.newEntity(scheduledActivityEntity, activityItemDefinitionEntity);
+			}
+			if (itemEntity != null) {
+				scheduledActivityEntity.activities.add(itemEntity);
+			}
 		}
 		return scheduledActivityEntity;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -130,16 +138,15 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	public int compareTo(ScheduledActivityEntity r) {
 		return scheduledTime.compareTo(r.getScheduledTime());
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		return (o instanceof ScheduledActivityEntity) && equals((ScheduledActivityEntity)o);
-	}
-	
-	private boolean equals(ScheduledActivityEntity o) {
-		return (this == o) || o.getId().equals(id); 
+		return (o instanceof ScheduledActivityEntity) && equals((ScheduledActivityEntity) o);
 	}
 
+	private boolean equals(ScheduledActivityEntity o) {
+		return (this == o) || o.getId().equals(id);
+	}
 
 	protected void setActivityDefinitionEntity(ActivityDefinitionEntity activityDefinition) {
 		this.activityDefinition = activityDefinition;
@@ -155,14 +162,6 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	public String getNote() {
 		return note;
-	}
-
-	public void setPerceivedSense(int perceivedSense) {
-		this.perceivedSense = perceivedSense;
-	}
-
-	public int getPerceivedSense() {
-		return perceivedSense;
 	}
 
 	public void setActualTime(Date actualTime) {
@@ -194,31 +193,31 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	public boolean isWriteAllowed(UserEntity user) {
 		return this.getActivityDefinitionEntity().getHealthPlan().isWriteAllowed(user);
 	}
-	
+
 	public void setStatus(ScheduledActivityStatus status) {
 		this.status = status;
 	}
-	
+
 	public ScheduledActivityStatus getStatus() {
 		return status;
 	}
 
-	public List<MeasurementEntity> getMeasurements() {
-		Collections.sort(measurements);
-		return Collections.unmodifiableList(measurements);
+	public List<ActivityItemValuesEntity> getActivities() {
+		Collections.sort(activities);
+		return Collections.unmodifiableList(activities);
 	}
-	
-	public MeasurementEntity lookupMeasurement(int seqno) {
-		for (MeasurementEntity m : measurements) {
-			if (m.getMeasurementDefinition().getMeasurementType().getSeqno() == seqno) {
-				return m;
+
+	public ActivityItemValuesEntity lookupActivity(int seqno) {
+		for (ActivityItemValuesEntity activity : activities) {
+			if (activity.getActivityItemDefinitionEntity().getActivityItemType().getSeqno() == seqno) {
+				return activity;
 			}
 		}
 		throw new IllegalArgumentException("No such measurement found: " + id);
 	}
 
-	void setMeasurements(List<MeasurementEntity> measurements) {
-		this.measurements = measurements;
+	public void setActivities(List<ActivityItemValuesEntity> activities) {
+		this.activities = activities;
 	}
 
 	public boolean isReminderDone() {

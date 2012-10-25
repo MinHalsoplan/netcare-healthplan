@@ -47,7 +47,7 @@ public class CreateTokenController {
 	@RequestMapping(value="/token/forCareGiver", method=RequestMethod.GET)
 	public String createTokenForCareGiver(final Model m) {
 		log.info("Generating a guid by calling mvk push id service...");
-		m.addAttribute("guid", service.createAuthenticationTokenForCareGiver("hsa-id-1234", "care-unit-hsa", "Callista V�rdcentral"));
+		m.addAttribute("guid", service.createAuthenticationTokenForCareActor("hsa-id-1234", "care-unit-hsa", "Callista Vårdcentral"));
 		
 		return "redirect:/netcare/setup";
 	}

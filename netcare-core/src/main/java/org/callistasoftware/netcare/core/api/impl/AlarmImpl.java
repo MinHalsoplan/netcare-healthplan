@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.Alarm;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
@@ -38,7 +38,7 @@ public class AlarmImpl implements Alarm {
 	private Patient patient;
 	private String createdTime;
 	private String resolvedTime;
-	private CareGiverBaseView resolvedBy;
+	private CareActorBaseView resolvedBy;
 	private Option cause;
 	private String info;
 	private Long entityReferenceId;
@@ -70,7 +70,7 @@ public class AlarmImpl implements Alarm {
 		alarm.setPatient(PatientImpl.newFromEntity(entity.getPatient()));
 		alarm.setInfo(entity.getInfo());
 		if (entity.getResolvedBy() != null) {
-			alarm.setResolvedBy(CareGiverBaseViewImpl.newFromEntity(entity.getResolvedBy()));
+			alarm.setResolvedBy(CareActorBaseViewImpl.newFromEntity(entity.getResolvedBy()));
 		}
 		
 		return alarm;
@@ -96,7 +96,7 @@ public class AlarmImpl implements Alarm {
 		this.resolvedTime = resolvedTime;
 	}
 
-	public void setResolvedBy(CareGiverBaseView resolvedBy) {
+	public void setResolvedBy(CareActorBaseView resolvedBy) {
 		this.resolvedBy = resolvedBy;
 	}
 
@@ -134,7 +134,7 @@ public class AlarmImpl implements Alarm {
 	}
 
 	@Override
-	public CareGiverBaseView getResolvedBy() {
+	public CareActorBaseView getResolvedBy() {
 		return this.resolvedBy;
 	}
 

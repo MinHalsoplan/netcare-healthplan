@@ -21,7 +21,7 @@ import java.util.Date;
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityReport;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -64,7 +64,7 @@ public interface HealthPlanService {
 	 * @param patientId
 	 * @return
 	 */
-	ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan ordination, final CareGiverBaseView creator, final Long patientId);
+	ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan ordination, final CareActorBaseView creator, final Long patientId);
 	
 	/**
 	 * Delete the ordination with the specified id
@@ -146,7 +146,7 @@ public interface HealthPlanService {
 	 * Load replies for the currently logged in care giver
 	 * @return
 	 */
-	ServiceResult<ActivityComment[]> loadRepliesForCareGiver();
+	ServiceResult<ActivityComment[]> loadRepliesForCareActor();
 	
 	/**
 	 * Delete a comment with the specified id

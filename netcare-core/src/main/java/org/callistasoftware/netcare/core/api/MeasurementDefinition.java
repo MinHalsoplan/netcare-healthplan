@@ -16,30 +16,23 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+public interface MeasurementDefinition extends ActivityItemValuesDefinition {
 
-public interface MeasurementDefinition {
-	
-	/**
-	 * Returns id.
-	 * 
-	 */
-	Long getId();
-	
 	/**
 	 * Returns the type.
 	 */
-	MeasurementType getMeasurementType();	
-	
+	MeasurementType getMeasurementType();
+
 	/**
 	 * Returns target if not an interval.
 	 */
 	float getTarget();
-	
+
 	/**
 	 * Returns min target if there is an interval.
 	 */
 	float getMinTarget();
-	
+
 	/**
 	 * Returns max target if there is an interval.
 	 */

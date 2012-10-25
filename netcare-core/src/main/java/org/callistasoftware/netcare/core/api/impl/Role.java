@@ -50,7 +50,7 @@ public class Role implements GrantedAuthority {
 		return authority;
 	}
 	
-	public static Collection<? extends GrantedAuthority> getCareGiverRoleSet() {
+	public static Collection<? extends GrantedAuthority> getCareActorRoleSet() {
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
 		auths.add(new Role("ROLE_USER"));
 		auths.add(new Role("ROLE_ADMIN"));
