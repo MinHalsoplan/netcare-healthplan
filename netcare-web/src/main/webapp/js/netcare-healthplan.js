@@ -15,6 +15,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 var NC_MODULE = {
+		
+	GLOBAL : (function() {
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+		};
+		
+		my.loadNewPage = function(url, module, moduleParams) {
+			
+			// Show spinner
+			
+			$('#inboxDetailWrapper .wrapper').load(GLOB_CTX_PATH + '/netcare/' + url + ' #maincontainerwrapper', function() {
+				module.init(moduleParams);
+				// Hide spinner
+			});
+		};
+		
+		return my;
+	})(),
+		
 	ACTIVITY_TEMPLATE : (function() {
 		
 		var _text = "";
@@ -34,6 +57,7 @@ var NC_MODULE = {
 		};
 		
 		my.initEventListeners = function(my) {
+			
 			$('select[name="category"]').change(function() {
 				_category = $(this).find('option:selected').val();
 				my.searchTemplates(my);
@@ -85,7 +109,10 @@ var NC_MODULE = {
 					$('#templateList').append(template(v));
 					
 					$('#item-' + v.id).live('click', function() {
-						window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + v.id;
+						/*
+						 * Load new content
+						 */
+						NC_MODULE.GLOBAL.loadNewPage('/admin/template/' + v.id, NC_MODULE.ACTIVITY_TEMPLATE, { hsaId : '<c:out value="${currentHsaId}" />' });
 					});
 				});
 			});
