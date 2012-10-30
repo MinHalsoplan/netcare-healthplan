@@ -22,6 +22,7 @@ import java.util.Locale;
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
@@ -42,12 +43,14 @@ public class ActivityTypeImpl implements ActivityType {
 
 	private Long id;
 	private String name;
+	private AccessLevel accessLevel;
 	private ActivityCategoryImpl category;
 
 	private ActivityItemType[] activityItems;
 
 	//
 	public ActivityTypeImpl() {
+		this.accessLevel = AccessLevel.CAREUNIT;
 		this.activityItems = new ActivityItemTypeImpl[0];
 	}
 
@@ -55,6 +58,7 @@ public class ActivityTypeImpl implements ActivityType {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
+		dto.setAccessLevel(entity.getAccessLevel());
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
@@ -134,5 +138,14 @@ public class ActivityTypeImpl implements ActivityType {
 		}
 
 		return buf.toString();
+	}
+
+	@Override
+	public AccessLevel getAccessLevel() {
+		return this.accessLevel;
+	}
+	
+	public void setAccessLevel(final AccessLevel accessLevel) {
+		this.accessLevel = accessLevel;
 	}
 }

@@ -18,6 +18,8 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.model.entity.AccessLevel;
+
 /**
  * Definition of an activity type
  * 
@@ -30,6 +32,12 @@ public interface ActivityType extends Serializable {
 	 * Get the id of this activity type
 	 */
 	Long getId();
+	
+	/**
+	 * The access level of this template
+	 * @return
+	 */
+	AccessLevel getAccessLevel();
 	
 	/**
 	 * Get the name of this activity type

@@ -37,6 +37,7 @@
 					hsaId : '<c:out value="${currentHsaId}" />'
 				};
 				
+				NC_MODULE.GLOBAL.init();
 				NC_MODULE.ACTIVITY_TEMPLATE.init(params);
 			});
 		</script>

@@ -39,16 +39,23 @@ var NC_MODULE = {
 	})(),
 		
 	ACTIVITY_TEMPLATE : (function() {
-		
-		var _text = "";
-		var _category = "all";
-		var _level = "all";
+		var _init;
+		var _text;
+		var _category;
+		var _level;
 		
 		var my  = {};
 		
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
+			
+			if (_init == undefined) {
+				_init = true;
+				_text = "";
+				_category = "all";
+				_level= "all";
+			}
 			
 			my.loadCategories();
 			my.loadLevels();
@@ -108,11 +115,19 @@ var NC_MODULE = {
 					var template = _.template($("#activityTemplate").html());
 					$('#templateList').append(template(v));
 					
+					if (v.accessLevel != "CAREUNIT") {
+						$('#item-' + v.id).next('a.itemNavigation').after(
+							$('<div>').addClass('itemStateText').append(
+								$('<div>').addClass('wrapper').html(v.accessLevel)
+							)
+						);
+					}
+					
 					$('#item-' + v.id).live('click', function() {
 						/*
 						 * Load new content
 						 */
-						NC_MODULE.GLOBAL.loadNewPage('/admin/template/' + v.id, NC_MODULE.ACTIVITY_TEMPLATE, { hsaId : '<c:out value="${currentHsaId}" />' });
+						NC_MODULE.GLOBAL.loadNewPage('/admin/template/' + v.id, NC_MODULE.ACTIVITY_TEMPLATE, { hsaId : '<c:out value="${currentHsaId}" />'});
 					});
 				});
 			});
