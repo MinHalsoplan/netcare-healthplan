@@ -23,6 +23,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -68,6 +70,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	private CareUnitEntity careUnit;
 
 	@Column(name = "accessLevel", nullable = false)
+	@Enumerated(EnumType.STRING)
 	private AccessLevel accessLevel;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)

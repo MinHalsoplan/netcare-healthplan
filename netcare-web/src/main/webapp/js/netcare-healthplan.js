@@ -52,6 +52,14 @@ var NC_MODULE = {
 			}, false);
 		};
 		
+		my.searchTemplates = function(my, text, category, type) {
+			
+			var ajax = new NC.Ajax().getWithParams('/activityType/search', { 'text' : text, 'category' : category, 'type' : type}, function(data) {
+				
+			});
+			
+		};
+		
 		return my;
 	})()
 };

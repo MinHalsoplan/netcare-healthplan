@@ -30,9 +30,6 @@ import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.CareActorRepository;
-import org.callistasoftware.netcare.core.repository.CareUnitRepository;
-import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
@@ -57,27 +54,18 @@ public class ActivityTypeServiceTest extends TestSupport {
 	private ActivityTypeRepository repo;
 
 	@Autowired
-	private CareUnitRepository cuRepo;
-
-	@Autowired
-	private CareActorRepository careActorRepo;
-
-	@Autowired
 	private ActivityTypeService service;
-
-	@Autowired
-	private CountyCouncilRepository ccRepo;
 
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testLoadAllActivityTypes() throws Exception {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = getCountyCouncilRepository().save(CountyCouncilEntity.newEntity("SLL"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
-		final CareUnitEntity savedCu = cuRepo.save(cu);
+		final CareUnitEntity savedCu = getCareUnitRepository().save(cu);
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
-		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
+		final CareActorEntity ca = getCareActorRepository().save(CareActorEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
 		final CareActorBaseView cab = CareActorBaseViewImpl.newFromEntity(ca);
 
 		this.runAs(cab);
@@ -125,8 +113,8 @@ public class ActivityTypeServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testGetActivityType() throws Exception {
 		// First create an entity in the database
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
-		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
+		final CountyCouncilEntity cc = getCountyCouncilRepository().save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = getCareUnitRepository().save(CareUnitEntity.newEntity("hsa-id", cc));
 
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Tempkategori"));
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa", cat, cu, AccessLevel.CAREUNIT);
@@ -143,5 +131,30 @@ public class ActivityTypeServiceTest extends TestSupport {
 		assertTrue(result.isSuccess());
 		assertEquals("Springa", result.getData().getName());
 
+	}
+	
+	@Test
+	@Rollback(true)
+	public void searchTemplates() {
+		
+		authenticatedUser("hsa-care-actor", "hsa-care-unit", "SLL");
+
+		final CareUnitEntity cu = getCareUnitRepository().findByHsaId("hsa-care-unit");
+
+		final ActivityCategoryEntity cat = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori"));
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa", cat, cu, AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
+		final ActivityTypeEntity savedEnt = this.repo.saveAndFlush(ent);
+		assertNotNull(savedEnt);
+
+		ServiceResult<ActivityType[]> result = this.service.searchForActivityTypes("ring", "all", "all");
+		assertEquals(1, result.getData().length);
+		
+		result = this.service.searchForActivityTypes("", "Tempkategori", "all");
+		assertEquals(1, result.getData().length);
+		
+		result = this.service.searchForActivityTypes("", "all", AccessLevel.COUNTY_COUNCIL.name());
+		assertEquals(1, result.getData().length);
 	}
 }

@@ -86,7 +86,6 @@ public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActor
 	@Override
 	public String getPassword() {
 		return null;
-		//throw new UnsupportedOperationException("Care givers should never use basic authentication. This method is most likely called from the mobile authentication manager");
 	}
 
 	@Override

@@ -16,8 +16,17 @@
  */
 package org.callistasoftware.netcare.core.support;
 
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
+import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,8 +37,41 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
 @ActiveProfiles(profiles={"db-embedded","test"}, inheritProfiles=true)
 public abstract class TestSupport {
-
+	
+	@Autowired
+	private CareActorRepository caRepo;
+	
+	@Autowired
+	private CareUnitRepository cuRepo;
+	
+	@Autowired
+	private CountyCouncilRepository ccRepo;
+	
 	protected void runAs(final UserBaseView user) {
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null));
+	}
+	
+	protected final void authenticatedUser(final String hsaId
+			, final String careUnitHsa
+			, final String countyCouncil) {
+		
+		final CountyCouncilEntity councilEntity = ccRepo.saveAndFlush(CountyCouncilEntity.newEntity(countyCouncil));
+		final CareUnitEntity unitEntity = cuRepo.saveAndFlush(CareUnitEntity.newEntity(careUnitHsa, councilEntity));
+		final CareActorEntity entity = caRepo.saveAndFlush(CareActorEntity.newEntity("Test", "Torsksson", hsaId, unitEntity));
+		
+		final CareActorBaseView ca = CareActorBaseViewImpl.newFromEntity(entity);
+		runAs(ca);
+	}
+	
+	protected final CareActorRepository getCareActorRepository() {
+		return this.caRepo;
+	}
+	
+	protected final CareUnitRepository getCareUnitRepository() {
+		return this.cuRepo;
+	}
+	
+	protected final CountyCouncilRepository getCountyCouncilRepository() {
+		return this.ccRepo;
 	}
 }

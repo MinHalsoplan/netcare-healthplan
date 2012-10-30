@@ -45,7 +45,7 @@ public interface ActivityTypeService {
 	 * @param searchString
 	 * @return
 	 */
-	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString);
+	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category, final String level);
 
 	/**
 	 * Load all activity categories

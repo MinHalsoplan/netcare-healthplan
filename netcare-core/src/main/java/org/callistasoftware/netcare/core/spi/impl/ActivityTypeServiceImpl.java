@@ -18,6 +18,8 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
@@ -40,6 +42,7 @@ import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
@@ -63,6 +66,8 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	private static final Logger log = LoggerFactory.getLogger(ActivityTypeServiceImpl.class);
 
+	@Autowired private EntityManagerFactory eMan;
+	
 	@Autowired
 	private ActivityCategoryRepository catRepo;
 
@@ -122,13 +127,44 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	@Override
-	public ServiceResult<ActivityType[]> searchForActivityTypes(String searchString) {
+	public ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category, final String level) {
 		log.info("Finding activity types. Search string is: " + searchString);
-		final List<ActivityTypeEntity> result = this.repo.findByNameLike(new StringBuilder().append("%")
-				.append(searchString).append("%").toString());
-
-		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(result,
-				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, result.size()));
+		
+		boolean includeAnd = true;
+		final StringBuilder query = new StringBuilder();
+		query.append("select e from ActivityTypeEntity as e where ");
+		if (!searchString.isEmpty()) {
+			log.debug("Using name {}", searchString);
+			query.append("e.name like ").append("'%").append(searchString).append("%' ");	
+		} else {
+			includeAnd = false;
+		}
+		
+		if (!category.equals("all")) {
+			log.debug("Using category {}", category);
+			query.append(includeAnd ? "and e.category.name = " : "e.category.name = ").append("'").append(category).append("'");
+			includeAnd = true;
+		}
+		
+		if (!level.equals("all")) {
+			log.debug("Using level {}", level);
+			query.append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
+			
+			/*
+			 * Only include templates for the county council that we belong to
+			 */
+			final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
+			if (level.equals(AccessLevel.COUNTY_COUNCIL.name())) {
+				log.debug("Find in county council {} ({})", cce.getName(), cce.getId());
+				query.append(" and e.careUnit.countyCouncil.id = ").append(cce.getId());
+			}
+		}
+		
+		@SuppressWarnings("unchecked")
+		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
+		return ServiceResultImpl.createSuccessResult(
+				ActivityTypeImpl.newFromEntities(
+						results, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, results.size()));
 	}
 
 	@Override

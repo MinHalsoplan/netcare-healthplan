@@ -18,19 +18,29 @@ package org.callistasoftware.netcare.core.repository;
 
 import java.util.List;
 
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long> {
+public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long>, JpaSpecificationExecutor<ActivityTypeEntity> {
 	
 	/**
 	 * Find activity types by name
 	 * @param name
 	 * @return
 	 */
-	List<ActivityTypeEntity> findByNameLike(final String name);
+	@Query("select e from ActivityTypeEntity as e " +
+			"where e.name like :name and e.accessLevel = :level and e.category.name = :category")
+	List<ActivityTypeEntity> searchTemplates(final String name, final AccessLevel level, final String category);
+	
+	@Query("select e from ActivityTypeEntity as e where e.name like :name and e.accessLevel = :level")
+	List<ActivityTypeEntity> searchTemplates(final String name, final AccessLevel level);
+	
+	@Query("select e from ActivityTypeEntity as e where e.category.name = :category")
+	List<ActivityTypeEntity> searchTemplates(final String name, final String category);
 	
 	/**
 	 * Find activity types created on the given care unit

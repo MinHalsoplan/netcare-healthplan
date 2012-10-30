@@ -21,4 +21,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CountyCouncilRepository extends JpaRepository<CountyCouncilEntity, Long> {
 
+	CountyCouncilEntity findByName(final String name);
 }

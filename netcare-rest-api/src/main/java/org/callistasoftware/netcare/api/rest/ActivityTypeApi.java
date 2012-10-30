@@ -45,9 +45,11 @@ public class ActivityTypeApi extends ApiSupport {
 	
 	@RequestMapping(value="/search", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType[]> searchActivityTypes(@RequestParam(value="text") final String text) {
+	public ServiceResult<ActivityType[]> searchActivityTypes(@RequestParam(value="text") final String text,
+			@RequestParam("category") final String category,
+			@RequestParam("level") final String level) {
 		this.logAccess("search", "activity types");
-		return this.service.searchForActivityTypes(text);
+		return this.service.searchForActivityTypes(text, category, level);
 	}
 	
     @RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
