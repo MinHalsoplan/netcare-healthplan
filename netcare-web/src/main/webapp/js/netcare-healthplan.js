@@ -16,6 +16,11 @@
  */
 var NC_MODULE = {
 	ACTIVITY_TEMPLATE : (function() {
+		
+		var _text = "";
+		var _category = "all";
+		var _level = "all";
+		
 		var my  = {};
 		
 		my.init = function(params) {
@@ -23,20 +28,57 @@ var NC_MODULE = {
 			this.params = params;
 			
 			my.loadCategories();
-			my.loadTemplates(that);
+			my.loadLevels();
+			my.searchTemplates(that);
+			my.initEventListeners(that);
+		};
+		
+		my.initEventListeners = function(my) {
+			$('select[name="category"]').change(function() {
+				_category = $(this).find('option:selected').val();
+				my.searchTemplates(my);
+			});
+			
+			$('select[name="level"]').change(function() {
+				_level = $(this).find('option:selected').val();
+				my.searchTemplates(my);
+			});
+			
+			$('input.search-query').keyup(function() {
+				_text = $(this).val();
+			});
+			
+			$(':submit').click(function(e) {
+				e.preventDefault();
+				my.searchTemplates();
+			})
 		};
 		
 		my.loadCategories = function() {
+			var opt = $('<option>', { value : 'all', selected : 'selected' });
+			opt.html('-- Alla --');
+			
 			var tc = new NC.ActivityCategories();
 			tc.loadAsOptions($('select[name="category"]'));
+			
+			$('select[name="category"]').prepend(opt);
 		};
 		
-		my.loadTemplates = function(my) {
-			/*
-			 * Load activity template
-			 */
-			var at = new NC.ActivityTypes();
-			at.load(my.params.hsaId, function(data) {
+		my.loadLevels = function() {
+			var opt = $('<option>', { value : 'all', selected : 'selected' });
+			opt.html('-- Alla --');
+			
+			var tc = new NC.Support();
+			tc.loadAccessLevels($('select[name="level"]'));
+			
+			$('select[name="level"]').prepend(opt);
+		};
+		
+		my.searchTemplates = function(my) {
+			NC.log('Searching... Text: ' + _text + ', Category: ' + _category + ', Level: ' + _level);
+			var ajax = new NC.Ajax().getWithParams('/activityType/search', { 'text' : _text, 'category' : _category, 'level' : _level}, function(data) {
+				
+				$('#templateList').empty();
 				
 				$.each(data.data, function(i, v) {
 					var template = _.template($("#activityTemplate").html());
@@ -45,19 +87,8 @@ var NC_MODULE = {
 					$('#item-' + v.id).live('click', function() {
 						window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + v.id;
 					});
-					
-					
 				});
-				
-			}, false);
-		};
-		
-		my.searchTemplates = function(my, text, category, type) {
-			
-			var ajax = new NC.Ajax().getWithParams('/activityType/search', { 'text' : text, 'category' : category, 'type' : type}, function(data) {
-				
 			});
-			
 		};
 		
 		return my;

@@ -27,6 +27,7 @@ import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
@@ -75,6 +76,19 @@ public class SupportApi extends ApiSupport {
 		final Option[] opts = new Option[valueTypes.length];
 		for (int i = 0; i < valueTypes.length; i++) {
 			opts[i] = new Option(valueTypes[i].name(), LocaleContextHolder.getLocale());
+		}
+		
+		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
+	}
+	
+	@RequestMapping(value="/accessLevels", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public ServiceResult<Option[]> loadAccessLevels() {
+		this.logAccess("load", "access levels");
+		final AccessLevel[] levels = AccessLevel.values();
+		final Option[] opts = new Option[levels.length];
+		for (int i = 0; i < levels.length; i++) {
+			opts[i] = new Option(levels[i].name(), LocaleContextHolder.getLocale());
 		}
 		
 		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());

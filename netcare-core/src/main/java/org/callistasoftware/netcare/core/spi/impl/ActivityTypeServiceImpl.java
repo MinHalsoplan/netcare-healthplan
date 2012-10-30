@@ -130,6 +130,11 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	public ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category, final String level) {
 		log.info("Finding activity types. Search string is: " + searchString);
 		
+		// Default find all
+		if (searchString.isEmpty() && category.equals("all") && level.equals("all")) {
+			return this.loadAllActivityTypes(getCareActor().getCareUnit().getHsaId());
+		}
+		
 		boolean includeAnd = true;
 		final StringBuilder query = new StringBuilder();
 		query.append("select e from ActivityTypeEntity as e where ");
@@ -142,7 +147,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		
 		if (!category.equals("all")) {
 			log.debug("Using category {}", category);
-			query.append(includeAnd ? "and e.category.name = " : "e.category.name = ").append("'").append(category).append("'");
+			query.append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
 			includeAnd = true;
 		}
 		

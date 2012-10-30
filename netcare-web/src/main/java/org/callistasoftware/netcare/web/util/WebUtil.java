@@ -199,7 +199,7 @@ public final class WebUtil {
 		atRepo.flush();
 
 		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, cu2,
-				AccessLevel.CAREUNIT);
+				AccessLevel.NATIONAL);
 		MeasurementTypeEntity
 				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft");
@@ -305,7 +305,7 @@ public final class WebUtil {
 		sar.flush();
 		adRepo.flush();
 
-		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2, AccessLevel.CAREUNIT);
+		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2, AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE,
 				false);
 		atRepo.save(at2);
