@@ -168,60 +168,74 @@ public final class WebUtil {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
+		
+		final TestDataHelper td = new TestDataHelper(sc);
 
-		final CountyCouncilEntity jkpg = ccRepo.save(CountyCouncilEntity.newEntity("Landstinget i Jönköpings län"));
-		// final CountyCouncilEntity vbott =
-		// ccRepo.save(CountyCouncilEntity.newEntity("Region Halland"));
-		// final CountyCouncilEntity hall =
-		// ccRepo.save(CountyCouncilEntity.newEntity("Västerbottens läns landsting"));
+		/*
+		 * County councils
+		 */
+		final CountyCouncilEntity jkpg = td.newCountyCouncil("Landstinget i Jönköpings län");
+		final CountyCouncilEntity hall = td.newCountyCouncil("Region Halland");
+		final CountyCouncilEntity vbott = td.newCountyCouncil("Västerbottens läns landsting");
 
+		/*
+		 * Care units
+		 */
+		final CareUnitEntity jkpg_cu_1 = td.newCareUnit("hsa-cu-1", "Rosenhälsan i Huskvarna", jkpg);
+		final CareUnitEntity jkpg_cu_2 = td.newCareUnit("hsa-cu-2", "Dialysmottagningen Ryhov", jkpg);
+		final CareUnitEntity hall_cu_1 = td.newCareUnit("hall-cu-1", "Vårdcentralen Getinge", hall);
+		final CareUnitEntity hall_cu_2 = td.newCareUnit("hall-cu-2", "Tudorkliniken Allmänläkarmottagning", hall);
+		final CareUnitEntity vbott_cu_1 = td.newCareUnit("vbott-cu-1", "Hudläkaren i Umeå AB", vbott);
+		final CareUnitEntity vbott_cu_2 = td.newCareUnit("vbott-cu-2", "Norsjö Rehab Center", vbott);
+		
+		/*
+		 * System categories
+		 */
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Mental träning"));
 		final ActivityCategoryEntity cat3 = catRepo.save(ActivityCategoryEntity.newEntity("Provtagning"));
 
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-1", jkpg);
-		cu.setName("Rosenhälsan i Huskvarna");
-		cuRepo.save(cu);
-		cuRepo.flush();
-
-		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-cu-2", jkpg);
-		cu2.setName("Primärvårdsrehab Gibraltar");
-		cuRepo.save(cu2);
-		cuRepo.flush();
-
-		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu2, AccessLevel.CAREUNIT);
+		/*
+		 * Rosenhälsan
+		 */
+		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, jkpg_cu_1, AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
 				MeasureUnit.KILOGRAM, true);
-		me.setAlarmEnabled(true);
 		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5);
-		atRepo.save(t1);
-		atRepo.flush();
+		atRepo.saveAndFlush(t1);
 
-		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, cu2,
+		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, jkpg_cu_1,
 				AccessLevel.NATIONAL);
 		MeasurementTypeEntity
 				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
 		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5);
-		atRepo.save(t2);
-		atRepo.flush();
+		atRepo.saveAndFlush(t2);
 
-		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, cu2,
-				AccessLevel.CAREUNIT);
+		/*
+		 * Dialys Ryhov
+		 */
+		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, jkpg_cu_2,
+				AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity
 				.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
 		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG,
 				true);
-		atRepo.save(t3);
-		atRepo.flush();
+		atRepo.saveAndFlush(t3);
+		
+		/*
+		 * Norsjö Rehab Center
+		 */
+		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
+		atRepo.saveAndFlush(t4);
 
-		final CareActorEntity ca1 = CareActorEntity.newEntity("Peter", "Abrahamsson", careActorHsa, cu);
-		careActorRepo.save(ca1);
+		
+		final CareActorEntity ca1 = CareActorEntity.newEntity("Peter", "Abrahamsson", careActorHsa, vbott_cu_2);
+		careActorRepo.saveAndFlush(ca1);
 
-		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", cu2);
-		careActorRepo.save(ca);
-
-		careActorRepo.flush();
+		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", jkpg_cu_1);
+		careActorRepo.saveAndFlush(ca);
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
@@ -305,14 +319,16 @@ public final class WebUtil {
 		sar.flush();
 		adRepo.flush();
 
-		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE,
-				false);
-		atRepo.save(at2);
+		
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
-		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, ca);
-		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setTarget(60);
+		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, t3, frequency2, ca);
+		
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setMinTarget(90.0f);
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setMaxTarget(140.0f);
 
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setMinTarget(70.0f);
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(1)).setMaxTarget(90.0f);
+		
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
 	}

@@ -115,3 +115,31 @@ ul.itemList {
 	background-image: url(../css/images/togglerClosedBlue.png);
 	text-decoration: none;
 }
+
+/*
+ * TO BE REMOVED AFTER MVK RELEASE
+ */
+li.item .itemStateText {
+	position: absolute;
+	display: block;
+	top: 0px;
+	right: 60px;
+	padding-bottom: 3px;
+	font-size: 0.75em;
+	font-weight: bold;
+	background-image: url('../img/shadow-btn.png');
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+/*
+ * TO BE REMOVED AFTER MVK RELEASE
+ */
+#inboxDetailWrapper li.item .itemStateText>.wrapper {
+	padding: 5px 13px;
+	display: block;
+	background-color: #fabd17;
+	background-image: url('../images/stateTextBg.png');
+	background-position: right center;
+	background-repeat: repeat-y;
+}
