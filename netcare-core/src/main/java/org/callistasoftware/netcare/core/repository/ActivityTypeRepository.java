@@ -18,35 +18,37 @@ package org.callistasoftware.netcare.core.repository;
 
 import java.util.List;
 
-import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long>, JpaSpecificationExecutor<ActivityTypeEntity> {
-	
-	/**
-	 * Find activity types by name
-	 * @param name
-	 * @return
-	 */
-	@Query("select e from ActivityTypeEntity as e " +
-			"where e.name like :name and e.accessLevel = :level and e.category.name = :category")
-	List<ActivityTypeEntity> searchTemplates(final String name, final AccessLevel level, final String category);
-	
-	@Query("select e from ActivityTypeEntity as e where e.name like :name and e.accessLevel = :level")
-	List<ActivityTypeEntity> searchTemplates(final String name, final AccessLevel level);
-	
-	@Query("select e from ActivityTypeEntity as e where e.category.name = :category")
-	List<ActivityTypeEntity> searchTemplates(final String name, final String category);
-	
 	/**
 	 * Find activity types created on the given care unit
 	 * @param hsaId
 	 * @return
+	 * @deprecated Use {@link ActivityCategoryRepository}{@link #findByCareUnit(CareUnitEntity)} instead
 	 */
+	@Deprecated
 	@Query("select e from ActivityTypeEntity as e where e.careUnit.hsaId = :hsaId order by e.name asc")
 	List<ActivityTypeEntity> findByCareUnit(@Param("hsaId") final String hsaId);
+	
+	@Query("select e from ActivityTypeEntity as e where " +
+			"(e.accessLevel = 'CAREUNIT' and e.careUnit = :careUnit) " +
+			"or (e.accessLevel = 'NATIONAL') " +
+			"or (e.accessLevel = 'COUNTY_COUNCIL' and e.careUnit.countyCouncil = :countyCouncil)")
+	List<ActivityTypeEntity> findByCareUnit(@Param("careUnit") final CareUnitEntity careUnit
+			, @Param("countyCouncil") final CountyCouncilEntity countyCouncil);
+	
+	@Query("select e from ActivityTypeEntity as e where " +
+			"(e.accessLevel = 'CAREUNIT' and e.careUnit.hsaId = :hsaId) " +
+			"or (e.accessLevel = 'NATION') " +
+			"or (e.accessLevel = 'COUNTY_COUNCIL' and e.careUnit.countyCouncil.id = :countyCouncilId)")
+	List<ActivityTypeEntity> findAllAccessible(
+			@Param("hsaId") final String careUnitHsa, 
+			@Param("countyCouncilId") final Long countyCouncilId);
 }

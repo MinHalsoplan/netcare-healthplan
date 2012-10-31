@@ -80,6 +80,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	private CareUnitRepository cuRepo;
 
 	@Override
+	@Deprecated
 	public ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId) {
 		log.info("Loading all activity types from repository belongin to {}...", hsaId);
 		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(hsaId);
@@ -88,6 +89,14 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			this.verifyReadAccess(all.get(0));
 		}
 
+		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
+				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
+	}
+	
+	public ServiceResult<ActivityType[]> loadAllActivityTypes(final CareUnitEntity careUnit) {
+		log.info("Loading all activity templates accessible from care unit {}", careUnit.getHsaId());
+		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(careUnit, careUnit.getCountyCouncil());
+		
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
@@ -134,33 +143,41 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		
 		// Default find all
 		if (searchString.isEmpty() && category.equals("all") && level.equals("all")) {
-			return this.loadAllActivityTypes(getCareActor().getCareUnit().getHsaId());
+			return this.loadAllActivityTypes(getCareActor().getCareUnit());
 		}
 		
 		boolean includeAnd = true;
+		boolean includeWhere = false;
+		
 		final StringBuilder query = new StringBuilder();
-		query.append("select e from ActivityTypeEntity as e where ");
+		query.append("select e from ActivityTypeEntity as e ");
 		if (!searchString.isEmpty()) {
 			log.debug("Using name {}", searchString);
-			query.append("e.name like ").append("'%").append(searchString).append("%' ");	
+			query.append("where e.name like ").append("'%").append(searchString).append("%' ");	
 		} else {
+			includeWhere = true;
 			includeAnd = false;
 		}
 		
 		if (!category.equals("all")) {
 			log.debug("Using category {}", category);
-			query.append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
+			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
 			includeAnd = true;
+			includeWhere = false;
 		}
 		
 		if (!level.equals("all")) {
 			log.debug("Using level {}", level);
-			query.append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
+			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
 			includeAnd = true;
 		}
 		
+		log.debug("Search query is: {}", query.toString());
+		
 		@SuppressWarnings("unchecked")
 		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
+		
+		log.debug("Now filter result set...");
 		
 		/*
 		 * Make sure we do not get other county councils templates
