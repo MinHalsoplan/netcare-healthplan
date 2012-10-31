@@ -55,9 +55,20 @@ public abstract class TestSupport {
 			, final String careUnitHsa
 			, final String countyCouncil) {
 		
-		final CountyCouncilEntity councilEntity = ccRepo.saveAndFlush(CountyCouncilEntity.newEntity(countyCouncil));
-		final CareUnitEntity unitEntity = cuRepo.saveAndFlush(CareUnitEntity.newEntity(careUnitHsa, councilEntity));
-		final CareActorEntity entity = caRepo.saveAndFlush(CareActorEntity.newEntity("Test", "Torsksson", hsaId, unitEntity));
+		CountyCouncilEntity councilEntity = getCountyCouncilRepository().findByName(countyCouncil);
+		if (councilEntity == null) {
+			councilEntity = ccRepo.saveAndFlush(CountyCouncilEntity.newEntity(countyCouncil));
+		}
+		
+		CareUnitEntity unitEntity = getCareUnitRepository().findByHsaId(careUnitHsa);
+		if (unitEntity == null) {
+			unitEntity = cuRepo.saveAndFlush(CareUnitEntity.newEntity(careUnitHsa, councilEntity));
+		}
+		
+		CareActorEntity entity = getCareActorRepository().findByHsaId(hsaId);
+		if (entity == null) {
+			entity = caRepo.saveAndFlush(CareActorEntity.newEntity("Test", "Torsksson", hsaId, unitEntity));
+		}
 		
 		final CareActorBaseView ca = CareActorBaseViewImpl.newFromEntity(entity);
 		runAs(ca);

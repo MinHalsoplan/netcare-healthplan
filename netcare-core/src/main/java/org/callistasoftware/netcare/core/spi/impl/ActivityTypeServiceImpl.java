@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -158,18 +159,33 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			includeAnd = true;
 		}
 		
+		@SuppressWarnings("unchecked")
+		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
+		
 		/*
 		 * Make sure we do not get other county councils templates
 		 */
+		final CareUnitEntity cu = getCareActor().getCareUnit();
 		final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
-		query.append(includeAnd ? " and " : " ").append("e.careUnit.countyCouncil.id = ").append(cce.getId());
+		final List<ActivityTypeEntity> filteredResults = new ArrayList<ActivityTypeEntity>();
+		for (final ActivityTypeEntity ent : results) {
+			
+			if (ent.getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL) && !ent.getCountyCouncil().getId().equals(cce.getId())) {
+				log.debug("Found a template for county council {} but the user belongs to {}", ent.getCountyCouncil().getId(), cce.getId());
+				continue;
+			}
+			
+			if (ent.getAccessLevel().equals(AccessLevel.CAREUNIT) && !ent.getCareUnit().getId().equals(cu.getId())) {
+				log.debug("Found a template for care unit {} but the user belongs to {}", ent.getCareUnit().getHsaId(), cu.getHsaId());
+				continue;
+			}
+			  
+			filteredResults.add(ent);
+		}
 		
-		
-		@SuppressWarnings("unchecked")
-		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
 		return ServiceResultImpl.createSuccessResult(
 				ActivityTypeImpl.newFromEntities(
-						results, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, results.size()));
+						filteredResults, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
 	}
 
 	@Override

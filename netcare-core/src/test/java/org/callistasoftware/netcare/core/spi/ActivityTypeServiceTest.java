@@ -149,28 +149,28 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final ActivityCategoryEntity cat3 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori3"));
 		final ActivityCategoryEntity cat4 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori4"));
 		
-		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa", cat, cu, AccessLevel.CAREUNIT);
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa1", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		
 		final ActivityTypeEntity savedEnt = this.repo.saveAndFlush(ent);
 		assertNotNull(savedEnt);
 		
-		final ActivityTypeEntity ent2 = ActivityTypeEntity.newEntity("Springa", cat2, cu, AccessLevel.COUNTY_COUNCIL);
+		final ActivityTypeEntity ent2 = ActivityTypeEntity.newEntity("Springa2", cat2, cu, AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		
 		final ActivityTypeEntity savedEnt2 = this.repo.saveAndFlush(ent2);
 		assertNotNull(savedEnt2);
 
-		final ActivityTypeEntity ent3 = ActivityTypeEntity.newEntity("Springa", cat3, cu2, AccessLevel.COUNTY_COUNCIL);
+		final ActivityTypeEntity ent3 = ActivityTypeEntity.newEntity("Springa3", cat3, cu2, AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		
 		final ActivityTypeEntity savedEnt3 = this.repo.saveAndFlush(ent3);
 		assertNotNull(savedEnt3);
 		
-		final ActivityTypeEntity ent4 = ActivityTypeEntity.newEntity("Springa", cat4, cu, AccessLevel.NATIONAL);
+		final ActivityTypeEntity ent4 = ActivityTypeEntity.newEntity("Springa4", cat4, cu, AccessLevel.NATIONAL);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
 		
@@ -188,5 +188,13 @@ public class ActivityTypeServiceTest extends TestSupport {
 		
 		result = this.service.searchForActivityTypes("", "all", AccessLevel.NATIONAL.name());
 		assertEquals(1, result.getData().length);
+		
+		/*
+		 * Test with another user
+		 */
+		authenticatedUser("hsa-care-actor-2", "hsa-care-unit-2", "LJ");
+		
+		result = this.service.searchForActivityTypes("ring", "all", "all");
+		assertEquals(2, result.getData().length);
 	}
 }
