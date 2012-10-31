@@ -54,6 +54,7 @@
 <%-- This template is used to show an measurement item form --%>
 
 <script id="activityItemMeasurementForm" type="text/template">
+<form>
 <h2>
 	<spring:message code="template.activity.measurement.title" />
 </h2>
@@ -61,32 +62,31 @@
 	<span class="label label-info"><spring:message code="information" /></span>
 	<spring:message code="template.activity.measurement.description" />
 </p>
-<div class="span8">
-	<label for="measurementName"><spring:message code="template.activity.activityItemName.field.label" /></label>
-	<input type="text" name="measurementName" id="measurementName" value="{{name}}"></input>
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
 </div>
-<div class="span4">
+<div class="controls controls-row">
 	<label for="valueType"><spring:message code="measureValue.type" /></label>
-	<select name="valueType" id="valueType" class="input-medium"></select>
-</div>
-<div class="span7">
+	<select name="valueType" id="valueType" class="span2"></select>
 	<label for="measurementUnit"><spring:message code="measureValue.unit" /></label>
-	<select name="measurementUnit" id="measurementUnit" class="input-small"></select>
+	<select name="measurementUnit" id="measurementUnit" class="span3"></select>
 </div>
-<div id="measureValueIntervalOnly" class="span12" style="display:none;">
+<div id="measureValueIntervalOnly" class="controls" style="display:none;">
 	<label for="measurementAlarm"><spring:message code="measureValue.alarm" /></label>
 	<input type="checkbox" name="measurementAlarm" id="measurementAlarm"></input>
 	&nbsp;<spring:message code="measureValue.alarm.text" />
 </div>
-<div class="span12" style="padding-top:20px;">
+<div class="form-actions" style="padding-top:20px;">
 	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Spara</button>
 </div>
+</form>
 </script>
 
 <%-- This template is used to show an estimation item form --%>
 
 <script id="activityItemEstimationForm" type="text/template">
-<section id="head">
+<form>
 <h2>
 	<spring:message code="template.activity.estimation.title" />
 </h2>
@@ -94,17 +94,33 @@
 	<span class="label label-info"><spring:message code="information" /></span>
 	<spring:message code="template.activity.estimation.description" />
 </p>
-</section>
-<section id="formSection">
-<h4>
-	<spring:message code="template.activity.yesno.field.label" />
-	:
-</h4>
-<textarea id="questionId" rows="2" class="span6"></textarea>
-</section>
+<div class="control-group">
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls">
+	<label><spring:message code="estimation.scale.label" /></label>
+</div>
+<div class="controls controls-row">
+	<spring:message code="estimation.lowValue.label" />
+	<input type="text" name="estimationLowValue" id="estimationLowValue" class="span1" value="{{minScaleValue}}"></input>
+	<span style="padding-left:20px;"><spring:message code="estimation.highValue.label" /></span>
+	<input type="text" name="estimationHighValue" id="estimationHighValue" class="span1" value="{{maxScaleValue}}"></input>
+</div>
+<div class="controls">
+	<label for="estimationLowText"><spring:message code="estimation.lowText.label" /></label>
+	<input type="text" class="span6" name="estimationLowText" id="estimationLowText" value="{{minScaleText}}"></input>
+</div>
+<div class="controls">
+	<label for="estimationHighText"><spring:message code="estimation.highText.label" /></label>
+	<input type="text" class="span6" name="estimationHighText" id="estimationHighText" value="{{maxScaleText}}"></input>
+</div>
 <div class="span12" style="padding-top:20px;">
 	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Spara</button>
 </div>
+</div>
+</form>
 </script>
 
 <%-- This template is used to show an yesno item form --%>
