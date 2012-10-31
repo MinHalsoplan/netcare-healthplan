@@ -155,16 +155,15 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		if (!level.equals("all")) {
 			log.debug("Using level {}", level);
 			query.append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
-			
-			/*
-			 * Only include templates for the county council that we belong to
-			 */
-			final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
-			if (level.equals(AccessLevel.COUNTY_COUNCIL.name())) {
-				log.debug("Find in county council {} ({})", cce.getName(), cce.getId());
-				query.append(" and e.careUnit.countyCouncil.id = ").append(cce.getId());
-			}
+			includeAnd = true;
 		}
+		
+		/*
+		 * Make sure we do not get other county councils templates
+		 */
+		final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
+		query.append(includeAnd ? " and " : " ").append("e.careUnit.countyCouncil.id = ").append(cce.getId());
+		
 		
 		@SuppressWarnings("unchecked")
 		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
