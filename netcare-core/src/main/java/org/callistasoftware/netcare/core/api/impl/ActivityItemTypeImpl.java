@@ -18,12 +18,14 @@ package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 
-public class ActivityItemTypeImpl implements ActivityItemType {
+public abstract class ActivityItemTypeImpl implements ActivityItemType {
 
 	private Long id;
 	private String name;
 	private int seqno;
 
+	public abstract String getActivityItemTypeName();
+	
 	@Override
 	public Long getId() {
 		return this.id;

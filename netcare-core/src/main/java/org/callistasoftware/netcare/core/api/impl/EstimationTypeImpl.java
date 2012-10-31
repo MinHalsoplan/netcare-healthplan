@@ -23,6 +23,8 @@ public class EstimationTypeImpl extends ActivityItemTypeImpl implements Estimati
 
 	private String minScaleText;
 	private String maxScaleText;
+	private Integer minScaleValue;
+	private Integer maxScaleValue;
 
 	public static EstimationType newFromEntity(EstimationTypeEntity entity) {
 		final EstimationTypeImpl dto = new EstimationTypeImpl();
@@ -33,8 +35,15 @@ public class EstimationTypeImpl extends ActivityItemTypeImpl implements Estimati
 
 		dto.setMinScaleText(entity.getSenseLabelLow());
 		dto.setMaxScaleText(entity.getSenseLabelHigh());
+		dto.setMinScaleValue(entity.getSenseValueLow());
+		dto.setMaxScaleValue(entity.getSenseValueHigh());
 
 		return dto;
+	}
+
+	@Override
+	public String getActivityItemTypeName() {
+		return ESTIMATION_ITEM_TYPE;
 	}
 
 	@Override
@@ -56,6 +65,24 @@ public class EstimationTypeImpl extends ActivityItemTypeImpl implements Estimati
 	}
 
 	@Override
+	public Integer getMinScaleValue() {
+		return this.minScaleValue;
+	}
+
+	public void setMinScaleValue(Integer minScaleValue) {
+		this.minScaleValue = minScaleValue;
+	}
+
+	@Override
+	public Integer getMaxScaleValue() {
+		return maxScaleValue;
+	}
+
+	public void setMaxScaleValue(Integer maxScaleValue) {
+		this.maxScaleValue = maxScaleValue;
+	}
+
+	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
 
@@ -65,6 +92,8 @@ public class EstimationTypeImpl extends ActivityItemTypeImpl implements Estimati
 		buf.append("Seqno: ").append(this.getSeqno()).append("\n");
 		buf.append("LabelMin: ").append(this.getMinScaleText()).append("\n");
 		buf.append("LabelMax: ").append(this.getMaxScaleText()).append("\n");
+		buf.append("ValueMin: ").append(this.getMinScaleValue()).append("\n");
+		buf.append("ValueMax: ").append(this.getMaxScaleValue()).append("\n");
 		buf.append("==========================\n");
 
 		return buf.toString();

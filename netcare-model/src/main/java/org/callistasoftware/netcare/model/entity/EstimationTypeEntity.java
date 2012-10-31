@@ -30,13 +30,21 @@ public class EstimationTypeEntity extends ActivityItemTypeEntity {
 	@Column(name = "sense_label_high")
 	private String senseLabelHigh;
 
+	@Column(name = "sense_value_low")
+	private Integer senseValueLow;
+
+	@Column(name = "sense_value_high")
+	private Integer senseValueHigh;
+
 	public static EstimationTypeEntity newEntity(ActivityTypeEntity activityTypeEntity, String name,
-			String minScaleText, String maxScaleText) {
+			String minScaleText, String maxScaleText, Integer minScaleValue, Integer maxScaleValue) {
 		EstimationTypeEntity entity = new EstimationTypeEntity();
 		entity.setActivityType(activityTypeEntity);
 		entity.setName(name);
 		entity.setSenseLabelLow(minScaleText);
 		entity.setSenseLabelHigh(maxScaleText);
+		entity.setSenseValueLow(minScaleValue);
+		entity.setSenseValueHigh(maxScaleValue);
 		activityTypeEntity.addActivityItemType(entity);
 		return entity;
 	}
@@ -57,4 +65,19 @@ public class EstimationTypeEntity extends ActivityItemTypeEntity {
 		this.senseLabelHigh = senseLabelHigh;
 	}
 
+	public Integer getSenseValueLow() {
+		return senseValueLow;
+	}
+
+	public void setSenseValueLow(Integer senseValueLow) {
+		this.senseValueLow = senseValueLow;
+	}
+
+	public Integer getSenseValueHigh() {
+		return senseValueHigh;
+	}
+
+	public void setSenseValueHigh(Integer senseValueHigh) {
+		this.senseValueHigh = senseValueHigh;
+	}
 }

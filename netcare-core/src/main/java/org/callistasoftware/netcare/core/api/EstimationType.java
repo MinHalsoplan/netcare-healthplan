@@ -30,4 +30,17 @@ public interface EstimationType extends ActivityItemType {
 	 */
 	String getMaxScaleText();
 
+	/**
+	 * Returns the min value.
+	 * 
+	 * @return
+	 */
+	Integer getMinScaleValue();
+
+	/**
+	 * Returns the max value
+	 * 
+	 * @return
+	 */
+	Integer getMaxScaleValue();
 }

@@ -42,6 +42,11 @@ public class MeasurementTypeImpl extends ActivityItemTypeImpl implements Measure
 	}
 
 	@Override
+	public String getActivityItemTypeName() {
+		return MEASUREMENT_ITEM_TYPE;
+	}
+
+	@Override
 	public Option getValueType() {
 		return this.valueType;
 	}
@@ -82,4 +87,5 @@ public class MeasurementTypeImpl extends ActivityItemTypeImpl implements Measure
 
 		return buf.toString();
 	}
+
 }

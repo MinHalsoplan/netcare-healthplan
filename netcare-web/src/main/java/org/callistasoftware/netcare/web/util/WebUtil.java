@@ -118,7 +118,7 @@ public final class WebUtil {
 
 		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft");
+		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft", 0, 10);
 		atRepo.save(ate);
 		atRepo.flush();
 
@@ -194,7 +194,7 @@ public final class WebUtil {
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
 				MeasureUnit.KILOGRAM, true);
 		me.setAlarmEnabled(true);
-		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft");
+		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5);
 		atRepo.save(t1);
 		atRepo.flush();
 
@@ -202,7 +202,7 @@ public final class WebUtil {
 				AccessLevel.NATIONAL);
 		MeasurementTypeEntity
 				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
-		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft");
+		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5);
 		atRepo.save(t2);
 		atRepo.flush();
 

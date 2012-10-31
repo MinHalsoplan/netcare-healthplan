@@ -33,52 +33,14 @@
 		<hp:templates />
 		<script type="text/javascript">
 			$(document).ready(function() {
-				var currentId = <c:out value="${currentId}" />;
-				var currentActivityType;
-				var ncActivityTypes = new NC.ActivityTypes();
-				NC.log(ncActivityTypes);
-				
-				var findActivityTypeById = function() {
-					ncActivityTypes.get(currentId, function(data) {
-						NC.log('Loaded type id:' + currentId);
-						currentActivityType = data.data;
-						NC.log(currentActivityType);
-						$("#activityTypeName").val(currentActivityType.name);
-						var template = _.template($("#activityTypeItem").html());
-						$.each(currentActivityType.activityItems, function(index, value) {
-							$("#activityItems").append(template(value));
-						});
-					});
+				var params = {
+			 		templateId : <c:out value="${currentId}" />,
+					hsaId : '<c:out value="${currentHsaId}" />'
 				};
-				findActivityTypeById();
-				$("#nextChooseName").click(function() {
-					$("#activityTypeWrapper").show();
-					$("#nextChooseName").hide();
-				});
-				$("#nextchooseActivities").click(function() {
-					$("#chooseSaveWrapper").show();
-					$("#nextchooseActivities").hide();
-				});
-				$("#addYesNoButton").click(function() {
-					var template = _.template($("#activityTypeItem").html());
-					var param = {
-						id:	111,
-						name : 'Ja/Nej-fråga'
-					}
-					$("#activityItems").append(template(param));
-				});
+				var my = NC_MODULE.ACTIVITY_TEMPLATE;
+				my.initSingleTemplate(params, new NC.Support());
+
 			});
-			function deleteListItem(itemId) {
-				$("#" + itemId).remove();
-			}
-			function showYesNoContainer() {
-				$("#activityTypeContainer").hide();
-				$("#yesNoFormContainer").show();
-			}
-			function showActivityTypeContainer() {
-				$("#activityTypeContainer").show();
-				$("#yesNoFormContainer").hide();
-			}
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="NyAktivitetsmall">
@@ -100,32 +62,21 @@
 							<spring:message code="template.select.name" />
 						</h4>
 						<input id="activityTypeName" type="text" size="32">
-						<div id="nextChooseNameWrapper">
-							<a href="###" id="nextChooseName">
-								<button class="btn btn-info" type="button">Nästa</button>
-							</a>
-						</div>
 					</div>
 					<div id="chooseActivities">
 						<h4>
 							2.
 							<spring:message code="template.select.activities" />
 						</h4>
-						<div id="activityTypeWrapper" style="display: none; background-color: white; padding: 3px;">
-
-							<ul id="activityItems" class="itemList facility">
-							</ul>
-							<div id="addActivityButtons">
-								<div id="addListItemWrapper">
-									<span style="padding-right: 15px"></span> <a href="#" class="addListItem">Mätning</a> <a href="#"
-										class="addListItem">Skattning</a> <a href="#" class="addListItem" id="addYesNoButton">Ja/Nej-fråga</a>
-									<a href="#" class="addListItem">Text</a>
-								</div>
-							</div>
-							<div id="nextchooseActivitiesWrapper">
-								<a href="###" id="nextchooseActivities">
-									<button class="btn btn-info" type="button">Nästa</button>
-								</a>
+						<div id="activityTypeWrapper" style="background-color:white; padding: 3px;">
+							<mvk:touch-list id="activityTypeItems">
+							</mvk:touch-list>
+						</div>
+						<div id="addActivityButtons">
+							<div id="addListItemWrapper">
+								<span style="padding-right: 15px"></span> <a href="#" class="addListItem">Mätning</a> <a href="#"
+									class="addListItem">Skattning</a> <a href="#" class="addListItem" id="addYesNoButton">Ja/Nej-fråga</a>
+								<a href="#" class="addListItem">Text</a>
 							</div>
 						</div>
 					</div>
@@ -134,31 +85,13 @@
 							3.
 							<spring:message code="template.select.saveTemplate" />
 						</h4>
-						<div id="chooseSaveWrapper" style="display: none; background-color: white; padding: 3px;">
+						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">
 							<button class="btn btn-info" type="button">Spara aktivitetsmall</button>
 						</div>
 					</div>
 				</section>
 			</div>
-			<div id="yesNoFormContainer" style="display: none;">
-				<section id="yesnoHead">
-					<h2>
-						<spring:message code="template.activity.yesno.title" />
-					</h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="template.activity.yesno.description" />
-					</p>
-				</section>
-				<section id="yesnoSection">
-					<h4>
-						<spring:message code="template.activity.yesno.field.label" />
-						:
-					</h4>
-					<textarea id="questionId" rows="2" class="span6"></textarea>
-				</section>
-				<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Spara</button>
-			</div>
+			<div id="activityItemFormContainer" style="display: none;"></div>
 		</div>
 	</hp:viewBody>
 </hp:view>

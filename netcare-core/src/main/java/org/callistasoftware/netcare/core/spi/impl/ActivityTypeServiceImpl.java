@@ -66,8 +66,9 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	private static final Logger log = LoggerFactory.getLogger(ActivityTypeServiceImpl.class);
 
-	@Autowired private EntityManagerFactory eMan;
-	
+	@Autowired
+	private EntityManagerFactory eMan;
+
 	@Autowired
 	private ActivityCategoryRepository catRepo;
 
@@ -199,7 +200,8 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			} else if (type instanceof EstimationType) {
 				EstimationType estimationType = (EstimationType) type;
 				final EstimationTypeEntity entity = EstimationTypeEntity.newEntity(activityTypeEntity,
-						estimationType.getName(), estimationType.getMinScaleText(), estimationType.getMaxScaleText());
+						estimationType.getName(), estimationType.getMinScaleText(), estimationType.getMaxScaleText(),
+						estimationType.getMinScaleValue(), estimationType.getMaxScaleValue());
 				activityTypeEntity.addActivityItemType(entity);
 				log.debug("Adding estimation type {}", type.getName());
 			}
@@ -220,7 +222,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		if (result == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
 		}
-		//TODO Do we have to check access rights here?
+		// TODO Do we have to check access rights here?
 		return ServiceResultImpl.createSuccessResult(
 				ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}

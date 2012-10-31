@@ -18,6 +18,11 @@ package org.callistasoftware.netcare.core.api;
 
 public interface ActivityItemType {
 
+	public final static String MEASUREMENT_ITEM_TYPE = "measurement";
+	public final static String ESTIMATION_ITEM_TYPE = "estimation";
+	public final static String YESNO_ITEM_TYPE = "yesno";
+	public final static String TEXT_ITEM_TYPE = "text";
+
 	/**
 	 * Returns id.
 	 * 
@@ -35,4 +40,11 @@ public interface ActivityItemType {
 	 * Returns sequence number.
 	 */
 	int getSeqno();
+
+	/**
+	 * Returns the type name for this item.
+	 * 
+	 * @return
+	 */
+	String getActivityItemTypeName();
 }
