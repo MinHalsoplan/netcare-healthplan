@@ -151,7 +151,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		ServiceResult<ActivityType[]> result = this.service.searchForActivityTypes("ring", "all", "all");
 		assertEquals(1, result.getData().length);
 		
-		result = this.service.searchForActivityTypes("", "Tempkategori", "all");
+		result = this.service.searchForActivityTypes("", String.valueOf(cat.getId()), "all");
 		assertEquals(1, result.getData().length);
 		
 		result = this.service.searchForActivityTypes("", "all", AccessLevel.COUNTY_COUNCIL.name());
