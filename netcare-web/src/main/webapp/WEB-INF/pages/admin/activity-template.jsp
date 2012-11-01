@@ -38,7 +38,7 @@
 				};
 				
 				NC_MODULE.GLOBAL.init();
-				NC_MODULE.ACTIVITY_TEMPLATE.init(params);
+				NC_MODULE.TEMPLATE_SEARCH.init(params);
 			});
 		</script>
 	</hp:viewHeader>

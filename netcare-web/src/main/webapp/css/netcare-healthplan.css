@@ -116,6 +116,27 @@ ul.itemList {
 	text-decoration: none;
 }
 
+.actionBody .mvk-icon {
+	background-position: center center;
+	background-repeat: no-repeat;
+	margin-top: 10px;
+	margin-bottom: -10px;
+	height: 50px;
+	width: 30px;
+	display: inline-block;
+	
+}
+
+.mvk-icon.copy {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -250px 0px;
+}
+
+.mvk-icon.delete {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -105px 0px;
+}
+
 /*
  * TO BE REMOVED AFTER MVK RELEASE
  */
@@ -127,7 +148,7 @@ li.item .itemStateText {
 	padding-bottom: 3px;
 	font-size: 0.75em;
 	font-weight: bold;
-	background-image: url('../img/shadow-btn.png');
+	background-image: url(/netcare/resources/img/shadow-btn.png);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -139,7 +160,7 @@ li.item .itemStateText {
 	padding: 5px 13px;
 	display: block;
 	background-color: #fabd17;
-	background-image: url('../images/stateTextBg.png');
+	background-image: url(/netcare/resources/img/stateTextBg.png);
 	background-position: right center;
 	background-repeat: repeat-y;
 }

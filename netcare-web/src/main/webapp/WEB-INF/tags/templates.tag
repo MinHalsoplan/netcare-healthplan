@@ -24,15 +24,29 @@
 <li id="at{{id}}" class="item withNavigation" style="cursor: pointer;">
 <mvk:touch-item>
 <div id="item-{{id}}" class="listItemBase">
-	<div class="mainBody">
-		<h4 class="titel">{{name}}</h4>
-		<div class="subRow">{{category.name}}</div>
+	<div class="row-fluid">
+		<div class="mainBody span6">
+			<h4 class="titel">{{name}}</h4>
+			<div class="subRow">{{category.name}}</div>
+		</div>
+		<div class="mainBody actionBody span6"></div>
 	</div>
+	
 </div>
 <a href="#" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
 </li>
 </script>
+<%--
+	Must be included within a touch-item and inserted
+	after a.itemNavigation
+ --%>
+<script id="itemNote" type="text/template">
+<div class="itemStateText">
+	<div class="wrapper">{{value}}</div>
+</div>
+</script>
+
 <%-- This template is used to show an activity type item --%>
 <script id="activityItemTemplate" type="text/template">
 <li id="liActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">

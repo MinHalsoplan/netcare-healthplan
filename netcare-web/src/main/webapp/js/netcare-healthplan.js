@@ -37,18 +37,14 @@ var NC_MODULE = {
 		
 		return my;
 	})(),
-		
-	ACTIVITY_TEMPLATE : (function() {
+	
+	TEMPLATE_SEARCH : (function() {
 		var _init;
 		var _text;
 		var _category;
 		var _level;
 		
-		var activityTemplate;
-		var my  = {};
-		var support;
-		var typeOpts;
-		var unitOpts;
+		var my = {};
 		
 		my.init = function(params) {
 			var that = this;
@@ -89,19 +85,6 @@ var NC_MODULE = {
 			})
 		};
 		
-		my.initSingleTemplate = function(params, paramSupport) {
-			activityTemplate = new Object();
-			support = paramSupport;
-			typeOpts = new Array();
-			unitOpts = new Array();
-			
-			var that = this;
-			this.params = params
-			my.loadTemplate(that, params.templateId);
-			initMeasureValues(that);
-			initUnitValues(that);
-		};
-		
 		my.loadCategories = function() {
 			var opt = $('<option>', { value : 'all', selected : 'selected' });
 			opt.html('-- Alla --');
@@ -132,23 +115,68 @@ var NC_MODULE = {
 					var template = _.template($('#activityTemplate').html());
 					$('#templateList').append(template(v));
 					
-					if (v.accessLevel != "CAREUNIT") {
-						$('#item-' + v.id).next('a.itemNavigation').after(
-							$('<div>').addClass('itemStateText').append(
-								$('<div>').addClass('wrapper').html(v.accessLevel.value)
-							)
+					if (v.accessLevel.code != "CAREUNIT") {
+						var t2 = _.template($('#itemNote').html());
+						$('#item-' + v.id).next('a.itemNavigation').after(t2(v.accessLevel));
+						
+						$('#item-' + v.id).find('.actionBody').append(
+							$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
+								e.preventDefault();
+								e.stopPropagation();
+								my.copyTemplate(my, v.id);
+							})
 						);
+						
+						$('#item-' + v.id).find('.actionBody').append(
+							$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
+								e.preventDefault();
+								e.stopPropagation();
+								my.deleteTemplate(my, v.id);
+							})
+						);
+						
+					} else {
+						
 					}
 					
 					$('#item-' + v.id).live('click', function() {
-						/*
-						 * Load new content
-						 */
 						window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + v.id;
-						//NC_MODULE.GLOBAL.loadNewPage('/admin/template/' + v.id, NC_MODULE.ACTIVITY_TEMPLATE, { hsaId : '<c:out value="${currentHsaId}" />', templateId : v.id });
 					});
 				});
 			});
+		};
+		
+		my.copyTemplate = function(my, templateId) {
+			NC.log('Copy template');
+			
+		};
+		
+		my.deleteTemplate = function(my, templateId) {
+			NC.log('Delete template');
+		};
+		
+		return my;
+		
+	})(),
+		
+	ACTIVITY_TEMPLATE : (function() {
+		var activityTemplate;
+		var my  = {};
+		var support;
+		var typeOpts;
+		var unitOpts;
+		
+		my.initSingleTemplate = function(params, paramSupport) {
+			activityTemplate = new Object();
+			support = paramSupport;
+			typeOpts = new Array();
+			unitOpts = new Array();
+			
+			var that = this;
+			this.params = params
+			my.loadTemplate(that, params.templateId);
+			initMeasureValues(that);
+			initUnitValues(that);
 		};
 
 		my.loadTemplate = function(my, templateId) {
