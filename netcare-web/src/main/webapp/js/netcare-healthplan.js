@@ -148,7 +148,6 @@ var NC_MODULE = {
 
 					if (v.accessLevel != "CAREUNIT") {
 						$('#item-' + v.id).next('a.itemNavigation').after(
-<<<<<<< Updated upstream
 							$('<div>').addClass('itemStateText').append(
 								$('<div>').addClass('wrapper').html(v.accessLevel.value)
 							)
@@ -162,24 +161,6 @@ var NC_MODULE = {
 						window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + v.id;
 						//NC_MODULE.GLOBAL.loadNewPage('/admin/template/' + v.id, NC_MODULE.ACTIVITY_TEMPLATE, { hsaId : '<c:out value="${currentHsaId}" />', templateId : v.id });
 					});
-=======
-								$('<div>').addClass('itemStateText').append(
-										$('<div>').addClass('wrapper').html(
-												v.accessLevel)));
-					}
-
-					$('#item-' + v.id).live(
-							'click',
-							function() {
-								/*
-								 * Load new content
-								 */
-								NC_MODULE.GLOBAL.loadNewPage('/admin/template/'
-										+ v.id, NC_MODULE.ACTIVITY_TEMPLATE, {
-									hsaId : '<c:out value="${currentHsaId}" />'
-								});
-							});
->>>>>>> Stashed changes
 				});
 			});
 		};

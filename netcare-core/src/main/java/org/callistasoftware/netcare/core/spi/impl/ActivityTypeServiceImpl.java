@@ -17,10 +17,7 @@
 package org.callistasoftware.netcare.core.spi.impl;
 
 import java.util.ArrayList;
-<<<<<<< Updated upstream
-=======
 import java.util.Iterator;
->>>>>>> Stashed changes
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -95,11 +92,11 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
-	
+
 	public ServiceResult<ActivityType[]> loadAllActivityTypes(final CareUnitEntity careUnit) {
 		log.info("Loading all activity templates accessible from care unit {}", careUnit.getHsaId());
 		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(careUnit, careUnit.getCountyCouncil());
-		
+
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
@@ -152,16 +149,12 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		boolean includeAnd = true;
 		boolean includeWhere = false;
-		
+
 		final StringBuilder query = new StringBuilder();
 		query.append("select e from ActivityTypeEntity as e ");
 		if (!searchString.isEmpty()) {
 			log.debug("Using name {}", searchString);
-<<<<<<< Updated upstream
-			query.append("where e.name like ").append("'%").append(searchString).append("%' ");	
-=======
-			query.append("e.name like ").append("'%").append(searchString).append("%' ");
->>>>>>> Stashed changes
+			query.append("where e.name like ").append("'%").append(searchString).append("%' ");
 		} else {
 			includeWhere = true;
 			includeAnd = false;
@@ -169,25 +162,28 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		if (!category.equals("all")) {
 			log.debug("Using category {}", category);
-			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
+			query.append(includeWhere ? " where " : "")
+					.append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
 			includeAnd = true;
 			includeWhere = false;
 		}
 
 		if (!level.equals("all")) {
 			log.debug("Using level {}", level);
-<<<<<<< Updated upstream
-			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
+			query.append(includeWhere ? " where " : "")
+					.append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'")
+					.append(AccessLevel.valueOf(level)).append("'");
 			includeAnd = true;
 		}
-		
+
 		log.debug("Search query is: {}", query.toString());
-		
+
 		@SuppressWarnings("unchecked")
-		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
-		
+		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString())
+				.getResultList();
+
 		log.debug("Now filter result set...");
-		
+
 		/*
 		 * Make sure we do not get other county councils templates
 		 */
@@ -195,43 +191,27 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
 		final List<ActivityTypeEntity> filteredResults = new ArrayList<ActivityTypeEntity>();
 		for (final ActivityTypeEntity ent : results) {
-			
-			if (ent.getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL) && !ent.getCountyCouncil().getId().equals(cce.getId())) {
-				log.debug("Found a template for county council {} but the user belongs to {}", ent.getCountyCouncil().getId(), cce.getId());
+
+			if (ent.getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL)
+					&& !ent.getCountyCouncil().getId().equals(cce.getId())) {
+				log.debug("Found a template for county council {} but the user belongs to {}", ent.getCountyCouncil()
+						.getId(), cce.getId());
 				continue;
 			}
-			
+
 			if (ent.getAccessLevel().equals(AccessLevel.CAREUNIT) && !ent.getCareUnit().getId().equals(cu.getId())) {
-				log.debug("Found a template for care unit {} but the user belongs to {}", ent.getCareUnit().getHsaId(), cu.getHsaId());
+				log.debug("Found a template for care unit {} but the user belongs to {}", ent.getCareUnit().getHsaId(),
+						cu.getHsaId());
 				continue;
 			}
-			  
+
 			filteredResults.add(ent);
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(
-				ActivityTypeImpl.newFromEntities(
-						filteredResults, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
-=======
-			query.append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'")
-					.append(AccessLevel.valueOf(level)).append("'");
+				ActivityTypeImpl.newFromEntities(filteredResults, LocaleContextHolder.getLocale()),
+				new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
 
-			/*
-			 * Only include templates for the county council that we belong to
-			 */
-			final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
-			if (level.equals(AccessLevel.COUNTY_COUNCIL.name())) {
-				log.debug("Find in county council {} ({})", cce.getName(), cce.getId());
-				query.append(" and e.careUnit.countyCouncil.id = ").append(cce.getId());
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString())
-				.getResultList();
-		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(results,
-				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, results.size()));
->>>>>>> Stashed changes
 	}
 
 	@Override
@@ -287,7 +267,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		}
 
 		repoItem.setName(dto.getName());
-		repoItem.setAccessLevel(dto.getAccessLevel());
+		repoItem.setAccessLevel(AccessLevel.valueOf(dto.getAccessLevel().getCode()));
 		if (repoItem.getCategory().getId() != category.getId()) {
 			repoItem.setCategory(category);
 		}
