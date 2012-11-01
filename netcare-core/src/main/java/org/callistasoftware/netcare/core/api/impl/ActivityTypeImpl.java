@@ -26,9 +26,8 @@ import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
+
 
 /**
  * Implementation of an activity type
@@ -65,12 +64,7 @@ public class ActivityTypeImpl implements ActivityType {
 		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
 			ActivityItemTypeEntity activityItemTypeEntity = entity.getActivityItemTypes().get(i);
-			if (activityItemTypeEntity instanceof MeasurementTypeEntity) {
-				values[i] = MeasurementTypeImpl.newFromEntity((MeasurementTypeEntity) activityItemTypeEntity);
-			} else if (activityItemTypeEntity instanceof EstimationTypeEntity) {
-				values[i] = EstimationTypeImpl.newFromEntity((EstimationTypeEntity) activityItemTypeEntity);
-			}
-			// TODO JCTODO
+			values[i] = ActivityItemTypeImpl.newFromEntity(activityItemTypeEntity);
 		}
 
 		dto.activityItems = values;
@@ -147,7 +141,7 @@ public class ActivityTypeImpl implements ActivityType {
 		return this.accessLevel;
 	}
 	
-	public void setAccessLevel(final Option accessLevel) {
-		this.accessLevel = accessLevel;
+	public void setAccessLevel(Option option) {
+		this.accessLevel = option;
 	}
 }

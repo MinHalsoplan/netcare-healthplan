@@ -20,6 +20,7 @@ import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 
 /**
  * Interface defining service methods for managing activity types
@@ -45,7 +46,8 @@ public interface ActivityTypeService {
 	 * @param searchString
 	 * @return
 	 */
-	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category, final String level);
+	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category,
+			final String level);
 
 	/**
 	 * Load all activity categories
@@ -77,4 +79,14 @@ public interface ActivityTypeService {
 	 * @return An activity type.
 	 */
 	ServiceResult<ActivityType> getActivityType(final String id);
+
+	/**
+	 * Updates an activity type.
+	 * 
+	 * @param activityType
+	 *            The activity type to be saved.
+	 * @param careActor
+	 * @return the saved activity.
+	 */
+	ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl activityType, final CareActorBaseView careActor);
 }

@@ -78,8 +78,9 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu, AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
+		MeasurementTypeEntity
+				.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
+		MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 1);
 		typeRepo.save(type);
 		typeRepo.flush();
 

@@ -117,8 +117,8 @@ public final class WebUtil {
 		cuRepo.flush();
 
 		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft", 0, 10);
+		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
+		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft", 0, 10, 1);
 		atRepo.save(ate);
 		atRepo.flush();
 
@@ -199,17 +199,19 @@ public final class WebUtil {
 		 * Rosenhälsan
 		 */
 		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, jkpg_cu_1, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
+		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
-				MeasureUnit.KILOGRAM, true);
-		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5);
+				MeasureUnit.KILOGRAM, true, 2);
+		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 3);
 		atRepo.saveAndFlush(t1);
+
 
 		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, jkpg_cu_1,
 				AccessLevel.NATIONAL);
+
 		MeasurementTypeEntity
-				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
-		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5);
+				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 1);
+		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5, 2);
 		atRepo.saveAndFlush(t2);
 
 		/*
@@ -218,16 +220,16 @@ public final class WebUtil {
 		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, jkpg_cu_2,
 				AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity
-				.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
+				.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true, 1);
 		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG,
-				true);
+				true, 2);
 		atRepo.saveAndFlush(t3);
 		
 		/*
 		 * Norsjö Rehab Center
 		 */
 		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
+		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 1);
 		atRepo.saveAndFlush(t4);
 
 		
@@ -236,6 +238,7 @@ public final class WebUtil {
 
 		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", jkpg_cu_1);
 		careActorRepo.saveAndFlush(ca);
+
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
@@ -319,7 +322,6 @@ public final class WebUtil {
 		sar.flush();
 		adRepo.flush();
 
-		
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
 		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, t3, frequency2, ca);
 		

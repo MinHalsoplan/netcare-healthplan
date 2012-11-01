@@ -61,7 +61,7 @@
 							1.
 							<spring:message code="template.select.name" />
 						</h4>
-						<input id="activityTypeName" type="text" size="32">
+						<input id="activityTypeName" name="activityTypeName" type="text" size="32">
 					</div>
 					<div id="chooseActivities">
 						<h4>
@@ -74,9 +74,9 @@
 						</div>
 						<div id="addActivityButtons">
 							<div id="addListItemWrapper">
-								<span style="padding-right: 15px"></span> <a href="#" class="addListItem">Mätning</a> <a href="#"
-									class="addListItem">Skattning</a> <a href="#" class="addListItem" id="addYesNoButton">Ja/Nej-fråga</a>
-								<a href="#" class="addListItem">Text</a>
+								<span style="padding-right: 15px"></span> <a href="#" class="addListItem" id="addMeasurementButton">Mätning</a> <a href="#"
+									class="addListItem" id="addEstimationButton">Skattning</a> <a href="#" class="addListItem" id="addYesNoButton">Ja/Nej-fråga</a>
+								<a href="#" class="addListItem" id="addTextButton">Text</a>
 							</div>
 						</div>
 					</div>
@@ -86,7 +86,7 @@
 							<spring:message code="template.select.saveTemplate" />
 						</h4>
 						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">
-							<button class="btn btn-info" type="button">Spara aktivitetsmall</button>
+							<button id="activitySaveButton" class="btn btn-info" type="button">Spara aktivitetsmall</button>
 						</div>
 					</div>
 				</section>

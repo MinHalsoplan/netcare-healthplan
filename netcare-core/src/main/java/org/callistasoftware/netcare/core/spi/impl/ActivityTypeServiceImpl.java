@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.spi.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -25,8 +26,6 @@ import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
-import org.callistasoftware.netcare.core.api.EstimationType;
-import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
@@ -41,6 +40,7 @@ import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
@@ -138,14 +138,15 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	@Override
-	public ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category, final String level) {
+	public ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category,
+			final String level) {
 		log.info("Finding activity types. Search string is: " + searchString);
-		
+
 		// Default find all
 		if (searchString.isEmpty() && category.equals("all") && level.equals("all")) {
 			return this.loadAllActivityTypes(getCareActor().getCareUnit());
 		}
-		
+
 		boolean includeAnd = true;
 		boolean includeWhere = false;
 		
@@ -153,19 +154,19 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		query.append("select e from ActivityTypeEntity as e ");
 		if (!searchString.isEmpty()) {
 			log.debug("Using name {}", searchString);
-			query.append("where e.name like ").append("'%").append(searchString).append("%' ");	
+			query.append("where e.name like ").append("'%").append(searchString).append("%' ");
 		} else {
 			includeWhere = true;
 			includeAnd = false;
 		}
-		
+
 		if (!category.equals("all")) {
 			log.debug("Using category {}", category);
 			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
 			includeAnd = true;
 			includeWhere = false;
 		}
-		
+
 		if (!level.equals("all")) {
 			log.debug("Using level {}", level);
 			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
@@ -221,22 +222,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 				AccessLevel.CAREUNIT);
 
 		for (final ActivityItemType type : dto.getActivityItems()) {
-			if (type instanceof MeasurementType) {
-				MeasurementType measurementType = (MeasurementType) type;
-				final MeasurementTypeEntity entity = MeasurementTypeEntity.newEntity(activityTypeEntity,
-						measurementType.getName(),
-						MeasurementValueType.valueOf(measurementType.getValueType().getCode()),
-						MeasureUnit.valueOf(measurementType.getUnit().getCode()), measurementType.isAlarm());
-				activityTypeEntity.addActivityItemType(entity);
-				log.debug("Adding measurement type {}", type.getName());
-			} else if (type instanceof EstimationType) {
-				EstimationType estimationType = (EstimationType) type;
-				final EstimationTypeEntity entity = EstimationTypeEntity.newEntity(activityTypeEntity,
-						estimationType.getName(), estimationType.getMinScaleText(), estimationType.getMaxScaleText(),
-						estimationType.getMinScaleValue(), estimationType.getMaxScaleValue());
-				activityTypeEntity.addActivityItemType(entity);
-				log.debug("Adding estimation type {}", type.getName());
-			}
+			activityTypeEntity.addActivityItemType(createNewItemEntity(type, activityTypeEntity));
 		}
 
 		final ActivityTypeEntity savedEntity = this.repo.save(activityTypeEntity);
@@ -257,5 +243,121 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		// TODO Do we have to check access rights here?
 		return ServiceResultImpl.createSuccessResult(
 				ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl dto, CareActorBaseView careActor) {
+		Long id = dto.getId();
+		ActivityTypeEntity repoItem = this.repo.findOne(id);
+		if (repoItem == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
+		}
+		final ActivityCategoryEntity category = this.catRepo.findOne(dto.getCategory().getId());
+		if (category == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCategoryEntity.class, dto
+					.getCategory().getId()));
+		}
+
+		repoItem.setName(dto.getName());
+		repoItem.setAccessLevel(AccessLevel.valueOf(dto.getAccessLevel().getCode()));
+		if (repoItem.getCategory().getId() != category.getId()) {
+			repoItem.setCategory(category);
+		}
+		updateItemsWithDtoList(repoItem, dto.getActivityItems());
+
+		final ActivityTypeEntity savedEntity = this.repo.save(repoItem);
+
+		return ServiceResultImpl.createSuccessResult(
+				(ActivityType) ActivityTypeImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale()),
+				new GenericSuccessMessage());
+	}
+
+	protected void updateItemsWithDtoList(ActivityTypeEntity repoItem, ActivityItemType[] dtoItems) {
+		checkForDeletions(repoItem.getActivityItemTypes(), dtoItems);
+		updateItemsInType(repoItem, dtoItems);
+	}
+
+	protected void updateItemsInType(ActivityTypeEntity repoItem, ActivityItemType[] dtoItems) {
+		List<ActivityItemTypeEntity> newItems = new ArrayList<ActivityItemTypeEntity>();
+		for (ActivityItemType dtoItem : dtoItems) {
+			updateOrCreateItem(repoItem, dtoItem, newItems);
+		}
+		if (newItems.size() > 0) {
+			repoItem.getActivityItemTypes().addAll(newItems);
+		}
+	}
+
+	protected void updateOrCreateItem(ActivityTypeEntity repoItem, ActivityItemType dtoItem,
+			List<ActivityItemTypeEntity> newItems) {
+		if (dtoItem.getId() >= 0) {
+			updateItemWithDtoValues(findEntityItem(dtoItem.getId(), repoItem.getActivityItemTypes()), dtoItem);
+		} else {
+			newItems.add(createNewItemEntity(dtoItem, repoItem));
+		}
+	}
+
+	protected void updateItemWithDtoValues(ActivityItemTypeEntity itemEntity, ActivityItemType dtoItem) {
+		itemEntity.setName(dtoItem.getName());
+		itemEntity.setSeqno(dtoItem.getSeqno());
+		if (itemEntity instanceof MeasurementTypeEntity) {
+			MeasurementTypeEntity entity = (MeasurementTypeEntity) itemEntity;
+			entity.setValueType(MeasurementValueType.valueOf(dtoItem.getValueType().getCode()));
+			entity.setUnit(MeasureUnit.valueOf(dtoItem.getUnit().getCode()));
+			entity.setAlarmEnabled(dtoItem.isAlarm());
+		} else if (itemEntity instanceof EstimationTypeEntity) {
+			EstimationTypeEntity entity = (EstimationTypeEntity) itemEntity;
+			entity.setSenseLabelHigh(dtoItem.getMaxScaleText());
+			entity.setSenseLabelLow(dtoItem.getMinScaleText());
+			entity.setSenseValueHigh(dtoItem.getMaxScaleValue());
+			entity.setSenseValueLow(dtoItem.getMinScaleValue());
+		}
+	}
+
+	protected ActivityItemTypeEntity findEntityItem(Long id, List<ActivityItemTypeEntity> activityItemTypes) {
+		for (ActivityItemTypeEntity entity : activityItemTypes) {
+			if (entity.getId() == id) {
+				return entity;
+			}
+		}
+		throw new RuntimeException("Entity with id " + id + " not found for update. Aborting update");
+	}
+
+	protected ActivityItemTypeEntity createNewItemEntity(ActivityItemType dtoItem, ActivityTypeEntity parent) {
+		if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.MEASUREMENT_ITEM_TYPE)) {
+			return MeasurementTypeEntity.newEntity(parent, dtoItem.getName(),
+					MeasurementValueType.valueOf(dtoItem.getValueType().getCode()),
+					MeasureUnit.valueOf(dtoItem.getUnit().getCode()), dtoItem.isAlarm(), dtoItem.getSeqno());
+		} else if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.ESTIMATION_ITEM_TYPE)) {
+			return EstimationTypeEntity.newEntity(parent, dtoItem.getName(), dtoItem.getMinScaleText(),
+					dtoItem.getMaxScaleText(), dtoItem.getMinScaleValue(), dtoItem.getMaxScaleValue(),
+					dtoItem.getSeqno());
+		} else if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.TEXT_ITEM_TYPE)) {
+			return null;
+		} else if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.YESNO_ITEM_TYPE)) {
+			return null;
+		} else {
+			throw new RuntimeException("Could not create activity type item. Missing attribute [activityTypeName]");
+		}
+
+	}
+
+	protected void checkForDeletions(List<ActivityItemTypeEntity> repoList, ActivityItemType[] activityItems) {
+		Iterator<ActivityItemTypeEntity> iter = repoList.iterator();
+		while (iter.hasNext()) {
+			ActivityItemTypeEntity entity = iter.next();
+			if (!entityInDtoList(entity.getId(), activityItems)) {
+				entity.setActivityType(null);
+				iter.remove();
+			}
+		}
+	}
+
+	protected boolean entityInDtoList(Long id, ActivityItemType[] activityItems) {
+		for (ActivityItemType item : activityItems) {
+			if (item.getId() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

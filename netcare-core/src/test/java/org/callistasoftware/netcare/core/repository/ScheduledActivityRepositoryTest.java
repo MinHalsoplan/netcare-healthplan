@@ -87,8 +87,8 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
 		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
+		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
+		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 0);
 		final ActivityTypeEntity savedAt = this.atRepo.save(at);
 
 		final HealthPlanEntity hp = HealthPlanEntity.newEntity(savedCa, savedPatient, "Health plan", new Date(), 12,
@@ -121,7 +121,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit()
 				.getHsaId());
 		assertEquals(result.get(0).getActivities().get(0).getActivityItemDefinitionEntity().getActivityItemType()
-				.getSeqno(), 1);
+				.getSeqno(), 0);
 		e.setReportedTime(null);
 		e = this.repo.save(e);
 

@@ -47,4 +47,64 @@ public interface ActivityItemType {
 	 * @return
 	 */
 	String getActivityItemTypeName();
+
+	/**
+	 * 
+	 * ********************* Estimation operations
+	 * 
+	 */
+
+	/**
+	 * Returns the minimum scale description.
+	 */
+	String getMinScaleText();
+
+	/**
+	 * Returns the maximum scale description
+	 * 
+	 * @return
+	 */
+	String getMaxScaleText();
+
+	/**
+	 * Returns the min value.
+	 * 
+	 * @return
+	 */
+	Integer getMinScaleValue();
+
+	/**
+	 * Returns the max value
+	 * 
+	 * @return
+	 */
+	Integer getMaxScaleValue();
+
+	/**
+	 * 
+	 * ********************** Measurement operations
+	 * 
+	 */
+
+	/**
+	 * Get the type of value for this measurement
+	 * 
+	 * @return
+	 */
+	Option getValueType();
+
+	/**
+	 * Get the unit of this activity type
+	 */
+	Option getUnit();
+
+	/**
+	 * If this measurement is an interval, this flag tells whether an alarm
+	 * should be sent if the reported value is outside the boundaries of this
+	 * interval
+	 * 
+	 * @return
+	 */
+	boolean isAlarm();
+
 }

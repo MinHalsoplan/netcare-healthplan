@@ -52,7 +52,7 @@ public class MeasurementEntity extends ActivityItemValuesEntity {
 		this.target = -1;
 	}
 
-	static MeasurementEntity newEntity(ScheduledActivityEntity scheduledActivity,
+	public static MeasurementEntity newEntity(ScheduledActivityEntity scheduledActivity,
 			MeasurementDefinitionEntity measurementDefinition) {
 		MeasurementEntity entity = new MeasurementEntity();
 		entity.setScheduledActivity(scheduledActivity);

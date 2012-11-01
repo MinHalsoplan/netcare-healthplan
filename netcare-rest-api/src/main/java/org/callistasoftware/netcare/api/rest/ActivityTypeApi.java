@@ -66,4 +66,11 @@ public class ActivityTypeApi extends ApiSupport {
 		throw new UnsupportedOperationException();
 	}
 
+	@RequestMapping(value="/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityType> updateActivityType(@RequestBody final ActivityTypeImpl activityType) {
+		this.logAccess("update", "activity type");
+		return this.service.updateActivityType(activityType, (CareActorBaseView) getUser());
+	}
+
 }

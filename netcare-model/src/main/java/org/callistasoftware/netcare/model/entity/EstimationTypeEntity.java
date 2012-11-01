@@ -37,7 +37,7 @@ public class EstimationTypeEntity extends ActivityItemTypeEntity {
 	private Integer senseValueHigh;
 
 	public static EstimationTypeEntity newEntity(ActivityTypeEntity activityTypeEntity, String name,
-			String minScaleText, String maxScaleText, Integer minScaleValue, Integer maxScaleValue) {
+			String minScaleText, String maxScaleText, Integer minScaleValue, Integer maxScaleValue, int seqno) {
 		EstimationTypeEntity entity = new EstimationTypeEntity();
 		entity.setActivityType(activityTypeEntity);
 		entity.setName(name);
@@ -45,6 +45,7 @@ public class EstimationTypeEntity extends ActivityItemTypeEntity {
 		entity.setSenseLabelHigh(maxScaleText);
 		entity.setSenseValueLow(minScaleValue);
 		entity.setSenseValueHigh(maxScaleValue);
+		entity.setSeqno(seqno);
 		activityTypeEntity.addActivityItemType(entity);
 		return entity;
 	}

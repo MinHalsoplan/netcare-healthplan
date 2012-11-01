@@ -15,26 +15,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 var NC_MODULE = {
-		
+
 	GLOBAL : (function() {
-		
+
 		var my = {};
-		
+
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
 		};
-		
+
 		my.loadNewPage = function(url, module, moduleParams) {
-			
+
 			// Show spinner
-			
-			$('#inboxDetailWrapper .wrapper').load(GLOB_CTX_PATH + '/netcare/' + url + ' #maincontainerwrapper', function() {
-				module.init(moduleParams);
-				// Hide spinner
-			});
+
+			$('#inboxDetailWrapper .wrapper').load(
+					GLOB_CTX_PATH + '/netcare/' + url
+							+ ' #maincontainerwrapper', function() {
+						module.init(moduleParams);
+						// Hide spinner
+					});
 		};
-		
+
 		return my;
 	})(),
 	
@@ -43,42 +45,41 @@ var NC_MODULE = {
 		var _text;
 		var _category;
 		var _level;
-		
 		var my = {};
-		
+
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
-			
+
 			if (_init == undefined) {
 				_init = true;
 				_text = "";
 				_category = "all";
-				_level= "all";
+				_level = "all";
 			}
-			
+
 			my.loadCategories();
 			my.loadLevels();
 			my.searchTemplates(that);
 			my.initEventListeners(that);
 		};
-		
+
 		my.initEventListeners = function(my) {
-			
+
 			$('select[name="category"]').change(function() {
 				_category = $(this).find('option:selected').val();
 				my.searchTemplates(my);
 			});
-			
+
 			$('select[name="level"]').change(function() {
 				_level = $(this).find('option:selected').val();
 				my.searchTemplates(my);
 			});
-			
+
 			$('input.search-query').keyup(function() {
 				_text = $(this).val();
 			});
-			
+
 			$(':submit').click(function(e) {
 				e.preventDefault();
 				my.searchTemplates();
@@ -86,31 +87,42 @@ var NC_MODULE = {
 		};
 		
 		my.loadCategories = function() {
-			var opt = $('<option>', { value : 'all', selected : 'selected' });
+			var opt = $('<option>', {
+				value : 'all',
+				selected : 'selected'
+			});
 			opt.html('-- Alla --');
-			
+
 			var tc = new NC.ActivityCategories();
 			tc.loadAsOptions($('select[name="category"]'));
-			
+
 			$('select[name="category"]').prepend(opt);
 		};
-		
+
 		my.loadLevels = function() {
-			var opt = $('<option>', { value : 'all', selected : 'selected' });
+			var opt = $('<option>', {
+				value : 'all',
+				selected : 'selected'
+			});
 			opt.html('-- Alla --');
-			
+
 			var tc = new NC.Support();
 			tc.loadAccessLevels($('select[name="level"]'));
-			
+
 			$('select[name="level"]').prepend(opt);
 		};
-		
+
 		my.searchTemplates = function(my) {
-			NC.log('Searching... Text: ' + _text + ', Category: ' + _category + ', Level: ' + _level);
-			var ajax = new NC.Ajax().getWithParams('/activityType/search', { 'text' : _text, 'category' : _category, 'level' : _level}, function(data) {
-				
+			NC.log('Searching... Text: ' + _text + ', Category: ' + _category
+					+ ', Level: ' + _level);
+			var ajax = new NC.Ajax().getWithParams('/activityType/search', {
+				'text' : _text,
+				'category' : _category,
+				'level' : _level
+			}, function(data) {
+
 				$('#templateList').empty();
-				
+
 				$.each(data.data, function(i, v) {
 					var template = _.template($('#activityTemplate').html());
 					$('#templateList').append(template(v));
@@ -161,17 +173,18 @@ var NC_MODULE = {
 		
 	ACTIVITY_TEMPLATE : (function() {
 		var activityTemplate;
-		var my  = {};
+		var my = {};
 		var support;
 		var typeOpts;
 		var unitOpts;
+		var nextItemId = -1;
 		
 		my.initSingleTemplate = function(params, paramSupport) {
 			activityTemplate = new Object();
 			support = paramSupport;
 			typeOpts = new Array();
 			unitOpts = new Array();
-			
+
 			var that = this;
 			this.params = params
 			my.loadTemplate(that, params.templateId);
@@ -184,38 +197,90 @@ var NC_MODULE = {
 			 * Load single template
 			 */
 			var at = new NC.ActivityTypes();
-			
+
 			at.get(templateId, function(data) {
 				activityTemplate = data.data;
 				renderItems(my, activityTemplate);
 				NC.log(activityTemplate);
 			});
+			$('#activitySaveButton')
+					.on(
+							'click',
+							function() {
+								NC.log('Save button clicked');
+								activityTemplate.name = $('#activityTypeName')
+										.val();
+								for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
+									delete activityTemplate.activityItems[i].details;
+								}
+								at.update(activityTemplate, function(data) {
+									activityTemplate = data.data;
+									renderItems(my, activityTemplate);
+									NC.log(activityTemplate);
+								});
+							});
+			$('#addMeasurementButton').on('click', function() {
+				createItem('measurement');
+			});
+			$('#addEstimationButton').on('click', function() {
+				createItem('estimation');
+			});
+			$('#addYesNoButton').on('click', function() {
+				createItem('yesno');
+			});
+			$('#addTextButton').on('click', function() {
+				createItem('text');
+			});
 
+			function createItem(type) {
+				// ALLA attribut måste vara med här för att json-parsern
+				// på servern ska fixa det hela.
+				var item = {
+					'id' : nextItemId--,
+					'name' : "Saknar namn",
+					'seqno' : activityTemplate.activityItems.length,
+					'activityItemTypeName' : type,
+					'alarm' : false,
+					'valueType' : {
+						'code' : null,
+						'value' : null
+					},
+					'unit' : {
+						'code' : null,
+						'value' : null
+					},
+					"minScaleText" : null,
+					"maxScaleText" : null,
+					"minScaleValue" : null,
+					"maxScaleValue" : null
+				};
+				activityTemplate.activityItems.push(item);
+				renderItems(my, activityTemplate);
+			}
 		};
 
-		
 		my.moveItemUp = function(my, itemId) {
 			/*
 			 * Move an activity item up in the list
 			 */
 			var items = activityTemplate.activityItems;
 			var i = 0;
-			for (i;i<items.length;i++) {
-				if(items[i].id==itemId) {
-					if(i!=0){
+			for (i; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					if (i != 0) {
 						// Change order
-						var temp = items[i-1];
-						items[i-1] = items[i];
+						var temp = items[i - 1];
+						items[i - 1] = items[i];
 						items[i] = temp;
 						// Set new seqno
-						items[i-1].seqno--;
+						items[i - 1].seqno--;
 						items[i].seqno++;
 						break;
 					}
 				}
 			}
 			renderItems(my, activityTemplate);
-			flash($('#item'+itemId).parent());
+			flash($('#item' + itemId).parent());
 		};
 
 		my.moveItemDown = function(my, itemId) {
@@ -224,34 +289,40 @@ var NC_MODULE = {
 			 */
 			var items = activityTemplate.activityItems;
 			var i = 0;
-			for (i;i<items.length;i++) {
-				if(items[i].id==itemId) {
-					if(i<=items.length-2){
+			for (i; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					if (i <= items.length - 2) {
 						// Change order
-						var temp = items[i+1];
-						items[i+1] = items[i];
+						var temp = items[i + 1];
+						items[i + 1] = items[i];
 						items[i] = temp;
 						// Set new seqno
-						items[i+1].seqno++;
+						items[i + 1].seqno++;
 						items[i].seqno--;
 						break;
 					}
 				}
 			}
 			renderItems(my, activityTemplate);
-			flash($('#item'+itemId).parent());
+			flash($('#item' + itemId).parent());
 		};
 
 		my.deleteItem = function(my, itemId) {
 			/*
-			 * Delete an activity item from the list
+			 * Delete an activity item from the list and decrease seqno
 			 */
 			var items = activityTemplate.activityItems;
-			for (var i=0;i<items.length;i++) {
-				if(items[i].id==itemId) {
-					items.splice(i,1);
+			var decreaseSeqno = false;
+			for ( var i = 0; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					items.splice(i, 1);
+					decreaseSeqno = true;
+				}
+				if (decreaseSeqno) {
+					items[i].seqno--;
 				}
 			}
+			NC.log(activityTemplate);
 			renderItems(my, activityTemplate);
 		};
 
@@ -260,14 +331,14 @@ var NC_MODULE = {
 			 * Display the form for an activity item from the list
 			 */
 			var items = activityTemplate.activityItems;
-			for (var i=0;i<items.length;i++) {
-				if(items[i].id==itemId) {
-					renderFormForItem(items[i]);
+			for ( var i = 0; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					renderFormForItem(my, items[i]);
 				}
 			}
 		};
 
-		 var renderItems = function( my, activityTemplate ) {
+		var renderItems = function(my, activityTemplate) {
 			$('#activityTypeName').val(activityTemplate.name);
 			var template = _.template($('#activityItemTemplate').html());
 			$('#activityTypeItems').empty();
@@ -290,37 +361,67 @@ var NC_MODULE = {
 					my.showItemForm(my, value.id);
 				});
 			});
-		
+
 			function setDetailsText(item) {
-				if(item.activityItemTypeName == 'measurement') {
-					item.details = item.valueType.value + ' | ' + item.unit.value;
-				} else if(item.activityItemTypeName == 'estimation') {
-					item.details = 'Från ' + item.minScaleValue + ' (' 
-						+ item.minScaleText + ') till ' + item.maxScaleValue + ' (' + item.maxScaleText + ')';
+				if (item.activityItemTypeName == 'measurement') {
+					if (item.unit != null && item.valueType != null) {
+						item.details = item.unit.value + ' | '
+								+ item.valueType.value;
+					} else {
+						item.details = 'Värden saknas';
+					}
+				} else if (item.activityItemTypeName == 'estimation') {
+					if (item.minScaleValue != null && item.minScaleText != null
+							&& item.maxScaleValue != null
+							&& item.maxScaleText != null) {
+						item.details = 'Från ' + item.minScaleValue + ' ('
+								+ item.minScaleText + ') till '
+								+ item.maxScaleValue + ' (' + item.maxScaleText
+								+ ')';
+					} else {
+						item.details = 'Värden saknas';
+					}
 				}
 			}
 		}
-		var renderFormForItem = function(item) {
-			var template; 
+		var renderFormForItem = function(my, item) {
+			var template;
 			$('#activityItemFormContainer').empty();
-			if(item.activityItemTypeName == 'measurement') {
+			var collectAndValidateFunction;
+			if (item.activityItemTypeName == 'measurement') {
 				renderMeasurementForm(item);
-			} else if(item.activityItemTypeName == 'estimation') {
+				collectAndValidateFunction = handleMeasurementForm;
+			} else if (item.activityItemTypeName == 'estimation') {
 				template = _.template($('#activityItemEstimationForm').html());
 				$('#activityItemFormContainer').append(template(item));
-			} else if(item.activityItemTypeName == 'yesno') {
+				collectAndValidateFunction = handleEstimationForm;
+			} else if (item.activityItemTypeName == 'yesno') {
 				template = _.template($('#activityItemYesNoForm').html());
 				$('#activityItemFormContainer').append(template(item));
-			} else if(item.activityItemTypeName == 'text') {
+			} else if (item.activityItemTypeName == 'text') {
 				template = _.template($('#activityItemTextForm').html());
 				$('#activityItemFormContainer').append(template(item));
 			}
-			$('#activityTypeContainer').hide('slide', { direction: 'left' }, 300);
-			$('#activityItemFormContainer').show('slide', { direction: 'left' }, 500);
-			$('#backButtonForm').on('click', function(){
-				$('#activityItemFormContainer').hide('slide', { direction: 'left' }, 400);
-				$('#activityTypeContainer').show('slide', { direction: 'left' }, 400);
-			});
+			$('#activityTypeContainer').hide('slide', {
+				direction : 'left'
+			}, 300);
+			$('#activityItemFormContainer').show('slide', {
+				direction : 'left'
+			}, 500);
+			$('#backButtonForm').on(
+					'click',
+					function() {
+						if (validateFormAndUpdateModel(
+								collectAndValidateFunction, item)) {
+							$('#activityItemFormContainer').hide('slide', {
+								direction : 'left'
+							}, 400);
+							$('#activityTypeContainer').show('slide', {
+								direction : 'left'
+							}, 400);
+							renderItems(my, activityTemplate);
+						}
+					});
 
 		}
 
@@ -331,16 +432,16 @@ var NC_MODULE = {
 
 		var renderMeasurementForm = function(item) {
 			applyTemplate('activityItemMeasurementForm', item);
-			var typeCode = item.valueType.code;
 			$.each(typeOpts, function(i, v) {
-				if(typeCode==v.attr('value')) {
+				if (item.valueType != null
+						&& item.valueType.code == v.attr('value')) {
 					v.attr('selected', 'selected');
 				}
 				$('#valueType').append(v);
 			});
 			$('#valueType').change(function(e) {
 				var val = $(this).val();
-				switch(val) {
+				switch (val) {
 				case 'SINGLE_VALUE':
 					$('#measureValueIntervalOnly').hide();
 					break;
@@ -352,19 +453,59 @@ var NC_MODULE = {
 			// Trigger the event handler
 			$('#valueType').change();
 
-			var unitCode = item.unit.code;
 			$.each(unitOpts, function(i, v) {
-				if(unitCode==v.attr('value')) {
+				if (item.unit != null && item.unit.code == v.attr('value')) {
 					v.attr('selected', 'selected');
 				}
 				$('#measurementUnit').append(v);
 			});
-			
-			if(item.alarm) {
+
+			if (item.alarm) {
 				$('#measurementAlarm').attr('checked', 'on');
 			}
 		}
-		
+
+		var validateFormAndUpdateModel = function(handleFormFunction, item) {
+			NC.log('Collecting form values and validating.');
+			return handleFormFunction(item);
+		}
+
+		var handleMeasurementForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.valueTypeCode = $('#valueType option:selected').val();
+			collected.valueTypeValue = $('#valueType option:selected').text();
+			collected.measurementUnitCode = $(
+					'#measurementUnit option:selected').val();
+			collected.measurementUnitValue = $(
+					'#measurementUnit option:selected').text();
+			collected.alarm = $('#measurementAlarm:checked').val() == "on"
+			// Do some validation
+			item.name = collected.name;
+			item.unit.code = collected.measurementUnitCode;
+			item.unit.value = collected.measurementUnitValue;
+			item.valueType.code = collected.valueTypeCode;
+			item.valueType.value = collected.valueTypeValue;
+			item.alarm = collected.alarm;
+			return true
+		}
+
+		var handleEstimationForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.minScaleValue = $('#minScaleValue').val();
+			collected.maxScaleValue = $('#maxScaleValue').val();
+			collected.minScaleText = $('#minScaleText').val();
+			collected.maxScaleText = $('#maxScaleText').val();
+			// Do some validation
+			item.name = collected.name;
+			item.minScaleValue = collected.minScaleValue;
+			item.maxScaleValue = collected.maxScaleValue;
+			item.minScaleText = collected.minScaleText;
+			item.maxScaleText = collected.maxScaleText;
+			return true;
+		}
+
 		var flash = function(something) {
 			something.animate({
 				'backgroundColor' : '#eee'
@@ -372,18 +513,20 @@ var NC_MODULE = {
 				'backgroundColor' : 'white'
 			}, 200);
 		}
-		
+
 		var initMeasureValues = function(my) {
 			support.getMeasureValueTypes(function(data) {
 				$.each(data.data, function(i, v) {
-					typeOpts.push($('<option>').attr('value', v.code).html(v.value));
+					typeOpts.push($('<option>').attr('value', v.code).html(
+							v.value));
 				});
 			});
 		}
 		var initUnitValues = function(my) {
 			support.getUnits(function(data) {
 				$.each(data.data, function(i, v) {
-					unitOpts.push($('<option>').attr('value', v.code).html(v.value));
+					unitOpts.push($('<option>').attr('value', v.code).html(
+							v.value));
 				});
 			});
 		}
@@ -397,11 +540,3 @@ var NC_MODULE = {
 		return my;
 	})()
 };
-
-
-
-
-
-
-
-
