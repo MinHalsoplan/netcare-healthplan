@@ -42,7 +42,7 @@ var NC_MODULE = {
 	
 	TEMPLATE_SEARCH : (function() {
 		var _init;
-		var _text;
+		var _name;
 		var _category;
 		var _level;
 		var my = {};
@@ -53,7 +53,7 @@ var NC_MODULE = {
 
 			if (_init == undefined) {
 				_init = true;
-				_text = "";
+				_name = "";
 				_category = "all";
 				_level = "all";
 			}
@@ -77,7 +77,7 @@ var NC_MODULE = {
 			});
 
 			$('input.search-query').keyup(function() {
-				_text = $(this).val();
+				_name = $(this).val();
 			});
 
 			$(':submit').click(function(e) {
@@ -113,10 +113,10 @@ var NC_MODULE = {
 		};
 
 		my.searchTemplates = function(my) {
-			NC.log('Searching... Text: ' + _text + ', Category: ' + _category
+			NC.log('Searching... Text: ' + _name + ', Category: ' + _category
 					+ ', Level: ' + _level);
-			var ajax = new NC.Ajax().getWithParams('/activityType/search', {
-				'text' : _text,
+			var ajax = new NC.Ajax().getWithParams('/templates/', {
+				'name' : _name,
 				'category' : _category,
 				'level' : _level
 			}, function(data) {
@@ -213,7 +213,7 @@ var NC_MODULE = {
 								for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
 									delete activityTemplate.activityItems[i].details;
 								}
-								at.update(activityTemplate, function(data) {
+								at.update(templateId, activityTemplate, function(data) {
 									activityTemplate = data.data;
 									renderItems(my, activityTemplate);
 									NC.log(activityTemplate);

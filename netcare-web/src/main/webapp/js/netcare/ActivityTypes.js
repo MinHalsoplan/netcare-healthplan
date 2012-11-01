@@ -65,7 +65,7 @@ NC.ActivityTypes = function() {
 		},
 
 		get : function(entityId, callback) {
-			_ajax.getWithParams('/templates/' + entityId, callback);
+			_ajax.get('/templates/' + entityId, callback);
 		},
 
 	};

@@ -37,16 +37,16 @@ public class ActivityTypeApi extends ApiSupport {
 	@Autowired
 	private ActivityTypeService service;
 	
-	@RequestMapping(value="", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType[]> listTemplates(@RequestParam(value="text") final String text,
+	public ServiceResult<ActivityType[]> listTemplates(@RequestParam(value="name") final String text,
 			@RequestParam("category") final String category,
 			@RequestParam("level") final String level) {
 		this.logAccess("search", "activity types");
 		return this.service.searchForActivityTypes(text, category, level);
 	}
 	
-    @RequestMapping(value="", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+    @RequestMapping(value="/", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityType> newTemplate(@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("create", "activity type");
@@ -66,9 +66,9 @@ public class ActivityTypeApi extends ApiSupport {
 		throw new UnsupportedOperationException();
 	}
 
-	@RequestMapping(value="/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+	@RequestMapping(value="/{id}", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType> updateActivityType(@RequestBody final ActivityTypeImpl activityType) {
+	public ServiceResult<ActivityType> updateActivityType(@PathVariable("{id") final String id, @RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("update", "activity type");
 		return this.service.updateActivityType(activityType, (CareActorBaseView) getUser());
 	}
