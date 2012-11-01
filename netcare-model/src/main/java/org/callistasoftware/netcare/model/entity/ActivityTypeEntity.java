@@ -16,7 +16,6 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 

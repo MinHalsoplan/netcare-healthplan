@@ -28,7 +28,6 @@ import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-
 /**
  * Implementation of an activity type
  * 

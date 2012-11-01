@@ -92,11 +92,11 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
-	
+
 	public ServiceResult<ActivityType[]> loadAllActivityTypes(final CareUnitEntity careUnit) {
 		log.info("Loading all activity templates accessible from care unit {}", careUnit.getHsaId());
 		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(careUnit, careUnit.getCountyCouncil());
-		
+
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
@@ -149,7 +149,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		boolean includeAnd = true;
 		boolean includeWhere = false;
-		
+
 		final StringBuilder query = new StringBuilder();
 		query.append("select e from ActivityTypeEntity as e ");
 		if (!searchString.isEmpty()) {
@@ -162,7 +162,8 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		if (!category.equals("all")) {
 			log.debug("Using category {}", category);
-			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
+			query.append(includeWhere ? " where " : "")
+					.append(includeAnd ? "and e.category.name = " : "e.category.id = ").append(Long.valueOf(category));
 			includeAnd = true;
 			includeWhere = false;
 		}
@@ -172,14 +173,15 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
 			includeAnd = true;
 		}
-		
+
 		log.debug("Search query is: {}", query.toString());
-		
+
 		@SuppressWarnings("unchecked")
-		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString()).getResultList();
-		
+		final List<ActivityTypeEntity> results = eMan.createEntityManager().createQuery(query.toString())
+				.getResultList();
+
 		log.debug("Now filter result set...");
-		
+
 		/*
 		 * Make sure we do not get other county councils templates
 		 */
@@ -187,17 +189,20 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		final CountyCouncilEntity cce = getCareActor().getCareUnit().getCountyCouncil();
 		final List<ActivityTypeEntity> filteredResults = new ArrayList<ActivityTypeEntity>();
 		for (final ActivityTypeEntity ent : results) {
-			
-			if (ent.getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL) && !ent.getCountyCouncil().getId().equals(cce.getId())) {
-				log.debug("Found a template for county council {} but the user belongs to {}", ent.getCountyCouncil().getId(), cce.getId());
+
+			if (ent.getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL)
+					&& !ent.getCountyCouncil().getId().equals(cce.getId())) {
+				log.debug("Found a template for county council {} but the user belongs to {}", ent.getCountyCouncil()
+						.getId(), cce.getId());
 				continue;
 			}
-			
+
 			if (ent.getAccessLevel().equals(AccessLevel.CAREUNIT) && !ent.getCareUnit().getId().equals(cu.getId())) {
-				log.debug("Found a template for care unit {} but the user belongs to {}", ent.getCareUnit().getHsaId(), cu.getHsaId());
+				log.debug("Found a template for care unit {} but the user belongs to {}", ent.getCareUnit().getHsaId(),
+						cu.getHsaId());
 				continue;
 			}
-			  
+
 			filteredResults.add(ent);
 		}
 		

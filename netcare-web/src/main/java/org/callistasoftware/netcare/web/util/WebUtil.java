@@ -212,6 +212,7 @@ public final class WebUtil {
 		MeasurementTypeEntity
 				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 1);
 		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5, 2);
+
 		atRepo.saveAndFlush(t2);
 
 		/*
@@ -223,6 +224,7 @@ public final class WebUtil {
 				.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true, 1);
 		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG,
 				true, 2);
+
 		atRepo.saveAndFlush(t3);
 		
 		/*
@@ -230,6 +232,7 @@ public final class WebUtil {
 		 */
 		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 1);
+
 		atRepo.saveAndFlush(t4);
 
 		
@@ -238,7 +241,6 @@ public final class WebUtil {
 
 		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", jkpg_cu_1);
 		careActorRepo.saveAndFlush(ca);
-
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");

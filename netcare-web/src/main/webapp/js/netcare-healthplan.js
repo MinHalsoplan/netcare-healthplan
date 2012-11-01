@@ -145,6 +145,7 @@ var NC_MODULE = {
 								e.stopPropagation();
 								my.deleteTemplate(my, v.id);
 							})
+
 						);
 						
 					} else {

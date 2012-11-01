@@ -146,7 +146,6 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final CareUnitEntity cu2 = getCareUnitRepository().saveAndFlush(CareUnitEntity.newEntity("hsa-care-unit-2", cc));
 
 		final ActivityCategoryEntity cat = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori"));
-
 		final ActivityCategoryEntity cat2 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori2"));
 		final ActivityCategoryEntity cat3 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori3"));
 		final ActivityCategoryEntity cat4 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori4"));
@@ -154,7 +153,6 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa1", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
-		
 
 		final ActivityTypeEntity savedEnt = this.repo.saveAndFlush(ent);
 		assertNotNull(savedEnt);
@@ -162,6 +160,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final ActivityTypeEntity ent2 = ActivityTypeEntity.newEntity("Springa2", cat2, cu, AccessLevel.COUNTY_COUNCIL);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
+
 		
 		final ActivityTypeEntity savedEnt2 = this.repo.saveAndFlush(ent2);
 		assertNotNull(savedEnt2);
@@ -176,7 +175,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		final ActivityTypeEntity ent4 = ActivityTypeEntity.newEntity("Springa4", cat4, cu, AccessLevel.NATIONAL);
 		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
 		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
-		
+	
 		final ActivityTypeEntity savedEnt4 = this.repo.saveAndFlush(ent4);
 		assertNotNull(savedEnt4);
 		
