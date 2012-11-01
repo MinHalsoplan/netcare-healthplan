@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
-import org.callistasoftware.netcare.core.api.MeasurementType;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 
 public class MeasurementDefinitionImpl extends ActivityItemValuesDefinitionImpl implements MeasurementDefinition {
@@ -28,16 +27,11 @@ public class MeasurementDefinitionImpl extends ActivityItemValuesDefinitionImpl 
 	public static MeasurementDefinition newFromEntity(MeasurementDefinitionEntity entity) {
 		MeasurementDefinitionImpl m = new MeasurementDefinitionImpl();
 		m.setId(entity.getId());
-		m.setActivityItemType(MeasurementTypeImpl.newFromEntity(entity.getMeasurementType()));
+		m.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getMeasurementType()));
 		m.target = entity.getTarget();
 		m.maxTarget = entity.getMaxTarget();
 		m.minTarget = entity.getMinTarget();
 		return m;
-	}
-
-	@Override
-	public MeasurementType getMeasurementType() {
-		return (MeasurementType) getActivityItemType();
 	}
 
 	@Override

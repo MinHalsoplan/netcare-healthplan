@@ -19,11 +19,6 @@ package org.callistasoftware.netcare.core.api;
 public interface MeasurementDefinition extends ActivityItemValuesDefinition {
 
 	/**
-	 * Returns the type.
-	 */
-	MeasurementType getMeasurementType();
-
-	/**
 	 * Returns target if not an interval.
 	 */
 	float getTarget();

@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -43,13 +44,10 @@ public class ActivityItemTypeEntity implements Comparable<ActivityItemTypeEntity
 	@Column(name = "name", length = 32, nullable = false)
 	private String name;
 
-	@Column(name = "alarm_enabled")
-	private boolean alarmEnabled;
-
 	@Column(name = "seqno")
 	private int seqno;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "activity_type_id")
 	private ActivityTypeEntity activityType;
 
@@ -61,16 +59,8 @@ public class ActivityItemTypeEntity implements Comparable<ActivityItemTypeEntity
 		return name;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
-	}
-
-	public boolean isAlarmEnabled() {
-		return alarmEnabled;
-	}
-
-	public void setAlarmEnabled(boolean alarmEnabled) {
-		this.alarmEnabled = alarmEnabled;
 	}
 
 	public int getSeqno() {
@@ -85,7 +75,7 @@ public class ActivityItemTypeEntity implements Comparable<ActivityItemTypeEntity
 		return activityType;
 	}
 
-	void setActivityType(ActivityTypeEntity activityType) {
+	public void setActivityType(ActivityTypeEntity activityType) {
 		this.activityType = activityType;
 	}
 

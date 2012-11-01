@@ -54,7 +54,6 @@
 <%-- This template is used to show an measurement item form --%>
 
 <script id="activityItemMeasurementForm" type="text/template">
-<form>
 <h2>
 	<spring:message code="template.activity.measurement.title" />
 </h2>
@@ -78,15 +77,13 @@
 	&nbsp;<spring:message code="measureValue.alarm.text" />
 </div>
 <div class="form-actions" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Spara</button>
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
 </div>
-</form>
 </script>
 
 <%-- This template is used to show an estimation item form --%>
 
 <script id="activityItemEstimationForm" type="text/template">
-<form>
 <h2>
 	<spring:message code="template.activity.estimation.title" />
 </h2>
@@ -104,23 +101,22 @@
 </div>
 <div class="controls controls-row">
 	<spring:message code="estimation.lowValue.label" />
-	<input type="text" name="estimationLowValue" id="estimationLowValue" class="span1" value="{{minScaleValue}}"></input>
+	<input type="text" name="minScaleValue" id="minScaleValue" class="span1" value="{{minScaleValue}}"></input>
 	<span style="padding-left:20px;"><spring:message code="estimation.highValue.label" /></span>
-	<input type="text" name="estimationHighValue" id="estimationHighValue" class="span1" value="{{maxScaleValue}}"></input>
+	<input type="text" name="maxScaleValue" id="maxScaleValue" class="span1" value="{{maxScaleValue}}"></input>
 </div>
 <div class="controls">
-	<label for="estimationLowText"><spring:message code="estimation.lowText.label" /></label>
-	<input type="text" class="span6" name="estimationLowText" id="estimationLowText" value="{{minScaleText}}"></input>
+	<label for="minScaleText"><spring:message code="estimation.lowText.label" /></label>
+	<input type="text" class="span6" name="minScaleText" id="minScaleText" value="{{minScaleText}}"></input>
 </div>
 <div class="controls">
-	<label for="estimationHighText"><spring:message code="estimation.highText.label" /></label>
-	<input type="text" class="span6" name="estimationHighText" id="estimationHighText" value="{{maxScaleText}}"></input>
+	<label for="maxScaleText"><spring:message code="estimation.highText.label" /></label>
+	<input type="text" class="span6" name="maxScaleText" id="maxScaleText" value="{{maxScaleText}}"></input>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Spara</button>
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
 </div>
 </div>
-</form>
 </script>
 
 <%-- This template is used to show an yesno item form --%>
@@ -142,7 +138,7 @@
 </h4>
 <textarea id="questionId" rows="2" class="span6"></textarea>
 </section>
-<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Spara</button>
+<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Tillbaka</button>
 </script>
 
 <%-- This template is used to show an text item form --%>
@@ -164,7 +160,7 @@
 </h4>
 <textarea id="questionId" rows="2" class="span6"></textarea>
 </section>
-<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Spara</button>
+<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Tillbaka</button>
 </script>
 
 <!-- healthplan:templates / -->

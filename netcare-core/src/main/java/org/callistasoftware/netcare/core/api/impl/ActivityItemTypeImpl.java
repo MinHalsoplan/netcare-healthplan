@@ -17,15 +17,63 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.ActivityItemType;
+import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
+import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
+import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.springframework.context.i18n.LocaleContextHolder;
 
-public abstract class ActivityItemTypeImpl implements ActivityItemType {
+public class ActivityItemTypeImpl implements ActivityItemType {
 
 	private Long id;
 	private String name;
 	private int seqno;
+	private String activityItemTypeName;
 
-	public abstract String getActivityItemTypeName();
-	
+	// Estimation
+	private String minScaleText;
+	private String maxScaleText;
+	private Integer minScaleValue;
+	private Integer maxScaleValue;
+
+	// Measurement
+	private boolean alarm;
+	private Option valueType;
+	private Option unit;
+
+	public static ActivityItemType newFromEntity(ActivityItemTypeEntity entity) {
+		final ActivityItemTypeImpl dto = new ActivityItemTypeImpl();
+
+		dto.setId(entity.getId());
+		dto.setName(entity.getName());
+		dto.setSeqno(entity.getSeqno());
+
+		if (entity instanceof EstimationTypeEntity) {
+			EstimationTypeEntity e = (EstimationTypeEntity) entity;
+			dto.setActivityItemTypeName(ESTIMATION_ITEM_TYPE);
+			dto.setMinScaleText(e.getSenseLabelLow());
+			dto.setMaxScaleText(e.getSenseLabelHigh());
+			dto.setMinScaleValue(e.getSenseValueLow());
+			dto.setMaxScaleValue(e.getSenseValueHigh());
+		} else if (entity instanceof MeasurementTypeEntity) {
+			MeasurementTypeEntity e = (MeasurementTypeEntity) entity;
+			dto.setActivityItemTypeName(MEASUREMENT_ITEM_TYPE);
+			dto.setAlarm(e.isAlarmEnabled());
+			dto.setUnit(new Option(e.getUnit().name(), LocaleContextHolder.getLocale()));
+			dto.setValueType(new Option(e.getValueType().name(), LocaleContextHolder.getLocale()));
+		}
+		return dto;
+	}
+
+	@Override
+	public String getActivityItemTypeName() {
+		return this.activityItemTypeName;
+	}
+
+	public void setActivityItemTypeName(String activityItemTypeName) {
+		this.activityItemTypeName = activityItemTypeName;
+	}
+
 	@Override
 	public Long getId() {
 		return this.id;
@@ -51,6 +99,88 @@ public abstract class ActivityItemTypeImpl implements ActivityItemType {
 
 	public void setSeqno(int seqno) {
 		this.seqno = seqno;
+	}
+
+	@Override
+	public String getMinScaleText() {
+		return this.minScaleText;
+	}
+
+	public void setMinScaleText(final String minScaleText) {
+		this.minScaleText = minScaleText;
+	}
+
+	@Override
+	public String getMaxScaleText() {
+		return this.maxScaleText;
+	}
+
+	public void setMaxScaleText(final String maxScaleText) {
+		this.maxScaleText = maxScaleText;
+	}
+
+	@Override
+	public Integer getMinScaleValue() {
+		return this.minScaleValue;
+	}
+
+	public void setMinScaleValue(Integer minScaleValue) {
+		this.minScaleValue = minScaleValue;
+	}
+
+	@Override
+	public Integer getMaxScaleValue() {
+		return maxScaleValue;
+	}
+
+	public void setMaxScaleValue(Integer maxScaleValue) {
+		this.maxScaleValue = maxScaleValue;
+	}
+
+	@Override
+	public Option getValueType() {
+		return this.valueType;
+	}
+
+	public void setValueType(final Option valueType) {
+		this.valueType = valueType;
+	}
+
+	@Override
+	public Option getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(final Option unit) {
+		this.unit = unit;
+	}
+
+	@Override
+	public boolean isAlarm() {
+		return this.alarm;
+	}
+
+	public void setAlarm(final boolean alarm) {
+		this.alarm = alarm;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+
+		buf.append("==== Item type ====\n");
+		buf.append("Id: ").append(this.getId()).append("\n");
+		buf.append("Name: ").append(this.getName()).append("\n");
+		buf.append("Seqno: ").append(this.getSeqno()).append("\n");
+		buf.append("LabelMin: ").append(this.getMinScaleText()).append("\n");
+		buf.append("LabelMax: ").append(this.getMaxScaleText()).append("\n");
+		buf.append("ValueMin: ").append(this.getMinScaleValue()).append("\n");
+		buf.append("ValueMax: ").append(this.getMaxScaleValue()).append("\n");
+		buf.append("Unit: ").append(this.getUnit().getCode()).append("\n");
+		buf.append("Type: ").append(this.getValueType().getCode()).append("\n");
+		buf.append("==========================\n");
+
+		return buf.toString();
 	}
 
 }

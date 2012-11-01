@@ -62,7 +62,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@JoinColumn(name = "category_id")
 	private ActivityCategoryEntity category;
 
-	@OneToMany(mappedBy = "activityType", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
+	@OneToMany(mappedBy = "activityType", fetch = FetchType.LAZY, cascade = { CascadeType.ALL }, orphanRemoval = true)
 	private List<ActivityItemTypeEntity> activityItemTypes;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -100,7 +100,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		return id;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = EntityUtil.notNull(name);
 	}
 
@@ -112,7 +112,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		return category;
 	}
 
-	void setCategory(ActivityCategoryEntity category) {
+	public void setCategory(ActivityCategoryEntity category) {
 		this.category = category;
 	}
 
@@ -122,8 +122,6 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	public boolean addActivityItemType(ActivityItemTypeEntity activityItemType) {
 		if (!activityItemTypes.contains(activityItemType)) {
-			int seqno = activityItemTypes.size() + 1;
-			activityItemType.setSeqno(seqno);
 			return activityItemTypes.add(activityItemType);
 		}
 		return false;
@@ -134,8 +132,9 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	}
 
 	public List<ActivityItemTypeEntity> getActivityItemTypes() {
-		Collections.sort(activityItemTypes);
-		return Collections.unmodifiableList(activityItemTypes);
+//		Collections.sort(activityItemTypes);
+//		return Collections.unmodifiableList(activityItemTypes);
+		return this.activityItemTypes;
 	}
 
 	public CareUnitEntity getCareUnit() {

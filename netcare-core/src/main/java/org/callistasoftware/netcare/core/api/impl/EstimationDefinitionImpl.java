@@ -26,8 +26,7 @@ public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl i
 	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
 		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
 		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(EstimationTypeImpl.newFromEntity((EstimationTypeEntity) entity
-				.getActivityItemType()));
+		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
 		return estimationDefinition;
 	}
 }
