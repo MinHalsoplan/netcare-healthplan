@@ -145,9 +145,7 @@ var NC_MODULE = {
 								e.stopPropagation();
 								my.deleteTemplate(my, v.id);
 							})
-
 						);
-						
 					} else {
 						
 					}
@@ -316,8 +314,10 @@ var NC_MODULE = {
 			var decreaseSeqno = false;
 			for ( var i = 0; i < items.length; i++) {
 				if (items[i].id == itemId) {
+					if (i < items.length - 1) {
+						decreaseSeqno = true;
+					}
 					items.splice(i, 1);
-					decreaseSeqno = true;
 				}
 				if (decreaseSeqno) {
 					items[i].seqno--;

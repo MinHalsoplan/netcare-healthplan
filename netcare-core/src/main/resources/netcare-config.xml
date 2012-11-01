@@ -56,13 +56,13 @@
   	<beans profile="db-embedded">
   		<context:property-placeholder location="classpath:/db-embedded.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
 
-<!--     	<bean  -->
-<!--         	id="org.h2.tools.Server-WebServer"  -->
-<!--         	class="org.h2.tools.Server" -->
-<!--     		factory-method="createWebServer"  -->
-<!--     		init-method="start"> -->
-<!--     		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" /> -->
-<!--     	</bean> -->
+     	<bean  
+         	id="org.h2.tools.Server-WebServer"  
+         	class="org.h2.tools.Server" 
+     		factory-method="createWebServer"  
+     		init-method="start"> 
+     		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" /> 
+     	</bean> 
   		
   	</beans>
 

@@ -253,6 +253,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	@Override
 	public ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl dto, CareActorBaseView careActor) {
 		Long id = dto.getId();
+		System.out.println("update of activity with id " + id);
 		ActivityTypeEntity repoItem = this.repo.findOne(id);
 		if (repoItem == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
@@ -283,21 +284,16 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	protected void updateItemsInType(ActivityTypeEntity repoItem, ActivityItemType[] dtoItems) {
-		List<ActivityItemTypeEntity> newItems = new ArrayList<ActivityItemTypeEntity>();
 		for (ActivityItemType dtoItem : dtoItems) {
-			updateOrCreateItem(repoItem, dtoItem, newItems);
-		}
-		if (newItems.size() > 0) {
-			repoItem.getActivityItemTypes().addAll(newItems);
+			updateOrCreateItem(repoItem, dtoItem);
 		}
 	}
 
-	protected void updateOrCreateItem(ActivityTypeEntity repoItem, ActivityItemType dtoItem,
-			List<ActivityItemTypeEntity> newItems) {
+	protected void updateOrCreateItem(ActivityTypeEntity repoItem, ActivityItemType dtoItem) {
 		if (dtoItem.getId() >= 0) {
 			updateItemWithDtoValues(findEntityItem(dtoItem.getId(), repoItem.getActivityItemTypes()), dtoItem);
 		} else {
-			newItems.add(createNewItemEntity(dtoItem, repoItem));
+			createNewItemEntity(dtoItem, repoItem);
 		}
 	}
 

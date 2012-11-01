@@ -83,4 +83,16 @@ public class ActivityItemTypeEntity implements Comparable<ActivityItemTypeEntity
 	public int compareTo(ActivityItemTypeEntity m) {
 		return (this.getSeqno() - m.getSeqno());
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("{'id' : " + id);
+		buf.append(", 'name' : " + name);
+		buf.append(", 'seqno' : " + seqno);
+		buf.append(", 'type' : " + this.getClass().getName());
+		
+		// TODO Auto-generated method stub
+		return buf.toString();
+	}
 }
