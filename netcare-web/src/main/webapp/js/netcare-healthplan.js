@@ -233,6 +233,9 @@ var NC_MODULE = {
 			initMeasureValues(that);
 			initUnitValues(that);
 
+			$('#activityTypeName').on('change', function(event) {
+				activityTemplate.name = this.value;
+			});
 			$('#addMeasurementButton').on('click', function(event) {
 				createItem('measurement');
 				event.preventDefault();

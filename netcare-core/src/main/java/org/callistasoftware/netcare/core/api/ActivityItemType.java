@@ -16,9 +16,12 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(as=ActivityItemTypeImpl.class)
 public interface ActivityItemType {
 
 	public final static String MEASUREMENT_ITEM_TYPE = "measurement";
