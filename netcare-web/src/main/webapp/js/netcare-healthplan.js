@@ -30,16 +30,16 @@ var NC_MODULE = {
 			// Show spinner
 
 			$('#inboxDetailWrapper .wrapper').load(
-				GLOB_CTX_PATH + '/netcare/' + url
-						+ ' #maincontainerwrapper', function() {
-					module.init(moduleParams);
-					// Hide spinner
-			});
+					GLOB_CTX_PATH + '/netcare/' + url
+							+ ' #maincontainerwrapper', function() {
+						module.init(moduleParams);
+						// Hide spinner
+					});
 		};
 
 		return my;
 	})(),
-	
+
 	TEMPLATE_SEARCH : (function() {
 		var _init;
 		var _name;
@@ -85,7 +85,7 @@ var NC_MODULE = {
 				my.searchTemplates();
 			})
 		};
-		
+
 		my.loadCategories = function() {
 			var opt = $('<option>', {
 				value : 'all',
@@ -111,11 +111,11 @@ var NC_MODULE = {
 
 			$('select[name="level"]').prepend(opt);
 		};
-		
+
 		my.buildTemplateItem = function(my, template, insertAfter) {
 			var t = _.template($('#activityTemplate').html());
 			var dom = t(template);
-			
+
 			if (insertAfter == undefined) {
 				$('#templateList').append($(dom));
 			} else {
@@ -123,35 +123,39 @@ var NC_MODULE = {
 				NC.log('Element is: ' + elem);
 				elem.insertAfter($(dom));
 			}
-			
+
 			if (template.accessLevel.code != "CAREUNIT") {
 				var t2 = _.template($('#itemNote').html());
-				$('#item-' + template.id).next('a.itemNavigation').after(t2(template.accessLevel));
-				
+				$('#item-' + template.id).next('a.itemNavigation').after(
+						t2(template.accessLevel));
+
 				$('#item-' + template.id).find('.actionBody').append(
-					$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						my.copyTemplate(my, template);
-					})
-				);
-				
+						$('<div>').addClass('mvk-icon copy').bind('click',
+								function(e) {
+									e.preventDefault();
+									e.stopPropagation();
+									my.copyTemplate(my, template);
+								}));
+
 				if (!template.inUse) {
 					$('#item-' + template.id).find('.actionBody').append(
-						$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
-							e.preventDefault();
-							e.stopPropagation();
-							my.deleteTemplate(my, template.id);
-						})
-					);
+							$('<div>').addClass('mvk-icon delete').bind(
+									'click', function(e) {
+										e.preventDefault();
+										e.stopPropagation();
+										my.deleteTemplate(my, template.id);
+									}));
 				}
 			} else {
-				
+
 			}
-			
-			$('#item-' + template.id).live('click', function() {
-				window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
-			});
+
+			$('#item-' + template.id).live(
+					'click',
+					function() {
+						window.location = GLOB_CTX_PATH
+								+ '/netcare/admin/template/' + template.id;
+					});
 		};
 
 		my.searchTemplates = function(my) {
@@ -168,25 +172,28 @@ var NC_MODULE = {
 				});
 			});
 		};
-		
+
 		my.copyTemplate = function(my, template) {
 			NC.log('Copy template');
 			template.name = template.name + ' (Kopia)';
-			
-			var at = new NC.ActivityTypes().create(template, function(data) {
-				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
-				my.buildTemplateItem(my, data.data, '#item-' + template.id);
-			});
+
+			var at = new NC.ActivityTypes().create(template,
+					function(data) {
+						NC.log('Copied ' + template.id + ' new id is: '
+								+ data.data.id);
+						my.buildTemplateItem(my, data.data, '#item-'
+								+ template.id);
+					});
 		};
-		
+
 		my.deleteTemplate = function(my, templateId) {
 			NC.log('Delete template');
 		};
-		
+
 		return my;
-		
+
 	})(),
-		
+
 	ACTIVITY_TEMPLATE : (function() {
 		var activityTemplate;
 		var my = {};
@@ -194,8 +201,9 @@ var NC_MODULE = {
 		var typeOpts;
 		var unitOpts;
 		var nextItemId = -1;
-		
+
 		my.initSingleTemplate = function(params, paramSupport) {
+			var at = new NC.ActivityTypes();
 			activityTemplate = new Object();
 			support = paramSupport;
 			typeOpts = new Array();
@@ -203,49 +211,43 @@ var NC_MODULE = {
 
 			var that = this;
 			this.params = params
-			my.loadTemplate(that, params.templateId);
+			if (params.templateId != -1) {
+				my.loadTemplate(that, params.templateId);
+			} else {
+				activityTemplate = {
+					"id" : -1,
+					"name" : "",
+					"inUse" : false,
+					"accessLevel" : {
+						"code" : "CAREUNIT",
+						"value" : ""
+					},
+					"category" : {
+						"id" : 1,
+						"name" : "Fysisk aktivitet"
+					},
+					"activityItems" : []
+				}
+
+			}
 			initMeasureValues(that);
 			initUnitValues(that);
-		};
 
-		my.loadTemplate = function(my, templateId) {
-			/*
-			 * Load single template
-			 */
-			var at = new NC.ActivityTypes();
-
-			at.get(templateId, function(data) {
-				activityTemplate = data.data;
-				renderItems(my, activityTemplate);
-				NC.log(activityTemplate);
-			});
-			$('#activitySaveButton')
-					.on(
-							'click',
-							function() {
-								NC.log('Save button clicked');
-								activityTemplate.name = $('#activityTypeName')
-										.val();
-								for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
-									delete activityTemplate.activityItems[i].details;
-								}
-								at.update(templateId, activityTemplate, function(data) {
-									activityTemplate = data.data;
-									renderItems(my, activityTemplate);
-									NC.log(activityTemplate);
-								});
-							});
-			$('#addMeasurementButton').on('click', function() {
+			$('#addMeasurementButton').on('click', function(event) {
 				createItem('measurement');
+				event.preventDefault();
 			});
-			$('#addEstimationButton').on('click', function() {
+			$('#addEstimationButton').on('click', function(event) {
 				createItem('estimation');
+				event.preventDefault();
 			});
-			$('#addYesNoButton').on('click', function() {
+			$('#addYesNoButton').on('click', function(event) {
 				createItem('yesno');
+				event.preventDefault();
 			});
-			$('#addTextButton').on('click', function() {
+			$('#addTextButton').on('click', function(event) {
 				createItem('text');
+				event.preventDefault();
 			});
 
 			function createItem(type) {
@@ -273,6 +275,45 @@ var NC_MODULE = {
 				activityTemplate.activityItems.push(item);
 				renderItems(my, activityTemplate);
 			}
+			$('#activitySaveButton')
+			.on(
+					'click',
+					function() {
+						NC.log('Save button clicked');
+						activityTemplate.name = $('#activityTypeName')
+								.val();
+						for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
+							delete activityTemplate.activityItems[i].details;
+						}
+						if (activityTemplate.id == -1) {
+							at.create(activityTemplate, function(data) {
+								activityTemplate = data.data;
+								renderItems(my, activityTemplate);
+								NC.log(activityTemplate);
+							});
+						} else {
+							at.update(params.templateId, activityTemplate,
+									function(data) {
+										activityTemplate = data.data;
+										renderItems(my,
+												activityTemplate);
+										NC.log(activityTemplate);
+									});
+						}
+					});
+		};
+
+		my.loadTemplate = function(my, templateId) {
+			/*
+			 * Load single template
+			 */
+			var at = new NC.ActivityTypes();
+
+			at.get(templateId, function(data) {
+				activityTemplate = data.data;
+				renderItems(my, activityTemplate);
+				NC.log(activityTemplate);
+			});
 		};
 
 		my.moveItemUp = function(my, itemId) {
@@ -400,13 +441,13 @@ var NC_MODULE = {
 						item.details = 'Värden saknas';
 					}
 				} else if (item.activityItemTypeName == 'yesno') {
-					if(item.question != null) {
+					if (item.question != null) {
 						item.details = item.question;
 					} else {
 						item.details = 'Värden saknas';
 					}
 				} else if (item.activityItemTypeName == 'text') {
-					if(item.label != null) {
+					if (item.label != null) {
 						item.details = item.label;
 					} else {
 						item.details = 'Värden saknas';

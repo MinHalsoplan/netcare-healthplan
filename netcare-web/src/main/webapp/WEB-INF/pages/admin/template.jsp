@@ -74,9 +74,9 @@
 						</div>
 						<div id="addActivityButtons">
 							<div id="addListItemWrapper">
-								<span style="padding-right: 15px"></span> <a href="#" class="addListItem" id="addMeasurementButton">Mätning</a> <a href="#"
+								<span style="padding-right: 15px"><a href="#" class="addListItem" id="addMeasurementButton">Mätning</a> <a href="#"
 									class="addListItem" id="addEstimationButton">Skattning</a> <a href="#" class="addListItem" id="addYesNoButton">Ja/Nej-fråga</a>
-								<a href="#" class="addListItem" id="addTextButton">Text</a>
+								<a href="#" class="addListItem" id="addTextButton">Text</a></span> 
 							</div>
 						</div>
 					</div>
