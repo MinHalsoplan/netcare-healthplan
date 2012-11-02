@@ -14,18 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.impl;
+package org.callistasoftware.netcare.model.entity;
 
-import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.EstimationDefinition;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
+@Entity
+@DiscriminatorValue("yesno")
+public class YesNoDefinitionEntity extends ActivityItemDefinitionEntity {
 
-	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
-		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
-		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
-		return estimationDefinition;
+	YesNoTypeEntity getYesNoType() {
+		return (YesNoTypeEntity) getActivityItemType();
+	}
+
+	public static ActivityItemDefinitionEntity newEntity(ActivityDefinitionEntity activityDefEntity,
+			ActivityItemTypeEntity activityItemType) {
+		YesNoDefinitionEntity entity = new YesNoDefinitionEntity();
+		entity.setActivityDefinition(activityDefEntity);
+		entity.setActivityItemType(activityItemType);
+		return entity;
 	}
 }

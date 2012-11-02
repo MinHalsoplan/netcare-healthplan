@@ -18,7 +18,6 @@ package org.callistasoftware.netcare.core.api;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public interface ActivityItemType {
 
@@ -110,5 +109,29 @@ public interface ActivityItemType {
 	 * @return
 	 */
 	boolean isAlarm();
+
+	/**
+	 * 
+	 * ********************** YesNo operations
+	 * 
+	 */
+	/**
+	 * Gets the question for the yes/no query.
+	 * 
+	 * @return
+	 */
+	String getQuestion();
+
+	/**
+	 * 
+	 * ********************** Text operations
+	 * 
+	 */
+	/**
+	 * Gets the label for the text comment field.
+	 * 
+	 * @return
+	 */
+	String getLabel();
 
 }

@@ -17,15 +17,15 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.EstimationDefinition;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+import org.callistasoftware.netcare.core.api.YesNoDefinition;
+import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
 
-public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
+public class TextDefinitionImpl extends ActivityItemValuesDefinitionImpl implements YesNoDefinition {
 
-	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
-		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
-		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
-		return estimationDefinition;
+	public static ActivityItemValuesDefinition newFromEntity(TextDefinitionEntity entity) {
+		TextDefinitionImpl textDefinition = new TextDefinitionImpl();
+		textDefinition.setId(entity.getId());
+		textDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
+		return textDefinition;
 	}
 }

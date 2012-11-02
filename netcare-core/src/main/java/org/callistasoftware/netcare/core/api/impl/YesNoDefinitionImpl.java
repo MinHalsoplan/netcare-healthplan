@@ -17,15 +17,15 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.EstimationDefinition;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+import org.callistasoftware.netcare.core.api.YesNoDefinition;
+import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
 
-public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
+public class YesNoDefinitionImpl extends ActivityItemValuesDefinitionImpl implements YesNoDefinition {
 
-	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
-		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
-		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
-		return estimationDefinition;
+	public static ActivityItemValuesDefinition newFromEntity(YesNoDefinitionEntity entity) {
+		YesNoDefinitionImpl yesNoDefinition = new YesNoDefinitionImpl();
+		yesNoDefinition.setId(entity.getId());
+		yesNoDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
+		return yesNoDefinition;
 	}
 }

@@ -249,8 +249,6 @@ var NC_MODULE = {
 			});
 
 			function createItem(type) {
-				// ALLA attribut måste vara med här för att json-parsern
-				// på servern ska fixa det hela.
 				var item = {
 					'id' : nextItemId--,
 					'name' : "Saknar namn",
@@ -268,7 +266,9 @@ var NC_MODULE = {
 					"minScaleText" : null,
 					"maxScaleText" : null,
 					"minScaleValue" : null,
-					"maxScaleValue" : null
+					"maxScaleValue" : null,
+					"question" : null,
+					"label" : null
 				};
 				activityTemplate.activityItems.push(item);
 				renderItems(my, activityTemplate);
@@ -399,6 +399,18 @@ var NC_MODULE = {
 					} else {
 						item.details = 'Värden saknas';
 					}
+				} else if (item.activityItemTypeName == 'yesno') {
+					if(item.question != null) {
+						item.details = item.question;
+					} else {
+						item.details = 'Värden saknas';
+					}
+				} else if (item.activityItemTypeName == 'text') {
+					if(item.label != null) {
+						item.details = item.label;
+					} else {
+						item.details = 'Värden saknas';
+					}
 				}
 			}
 		}
@@ -416,9 +428,11 @@ var NC_MODULE = {
 			} else if (item.activityItemTypeName == 'yesno') {
 				template = _.template($('#activityItemYesNoForm').html());
 				$('#activityItemFormContainer').append(template(item));
+				collectAndValidateFunction = handleYesNoForm;
 			} else if (item.activityItemTypeName == 'text') {
 				template = _.template($('#activityItemTextForm').html());
 				$('#activityItemFormContainer').append(template(item));
+				collectAndValidateFunction = handleTextForm;
 			}
 			$('#activityTypeContainer').hide('slide', {
 				direction : 'left'
@@ -524,6 +538,26 @@ var NC_MODULE = {
 			return true;
 		}
 
+		var handleYesNoForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.question = $('#yesNoQuestion').val();
+			// Do some validation
+			item.name = collected.name;
+			item.question = collected.question;
+			return true;
+		}
+
+		var handleTextForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.label = $('#textLabel').val();
+			// Do some validation
+			item.name = collected.name;
+			item.label = collected.label;
+			return true;
+		}
+
 		var flash = function(something) {
 			something.animate({
 				'backgroundColor' : '#eee'
@@ -548,12 +582,6 @@ var NC_MODULE = {
 				});
 			});
 		}
-
-		var removeMeasureValueForm = function() {
-			if ($('#measureValueContainer div').size() > 0) {
-				$('#measureValueContainer').empty();
-			}
-		};
 
 		return my;
 	})()

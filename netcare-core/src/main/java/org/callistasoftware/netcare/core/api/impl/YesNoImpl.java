@@ -16,16 +16,29 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.EstimationDefinition;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+import org.callistasoftware.netcare.core.api.YesNo;
+import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
 
-public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
+public class YesNoImpl extends ActivityItemValuesImpl implements YesNo {
 
-	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
-		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
-		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
-		return estimationDefinition;
+	private Boolean answer;
+
+	public static YesNo newFromEntity(YesNoEntity entity) {
+		YesNoImpl yesno = new YesNoImpl();
+		yesno.setId(entity.getId());
+		yesno.setDefinition(YesNoDefinitionImpl.newFromEntity((YesNoDefinitionEntity) entity
+				.getActivityItemDefinitionEntity()));
+		yesno.answer = entity.getAnswer();
+		return yesno;
+	}
+
+	@Override
+	public Boolean getAnswer() {
+		return this.answer;
+	}
+
+	public void setAnswer(Boolean answer) {
+		this.answer = answer;
 	}
 }

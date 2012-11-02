@@ -49,6 +49,8 @@ import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
+import org.callistasoftware.netcare.model.entity.TextTypeEntity;
+import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +93,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		for (final ActivityTypeEntity ent : processed) {
 			log.debug("Is in use? {}", ent.getInUse());
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(processed,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
@@ -165,7 +167,9 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		if (!level.equals("all")) {
 			log.debug("Using level {}", level);
-			query.append(includeWhere ? " where " : "").append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'").append(AccessLevel.valueOf(level)).append("'");
+			query.append(includeWhere ? " where " : "")
+					.append(includeAnd ? "and e.accessLevel = " : "e.accessLevel = ").append("'")
+					.append(AccessLevel.valueOf(level)).append("'");
 			includeAnd = true;
 		}
 
@@ -200,15 +204,14 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 			filteredResults.add(ent);
 		}
-		
 		final List<ActivityTypeEntity> processed = this.processTemplatesInUse(filteredResults);
 		for (final ActivityTypeEntity ent : processed) {
 			log.debug("Is in use? {}", ent.getInUse());
 		}
-		
-		return ServiceResultImpl.createSuccessResult(
-				ActivityTypeImpl.newFromEntities(
-						processed, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
+
+		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(processed,
+				LocaleContextHolder.getLocale()),
+				new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
 	}
 
 	@Override
@@ -247,7 +250,8 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		}
 		// TODO Do we have to check access rights here?
 		return ServiceResultImpl.createSuccessResult(
-				(ActivityType) ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
+				(ActivityType) ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()),
+				new GenericSuccessMessage());
 	}
 
 	@Override
@@ -311,6 +315,12 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			entity.setSenseLabelLow(dtoItem.getMinScaleText());
 			entity.setSenseValueHigh(dtoItem.getMaxScaleValue());
 			entity.setSenseValueLow(dtoItem.getMinScaleValue());
+		} else if (itemEntity instanceof YesNoTypeEntity) {
+			YesNoTypeEntity entity = (YesNoTypeEntity) itemEntity;
+			entity.setQuestion(dtoItem.getQuestion());
+		} else if (itemEntity instanceof TextTypeEntity) {
+			TextTypeEntity entity = (TextTypeEntity) itemEntity;
+			entity.setLabel(dtoItem.getLabel());
 		}
 	}
 
@@ -333,9 +343,9 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 					dtoItem.getMaxScaleText(), dtoItem.getMinScaleValue(), dtoItem.getMaxScaleValue(),
 					dtoItem.getSeqno());
 		} else if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.TEXT_ITEM_TYPE)) {
-			return null;
+			return TextTypeEntity.newEntity(parent, dtoItem.getName(), dtoItem.getLabel(), dtoItem.getSeqno());
 		} else if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.YESNO_ITEM_TYPE)) {
-			return null;
+			return YesNoTypeEntity.newEntity(parent, dtoItem.getName(), dtoItem.getQuestion(), dtoItem.getSeqno());
 		} else {
 			throw new RuntimeException("Could not create activity type item. Missing attribute [activityTypeName]");
 		}
@@ -360,28 +370,28 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		}
 		return false;
 	}
-	
+
 	List<ActivityTypeEntity> processTemplatesInUse(final List<ActivityTypeEntity> entities) {
 		log.debug("Processing templates in use...");
 		final Collection<Long> ids = new ArrayList<Long>(entities.size());
 		for (final ActivityTypeEntity ent : entities) {
 			ids.add(ent.getId());
 		}
-		
+
 		final List<ActivityTypeEntity> inUse = repo.findInUse(ids);
-		
+
 		log.debug("There are {} templates in use of the specified entities...", inUse.size());
 		entLoop: for (final ActivityTypeEntity ent : inUse) {
-			
+
 			for (final ActivityTypeEntity one : entities) {
-				 if (ent.getId().equals(one.getId())) {
-					 log.debug("Updating entity with in use = true.");
-					 one.setInUse(true);
-					 continue entLoop;
-				 }
+				if (ent.getId().equals(one.getId())) {
+					log.debug("Updating entity with in use = true.");
+					one.setInUse(true);
+					continue entLoop;
+				}
 			}
 		}
-		
+
 		return entities;
 	}
 }
