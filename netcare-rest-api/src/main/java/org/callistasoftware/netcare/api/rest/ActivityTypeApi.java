@@ -62,9 +62,9 @@ public class ActivityTypeApi extends ApiSupport {
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE, produces="application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType> deleteTemplate(@PathVariable(value="id") final String id) {
+	public ServiceResult<ActivityType> deleteTemplate(@PathVariable(value="id") final Long id) {
 		this.logAccess("delete", "activity template");
-		throw new UnsupportedOperationException();
+		return this.service.deleteActivityTemplate(id);
 	}
 
 	@RequestMapping(value="/{id}", method=RequestMethod.POST, produces="application/json", consumes="application/json")

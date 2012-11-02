@@ -133,27 +133,25 @@ var NC_MODULE = {
 			
 			if (template.accessLevel.code != "CAREUNIT") {
 				var t2 = _.template($('#itemNote').html());
-				$('#item-' + template.id).next('a.itemNavigation').after(t2(template.accessLevel));
-				
+				$('#item-' + template.id).next('a.itemNavigation').after(t2(template.accessLevel));	
+			}
+			
+			$('#item-' + template.id).find('.actionBody').append(
+				$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					my.copyTemplate(my, template);
+				})
+			);
+			
+			if (!template.inUse) {
 				$('#item-' + template.id).find('.actionBody').append(
-					$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
+					$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
 						e.preventDefault();
 						e.stopPropagation();
-						my.copyTemplate(my, template);
+						my.deleteTemplate(my, template.id);
 					})
 				);
-				
-				if (!template.inUse) {
-					$('#item-' + template.id).find('.actionBody').append(
-						$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
-							e.preventDefault();
-							e.stopPropagation();
-							my.deleteTemplate(my, template.id);
-						})
-					);
-				}
-			} else {
-				
 			}
 			
 			$('#item-' + template.id).live('click', function() {
@@ -182,7 +180,7 @@ var NC_MODULE = {
 			NC.log('Copy template');
 			template.name = template.name + ' (Kopia)';
 			
-			var at = new NC.ActivityTypes().create(template, function(data) {
+			new NC.ActivityTypes().create(template, function(data) {
 				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
 				my.buildTemplateItem(my, data.data, '#item-' + template.id);
 			});
@@ -190,6 +188,10 @@ var NC_MODULE = {
 		
 		my.deleteTemplate = function(my, templateId) {
 			NC.log('Delete template');
+			new NC.ActivityTypes().deleteTemplate(templateId, function() {
+				NC.log('Item removed');
+				$('#item-' + templateId).parents('.item:first').fadeOut('fast');
+			});
 		};
 		
 		return my;

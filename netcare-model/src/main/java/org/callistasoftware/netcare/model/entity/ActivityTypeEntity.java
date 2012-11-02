@@ -195,8 +195,27 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		}
 
 		final CareActorEntity ca = (CareActorEntity) user;
-		if (ca.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
-			return true;
+		
+		if (getAccessLevel().equals(AccessLevel.CAREUNIT)) {
+		
+			if (ca.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
+				return true;
+			}
+		}
+		
+		if (getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL)) {
+			
+			/*
+			 * FIXME Extend check
+			 */
+			
+		}
+		
+		if (getAccessLevel().equals(AccessLevel.NATIONAL)) {
+			
+			/*
+			 * FIXME Extend check
+			 */
 		}
 
 		return false;

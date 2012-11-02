@@ -35,6 +35,7 @@ import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
+import org.callistasoftware.netcare.core.api.messages.NoAccessMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
@@ -383,5 +384,21 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		}
 		
 		return entities;
+	}
+
+	@Override
+	public ServiceResult<ActivityType> deleteActivityTemplate(Long id) {
+		log.debug("Deleting template {}", id);
+		final ActivityTypeEntity one = repo.findOne(id);
+		if (one == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
+		}
+		
+		if (one.isWriteAllowed(getCareActor())) {
+			repo.delete(one);
+			return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+		} else {
+			return ServiceResultImpl.createFailedResult(new NoAccessMessage());
+		}
 	}
 }

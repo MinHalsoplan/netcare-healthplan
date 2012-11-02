@@ -67,6 +67,10 @@ NC.ActivityTypes = function() {
 		get : function(entityId, callback) {
 			_ajax.get('/templates/' + entityId, callback);
 		},
+		
+		deleteTemplate : function(entityId, callback) {
+			_ajax.http_delete('/templates/' + entityId, callback, false);
+		}
 
 	};
 	

@@ -82,4 +82,11 @@ public interface ActivityTypeService {
 	 * @return the saved activity.
 	 */
 	ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl activityType, final CareActorBaseView careActor);
+	
+	/**
+	 * Deletes the activity template with the specified id
+	 * @param id
+	 * @return
+	 */
+	ServiceResult<ActivityType> deleteActivityTemplate(final Long id);
 }
