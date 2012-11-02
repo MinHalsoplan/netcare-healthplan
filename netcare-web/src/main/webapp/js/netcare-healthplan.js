@@ -36,6 +36,14 @@ var NC_MODULE = {
 					// Hide spinner
 			});
 		};
+		
+		my.flash = function(something) {
+			something.animate({
+				'backgroundColor' : '#eee'
+			}, 100).animate({
+				'backgroundColor' : 'white'
+			}, 200);
+		};
 
 		return my;
 	})(),
@@ -119,9 +127,8 @@ var NC_MODULE = {
 			if (insertAfter == undefined) {
 				$('#templateList').append($(dom));
 			} else {
-				var elem = $(insertAfter).parent('.item');
-				NC.log('Element is: ' + elem);
-				elem.insertAfter($(dom));
+				var elem = $(insertAfter).parents('.item:first');
+				$(dom).insertAfter(elem);
 			}
 			
 			if (template.accessLevel.code != "CAREUNIT") {
@@ -152,6 +159,8 @@ var NC_MODULE = {
 			$('#item-' + template.id).live('click', function() {
 				window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
 			});
+			
+			NC_MODULE.GLOBAL.flash($('#item-' + template.id).parent());
 		};
 
 		my.searchTemplates = function(my) {
@@ -296,7 +305,7 @@ var NC_MODULE = {
 				}
 			}
 			renderItems(my, activityTemplate);
-			flash($('#item' + itemId).parent());
+			NC_MODULE.GLOBAL.flash($('#item' + itemId).parent());
 		};
 
 		my.moveItemDown = function(my, itemId) {
@@ -320,7 +329,7 @@ var NC_MODULE = {
 				}
 			}
 			renderItems(my, activityTemplate);
-			flash($('#item' + itemId).parent());
+			NC_MODULE.GLOBAL.flash($('#item' + itemId).parent());
 		};
 
 		my.deleteItem = function(my, itemId) {
@@ -522,14 +531,6 @@ var NC_MODULE = {
 			item.minScaleText = collected.minScaleText;
 			item.maxScaleText = collected.maxScaleText;
 			return true;
-		}
-
-		var flash = function(something) {
-			something.animate({
-				'backgroundColor' : '#eee'
-			}, 100).animate({
-				'backgroundColor' : 'white'
-			}, 200);
 		}
 
 		var initMeasureValues = function(my) {
