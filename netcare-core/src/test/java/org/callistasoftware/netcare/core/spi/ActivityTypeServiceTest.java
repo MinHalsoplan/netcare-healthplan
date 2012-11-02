@@ -23,10 +23,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
-import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
@@ -34,7 +32,6 @@ import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
@@ -55,30 +52,6 @@ public class ActivityTypeServiceTest extends TestSupport {
 
 	@Autowired
 	private ActivityTypeService service;
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testLoadAllActivityTypes() throws Exception {
-		final CountyCouncilEntity cc = getCountyCouncilRepository().save(CountyCouncilEntity.newEntity("SLL"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
-		final CareUnitEntity savedCu = getCareUnitRepository().save(cu);
-		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-
-		final CareActorEntity ca = getCareActorRepository().save(
-				CareActorEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
-		final CareActorBaseView cab = CareActorBaseViewImpl.newFromEntity(ca);
-
-		this.runAs(cab);
-
-		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu, AccessLevel.CAREUNIT));
-		}
-
-		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes(savedCu.getHsaId());
-		assertTrue(result.isSuccess());
-		assertEquals(10, result.getData().length);
-	}
 
 	@Test
 	@Transactional

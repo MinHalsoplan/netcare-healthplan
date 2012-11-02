@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.spi.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,25 +80,19 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	@Autowired
 	private CareUnitRepository cuRepo;
 
-	@Override
-	@Deprecated
-	public ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId) {
-		log.info("Loading all activity types from repository belongin to {}...", hsaId);
-		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(hsaId);
-
-		if (!all.isEmpty()) {
-			this.verifyReadAccess(all.get(0));
-		}
-
-		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
-				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
-	}
-
 	public ServiceResult<ActivityType[]> loadAllActivityTypes(final CareUnitEntity careUnit) {
 		log.info("Loading all activity templates accessible from care unit {}", careUnit.getHsaId());
 		final List<ActivityTypeEntity> all = this.repo.findByCareUnit(careUnit, careUnit.getCountyCouncil());
 
-		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(all,
+		/*
+		 * Which of these are in use?
+		 */
+		final List<ActivityTypeEntity> processed = this.processTemplatesInUse(all);
+		for (final ActivityTypeEntity ent : processed) {
+			log.debug("Is in use? {}", ent.getInUse());
+		}
+		
+		return ServiceResultImpl.createSuccessResult(ActivityTypeImpl.newFromEntities(processed,
 				LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, all.size()));
 	}
 
@@ -154,7 +149,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		query.append("select e from ActivityTypeEntity as e ");
 		if (!searchString.isEmpty()) {
 			log.debug("Using name {}", searchString);
-			query.append("where e.name like ").append("'%").append(searchString).append("%' ");
+			query.append("where lower(e.name) like ").append("'%").append(searchString.toLowerCase()).append("%' ");
 		} else {
 			includeWhere = true;
 			includeAnd = false;
@@ -206,9 +201,14 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			filteredResults.add(ent);
 		}
 		
+		final List<ActivityTypeEntity> processed = this.processTemplatesInUse(filteredResults);
+		for (final ActivityTypeEntity ent : processed) {
+			log.debug("Is in use? {}", ent.getInUse());
+		}
+		
 		return ServiceResultImpl.createSuccessResult(
 				ActivityTypeImpl.newFromEntities(
-						filteredResults, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
+						processed, LocaleContextHolder.getLocale()), new ListEntitiesMessage(ActivityTypeEntity.class, filteredResults.size()));
 	}
 
 	@Override
@@ -247,7 +247,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		}
 		// TODO Do we have to check access rights here?
 		return ServiceResultImpl.createSuccessResult(
-				ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
+				(ActivityType) ActivityTypeImpl.newFromEntity(result, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
 
 	@Override
@@ -339,7 +339,6 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		} else {
 			throw new RuntimeException("Could not create activity type item. Missing attribute [activityTypeName]");
 		}
-
 	}
 
 	protected void checkForDeletions(List<ActivityItemTypeEntity> repoList, ActivityItemType[] activityItems) {
@@ -360,5 +359,29 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 			}
 		}
 		return false;
+	}
+	
+	List<ActivityTypeEntity> processTemplatesInUse(final List<ActivityTypeEntity> entities) {
+		log.debug("Processing templates in use...");
+		final Collection<Long> ids = new ArrayList<Long>(entities.size());
+		for (final ActivityTypeEntity ent : entities) {
+			ids.add(ent.getId());
+		}
+		
+		final List<ActivityTypeEntity> inUse = repo.findInUse(ids);
+		
+		log.debug("There are {} templates in use of the specified entities...", inUse.size());
+		entLoop: for (final ActivityTypeEntity ent : inUse) {
+			
+			for (final ActivityTypeEntity one : entities) {
+				 if (ent.getId().equals(one.getId())) {
+					 log.debug("Updating entity with in use = true.");
+					 one.setInUse(true);
+					 continue entLoop;
+				 }
+			}
+		}
+		
+		return entities;
 	}
 }

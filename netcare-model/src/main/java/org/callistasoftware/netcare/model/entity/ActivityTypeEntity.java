@@ -32,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An ActivityType corresponds to a "template". An ActivityType can be assigned
@@ -75,6 +76,9 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "county_council_id")
 	private CountyCouncilEntity countyCouncil;
+	
+	@Transient
+	private Boolean inUse;
 
 	ActivityTypeEntity() {
 		activityItemTypes = new LinkedList<ActivityItemTypeEntity>();
@@ -158,6 +162,14 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	public void setCountyCouncil(CountyCouncilEntity countyCouncil) {
 		this.countyCouncil = countyCouncil;
+	}
+	
+	public void setInUse(Boolean inUse) {
+		this.inUse = inUse;
+	}
+	
+	public Boolean getInUse() {
+		return inUse;
 	}
 
 	@Override

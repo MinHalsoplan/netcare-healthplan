@@ -65,13 +65,6 @@ public interface ActivityTypeService {
 	ServiceResult<ActivityCategory> createActivityCategory(final ActivityCategory dto);
 
 	/**
-	 * Load all activity types that exist in the system
-	 * 
-	 * @return
-	 */
-	ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId);
-
-	/**
 	 * Get an activityType by its id.
 	 * 
 	 * @param id

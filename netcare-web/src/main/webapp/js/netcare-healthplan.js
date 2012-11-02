@@ -30,11 +30,11 @@ var NC_MODULE = {
 			// Show spinner
 
 			$('#inboxDetailWrapper .wrapper').load(
-					GLOB_CTX_PATH + '/netcare/' + url
-							+ ' #maincontainerwrapper', function() {
-						module.init(moduleParams);
-						// Hide spinner
-					});
+				GLOB_CTX_PATH + '/netcare/' + url
+						+ ' #maincontainerwrapper', function() {
+					module.init(moduleParams);
+					// Hide spinner
+			});
 		};
 
 		return my;
@@ -111,6 +111,48 @@ var NC_MODULE = {
 
 			$('select[name="level"]').prepend(opt);
 		};
+		
+		my.buildTemplateItem = function(my, template, insertAfter) {
+			var t = _.template($('#activityTemplate').html());
+			var dom = t(template);
+			
+			if (insertAfter == undefined) {
+				$('#templateList').append($(dom));
+			} else {
+				var elem = $(insertAfter).parent('.item');
+				NC.log('Element is: ' + elem);
+				elem.insertAfter($(dom));
+			}
+			
+			if (template.accessLevel.code != "CAREUNIT") {
+				var t2 = _.template($('#itemNote').html());
+				$('#item-' + template.id).next('a.itemNavigation').after(t2(template.accessLevel));
+				
+				$('#item-' + template.id).find('.actionBody').append(
+					$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						my.copyTemplate(my, template);
+					})
+				);
+				
+				if (!template.inUse) {
+					$('#item-' + template.id).find('.actionBody').append(
+						$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+							my.deleteTemplate(my, template.id);
+						})
+					);
+				}
+			} else {
+				
+			}
+			
+			$('#item-' + template.id).live('click', function() {
+				window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
+			});
+		};
 
 		my.searchTemplates = function(my) {
 			NC.log('Searching... Text: ' + _name + ', Category: ' + _category
@@ -120,46 +162,21 @@ var NC_MODULE = {
 				'category' : _category,
 				'level' : _level
 			}, function(data) {
-
 				$('#templateList').empty();
-
 				$.each(data.data, function(i, v) {
-					var template = _.template($('#activityTemplate').html());
-					$('#templateList').append(template(v));
-					
-					if (v.accessLevel.code != "CAREUNIT") {
-						var t2 = _.template($('#itemNote').html());
-						$('#item-' + v.id).next('a.itemNavigation').after(t2(v.accessLevel));
-						
-						$('#item-' + v.id).find('.actionBody').append(
-							$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
-								e.preventDefault();
-								e.stopPropagation();
-								my.copyTemplate(my, v.id);
-							})
-						);
-						
-						$('#item-' + v.id).find('.actionBody').append(
-							$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
-								e.preventDefault();
-								e.stopPropagation();
-								my.deleteTemplate(my, v.id);
-							})
-						);
-					} else {
-						
-					}
-					
-					$('#item-' + v.id).live('click', function() {
-						window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + v.id;
-					});
+					my.buildTemplateItem(my, v);
 				});
 			});
 		};
 		
-		my.copyTemplate = function(my, templateId) {
+		my.copyTemplate = function(my, template) {
 			NC.log('Copy template');
+			template.name = template.name + ' (Kopia)';
 			
+			var at = new NC.ActivityTypes().create(template, function(data) {
+				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
+				my.buildTemplateItem(my, data.data, '#item-' + template.id);
+			});
 		};
 		
 		my.deleteTemplate = function(my, templateId) {

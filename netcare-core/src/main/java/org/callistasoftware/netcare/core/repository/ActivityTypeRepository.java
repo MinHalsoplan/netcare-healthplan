@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
@@ -27,16 +28,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long>, JpaSpecificationExecutor<ActivityTypeEntity> {
-	/**
-	 * Find activity types created on the given care unit
-	 * @param hsaId
-	 * @return
-	 * @deprecated Use {@link ActivityCategoryRepository}{@link #findByCareUnit(CareUnitEntity)} instead
-	 */
-	@Deprecated
-	@Query("select e from ActivityTypeEntity as e where e.careUnit.hsaId = :hsaId order by e.name asc")
-	List<ActivityTypeEntity> findByCareUnit(@Param("hsaId") final String hsaId);
 	
+	/**
+	 * Find all activity templates that is available to the certain care unit
+	 * @param careUnit
+	 * @param countyCouncil
+	 * @return
+	 */
 	@Query("select e from ActivityTypeEntity as e where " +
 			"(e.accessLevel = 'CAREUNIT' and e.careUnit = :careUnit) " +
 			"or (e.accessLevel = 'NATIONAL') " +
@@ -51,4 +49,9 @@ public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity
 	List<ActivityTypeEntity> findAllAccessible(
 			@Param("hsaId") final String careUnitHsa, 
 			@Param("countyCouncilId") final Long countyCouncilId);
+	
+	@Query("select at from ActivityDefinitionEntity as ade inner join " +
+			"ade.activityType as at where " +
+			"at.id in (:ids)")
+	List<ActivityTypeEntity> findInUse(@Param("ids") final Collection<Long> ids);
 }

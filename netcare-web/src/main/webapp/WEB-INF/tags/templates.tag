@@ -21,7 +21,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- healthplan:templates -->
 <script id="activityTemplate" type="text/template">
-<li id="at{{id}}" class="item withNavigation" style="cursor: pointer;">
 <mvk:touch-item>
 <div id="item-{{id}}" class="listItemBase">
 	<div class="row-fluid">
@@ -31,11 +30,9 @@
 		</div>
 		<div class="mainBody actionBody span6"></div>
 	</div>
-	
 </div>
 <a href="#" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
-</li>
 </script>
 <%--
 	Must be included within a touch-item and inserted

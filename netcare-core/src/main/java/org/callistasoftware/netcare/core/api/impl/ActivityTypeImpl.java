@@ -43,6 +43,7 @@ public class ActivityTypeImpl implements ActivityType {
 
 	private Long id;
 	private String name;
+	private boolean inUse;
 	private Option accessLevel;
 	private ActivityCategoryImpl category;
 
@@ -58,6 +59,7 @@ public class ActivityTypeImpl implements ActivityType {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
+		dto.setInUse(entity.getInUse() == null ? false : entity.getInUse());
 		dto.setAccessLevel(new Option(entity.getAccessLevel().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
@@ -142,5 +144,14 @@ public class ActivityTypeImpl implements ActivityType {
 	
 	public void setAccessLevel(Option option) {
 		this.accessLevel = option;
+	}
+
+	@Override
+	public boolean isInUse() {
+		return inUse;
+	}
+	
+	public void setInUse(final boolean inUse) {
+		this.inUse = inUse;
 	}
 }
