@@ -226,8 +226,8 @@ var NC_MODULE = {
 						"value" : ""
 					},
 					"category" : {
-						"id" : 1,
-						"name" : "Fysisk aktivitet"
+						"id" : null,
+						"name" : null
 					},
 					"activityItems" : []
 				}
@@ -286,6 +286,7 @@ var NC_MODULE = {
 				};
 				activityTemplate.activityItems.push(item);
 				renderItems(my, activityTemplate);
+				$('#item' + item.id + 'showDetails').click();
 			}
 			$('#activitySaveButton')
 			.on(
