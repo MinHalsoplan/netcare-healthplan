@@ -200,6 +200,7 @@ var NC_MODULE = {
 		var support;
 		var typeOpts;
 		var unitOpts;
+		var categories;
 		var nextItemId = -1;
 
 		my.initSingleTemplate = function(params, paramSupport) {
@@ -208,9 +209,11 @@ var NC_MODULE = {
 			support = paramSupport;
 			typeOpts = new Array();
 			unitOpts = new Array();
+			categories = new Array();
 
 			var that = this;
-			this.params = params
+			this.params = params;
+			
 			if (params.templateId != -1) {
 				my.loadTemplate(that, params.templateId);
 			} else {
@@ -230,11 +233,17 @@ var NC_MODULE = {
 				}
 
 			}
+
+			my.loadCategories();
+
 			initMeasureValues(that);
 			initUnitValues(that);
 
 			$('#activityTypeName').on('change', function(event) {
 				activityTemplate.name = this.value;
+			});
+			$('#activityTypeCategory').on('change', function(event) {
+				activityTemplate.category.id = this.value;
 			});
 			$('#addMeasurementButton').on('click', function(event) {
 				createItem('measurement');
@@ -319,6 +328,11 @@ var NC_MODULE = {
 			});
 		};
 
+		my.loadCategories = function() {
+			var tc = new NC.ActivityCategories();
+			tc.loadAsOptions($('select[name="category"]'));
+		};
+		
 		my.moveItemUp = function(my, itemId) {
 			/*
 			 * Move an activity item up in the list
@@ -402,6 +416,7 @@ var NC_MODULE = {
 
 		var renderItems = function(my, activityTemplate) {
 			$('#activityTypeName').val(activityTemplate.name);
+			$('#activityTypeCategory').val(activityTemplate.category.id);
 			var template = _.template($('#activityItemTemplate').html());
 			$('#activityTypeItems').empty();
 			$.each(activityTemplate.activityItems, function(index, value) {
