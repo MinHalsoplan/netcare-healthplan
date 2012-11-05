@@ -113,15 +113,22 @@ public class HomeController extends ControllerSupport {
 		return "admin/patients";
 	}
 
-	@RequestMapping(value = "/admin/activitytypes", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/templates", method = RequestMethod.GET)
 	public String displayActivityTypes() {
-		return "admin/types";
+		return "admin/activity-template";
 	}
 
 	@RequestMapping(value = "/admin/template/{id}", method = RequestMethod.GET)
 	public String displayTemplate(@PathVariable(value = "id") final Long id, Model model) {
 		log.info("Getting activity type with id {}", id);
 		model.addAttribute("currentId", id);
+		return "admin/template";
+	}
+
+	@RequestMapping(value = "/admin/template", method = RequestMethod.GET)
+	public String newTemplate(Model model) {
+		log.info("Creating new activity type ");
+		model.addAttribute("currentId", -1);
 		return "admin/template";
 	}
 

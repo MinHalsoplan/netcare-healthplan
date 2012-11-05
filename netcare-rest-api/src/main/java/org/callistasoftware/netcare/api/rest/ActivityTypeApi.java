@@ -23,6 +23,7 @@ import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,38 +31,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/activityType")
+@RequestMapping(value = "/templates")
 public class ActivityTypeApi extends ApiSupport {
-	
+
 	@Autowired
 	private ActivityTypeService service;
-	
-	@RequestMapping(value="/load", method=RequestMethod.GET)
+
+
+	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType[]> loadActivityTypes(@RequestParam(value="hsa") final String hsaId) {
-		this.logAccess("load", "activity types");
-		return this.service.loadAllActivityTypes(hsaId);
+	public ServiceResult<ActivityType[]> listTemplates(@RequestParam(value = "name") final String text,
+			@RequestParam("category") final String category, @RequestParam("level") final String level) {
+		this.logAccess("search", "activity template");
+		return this.service.searchForActivityTypes(text, category, level);
 	}
-	
-	@RequestMapping(value="/search", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType[]> searchActivityTypes(@RequestParam(value="text") final String text) {
-		this.logAccess("search", "activity types");
-		return this.service.searchForActivityTypes(text);
-	}
-	
-    @RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
-	@ResponseBody
-	public ServiceResult<ActivityType> createNewActivityType(@RequestBody final ActivityTypeImpl activityType) {
-		this.logAccess("create", "activity type");
+	public ServiceResult<ActivityType> newTemplate(@RequestBody final ActivityTypeImpl activityType) {
+		this.logAccess("create", "activity template");
 		return this.service.createActivityType(activityType, (CareActorBaseView) getUser());
 	}
 
-	@RequestMapping(value="/get", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType> findActivityTypeById(@RequestParam(value="id") final String id) {
-		this.logAccess("get", "activity type");
+	public ServiceResult<ActivityType> loadTemplate(@PathVariable(value = "id") final String id) {
+		this.logAccess("get", "activity template");
 		return this.service.getActivityType(id);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<ActivityType> deleteTemplate(@PathVariable(value="id") final Long id) {
+		this.logAccess("delete", "activity template");
+		return this.service.deleteActivityTemplate(id);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	@ResponseBody
+	public ServiceResult<ActivityType> updateActivityType(@PathVariable("id") final String id,
+			@RequestBody final ActivityTypeImpl activityType) {
+		this.logAccess("update", "activity type");
+		return this.service.updateActivityType(activityType, (CareActorBaseView) getUser());
 	}
 
 }

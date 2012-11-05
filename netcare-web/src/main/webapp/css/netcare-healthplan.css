@@ -23,8 +23,14 @@
 }
 
 /*** Choose bars ***/
-#chooseName h4,#chooseActivities h4,#chooseSave h4 {
+#activityTypeContainer h4 {
 	font-weight: normal;
+}
+
+#template > div {
+	border-top: 1px #cccccc dotted;
+	padding-left: 5px;
+	width: 94%;
 }
 
 #chooseSave h4 {
@@ -32,11 +38,11 @@
 	padding-bottom: 20px;
 }
 
-#chooseName,#chooseActivities,#chooseSave {
+/*#chooseName,#chooseActivities,#chooseSave,#selectCategory {
 	border-top: 1px #cccccc dotted;
 	padding-left: 5px;
 	width: 94%;
-}
+}*/
 
 #chooseName {
 	border-top: none;
@@ -60,7 +66,8 @@ ul.itemList {
 }
 
 #addActivityButtons {
-	padding-top: 20px
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 /*** Move list item up, down, delete it or add one ***/
@@ -69,11 +76,11 @@ ul.itemList {
 	background-position: center center;
 	background-repeat: no-repeat;
 	position: absolute;
-	right: 160px;
+	right: 158px;
 	top: 0px;
 	display: block;
 	height: 100%;
-	width: 48px;
+	width: 40px;
 }
 
 .listItemBody .listItemMoveDown {
@@ -81,23 +88,23 @@ ul.itemList {
 	background-position: center center;
 	background-repeat: no-repeat;
 	position: absolute;
-	right: 130px;
+	right: 120px;
 	top: 0px;
 	display: block;
 	height: 100%;
-	width: 48px;
+	width: 40px;
 }
 
 .listItemBody .listItemDelete {
 	background-image: url(../css/images/toolbarIconsBlue.png);
-	background-position: -96px 0px;
+	background-position: -105px 0px;
 	background-repeat: no-repeat;
 	position: absolute;
-	right: 100px;
+	right: 90px;
 	top: 16px;
 	display: block;
-	height: 100%;
-	width: 48px;
+	height: 50px;
+	width: 30px;
 }
 
 #addListItemWrapper .addListItem {
@@ -113,4 +120,53 @@ ul.itemList {
 #addListItemWrapper .addListItem:hover {
 	background-image: url(../css/images/togglerClosedBlue.png);
 	text-decoration: none;
+}
+
+.actionBody .mvk-icon {
+	background-position: center center;
+	background-repeat: no-repeat;
+	margin-top: 10px;
+	margin-bottom: -10px;
+	height: 50px;
+	width: 30px;
+	display: inline-block;
+	
+}
+
+.mvk-icon.copy {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -250px 0px;
+}
+
+.mvk-icon.delete {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -105px 0px;
+}
+
+/*
+ * TO BE REMOVED AFTER MVK RELEASE
+ */
+li.item .itemStateText {
+	position: absolute;
+	display: block;
+	top: 0px;
+	right: 60px;
+	padding-bottom: 3px;
+	font-size: 0.75em;
+	font-weight: bold;
+	background-image: url(/netcare/resources/img/shadow-btn.png);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+/*
+ * TO BE REMOVED AFTER MVK RELEASE
+ */
+#inboxDetailWrapper li.item .itemStateText>.wrapper {
+	padding: 5px 13px;
+	display: block;
+	background-color: #fabd17;
+	background-image: url(/netcare/resources/img/stateTextBg.png);
+	background-position: right center;
+	background-repeat: repeat-y;
 }

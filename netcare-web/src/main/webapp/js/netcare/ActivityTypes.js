@@ -19,7 +19,7 @@ NC.ActivityCategories = function() {
 	
 	var public = {
 		load : function(callback) {
-			_ajax.get('/activityCategory/load', callback);
+			_ajax.get('/categories', callback);
 		},
 		
 		loadAsOptions : function(selectElem) {
@@ -36,7 +36,7 @@ NC.ActivityCategories = function() {
 		},
 		
 		create : function(formData, callback) {
-			_ajax.post('/activityCategory/create', formData, callback, true);
+			_ajax.post('/categories/', formData, callback, true);
 		}
 	};
 	
@@ -47,21 +47,29 @@ NC.ActivityTypes = function() {
 	var _ajax = new NC.Ajax();
 	
 	public = {
-		load : function(hsaId, callback, showPageMessages) {
-			_ajax.getWithParams('/activityType/load', {hsa : hsaId}, callback);
+		load : function(entityId, callback, showPageMessages) {
+			_ajax.getWithParams('/templates/' + entityId, callback);
 		},
 		
 		search : function(searchString, callback) {
-			_ajax.getWithParams('/activityType/search', {text : searchString}, callback);
+			_ajax.getWithParams('/templates', {text : searchString}, callback);
 		},
 		
 		create : function(formData, callback) {
-			_ajax.post('/activityType/create', formData, callback, true);
+			_ajax.post('/templates/', formData, callback, true);
+		},
+
+		update : function(id, formData, callback) {
+			_ajax.post('/templates/' + id, formData, callback, true);
 		},
 
 		get : function(entityId, callback) {
-			_ajax.getWithParams('/activityType/get', {id : entityId}, callback);
+			_ajax.get('/templates/' + entityId, callback);
 		},
+		
+		deleteTemplate : function(entityId, callback) {
+			_ajax.http_delete('/templates/' + entityId, callback, false);
+		}
 
 	};
 	

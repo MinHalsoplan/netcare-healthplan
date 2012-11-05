@@ -91,7 +91,9 @@ import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
+import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -415,7 +417,11 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 					alarmRepo.save(ae);
 				}
 			} else if (activityItemValuesEntity instanceof EstimationEntity) {
-
+				throw new RuntimeException("Missing estimation implementation");
+			} else if (activityItemValuesEntity instanceof YesNoEntity) {
+				throw new RuntimeException("Missing yesno implementation");
+			} else if (activityItemValuesEntity instanceof TextEntity) {
+				throw new RuntimeException("Missing text implementation");
 			}
 		}
 		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());

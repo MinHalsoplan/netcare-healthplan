@@ -23,7 +23,6 @@
 
 <script type="text/javascript" src="<c:url value="/js/json2.js" />"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
 <script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
 
 <script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
@@ -35,4 +34,14 @@
 <script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/ReportedActivities.js' />"></script>
+
+<script type="text/javascript" src="<c:url value='/js/netcare-healthplan.js' />"></script>
+
+<script type="text/javascript">
+// Det här ska nog inte ligga här, men funkar så länge.
+_.templateSettings.variable = "us";
+_.templateSettings = {
+	  interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
+};
+</script>
 <!-- healthplan:js / -->

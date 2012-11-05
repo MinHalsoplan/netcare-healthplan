@@ -20,6 +20,7 @@ import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 
 /**
  * Interface defining service methods for managing activity types
@@ -45,7 +46,8 @@ public interface ActivityTypeService {
 	 * @param searchString
 	 * @return
 	 */
-	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString);
+	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category,
+			final String level);
 
 	/**
 	 * Load all activity categories
@@ -63,13 +65,6 @@ public interface ActivityTypeService {
 	ServiceResult<ActivityCategory> createActivityCategory(final ActivityCategory dto);
 
 	/**
-	 * Load all activity types that exist in the system
-	 * 
-	 * @return
-	 */
-	ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId);
-
-	/**
 	 * Get an activityType by its id.
 	 * 
 	 * @param id
@@ -77,4 +72,21 @@ public interface ActivityTypeService {
 	 * @return An activity type.
 	 */
 	ServiceResult<ActivityType> getActivityType(final String id);
+
+	/**
+	 * Updates an activity type.
+	 * 
+	 * @param activityType
+	 *            The activity type to be saved.
+	 * @param careActor
+	 * @return the saved activity.
+	 */
+	ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl activityType, final CareActorBaseView careActor);
+	
+	/**
+	 * Deletes the activity template with the specified id
+	 * @param id
+	 * @return
+	 */
+	ServiceResult<ActivityType> deleteActivityTemplate(final Long id);
 }

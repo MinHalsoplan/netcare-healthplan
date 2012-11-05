@@ -36,6 +36,8 @@ import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
+import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -98,6 +100,10 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 				goalValues[i] = MeasurementDefinitionImpl.newFromEntity((MeasurementDefinitionEntity) mdl.get(i));
 			} else if (mdl.get(i) instanceof EstimationDefinitionEntity) {
 				goalValues[i] = EstimationDefinitionImpl.newFromEntity((EstimationDefinitionEntity) mdl.get(i));
+			} else if (mdl.get(i) instanceof YesNoDefinitionEntity) {
+				goalValues[i] = YesNoDefinitionImpl.newFromEntity((YesNoDefinitionEntity) mdl.get(i));
+			} else if (mdl.get(i) instanceof TextDefinitionEntity) {
+				goalValues[i] = TextDefinitionImpl.newFromEntity((TextDefinitionEntity) mdl.get(i));
 			}
 
 		}

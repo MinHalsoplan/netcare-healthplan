@@ -69,6 +69,9 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 			if (ca == null) {
 				getLog().debug("Could not find any care giver matching {}", username);
 			} else {
+				
+				getLog().debug("Found care actor with {} roles", ca.getRoles().size());
+				
 				return CareActorBaseViewImpl.newFromEntity(ca);
 			}
 		} else {

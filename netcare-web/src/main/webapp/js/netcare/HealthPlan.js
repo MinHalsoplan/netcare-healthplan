@@ -23,6 +23,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 	var _support = new NC.Support();
 	
 	var _msgs = null;
+	
 	_support.loadMessages('result.targetValue, result.targetMinValue, result.targetMaxValue,activity.suspended, activity.suspend, activity.update', function(m) {
 		_msgs = m;
 	});
@@ -38,6 +39,36 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			$('#activityContainer div').show();
 			$('#' + tableId).hide();
 		}
+	};
+	
+	var _formatMeasurements = function(data) {
+		NC.log('formatMeasurements()')
+		var rc = new Object();
+		rc.alarm = false;
+		rc.html = '';
+		$.each(data, function(index, value) {
+			var target;
+			var alarm;
+			if (value.measurementDefinition.measurementType.valueType.code == 'INTERVAL') {
+				target = value.minTarget + '-' + value.maxTarget;
+				alarm = (value.reportedValue < value.minTarget || value.reportedValue> value.maxTarget);
+				if (alarm) {
+					rc.alarm = true;
+				}
+			} else {
+				target = value.target;
+			}
+			if (index > 0) {
+				rc.html += '<br/>'
+			}
+			
+			var report = alarm ? '<i style="font-weight: bold">' + value.reportedValue + '</i>' : value.reportedValue ;
+			
+			rc.html += value.measurementDefinition.measurementType.name + ':&nbsp;' + report + '&nbsp;' 
+				+ _util.formatUnit(value.measurementDefinition.measurementType.unit) + '&nbsp;(' + target + ')';
+			
+		});		
+		return rc;
 	};
 	
 	var _initModalForGoalUpdates = function(data, callback) {
@@ -213,13 +244,13 @@ NC.HealthPlan = function(descriptionId, tableId) {
 				$.each(data.data, function(index, value) {
 					if ((!value.publicDefinition && isPatient) || value.publicDefinition) {
 						var deleteIcon = _util.createIcon('trash', 24, function() {
-							deleteActivity(tableId, healthPlanId, value.id);
+							public.deleteActivity(tableId, healthPlanId, value.id);
 						}, _msgs['activity.suspend'], true).css('padding-left', '10px');
 						
 						var updateIcon = _util.createIcon('update-activity', 24, function() {
 							
 							_initModalForGoalUpdates(value, function() {
-								listActivities(healthPlanId, tableId, isPatient);
+								public.listActivities(healthPlanId, tableId, isPatient);
 							});
 							
 						}, _msgs['activity.update'], true);
@@ -277,7 +308,7 @@ NC.HealthPlan = function(descriptionId, tableId) {
 		 */
 		deleteActivity : function(tableId, healthPlanId, activityId) {
 			_ajax.post('/healthplan/' + healthPlanId + '/activity/' + activityId + '/delete', null, function(data){
-				listActivities(healthPlanId, tableId);
+				public.listActivities(healthPlanId, tableId);
 			}, true);
 		},
 		

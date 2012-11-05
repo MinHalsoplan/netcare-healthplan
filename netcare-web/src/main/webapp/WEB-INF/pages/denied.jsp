@@ -22,22 +22,19 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
-<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
-<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
-		<netcare:css resourcePath="${resourcePath}" />
-		<netcare:js resourcePath="${resourcePath}"/>
-		<hp:healthplan-js />
+<hp:view>
+	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
 				$('#modal-from-dom').modal('show');
 				$('input[name="j_username"]').focus();
 			});
 		</script>
-	</mvk:header>
+	</hp:viewHeader>
 	<body>
 		<div class="modal-backdrop fade in"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
@@ -50,4 +47,4 @@
 			</div>
 		</div>
 	</body>
-</mvk:page>
+</hp:view>

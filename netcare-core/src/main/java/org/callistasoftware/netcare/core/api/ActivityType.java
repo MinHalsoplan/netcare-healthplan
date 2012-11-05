@@ -32,6 +32,18 @@ public interface ActivityType extends Serializable {
 	Long getId();
 	
 	/**
+	 * Wether the activity is used somewhere
+	 * @return
+	 */
+	boolean isInUse();
+	
+	/**
+	 * The access level of this template
+	 * @return
+	 */
+	Option getAccessLevel();
+	
+	/**
 	 * Get the name of this activity type
 	 */
 	String getName();

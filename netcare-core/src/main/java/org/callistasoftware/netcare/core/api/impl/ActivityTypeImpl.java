@@ -22,10 +22,11 @@ import java.util.Locale;
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
+import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * Implementation of an activity type
@@ -42,12 +43,15 @@ public class ActivityTypeImpl implements ActivityType {
 
 	private Long id;
 	private String name;
+	private boolean inUse;
+	private Option accessLevel;
 	private ActivityCategoryImpl category;
 
 	private ActivityItemType[] activityItems;
 
 	//
 	public ActivityTypeImpl() {
+		this.accessLevel = new Option(AccessLevel.CAREUNIT.name(), LocaleContextHolder.getLocale());
 		this.activityItems = new ActivityItemTypeImpl[0];
 	}
 
@@ -55,16 +59,13 @@ public class ActivityTypeImpl implements ActivityType {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
+		dto.setInUse(entity.getInUse() == null ? false : entity.getInUse());
+		dto.setAccessLevel(new Option(entity.getAccessLevel().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
 		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
 			ActivityItemTypeEntity activityItemTypeEntity = entity.getActivityItemTypes().get(i);
-			if (activityItemTypeEntity instanceof MeasurementTypeEntity) {
-				values[i] = MeasurementTypeImpl.newFromEntity((MeasurementTypeEntity) activityItemTypeEntity);
-			} else if (activityItemTypeEntity instanceof EstimationTypeEntity) {
-				values[i] = EstimationTypeImpl.newFromEntity((EstimationTypeEntity) activityItemTypeEntity);
-			}
-			// TODO JCTODO
+			values[i] = ActivityItemTypeImpl.newFromEntity(activityItemTypeEntity);
 		}
 
 		dto.activityItems = values;
@@ -134,5 +135,23 @@ public class ActivityTypeImpl implements ActivityType {
 		}
 
 		return buf.toString();
+	}
+
+	@Override
+	public Option getAccessLevel() {
+		return this.accessLevel;
+	}
+	
+	public void setAccessLevel(Option option) {
+		this.accessLevel = option;
+	}
+
+	@Override
+	public boolean isInUse() {
+		return inUse;
+	}
+	
+	public void setInUse(final boolean inUse) {
+		this.inUse = inUse;
 	}
 }

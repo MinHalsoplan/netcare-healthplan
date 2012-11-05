@@ -106,6 +106,10 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 						(MeasurementDefinitionEntity) activityItemDefinitionEntity);
 			} else if (activityItemDefinitionEntity instanceof EstimationDefinitionEntity) {
 				itemEntity = EstimationEntity.newEntity(scheduledActivityEntity, activityItemDefinitionEntity);
+			} else if (activityItemDefinitionEntity instanceof YesNoDefinitionEntity) {
+				itemEntity = YesNoEntity.newEntity(scheduledActivityEntity, activityItemDefinitionEntity);
+			} else if (activityItemDefinitionEntity instanceof TextDefinitionEntity) {
+				itemEntity = TextEntity.newEntity(scheduledActivityEntity, activityItemDefinitionEntity);
 			}
 			if (itemEntity != null) {
 				scheduledActivityEntity.activities.add(itemEntity);

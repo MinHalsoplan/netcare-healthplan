@@ -16,13 +16,14 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An ActivityType corresponds to a "template". An ActivityType can be assigned
@@ -60,7 +62,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	@JoinColumn(name = "category_id")
 	private ActivityCategoryEntity category;
 
-	@OneToMany(mappedBy = "activityType", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
+	@OneToMany(mappedBy = "activityType", fetch = FetchType.LAZY, cascade = { CascadeType.ALL }, orphanRemoval = true)
 	private List<ActivityItemTypeEntity> activityItemTypes;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -68,11 +70,15 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	private CareUnitEntity careUnit;
 
 	@Column(name = "accessLevel", nullable = false)
+	@Enumerated(EnumType.STRING)
 	private AccessLevel accessLevel;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JoinColumn(name = "county_council_id")
 	private CountyCouncilEntity countyCouncil;
+	
+	@Transient
+	private Boolean inUse;
 
 	ActivityTypeEntity() {
 		activityItemTypes = new LinkedList<ActivityItemTypeEntity>();
@@ -97,7 +103,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		return id;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = EntityUtil.notNull(name);
 	}
 
@@ -109,7 +115,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		return category;
 	}
 
-	void setCategory(ActivityCategoryEntity category) {
+	public void setCategory(ActivityCategoryEntity category) {
 		this.category = category;
 	}
 
@@ -119,8 +125,6 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 
 	public boolean addActivityItemType(ActivityItemTypeEntity activityItemType) {
 		if (!activityItemTypes.contains(activityItemType)) {
-			int seqno = activityItemTypes.size() + 1;
-			activityItemType.setSeqno(seqno);
 			return activityItemTypes.add(activityItemType);
 		}
 		return false;
@@ -131,8 +135,9 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	}
 
 	public List<ActivityItemTypeEntity> getActivityItemTypes() {
-		Collections.sort(activityItemTypes);
-		return Collections.unmodifiableList(activityItemTypes);
+//		Collections.sort(activityItemTypes);
+//		return Collections.unmodifiableList(activityItemTypes);
+		return this.activityItemTypes;
 	}
 
 	public CareUnitEntity getCareUnit() {
@@ -158,6 +163,14 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	public void setCountyCouncil(CountyCouncilEntity countyCouncil) {
 		this.countyCouncil = countyCouncil;
 	}
+	
+	public void setInUse(Boolean inUse) {
+		this.inUse = inUse;
+	}
+	
+	public Boolean getInUse() {
+		return inUse;
+	}
 
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
@@ -182,8 +195,27 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		}
 
 		final CareActorEntity ca = (CareActorEntity) user;
-		if (ca.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
-			return true;
+		
+		if (getAccessLevel().equals(AccessLevel.CAREUNIT)) {
+		
+			if (ca.getCareUnit().getHsaId().equals(this.getCareUnit().getHsaId())) {
+				return true;
+			}
+		}
+		
+		if (getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL)) {
+			
+			/*
+			 * FIXME Extend check
+			 */
+			
+		}
+		
+		if (getAccessLevel().equals(AccessLevel.NATIONAL)) {
+			
+			/*
+			 * FIXME Extend check
+			 */
 		}
 
 		return false;

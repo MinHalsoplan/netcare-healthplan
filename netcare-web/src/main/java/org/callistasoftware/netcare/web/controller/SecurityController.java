@@ -68,8 +68,6 @@ public class SecurityController extends ControllerSupport {
 		}
 	}
 	
-	
-	
 	@RequestMapping(value="/loggedout")
 	public String loggedout() {
 		return "loggedout";

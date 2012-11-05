@@ -16,7 +16,18 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(as=ActivityItemTypeImpl.class)
 public interface ActivityItemType {
+
+	public final static String MEASUREMENT_ITEM_TYPE = "measurement";
+	public final static String ESTIMATION_ITEM_TYPE = "estimation";
+	public final static String YESNO_ITEM_TYPE = "yesno";
+	public final static String TEXT_ITEM_TYPE = "text";
 
 	/**
 	 * Returns id.
@@ -35,4 +46,95 @@ public interface ActivityItemType {
 	 * Returns sequence number.
 	 */
 	int getSeqno();
+
+	/**
+	 * Returns the type name for this item.
+	 * 
+	 * @return
+	 */
+	String getActivityItemTypeName();
+
+	/**
+	 * 
+	 * ********************* Estimation operations
+	 * 
+	 */
+
+	/**
+	 * Returns the minimum scale description.
+	 */
+	String getMinScaleText();
+
+	/**
+	 * Returns the maximum scale description
+	 * 
+	 * @return
+	 */
+	String getMaxScaleText();
+
+	/**
+	 * Returns the min value.
+	 * 
+	 * @return
+	 */
+	Integer getMinScaleValue();
+
+	/**
+	 * Returns the max value
+	 * 
+	 * @return
+	 */
+	Integer getMaxScaleValue();
+
+	/**
+	 * 
+	 * ********************** Measurement operations
+	 * 
+	 */
+
+	/**
+	 * Get the type of value for this measurement
+	 * 
+	 * @return
+	 */
+	Option getValueType();
+
+	/**
+	 * Get the unit of this activity type
+	 */
+	Option getUnit();
+
+	/**
+	 * If this measurement is an interval, this flag tells whether an alarm
+	 * should be sent if the reported value is outside the boundaries of this
+	 * interval
+	 * 
+	 * @return
+	 */
+	boolean isAlarm();
+
+	/**
+	 * 
+	 * ********************** YesNo operations
+	 * 
+	 */
+	/**
+	 * Gets the question for the yes/no query.
+	 * 
+	 * @return
+	 */
+	String getQuestion();
+
+	/**
+	 * 
+	 * ********************** Text operations
+	 * 
+	 */
+	/**
+	 * Gets the label for the text comment field.
+	 * 
+	 * @return
+	 */
+	String getLabel();
+
 }

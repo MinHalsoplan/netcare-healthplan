@@ -37,11 +37,11 @@
 		</security:http>
 	
 		<security:http use-expressions="true" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/security/denied">
-			<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
-			<security:intercept-url pattern="/netcare/home*" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')"/>
-			<security:intercept-url pattern="/netcare/user/**" access="hasRole('ROLE_USER')"/>
-			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('ROLE_ADMIN')"/>
-			<security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+			<security:intercept-url pattern="/api/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
+			<security:intercept-url pattern="/netcare/home*" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
+			<security:intercept-url pattern="/netcare/user/**" access="hasRole('PATIENT')"/>
+			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('CARE_ACTOR')"/>
+			<security:intercept-url pattern="/**" access="hasRole('PATIENT')"/>
 			<security:logout logout-url="/netcare/security/logout"/>
 		</security:http>
 	</beans>

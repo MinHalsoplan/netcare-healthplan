@@ -14,29 +14,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.core.api.impl;
 
-public interface MeasurementType extends ActivityItemType {
+import org.callistasoftware.netcare.core.api.Role;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
+
+public class RoleImpl implements Role {
 
 	/**
-	 * Get the type of value for this measurement
 	 * 
-	 * @return
 	 */
-	Option getValueType();
+	private static final long serialVersionUID = 1L;
+	private String dn;
+	
+	RoleImpl(final String dn) {
+		this.dn = dn;
+	}
+	
+	public static Role newFromEntity(final RoleEntity entity) {
+		return new RoleImpl(entity.getDn());
+	}
 
-	/**
-	 * Get the unit of this activity type
-	 */
-	Option getUnit();
+	@Override
+	public String getDn() {
+		return this.dn;
+	}
 
-	/**
-	 * If this measurement is an interval, this flag tells whether an alarm
-	 * should be sent if the reported value is outside the boundaries of this
-	 * interval
-	 * 
-	 * @return
-	 */
-	boolean isAlarm();
+	@Override
+	public String getAuthority() {
+		return getDn();
+	}
 
 }

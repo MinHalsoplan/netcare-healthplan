@@ -39,7 +39,7 @@
 		<hp:menu />
 	</mvk:leftMenu>
 	
-	<mvk:content title="Startsida">
+	<mvk:content title="${title}">
 		<jsp:doBody/>
 	</mvk:content>
 </mvk:pageContent>

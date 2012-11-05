@@ -16,6 +16,9 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.util.Set;
+
+
 public interface CareActorBaseView extends UserBaseView {
 
 	/**
@@ -29,4 +32,10 @@ public interface CareActorBaseView extends UserBaseView {
 	 * @return
 	 */
 	CareUnit getCareUnit();
+	
+	/**
+	 * The role's of the care actor
+	 * @return
+	 */
+	Set<Role> getRoles();
 }

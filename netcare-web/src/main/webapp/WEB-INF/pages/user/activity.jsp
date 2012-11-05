@@ -33,6 +33,7 @@
 		<script type="text/javascript">
 			$(function() {
 				var util = new NC.Util();
+				var support = new NC.Support();
 				
 				/*
 				 * Are we a patient or are a care giver
@@ -435,7 +436,7 @@
 						<spring:message code="activity.form.type" var="what" scope="page" />
 						<netcare:field name="activityType" label="${what}">
 							<select name="activityType" class="input-medium"></select>
-							<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<sec:authorize access="hasRole('CARE_ACTOR')">
 								<p><a href="<c:url value="/netcare/admin/activitytypes" />"><spring:message code="activity.form.addType" /></a></p>
 							</sec:authorize>
 						</netcare:field>

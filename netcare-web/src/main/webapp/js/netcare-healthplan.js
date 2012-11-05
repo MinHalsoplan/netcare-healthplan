@@ -14,167 +14,671 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-$(window).load(function() {
-	$('#pageLoading').fadeOut('fast', function(e) {
-		$(this).hide();
-		$('#pageLoadingBox').hide();
-	});
-});
+var NC_MODULE = {
 
-$(document).ready(function() {
-	
-	if (typeof console === "undefined") {
-		console = {};
-	}
-	if (typeof console.log === "undefined") {
-		console.log = function() {};
-	}
-	
-	var _util = new NC.Util();
-	var _support = new NC.Support();
-	
-	$('.page-header h1').css('background', 'url(' + NC.getContextPath() + '/img/icons/32/heart-logo.png) no-repeat left');
-	
-	$('#pageLoading').css('height', $(window).height()).show();
-	$('#pageLoadingBox').show();
-	
-	/*$('#ajaxInProgress').ajaxStart(function() {
-		$(this).show();
-	});
-	
-	$('#ajaxInProgress').ajaxStop(function() {
-		$(this).hide();
-	});*/
+	GLOBAL : (function() {
 
-	/*
-	 * Bind all autocomplete boxes
-	 */
-	$('.nc-autocomplete').autocomplete({
-		search : function(event, ui) {
-			$(this).addClass('spinner');
-		},
-		open : function(event, ui) {
-			$(this).removeClass('spinner');
-		}
-	});
-	
-	$('.nc-autocomplete').blur(function() {
-		$(this).removeClass('spinner');
-	});
-	
-	var handleErrorCode = function(code) {
-		window.location.href = NC.getContextPath() + '/netcare/error/' + code;
-		return false;
-	};
-	
+		var my = {};
+
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+		};
+
+		my.loadNewPage = function(url, module, moduleParams) {
+
+			// Show spinner
+
+			$('#inboxDetailWrapper .wrapper').load(
+					GLOB_CTX_PATH + '/netcare/' + url
+							+ ' #maincontainerwrapper', function() {
+						module.init(moduleParams);
+						// Hide spinner
+					});
+		};
 		
-	/*
-	 * Select content when a text or number input field gains focus.
-	 */
-	$('input:text').focus( function (event) { 
-		NC.focusGained($(this));
-	});
+		my.flash = function(something) {
+			something.animate({
+				'backgroundColor' : '#eee'
+			}, 100).animate({
+				'backgroundColor' : 'white'
+			}, 200);
+		};
 
-	$('input:text').focusout( function () { 
-		NC.focusLost($(this));
-	});
+		return my;
+	})(),
 
-	$('input:password').focus( function (event) { 
-		NC.focusGained($(this));
-	});
+	TEMPLATE_SEARCH : (function() {
+		var _init;
+		var _name;
+		var _category;
+		var _level;
+		var my = {};
 
-	$('input:password').focusout( function () { 
-		NC.focusLost($(this));
-	});
-	
-	$('input[type="number"]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
 
-	$('input[type="number"]').focusout( function () { 
-		NC.focusLost($(this));
-	});
+			if (_init == undefined) {
+				_init = true;
+				_name = "";
+				_category = "all";
+				_level = "all";
+			}
+			
+			my.loadCategories();
+			my.loadLevels();
+			my.searchTemplates(that);
+			my.initEventListeners(that);
+		};
 
-	$('input[type="tel"]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
+		my.initEventListeners = function(my) {
 
-	$('input[type="tel"]').focusout( function () { 
-		NC.focusLost($(this));
-	});
+			$('select[name="category"]').change(function() {
+				_category = $(this).find('option:selected').val();
+				my.searchTemplates(my);
+			});
 
-	$('input[type="email"]').focus( function (event) { 
-		NC.focusGained($(this));
-	});
+			$('select[name="level"]').change(function() {
+				_level = $(this).find('option:selected').val();
+				my.searchTemplates(my);
+			});
 
-	$('input[type="email"]').focusout( function () { 
-		NC.focusLost($(this));
-	});
+			$('input.search-query').keyup(function() {
+				_name = $(this).val();
+			});
 
-	/*
-	 * Fix for IE8, make sure enter submits a form.
-	 */
-	$('form').keypress(function(event) {
-		// enter
-		if (event.which == 13) {
-			event.stopPropagation();
-		}
-	});
-	
-	/*
-	 * Setup ajax status mappings
-	 */
-	$.ajaxSetup({
-		dataType : 'json',
-		statusCode : {
-			404 : function() {
-				return handleErrorCode(404);
-			},
-			403 : function() {
-				return handleErrorCode(403);
-			},
-			500 : function() {
-				return handleErrorCode(500);
+			$(':submit').click(function(e) {
+				e.preventDefault();
+				my.searchTemplates();
+			})
+		};
+
+		my.loadCategories = function() {
+			var opt = $('<option>', {
+				value : 'all',
+				selected : 'selected'
+			});
+			opt.html('-- Alla --');
+
+			var tc = new NC.ActivityCategories();
+			tc.loadAsOptions($('select[name="category"]'));
+
+			$('select[name="category"]').prepend(opt);
+		};
+
+		my.loadLevels = function() {
+			var opt = $('<option>', {
+				value : 'all',
+				selected : 'selected'
+			});
+			opt.html('-- Alla --');
+
+			var tc = new NC.Support();
+			tc.loadAccessLevels($('select[name="level"]'));
+
+			$('select[name="level"]').prepend(opt);
+		};
+		
+		my.buildDeleteIcon = function(my, template) {
+			$('#item-' + template.id).find('.actionBody').append(
+				$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					my.deleteTemplate(my, template.id);
+				})
+			);
+		};
+		
+		my.buildTemplateItem = function(my, template, insertAfter) {
+			var t = _.template($('#activityTemplate').html());
+			var dom = t(template);
+
+			if (insertAfter == undefined) {
+				$('#templateList').append($(dom));
+			} else {
+				var elem = $(insertAfter).parents('.item:first');
+				$(dom).insertAfter(elem);
+			}
+
+			if (template.accessLevel.code != "CAREUNIT") {
+				var t2 = _.template($('#itemNote').html());
+				$('#item-' + template.id).next('a.itemNavigation').after(t2(template.accessLevel));	
+			}
+			
+			$('#item-' + template.id).find('.actionBody').append(
+				$('<div>').addClass('mvk-icon copy').bind('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					my.copyTemplate(my, template);
+				})
+			);
+			
+			if (!template.inUse) {
+				if (template.accessLevel.code == "CAREUNIT" && my.params.isCareActor == "true") {
+					NC.log('Template has care unit level and we have care actor role. Show delete icon');
+					my.buildDeleteIcon(my, template);
+				}
+				
+				if (template.accessLevel.code == "COUNTY_COUNCIL" && my.params.isCountyActor == "true") {
+					NC.log('Template has county level and we have county role. Show delete icon');
+					my.buildDeleteIcon(my, template);
+				}
+				
+				if (template.accessLevel.code == "NATIONAL" && my.params.isNationActor == "true") {
+					NC.log('Template has nation level and we have nation role. Show delete icon');
+					my.buildDeleteIcon(my, template);
+				}
+			}
+			
+			$('#item-' + template.id).live('click', function() {
+				window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
+			});
+			
+			NC_MODULE.GLOBAL.flash($('#item-' + template.id).parent());
+		};
+
+		my.searchTemplates = function(my) {
+			NC.log('Searching... Text: ' + _name + ', Category: ' + _category
+					+ ', Level: ' + _level);
+			var ajax = new NC.Ajax().getWithParams('/templates/', {
+				'name' : _name,
+				'category' : _category,
+				'level' : _level
+			}, function(data) {
+				$('#templateList').empty();
+				$.each(data.data, function(i, v) {
+					my.buildTemplateItem(my, v);
+				});
+			});
+		};
+
+		my.copyTemplate = function(my, template) {
+			NC.log('Copy template');
+			template.name = template.name + ' (Kopia)';
+
+			new NC.ActivityTypes().create(template, function(data) {
+				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
+				my.buildTemplateItem(my, data.data, '#item-' + template.id);
+			});
+		};
+
+		my.deleteTemplate = function(my, templateId) {
+			NC.log('Delete template');
+			new NC.ActivityTypes().deleteTemplate(templateId, function() {
+				NC.log('Item removed');
+				$('#item-' + templateId).parents('.item:first').fadeOut('fast');
+			});
+		};
+
+		return my;
+
+	})(),
+
+	ACTIVITY_TEMPLATE : (function() {
+		var activityTemplate;
+		var my = {};
+		var support;
+		var typeOpts;
+		var unitOpts;
+		var categories;
+		var nextItemId = -1;
+
+		my.initSingleTemplate = function(params, paramSupport) {
+			var at = new NC.ActivityTypes();
+			activityTemplate = new Object();
+			support = paramSupport;
+			typeOpts = new Array();
+			unitOpts = new Array();
+			categories = new Array();
+
+			var that = this;
+			this.params = params;
+			
+			if (params.templateId != -1) {
+				my.loadTemplate(that, params.templateId);
+			} else {
+				activityTemplate = {
+					"id" : -1,
+					"name" : "",
+					"inUse" : false,
+					"accessLevel" : {
+						"code" : "CAREUNIT",
+						"value" : ""
+					},
+					"category" : {
+						"id" : null,
+						"name" : null
+					},
+					"activityItems" : []
+				}
+
+			}
+
+			my.loadCategories();
+			my.loadAccessLevels(that);
+
+			initMeasureValues(that);
+			initUnitValues(that);
+
+			$('#activityTypeName').on('change', function(event) {
+				activityTemplate.name = this.value;
+			});
+
+			$('#activityTypeCategory').on('change', function(event) {
+				activityTemplate.category.id = this.value;
+			});
+			$('#addMeasurementButton').on('click', function(event) {
+				createItem('measurement');
+				event.preventDefault();
+			});
+			$('#addEstimationButton').on('click', function(event) {
+				createItem('estimation');
+				event.preventDefault();
+			});
+			$('#addYesNoButton').on('click', function(event) {
+				createItem('yesno');
+				event.preventDefault();
+			});
+			$('#addTextButton').on('click', function(event) {
+				createItem('text');
+				event.preventDefault();
+			});
+
+			function createItem(type) {
+				var item = {
+					'id' : nextItemId--,
+					'name' : "Saknar namn",
+					'seqno' : activityTemplate.activityItems.length,
+					'activityItemTypeName' : type,
+					'alarm' : false,
+					'valueType' : {
+						'code' : null,
+						'value' : null
+					},
+					'unit' : {
+						'code' : null,
+						'value' : null
+					},
+					"minScaleText" : null,
+					"maxScaleText" : null,
+					"minScaleValue" : null,
+					"maxScaleValue" : null,
+					"question" : null,
+					"label" : null
+				};
+				activityTemplate.activityItems.push(item);
+				renderItems(my, activityTemplate);
+				$('#item' + item.id + 'showDetails').click();
+			}
+			$('#activitySaveButton')
+			.on(
+					'click',
+					function() {
+						NC.log('Save button clicked');
+						activityTemplate.name = $('#activityTypeName')
+								.val();
+						for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
+							delete activityTemplate.activityItems[i].details;
+						}
+						if (activityTemplate.id == -1) {
+							at.create(activityTemplate, function(data) {
+								activityTemplate = data.data;
+								renderItems(my, activityTemplate);
+								NC.log(activityTemplate);
+							});
+						} else {
+							at.update(params.templateId, activityTemplate,
+									function(data) {
+										activityTemplate = data.data;
+										renderItems(my,
+												activityTemplate);
+										NC.log(activityTemplate);
+									});
+						}
+					});
+		};
+
+		my.loadTemplate = function(my, templateId) {
+			/*
+			 * Load single template
+			 */
+			var at = new NC.ActivityTypes();
+
+			at.get(templateId, function(data) {
+				activityTemplate = data.data;
+				renderItems(my, activityTemplate);
+				NC.log(activityTemplate);
+			});
+		};
+
+		my.loadCategories = function() {
+			var tc = new NC.ActivityCategories();
+			tc.loadAsOptions($('#activityTypeCategory'));
+		};
+		
+		my.loadAccessLevels = function(my) {
+			new NC.Support().loadAccessLevels($('#activityTypeAccessLevel'));
+			
+			/*
+			 * Role check, remove items that we do not have access to
+			 */
+			if (my.params.isCareActor == "true" && my.params.isCountyActor == "false") {
+				$('#activityTypeAccessLevel').prop('disabled', 'disabled');
+			}
+		};
+		
+		my.moveItemUp = function(my, itemId) {
+			/*
+			 * Move an activity item up in the list
+			 */
+			var items = activityTemplate.activityItems;
+			var i = 0;
+			for (i; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					if (i != 0) {
+						// Change order
+						var temp = items[i - 1];
+						items[i - 1] = items[i];
+						items[i] = temp;
+						// Set new seqno
+						items[i - 1].seqno--;
+						items[i].seqno++;
+						break;
+					}
+				}
+			}
+			renderItems(my, activityTemplate);
+			NC_MODULE.GLOBAL.flash($('#item' + itemId).parent());
+		};
+
+		my.moveItemDown = function(my, itemId) {
+			/*
+			 * Move an activity item down in the list
+			 */
+			var items = activityTemplate.activityItems;
+			var i = 0;
+			for (i; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					if (i <= items.length - 2) {
+						// Change order
+						var temp = items[i + 1];
+						items[i + 1] = items[i];
+						items[i] = temp;
+						// Set new seqno
+						items[i + 1].seqno++;
+						items[i].seqno--;
+						break;
+					}
+				}
+			}
+			renderItems(my, activityTemplate);
+			NC_MODULE.GLOBAL.flash($('#item' + itemId).parent());
+		};
+
+		my.deleteItem = function(my, itemId) {
+			/*
+			 * Delete an activity item from the list and decrease seqno
+			 */
+			var items = activityTemplate.activityItems;
+			var decreaseSeqno = false;
+			for ( var i = 0; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					if (i < items.length - 1) {
+						decreaseSeqno = true;
+					}
+					items.splice(i, 1);
+				}
+				if (decreaseSeqno) {
+					items[i].seqno--;
+				}
+			}
+			NC.log(activityTemplate);
+			renderItems(my, activityTemplate);
+		};
+
+		my.showItemForm = function(my, itemId) {
+			/*
+			 * Display the form for an activity item from the list
+			 */
+			var items = activityTemplate.activityItems;
+			for ( var i = 0; i < items.length; i++) {
+				if (items[i].id == itemId) {
+					renderFormForItem(my, items[i]);
+				}
+			}
+		};
+
+		var renderItems = function(my, activityTemplate) {
+			$('#activityTypeName').val(activityTemplate.name);
+			$('#activityTypeCategory > option[value="' + activityTemplate.category.id + '"]').prop('selected', true);
+			$('#activityTypeAccessLevel > option[value="' + activityTemplate.accessLevel.code + '"]').prop('selected', true);
+			
+			var template = _.template($('#activityItemTemplate').html());
+			$('#activityTypeItems').empty();
+			$.each(activityTemplate.activityItems, function(index, value) {
+				setDetailsText(value);
+				$('#activityTypeItems').append(template(value));
+				$('#item' + value.id + 'moveUp').on('click', function() {
+					my.moveItemUp(my, value.id);
+				});
+				$('#item' + value.id + 'moveDown').on('click', function() {
+					my.moveItemDown(my, value.id);
+				});
+				$('#item' + value.id + 'delete').on('click', function() {
+					my.deleteItem(my, value.id);
+				});
+				$('#item' + value.id).on('click', function() {
+					my.showItemForm(my, value.id);
+				});
+				$('#item' + value.id + 'showDetails').on('click', function() {
+					my.showItemForm(my, value.id);
+				});
+			});
+
+			function setDetailsText(item) {
+				if (item.activityItemTypeName == 'measurement') {
+					if (item.unit != null && item.valueType != null) {
+						item.details = item.unit.value + ' | '
+								+ item.valueType.value;
+					} else {
+						item.details = 'Värden saknas';
+					}
+				} else if (item.activityItemTypeName == 'estimation') {
+					if (item.minScaleValue != null && item.minScaleText != null
+							&& item.maxScaleValue != null
+							&& item.maxScaleText != null) {
+						item.details = 'Från ' + item.minScaleValue + ' ('
+								+ item.minScaleText + ') till '
+								+ item.maxScaleValue + ' (' + item.maxScaleText
+								+ ')';
+					} else {
+						item.details = 'Värden saknas';
+					}
+				} else if (item.activityItemTypeName == 'yesno') {
+					if (item.question != null) {
+						item.details = item.question;
+					} else {
+						item.details = 'Värden saknas';
+					}
+				} else if (item.activityItemTypeName == 'text') {
+					if (item.label != null) {
+						item.details = item.label;
+					} else {
+						item.details = 'Värden saknas';
+					}
+				}
 			}
 		}
-	});
-	
-	$('.addButton').css('background', 'url(' + NC.getContextPath() + '/img/icons/16/add.png) no-repeat 3px').css('padding-left', '24px');;
-	$('.spinner').css('background', 'url(' + NC.getContextPath() + '/img/ajax-loader-small.gif) no-repeat right');
-	
-	/*
-	 * Process all date fields that exist on the
-	 * current page.
-	 */
-	$('.dateInput').each(function(i, v) {
-		
-		$(v).datepicker({
-			dateFormat : 'yy-mm-dd',
-			firstDay : 1,
-			minDate : +0
-		});
-		
-		_support.loadMonths(function(data) { $(v).datepicker('option', 'monthNames', data); });
-		_support.loadWeekdays(function(data) { $(v).datepicker('option', 'dayNamesMin', data); });
-		
-		$(v).siblings('span').css('cursor', 'pointer').click(function(e) {
-			$(v).datepicker('show');
-		});
-		
-	});
-	
-	/*
-	 * Bind all time fields on the page
-	 */
-	$('.timeInput').each(function(i, v) {
-		_util.validateTimeField($(v));
-	});
-});
+		var renderFormForItem = function(my, item) {
+			var template;
+			$('#activityItemFormContainer').empty();
+			var collectAndValidateFunction;
+			if (item.activityItemTypeName == 'measurement') {
+				renderMeasurementForm(item);
+				collectAndValidateFunction = handleMeasurementForm;
+			} else if (item.activityItemTypeName == 'estimation') {
+				template = _.template($('#activityItemEstimationForm').html());
+				$('#activityItemFormContainer').append(template(item));
+				collectAndValidateFunction = handleEstimationForm;
+			} else if (item.activityItemTypeName == 'yesno') {
+				template = _.template($('#activityItemYesNoForm').html());
+				$('#activityItemFormContainer').append(template(item));
+				collectAndValidateFunction = handleYesNoForm;
+			} else if (item.activityItemTypeName == 'text') {
+				template = _.template($('#activityItemTextForm').html());
+				$('#activityItemFormContainer').append(template(item));
+				collectAndValidateFunction = handleTextForm;
+			}
+			$('#activityTypeContainer').hide('slide', {
+				direction : 'left'
+			}, 300);
+			$('#activityItemFormContainer').show('slide', {
+				direction : 'left'
+			}, 500);
+			$('#backButtonForm').on(
+					'click',
+					function() {
+						if (validateFormAndUpdateModel(
+								collectAndValidateFunction, item)) {
+							$('#activityItemFormContainer').hide('slide', {
+								direction : 'left'
+							}, 400);
+							$('#activityTypeContainer').show('slide', {
+								direction : 'left'
+							}, 400);
+							renderItems(my, activityTemplate);
+						}
+					});
 
+		}
 
+		var applyTemplate = function(formTemplate, item) {
+			template = _.template($('#' + formTemplate).html());
+			$('#activityItemFormContainer').append(template(item));
+		}
 
+		var renderMeasurementForm = function(item) {
+			applyTemplate('activityItemMeasurementForm', item);
+			$.each(typeOpts, function(i, v) {
+				if (item.valueType != null
+						&& item.valueType.code == v.attr('value')) {
+					v.attr('selected', 'selected');
+				}
+				$('#valueType').append(v);
+			});
+			$('#valueType').change(function(e) {
+				var val = $(this).val();
+				switch (val) {
+				case 'SINGLE_VALUE':
+					$('#measureValueIntervalOnly').hide();
+					break;
+				case 'INTERVAL':
+					$('#measureValueIntervalOnly').show();
+					break;
+				}
+			});
+			// Trigger the event handler
+			$('#valueType').change();
 
+			$.each(unitOpts, function(i, v) {
+				if (item.unit != null && item.unit.code == v.attr('value')) {
+					v.attr('selected', 'selected');
+				}
+				$('#measurementUnit').append(v);
+			});
 
+			if (item.alarm) {
+				$('#measurementAlarm').attr('checked', 'on');
+			}
+		}
 
+		var validateFormAndUpdateModel = function(handleFormFunction, item) {
+			NC.log('Collecting form values and validating.');
+			return handleFormFunction(item);
+		}
 
+		var handleMeasurementForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.valueTypeCode = $('#valueType option:selected').val();
+			collected.valueTypeValue = $('#valueType option:selected').text();
+			collected.measurementUnitCode = $(
+					'#measurementUnit option:selected').val();
+			collected.measurementUnitValue = $(
+					'#measurementUnit option:selected').text();
+			collected.alarm = $('#measurementAlarm:checked').val() == "on"
+			// Do some validation
+			item.name = collected.name;
+			item.unit.code = collected.measurementUnitCode;
+			item.unit.value = collected.measurementUnitValue;
+			item.valueType.code = collected.valueTypeCode;
+			item.valueType.value = collected.valueTypeValue;
+			item.alarm = collected.alarm;
+			return true
+		}
 
+		var handleEstimationForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.minScaleValue = $('#minScaleValue').val();
+			collected.maxScaleValue = $('#maxScaleValue').val();
+			collected.minScaleText = $('#minScaleText').val();
+			collected.maxScaleText = $('#maxScaleText').val();
+			// Do some validation
+			item.name = collected.name;
+			item.minScaleValue = collected.minScaleValue;
+			item.maxScaleValue = collected.maxScaleValue;
+			item.minScaleText = collected.minScaleText;
+			item.maxScaleText = collected.maxScaleText;
+			return true;
+		}
+
+		var handleYesNoForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.question = $('#yesNoQuestion').val();
+			// Do some validation
+			item.name = collected.name;
+			item.question = collected.question;
+			return true;
+		}
+
+		var handleTextForm = function(item) {
+			var collected = new Object();
+			collected.name = $('#activityItemName').val();
+			collected.label = $('#textLabel').val();
+			// Do some validation
+			item.name = collected.name;
+			item.label = collected.label;
+			return true;
+		}
+
+		var flash = function(something) {
+			something.animate({
+				'backgroundColor' : '#eee'
+			}, 100).animate({
+				'backgroundColor' : 'white'
+			}, 200);
+		}
+
+		var initMeasureValues = function(my) {
+			support.getMeasureValueTypes(function(data) {
+				$.each(data.data, function(i, v) {
+					typeOpts.push($('<option>').attr('value', v.code).html(
+							v.value));
+				});
+			});
+		}
+		var initUnitValues = function(my) {
+			support.getUnits(function(data) {
+				$.each(data.data, function(i, v) {
+					unitOpts.push($('<option>').attr('value', v.code).html(
+							v.value));
+				});
+			});
+		}
+
+		return my;
+	})()
+};

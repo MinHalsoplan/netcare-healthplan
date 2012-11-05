@@ -85,6 +85,13 @@ NC.Support = function() {
 			
 		},
 		
+		loadAccessLevels : function(selectElem) {
+			var url = '/support/accessLevels';
+			_loadOptions(url, function(data) {
+				_createOptions(data, selectElem);
+			});
+		},
+		
 		//
 		setSelectOptions : function(selectElement, options) {
 			_createOptions(options, selectElement);

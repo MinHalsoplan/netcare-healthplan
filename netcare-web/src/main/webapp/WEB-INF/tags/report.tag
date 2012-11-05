@@ -47,6 +47,11 @@
 				<input type="text" name="date" class="input-small" />&nbsp;-
 				<input type="text" name="time" class="input-mini" />				
 			</div>
+			
+			<!--  Space for measurement input -->
+			<table id="measurementTableId" class="table-condensed">
+				<tbody></tbody>
+			</table>
 
 			<div id="inputFields">
 				<!--  Space for measurement input -->

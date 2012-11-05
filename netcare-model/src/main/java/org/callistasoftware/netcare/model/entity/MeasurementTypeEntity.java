@@ -30,6 +30,9 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 	@Column(name = "unit")
 	private MeasureUnit unit;
 
+	@Column(name = "alarm_enabled")
+	private boolean alarmEnabled;
+
 	MeasurementTypeEntity() {
 	}
 
@@ -45,13 +48,14 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 	 * @return the entity.
 	 */
 	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name,
-			MeasurementValueType valueType, MeasureUnit unit, final boolean alarmEnabled) {
+			MeasurementValueType valueType, MeasureUnit unit, final boolean alarmEnabled, int seqno) {
 		MeasurementTypeEntity entity = new MeasurementTypeEntity();
 		entity.setActivityType(activityType);
 		entity.setName(name);
 		entity.setValueType(valueType);
 		entity.setUnit(unit);
 		entity.setAlarmEnabled(alarmEnabled);
+		entity.setSeqno(seqno);
 		activityType.addActivityItemType(entity);
 		return entity;
 	}
@@ -60,7 +64,7 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 		return this.valueType;
 	}
 
-	void setValueType(final MeasurementValueType valueType) {
+	public void setValueType(final MeasurementValueType valueType) {
 		this.valueType = valueType;
 	}
 
@@ -68,8 +72,15 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 		return unit;
 	}
 
-	void setUnit(MeasureUnit unit) {
+	public void setUnit(MeasureUnit unit) {
 		this.unit = unit;
 	}
 
+	public boolean isAlarmEnabled() {
+		return alarmEnabled;
+	}
+
+	public void setAlarmEnabled(boolean alarmEnabled) {
+		this.alarmEnabled = alarmEnabled;
+	}
 }

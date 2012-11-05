@@ -24,9 +24,9 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
-<sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
+<sec:authorize access="hasRole('CARE_ACTOR')" var="isCareActor"/>
 <c:choose>
-	<c:when test="${isAdmin}">
+	<c:when test="${isCareActor}">
 		<hp:admin-menu />
 	</c:when>
 	<c:otherwise>

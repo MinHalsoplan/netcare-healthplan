@@ -204,7 +204,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			rep.values = new Array();
 
 			public.performReport(id, rep, function(data, last) {
-				this.attr('disabled', data.rejected);
+				cbtn.attr('disabled', data.rejected);
 				if (_reportCallback != null) {
 					_reportCallback(data.definition.id, 0, last);
 				}
@@ -296,7 +296,7 @@ NC.PatientReport = function(tableId, shortVersion) {
 			});
 
 			$('#historyBoxId').click(function() {
-				showHistory($(this).is(':checked'));
+				public.showHistory($(this).is(':checked'));
 			});
 			
 			public.list();
@@ -320,7 +320,25 @@ NC.PatientReport = function(tableId, shortVersion) {
 			}, true);	
 		},
 				
+		list : function() {
+			_ajax.get('/patient/schema', function(data) {
+				/* Empty the result list */
+				$('#' + tableId + ' tbody > tr').empty();
+				_render(data.data);
+				public.showHistory(_shortVersion);
+				_updateDescription();
+			}, false);
+		},
 
+		showHistory : function(show) {
+			$.each(_dueActivities, function(index, value) {
+				if (show || (value.reported == null)) {
+					$('#act-' + value.id).show();
+				} else {
+					$('#act-' + value.id).hide();
+				}
+			});
+		},
 		
 		getCaptions : function() {
 			return _captions;

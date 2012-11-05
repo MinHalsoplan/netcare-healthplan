@@ -25,8 +25,10 @@ NC.Util = function() {
 	var _loadCaptions = function() {
 		var _support = new NC.Support();
 		
-		_support.loadCaptions('util', ['week', 'freq0', 'freq1', 'freq2', 'freq3', 
-		                               'freq4', 'freq5', 'every', 'newEvents'], 
+		_support.loadCaptions('util', ['week', 'freq0', 'freq1', 'freq2', 'freq3',
+		                               'freq4', 'freq5', 'every', 'meter', 'minute', 
+		                               'step', 'newEvents', 'kilogram', 'gram', 'pressure_mmhg',
+		                               'flow_mlmin', 'milliliter', 'liter'],
 		                               function(data) {
 			_captions = data;
 			NC.log('Localized captions for util loaded.');
@@ -237,6 +239,7 @@ NC.Util = function() {
 		validateFieldNotEmpty : function(input) {
 			if (input.val() == '' || input.val() == null || input.val() == undefined) {
 				var id = input.attr('id');
+				var existingText = $('label[for="' + id + '"]').html();
 				$('label[for="' + id + '"]').parent().addClass('error');
 				return false;
 			}

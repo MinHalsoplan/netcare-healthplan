@@ -19,15 +19,13 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.EstimationDefinition;
 import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
-import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 
 public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
 
 	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
 		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
 		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(EstimationTypeImpl.newFromEntity((EstimationTypeEntity) entity
-				.getActivityItemType()));
+		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
 		return estimationDefinition;
 	}
 }

@@ -17,10 +17,14 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.core.api.Role;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -39,12 +43,16 @@ public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActor
 	
 	private CareUnit careUnit;
 	
+	private Set<Role> roles;
+	
 	public CareActorBaseViewImpl() {
 		super(null, null, null);
+		roles = new HashSet<Role>();
 	}
 	
 	public CareActorBaseViewImpl(final Long id, final String name, final String surname) {
 		super(id, name, surname);
+		roles = new HashSet<Role>();
 	}
 	
 	public static CareActorBaseView newFromEntity(final CareActorEntity entity) {
@@ -52,6 +60,10 @@ public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActor
 		ca.setHsaId(entity.getHsaId());
 		ca.setCareUnit(CareUnitImpl.newFromEntity(entity.getCareUnit()));
 
+		for (final RoleEntity r : entity.getRoles()) {
+			ca.getRoles().add(RoleImpl.newFromEntity(r));
+		}
+		
 		return ca;
 	}
 	
@@ -80,17 +92,21 @@ public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActor
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Role.getCareActorRoleSet();
+		return getRoles();
 	}
 
 	@Override
 	public String getPassword() {
 		return null;
-		//throw new UnsupportedOperationException("Care givers should never use basic authentication. This method is most likely called from the mobile authentication manager");
 	}
 
 	@Override
 	public String getUsername() {
 		return this.getHsaId();
+	}
+
+	@Override
+	public Set<Role> getRoles() {
+		return this.roles;
 	}
 }

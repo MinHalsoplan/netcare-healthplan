@@ -17,38 +17,169 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- healthplan:templates -->
-<script id="johannesid" type="text/template" class="johannes">
-							<li id="item2" class="item withNavigation" style="cursor: pointer;">
-								<div class="containerBoxShadow paperSlip">
-									<div class="top">
-										<div class="wrap"></div>
-										<div class="left"></div>
-										<div class="right"></div>
-									</div>
-									<div class="wrap">
-										<div class="boxShadowBody">
-											<div class="listItemBody">
-												<div class="listItemBase">
-													<div class="mainBody">
-														<h4 class="titel">Mätvärde</h4>
-														<div class="subRow">Vikt | Intervall | kg</div>
-													</div>
-												</div>
-												<div class="listItemMoveUp"></div>
-												<div class="listItemMoveDown"></div>
-												<div class="listItemDelete"></div>
-												<a href="javascript:showYesNoContainer();" class="itemNavigation assistiveText">Uppdatera
-													aktivitet</a>
-											</div>
-										</div>
-									</div>
-									<div class="bottom">
-										<div class="wrap"></div>
-										<div class="left"></div>
-										<div class="right"></div>
-									</div>
-								</div>
-							</li>
+<script id="activityTemplate" type="text/template">
+<li id="liActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item>
+<div id="item-{{id}}" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span6">
+			<h4 class="titel">{{name}}</h4>
+			<div class="subRow">{{category.name}}</div>
+		</div>
+		<div class="mainBody actionBody span6"></div>
+	</div>
+</div>
+<a href="#" class="itemNavigation assistiveText"></a>
+</mvk:touch-item>
+</li>
 </script>
+<%--
+	Must be included within a touch-item and inserted
+	after a.itemNavigation
+ --%>
+<script id="itemNote" type="text/template">
+<div class="itemStateText">
+	<div class="wrapper">{{value}}</div>
+</div>
+</script>
+
+<%-- This template is used to show an activity type item --%>
+<script id="activityItemTemplate" type="text/template">
+<li id="liActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item>
+<div id="item{{id}}" class="listItemBase">
+	<div class="mainBody">
+		<h4 class="titel">{{name}}</h4>
+		<div class="subRow">{{details}}</div>
+	</div>
+	<div id="item{{id}}moveUp" class="listItemMoveUp"></div>
+	<div id="item{{id}}moveDown" class="listItemMoveDown"></div>
+	<div id="item{{id}}delete" class="listItemDelete"></div>
+</div>
+<a id="item{{id}}showDetails" href="#" class="itemNavigation assistiveText"></a>
+</mvk:touch-item>
+</li>
+</script>
+
+<%-- This template is used to show an measurement item form --%>
+
+<script id="activityItemMeasurementForm" type="text/template">
+<h2>
+	<spring:message code="template.activity.measurement.title" />
+</h2>
+<p>
+	<span class="label label-info"><spring:message code="information" /></span>
+	<spring:message code="template.activity.measurement.description" />
+</p>
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls controls-row">
+	<label for="valueType"><spring:message code="measureValue.type" /></label>
+	<select name="valueType" id="valueType" class="span2"></select>
+	<label for="measurementUnit"><spring:message code="measureValue.unit" /></label>
+	<select name="measurementUnit" id="measurementUnit" class="span3"></select>
+</div>
+<div id="measureValueIntervalOnly" class="controls" style="display:none;">
+	<label for="measurementAlarm"><spring:message code="measureValue.alarm" /></label>
+	<input type="checkbox" name="measurementAlarm" id="measurementAlarm"></input>
+	&nbsp;<spring:message code="measureValue.alarm.text" />
+</div>
+<div class="form-actions" style="padding-top:20px;">
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+</div>
+</script>
+
+<%-- This template is used to show an estimation item form --%>
+
+<script id="activityItemEstimationForm" type="text/template">
+<h2>
+	<spring:message code="template.activity.estimation.title" />
+</h2>
+<p>
+	<span class="label label-info"><spring:message code="information" /></span>
+	<spring:message code="template.activity.estimation.description" />
+</p>
+<div class="control-group">
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls">
+	<label><spring:message code="estimation.scale.label" /></label>
+</div>
+<div class="controls controls-row">
+	<spring:message code="estimation.lowValue.label" />
+	<input type="text" name="minScaleValue" id="minScaleValue" class="span1" value="{{minScaleValue}}"></input>
+	<span style="padding-left:20px;"><spring:message code="estimation.highValue.label" /></span>
+	<input type="text" name="maxScaleValue" id="maxScaleValue" class="span1" value="{{maxScaleValue}}"></input>
+</div>
+<div class="controls">
+	<label for="minScaleText"><spring:message code="estimation.lowText.label" /></label>
+	<input type="text" class="span6" name="minScaleText" id="minScaleText" value="{{minScaleText}}"></input>
+</div>
+<div class="controls">
+	<label for="maxScaleText"><spring:message code="estimation.highText.label" /></label>
+	<input type="text" class="span6" name="maxScaleText" id="maxScaleText" value="{{maxScaleText}}"></input>
+</div>
+<div class="span12" style="padding-top:20px;">
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+</div>
+</div>
+</script>
+
+<%-- This template is used to show an yesno item form --%>
+
+<script id="activityItemYesNoForm" type="text/template">
+<h2>
+	<spring:message code="template.activity.yesno.title" />
+</h2>
+<p>
+	<span class="label label-info"><spring:message code="information" /></span>
+	<spring:message code="template.activity.yesno.description" />
+</p>
+<div class="control-group">
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls">
+	<label for="yesNoQuestion"><spring:message code="template.activity.yesno.question.label" /></label>
+	<textarea id="yesNoQuestion" rows="2" class="span6">{{question}}</textarea>
+</div>
+<div class="span12" style="padding-top:20px;">
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+</div>
+</div>
+</script>
+
+<%-- This template is used to show an text item form --%>
+
+<script id="activityItemTextForm" type="text/template">
+<h2>
+	<spring:message code="template.activity.text.title" />
+</h2>
+<p>
+	<span class="label label-info"><spring:message code="information" /></span>
+	<spring:message code="template.activity.text.description" />
+</p>
+<div class="control-group">
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls">
+	<label for="textLabel"><spring:message code="template.activity.text.label.label" /></label>
+	<textarea id="textLabel" rows="2" class="span6">{{label}}</textarea>
+</div>
+<div class="span12" style="padding-top:20px;">
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+</div>
+</div>
+</script>
+
 <!-- healthplan:templates / -->

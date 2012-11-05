@@ -22,5 +22,5 @@ package org.callistasoftware.netcare.model.entity;
  * national.
  */
 public enum AccessLevel {
-	NATIONAL, COUNTY_COUNCIL, CAREUNIT;
+	CAREUNIT, COUNTY_COUNCIL, NATIONAL;
 }

@@ -23,21 +23,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
-import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.CareActorRepository;
-import org.callistasoftware.netcare.core.repository.CareUnitRepository;
-import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnit;
@@ -57,39 +51,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 	private ActivityTypeRepository repo;
 
 	@Autowired
-	private CareUnitRepository cuRepo;
-
-	@Autowired
-	private CareActorRepository careActorRepo;
-
-	@Autowired
 	private ActivityTypeService service;
-
-	@Autowired
-	private CountyCouncilRepository ccRepo;
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testLoadAllActivityTypes() throws Exception {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
-		final CareUnitEntity savedCu = cuRepo.save(cu);
-		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-
-		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Dr Marcus", "", "hsa-id-cg", cu));
-		final CareActorBaseView cab = CareActorBaseViewImpl.newFromEntity(ca);
-
-		this.runAs(cab);
-
-		for (int i = 0; i < 10; i++) {
-			this.repo.save(ActivityTypeEntity.newEntity("Type-" + i, cat, savedCu, AccessLevel.CAREUNIT));
-		}
-
-		final ServiceResult<ActivityType[]> result = this.service.loadAllActivityTypes(savedCu.getHsaId());
-		assertTrue(result.isSuccess());
-		assertEquals(10, result.getData().length);
-	}
 
 	@Test
 	@Transactional
@@ -125,23 +87,89 @@ public class ActivityTypeServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testGetActivityType() throws Exception {
 		// First create an entity in the database
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
-		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
+		final CountyCouncilEntity cc = getCountyCouncilRepository().save(CountyCouncilEntity.newEntity("SLL"));
+		final CareUnitEntity cu = getCareUnitRepository().save(CareUnitEntity.newEntity("hsa-id", cc));
 
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Tempkategori"));
 		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa", cat, cu, AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 1);
 		final ActivityTypeEntity savedEnt = this.repo.save(ent);
 		assertNotNull(savedEnt);
 
 		String id = savedEnt.getId().toString();
-		
+
 		// Then the actual test:
 		ServiceResult<ActivityType> result = this.service.getActivityType(id);
 		assertNotNull("Result should not be null", result);
 		assertTrue(result.isSuccess());
 		assertEquals("Springa", result.getData().getName());
 
+	}
+
+	@Test
+	@Rollback(true)
+	public void searchTemplates() {
+
+		authenticatedUser("hsa-care-actor", "hsa-care-unit", "SLL");
+
+		final CountyCouncilEntity cc = getCountyCouncilRepository().saveAndFlush(CountyCouncilEntity.newEntity("LJ"));
+		
+		final CareUnitEntity cu = getCareUnitRepository().findByHsaId("hsa-care-unit");
+		final CareUnitEntity cu2 = getCareUnitRepository().saveAndFlush(CareUnitEntity.newEntity("hsa-care-unit-2", cc));
+
+		final ActivityCategoryEntity cat = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori"));
+		final ActivityCategoryEntity cat2 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori2"));
+		final ActivityCategoryEntity cat3 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori3"));
+		final ActivityCategoryEntity cat4 = this.catRepo.saveAndFlush(ActivityCategoryEntity.newEntity("Tempkategori4"));
+		
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Springa1", cat, cu, AccessLevel.CAREUNIT);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
+
+		final ActivityTypeEntity savedEnt = this.repo.saveAndFlush(ent);
+		assertNotNull(savedEnt);
+		
+		final ActivityTypeEntity ent2 = ActivityTypeEntity.newEntity("Springa2", cat2, cu, AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
+
+		
+		final ActivityTypeEntity savedEnt2 = this.repo.saveAndFlush(ent2);
+		assertNotNull(savedEnt2);
+
+		final ActivityTypeEntity ent3 = ActivityTypeEntity.newEntity("Springa3", cat3, cu2, AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
+		
+		final ActivityTypeEntity savedEnt3 = this.repo.saveAndFlush(ent3);
+		assertNotNull(savedEnt3);
+		
+		final ActivityTypeEntity ent4 = ActivityTypeEntity.newEntity("Springa4", cat4, cu, AccessLevel.NATIONAL);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 2);
+	
+		final ActivityTypeEntity savedEnt4 = this.repo.saveAndFlush(ent4);
+		assertNotNull(savedEnt4);
+		
+		ServiceResult<ActivityType[]> result = this.service.searchForActivityTypes("ring", "all", "all");
+		assertEquals(3, result.getData().length);
+		
+		result = this.service.searchForActivityTypes("", String.valueOf(cat.getId()), "all");
+		assertEquals(1, result.getData().length);
+
+		result = this.service.searchForActivityTypes("", "all", AccessLevel.COUNTY_COUNCIL.name());
+		assertEquals(1, result.getData().length);
+		
+		result = this.service.searchForActivityTypes("", "all", AccessLevel.NATIONAL.name());
+		assertEquals(1, result.getData().length);
+		
+		/*
+		 * Test with another user
+		 */
+		authenticatedUser("hsa-care-actor-2", "hsa-care-unit-2", "LJ");
+		
+		result = this.service.searchForActivityTypes("ring", "all", "all");
+		assertEquals(2, result.getData().length);
 	}
 }
