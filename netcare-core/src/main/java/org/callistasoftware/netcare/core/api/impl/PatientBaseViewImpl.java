@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -85,7 +86,18 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Role.getPatientRoleSet();
+		return Collections.singletonList(new GrantedAuthority() {
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getAuthority() {
+				return "PATIENT";
+			}
+		});
 	}
 
 	@Override

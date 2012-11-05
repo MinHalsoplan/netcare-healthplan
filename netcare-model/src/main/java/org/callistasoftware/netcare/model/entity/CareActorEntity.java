@@ -16,10 +16,14 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -31,21 +35,28 @@ public class CareActorEntity extends UserEntity {
 
 	@Column(name="hsa_id", length=64, nullable=false, unique=true)
 	private String hsaId;
-		
+	
+	@ManyToMany
+	private Set<RoleEntity> roles;
+	
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
 	@JoinColumn(name="care_unit_id")
 	private CareUnitEntity careUnit;
 	
-	CareActorEntity() {}
+	CareActorEntity() {
+		this.roles = new HashSet<RoleEntity>();
+	}
 	
 	CareActorEntity(final String firstName, final String surName) {
 		super(firstName, surName);
+		this.roles = new HashSet<RoleEntity>();
 	}
 	
 	CareActorEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
 		this(firstName, surName);
 		this.setHsaId(hsaId);
 		this.setCareUnit(careUnit);
+		this.roles = new HashSet<RoleEntity>();
 	}
 
 	public static CareActorEntity newEntity(final String firstName, final String surName, final String hsaId, final CareUnitEntity careUnit) {
@@ -66,6 +77,22 @@ public class CareActorEntity extends UserEntity {
 	
 	public void setCareUnit(final CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
+	}
+	
+	public Set<RoleEntity> getRoles() {
+		return roles;
+	}
+	
+	void setRoles(Set<RoleEntity> roles) {
+		this.roles = roles;
+	}
+	
+	public void addRole(final RoleEntity role) {
+		this.roles.add(role);
+	}
+	
+	public void removeRole(final RoleEntity role) {
+		this.roles.remove(role);
 	}
 
 	@Override

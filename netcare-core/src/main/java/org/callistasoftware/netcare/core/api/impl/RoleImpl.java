@@ -14,28 +14,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.core.api.impl;
 
-import java.util.Set;
+import org.callistasoftware.netcare.core.api.Role;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 
-
-public interface CareActorBaseView extends UserBaseView {
+public class RoleImpl implements Role {
 
 	/**
-	 * Get the hsa id for the care giver
-	 * @return
+	 * 
 	 */
-	String getHsaId();
+	private static final long serialVersionUID = 1L;
+	private String dn;
 	
-	/**
-	 * Get the care unit for this care giver
-	 * @return
-	 */
-	CareUnit getCareUnit();
+	RoleImpl(final String dn) {
+		this.dn = dn;
+	}
 	
-	/**
-	 * The role's of the care actor
-	 * @return
-	 */
-	Set<Role> getRoles();
+	public static Role newFromEntity(final RoleEntity entity) {
+		return new RoleImpl(entity.getDn());
+	}
+
+	@Override
+	public String getDn() {
+		return this.dn;
+	}
+
+	@Override
+	public String getAuthority() {
+		return getDn();
+	}
+
 }

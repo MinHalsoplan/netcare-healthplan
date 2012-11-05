@@ -23,10 +23,12 @@ import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
 import org.callistasoftware.netcare.mvk.authentication.service.api.PreAuthenticationCallback;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,9 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 	@Autowired
 	private PatientRepository pRepo;
 	
+	@Autowired
+	private RoleRepository roleRepo;
+	
 	@Override
 	public UserDetails createMissingUser(AuthenticationResult preAuthenticated) {
 		getLog().info("User {} has not been here before, create the user...", preAuthenticated.getUsername());
@@ -63,8 +68,13 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 				cu = this.createCareUnit(careUnit, preAuthenticated.getCareUnitName());
 			}
 			
+			getLog().debug("Lookup care actor role...");
+			final RoleEntity caRole = roleRepo.findByDn("CARE_ACTOR");
+			
 			final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("system-generated-name", "system-generated-name", preAuthenticated.getUsername(), cu));
-			getLog().debug("Created care giver {}", ca.getFirstName());
+			ca.addRole(caRole);
+			
+			getLog().debug("Created care giver {} {}", ca.getFirstName(), ca.getSurName());
 			
 			return CareActorBaseViewImpl.newFromEntity(ca);
 		} else {

@@ -14,28 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.core.repository;
 
-import java.util.Set;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-
-public interface CareActorBaseView extends UserBaseView {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
 	/**
-	 * Get the hsa id for the care giver
-	 * @return
+	 * Find role by its distinguished name
+	 * @param dn
 	 */
-	String getHsaId();
-	
-	/**
-	 * Get the care unit for this care giver
-	 * @return
-	 */
-	CareUnit getCareUnit();
-	
-	/**
-	 * The role's of the care actor
-	 * @return
-	 */
-	Set<Role> getRoles();
+	RoleEntity findByDn(final String dn);
 }

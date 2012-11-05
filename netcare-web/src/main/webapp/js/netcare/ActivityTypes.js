@@ -20,7 +20,7 @@ NC.ActivityCategories = function() {
 	
 	var public = {
 		load : function(callback) {
-			_ajax.get('/activityCategory/load', callback);
+			_ajax.get('/categories', callback);
 		},
 		
 		loadAsOptions : function(selectElem) {
@@ -37,7 +37,7 @@ NC.ActivityCategories = function() {
 		},
 		
 		create : function(formData, callback) {
-			_ajax.post('/activityCategory/create', formData, callback, true);
+			_ajax.post('/categories/', formData, callback, true);
 		}
 	};
 	
@@ -53,7 +53,7 @@ NC.ActivityTypes = function() {
 		},
 		
 		search : function(searchString, callback) {
-			_ajax.getWithParams('/templates/', {text : searchString}, callback);
+			_ajax.getWithParams('/templates', {text : searchString}, callback);
 		},
 		
 		create : function(formData, callback) {

@@ -30,6 +30,7 @@ import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
@@ -52,6 +53,7 @@ import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.slf4j.Logger;
@@ -102,11 +104,14 @@ public final class WebUtil {
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
+		final RoleRepository roleRepo = wc.getBean(RoleRepository.class);
 
 		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
+		
+		final RoleEntity careActorRole = roleRepo.save(RoleEntity.newRole("CARE_ACTOR"));
 
 		final CountyCouncilEntity jkpg = ccRepo.save(CountyCouncilEntity.newEntity("Landstinget i Jönköpings län"));
 
@@ -123,6 +128,7 @@ public final class WebUtil {
 		atRepo.flush();
 
 		final CareActorEntity ca1 = CareActorEntity.newEntity("Test", "Läkare", careActorHsa, cu);
+		ca1.addRole(careActorRole);
 		careActorRepo.save(ca1);
 		careActorRepo.flush();
 
@@ -170,7 +176,7 @@ public final class WebUtil {
 		}
 		
 		final TestDataHelper td = new TestDataHelper(sc);
-
+		
 		/*
 		 * County councils
 		 */
@@ -237,9 +243,11 @@ public final class WebUtil {
 
 		
 		final CareActorEntity ca1 = CareActorEntity.newEntity("Peter", "Abrahamsson", careActorHsa, vbott_cu_2);
+		ca1.addRole(td.newCareActorRole());
 		careActorRepo.saveAndFlush(ca1);
 
 		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", jkpg_cu_1);
+		ca.addRole(td.newCareActorRole());
 		careActorRepo.saveAndFlush(ca);
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");

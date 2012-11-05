@@ -23,7 +23,7 @@
 }
 
 /*** Choose bars ***/
-#chooseName h4,#chooseActivities h4,#chooseSave h4 {
+#activityTypeContainer h4 {
 	font-weight: normal;
 }
 
@@ -32,7 +32,7 @@
 	padding-bottom: 20px;
 }
 
-#chooseName,#chooseActivities,#chooseSave {
+#chooseName,#chooseActivities,#chooseSave,#selectCategory {
 	border-top: 1px #cccccc dotted;
 	padding-left: 5px;
 	width: 94%;

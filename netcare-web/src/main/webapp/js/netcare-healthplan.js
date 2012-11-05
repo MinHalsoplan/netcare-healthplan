@@ -214,9 +214,17 @@ var NC_MODULE = {
 
 			var that = this;
 			this.params = params
+			
+			my.loadCategories(that);
+			
 			my.loadTemplate(that, params.templateId);
 			initMeasureValues(that);
 			initUnitValues(that);
+		};
+		
+		my.loadCategories = function(my) {
+			var ac = new NC.ActivityCategories();
+			ac.loadAsOptions($('#categories'));
 		};
 
 		my.loadTemplate = function(my, templateId) {
@@ -237,6 +245,11 @@ var NC_MODULE = {
 								NC.log('Save button clicked');
 								activityTemplate.name = $('#activityTypeName')
 										.val();
+								
+								// Category
+								activityTemplate.category = new Object();
+								activityTemplate.category.id = $('#categories option:selected').val();
+								
 								for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
 									delete activityTemplate.activityItems[i].details;
 								}

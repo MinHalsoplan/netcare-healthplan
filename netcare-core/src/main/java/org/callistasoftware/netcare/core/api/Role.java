@@ -16,26 +16,13 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
 
-
-public interface CareActorBaseView extends UserBaseView {
-
-	/**
-	 * Get the hsa id for the care giver
-	 * @return
-	 */
-	String getHsaId();
+public interface Role extends GrantedAuthority {
 	
 	/**
-	 * Get the care unit for this care giver
+	 * The role's distinguished name
 	 * @return
 	 */
-	CareUnit getCareUnit();
-	
-	/**
-	 * The role's of the care actor
-	 * @return
-	 */
-	Set<Role> getRoles();
+	String getDn();
 }

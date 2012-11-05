@@ -63,9 +63,13 @@
 						</h4>
 						<input id="activityTypeName" name="activityTypeName" type="text" size="32">
 					</div>
+					<div id="selectCategory">
+						<h4>2. <spring:message code="template.select.category" /></h4>
+						<select id="categories" name="categories"></select>
+					</div>
 					<div id="chooseActivities">
 						<h4>
-							2.
+							3.
 							<spring:message code="template.select.activities" />
 						</h4>
 						<div id="activityTypeWrapper" style="background-color:white; padding: 3px;">
@@ -82,7 +86,7 @@
 					</div>
 					<div id="chooseSave">
 						<h4>
-							3.
+							4.
 							<spring:message code="template.select.saveTemplate" />
 						</h4>
 						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">

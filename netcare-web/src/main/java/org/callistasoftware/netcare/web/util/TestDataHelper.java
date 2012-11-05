@@ -21,8 +21,10 @@ import javax.servlet.ServletContext;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
+import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -31,6 +33,7 @@ public class TestDataHelper {
 	private CareActorRepository careActorRepository;
 	private CareUnitRepository careUnitRepository;
 	private CountyCouncilRepository countyCouncilRepository;
+	private RoleRepository roleRepository;
 	
 	public TestDataHelper() {
 		
@@ -41,6 +44,7 @@ public class TestDataHelper {
 		setCareActorRepository(wc.getBean(CareActorRepository.class));
 		setCareUnitRepository(wc.getBean(CareUnitRepository.class));
 		setCountyCouncilRepository(wc.getBean(CountyCouncilRepository.class));
+		setRoleRepository(wc.getBean(RoleRepository.class));
 	}
 	
 	public void setCareActorRepository(CareActorRepository careActorRepository) {
@@ -66,6 +70,23 @@ public class TestDataHelper {
 	
 	public CountyCouncilRepository getCountyCouncilRepository() {
 		return countyCouncilRepository;
+	}
+	
+	public RoleRepository getRoleRepository() {
+		return roleRepository;
+	}
+	
+	public void setRoleRepository(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
+	}
+	
+	public RoleEntity newCareActorRole() {
+		RoleEntity r = getRoleRepository().findByDn("CARE_ACTOR");
+		if (r == null) {
+			r = getRoleRepository().saveAndFlush(RoleEntity.newRole("CARE_ACTOR"));
+		}
+		
+		return r;
 	}
 	
 	public CountyCouncilEntity newCountyCouncil(final String name) {

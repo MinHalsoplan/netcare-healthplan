@@ -42,6 +42,7 @@
 		<class>org.callistasoftware.netcare.model.entity.MeasurementEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.MeasurementTypeEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity</class>
+		<class>org.callistasoftware.netcare.model.entity.RoleEntity</class>
 	</persistence-unit>
 
 </persistence>
