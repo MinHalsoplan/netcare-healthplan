@@ -65,6 +65,10 @@ var NC_MODULE = {
 				_category = "all";
 				_level = "all";
 			}
+			
+			NC.log('Care Actor: ' + params.isCareActor);
+			NC.log('County Actor: ' + params.isCountyActor);
+			NC.log('Nation Actor: ' + params.isNationActor);
 
 			my.loadCategories();
 			my.loadLevels();
@@ -120,6 +124,16 @@ var NC_MODULE = {
 			$('select[name="level"]').prepend(opt);
 		};
 		
+		my.buildDeleteIcon = function(my, template) {
+			$('#item-' + template.id).find('.actionBody').append(
+				$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					my.deleteTemplate(my, template.id);
+				})
+			);
+		};
+		
 		my.buildTemplateItem = function(my, template, insertAfter) {
 			var t = _.template($('#activityTemplate').html());
 			var dom = t(template);
@@ -145,13 +159,20 @@ var NC_MODULE = {
 			);
 			
 			if (!template.inUse) {
-				$('#item-' + template.id).find('.actionBody').append(
-					$('<div>').addClass('mvk-icon delete').bind('click', function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						my.deleteTemplate(my, template.id);
-					})
-				);
+				if (template.accessLevel.code == "CAREUNIT" && my.params.isCareActor == "true") {
+					NC.log('Template has care unit level and we have care actor role. Show delete icon');
+					my.buildDeleteIcon(my, template);
+				}
+				
+				if (template.accessLevel.code == "COUNTY_COUNCIL" && my.params.isCountyActor == "true") {
+					NC.log('Template has county level and we have county role. Show delete icon');
+					my.buildDeleteIcon(my, template);
+				}
+				
+				if (template.accessLevel.code == "NATIONAL" && my.params.isNationActor == "true") {
+					NC.log('Template has nation level and we have nation role. Show delete icon');
+					my.buildDeleteIcon(my, template);
+				}
 			}
 			
 			$('#item-' + template.id).live('click', function() {

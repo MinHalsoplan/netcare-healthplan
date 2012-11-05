@@ -30,11 +30,17 @@
 <hp:view>
 	<hp:viewHeader>
 		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />
+		<sec:authorize access="hasRole('CARE_ACTOR')" var="isCareActor" />
+		<sec:authorize access="hasRole('COUNTY_ADMIN')" var="isCountyActor" />
+		<sec:authorize access="hasRole('NATION_ADMIN')" var="isNationActor" />
 		<hp:templates />
 		<script type="text/javascript">
 			$(document).ready(function() {
 				var params = {
-					hsaId : '<c:out value="${currentHsaId}" />'
+					hsaId : '<c:out value="${currentHsaId}" />',
+					isCareActor : '<c:out value="${isCareActor}" />',
+					isCountyActor : '<c:out value="${isCountyActor}" />',
+					isNationActor : '<c:out value="${isNationActor}" />'
 				};
 				
 				NC_MODULE.GLOBAL.init();
