@@ -27,16 +27,22 @@
 	font-weight: normal;
 }
 
+#template > div {
+	border-top: 1px #cccccc dotted;
+	padding-left: 5px;
+	width: 94%;
+}
+
 #chooseSave h4 {
 	margin-bottom: 0;
 	padding-bottom: 20px;
 }
 
-#chooseName,#chooseActivities,#chooseSave,#selectCategory {
+/*#chooseName,#chooseActivities,#chooseSave,#selectCategory {
 	border-top: 1px #cccccc dotted;
 	padding-left: 5px;
 	width: 94%;
-}
+}*/
 
 #chooseName {
 	border-top: none;

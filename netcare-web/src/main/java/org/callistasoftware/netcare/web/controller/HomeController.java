@@ -125,6 +125,13 @@ public class HomeController extends ControllerSupport {
 		return "admin/template";
 	}
 
+	@RequestMapping(value = "/admin/template", method = RequestMethod.GET)
+	public String newTemplate(Model model) {
+		log.info("Creating new activity type ");
+		model.addAttribute("currentId", -1);
+		return "admin/template";
+	}
+
 	@RequestMapping(value = "/admin/activity/list", method = RequestMethod.GET)
 	public String displayReportedActivities() {
 		return "admin/reportedActivities";

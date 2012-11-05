@@ -14,18 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api.impl;
+package org.callistasoftware.netcare.core.api;
 
-import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.EstimationDefinition;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+public interface YesNoDefinition extends ActivityItemValuesDefinition {
 
-public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
-
-	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
-		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
-		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
-		return estimationDefinition;
-	}
 }

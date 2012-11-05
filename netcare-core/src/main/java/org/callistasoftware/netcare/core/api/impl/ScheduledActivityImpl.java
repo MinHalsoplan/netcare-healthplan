@@ -31,6 +31,8 @@ import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 public class ScheduledActivityImpl implements ScheduledActivity {
@@ -63,8 +65,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		ScheduledActivityImpl scheduledActivity = new ScheduledActivityImpl();
 
 		scheduledActivity.id = entity.getId();
-		scheduledActivity.activityDefinition = ActivityDefinitionImpl
-				.newFromEntity(entity.getActivityDefinitionEntity());
+		scheduledActivity.activityDefinition = ActivityDefinitionImpl.newFromEntity(entity
+				.getActivityDefinitionEntity());
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(entity.getScheduledTime());
@@ -93,9 +95,14 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 			if (activityItemValuesEntity instanceof MeasurementEntity) {
 				scheduledActivity.activityItemValues[i] = MeasurementImpl
 						.newFromEntity((MeasurementEntity) activityItemValuesEntity);
-			} else {
+			} else if (activityItemValuesEntity instanceof EstimationEntity) {
 				scheduledActivity.activityItemValues[i] = EstimationImpl
 						.newFromEntity((EstimationEntity) activityItemValuesEntity);
+			} else if (activityItemValuesEntity instanceof YesNoEntity) {
+				scheduledActivity.activityItemValues[i] = YesNoImpl
+						.newFromEntity((YesNoEntity) activityItemValuesEntity);
+			} else if (activityItemValuesEntity instanceof TextEntity) {
+				scheduledActivity.activityItemValues[i] = TextImpl.newFromEntity((TextEntity) activityItemValuesEntity);
 			}
 		}
 		scheduledActivity.rejected = entity.isRejected();

@@ -16,16 +16,29 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
-import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.EstimationDefinition;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+import org.callistasoftware.netcare.core.api.Text;
+import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.TextEntity;
 
-public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
+public class TextImpl extends ActivityItemValuesImpl implements Text {
 
-	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
-		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
-		estimationDefinition.setId(entity.getId());
-		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
-		return estimationDefinition;
+	private String textComment;
+
+	public static Text newFromEntity(TextEntity entity) {
+		TextImpl yesno = new TextImpl();
+		yesno.setId(entity.getId());
+		yesno.setDefinition(TextDefinitionImpl.newFromEntity((TextDefinitionEntity) entity
+				.getActivityItemDefinitionEntity()));
+		yesno.textComment = entity.getTextComment();
+		return yesno;
+	}
+
+	@Override
+	public String getTextComment() {
+		return this.textComment;
+	}
+
+	public void setTextComment(String textComment) {
+		this.textComment = textComment;
 	}
 }

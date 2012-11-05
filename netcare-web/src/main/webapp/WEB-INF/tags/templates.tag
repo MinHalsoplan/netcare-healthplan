@@ -21,6 +21,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- healthplan:templates -->
 <script id="activityTemplate" type="text/template">
+<li id="liActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
 <mvk:touch-item>
 <div id="item-{{id}}" class="listItemBase">
 	<div class="row-fluid">
@@ -33,6 +34,7 @@
 </div>
 <a href="#" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
+</li>
 </script>
 <%--
 	Must be included within a touch-item and inserted
@@ -133,7 +135,6 @@
 <%-- This template is used to show an yesno item form --%>
 
 <script id="activityItemYesNoForm" type="text/template">
-<section id="head">
 <h2>
 	<spring:message code="template.activity.yesno.title" />
 </h2>
@@ -141,21 +142,24 @@
 	<span class="label label-info"><spring:message code="information" /></span>
 	<spring:message code="template.activity.yesno.description" />
 </p>
-</section>
-<section id="formSection">
-<h4>
-	<spring:message code="template.activity.yesno.field.label" />
-	:
-</h4>
-<textarea id="questionId" rows="2" class="span6"></textarea>
-</section>
-<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Tillbaka</button>
+<div class="control-group">
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls">
+	<label for="yesNoQuestion"><spring:message code="template.activity.yesno.question.label" /></label>
+	<textarea id="yesNoQuestion" rows="2" class="span6">{{question}}</textarea>
+</div>
+<div class="span12" style="padding-top:20px;">
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+</div>
+</div>
 </script>
 
 <%-- This template is used to show an text item form --%>
 
 <script id="activityItemTextForm" type="text/template">
-<section id="head">
 <h2>
 	<spring:message code="template.activity.text.title" />
 </h2>
@@ -163,15 +167,19 @@
 	<span class="label label-info"><spring:message code="information" /></span>
 	<spring:message code="template.activity.text.description" />
 </p>
-</section>
-<section id="formSection">
-<h4>
-	<spring:message code="template.activity.yesno.field.label" />
-	:
-</h4>
-<textarea id="questionId" rows="2" class="span6"></textarea>
-</section>
-<button onclick="showActivityTypeContainer();" class="btn btn-info">&lt;&lt; Tillbaka</button>
+<div class="control-group">
+<div class="controls">
+	<label for="activityItemName"><spring:message code="template.activity.activityItemName.field.label" /></label>
+	<input type="text" class="span6" name="activityItemName" id="activityItemName" value="{{name}}"></input>
+</div>
+<div class="controls">
+	<label for="textLabel"><spring:message code="template.activity.text.label.label" /></label>
+	<textarea id="textLabel" rows="2" class="span6">{{label}}</textarea>
+</div>
+<div class="span12" style="padding-top:20px;">
+	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+</div>
+</div>
 </script>
 
 <!-- healthplan:templates / -->

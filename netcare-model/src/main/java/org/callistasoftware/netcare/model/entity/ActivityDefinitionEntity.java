@@ -107,6 +107,10 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 				entity.activityItemDefinitions.add(activityItemDefinition);
 			} else if (activityItemType instanceof EstimationTypeEntity) {
 				activityItemDefinition = EstimationDefinitionEntity.newEntity(entity, activityItemType);
+			} else if (activityItemType instanceof YesNoTypeEntity) {
+				activityItemDefinition = YesNoDefinitionEntity.newEntity(entity, activityItemType);
+			} else if (activityItemType instanceof TextTypeEntity) {
+				activityItemDefinition = TextDefinitionEntity.newEntity(entity, activityItemType);
 			}
 			if (activityItemDefinition != null) {
 				entity.activityItemDefinitions.add(activityItemDefinition);

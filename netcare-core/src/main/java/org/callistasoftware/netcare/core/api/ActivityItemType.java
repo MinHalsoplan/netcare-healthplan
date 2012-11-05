@@ -16,10 +16,12 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(as=ActivityItemTypeImpl.class)
 public interface ActivityItemType {
 
 	public final static String MEASUREMENT_ITEM_TYPE = "measurement";
@@ -110,5 +112,29 @@ public interface ActivityItemType {
 	 * @return
 	 */
 	boolean isAlarm();
+
+	/**
+	 * 
+	 * ********************** YesNo operations
+	 * 
+	 */
+	/**
+	 * Gets the question for the yes/no query.
+	 * 
+	 * @return
+	 */
+	String getQuestion();
+
+	/**
+	 * 
+	 * ********************** Text operations
+	 * 
+	 */
+	/**
+	 * Gets the label for the text comment field.
+	 * 
+	 * @return
+	 */
+	String getLabel();
 
 }

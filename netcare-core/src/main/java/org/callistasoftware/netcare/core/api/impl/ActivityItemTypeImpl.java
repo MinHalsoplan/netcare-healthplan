@@ -21,6 +21,8 @@ import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
+import org.callistasoftware.netcare.model.entity.TextTypeEntity;
+import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -43,6 +45,12 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 	private Option valueType;
 	private Option unit;
 
+	// YesNo
+	private String question;
+
+	// Text
+	private String label;
+
 	public static ActivityItemType newFromEntity(ActivityItemTypeEntity entity) {
 		final ActivityItemTypeImpl dto = new ActivityItemTypeImpl();
 
@@ -63,6 +71,14 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 			dto.setAlarm(e.isAlarmEnabled());
 			dto.setUnit(new Option(e.getUnit().name(), LocaleContextHolder.getLocale()));
 			dto.setValueType(new Option(e.getValueType().name(), LocaleContextHolder.getLocale()));
+		} else if (entity instanceof YesNoTypeEntity) {
+			YesNoTypeEntity e = (YesNoTypeEntity) entity;
+			dto.setActivityItemTypeName(YESNO_ITEM_TYPE);
+			dto.setQuestion(e.getQuestion());
+		} else if (entity instanceof TextTypeEntity) {
+			TextTypeEntity e = (TextTypeEntity) entity;
+			dto.setActivityItemTypeName(TEXT_ITEM_TYPE);
+			dto.setLabel(e.getLabel());
 		}
 		return dto;
 	}
@@ -167,6 +183,24 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 	}
 
 	@Override
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	@Override
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
 
@@ -178,11 +212,12 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 		buf.append("LabelMax: ").append(this.getMaxScaleText()).append("\n");
 		buf.append("ValueMin: ").append(this.getMinScaleValue()).append("\n");
 		buf.append("ValueMax: ").append(this.getMaxScaleValue()).append("\n");
-		buf.append("Unit: ").append(this.getUnit().getCode()).append("\n");
-		buf.append("Type: ").append(this.getValueType().getCode()).append("\n");
+		buf.append("Unit: ").append(this.getUnit() != null ? this.getUnit().getCode() : "").append("\n");
+		buf.append("Type: ").append(this.getValueType() != null ? this.getValueType().getCode() : "").append("\n");
+		buf.append("Question: ").append(this.getQuestion()).append("\n");
+		buf.append("Label: ").append(this.getLabel()).append("\n");
 		buf.append("==========================\n");
 
 		return buf.toString();
 	}
-
 }

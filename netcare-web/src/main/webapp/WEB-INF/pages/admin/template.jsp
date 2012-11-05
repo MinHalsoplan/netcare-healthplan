@@ -30,12 +30,18 @@
 <hp:view>
 	<hp:viewHeader>
 		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />
+		<sec:authorize access="hasRole('CARE_ACTOR')" var="isCareActor" />
+		<sec:authorize access="hasRole('COUNTY_ADMIN')" var="isCountyActor" />
+		<sec:authorize access="hasRole('NATION_ADMIN')" var="isNationActor" />
 		<hp:templates />
 		<script type="text/javascript">
 			$(document).ready(function() {
 				var params = {
 			 		templateId : <c:out value="${currentId}" />,
-					hsaId : '<c:out value="${currentHsaId}" />'
+					hsaId : '<c:out value="${currentHsaId}" />',
+					isCareActor : '<c:out value="${isCareActor}" />',
+					isCountyActor : '<c:out value="${isCountyActor}" />',
+					isNationActor : '<c:out value="${isNationActor}" />'
 				};
 				var my = NC_MODULE.ACTIVITY_TEMPLATE;
 				my.initSingleTemplate(params, new NC.Support());
@@ -44,7 +50,6 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="NyAktivitetsmall">
-		<div id="whole">
 			<div id="activityTypeContainer">
 				<section id="head">
 					<h2>
@@ -57,20 +62,26 @@
 				</section>
 				<section id="template">
 					<div id="chooseName">
-						<h4>
-							1.
-							<spring:message code="template.select.name" />
-						</h4>
-						<input id="activityTypeName" name="activityTypeName" type="text" size="32">
+						<spring:message code="template.select.name" var="selectNameLabel" scope="page"/>
+						<spring:message code="template.select.category" var="selectCategoryLabel" scope="page"/>
+						<spring:message code="template.select.level" var="selectLevelLabel" scope="page"/>
+						<h4>1. <spring:message code="template.step1.title" /></h4>
+						<netcare:field name="activityTypeName" label="${selectNameLabel}">
+							<input id="activityTypeName" name="activityTypeName" type="text">
+						</netcare:field>
 					</div>
 					<div id="selectCategory">
-						<h4>2. <spring:message code="template.select.category" /></h4>
-						<select id="categories" name="categories"></select>
+						<h4>2. ${selectCategoryLabel}</h4>
+						<select id="activityTypeCategory" name="activityTypeCategory"></select>
+					</div>
+					<div id="selectAccessLevel">
+						<h4>3. ${selectLevelLabel}</h4>
+						<select id="activityTypeAccessLevel" name="activityTypeAccessLevel"></select>
 					</div>
 					<div id="chooseActivities">
 						<h4>
-							3.
-							<spring:message code="template.select.activities" />
+							4.
+							<spring:message code="template.step2.title" />
 						</h4>
 						<div id="activityTypeWrapper" style="background-color:white; padding: 3px;">
 							<mvk:touch-list id="activityTypeItems">
@@ -78,25 +89,24 @@
 						</div>
 						<div id="addActivityButtons">
 							<div id="addListItemWrapper">
-								<span style="padding-right: 15px"></span> <a href="#" class="addListItem" id="addMeasurementButton">Mätning</a> <a href="#"
-									class="addListItem" id="addEstimationButton">Skattning</a> <a href="#" class="addListItem" id="addYesNoButton">Ja/Nej-fråga</a>
-								<a href="#" class="addListItem" id="addTextButton">Text</a>
+								<span style="padding-right: 15px"><a href="#" class="addListItem" id="addMeasurementButton"><spring:message code="template.activity.measurement.title" /></a> <a href="#"
+									class="addListItem" id="addEstimationButton"><spring:message code="template.activity.estimation.title" /></a> <a href="#" class="addListItem" id="addYesNoButton"><spring:message code="template.activity.yesno.title" /></a>
+								<a href="#" class="addListItem" id="addTextButton"><spring:message code="template.activity.text.title" /></a></span> 
 							</div>
 						</div>
 					</div>
 					<div id="chooseSave">
 						<h4>
-							4.
-							<spring:message code="template.select.saveTemplate" />
+							5.
+							<spring:message code="template.step3.title" />
 						</h4>
 						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">
-							<button id="activitySaveButton" class="btn btn-info" type="button">Spara aktivitetsmall</button>
+							<button id="activitySaveButton" class="btn btn-info" type="button"><spring:message code="template.save" /></button>
 						</div>
 					</div>
 				</section>
 			</div>
 			<div id="activityItemFormContainer" style="display: none;"></div>
-		</div>
 	</hp:viewBody>
 </hp:view>
 
