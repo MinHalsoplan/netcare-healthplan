@@ -38,17 +38,10 @@ public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity
 	@Query("select e from ActivityTypeEntity as e where " +
 			"(e.accessLevel = 'CAREUNIT' and e.careUnit = :careUnit) " +
 			"or (e.accessLevel = 'NATIONAL') " +
-			"or (e.accessLevel = 'COUNTY_COUNCIL' and e.careUnit.countyCouncil = :countyCouncil)")
+			"or (e.accessLevel = 'COUNTY_COUNCIL' and e.careUnit.countyCouncil = :countyCouncil) " +
+			"order by e.name asc")
 	List<ActivityTypeEntity> findByCareUnit(@Param("careUnit") final CareUnitEntity careUnit
 			, @Param("countyCouncil") final CountyCouncilEntity countyCouncil);
-	
-	@Query("select e from ActivityTypeEntity as e where " +
-			"(e.accessLevel = 'CAREUNIT' and e.careUnit.hsaId = :hsaId) " +
-			"or (e.accessLevel = 'NATION') " +
-			"or (e.accessLevel = 'COUNTY_COUNCIL' and e.careUnit.countyCouncil.id = :countyCouncilId)")
-	List<ActivityTypeEntity> findAllAccessible(
-			@Param("hsaId") final String careUnitHsa, 
-			@Param("countyCouncilId") final Long countyCouncilId);
 	
 	@Query("select at from ActivityDefinitionEntity as ade inner join " +
 			"ade.activityType as at where " +

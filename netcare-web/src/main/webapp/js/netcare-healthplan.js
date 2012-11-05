@@ -256,7 +256,7 @@ var NC_MODULE = {
 			}
 
 			my.loadCategories();
-			my.loadAccessLevels();
+			my.loadAccessLevels(that);
 
 			initMeasureValues(that);
 			initUnitValues(that);
@@ -357,8 +357,15 @@ var NC_MODULE = {
 			tc.loadAsOptions($('#activityTypeCategory'));
 		};
 		
-		my.loadAccessLevels = function() {
+		my.loadAccessLevels = function(my) {
 			new NC.Support().loadAccessLevels($('#activityTypeAccessLevel'));
+			
+			/*
+			 * Role check, remove items that we do not have access to
+			 */
+			if (my.params.isCareActor == "true" && my.params.isCountyActor == "false") {
+				$('#activityTypeAccessLevel').prop('disabled', 'disabled');
+			}
 		};
 		
 		my.moveItemUp = function(my, itemId) {
@@ -445,6 +452,7 @@ var NC_MODULE = {
 		var renderItems = function(my, activityTemplate) {
 			$('#activityTypeName').val(activityTemplate.name);
 			$('#activityTypeCategory > option[value="' + activityTemplate.category.id + '"]').prop('selected', true);
+			$('#activityTypeAccessLevel > option[value="' + activityTemplate.accessLevel.code + '"]').prop('selected', true);
 			
 			var template = _.template($('#activityItemTemplate').html());
 			$('#activityTypeItems').empty();
