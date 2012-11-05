@@ -25,7 +25,7 @@ NC.ActivityCategories = function() {
 		loadAsOptions : function(selectElem) {
 			var util = new NC.Util();
 			
-			load(function(data) {
+			public.load(function(data) {
 				var arr = new Array();
 				$.each(data.data, function(index, value) {
 					arr.push({code : value.id, value : value.name});
