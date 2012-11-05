@@ -403,6 +403,8 @@ var NC_MODULE = {
 
 		var renderItems = function(my, activityTemplate) {
 			$('#activityTypeName').val(activityTemplate.name);
+			$('#categories > option[value="' + activityTemplate.category.id + '"]').prop('selected', true);
+			
 			var template = _.template($('#activityItemTemplate').html());
 			$('#activityTypeItems').empty();
 			$.each(activityTemplate.activityItems, function(index, value) {
