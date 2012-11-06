@@ -16,12 +16,18 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Defines a base view of a patient
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(as=PatientBaseViewImpl.class)
 public interface PatientBaseView extends UserBaseView {
 
 	/**

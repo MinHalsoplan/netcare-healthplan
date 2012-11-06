@@ -26,50 +26,26 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
+<c:set var="patientId" value="${sessionScope.currentPatient.id}" scope="page" />
+<c:set var="patient" value="${sessionScope.currentPatient.name}" scope="page" />
+
 <hp:view>
 	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 				
-				var validateField = function(field) {
-					if (field.val().length == 0 || field.val() == "") {
-						field.parent().parent().addClass('error');
-						return true;
-					} else {
-						
-						if (field.hasClass('signedNumeric')) {
-							var value = parseInt(field.val());
-							NC.log('Value of field is: ' + value);
-							
-							if (value <= 0) {
-								field.parent().parent().addClass('error');
-								return true;	
-							}
-						}
-						
-						field.parent().parent().removeClass('error').addClass('success');
-						return false;
-					}
+				var params = {
+					healthplanId : -1,
+					patientId : '<c:out value="${patientId}" />'
 				};
 				
-				var validateForm = function() {
-					
-					var errors = false;
-					
-					errors = validateField($('input[name="name"]'));
-					errors = validateField($('input[name="startDate"]'));
-					errors = validateField($('input[name="duration"]'));
-					
-					return !errors;
-				};
-				
-				var support = NC.Support();
-				support.loadDurations($('#createHealthPlanForm select'));
+				NC_MODULE.HEALTH_PLAN.init(params);
 				
 				/*
 				 * Set todays date
 				 */
-				$('input[name="startDate"]').datepicker('setDate', new Date());
+				/*$('input[name="startDate"]').datepicker('setDate', new Date());
 				
 				var updateDescription = function(count) {
 					NC.log("Updating ordination table description");
@@ -86,7 +62,7 @@
 				var listCallback = function(data) {
 					NC.log("Success. Processing results...");
 					
-					/* Empty the result list */
+					// Empty the result list
 					$('#ordinationTable tbody > tr').empty();
 					
 					var infoMessages;
@@ -183,43 +159,7 @@
 					listCallback(data);
 				});
 				
-				updateDescription(0);
-				
-				/*
-				 * Bind create button
-				 */
-				$('#createHealthPlanForm :submit').click(function(event) {
-					NC.log("Submitting form...");
-					event.preventDefault();
-					
-					var result = validateForm();
-					if (!result) {
-						return false;
-					}
-					
-					var formData = new Object();
-					formData.name = $('#createHealthPlanForm input[name="name"]').val();
-					formData.startDate = $('#createHealthPlanForm input[name="startDate"]').val();
-					formData.duration = $('#createHealthPlanForm input[name="duration"]').val();
-					formData.durationUnit = new Object();
-					formData.durationUnit.code = $('#createHealthPlanForm select option:selected').attr('value');
-					formData.durationUnit.value = $('#createHealthPlanForm select option:selected').val();
-					formData.autoRenewal = $('#createHealthPlanForm input[name="autoRenewal"]').is(':checked');
-					
-					healthPlans.create(formData, <c:out value="${sessionScope.currentPatient.id}" />, function(data){
-						$('#createHealthPlanForm :reset').click();
-						healthPlans.view(data.data.id);
-					});
-					
-					$('#createHealthPlanForm').hide();
-				});
-			
-				$('#showCreateForm').click(function(even) {
-					$('#createHealthPlanForm').toggle();
-				});
-				
-				$('#createHealthPlanForm').hide();
-				
+				updateDescription(0);*/
 			});
 		</script>
 	</hp:viewHeader>
@@ -272,7 +212,7 @@
 				</netcare:row>
 
 				<netcare:field name="autoRenewal" label="${autoRenewal}">
-					<input type="checkbox" name="autoRenewal" />
+					<input type="checkbox" name="autoRenewal" value="true"/>
 				</netcare:field>
 			</fieldset>
 			
@@ -283,25 +223,9 @@
 			
 		</form>
 		
-		<div id="healthPlanContainer">
-			<div style="display: none;" class="alert alert-info">
-				<p><spring:message code="healthplan.none" /></p>
-			</div>
-			<netcare:table id="ordinationTable">
-				<thead>
-					<tr>
-						<th><c:out value="${name}" /></th>
-						<th><c:out value="${startDate}" /></th>
-						<th><c:out value="${duration}" /></th>
-						<th><c:out value="${issuedBy}" /></th>
-						<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-						<th width="96px">&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</netcare:table>
-		</div>
+		<mvk:touch-list id="healthPlanContainer">
+		
+		</mvk:touch-list>
 
 		<netcare:modal titleCode="healthplan.icons.performRenewal" confirmCode="label.yes" id="perform-renewal">
 			<p>

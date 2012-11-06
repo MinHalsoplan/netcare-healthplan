@@ -44,8 +44,158 @@ var NC_MODULE = {
 				'backgroundColor' : 'white'
 			}, 200);
 		};
+		
+		my.validateField = function(field) {
+			if (field.val().length == 0 || field.val() == "") {
+				field.parent().parent().addClass('error');
+				return true;
+			} else {
+				
+				if (field.hasClass('signedNumeric')) {
+					var value = parseInt(field.val());
+					NC.log('Value of field is: ' + value);
+					
+					if (value <= 0) {
+						field.parent().parent().addClass('error');
+						return true;	
+					}
+				}
+				
+				field.parent().parent().removeClass('error').addClass('success');
+				return false;
+			}
+		};
 
 		return my;
+	})(),
+	
+	HEALTH_PLAN : (function() {
+		
+		var _data = new Object();
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.loadDurations();
+			
+			if (params.id > 1) {
+				my.loadHealthPlan(that);
+			} else {
+				_data = new Object();
+				_data.patient = new Object();
+				_data.patient.id = params.patientId;
+			}
+			
+			my.initListeners();
+			
+			/*
+			 * Load all in list
+			 */
+			my.loadHealthPlans(that);
+		};
+		
+		my.loadDurations = function() {
+			new NC.Support().loadDurations($('#createHealthPlanForm select'));
+		};
+		
+		my.initListeners = function() {
+			$('input[name="name"]').on('keyup blur', function() {
+				_data.name = $(this).val();
+				NC.log('Updated name to: ' + _data.name);
+			});
+			
+			$('input[name="startDate"]').on('keyup blur', function() {
+				_data.startDate = $(this).val();
+				NC.log('Updated start date to: ' + _data.startDate);
+			});
+			
+			$('input[name="duration"]').on('keyup blur', function() {
+				_data.duration = $(this).val();
+				NC.log('Updated duration to: ' + _data.duration);
+			});
+			
+			$('select[name="type"]').on('focus change', function() {
+				_data.durationUnit = new Object();
+				_data.durationUnit.code = $(this).val();
+				NC.log('Updated duration unit to: ' + _data.durationUnit.code);
+			});
+			
+			$('input[name="autoRenewal"]').on('click', function() {
+				var checked = $('input[name="autoRenewal"]:checked').val();
+				if (checked != undefined) {
+					_data.autoRenewal = true;
+				} else {
+					_data.autoRenewal = false;
+				}
+				
+				NC.log('Updated auto renewal to: ' + _data.autoRenewal);
+			});
+			
+			$('#createHealthPlanForm').submit(function(e) {
+				e.preventDefault();
+				my.save();
+			})
+		};
+		
+		my.loadHealthPlan = function(my) {
+			new NC.Ajax().get('/healthplans/' + my.params.id, function(data) {
+				_data = data.data;
+				my.renderForm();
+			}, false);
+		};
+		
+		my.loadHealthPlans = function(my) {
+			new NC.Ajax().getWithParams('/healthplans', { patient : my.params.patientId }, function(data) {
+				$('#healthPlanContainer').empty();
+				
+				$.each(data.data, function(i, v) {
+					var t = _.template($('#healthPlanItem').html());
+					if (t == undefined) {
+						throw new Error('Template undefined');
+					}
+					
+					var dom = t(v);
+					$('#healthPlanContainer').append($(dom));
+					
+					/*
+					 * Bind click event
+					 */
+					$('#healthPlanItem' + v.id).next('.item').click(function() {
+						window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + v.id;
+					});
+				});
+				
+			}, false);
+		};
+		
+		my.renderForm = function(my) {
+			
+		};
+		
+		my.validate = function() {
+			var errors = false;
+			
+			errors = NC_MODULE.GLOBAL.validateField($('input[name="name"]'));
+			errors = NC_MODULE.GLOBAL.validateField($('input[name="startDate"]'));
+			errors = NC_MODULE.GLOBAL.validateField($('input[name="duration"]'));
+			
+			return !errors;
+		};
+		
+		my.save = function() {
+			if (my.validate()) {
+				NC.log('Saving health plan. Data is: ' + _data);
+				new NC.Ajax().post('/healthplans', _data, function(data) {
+					alert('New health plan saved');
+				}, true);
+			}
+		};
+		
+		return my;
+		
 	})(),
 
 	TEMPLATE_SEARCH : (function() {

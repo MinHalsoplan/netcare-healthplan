@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/healthplan")
+@RequestMapping(value="/healthplans")
 public class HealthPlanApi extends ApiSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanApi.class);
@@ -51,17 +51,16 @@ public class HealthPlanApi extends ApiSupport {
 	@Autowired 
 	private HealthPlanService service;
 	
-	@RequestMapping(value="/{patient}/create", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlan> createHealthPlan(@RequestBody final HealthPlanImpl dto, @PathVariable(value="patient") final Long patient, final Authentication auth) {
-		log.info("Creating a new ordination. Creator: {}, Ordination: {}, Patient: {}", new Object[] {auth.getPrincipal(), patient});
-		
-		return this.service.createNewHealthPlan(dto, (CareActorBaseView) auth.getPrincipal(), patient);
+	public ServiceResult<HealthPlan> createHealthPlan(@RequestBody final HealthPlanImpl dto, final Authentication auth) {
+		this.logAccess("create", "health plan");
+		return this.service.createNewHealthPlan(dto, (CareActorBaseView) auth.getPrincipal(), dto.getPatient().getId());
 	}
 	
-	@RequestMapping(value="/{patient}/list", method=RequestMethod.GET)
+	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<HealthPlan[]> listHealthPlans(@PathVariable(value="patient") final Long patient, final Authentication auth) {
+	public ServiceResult<HealthPlan[]> listHealthPlans(@RequestParam(value="patient") final Long patient, final Authentication auth) {
 		this.logAccess("list", "healthplan");
 		final ServiceResult<HealthPlan[]> ordinations = this.service.loadHealthPlansForPatient(patient);
 		
@@ -69,14 +68,14 @@ public class HealthPlanApi extends ApiSupport {
 		return ordinations;
 	}
 	
-	@RequestMapping(value="/${healthPlan}/load", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/{healthPlan}", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlan> loadHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
 		this.logAccess("load", "health plan");
 		return this.service.loadHealthPlan(healthPlan);
 	}
 	
-    @RequestMapping(value="/{healthPlan}/delete", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/{healthPlan}", method=RequestMethod.DELETE, produces="application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
 		this.logAccess("delete", "health plan");

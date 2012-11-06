@@ -76,7 +76,7 @@ public class HomeController extends ControllerSupport {
 		return "admin/home";
 	}
 
-	@RequestMapping(value = "/admin/healthplan/new", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/healthplans", method = RequestMethod.GET)
 	public String displayCreateOrdination(final Model m, final HttpSession session, final Locale locale) {
 		log.info("Displaying create new health plan");
 
@@ -87,7 +87,7 @@ public class HomeController extends ControllerSupport {
 		return "admin/healthplan";
 	}
 
-	@RequestMapping(value = "/user/healthplan/{healthplanId}/view", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/healthplans/{healthplanId}", method = RequestMethod.GET)
 	public String displayNewActivityDefinition(@PathVariable(value = "healthplanId") final Long healthPlan,
 			final HttpSession session, final Model m) {
 		log.info("Getting health plan {}", healthPlan);
@@ -100,7 +100,7 @@ public class HomeController extends ControllerSupport {
 
 		log.debug("Returning health plan with id: {}", result.getData().getId());
 
-		return "user/activity";
+		return "admin/activity";
 	}
 
 	@RequestMapping(value = "/admin/categories", method = RequestMethod.GET)

@@ -139,7 +139,7 @@
 				<span id="cnr"></span>
 			</p>
 			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplan/new" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
+				<li><a href="<spring:url value="/netcare/admin/healthplans" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
 				<li><a id="quitPatientSession" href="#"><spring:message code="admin.menu.patient.quit" /></a></li>
 			</ul>
 		</div>
