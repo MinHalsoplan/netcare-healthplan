@@ -17,6 +17,7 @@
 
 --%>
 <%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- healthplan:templates -->
@@ -54,14 +55,66 @@
 	<div class="row-fluid">
 		<div class="mainBody span6">
 			<h4 class="titel">{{name}}</h4>
-			<div class="subRow">{{issuedBy.name}}</div>
+			<div class="subRow"></div>
 		</div>
-		<div class="mainBody actionBody span6"></div>
+		<div class="mainBody actionBody span6">
+
+		</div>
 	</div>
 </div>
 <a href="#" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
 </li>
+</script>
+
+<%--Healthplan details --%>
+<script id="healthPlanDetails" type="text/template">
+<div id="hp-details-{{id}}" style="display: none;">
+	<div class="row-fluid">
+		<div class="span12">
+		
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6" style="text-align: left">
+			<a href="<c:url value='/netcare/admin/templates?healthPlan={{id}}' />">Planera ny aktivitet från mall</a>
+		</div>
+		<div class="span6" style="text-align: right">
+			<a href="#" style="padding-right: 10px">Avaktivera hälsoplan</a>
+		</div>
+	</div>
+</div>
+</script>
+
+<%-- Activity planning - Single value --%>
+<script id="singleValue" type="text/template">
+<h4>{{name}}</h4>
+<div class="control-group">
+	<label for="field-{{id}}">Målvärde</label>
+	<div class="controls">
+		<input id="field-{{id}}" type="text" />
+		<span class="help-inline">{{unit.value}}</span>
+	</div>
+</div>
+</script>
+
+<%-- Activity planning - Interval value --%>
+<script id="intervalValue" type="text/template">
+<h4>{{name}}</h4>
+<div class="control-group">
+	<label for="field-{{id}}-min">Målvärde (min)</label>
+	<div class="controls">
+		<input id="field-{{id}}-min" type="text" />
+		<span class="help-inline">{{unit.value}}</span>
+	</div>
+</div>
+<div class="control-group">
+	<label for="field-{{id}}-max">Målvärde (max)</label>
+	<div class="controls">
+		<input id="field-{{id}}-max" type="text" />
+		<span class="help-inline">{{unit.value}}</span>
+	</div>
+</div>
 </script>
 
 <%-- This template is used to show an activity type item --%>

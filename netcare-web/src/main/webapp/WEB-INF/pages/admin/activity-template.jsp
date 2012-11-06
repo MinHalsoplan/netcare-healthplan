@@ -40,7 +40,8 @@
 					hsaId : '<c:out value="${currentHsaId}" />',
 					isCareActor : '<c:out value="${isCareActor}" />',
 					isCountyActor : '<c:out value="${isCountyActor}" />',
-					isNationActor : '<c:out value="${isNationActor}" />'
+					isNationActor : '<c:out value="${isNationActor}" />',
+					healthPlanId : '<c:out value="${param.healthPlan}" />'
 				};
 				
 				NC_MODULE.GLOBAL.init();

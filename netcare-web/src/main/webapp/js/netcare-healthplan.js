@@ -163,9 +163,41 @@ var NC_MODULE = {
 					/*
 					 * Bind click event
 					 */
-					$('#healthPlanItem' + v.id).next('.item').click(function() {
+					var liElem = $('#healthPlanItem' + v.id).next('.item');
+					liElem.click(function() {
 						window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + v.id;
 					});
+					
+					if (v.autoRenewal) {
+						liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
+					} else {
+						liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' ' + v.endDate);
+					}
+					
+					var detailsTemplate = _.template($('#healthPlanDetails').html());
+					var detailsDom = detailsTemplate(v);
+					
+					liElem.find('.row-fluid').after($(detailsDom));
+					
+					if (v.activityDefinitions == null) {
+						$('#hp-details-' + v.id).find('.span12').append(
+							$('<p>').css({'font-style' : 'italic'}).html('Inga aktiviteter planerade ännu')
+						);
+					} else {
+						$.each(v.activityDefinitions, function(idx, ad) {
+							
+						});
+					}
+					
+					var expander = $('<div>').addClass('mvk-icon toggle').click(function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						$('#hp-details-' + v.id).toggle();
+					}) ;
+					
+					liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
+					.append(expander);
+					
 				});
 				
 			}, false);
@@ -196,6 +228,53 @@ var NC_MODULE = {
 		
 		return my;
 		
+	})(),
+	
+	PLAN_ACTIVITY : (function() {
+		var _templateData = null;
+		var _data = new Object();
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
+				_templateData = data;
+				my.renderGoals(that);
+			});
+		};
+		
+		my.renderGoals = function(my) {
+			NC.log('Render goals');
+			$.each(_templateData.activityItems, function(i, v) {
+				
+				if (v.activityItemTypeName == "measurement" && v.valueType.code == "INTERVAL") {
+					my.renderIntervalGoal(v, '');
+				} else if (v.activityItemTypeName == "measurement" && v.valueType.code == "SINGLE_VALUE") {
+					my.renderSingleGoal(v, '');
+				}
+			});
+		};
+		
+		my.renderSingleGoal = function(activityItem, value) {
+			NC.log('Render single goal');
+			var t = _.template( $('#singleValue').html() );
+			var dom = t(activityItem);
+			
+			$('#activityFieldset').append($(dom));
+		};
+		
+		my.renderIntervalGoal = function(activityItem, value) {
+			NC.log('Render interval goal');
+			var t = _.template( $('#intervalValue').html() );
+			var dom = t(activityItem);
+			
+			$('#activityFieldset').append($(dom));
+		};
+		
+		return my;
 	})(),
 
 	TEMPLATE_SEARCH : (function() {
@@ -322,7 +401,13 @@ var NC_MODULE = {
 			}
 			
 			$('#item-' + template.id).live('click', function() {
-				window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
+				NC.log('Health plan: ' + my.params.healthPlanId);
+				if (my.params.healthPlanId != '') {
+					NC.log('Add to health plan ' + my.params.healthPlanId);
+					window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + my.params.healthPlanId + '/plan/new?template=' + template.id;
+				} else {
+					window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
+				}
 			});
 			
 			NC_MODULE.GLOBAL.flash($('#item-' + template.id).parent());
@@ -386,7 +471,11 @@ var NC_MODULE = {
 			this.params = params;
 			
 			if (params.templateId != -1) {
-				my.loadTemplate(that, params.templateId);
+				my.loadTemplate(params.templateId, function(data) {
+					activityTemplate = data.data;
+					renderItems(my, activityTemplate);
+					NC.log(activityTemplate);
+				});
 			} else {
 				activityTemplate = {
 					"id" : -1,
@@ -489,16 +578,14 @@ var NC_MODULE = {
 					});
 		};
 
-		my.loadTemplate = function(my, templateId) {
+		my.loadTemplate = function(templateId, callback) {
 			/*
 			 * Load single template
 			 */
 			var at = new NC.ActivityTypes();
 
 			at.get(templateId, function(data) {
-				activityTemplate = data.data;
-				renderItems(my, activityTemplate);
-				NC.log(activityTemplate);
+				callback(data.data);
 			});
 		};
 

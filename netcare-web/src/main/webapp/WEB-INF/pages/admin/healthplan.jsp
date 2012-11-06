@@ -35,131 +35,19 @@
 		<script type="text/javascript">
 			$(function() {
 				
+				var lang = {
+					active : '<spring:message code="healthplan.active" />',
+					autoRenew : '<spring:message code="healthplan.autoRenew" />',
+					ends : '<spring:message code="healthplan.ends" />'
+				}
+				
 				var params = {
 					healthplanId : -1,
-					patientId : '<c:out value="${patientId}" />'
+					patientId : '<c:out value="${patientId}" />',
+					lang : lang
 				};
 				
 				NC_MODULE.HEALTH_PLAN.init(params);
-				
-				/*
-				 * Set todays date
-				 */
-				/*$('input[name="startDate"]').datepicker('setDate', new Date());
-				
-				var updateDescription = function(count) {
-					NC.log("Updating ordination table description");
-					if (count == 0) {
-						$('#healthPlanContainer div').show();
-						$('#ordinationTable').hide();
-					} else {
-						$('#healthPlanContainer div').hide();
-						$('#ordinationTable').show();
-					}
-				};
-				
-				var healthPlans = NC.HealthPlan();
-				var listCallback = function(data) {
-					NC.log("Success. Processing results...");
-					
-					// Empty the result list
-					$('#ordinationTable tbody > tr').empty();
-					
-					var infoMessages;
-					
-					support.loadMessages('healthplan.icons.performRenewal, healthplan.icons.stopRenewal, healthplan.inActiveInfo, healthplan.autoRenewal, healthplan.icons.result, healthplan.icons.edit', function(messages) {
-						infoMessages = messages;
-					});
-
-					
-					$.each(data.data, function(index, value) {
-						NC.log("Processing index " + index + " value: " + value.name);
-						
-						var util = NC.Util();
-						
-						var resultIcon = util.createIcon('results', 24, function() {
-							healthPlans.results(value.id);
-						}, infoMessages['healthplan.icons.result'], true);
-						
-						var editIcon = util.createIcon('edit', 24, function() {
-							healthPlans.view(value.id);
-						}, infoMessages['healthplan.icons.edit'], true).css('padding-left', '10px');
-						
-						var renewalIcon;
-						if (value.autoRenewal) {
-							renewalIcon = util.createIcon('exit', 24, function() {
-								$('#stop-renewal').modal('show');
-								$('#stop-renewal a.btn-info').click(function(e) {
-									e.preventDefault();
-									healthPlans.stopAutoRenewal(value.id, function(data) {
-										$('#hn-' + value.id).html('<strong>' + data.data.name + '</strong>');
-										renewalIcon.addClass('ui-state-disabled');
-										renewalIcon.unbind('click');
-									});
-									$('#stop-renewal a.btn-info').unbind('click');
-									$('#stop-renewal').modal('hide');
-								})
-							}, infoMessages['healthplan.icons.stopRenewal'], true);
-						} else {
-							renewalIcon = util.createIcon('renew', 24, function() {
-								$('#perform-renewal').modal('show');
-								$('#perform-renewal a.btn-info').click(function(e) {
-									e.preventDefault();
-									healthPlans.performExplicitRenewal(value.id, function(data) {
-										NC.log('Renewal : ' + data.data.endDate);
-										var dur = '<strong>' + data.data.endDate + '<br/>' 
-											+ ((data.data.iteration > 0) ? (data.data.iteration+1) + 'x' : '') 
-											+ value.duration + ' ' + value.durationUnit.value
-											+ '</strong>';
-										$('#hd-' + value.id).html(dur);
-										renewalIcon.addClass('ui-state-disabled');
-										renewalIcon.unbind('click');
-									});
-									$('#perform-renewal a.btn-info').unbind('click');
-									$('#perform-renewal').modal('hide');
-								})
-							}, infoMessages['healthplan.icons.performRenewal'], true);								
-						}
-						renewalIcon.css('padding-left','10px');
-						
-						if (!value.active) {
-							editIcon.addClass('ui-state-disabled');
-							editIcon.unbind('click');
-						}
-						
-						var actionCol = $('<td>').css('text-align', 'right');
-						
-						resultIcon.appendTo(actionCol);
-						editIcon.appendTo(actionCol);
-						renewalIcon.appendTo(actionCol);
-						
-
-						var duration = value.endDate + '<br/>' + ((value.iteration > 0) ? (value.iteration+1) + 'x' : '') + value.duration + ' ' + value.durationUnit.value;
-						var name = value.name;
-						if (value.autoRenewal) {
-							name += '<br/><i style="font-size: 10px;">'+ infoMessages['healthplan.autoRenewal'] + '</i>';
-						} else if (!value.active) {
-							name += '<br/><i style="font-size: 10px;">'+ infoMessages['healthplan.inActiveInfo'] + '</i>';							
-						}
-						
-						$('#ordinationTable tbody').append(
-								$('<tr>').append(
-									$('<td>').attr('id', 'hn-' + value.id).html(name)).append(
-										$('<td>').html(value.startDate)).append(
-												$('<td>').attr('id', 'hd-' + value.id).html(duration)).append(
-														$('<td>').html(value.issuedBy.name)).append(
-																actionCol));
-					});
-					
-					NC.log("Updating description");
-					updateDescription(data.data.length);
-				}
-				
-				healthPlans.list(<c:out value="${sessionScope.currentPatient.id}" />, function(data) {
-					listCallback(data);
-				});
-				
-				updateDescription(0);*/
 			});
 		</script>
 	</hp:viewHeader>

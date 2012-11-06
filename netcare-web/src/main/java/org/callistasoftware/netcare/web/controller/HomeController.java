@@ -20,9 +20,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
-import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.NoCurrentPatientMessage;
@@ -87,20 +85,11 @@ public class HomeController extends ControllerSupport {
 		return "admin/healthplan";
 	}
 
-	@RequestMapping(value = "/admin/healthplans/{healthplanId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/healthplans/{healthplanId}/plan/new", method = RequestMethod.GET)
 	public String displayNewActivityDefinition(@PathVariable(value = "healthplanId") final Long healthPlan,
 			final HttpSession session, final Model m) {
-		log.info("Getting health plan {}", healthPlan);
-
-		final ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan);
-		m.addAttribute("result", result);
-		if (result.isSuccess()) {
-			m.addAttribute("hideMessages", Boolean.TRUE);
-		}
-
-		log.debug("Returning health plan with id: {}", result.getData().getId());
-
-		return "admin/activity";
+		m.addAttribute("healthPlanId", healthPlan);
+		return "admin/plan";
 	}
 
 	@RequestMapping(value = "/admin/categories", method = RequestMethod.GET)

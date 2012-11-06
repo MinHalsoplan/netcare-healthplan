@@ -143,6 +143,14 @@ ul.itemList {
 	background-position: -105px 0px;
 }
 
+.mvk-icon.toggle {
+	background-image: url('../css/images/togglerClosed.png');
+}
+
+.mvk-icon.toggle:hover {
+	background-image: url('../css/images/togglerClosedBlue.png');
+}
+
 /*
  * TO BE REMOVED AFTER MVK RELEASE
  */
