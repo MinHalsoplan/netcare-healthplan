@@ -26,6 +26,7 @@ import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
@@ -34,6 +35,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ActivityTypeImpl implements ActivityType {
 
 	/**

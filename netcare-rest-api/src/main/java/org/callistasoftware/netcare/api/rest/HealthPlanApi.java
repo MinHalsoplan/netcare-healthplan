@@ -96,13 +96,7 @@ public class HealthPlanApi extends ApiSupport {
  		return this.service.healthPlanRenewal(healthPlan, true);
  	}
 	
-	@RequestMapping(value="/{healthPlanId}/activity/new", method=RequestMethod.POST, consumes="application/json", produces="application/json")
-	@ResponseBody
-	public ServiceResult<HealthPlan> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity, @PathVariable(value="healthPlanId") final Long healthPlanId) {
-		log.info("User {} is adding a new activity defintion for health plan {}", new Object[] {this.getUser(), healthPlanId});
-		
-		return this.service.addActvitiyToHealthPlan(healthPlanId, activity, getUser());
-	}
+	
 	
 	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/updateGoalValues", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody

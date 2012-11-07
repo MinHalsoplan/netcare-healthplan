@@ -179,15 +179,7 @@ var NC_MODULE = {
 					
 					liElem.find('.row-fluid').after($(detailsDom));
 					
-					if (v.activityDefinitions == null) {
-						$('#hp-details-' + v.id).find('.span12').append(
-							$('<p>').css({'font-style' : 'italic'}).html('Inga aktiviteter planerade ännu')
-						);
-					} else {
-						$.each(v.activityDefinitions, function(idx, ad) {
-							
-						});
-					}
+					my.processDefinitions(my, v);
 					
 					var expander = $('<div>').addClass('mvk-icon toggle').click(function(e) {
 						e.preventDefault();
@@ -201,6 +193,34 @@ var NC_MODULE = {
 				});
 				
 			}, false);
+		};
+		
+		my.processDefinitions = function(my, hp) {
+			
+			NC.log('Processing activity definitions of health plan ' + hp.id);
+			
+			if (hp.activityDefinitions.length == 0) {
+				NC.log('No activity definitions yet available');
+				$('#hp-details-' + v.id).find('.span12').append(
+					$('<p>').css({'font-style' : 'italic'}).html('Inga aktiviteter planerade ännu')
+				);
+			} else {
+				$.each(hp.activityDefinitions, function(idx, ad) {
+					
+					var t = _.template($('#healthPlanDefinitions').html());
+					var dom = t(ad);
+					
+					$('#hp-details-' + hp.id).find('.span12').append($(dom));
+					
+					$('#hp-ad-' + ad.id + '-edit').click(function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						
+						window.location = GLOB_CTX_PATH = '/netcare/admin/healthplans/' + hp.id + '/plan/' + ad.id;
+					})
+					
+				});
+			}
 		};
 		
 		my.renderForm = function(my) {
@@ -231,6 +251,9 @@ var NC_MODULE = {
 	})(),
 	
 	PLAN_ACTIVITY : (function() {
+		
+		var _isNew = false;
+		
 		var _templateData = null;
 		var _data = new Object();
 		
@@ -240,23 +263,53 @@ var NC_MODULE = {
 			var that = this;
 			this.params = params;
 			
-			_data.activityDefinitions = new Array();
+			_data.goalValues = new Array();
 			_data.dayTimes = new Array();
 			
-			NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
-				_templateData = data;
-				my.renderGoals(that);
-			});
+			if (params.definitionId != '') {
+				new NC.Ajax().get('/activityPlans/' + params.definitionId, function(data) {
+					
+					_isNew = true;
+					
+					_data = data.data;
+					_templateData = _data.type;
+					
+					my.renderGoals(that);
+					my.renderAllTimes(that);
+					my.renderForm(that);
+				});
+			} else {
+				NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
+					
+					_isNew = false;
+					
+					_templateData = data;
+					
+					_data.type = new Object();
+					_data.type.id = _templateData.id;
+					
+					my.renderGoals(that);
+				});
+			}
 			
 			/*
 			 * Check if we should load an activity
 			 * definition here and populate the form
 			 */
-			
 			my.initListeners(that);
 		};
 		
+		my.renderForm = function(my) {
+			$('input[name="startDate"]').val(_data.startDate);
+			$('input[name="duration"]').val(_data.activityRepeat);
+		};
+		
 		my.initListeners = function(my) {
+			$('#saveForm').submit(function(e) {
+				e.preventDefault();
+				my.save(my);
+			});
+			
 			$('#addTimesForm').submit(function(e) {
 				e.preventDefault();
 				
@@ -274,60 +327,85 @@ var NC_MODULE = {
 					$('#specifyTime').val('');
 				}
 			});
-		};
-		
-		my.doTimeRendering = function(my) {
 			
-			var val = $('#specifyTime').val().trim();
+			$('input[name="startDate"]').on('blur keyup change', function() {
+				_data.startDate = $(this).val();
+				NC.log('Setting start date to: ' + _data.startDate);
+			});
 			
-			/*
-			 * Loop through days
-			 */
-			$('#addTimesForm input:checkbox:checked').each(function(i, v) {
-				var day = $(v).prop('name');
-				if (_data.dayTimes[day] == undefined) {
-					_data.dayTimes[day] = new Object();
-					_data.dayTimes[day].day = day;
-					_data.dayTimes[day].times = new Array();
-				}
-				
-				// Does time already exist for day?
-				if ($.inArray(val, _data.dayTimes[day].times) == -1) {
-					_data.dayTimes[day].times.push(val);
-					my.renderTimes(my, day);
-				}
+			$('input[name="activityRepeat"]').on('blur change keyup', function() {
+				_data.duration = $(this).val();
+				NC.log('Setting duration to: ' + _data.activityRepeat);
 			});
 		};
 		
 		my.renderGoals = function(my) {
 			NC.log('Render goals');
 			$.each(_templateData.activityItems, function(i, v) {
-				
 				if (v.activityItemTypeName == "measurement" && v.valueType.code == "INTERVAL") {
-					my.renderIntervalGoal(v, '');
+					my.renderIntervalGoal(v);
 				} else if (v.activityItemTypeName == "measurement" && v.valueType.code == "SINGLE_VALUE") {
-					my.renderSingleGoal(v, '');
+					my.renderSingleGoal(v);
 				}
 			});
 		};
 		
-		my.renderSingleGoal = function(activityItem, value) {
+		var findGoalValue = function(id) {
+			if (_data.goalValues == undefined) {
+				_data.goalValues = new Array();
+			}
+			
+			for (var i = 0; i < _data.goalValues.length; i++) {
+				if (_data.goalValues[i].activityItemType.id == id) {
+					return i;
+				}
+			}
+			
+			return -1;
+		}
+		
+		var initGoalValue = function(id, type) {
+			
+			var idx = findGoalValue(id);
+			if (idx == -1) {
+				NC.log('Goal value for ' + id + ' is not yet defined');
+				var gv = new Object();
+				gv.valueType = type;
+				gv.id = -1;
+				
+				gv.activityItemType = new Object();
+				gv.activityItemType.id = id;
+				gv.activityItemType.name = type;
+				
+				gv.target = '';
+				gv.minTarget = '';
+				gv.maxTarget = '';
+				
+				_data.goalValues.push(gv);
+				idx = _data.goalValues.length - 1;
+			}
+			
+			return idx;
+		} 
+		
+		my.renderSingleGoal = function(activityItem) {
 			NC.log('Render single goal');
 			var t = _.template( $('#singleValue').html() );
 			var dom = t(activityItem);
 			
 			$('#activityFieldset').append($(dom));
 			
-			$('#field-' + activityItem.id).on('blur keyup', function() {
-				_data.activityDefinitions['' + activityItem.id + ''] = new Object();
-				_data.activityDefinitions['' + activityItem.id + ''].id = activityItem.id;
-				_data.activityDefinitions['' + activityItem.id + ''].target = $(this).val();
-				
+			var idx = initGoalValue(activityItem.id, 'measurement');
+			
+			$('#field-' + activityItem.id).val(_data.goalValues[idx].target);
+			
+			$('#field-' + activityItem.id).on('change blur keyup', function() {
+				_data.goalValues[idx].target = $(this).val();
 				NC.log('Target set to: ' + $(this).val() + ' for ' + activityItem.name);
 			});
 		};
 		
-		my.renderIntervalGoal = function(activityItem, value) {
+		my.renderIntervalGoal = function(activityItem) {
 			NC.log('Render interval goal');
 			var t = _.template( $('#intervalValue').html() );
 			var dom = t(activityItem);
@@ -337,22 +415,81 @@ var NC_MODULE = {
 			var min = $('#field-' + activityItem.id + '-min');
 			var max = $('#field-' + activityItem.id + '-max');
 			
+			var idx = initGoalValue(activityItem.id, 'measurement');
+			
+			min.val(_data.goalValues[idx].minTarget);
+			max.val(_data.goalValues[idx].maxTarget);
+			
 			var updateIntervalValues = function(activityItem) {
-				_data.activityDefinitions['' + activityItem.id + ''] = new Object();
-				_data.activityDefinitions['' + activityItem.id + ''].id = activityItem.id;
-				_data.activityDefinitions['' + activityItem.id + ''].minTarget = $(min).val();
-				_data.activityDefinitions['' + activityItem.id + ''].maxTarget = $(max).val();
-				
+				_data.goalValues[idx].minTarget = $(min).val();
+				_data.goalValues[idx].maxTarget = $(max).val();
 				NC.log('Min target set to: ' + $(min).val() + ' for ' + activityItem.name);
 				NC.log('Max target set to: ' + $(max).val() + ' for ' + activityItem.name);
 			};
 			
-			$(min).on('blur keyup', function() {
+			$(min).on('change blur keyup', function() {
 				updateIntervalValues(activityItem);
 			});
 			
-			$(max).on('blur keyup', function() {
+			$(max).on('change blur keyup', function() {
 				updateIntervalValues(activityItem);
+			});
+		};
+		
+		var getIndexForDay = function(day) {
+			if (_data.dayTimes == undefined) {
+				NC.log('Day times are undefined. Create new array...');
+				_data.dayTimes = new Array();
+				return 0;
+			}
+			
+			for (var i = 0; i < _data.dayTimes.length; i++) {
+				var val = _data.dayTimes[i];
+				if (val.day == day) {
+					NC.log(day + ' found at index: ' + i);
+					return i;
+				}
+			}
+			
+			NC.log('Day index not found...');
+			return _data.dayTimes.length;
+		}
+		
+		my.doTimeRendering = function(my) {
+			
+			var val = $('#specifyTime').val().trim();
+			
+			NC.log('Adding time ' + val);
+			
+			/*
+			 * Loop through days
+			 */
+			$('#addTimesForm input:checkbox:checked').each(function(i, v) {
+				var day = $(v).prop('name');
+				
+				NC.log(day + ' is selected. Process...');
+				
+				var idx = getIndexForDay(day);
+				NC.log('Index of ' + day + ' is ' + idx);
+				
+				if (_data.dayTimes[idx] == undefined) {
+					NC.log('Initializing daytimes for: ' + day);
+					_data.dayTimes[idx] = new Object();
+					_data.dayTimes[idx].day = day;
+					_data.dayTimes[idx].times = new Array();
+				}
+				
+				// Does time already exist for day?
+				if ($.inArray(val, _data.dayTimes[idx].times) == -1) {
+					_data.dayTimes[idx].times.push(val);
+					my.renderTimes(my, day);
+				}
+			});
+		};
+		
+		my.renderAllTimes = function(my) {
+			$.each(_data.dayTimes, function(i, v) {
+				my.renderTimes(my, v.day);
 			});
 		};
 		
@@ -360,7 +497,8 @@ var NC_MODULE = {
 			
 			NC.log('Render times for ' + day);
 			
-			var times = _data.dayTimes[day].times;
+			var idx = getIndexForDay(day);
+			var times = _data.dayTimes[idx].times;
 			NC.log('Times are: ' + times);
 			
 			var container = $('#'+ day + '-container');
@@ -379,8 +517,8 @@ var NC_MODULE = {
 							e.preventDefault();
 							
 							NC.log('Remove ' + v + ' for ' + day);
-							var idx = $.inArray(v, _data.dayTimes[day].times);
-							_data.dayTimes[day].times.splice(idx, 1);
+							var pos = $.inArray(v, _data.dayTimes[idx].times);
+							_data.dayTimes[idx].times.splice(pos, 1);
 							
 							my.renderTimes(my, day);
 						})
@@ -391,6 +529,17 @@ var NC_MODULE = {
 				
 				container.show();
 			}
+		};
+		
+		my.save = function(my) {
+			NC.log('Save activity definition');
+			
+			var json = JSON.stringify(_data);
+			NC.log(json);
+			
+			new NC.Ajax().post('/activityPlans', _data, function(data) {
+				alert('Success!!!!');
+			});
 		};
 		
 		return my;

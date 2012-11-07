@@ -89,7 +89,14 @@ public interface HealthPlanService {
 	 * 
 	 * @return the result.
 	 */
-	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user);
+	ServiceResult<ActivityDefinition> addActvitiyToHealthPlan(final ActivityDefinition dto);
+	
+	/**
+	 * Load an activity definition
+	 * @param definitionId
+	 * @return
+	 */
+	ServiceResult<ActivityDefinition> loadDefinition(final Long definitionId);
 	
 	/**
 	 * Updates an existing activity definition

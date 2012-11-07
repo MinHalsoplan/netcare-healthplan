@@ -35,7 +35,8 @@
 			$(function() {
 				
 				var params = {
-					healthPlanid : '<c:out value="${requestScope.healthPlanId}" />',
+					healthPlanId : '<c:out value="${requestScope.healthPlanId}" />',
+					definitionId : '<c:out value="${requestScope.definitionId}" />',
 					templateId : '<c:out value="${param.template}" />'
 				};
 				
@@ -79,13 +80,13 @@
 						<button type="submit" class="btn btn-info">Lägg till</button>
 					</netcare:field>
 					
-					<input type="checkbox" name="monday"> Må
-					<input type="checkbox" name="tuesday"> Ti
-					<input type="checkbox" name="wednesday"> On
-					<input type="checkbox" name="thursday"> To
-					<input type="checkbox" name="friday"> Fr
-					<input type="checkbox" name="saturday"> Lö
-					<input type="checkbox" name="sunday"> Sö
+					<input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>
+					<input type="checkbox" name="tuesday"> <label for="tuesday" style="padding-right: 10px;">Ti</label>
+					<input type="checkbox" name="wednesday"> <label for="wednesday" style="padding-right: 10px;">On</label>
+					<input type="checkbox" name="thursday"> <label for="thursday" style="padding-right: 10px;">To</label>
+					<input type="checkbox" name="friday"> <label for="friday" style="padding-right: 10px;">Fr</label>
+					<input type="checkbox" name="saturday"> <label for="saturday" style="padding-right: 10px;">Lö</label>
+					<input type="checkbox" name="sunday"> <label for="sunday" style="padding-right: 10px;">Sö</label>
 				</form>
 				
 				<div id="monday-container" style="display: none;">
@@ -125,9 +126,11 @@
 				
 			</fieldset>
 			
-			<div class="form-actions">
-				<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
-				<button type="reset" class="btn"><spring:message code="clear" /></button>
-			</div>
+			<form id="saveForm">
+				<div class="form-actions">
+					<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
+					<button type="reset" class="btn"><spring:message code="clear" /></button>
+				</div>
+			</form>
 	</hp:viewBody>
 </hp:view>

@@ -18,12 +18,16 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Definition of an activity type
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonDeserialize(as=ActivityTypeImpl.class)
 public interface ActivityType extends Serializable {
 
 	/**

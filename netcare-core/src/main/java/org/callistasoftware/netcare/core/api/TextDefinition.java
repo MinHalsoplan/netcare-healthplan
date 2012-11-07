@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+
 public interface TextDefinition extends ActivityItemValuesDefinition {
 
 }

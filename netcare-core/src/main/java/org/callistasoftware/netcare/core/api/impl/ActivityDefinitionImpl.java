@@ -38,6 +38,7 @@ import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -47,6 +48,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ActivityDefinitionImpl implements ActivityDefinition {
 	private static final long serialVersionUID = 1L;
 	private Long id;

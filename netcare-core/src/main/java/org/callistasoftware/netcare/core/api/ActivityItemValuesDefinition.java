@@ -16,6 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemValuesDefinitionImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+@JsonDeserialize(as=ActivityItemValuesDefinitionImpl.class)
 public interface ActivityItemValuesDefinition {
 
 	/**

@@ -19,7 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.EstimationDefinition;
 import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
+import org.codehaus.jackson.annotate.JsonTypeName;
 
+@JsonTypeName(ActivityItemTypeImpl.ESTIMATION_ITEM_TYPE)
 public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
 
 	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {

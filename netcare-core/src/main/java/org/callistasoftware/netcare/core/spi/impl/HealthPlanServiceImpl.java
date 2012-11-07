@@ -258,14 +258,13 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long healthPlanId, final ActivityDefinition dto,
-			final UserBaseView user) {
-		log.info("Adding activity defintion to existing ordination with id {}", healthPlanId);
+	public ServiceResult<ActivityDefinition> addActvitiyToHealthPlan(final ActivityDefinition dto) {
+		log.info("Adding activity defintion to existing ordination with id {}", dto.getHealthPlanId());
 
-		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
+		final HealthPlanEntity entity = this.repo.findOne(dto.getHealthPlanId());
 		if (entity == null) {
 			return ServiceResultImpl
-					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, dto.getHealthPlanId()));
 		}
 
 		this.verifyWriteAccess(entity);
@@ -296,10 +295,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 		log.debug("Frequency: {}", Frequency.marshal(frequency));
 
-		final UserEntity userEntity = user.isCareActor() ? careActorRepository.findOne(user.getId())
-				: patientRepository.findOne(user.getId());
 		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency,
-				userEntity);
+				getCareActor());
 
 		log.debug("Setting public definition to {}", dto.isPublicDefinition());
 		newEntity.setPublicDefinition(dto.isPublicDefinition());
@@ -319,12 +316,12 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		scheduleActivities(savedEntity);
 
-		final HealthPlanEntity savedOrdination = this.repo.save(entity);
+		this.repo.save(entity);
 		log.debug("Health plan saved");
 
 		log.debug("Creating result. Success!");
-		final HealthPlan result = HealthPlanImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());
-		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
+		final ActivityDefinition def = ActivityDefinitionImpl.newFromEntity(savedEntity);
+		return ServiceResultImpl.createSuccessResult(def, new GenericSuccessMessage());
 	}
 
 	@Override
@@ -991,5 +988,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				}
 			}
 		}
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> loadDefinition(Long definitionId) {
+		final ActivityDefinitionEntity one = activityDefintionRepository.findOne(definitionId);
+		if (one == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, definitionId));
+		}
+		
+		one.isReadAllowed(getCareActor());
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(one), new GenericSuccessMessage());
 	}
 }

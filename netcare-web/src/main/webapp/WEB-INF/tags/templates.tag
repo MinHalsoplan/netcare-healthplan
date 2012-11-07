@@ -86,6 +86,14 @@
 </div>
 </script>
 
+<%-- Health plan activity def --%>
+<script id="healthPlanDefinitions" type="text/template">
+<div id="hp-ad-{{id}}" class="row-fluid">
+	<div class="span6">{{type.name}}</div>
+	<div class="span4"><a id="hp-ad-{{id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{id}}-remove" href="3">Avsluta</a></div>
+</div>
+</script>
+
 <%-- Activity planning - Single value --%>
 <script id="singleValue" type="text/template">
 <h4>{{name}}</h4>

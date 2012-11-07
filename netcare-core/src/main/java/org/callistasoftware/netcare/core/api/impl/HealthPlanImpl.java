@@ -46,7 +46,7 @@ public class HealthPlanImpl implements HealthPlan {
 	private CareUnit careUnit;
 	private CareActorBaseView issuedBy;
 	private PatientBaseView patient;
-	private ActivityDefinition[] activityDefintions;
+	private ActivityDefinition[] activityDefinitions;
 
 	private boolean autoRenewal;
 	private int iteration;
@@ -74,7 +74,9 @@ public class HealthPlanImpl implements HealthPlan {
 		dto.setActive(entity.isActive());
 		/*
 		 * Process defintions
-		 */		
+		 */
+		dto.setActivityDefinitions(ActivityDefinitionImpl.newFromEntities(entity.getActivityDefinitions()));
+		
 		
 		return dto;
 	}
@@ -143,8 +145,12 @@ public class HealthPlanImpl implements HealthPlan {
 	}
 
 	@Override
-	public ActivityDefinition[] getActivityDefintions() {
-		return this.activityDefintions;
+	public ActivityDefinition[] getActivityDefinitions() {
+		return this.activityDefinitions;
+	}
+	
+	public void setActivityDefinitions(final ActivityDefinition[] definitions) {
+		this.activityDefinitions = definitions;
 	}
 
 	@Override

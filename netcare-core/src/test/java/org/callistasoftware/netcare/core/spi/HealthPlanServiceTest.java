@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.HealthPlan;
@@ -231,6 +232,7 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		final ActivityDefinitionImpl impl = new ActivityDefinitionImpl();
 
+		impl.setHealthPlanId(savedOrd.getId());
 		impl.setType(typeImpl);
 		impl.setActivityRepeat(2);
 		impl.setGoalValues(new MeasurementDefinitionImpl[] { md });
@@ -253,10 +255,11 @@ public class HealthPlanServiceTest extends TestSupport {
 		final CareActorBaseView cabv = CareActorBaseViewImpl.newFromEntity(savedCa);
 		this.runAs(cabv);
 
-		final ServiceResult<HealthPlan> result = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl, cabv);
+		final ServiceResult<ActivityDefinition> result = this.service.addActvitiyToHealthPlan(impl);
 		assertTrue(result.isSuccess());
 
 		final ActivityDefinitionImpl impl2 = new ActivityDefinitionImpl();
+		impl2.setHealthPlanId(savedOrd.getId());
 		impl2.setType(typeImpl);
 		impl2.setActivityRepeat(0);
 		impl2.setStartDate("2013-01-30");
@@ -267,8 +270,10 @@ public class HealthPlanServiceTest extends TestSupport {
 		dt3.setDay("wednesday");
 		dt3.setTimes(new String[] { "07:15", "12:00", "22:45" });
 		impl2.setDayTimes(new DayTimeImpl[] { dt3 });
-		final ServiceResult<HealthPlan> result2 = this.service.addActvitiyToHealthPlan(savedOrd.getId(), impl2,
-				CareActorBaseViewImpl.newFromEntity(ca));
+		
+		this.runAs(CareActorBaseViewImpl.newFromEntity(ca));
+		
+		final ServiceResult<ActivityDefinition> result2 = this.service.addActvitiyToHealthPlan(impl2);
 		assertTrue(result2.isSuccess());
 
 		this.schedRepo.flush();

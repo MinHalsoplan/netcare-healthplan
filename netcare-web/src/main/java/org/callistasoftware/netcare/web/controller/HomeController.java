@@ -91,7 +91,17 @@ public class HomeController extends ControllerSupport {
 		m.addAttribute("healthPlanId", healthPlan);
 		return "admin/plan";
 	}
+	
+	@RequestMapping(value="/admin/healthplans/{healthPlanId}/plan/{definitionId}", method=RequestMethod.GET)
+	public String planActivity(@PathVariable("healthPlanId") final Long healthPlanId,
+			@PathVariable("definitionId") final Long definitionId, final Model m) {
+		
+		m.addAttribute("healthPlanId", healthPlanId);
+		m.addAttribute("definitionId", definitionId);
+		
+		return "admin/plan";
 
+	}
 	@RequestMapping(value = "/admin/categories", method = RequestMethod.GET)
 	public String displayActivityCategories() {
 		return "admin/categories";

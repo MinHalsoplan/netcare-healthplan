@@ -17,10 +17,12 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.YesNoDefinition;
+import org.callistasoftware.netcare.core.api.TextDefinition;
 import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
+import org.codehaus.jackson.annotate.JsonTypeName;
 
-public class TextDefinitionImpl extends ActivityItemValuesDefinitionImpl implements YesNoDefinition {
+@JsonTypeName(ActivityItemTypeImpl.TEXT_ITEM_TYPE)
+public class TextDefinitionImpl extends ActivityItemValuesDefinitionImpl implements TextDefinition {
 
 	public static ActivityItemValuesDefinition newFromEntity(TextDefinitionEntity entity) {
 		TextDefinitionImpl textDefinition = new TextDefinitionImpl();

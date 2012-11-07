@@ -58,6 +58,13 @@
 #chooseSaveWrapper {
 	
 }
+
+div[id*=hp-ad].row-fluid { 
+	border-bottom: 1px #cccccc dotted;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 ul.itemList {
 	list-style: none;
 	margin: 0 0 0 0;
