@@ -18,7 +18,10 @@ package org.callistasoftware.netcare.core.api;
 
 import java.util.Set;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public interface CareActorBaseView extends UserBaseView {
 
 	/**

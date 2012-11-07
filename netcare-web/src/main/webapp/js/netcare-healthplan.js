@@ -271,8 +271,23 @@ var NC_MODULE = {
 					
 					_isNew = true;
 					
-					_data = data.data;
-					_templateData = _data.type;
+					_data.id = data.data.id;
+					_data.healthPlanId = params.healthPlanId;
+					_data.goalValues = data.data.goalValues;
+					
+					$.each(data.data.dayTimes, function(i,v) {
+						_data.dayTimes[i] = new Object();
+						_data.dayTimes[i].day = v.day;
+						_data.dayTimes[i].times = v.times;
+					});
+					
+					_data.startDate = data.data.startDate;
+					_data.activityRepeat = data.data.activityRepeat;
+					
+					_data.type = new Object();
+					_data.type.id = data.data.type.id;
+					
+					_templateData = data.data.type;
 					
 					my.renderGoals(that);
 					my.renderAllTimes(that);
@@ -285,6 +300,7 @@ var NC_MODULE = {
 					
 					_templateData = data;
 					
+					_data.healthPlanId = params.healthPlanId;
 					_data.type = new Object();
 					_data.type.id = _templateData.id;
 					
@@ -327,6 +343,13 @@ var NC_MODULE = {
 					$('#specifyTime').val('');
 				}
 			});
+			
+			$('#addTimesForm :reset').click(function(e) {
+				NC.log('Resetting all times');
+				e.preventDefault();
+				_data.dayTimes = undefined;
+				my.resetTimes(my);
+			})
 			
 			$('input[name="startDate"]').on('blur keyup change', function() {
 				_data.startDate = $(this).val();
@@ -493,6 +516,16 @@ var NC_MODULE = {
 			});
 		};
 		
+		my.resetTimes = function(my) {
+			$('#monday-container').hide().find('.times').empty();
+			$('#tuesday-container').hide().find('.times').empty();
+			$('#wednesday-container').hide().find('.times').empty();
+			$('#thursday-container').hide().find('.times').empty();
+			$('#friday-container').hide().find('.times').empty();
+			$('#saturday-container').hide().find('.times').empty();
+			$('#sunday-container').hide().find('.times').empty();
+		};
+		
 		my.renderTimes = function(my, day) {
 			
 			NC.log('Render times for ' + day);
@@ -537,9 +570,16 @@ var NC_MODULE = {
 			var json = JSON.stringify(_data);
 			NC.log(json);
 			
-			new NC.Ajax().post('/activityPlans', _data, function(data) {
-				alert('Success!!!!');
-			});
+			if (_isNew) {
+				new NC.Ajax().post('/activityPlans', _data, function(data) {
+					_isNew = false;
+					alert('Successfully removed');
+				});
+			} else {
+				new NC.Ajax().post('/activityPlans' + _data.id, _data, function(data) {
+					alert('Successfully updated');
+				});
+			}
 		};
 		
 		return my;

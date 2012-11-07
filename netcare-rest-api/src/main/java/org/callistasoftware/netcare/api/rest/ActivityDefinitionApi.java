@@ -42,6 +42,14 @@ public class ActivityDefinitionApi extends ApiSupport {
 		return this.service.addActvitiyToHealthPlan(activity);
 	}
 	
+	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityDefinition> updateDefinition(@PathVariable("id") final Long id,
+			@RequestBody final ActivityDefinition data) {
+		logAccess("update", "activity definition");
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> loadActivityDefinition(@PathVariable("id") final Long id) {

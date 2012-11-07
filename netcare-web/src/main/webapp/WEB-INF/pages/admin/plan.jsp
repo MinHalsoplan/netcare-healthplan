@@ -78,6 +78,7 @@
 					<netcare:field name="specifyTime" label="${addTime}">
 						<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2"/>
 						<button type="submit" class="btn btn-info">Lägg till</button>
+						<button type="reset" class="btn btn-danger">Rensa</button>
 					</netcare:field>
 					
 					<input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>
