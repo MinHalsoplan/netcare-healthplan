@@ -44,7 +44,7 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Planera aktivitet">
-		<form id="activityForm" action="#" method="post">
+		
 			<fieldset id="activityFieldset">
 				<legend><spring:message code="activity.form.goals" /></legend>
 			</fieldset>
@@ -73,14 +73,55 @@
 			
 			<fieldset>
 				<legend><spring:message code="activity.form.specifyTimes" /></legend>
-
-				<hp:timeContainer name="monday" />
-				<hp:timeContainer name="tuesday" />
-				<hp:timeContainer name="wednesday" />
-				<hp:timeContainer name="thursday" />
-				<hp:timeContainer name="friday" />
-				<hp:timeContainer name="saturday" />
-				<hp:timeContainer name="sunday" />
+				<form id="addTimesForm" class="form-inline">
+					<netcare:field name="specifyTime" label="${addTime}">
+						<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2"/>
+						<button type="submit" class="btn btn-info">Lägg till</button>
+					</netcare:field>
+					
+					<input type="checkbox" name="monday"> Må
+					<input type="checkbox" name="tuesday"> Ti
+					<input type="checkbox" name="wednesday"> On
+					<input type="checkbox" name="thursday"> To
+					<input type="checkbox" name="friday"> Fr
+					<input type="checkbox" name="saturday"> Lö
+					<input type="checkbox" name="sunday"> Sö
+				</form>
+				
+				<div id="monday-container" style="display: none;">
+					<h4>Måndag</h4>
+					<div class="times"></div>
+				</div>
+				
+				<div id="tuesday-container" style="display: none;">
+					<h4>Tisdag</h4>
+					<div class="times"></div>
+				</div>
+				
+				<div id="wednesday-container" style="display: none;">
+					<h4>Onsdag</h4>
+					<div class="times"></div>
+				</div>
+				
+				<div id="thursday-container" style="display: none;">
+					<h4>Torsdag</h4>
+					<div class="times"></div>
+				</div>
+				
+				<div id="friday-container" style="display: none;">
+					<h4>Fredag</h4>
+					<div class="times"></div>
+				</div>
+				
+				<div id="saturday-container" style="display: none;">
+					<h4>Lördag</h4>
+					<div class="times"></div>
+				</div>
+				
+				<div id="sunday-container" style="display: none;">
+					<h4>Söndag</h4>
+					<div class="times"></div>
+				</div>
 				
 			</fieldset>
 			
@@ -88,7 +129,5 @@
 				<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
 				<button type="reset" class="btn"><spring:message code="clear" /></button>
 			</div>
-		
-		</form>
 	</hp:viewBody>
 </hp:view>

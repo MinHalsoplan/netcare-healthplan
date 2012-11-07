@@ -247,6 +247,56 @@ var NC_MODULE = {
 				_templateData = data;
 				my.renderGoals(that);
 			});
+			
+			/*
+			 * Check if we should load an activity
+			 * definition here and populate the form
+			 */
+			
+			my.initListeners(that);
+		};
+		
+		my.initListeners = function(my) {
+			$('#addTimesForm').submit(function(e) {
+				e.preventDefault();
+				
+				if ($('#addTimesForm input:checkbox:checked').length == 0) {
+					NC.log('No days specified');
+				} else {
+				
+					my.doTimeRendering(my);
+				
+					/* Uncheck checkboxes and reset value */
+					$('#addTimesForm input:checkbox:checked').each(function(i, v) {
+						$(this).prop('checked', false);
+					});
+					
+					$('#specifyTime').val('');
+				}
+			});
+		};
+		
+		my.doTimeRendering = function(my) {
+			
+			var val = $('#specifyTime').val().trim();
+			
+			/*
+			 * Loop through days
+			 */
+			$('#addTimesForm input:checkbox:checked').each(function(i, v) {
+				var day = $(v).prop('name');
+				if (_data.dayTimes[day] == undefined) {
+					_data.dayTimes[day] = new Object();
+					_data.dayTimes[day].day = day;
+					_data.dayTimes[day].times = new Array();
+				}
+				
+				// Does time already exist for day?
+				if ($.inArray(val, _data.dayTimes[day].times) == -1) {
+					_data.dayTimes[day].times.push(val);
+					my.renderTimes(my, day);
+				}
+			});
 		};
 		
 		my.renderGoals = function(my) {
@@ -304,6 +354,43 @@ var NC_MODULE = {
 			$(max).on('blur keyup', function() {
 				updateIntervalValues(activityItem);
 			});
+		};
+		
+		my.renderTimes = function(my, day) {
+			
+			NC.log('Render times for ' + day);
+			
+			var times = _data.dayTimes[day].times;
+			NC.log('Times are: ' + times);
+			
+			var container = $('#'+ day + '-container');
+			
+			container.hide();
+			container.find('.times').empty();
+		
+			if (times.length > 0) {
+				$.each(times, function(i, v) {
+					
+					var tc = $('<span>').css({'display' : 'inline', 'padding-right' : '20px'});
+					tc.append(
+						$('<span>').html(v)
+					).append(
+						$('<a>').html(' ×').click(function(e) {
+							e.preventDefault();
+							
+							NC.log('Remove ' + v + ' for ' + day);
+							var idx = $.inArray(v, _data.dayTimes[day].times);
+							_data.dayTimes[day].times.splice(idx, 1);
+							
+							my.renderTimes(my, day);
+						})
+					);
+					
+					container.find('.times').append(tc);
+				});
+				
+				container.show();
+			}
 		};
 		
 		return my;
