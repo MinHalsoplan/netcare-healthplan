@@ -240,6 +240,9 @@ var NC_MODULE = {
 			var that = this;
 			this.params = params;
 			
+			_data.activityDefinitions = new Array();
+			_data.dayTimes = new Array();
+			
 			NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
 				_templateData = data;
 				my.renderGoals(that);
@@ -264,6 +267,14 @@ var NC_MODULE = {
 			var dom = t(activityItem);
 			
 			$('#activityFieldset').append($(dom));
+			
+			$('#field-' + activityItem.id).on('blur keyup', function() {
+				_data.activityDefinitions['' + activityItem.id + ''] = new Object();
+				_data.activityDefinitions['' + activityItem.id + ''].id = activityItem.id;
+				_data.activityDefinitions['' + activityItem.id + ''].target = $(this).val();
+				
+				NC.log('Target set to: ' + $(this).val() + ' for ' + activityItem.name);
+			});
 		};
 		
 		my.renderIntervalGoal = function(activityItem, value) {
@@ -272,6 +283,27 @@ var NC_MODULE = {
 			var dom = t(activityItem);
 			
 			$('#activityFieldset').append($(dom));
+			
+			var min = $('#field-' + activityItem.id + '-min');
+			var max = $('#field-' + activityItem.id + '-max');
+			
+			var updateIntervalValues = function(activityItem) {
+				_data.activityDefinitions['' + activityItem.id + ''] = new Object();
+				_data.activityDefinitions['' + activityItem.id + ''].id = activityItem.id;
+				_data.activityDefinitions['' + activityItem.id + ''].minTarget = $(min).val();
+				_data.activityDefinitions['' + activityItem.id + ''].maxTarget = $(max).val();
+				
+				NC.log('Min target set to: ' + $(min).val() + ' for ' + activityItem.name);
+				NC.log('Max target set to: ' + $(max).val() + ' for ' + activityItem.name);
+			};
+			
+			$(min).on('blur keyup', function() {
+				updateIntervalValues(activityItem);
+			});
+			
+			$(max).on('blur keyup', function() {
+				updateIntervalValues(activityItem);
+			});
 		};
 		
 		return my;

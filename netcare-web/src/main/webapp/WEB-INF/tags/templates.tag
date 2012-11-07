@@ -101,18 +101,23 @@
 <%-- Activity planning - Interval value --%>
 <script id="intervalValue" type="text/template">
 <h4>{{name}}</h4>
-<div class="control-group">
-	<label for="field-{{id}}-min">Målvärde (min)</label>
-	<div class="controls">
-		<input id="field-{{id}}-min" type="text" />
-		<span class="help-inline">{{unit.value}}</span>
+<div class="row-fluid">
+	<div class="span6">
+		<div class="control-group">
+			<label for="field-{{id}}-min">Målvärde (min)</label>
+			<div class="controls">
+				<input id="field-{{id}}-min" type="text" />
+				<span class="help-inline">{{unit.value}}</span>
+			</div>
+		</div>
 	</div>
-</div>
-<div class="control-group">
-	<label for="field-{{id}}-max">Målvärde (max)</label>
-	<div class="controls">
-		<input id="field-{{id}}-max" type="text" />
-		<span class="help-inline">{{unit.value}}</span>
+	<div class="span6">
+		<div class="control-group">
+		<label for="field-{{id}}-max">Målvärde (max)</label>
+		<div class="controls">
+			<input id="field-{{id}}-max" type="text" />
+			<span class="help-inline">{{unit.value}}</span>
+		</div>
 	</div>
 </div>
 </script>
