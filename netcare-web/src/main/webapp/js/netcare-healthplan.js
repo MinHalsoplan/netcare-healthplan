@@ -627,7 +627,7 @@ var NC_MODULE = {
 
 			$(':submit').click(function(e) {
 				e.preventDefault();
-				my.searchTemplates();
+				my.searchTemplates(my);
 			})
 		};
 
@@ -780,7 +780,7 @@ var NC_MODULE = {
 			
 			if (params.templateId != -1) {
 				my.loadTemplate(params.templateId, function(data) {
-					activityTemplate = data.data;
+					activityTemplate = data;
 					renderItems(my, activityTemplate);
 					NC.log(activityTemplate);
 				});
