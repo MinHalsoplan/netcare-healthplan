@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -374,6 +375,11 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	List<ActivityTypeEntity> processTemplatesInUse(final List<ActivityTypeEntity> entities) {
 		log.debug("Processing templates in use...");
+		if (entities.isEmpty()) {
+			log.debug("No entities to process.");
+			return Collections.emptyList();
+		}
+		
 		final Collection<Long> ids = new ArrayList<Long>(entities.size());
 		for (final ActivityTypeEntity ent : entities) {
 			ids.add(ent.getId());

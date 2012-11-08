@@ -33,7 +33,7 @@ NC.ReportedActivities = function(messages) {
 					load = 'all';
 				}
 				
-				_ajax.get('/healthplan/activity/reported/' + load, function(data) {
+				_ajax.get('/healthplans/activity/reported/' + load, function(data) {
 					
 					if (data.data.length == 0) {
 						onNoData();
