@@ -30,7 +30,7 @@ var NC_MODULE = {
 			// Show spinner
 
 			$('#inboxDetailWrapper .wrapper').load(
-					GLOB_CTX_PATH + '/netcare/' + url
+					NC.getContextPath() + '/netcare/' + url
 							+ ' #maincontainerwrapper', function() {
 						module.init(moduleParams);
 						// Hide spinner
@@ -177,7 +177,7 @@ var NC_MODULE = {
 			 */
 			var liElem = $('#healthPlanItem' + hp.id).next('.item');
 			liElem.click(function() {
-				window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + hp.id;
+				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id;
 			});
 			
 			if (hp.autoRenewal) {
@@ -233,7 +233,7 @@ var NC_MODULE = {
 						e.preventDefault();
 						e.stopPropagation();
 						
-						window.location = GLOB_CTX_PATH = '/netcare/admin/healthplans/' + hp.id + '/plan/' + ad.id;
+						window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id + '/plan/' + ad.id;
 					});
 				});
 			}
@@ -651,11 +651,11 @@ var NC_MODULE = {
 			if (_isNew == true) {
 				new NC.Ajax().post('/activityPlans', _data, function(data) {
 					_isNew = false;
-					window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
+					window.location = NC.getContextPath() + '/netcare/admin/healthplans';
 				});
 			} else {
 				new NC.Ajax().post('/activityPlans/' + _data.id, _data, function(data) {
-					window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
+					window.location = NC.getContextPath() + '/netcare/admin/healthplans';
 				});
 			}
 		};
@@ -790,9 +790,9 @@ var NC_MODULE = {
 				NC.log('Health plan: ' + my.params.healthPlanId);
 				if (my.params.healthPlanId != '') {
 					NC.log('Add to health plan ' + my.params.healthPlanId);
-					window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + my.params.healthPlanId + '/plan/new?template=' + template.id;
+					window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + my.params.healthPlanId + '/plan/new?template=' + template.id;
 				} else {
-					window.location = GLOB_CTX_PATH + '/netcare/admin/template/' + template.id;
+					window.location = NC.getContextPath() + '/netcare/admin/template/' + template.id;
 				}
 			});
 			
