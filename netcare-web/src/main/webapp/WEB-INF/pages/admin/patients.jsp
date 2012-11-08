@@ -65,7 +65,7 @@
 							 */
 							support.selectPatient(data.data.id, function(data) {
 								NC.log("Created patient selected. Go to home...");
-								window.location = NC.getContextPath() + '/netcare/admin/healthplans';
+								window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
 							});
 						}
 					}
@@ -93,7 +93,7 @@
 									e.preventDefault();
 									support.selectPatient(value.id, function(data) {
 										util.updateCurrentPatient(data.data.name);
-										window.location = NC.getContextPath() + '/netcare/admin/healthplans';
+										window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
 									});
 								});
 								
@@ -144,21 +144,47 @@
 					
 					$('#patientForm :reset').click();
 				});
+				
+				$('#showCreatePatient').click(function(e) {
+					$('#patientForm').toggle();
+				});
+				
+				var showForm = '<c:out value="${param.showForm}" />';
+				if (showForm != '') {
+					$('#patientForm').toggle();
+				}
 			});
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Patienter">
-		<h2><spring:message code="admin.patients.new" /></h2>
-		<p>
-			<span class="label label-info"><spring:message code="information" /></span>
-			<spring:message code="admin.patients.desc" />
-		</p>
+		<section id="patients">
+			<h2><spring:message code="admin.patients.list" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="admin.patients.list.desc" />
+			</p>
+			<netcare:block-message type="info" style="display:none;">
+				<spring:message code="admin.patients.none" />
+			</netcare:block-message>
+			<netcare:table id="patientsTable">
+				<thead>
+					<tr>
+						<th><spring:message code="patient.surName" /></th>
+						<th><spring:message code="patient.firstName" /></th>
+						<th><spring:message code="patient.crn" /></th>
+						<th><spring:message code="patient.phoneNumber" />
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</netcare:table>
+		</section>
+	
+		<button id="showCreatePatient" class="btn btn-block btn-large btn-info" style="margin-top: 20px; margin-bottom: 20px;">
+			<spring:message code="admin.patients.new" />
+		</button>
 		
-		<form id="patientForm">
-			<fieldset>
-				<legend><spring:message code="admin.patients.new" /></legend>
-			</fieldset>
-			
+		<form id="patientForm" style="display: none;">
 			<netcare:row>
 				<netcare:col span="4">
 					<spring:message code="patient.firstName" var="name" scope="page"/>
@@ -197,28 +223,5 @@
 			</div>
 			
 		</form>
-		
-		<section id="patients">
-			<h3><spring:message code="admin.patients.list" /></h3>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="admin.patients.list.desc" />
-			</p>
-			<netcare:block-message type="info" style="display:none;">
-				<spring:message code="admin.patients.none" />
-			</netcare:block-message>
-			<netcare:table id="patientsTable">
-				<thead>
-					<tr>
-						<th><spring:message code="patient.surName" /></th>
-						<th><spring:message code="patient.firstName" /></th>
-						<th><spring:message code="patient.crn" /></th>
-						<th><spring:message code="patient.phoneNumber" />
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</netcare:table>
-		</section>
 	</hp:viewBody>
 </hp:view>

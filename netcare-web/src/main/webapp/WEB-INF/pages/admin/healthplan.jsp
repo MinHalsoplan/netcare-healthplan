@@ -44,7 +44,8 @@
 				var params = {
 					healthplanId : -1,
 					patientId : '<c:out value="${patientId}" />',
-					lang : lang
+					lang : lang,
+					showForm : '<c:out value="${param.showForm}" />'
 				};
 				
 				NC_MODULE.HEALTH_PLAN.init(params);

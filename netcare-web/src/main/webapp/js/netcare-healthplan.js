@@ -95,6 +95,10 @@ var NC_MODULE = {
 			 * Load all in list
 			 */
 			my.loadHealthPlans(that);
+			
+			if (my.params.showForm != '') {
+				$('#createHealthPlanForm').toggle();
+			}
 		};
 		
 		my.loadDurations = function() {
@@ -388,10 +392,29 @@ var NC_MODULE = {
 		my.renderGoals = function(my) {
 			NC.log('Render goals');
 			$.each(_templateData.activityItems, function(i, v) {
-				if (v.activityItemTypeName == "measurement" && v.valueType.code == "INTERVAL") {
-					my.renderIntervalGoal(v);
-				} else if (v.activityItemTypeName == "measurement" && v.valueType.code == "SINGLE_VALUE") {
-					my.renderSingleGoal(v);
+				
+				if (v.activityItemTypeName == "measurement") {
+					if (v.valueType.code == "INTERVAL") {
+						my.renderIntervalGoal(v);
+					} else if (v.valueType.code == "SINGLE_VALUE") {
+						my.renderSingleGoal(v);
+					} else {
+						throw new Error('Undefined value type for measurement');
+					}
+					
+					$('#activityFieldset').show();
+					
+				} else if (v.activityItemTypeName == "estimation") {
+					my.renderEstimationGoal(my, v);
+					$('#estimationItemsFieldset').show();
+				} else if (v.activityItemTypeName == "yesno") {
+					my.renderYesNoGoal(my, v);
+					$('#yesNoItemsFieldset').show();
+				} else if (v.activityItemTypeName == "text") {
+					my.renderTextGoal(my, v);
+					$('#textItemsFieldset').show();
+				} else {
+					throw new Error('Unknown activity item type');
 				}
 			});
 		};
@@ -408,7 +431,7 @@ var NC_MODULE = {
 			}
 			
 			return -1;
-		}
+		};
 		
 		var initGoalValue = function(id, type) {
 			
@@ -433,7 +456,36 @@ var NC_MODULE = {
 			// Set valueType of goal value
 			_data.goalValues[idx].valueType = type;
 			return idx;
-		} 
+		}; 
+		
+		my.renderEstimationGoal = function(my, activityItem) {
+			NC.log('Render estimation goal');
+			var idx = initGoalValue(activityItem.id, 'estimation');
+			
+			var i = activityItem;
+			$('#estimationItemsFieldset').append(
+				$('<p>').html(i.name + ' (' + i.minScaleValue + ' = ' + i.minScaleText + ', ' + i.maxScaleValue + ' = ' + i.maxScaleText + ')')
+			);
+		};
+		
+		my.renderYesNoGoal = function(my, activityItem) {
+			NC.log('Render yes/no gaol');
+			var idx = initGoalValue(activityItem.id, 'yesno');
+			
+			$('#yesNoItemsFieldset').append(
+				$('<p>').html(activityItem.question)
+			);
+		};
+		
+		my.renderTextGoal = function(my, activityItem) {
+			NC.log('Render text goal');
+			
+			var idx = initGoalValue(activityItem.id, 'text');
+			
+			$('#textItemsFieldset').append(
+				$('<p>').html(activityItem.label)
+			);
+		};
 		
 		my.renderSingleGoal = function(activityItem) {
 			NC.log('Render single goal');

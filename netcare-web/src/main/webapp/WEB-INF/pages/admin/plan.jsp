@@ -46,8 +46,20 @@
 	</hp:viewHeader>
 	<hp:viewBody title="Planera aktivitet">
 		
-			<fieldset id="activityFieldset">
+			<fieldset id="activityFieldset" style="display: none;">
 				<legend><spring:message code="activity.form.goals" /></legend>
+			</fieldset>
+			
+			<fieldset id="yesNoItemsFieldset" style="display: none;">
+				<legend><spring:message code="activity.form.yesnoItems" /></legend>
+			</fieldset>
+			
+			<fieldset id="estimationItemsFieldset" style="display: none;">
+				<legend><spring:message code="activity.form.estimationItems" /></legend>
+			</fieldset>
+			
+			<fieldset id="textItemsFieldset" style="display: none;">
+				<legend><spring:message code="activity.form.textItems" /></legend>
 			</fieldset>
 			
 			<fieldset id="scheduleFieldset">
