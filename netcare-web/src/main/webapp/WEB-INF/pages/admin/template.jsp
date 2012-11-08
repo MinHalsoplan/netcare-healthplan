@@ -100,6 +100,9 @@
 							5.
 							<spring:message code="template.step3.title" />
 						</h4>
+						<div id="accessNote" class="alert alert-error" style="display: none;">
+							<spring:message code="template.noAccess" />
+						</div>
 						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">
 							<button id="activitySaveButton" class="btn btn-info" type="button"><spring:message code="template.save" /></button>
 						</div>

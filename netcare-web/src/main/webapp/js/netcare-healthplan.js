@@ -995,9 +995,16 @@ var NC_MODULE = {
 		};
 
 		var renderItems = function(my, activityTemplate) {
+			var aLevel = activityTemplate.accessLevel.code;
+			
+			if (my.params.isCareActor == "true" && my.params.isCountyActor == "false" && aLevel != "CAREUNIT") {
+				$('#activitySaveButton').prop('disabled', true);
+				$('#accessNote').show();
+			}
+			
 			$('#activityTypeName').val(activityTemplate.name);
 			$('#activityTypeCategory > option[value="' + activityTemplate.category.id + '"]').prop('selected', true);
-			$('#activityTypeAccessLevel > option[value="' + activityTemplate.accessLevel.code + '"]').prop('selected', true);
+			$('#activityTypeAccessLevel > option[value="' + aLevel + '"]').prop('selected', true);
 			
 			var template = _.template($('#activityItemTemplate').html());
 			$('#activityTypeItems').empty();
