@@ -102,6 +102,11 @@ var NC_MODULE = {
 		};
 		
 		my.initListeners = function() {
+			
+			$('#showCreateHealthPlan').click(function() {
+				$('#createHealthPlanForm').toggle();
+			});
+			
 			$('input[name="name"]').on('keyup blur', function() {
 				_data.name = $(this).val();
 				NC.log('Updated name to: ' + _data.name);
@@ -152,47 +157,55 @@ var NC_MODULE = {
 				$('#healthPlanContainer').empty();
 				
 				$.each(data.data, function(i, v) {
-					var t = _.template($('#healthPlanItem').html());
-					if (t == undefined) {
-						throw new Error('Template undefined');
-					}
-					
-					var dom = t(v);
-					$('#healthPlanContainer').append($(dom));
-					
-					/*
-					 * Bind click event
-					 */
-					var liElem = $('#healthPlanItem' + v.id).next('.item');
-					liElem.click(function() {
-						window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + v.id;
-					});
-					
-					if (v.autoRenewal) {
-						liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
-					} else {
-						liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' ' + v.endDate);
-					}
-					
-					var detailsTemplate = _.template($('#healthPlanDetails').html());
-					var detailsDom = detailsTemplate(v);
-					
-					liElem.find('.row-fluid').after($(detailsDom));
-					
-					my.processDefinitions(my, v);
-					
-					var expander = $('<div>').addClass('mvk-icon toggle').click(function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						$('#hp-details-' + v.id).toggle();
-					}) ;
-					
-					liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
-					.append(expander);
-					
+					my.buildHealthPlanItem(my, v);
 				});
 				
 			}, false);
+		};
+		
+		my.buildHealthPlanItem = function(my, hp) {
+			var t = _.template($('#healthPlanItem').html());
+			var dom = t(hp);
+			$('#healthPlanContainer').append($(dom));
+			
+			/*
+			 * Bind click event
+			 */
+			var liElem = $('#healthPlanItem' + hp.id).next('.item');
+			liElem.click(function() {
+				window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans/' + hp.id;
+			});
+			
+			if (hp.autoRenewal) {
+				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
+			} else {
+				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' ' + hp.endDate);
+			}
+			
+			var detailsTemplate = _.template($('#healthPlanDetails').html());
+			var detailsDom = detailsTemplate(hp);
+			
+			liElem.find('.row-fluid').after($(detailsDom));
+			
+			my.processDefinitions(my, hp);
+			
+			var expander = $('<div>').addClass('mvk-icon toggle').click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$('#hp-details-' + hp.id).toggle();
+			}) ;
+			
+			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
+			.append(expander);
+			
+			$('#hp-inactivate-' + hp.id).click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				NC.log('Inactivate health plan ' + hp.id);
+				my.inactivate(my, hp);
+			});
+			
 		};
 		
 		my.processDefinitions = function(my, hp) {
@@ -201,7 +214,7 @@ var NC_MODULE = {
 			
 			if (hp.activityDefinitions.length == 0) {
 				NC.log('No activity definitions yet available');
-				$('#hp-details-' + v.id).find('.span12').append(
+				$('#hp-details-' + hp.id).find('.span12').append(
 					$('<p>').css({'font-style' : 'italic'}).html('Inga aktiviteter planerade ännu')
 				);
 			} else {
@@ -217,14 +230,17 @@ var NC_MODULE = {
 						e.stopPropagation();
 						
 						window.location = GLOB_CTX_PATH = '/netcare/admin/healthplans/' + hp.id + '/plan/' + ad.id;
-					})
-					
+					});
 				});
 			}
 		};
 		
-		my.renderForm = function(my) {
-			
+		my.inactivate = function(my, healthPlan) {
+			var id = healthPlan.id;
+			new NC.Ajax().http_delete('/healthplans/' + id, function() {
+				$('#healthPlanItem' + id).next('li').fadeOut('fast');
+				$('#healthPlanItem' + id).remove();
+			});
 		};
 		
 		my.validate = function() {
@@ -241,7 +257,14 @@ var NC_MODULE = {
 			if (my.validate()) {
 				NC.log('Saving health plan. Data is: ' + _data);
 				new NC.Ajax().post('/healthplans', _data, function(data) {
-					alert('New health plan saved');
+					
+					/*
+					 * Add new item in list and hide form
+					 */
+					$('#createHealthPlanForm').hide();
+					
+					NC.log('New healthplan created with id: ' + data.data.id);
+					my.buildHealthPlanItem(data.data);
 				}, true);
 			}
 		};
@@ -269,7 +292,7 @@ var NC_MODULE = {
 			if (params.definitionId != '') {
 				new NC.Ajax().get('/activityPlans/' + params.definitionId, function(data) {
 					
-					_isNew = true;
+					_isNew = false;
 					
 					_data.id = data.data.id;
 					_data.healthPlanId = params.healthPlanId;
@@ -296,7 +319,7 @@ var NC_MODULE = {
 			} else {
 				NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
 					
-					_isNew = false;
+					_isNew = true;
 					
 					_templateData = data;
 					
@@ -393,7 +416,6 @@ var NC_MODULE = {
 			if (idx == -1) {
 				NC.log('Goal value for ' + id + ' is not yet defined');
 				var gv = new Object();
-				gv.valueType = type;
 				gv.id = -1;
 				
 				gv.activityItemType = new Object();
@@ -408,6 +430,8 @@ var NC_MODULE = {
 				idx = _data.goalValues.length - 1;
 			}
 			
+			// Set valueType of goal value
+			_data.goalValues[idx].valueType = type;
 			return idx;
 		} 
 		
@@ -570,14 +594,16 @@ var NC_MODULE = {
 			var json = JSON.stringify(_data);
 			NC.log(json);
 			
-			if (_isNew) {
+			NC.log('Saving activity plan. Plan is new? ' + _isNew);
+			
+			if (_isNew == true) {
 				new NC.Ajax().post('/activityPlans', _data, function(data) {
 					_isNew = false;
-					alert('Successfully removed');
+					window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
 				});
 			} else {
-				new NC.Ajax().post('/activityPlans' + _data.id, _data, function(data) {
-					alert('Successfully updated');
+				new NC.Ajax().post('/activityPlans/' + _data.id, _data, function(data) {
+					window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
 				});
 			}
 		};

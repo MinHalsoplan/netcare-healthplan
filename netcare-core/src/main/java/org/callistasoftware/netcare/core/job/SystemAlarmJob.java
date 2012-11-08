@@ -172,7 +172,7 @@ public class SystemAlarmJob {
 	
 	//
 	private void plans(Date endDate) {
-		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThan(endDate);
+		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalse(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
 			if (hpe.isAutoRenewal()) {

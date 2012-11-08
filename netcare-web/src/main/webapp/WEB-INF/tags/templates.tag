@@ -80,7 +80,7 @@
 			<a href="<c:url value='/netcare/admin/templates?healthPlan={{id}}' />">Planera ny aktivitet från mall</a>
 		</div>
 		<div class="span6" style="text-align: right">
-			<a href="#" style="padding-right: 10px">Avaktivera hälsoplan</a>
+			<a id="hp-inactivate-{{id}}" href="#" style="padding-right: 10px">Avaktivera hälsoplan</a>
 		</div>
 	</div>
 </div>

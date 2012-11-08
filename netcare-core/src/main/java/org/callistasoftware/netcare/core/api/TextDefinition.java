@@ -16,7 +16,13 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
+import org.callistasoftware.netcare.core.api.impl.TextDefinitionImpl;
+import org.codehaus.jackson.annotate.JsonTypeName;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonTypeName(ActivityItemTypeImpl.TEXT_ITEM_TYPE)
+@JsonDeserialize(as=TextDefinitionImpl.class)
 public interface TextDefinition extends ActivityItemValuesDefinition {
 
 }

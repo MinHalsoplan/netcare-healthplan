@@ -169,7 +169,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
+		final List<HealthPlanEntity> entities = this.repo.findByForPatientAndArchivedFalse(forPatient);
 
 		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
@@ -238,14 +238,15 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		this.verifyWriteAccess(hp);
 
-		this.repo.delete(healthPlanId);
+		hp.setArchived(true);
+		this.repo.save(hp);
 
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
 
 	@Override
 	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
-		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
+		final HealthPlanEntity entity = this.repo.findByIdAndArchivedFalse(healthPlanId);
 		if (entity == null) {
 			return ServiceResultImpl
 					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
@@ -278,28 +279,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 
 		log.debug("Activity type entity found and resolved. Id is {}", typeEntity.getId());
-
-		/*
-		 * Create the day frequency based on what the user selected.
-		 */
-		log.debug("Processing the day and time frequence...");
-
-		final Frequency frequency = new Frequency();
-		frequency.setWeekFrequency(dto.getActivityRepeat());
-		for (final DayTime dt : dto.getDayTimes()) {
-			FrequencyDay fd = FrequencyDay.newFrequencyDay(ApiUtil.toIntDay(dt.getDay()));
-			for (String time : dt.getTimes()) {
-				fd.addTime(FrequencyTime.unmarshal(time));
-			}
-			frequency.addDay(fd);
-		}
-		log.debug("Frequency: {}", Frequency.marshal(frequency));
-
-		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency,
-				getCareActor());
-
-		log.debug("Setting public definition to {}", dto.isPublicDefinition());
-		newEntity.setPublicDefinition(dto.isPublicDefinition());
+		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, createFrequency(dto), getCareActor());
 
 		/*
 		 * Process measurement definitions
@@ -532,13 +512,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final ScheduledActivity[] activities = this.getScheduledActivitiesForHealthPlan(healthPlanId).getData();
 		final List<ActivityCount> activityCount = new ArrayList<ActivityCount>();
 
-		actLoop: for (final ScheduledActivity ac : activities) {
-
-			if (!ac.getDefinition().isPublicDefinition() && this.getCurrentUser().isCareActor()) {
-				log.debug("Skip activity because the care giver was not allowed to see it.");
-				continue actLoop;
-			}
-
+		for (final ScheduledActivity ac : activities) {
 			final String name = ac.getDefinition().getType().getName();
 			final ActivityCount act = new ActivityCount(name);
 			final ActivityCount existing = this.findActivityCount(name, activityCount);
@@ -563,13 +537,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
 		for (final ScheduledActivityEntity schedActivityEntity : ents) {
-
-			if (!schedActivityEntity.getActivityDefinitionEntity().isPublicDefinition()
-					&& this.getCurrentUser().isCareActor()) {
-				log.debug("Skip activity because the care giver was not allowed to see it.");
-				continue;
-			}
-
 			final ReportedActivity ra = new ReportedActivity();
 			ra.setName(schedActivityEntity.getActivityDefinitionEntity().getActivityType().getName());
 			ra.setNote(schedActivityEntity.getNote());
@@ -951,6 +918,19 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		 * Update measure values
 		 */
 		this.updateActivityItems(entity, dto);
+		
+		/*
+		 * Update frequency
+		 */
+		entity.setFrequency(createFrequency(dto));
+		
+		/*
+		 * Remove all future scheduled activties and add
+		 * new ones
+		 */
+		getLog().debug("Rescheduling activities... Before: {}", entity.getScheduledActivities().size());
+		entity.reschedule();
+		getLog().debug("After rescheduling {}", entity.getScheduledActivities().size());
 
 		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(entity),
 				new GenericSuccessMessage());
@@ -960,13 +940,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		/*
 		 * Process measurement defintions
 		 */
+		getLog().debug("Updating activity items...");
 		for (final ActivityItemDefinitionEntity aid : entity.getActivityItemDefinitions()) {
 			if (aid instanceof MeasurementDefinitionEntity) {
 				MeasurementDefinitionEntity mde = (MeasurementDefinitionEntity) aid;
+				getLog().debug("Found measurement {}", mde.getActivityItemType().getName());
+				
 				for (final ActivityItemValuesDefinition aivDefinition : dto.getGoalValues()) {
 
-					if (mde.getMeasurementType().getId().equals(aivDefinition.getActivityItemType().getId())
-							&& aivDefinition instanceof MeasurementDefinition) {
+					getLog().debug("Found goal value of type {}. Instance: {}", aivDefinition.getActivityItemType().getName(), aivDefinition.getClass().getSimpleName());
+					
+					if (mde.getMeasurementType().getId().equals(aivDefinition.getActivityItemType().getId())) {
 
 						log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType()
 								.getName(), mde.getMeasurementType().getActivityType().getName());
@@ -988,6 +972,26 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				}
 			}
 		}
+	}
+	
+	private Frequency createFrequency(final ActivityDefinition dto) {
+		/*
+		 * Create the day frequency based on what the user selected.
+		 */
+		log.debug("Processing the day and time frequence...");
+
+		final Frequency frequency = new Frequency();
+		frequency.setWeekFrequency(dto.getActivityRepeat());
+		for (final DayTime dt : dto.getDayTimes()) {
+			FrequencyDay fd = FrequencyDay.newFrequencyDay(ApiUtil.toIntDay(dt.getDay()));
+			for (String time : dt.getTimes()) {
+				fd.addTime(FrequencyTime.unmarshal(time));
+			}
+			frequency.addDay(fd);
+		}
+		
+		log.debug("Frequency: {}", Frequency.marshal(frequency));
+		return frequency;
 	}
 
 	@Override

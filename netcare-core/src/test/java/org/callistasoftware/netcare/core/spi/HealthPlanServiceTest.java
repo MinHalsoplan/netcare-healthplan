@@ -468,7 +468,7 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		this.service.deleteHealthPlan(saved.getId());
 
-		assertEquals(null, this.ordinationRepo.findOne(saved.getId()));
+		assertTrue(this.ordinationRepo.findOne(saved.getId()).isArchived());
 	}
 
 	@Test

@@ -19,19 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=As.PROPERTY, property="valueType")
-@JsonSubTypes({
-      @JsonSubTypes.Type(value=EstimationDefinitionImpl.class, name=ActivityItemTypeImpl.ESTIMATION_ITEM_TYPE),
-      @JsonSubTypes.Type(value=MeasurementDefinitionImpl.class, name=ActivityItemTypeImpl.MEASUREMENT_ITEM_TYPE),
-      @JsonSubTypes.Type(value=TextDefinitionImpl.class, name=ActivityItemTypeImpl.TEXT_ITEM_TYPE),
-      @JsonSubTypes.Type(value=YesNoDefinitionImpl.class, name=ActivityItemTypeImpl.YESNO_ITEM_TYPE)
-}) 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ActivityItemValuesDefinitionImpl implements ActivityItemValuesDefinition {
+public abstract class ActivityItemValuesDefinitionImpl implements ActivityItemValuesDefinition {
 	private Long id;
 	private ActivityItemType activityItemType;
 

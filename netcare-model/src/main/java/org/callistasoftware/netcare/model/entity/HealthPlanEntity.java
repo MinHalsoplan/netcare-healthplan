@@ -70,6 +70,8 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="reminder_done")
 	private boolean reminderDone;
 
+	@Column(name="archived")
+	private boolean archived;
 	
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
@@ -238,7 +240,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
 		for (ActivityDefinitionEntity ad : getActivityDefinitions()) {
 			if (!ad.isRemovedFlag()) {
-				list.addAll(ad.scheduleActivities0(newStartDate));
+				list.addAll(ad.scheduleActivities0(newStartDate, false));
 			}
 		}
 		
@@ -315,6 +317,21 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	//
 	public void setReminderDone(boolean reminderDone) {
 		this.reminderDone = reminderDone;
+	}
+	
+	/**
+	 * Whether the health plan has been archived or not. If this is
+	 * set to true, the health plan must no be visible to users
+	 * @return
+	 */
+	public boolean isArchived() {
+		return archived;
+	}
+	
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+		setAutoRenewal(false);
+		setReminderDone(true);
 	}
 
 }

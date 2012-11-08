@@ -16,9 +16,12 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.EstimationDefinitionImpl;
+import org.codehaus.jackson.annotate.JsonTypeName;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonTypeName(ActivityItemTypeImpl.ESTIMATION_ITEM_TYPE)
 @JsonDeserialize(as=EstimationDefinitionImpl.class)
 public interface EstimationDefinition extends ActivityItemValuesDefinition {
 

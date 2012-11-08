@@ -19,10 +19,8 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeName(ActivityItemTypeImpl.MEASUREMENT_ITEM_TYPE)
 public class MeasurementDefinitionImpl extends ActivityItemValuesDefinitionImpl implements MeasurementDefinition {
 	private float target;
 	private float maxTarget;

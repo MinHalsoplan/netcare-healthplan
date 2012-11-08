@@ -47,7 +47,7 @@ public class ActivityDefinitionApi extends ApiSupport {
 	public ServiceResult<ActivityDefinition> updateDefinition(@PathVariable("id") final Long id,
 			@RequestBody final ActivityDefinition data) {
 		logAccess("update", "activity definition");
-		throw new UnsupportedOperationException("Not yet implemented");
+		return this.service.updateActivity(data);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET, produces="application/json")

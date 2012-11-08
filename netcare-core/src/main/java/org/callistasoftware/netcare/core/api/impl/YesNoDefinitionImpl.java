@@ -19,9 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.YesNoDefinition;
 import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
-import org.codehaus.jackson.annotate.JsonTypeName;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-@JsonTypeName(ActivityItemTypeImpl.YESNO_ITEM_TYPE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class YesNoDefinitionImpl extends ActivityItemValuesDefinitionImpl implements YesNoDefinition {
 
 	public static ActivityItemValuesDefinition newFromEntity(YesNoDefinitionEntity entity) {

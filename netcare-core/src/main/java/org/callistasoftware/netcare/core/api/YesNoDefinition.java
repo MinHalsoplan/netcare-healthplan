@@ -16,9 +16,12 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.YesNoDefinitionImpl;
+import org.codehaus.jackson.annotate.JsonTypeName;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonTypeName(ActivityItemTypeImpl.YESNO_ITEM_TYPE)
 @JsonDeserialize(as=YesNoDefinitionImpl.class)
 public interface YesNoDefinition extends ActivityItemValuesDefinition {
 

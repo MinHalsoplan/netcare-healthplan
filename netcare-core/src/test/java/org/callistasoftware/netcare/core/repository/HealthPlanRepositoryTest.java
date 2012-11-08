@@ -148,7 +148,7 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		repo.save(HealthPlanEntity.newEntity(ca, patient, "Hälsoplan A", new Date(), 3, DurationUnit.MONTH));
 		repo.flush();
 
-		List<HealthPlanEntity> list = repo.findByForPatient(patient);
+		List<HealthPlanEntity> list = repo.findByForPatientAndArchivedFalse(patient);
 
 		assertEquals(2, list.size());
 

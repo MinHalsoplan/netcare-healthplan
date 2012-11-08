@@ -68,10 +68,8 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private int numDone;
 	private int numTarget;
 	private CareActorBaseView issuedBy;
+	
 	private ActivityItemValuesDefinition[] goalValues;
-
-	private boolean issuedByPatient;
-	private boolean publicDefinition;
 
 	private boolean active;
 
@@ -114,12 +112,6 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		dto.calcCompletion(entity.getScheduledActivities());
 		CareActorBaseView issuedBy = CareActorBaseViewImpl.newFromEntity(entity.getHealthPlan().getIssuedBy());
 		dto.setIssuedBy(issuedBy);
-
-		if (!entity.getCreatedBy().isCareActor()) {
-			dto.setIssuedByPatient(true);
-		}
-
-		dto.setPublicDefinition(entity.isPublicDefinition());
 
 		return dto;
 	}
@@ -284,24 +276,6 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	}
 
 	@Override
-	public boolean isIssuedByPatient() {
-		return this.issuedByPatient;
-	}
-
-	public void setIssuedByPatient(final boolean issuedByPatient) {
-		this.issuedByPatient = issuedByPatient;
-	}
-
-	@Override
-	public boolean isPublicDefinition() {
-		return this.publicDefinition;
-	}
-
-	public void setPublicDefinition(final boolean publicDefinition) {
-		this.publicDefinition = publicDefinition;
-	}
-
-	@Override
 	public boolean isActive() {
 		return this.active;
 	}
@@ -323,8 +297,6 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		buf.append("Health plan: ").append(this.healthPlanName).append("\n");
 		buf.append("Start date: ").append(this.startDate).append("\n");
 		buf.append("Issued by care giver: ").append(this.issuedBy).append("\n");
-		buf.append("Issued by patient: ").append(this.issuedByPatient).append("\n");
-		buf.append("Is public: ").append(this.publicDefinition).append("\n");
 
 		buf.append(this.getType());
 		buf.append("=============================\n");

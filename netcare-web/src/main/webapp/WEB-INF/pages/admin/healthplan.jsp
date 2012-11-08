@@ -56,11 +56,11 @@
 		<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
 		
 		<h2><spring:message code="healthplan.title" arguments="${curPatient}"/></h2>
-		<p>
-			<span class="label label-info"><spring:message code="information" /></span>
-			<spring:message code="healthplan.desc" arguments="${curPatient},${newHealthPlan}" />
-		</p>
 		
+		<mvk:touch-list id="healthPlanContainer">
+		
+		</mvk:touch-list>
+
 		<spring:message code="clear" var="clear" scope="page" />
 		<spring:message code="healthplan.duration" var="duration" scope="page" />
 		<spring:message code="healthplan.name" var="name" scope="page" />
@@ -69,12 +69,12 @@
 		<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
 		<spring:message code="healthplan.autoRenewal" var="autoRenewal" scope="page" />
 		
-		<p style="text-align: right; padding-right: 20px;">
-			<a id="showCreateForm" class="btn addButton"><c:out value="${newHealthPlan}" /></a>
-		</p>
-		<form id="createHealthPlanForm" action="#" method="post">
+		<button id="showCreateHealthPlan" class="btn btn-block btn-large btn-info" style="margin-top: 20px; margin-bottom: 20px;">
+			<spring:message code="healthplan.new" />
+		</button>
+		
+		<form id="createHealthPlanForm" action="#" method="post" style="display: none;">
 			<fieldset>
-				<legend><spring:message code="healthplan.new" /></legend>
 				<netcare:field name="name" label="${name}">
 					<input type="text" name="name" class="xlarge" />
 				</netcare:field>
@@ -110,10 +110,6 @@
 			</div>
 			
 		</form>
-		
-		<mvk:touch-list id="healthPlanContainer">
-		
-		</mvk:touch-list>
 
 		<netcare:modal titleCode="healthplan.icons.performRenewal" confirmCode="label.yes" id="perform-renewal">
 			<p>

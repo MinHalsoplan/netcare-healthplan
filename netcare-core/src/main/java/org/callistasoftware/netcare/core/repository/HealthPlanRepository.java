@@ -25,8 +25,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HealthPlanRepository extends JpaRepository<HealthPlanEntity, Long> {
 	
-	List<HealthPlanEntity> findByForPatient(PatientEntity forPatient);
+	HealthPlanEntity findByIdAndArchivedFalse(final Long id);
 	
-	List<HealthPlanEntity> findByEndDateLessThan(final Date endDate);
+	List<HealthPlanEntity> findByForPatientAndArchivedFalse(PatientEntity forPatient);
+	
+	List<HealthPlanEntity> findByEndDateLessThanAndArchivedFalse(final Date endDate);
 	
 }

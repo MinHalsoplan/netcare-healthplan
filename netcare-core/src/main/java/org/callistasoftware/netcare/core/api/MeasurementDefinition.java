@@ -16,9 +16,12 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityItemTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.MeasurementDefinitionImpl;
+import org.codehaus.jackson.annotate.JsonTypeName;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonTypeName(ActivityItemTypeImpl.MEASUREMENT_ITEM_TYPE)
 @JsonDeserialize(as=MeasurementDefinitionImpl.class)
 public interface MeasurementDefinition extends ActivityItemValuesDefinition {
 

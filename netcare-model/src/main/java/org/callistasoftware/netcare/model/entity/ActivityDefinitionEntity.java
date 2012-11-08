@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -61,9 +62,6 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@Column(name = "removed_flag")
 	private boolean removedFlag;
 
-	@Column(name = "is_public_definition", nullable = false)
-	private boolean publicDefinition;
-
 	@ManyToOne
 	@JoinColumn(name = "health_plan_id")
 	private HealthPlanEntity healthPlan;
@@ -88,7 +86,6 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		activityItemDefinitions = new LinkedList<ActivityItemDefinitionEntity>();
 		uuid = UUID.randomUUID().toString();
 		createdTime = new Date();
-		publicDefinition = true;
 		removedFlag = false;
 	}
 
@@ -240,7 +237,23 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	 *            the start date.
 	 * @return the list of scheduled activities.
 	 */
-	protected List<ScheduledActivityEntity> scheduleActivities0(Date startDate) {
+	protected List<ScheduledActivityEntity> scheduleActivities0(Date startDate, final boolean reschedule) {
+		
+		if (reschedule) {
+			
+			final List<ScheduledActivityEntity> tbr = new ArrayList<ScheduledActivityEntity>();
+			for (final ScheduledActivityEntity sae : scheduledActivities) {
+				
+				if (sae.getScheduledTime().after(startDate) && (sae.getReportedTime() != null || !sae.isReminderDone())) {
+					// Remove
+					tbr.add(sae);
+				}
+			}
+			
+			scheduledActivities.removeAll(tbr);
+		}
+		
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
 		LinkedList<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
@@ -269,7 +282,11 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	 * Returns scheduled activities.
 	 */
 	public List<ScheduledActivityEntity> scheduleActivities() {
-		return scheduleActivities0(getStartDate());
+		return scheduleActivities0(getStartDate(), false);
+	}
+	
+	public void reschedule() {
+		this.scheduleActivities0(new Date(), true);
 	}
 
 	/**
@@ -312,13 +329,4 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	public void setRemovedFlag(boolean removedFlag) {
 		this.removedFlag = removedFlag;
 	}
-
-	public boolean isPublicDefinition() {
-		return publicDefinition;
-	}
-
-	public void setPublicDefinition(boolean publicDefinition) {
-		this.publicDefinition = publicDefinition;
-	}
-
 }

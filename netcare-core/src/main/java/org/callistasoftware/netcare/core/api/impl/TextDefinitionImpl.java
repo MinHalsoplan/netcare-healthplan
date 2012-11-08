@@ -19,9 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.TextDefinition;
 import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
-import org.codehaus.jackson.annotate.JsonTypeName;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-@JsonTypeName(ActivityItemTypeImpl.TEXT_ITEM_TYPE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TextDefinitionImpl extends ActivityItemValuesDefinitionImpl implements TextDefinition {
 
 	public static ActivityItemValuesDefinition newFromEntity(TextDefinitionEntity entity) {

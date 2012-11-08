@@ -16,10 +16,18 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import org.callistasoftware.netcare.core.api.impl.ActivityItemValuesDefinitionImpl;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeInfo.As;
+import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 
-@JsonDeserialize(as=ActivityItemValuesDefinitionImpl.class)
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="valueType")
+@JsonSubTypes({
+	@JsonSubTypes.Type(value=EstimationDefinition.class),
+    @JsonSubTypes.Type(value=MeasurementDefinition.class),
+    @JsonSubTypes.Type(value=TextDefinition.class),
+    @JsonSubTypes.Type(value=YesNoDefinition.class)
+})
 public interface ActivityItemValuesDefinition {
 
 	/**
