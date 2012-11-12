@@ -26,7 +26,6 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(as=PatientBaseViewImpl.class)
 public interface PatientBaseView extends UserBaseView {
 

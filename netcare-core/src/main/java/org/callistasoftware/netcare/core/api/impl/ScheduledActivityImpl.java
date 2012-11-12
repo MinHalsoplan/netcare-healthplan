@@ -23,7 +23,6 @@ import java.util.List;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityItemValues;
 import org.callistasoftware.netcare.core.api.ApiUtil;
-import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
@@ -89,7 +88,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		}
 
 		List<ActivityItemValuesEntity> activityEntities = entity.getActivities();
-		scheduledActivity.activityItemValues = new Measurement[activityEntities.size()];
+		scheduledActivity.activityItemValues = new ActivityItemValues[activityEntities.size()];
 		for (int i = 0; i < scheduledActivity.activityItemValues.length; i++) {
 			ActivityItemValuesEntity activityItemValuesEntity = activityEntities.get(i);
 			if (activityItemValuesEntity instanceof MeasurementEntity) {

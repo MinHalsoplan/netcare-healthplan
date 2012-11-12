@@ -64,7 +64,7 @@ NC.ReportedActivities = function(messages) {
 							report.senseHigh = v.definition.type.maxScaleText;
 						}
 						report.note = v.note;
-						report.measurements = v.measurements;
+						report.measurements = v.activityItemValues;
 						
 						arr.push(report);
 					});

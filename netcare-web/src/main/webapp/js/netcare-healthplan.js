@@ -37,6 +37,24 @@ var NC_MODULE = {
 					});
 		};
 		
+		my.selectPatient = function(patientId, callback) {
+			new NC.Ajax().postSynchronous('/user/' + patientId + '/select', null, callback);
+		};
+		
+		my.updateCurrentPatient = function(name) {
+			NC.log("Updating current patient. Display: " + name);
+			$('#currentpatient a').html(name);
+			$('#nopatient').hide();
+			$('#currentpatient').show();
+		};
+		
+		my.formatCrn = function(crn) {
+			var first = crn.substring(0, 8);
+			var last = crn.substring(8, 12);
+			
+			return first + '-' + last;
+		};
+		
 		my.flash = function(something) {
 			something.animate({
 				'backgroundColor' : '#eee'
@@ -66,6 +84,44 @@ var NC_MODULE = {
 			}
 		};
 
+		return my;
+	})(),
+	
+	PATIENTS : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.load(that);
+		};
+		
+		my.load = function() {
+			new NC.Ajax().get('/user/load', function(data) {
+				
+				$.each(data.data, function(i, v) {
+					
+					var t = _.template($('#patientItem').html());
+					
+					v.civicRegistrationNumber = NC_MODULE.GLOBAL.formatCrn(v.civicRegistrationNumber);
+					var dom = t(v);
+					
+					$('#patientList').append($(dom));
+					
+					$('#patientItem' + v.id).next('li').click(function(e) {
+						e.preventDefault();
+						
+						NC_MODULE.GLOBAL.selectPatient(v.id, function(data) {
+							NC_MODULE.GLOBAL.updateCurrentPatient(data.data.name);
+							window.location = '/netcare/admin/healthplans?showForm=true';
+						});
+					});
+				});
+				
+			});
+		};
+		
 		return my;
 	})(),
 	

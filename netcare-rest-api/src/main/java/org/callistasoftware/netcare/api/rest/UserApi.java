@@ -23,7 +23,6 @@ import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientProfileImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
@@ -89,7 +88,7 @@ public class UserApi extends ApiSupport {
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
-	public ServiceResult<Patient> createNewPatient(@RequestBody final PatientImpl patient) throws IllegalAccessException {
+	public ServiceResult<Patient> createNewPatient(@RequestBody final Patient patient) throws IllegalAccessException {
 		this.logAccess("create", "patient");
 		
 		final UserBaseView user = this.getUser();

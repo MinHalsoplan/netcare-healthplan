@@ -16,7 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.PatientImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonDeserialize(as=PatientImpl.class)
 public interface Patient extends PatientBaseView {
 
 	/**

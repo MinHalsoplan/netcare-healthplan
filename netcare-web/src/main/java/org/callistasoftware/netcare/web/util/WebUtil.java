@@ -276,6 +276,7 @@ public final class WebUtil {
 		}
 		ad.setStartDate(hp.getStartDate());
 		adRepo.save(ad);
+		
 		hps.scheduleActivities(ad);
 
 		Date now = new Date();
@@ -286,6 +287,9 @@ public final class WebUtil {
 		int modulo = 5;
 		for (ScheduledActivityEntity sce : ad.getScheduledActivities()) {
 			if (sce.getScheduledTime().compareTo(now) < 0) {
+				
+				log.debug("Creating report for {}", sce.getScheduledTime());
+				
 				sce.setNote("Anteckning");
 				Calendar c = Calendar.getInstance();
 				c.setTime(sce.getScheduledTime());
@@ -295,6 +299,9 @@ public final class WebUtil {
 				sce.setStatus(ScheduledActivityStatus.OPEN);
 				sce.setActualTime(sce.getScheduledTime());
 				for (ActivityItemValuesEntity aiv : sce.getActivities()) {
+					
+					log.debug("Processing value {}", aiv.getActivityItemDefinitionEntity().getActivityItemType().getName());
+					
 					if (aiv instanceof MeasurementEntity) {
 						MeasurementEntity m = (MeasurementEntity) aiv;
 						MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) m

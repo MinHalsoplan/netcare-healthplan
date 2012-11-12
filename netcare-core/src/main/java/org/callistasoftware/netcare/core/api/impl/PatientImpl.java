@@ -20,7 +20,9 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PatientImpl extends PatientBaseViewImpl implements Patient {
 
 	/**

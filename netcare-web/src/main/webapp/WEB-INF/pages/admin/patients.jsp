@@ -28,10 +28,16 @@
 
 <hp:view>
 	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 				
 				var currentPatientId = "<c:out value='${sessionScope.currentPatient.id}' />";
+				
+				var params = {	
+				};
+				
+				NC_MODULE.PATIENTS.init(params);
 				
 				var util = new NC.Util();
 				var support = new NC.Support();
@@ -56,13 +62,11 @@
 					});
 				}
 				
-				var updatePatientTable = function(data) {
+				/*var updatePatientTable = function(data) {
 					
 					if (data != null) {
 						if (data.success) {
-							/*
-							 * Select the patient and navigate to home
-							 */
+							 // Select the patient and navigate to home
 							support.selectPatient(data.data.id, function(data) {
 								NC.log("Created patient selected. Go to home...");
 								window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
@@ -108,12 +112,12 @@
 							$('#patientsTable').show();
 						}
 					});
-				};
+				};*/
 				
 				/*
 				 * Load patients
 				 */
-				updatePatientTable(null);
+				//updatePatientTable(null);
 				
 				/**
 				 * Validate crn, only allow [0-9], maxlength of 6
@@ -159,25 +163,26 @@
 	<hp:viewBody title="Patienter">
 		<section id="patients">
 			<h2><spring:message code="admin.patients.list" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="admin.patients.list.desc" />
-			</p>
-			<netcare:block-message type="info" style="display:none;">
-				<spring:message code="admin.patients.none" />
-			</netcare:block-message>
-			<netcare:table id="patientsTable">
-				<thead>
-					<tr>
-						<th><spring:message code="patient.surName" /></th>
-						<th><spring:message code="patient.firstName" /></th>
-						<th><spring:message code="patient.crn" /></th>
-						<th><spring:message code="patient.phoneNumber" />
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</netcare:table>
+			
+<%-- 			<netcare:block-message type="info" style="display:none;"> --%>
+<%-- 				<spring:message code="admin.patients.none" /> --%>
+<%-- 			</netcare:block-message> --%>
+<%-- 			<netcare:table id="patientsTable"> --%>
+<!-- 				<thead> -->
+<!-- 					<tr> -->
+<%-- 						<th><spring:message code="patient.surName" /></th> --%>
+<%-- 						<th><spring:message code="patient.firstName" /></th> --%>
+<%-- 						<th><spring:message code="patient.crn" /></th> --%>
+<%-- 						<th><spring:message code="patient.phoneNumber" /> --%>
+<!-- 						<th>&nbsp;</th> -->
+<!-- 					</tr> -->
+<!-- 				</thead> -->
+<!-- 				<tbody></tbody> -->
+<%-- 			</netcare:table> --%>
+			<mvk:touch-list id="patientList">
+			
+			</mvk:touch-list>
+
 		</section>
 	
 		<button id="showCreatePatient" class="btn btn-block btn-large btn-info" style="margin-top: 20px; margin-bottom: 20px;">
