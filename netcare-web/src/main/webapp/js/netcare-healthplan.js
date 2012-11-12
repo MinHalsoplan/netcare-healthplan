@@ -951,19 +951,19 @@ var NC_MODULE = {
 			});
 			$('#addMeasurementButton').on('click', function(event) {
 				createItem('measurement');
-				event.preventDefault();
+				return true;
 			});
 			$('#addEstimationButton').on('click', function(event) {
 				createItem('estimation');
-				event.preventDefault();
+				return true;
 			});
 			$('#addYesNoButton').on('click', function(event) {
 				createItem('yesno');
-				event.preventDefault();
+				return true;
 			});
 			$('#addTextButton').on('click', function(event) {
 				createItem('text');
-				event.preventDefault();
+				return true;
 			});
 
 			function createItem(type) {
@@ -1182,13 +1182,13 @@ var NC_MODULE = {
 						item.details = 'Värden saknas';
 					}
 				} else if (item.activityItemTypeName == 'yesno') {
-					if (item.question != null) {
+					if (item.question != null && item.question!="") {
 						item.details = item.question;
 					} else {
 						item.details = 'Värden saknas';
 					}
 				} else if (item.activityItemTypeName == 'text') {
-					if (item.label != null) {
+					if (item.label != null && item.label!="") {
 						item.details = item.label;
 					} else {
 						item.details = 'Värden saknas';
@@ -1234,6 +1234,8 @@ var NC_MODULE = {
 								direction : 'left'
 							}, 400);
 							renderItems(my, activityTemplate);
+							NC.log('scrooll');
+							window.scrollTo(0,520);
 						}
 					});
 
