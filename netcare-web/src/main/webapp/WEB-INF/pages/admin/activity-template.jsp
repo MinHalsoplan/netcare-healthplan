@@ -50,7 +50,6 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Aktivitetsmallar">
-		
 		<netcare:row>
 			<netcare:col span="6">
 				<form class="form-search">
@@ -61,7 +60,7 @@
 				</form>
 			</netcare:col>
 			<netcare:col span="6" style="text-align: right;">
-				<a href="<c:url value="/netcare/admin/template/1" />" class="btn btn-info"><i class="icon-plus-sign icon-white"></i> Skapa ny mall</a>
+				<a href="<c:url value="/netcare/admin/template" />" class="btn btn-info"><i class="icon-plus-sign icon-white"></i> Skapa ny mall</a>
 			</netcare:col>
 		</netcare:row>
 		

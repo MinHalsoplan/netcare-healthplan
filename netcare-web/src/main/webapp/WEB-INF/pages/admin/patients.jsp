@@ -60,64 +60,7 @@
 							$('#patientForm :submit').attr('disabled', 'disbaled');						
 						}
 					});
-				}
-				
-				/*var updatePatientTable = function(data) {
-					
-					if (data != null) {
-						if (data.success) {
-							 // Select the patient and navigate to home
-							support.selectPatient(data.data.id, function(data) {
-								NC.log("Created patient selected. Go to home...");
-								window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
-							});
-						}
-					}
-					
-					patients.load(function(data) {
-						if (data.data.length == 0) {
-							$('#patients div').show();
-							$('#patientsTable').hide();
-						} else {
-							$('#patients div').hide();
-							$('#patientsTable tbody').empty();
-							
-							$.each(data.data, function(index, value) {
-								
-								NC.log("Processing patient " + value.name + "...");
-								
-								var tr = $('<tr>');
-								
-								var name = $('<td>' + value.surName + '</td>');
-								var firstName = $('<td>' + value.firstName + '</td>');
-								var cnr = $('<td>' + new NC.Util().formatCnr(value.civicRegistrationNumber) + '</td>');
-								var phone = $('<td>' + value.phoneNumber + '</td>');
-								
-								var loginAsIcon = $('<button>').addClass('btn btn-info').html('Välj patient').click(function(e) {
-									e.preventDefault();
-									support.selectPatient(value.id, function(data) {
-										util.updateCurrentPatient(data.data.name);
-										window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
-									});
-								});
-								
-								var actionCol = $('<td>').css('text-align', 'right');
-								actionCol.append(loginAsIcon);
-								
-								tr.append(name).append(firstName).append(cnr).append(phone).append(actionCol);
-								
-								$('#patientsTable tbody').append(tr);
-							});
-							
-							$('#patientsTable').show();
-						}
-					});
-				};*/
-				
-				/*
-				 * Load patients
-				 */
-				//updatePatientTable(null);
+				};
 				
 				/**
 				 * Validate crn, only allow [0-9], maxlength of 6

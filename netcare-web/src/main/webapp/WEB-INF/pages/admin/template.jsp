@@ -49,17 +49,9 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="NyAktivitetsmall">
+	<c:url value="/netcare/admin/templates" var="backToUrl" />
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till aktivitetsmallar">
 			<div id="activityTypeContainer">
-				<section id="head">
-					<h2>
-						<spring:message code="template.title" />
-					</h2>
-					<p>
-						<span class="label label-info"><spring:message code="information" /></span>
-						<spring:message code="template.description" />
-					</p>
-				</section>
 				<section id="template">
 					<div id="chooseName">
 						<spring:message code="template.select.name" var="selectNameLabel" scope="page"/>

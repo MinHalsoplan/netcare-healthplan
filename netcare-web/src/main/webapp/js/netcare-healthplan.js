@@ -771,10 +771,15 @@ var NC_MODULE = {
 				selected : 'selected'
 			});
 			opt.html('-- Alla --');
-
-			var tc = new NC.ActivityCategories();
-			tc.loadAsOptions($('select[name="category"]'));
-
+			
+			NC_MODULE.CATEGORIES.load(function(data) {
+				$.each(data.data, function(i, v) {
+					$('select[name="category"]').append(
+						$('<option>').prop('value', v.id).html(v.name)
+					);
+				});
+			});
+			
 			$('select[name="category"]').prepend(opt);
 		};
 
@@ -1010,6 +1015,8 @@ var NC_MODULE = {
 								activityTemplate = data.data;
 								renderItems(my, activityTemplate);
 								NC.log(activityTemplate);
+								
+								window.location = NC.getContextPath() + '/netcare/admin/templates';
 							});
 						} else {
 							at.update(params.templateId, activityTemplate,
@@ -1018,6 +1025,9 @@ var NC_MODULE = {
 										renderItems(my,
 												activityTemplate);
 										NC.log(activityTemplate);
+										
+										window.location = NC.getContextPath() + '/netcare/admin/templates';
+										
 									});
 						}
 					});
@@ -1035,8 +1045,13 @@ var NC_MODULE = {
 		};
 
 		my.loadCategories = function() {
-			var tc = new NC.ActivityCategories();
-			tc.loadAsOptions($('#activityTypeCategory'));
+			NC_MODULE.CATEGORIES.load(function(data) {
+				$.each(data.data, function(i, v) {
+					$('#activityTypeCategory').append(
+						$('<option>').prop('value', v.id).html(v.name)
+					);
+				});
+			});
 		};
 		
 		my.loadAccessLevels = function(my) {
@@ -1060,6 +1075,10 @@ var NC_MODULE = {
 				
 				if (my.params.isCountyActor == "true" && my.params.isNationActor == "false") {
 					$('#access-level-NATIONAL').prop('disabled', true);
+				}
+				
+				if (my.params.isNationActor == "true" && my.params.isCountyActor == "false") {
+					$('#access-level-COUNTY_COUNCIL').prop('disabled', true);
 				}
 				
 			});
@@ -1512,6 +1531,78 @@ var NC_MODULE = {
 					my.resetForm(my);
 				});
 			}
+		};
+		
+		return my;
+	})(),
+	
+	CATEGORIES : (function() {
+		
+		var _data = new Object();
+		
+		var my = {};
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			_data.id = -1;
+			
+			my.loadTable(that);
+			my.initChangeListeners(that);
+			my.renderForm();
+		};
+		
+		my.initChangeListeners = function(my) {
+			$('input[name="name"]').bind('keyup change blur', function() {
+				_data.name = $(this).val();
+			});
+			
+			$('#activityCategoryForm').submit(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				my.save(my);
+			});
+		};
+		
+		my.resetForm = function() {
+			_data.id = -1;
+			_data.name = '';
+			
+			my.renderForm();
+		};
+		
+		my.renderForm = function() {
+			$('input[name="id"]').val(_data.id);
+			$('input[name="name"]').val(_data.name);
+		};
+		
+		my.buildTableRow = function(rowData) {
+			var tr = $('<tr>').append(
+				$('<td>' + rowData.name + '</td>')
+			);
+			
+			$('#categoryTable tbody').append(tr);
+		};
+		
+		my.loadTable = function(my) {
+			my.load(function(data) {
+				$('#categoryTable tbody').empty();
+				$.each(data.data, function(index, value) {
+					my.buildTableRow(value);
+				});
+			});
+		};
+		
+		my.load = function(callback) {
+			new NC.Ajax().getSynchronous('/categories', callback);
+		};
+		
+		my.save = function(my) {
+			new NC.Ajax().post('/categories/', _data, function(data) {
+				my.buildTableRow(data.data);
+				my.resetForm();
+			});
 		};
 		
 		return my;

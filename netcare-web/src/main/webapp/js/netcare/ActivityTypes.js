@@ -14,35 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-NC.ActivityCategories = function() {
-	var _ajax = new NC.Ajax();
-	
-	var public = {
-		load : function(callback) {
-			_ajax.get('/categories', callback);
-		},
-		
-		loadAsOptions : function(selectElem) {
-			var util = new NC.Util();
-			
-			public.load(function(data) {
-				var arr = new Array();
-				$.each(data.data, function(index, value) {
-					arr.push({code : value.id, value : value.name});
-				});
-				
-				util.createOptions(arr, selectElem);
-			});
-		},
-		
-		create : function(formData, callback) {
-			_ajax.post('/categories/', formData, callback, true);
-		}
-	};
-	
-	return public;
-};
-
 NC.ActivityTypes = function() {
 	var _ajax = new NC.Ajax();
 	

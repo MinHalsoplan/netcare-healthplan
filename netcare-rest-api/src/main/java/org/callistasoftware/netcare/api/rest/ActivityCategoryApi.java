@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/categories")
+@RequestMapping(value="/categories", produces="application/json")
 public class ActivityCategoryApi extends ApiSupport {
 	
 	@Autowired
@@ -41,9 +41,8 @@ public class ActivityCategoryApi extends ApiSupport {
 		return this.service.loadAllActivityCategories();
 	}
 	
-	@RequestMapping(value="/"
+	@RequestMapping(value=""
 			, method=RequestMethod.POST
-			, produces="application/json"
 			, consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityCategory> createNewActivityCategory(@RequestBody final ActivityCategoryImpl category) {

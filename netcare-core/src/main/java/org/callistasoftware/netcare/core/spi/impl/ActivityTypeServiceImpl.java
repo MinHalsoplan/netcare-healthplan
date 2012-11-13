@@ -350,10 +350,11 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	protected ActivityItemTypeEntity createNewItemEntity(ActivityItemType dtoItem, ActivityTypeEntity parent) {
 		
-		// Resolve measure unit
-		final MeasureUnitEntity mue = resolveMeasureUnit(dtoItem.getUnit().getId(), false);
-		
 		if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.MEASUREMENT_ITEM_TYPE)) {
+			
+			// Resolve measure unit
+			final MeasureUnitEntity mue = resolveMeasureUnit(dtoItem.getUnit().getId(), false);
+			
 			return MeasurementTypeEntity.newEntity(parent, dtoItem.getName(),
 					MeasurementValueType.valueOf(dtoItem.getValueType().getCode()),
 					mue, dtoItem.isAlarm(), dtoItem.getSeqno());

@@ -30,57 +30,22 @@
 	<hp:viewHeader>
 		<script type="text/javascript">
 			$(function() {
-				var categories = new NC.ActivityCategories();
-				var loadCallback = function(data) {
-					
-					$('#categoryTable tbody').empty();
-					
-					$.each(data.data, function(index, value) {
-						NC.log("Processing " + value.name + "...");
-						
-						var tr = $('<tr>');
-						var name = $('<td>' + value.name + '</td>');
-						
-						tr.append(name);
-						
-						$('#categoryTable tbody').append(tr);
-					});
-				}
-				
-				categories.load(loadCallback);
-				
-				$(':submit').click(function(event) {
-					NC.log("Form submitted");
-					event.preventDefault();
-					
-					var formData = new Object();
-					formData.name = $('input[name="name"]').val();
-					
-					categories.create(formData, function(data) {
-						categories.load(loadCallback);
-					});
-					
-					$('input[name="name"]').val('');
-				});
-				
+				NC_MODULE.CATEGORIES.init();
 			});
 		</script>
 	</hp:viewHeader>
 	<spring:message code="admin.menu.categories" var="cat" />
 	<hp:viewBody title="${cat}">
 		<form id="activityCategoryForm">
-			<fieldset>
-				<legend><spring:message code="category.new" /></legend>
-			</fieldset>
-			
 			<spring:message code="category.name" var="categoryName" scope="page" />
 			<netcare:field name="name" label="${categoryName}">
 				<input type="text" name="name" />
 			</netcare:field>
 			
+			<input type="hidden" name="id" value="-1" />
+			
 			<div class="form-actions">
-				<button type="submit" class="btn btn-info"><spring:message code="category.new" /></button>
-				<button type="reset" class="btn"><spring:message code="clear" /></button>
+				<button type="submit" class="btn btn-info">Lägg till</button>
 			</div>
 			
 		</form>
