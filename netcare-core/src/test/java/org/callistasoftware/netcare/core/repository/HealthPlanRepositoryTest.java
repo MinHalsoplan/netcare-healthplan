@@ -73,8 +73,9 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		FrequencyTime time = FrequencyTime.unmarshal("10:00");
 		day.addTime(time);
 
-		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		
+		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity

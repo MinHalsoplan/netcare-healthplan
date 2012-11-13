@@ -35,7 +35,7 @@
 		
 		<security:intercept-url pattern="/netcare/admin/**" access="hasRole('CARE_ACTOR')"/>
 		
-		<security:intercept-url pattern="/netcare/county-admin/**" access="hasRole('COUNTY_COUNCIL_ADMINISTRATOR')"/>
+		<security:intercept-url pattern="/netcare/nation-admin/**" access="hasRole('NATION_ADMINISTRATOR')"/>
 		
 		<security:intercept-url pattern="/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 		

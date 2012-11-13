@@ -34,8 +34,8 @@
 	</c:otherwise>
 </c:choose>
 
-<sec:authorize access="hasRole('COUNTY_COUNCIL_ADMINISTRATOR')">
-	<hp:county-admin-menu />
+<sec:authorize access="hasRole('NATION_ADMINISTRATOR')">
+	<hp:nation-admin-menu />
 </sec:authorize>
 
 

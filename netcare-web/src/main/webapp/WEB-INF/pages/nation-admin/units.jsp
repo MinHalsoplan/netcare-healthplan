@@ -36,7 +36,7 @@
 		</script>
 	</hp:viewHeader>
 	
-	<spring:message code="county.menu.units" var="units" />
+	<spring:message code="admin.menu.units" var="units" />
 	<hp:viewBody title="${units}">
 		
 		<form id="unitForm">

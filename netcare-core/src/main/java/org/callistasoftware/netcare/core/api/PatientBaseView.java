@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.core.api;
 
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 /**

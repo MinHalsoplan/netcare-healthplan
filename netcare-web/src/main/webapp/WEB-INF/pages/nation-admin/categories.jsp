@@ -66,17 +66,8 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Kategorier">
-		<h2><spring:message code="category.title" /></h2>
-		<p>
-			<span class="label label-info"><spring:message code="information" /></span>
-			<spring:message code="category.desc" />
-		</p>
-		<p>
-			<span class="label label-important"><spring:message code="important" /></span>
-			<spring:message code="category.important" />
-		</p>
-		
+	<spring:message code="admin.menu.categories" var="cat" />
+	<hp:viewBody title="${cat}">
 		<form id="activityCategoryForm">
 			<fieldset>
 				<legend><spring:message code="category.new" /></legend>
@@ -96,10 +87,6 @@
 		
 		<section id="categoryList">
 			<h3><spring:message code="category.list.title" /></h3>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="category.list.desc" />
-			</p>
 			<netcare:table id="categoryTable">
 				<thead>
 					<tr>

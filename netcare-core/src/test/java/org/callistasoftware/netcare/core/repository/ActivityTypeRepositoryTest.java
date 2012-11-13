@@ -54,7 +54,7 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = newCountyCouncil("SLL");
 		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
 
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));

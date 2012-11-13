@@ -16,9 +16,6 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import java.util.List;
-
-import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -30,12 +27,5 @@ public interface MeasureUnitRepository extends JpaRepository<MeasureUnitEntity, 
 	 * @param cce
 	 * @return
 	 */
-	MeasureUnitEntity findByDnAndCountyCouncil(final String dn, final CountyCouncilEntity cce);
-	
-	/**
-	 * Find measure units for a county council
-	 * @param countyCouncil
-	 * @return
-	 */
-	List<MeasureUnitEntity> findByCountyCouncil(final CountyCouncilEntity countyCouncil);
+	MeasureUnitEntity findByDnOrderByDnAsc(final String dn);
 }

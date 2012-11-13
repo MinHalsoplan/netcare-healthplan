@@ -93,17 +93,21 @@ public class TestDataHelper {
 	}
 	
 	public RoleEntity newCareActorRole() {
-		return newRole("CARE_ACTOR");
+		return newRole(RoleEntity.CARE_ACTOR);
 	}
 	
 	public RoleEntity newCountyAdminRole() {
-		return newRole("COUNTY_COUNCIL_ADMINISTRATOR");
+		return newRole(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR);
 	}
 	
-	public MeasureUnitEntity newMeasureUnit(final String name, final String dn, final CountyCouncilEntity cce) {
-		MeasureUnitEntity mue = getMeasureUnitRepository().findByDnAndCountyCouncil(dn, cce);
+	public RoleEntity newNationAdminRole() {
+		return newRole(RoleEntity.NATION_ADMINISTRATOR);
+	}
+	
+	public MeasureUnitEntity newMeasureUnit(final String name, final String dn) {
+		MeasureUnitEntity mue = getMeasureUnitRepository().findByDnOrderByDnAsc(dn);
 		if (mue == null) {
-			mue = getMeasureUnitRepository().saveAndFlush(MeasureUnitEntity.newEntity(name, dn, cce));
+			mue = getMeasureUnitRepository().saveAndFlush(MeasureUnitEntity.newEntity(name, dn));
 		}
 		
 		return mue;

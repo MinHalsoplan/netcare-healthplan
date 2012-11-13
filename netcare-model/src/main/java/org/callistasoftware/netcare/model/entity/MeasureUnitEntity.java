@@ -21,7 +21,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -32,21 +31,16 @@ public class MeasureUnitEntity implements PermissionRestrictedEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@ManyToOne(optional=false)
-	private CountyCouncilEntity countyCouncil;
-	
 	@Column(nullable=false)
 	private String dn;
 	
 	@Column(nullable=false)
 	private String name;
 	
-	public static MeasureUnitEntity newEntity(final String name, final String dn, final CountyCouncilEntity counctyCouncil) {
+	public static MeasureUnitEntity newEntity(final String name, final String dn) {
 		final MeasureUnitEntity mue = new MeasureUnitEntity();
 		mue.setDn(dn);
 		mue.setName(name);
-		mue.setCountyCouncil(counctyCouncil);
-		
 		return mue;
 	}
 	
@@ -56,14 +50,6 @@ public class MeasureUnitEntity implements PermissionRestrictedEntity {
 	
 	void setId(Long id) {
 		this.id = id;
-	}
-	
-	public CountyCouncilEntity getCountyCouncil() {
-		return countyCouncil;
-	}
-	
-	void setCountyCouncil(CountyCouncilEntity countyCouncil) {
-		this.countyCouncil = countyCouncil;
 	}
 	
 	public String getName() {
@@ -84,25 +70,16 @@ public class MeasureUnitEntity implements PermissionRestrictedEntity {
 
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
-		if (user.isCareActor()) {
-			final CareActorEntity ca = (CareActorEntity) user;
-			if (ca.getCareUnit().getCountyCouncil().getId().equals(getCountyCouncil().getId())) {
-				return true;
-			}
-		}
-		
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
 		if (user.isCareActor()) {
 			final CareActorEntity ca = (CareActorEntity) user;
-			if (ca.getCareUnit().getCountyCouncil().getId().equals(getCountyCouncil().getId())) {
-				for (final RoleEntity r : ca.getRoles()) {
-					if (r.getDn().equals(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR)) {
-						return true;
-					}
+			for (final RoleEntity r : ca.getRoles()) {
+				if (r.getDn().equals(RoleEntity.NATION_ADMINISTRATOR)) {
+					return true;
 				}
 			}
 		}

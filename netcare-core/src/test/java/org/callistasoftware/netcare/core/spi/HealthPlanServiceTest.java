@@ -195,8 +195,8 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testAddActivityDefintion() throws Exception {
-		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 

@@ -24,7 +24,17 @@
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
 
-<h3><spring:message code="county.menu.title" /></h3>
+<h3><spring:message code="admin.menu.title" /></h3>
 <ul>
-	<li><a href="<spring:url value="/netcare/county-admin/units" />"><spring:message code="county.menu.units" /></a>
+	<li>
+		<a href="<spring:url value="/netcare/nation-admin/units" />">
+			<spring:message code="admin.menu.units" />
+		</a>
+	</li>
+	<li>
+		<netcare:image name="new-category" size="16" />
+		<a href="<spring:url value="/netcare/nation-admin/categories" />">
+			<spring:message code="admin.menu.categories" />
+		</a>
+	</li>
 </ul>

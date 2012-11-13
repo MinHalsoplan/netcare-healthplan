@@ -102,10 +102,6 @@ public class HomeController extends ControllerSupport {
 		return "admin/plan";
 
 	}
-	@RequestMapping(value = "/admin/categories", method = RequestMethod.GET)
-	public String displayActivityCategories() {
-		return "admin/categories";
-	}
 
 	@RequestMapping(value = "/admin/patients", method = RequestMethod.GET)
 	public String displayPatients() {
@@ -159,8 +155,13 @@ public class HomeController extends ControllerSupport {
 		return "user/report";
 	}
 	
-	@RequestMapping(value="/county-admin/units", method=RequestMethod.GET)
+	@RequestMapping(value="/nation-admin/units", method=RequestMethod.GET)
 	public String displayUnitAdministration() {
-		return "county-admin/units";
+		return "nation-admin/units";
+	}
+	
+	@RequestMapping(value = "/nation-admin/categories", method = RequestMethod.GET)
+	public String displayActivityCategories() {
+		return "nation-admin/categories";
 	}
 }

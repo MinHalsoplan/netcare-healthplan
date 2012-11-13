@@ -124,7 +124,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		log.info("Creating new activity category: {}", dto.getName());
 
 		log.debug("Checking if there already exist a category with the name {}", dto.getName());
-		final ActivityCategoryEntity existing = this.catRepo.findByName(dto.getName().trim());
+		final ActivityCategoryEntity existing = this.catRepo.findByNameOrderByNameAsc(dto.getName().trim());
 		if (existing != null) {
 			log.debug("The name already exists... Abort.");
 			return ServiceResultImpl
@@ -133,6 +133,8 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 		log.debug("No category with the specified name... creating new entity.");
 		final ActivityCategoryEntity ent = ActivityCategoryEntity.newEntity(dto.getName());
+		verifyWriteAccess(ent);
+		
 		final ActivityCategoryEntity savedEntity = this.catRepo.save(ent);
 
 		return ServiceResultImpl.createSuccessResult(ActivityCategoryImpl.newFromEntity(savedEntity),

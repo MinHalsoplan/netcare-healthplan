@@ -41,7 +41,7 @@ public class UnitServiceImpl extends ServiceSupport implements UnitService {
 	
 	@Override
 	public ServiceResult<MeasureUnit[]> loadUnits() {
-		final List<MeasureUnitEntity> set = repo.findByCountyCouncil(getCareActor().getCareUnit().getCountyCouncil());
+		final List<MeasureUnitEntity> set = repo.findAll();
 		return ServiceResultImpl.createSuccessResult(MeasureUnitImpl.newFromEntities(set)
 				, new ListEntitiesMessage(MeasureUnitEntity.class, set.size()));
 	}
@@ -64,9 +64,7 @@ public class UnitServiceImpl extends ServiceSupport implements UnitService {
 		
 		if (mue == null) {
 			
-			mue = MeasureUnitEntity.newEntity(measureUnit.getName()
-					, measureUnit.getDn()
-					, getCareActor().getCareUnit().getCountyCouncil());
+			mue = MeasureUnitEntity.newEntity(measureUnit.getName(), measureUnit.getDn());
 			
 			verifyWriteAccess(mue);
 			

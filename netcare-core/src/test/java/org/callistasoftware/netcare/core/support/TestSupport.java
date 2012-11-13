@@ -23,10 +23,12 @@ import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.repository.MeasureUnitRepository;
+import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,6 +41,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations="classpath:/netcare-config.xml")
 @ActiveProfiles(profiles={"db-embedded","test"}, inheritProfiles=true)
 public abstract class TestSupport {
+	
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	@Autowired
 	private CareActorRepository caRepo;
@@ -58,7 +63,8 @@ public abstract class TestSupport {
 	
 	protected final void authenticatedUser(final String hsaId
 			, final String careUnitHsa
-			, final String countyCouncil) {
+			, final String countyCouncil
+			, final RoleEntity... roles) {
 		
 		CountyCouncilEntity councilEntity = getCountyCouncilRepository().findByName(countyCouncil);
 		if (councilEntity == null) {
@@ -75,17 +81,43 @@ public abstract class TestSupport {
 			entity = caRepo.saveAndFlush(CareActorEntity.newEntity("Test", "Torsksson", hsaId, unitEntity));
 		}
 		
+		for (final RoleEntity r : roles) {
+			entity.addRole(r);
+		}
+		
 		final CareActorBaseView ca = CareActorBaseViewImpl.newFromEntity(entity);
 		runAs(ca);
 	}
 	
 	protected final MeasureUnitEntity newMeasureUnit(final String name, final String dn, final CountyCouncilEntity cce) {
-		MeasureUnitEntity mue = getMeasureUnitRepository().findByDnAndCountyCouncil(dn, cce);
+		MeasureUnitEntity mue = getMeasureUnitRepository().findByDnOrderByDnAsc(dn);
 		if (mue == null) {
-			mue = getMeasureUnitRepository().saveAndFlush(MeasureUnitEntity.newEntity(name, dn, cce));
+			mue = getMeasureUnitRepository().saveAndFlush(MeasureUnitEntity.newEntity(name, dn));
 		}
 		
 		return mue;
+	}
+	
+	protected final CountyCouncilEntity newCountyCouncil(final String name) {
+		CountyCouncilEntity cc = getCountyCouncilRepository().findByName(name);
+		if (cc == null) {
+			cc = getCountyCouncilRepository().saveAndFlush(CountyCouncilEntity.newEntity(name));
+		}
+		
+		return cc;
+	}
+	
+	protected final RoleEntity newRole(final String name) {
+		RoleEntity r = getRoleRepository().findByDn(name);
+		if (r == null) {
+			r = getRoleRepository().saveAndFlush(RoleEntity.newRole(name));
+		}
+		
+		return r;
+	}
+	
+	protected final RoleRepository getRoleRepository() {
+		return roleRepository;
 	}
 	
 	protected final MeasureUnitRepository getMeasureUnitRepository() {

@@ -116,7 +116,7 @@ public final class WebUtil {
 		
 		final RoleEntity careActorRole = td.newCareActorRole();
 		final CountyCouncilEntity jkpg = td.newCountyCouncil("Landstinget i Jönköpings Län");
-		final MeasureUnitEntity mue = td.newMeasureUnit("m", "Meter", jkpg);
+		final MeasureUnitEntity mue = td.newMeasureUnit("m", "Meter");
 
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit", jkpg);
@@ -203,14 +203,14 @@ public final class WebUtil {
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Mental träning"));
 		final ActivityCategoryEntity cat3 = catRepo.save(ActivityCategoryEntity.newEntity("Provtagning"));
-
+		
 		/*
 		 * Rosenhälsan
 		 */
-		final MeasureUnitEntity meter = td.newMeasureUnit("meter", "Meter", jkpg);
-		final MeasureUnitEntity kilogram = td.newMeasureUnit("kg", "Kilogram", jkpg);
-		final MeasureUnitEntity minute = td.newMeasureUnit("m", "Minuter", jkpg);
-		final MeasureUnitEntity pressure = td.newMeasureUnit("mmHg", "Tryck", jkpg);
+		final MeasureUnitEntity meter = td.newMeasureUnit("meter", "Meter");
+		final MeasureUnitEntity kilogram = td.newMeasureUnit("kg", "Kilogram");
+		final MeasureUnitEntity minute = td.newMeasureUnit("m", "Minuter");
+		final MeasureUnitEntity pressure = td.newMeasureUnit("mmHg", "Tryck");
 		
 		
 		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, jkpg_cu_1, AccessLevel.COUNTY_COUNCIL);
@@ -243,10 +243,8 @@ public final class WebUtil {
 		/*
 		 * Norsjö Rehab Center
 		 */
-		final MeasureUnitEntity minuteVbott = td.newMeasureUnit("m", "Meter", vbott);
-		
 		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minuteVbott, false, 1);
+		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 1);
 
 		atRepo.saveAndFlush(t4);
 
@@ -263,6 +261,13 @@ public final class WebUtil {
 		ca3.addRole(td.newCareActorRole());
 		ca3.addRole(td.newCountyAdminRole());
 		careActorRepo.saveAndFlush(ca3);
+		
+		
+		final CareActorEntity ca4 = CareActorEntity.newEntity("Johanna", "Niklasson", "hsa-swe-admin", hall_cu_1);
+		ca4.addRole(td.newCareActorRole());
+		ca4.addRole(td.newCountyAdminRole());
+		ca4.addRole(td.newNationAdminRole());
+		careActorRepo.saveAndFlush(ca4);
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
