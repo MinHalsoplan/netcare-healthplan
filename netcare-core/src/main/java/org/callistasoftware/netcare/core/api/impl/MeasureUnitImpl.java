@@ -32,6 +32,10 @@ public class MeasureUnitImpl implements MeasureUnit {
 	private String dn;
 	private String name;
 	
+	public MeasureUnitImpl() {
+		this.id = -1L;
+	}
+	
 	public MeasureUnitImpl(final MeasureUnitEntity entity) {
 		this.id = entity.getId();
 		this.dn = entity.getDn();

@@ -1407,22 +1407,36 @@ var NC_MODULE = {
 			})
 		};
 		
-		my.buildUnitRow = function(unit) {
+		my.buildUnitRow = function(my, unit) {
 			var template = _.template($('#measureUnitRow').html());
 			var dom = template(unit);
 			$('#measureUnitsTable tbody').append($(dom));
+			
+			$('#measure-unit-' + unit.id + '-edit').click(function() {
+				_data.id = unit.id;
+				_data.dn = unit.dn;
+				_data.name = unit.name;
+				
+				my.renderForm(my);
+			});
 		};
 		
 		my.load = function(my) {
 			new NC.Ajax().get('/units', function(data) {
 				$.each(data.data, function(i, v) {
-					my.buildUnitRow(v);
+					my.buildUnitRow(my, v);
 				});
 				
 				if (data.data.length > 0) {
 					$('#measureUnitsTable').show();
 				}
 			});
+		};
+		
+		my.renderForm = function(my) {
+			$('#dn').val(_data.dn);
+			$('#name').val(_data.name);
+			$('#unitId').val(_data.id);
 		};
 		
 		my.save = function(my) {

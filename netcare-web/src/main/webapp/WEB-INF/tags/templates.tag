@@ -290,7 +290,7 @@
 <tr id="measure-unit-{{id}}">
 	<td>{{dn}}</td>
 	<td>{{name}}</td>
-	<td><img id="measure-unit-{{id}}-edit" src="<c:url value="/img/24/edit.png" />" /></td>
+	<td><img id="measure-unit-{{id}}-edit" src="<c:url value="/img/icons/24/edit.png" />" style="cursor: pointer;" /></td>
 </tr>
 </script>
 

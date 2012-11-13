@@ -49,16 +49,20 @@ public class UnitServiceImpl extends ServiceSupport implements UnitService {
 	@Override
 	public ServiceResult<MeasureUnit> saveUnit(MeasureUnit measureUnit) {
 		
-		MeasureUnitEntity mue = resolveEntity(measureUnit.getDn());
-		if (measureUnit.getId().equals(-1) && mue != null) {
+		final Long id = measureUnit.getId();
+		
+		MeasureUnitEntity mue = resolveEntity(id);
+		if (id.longValue() == -1L && mue != null) {
+			getLog().warn("Measure unit with dn {} did already exist in the system.", measureUnit.getDn());
 			return ServiceResultImpl.createFailedResult(new EntityNotUniqueMessage(MeasureUnitEntity.class, "unikt namn"));
 		}
 		
-		if (!measureUnit.getId().equals(-1) && mue == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(MeasureUnitEntity.class, measureUnit.getId()));
+		if (id.longValue() != -1L && mue == null) {
+			getLog().warn("Measure unit {} was expected to be in the database but was not", id);
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(MeasureUnitEntity.class, id));
 		}
 		
-		if (measureUnit.getId().equals(-1)) {
+		if (mue == null) {
 			
 			mue = MeasureUnitEntity.newEntity(measureUnit.getName()
 					, measureUnit.getDn()
@@ -80,9 +84,12 @@ public class UnitServiceImpl extends ServiceSupport implements UnitService {
 		
 	}
 	
-	private MeasureUnitEntity resolveEntity(final String dn) {
-		return repo.findByDnAndCountyCouncil(dn
-				, getCareActor().getCareUnit().getCountyCouncil());
+	private MeasureUnitEntity resolveEntity(final Long id) {
+		if (id.longValue() == -1L) {
+			return null;
+		}
+		
+		return repo.findOne(id);
 	}
 
 }
