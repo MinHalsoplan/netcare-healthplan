@@ -294,4 +294,9 @@
 </tr>
 </script>
 
+<script id="accessLevelsRadioOption" type="text/template">
+	<input id="access-level-{{code}}" type="radio" name="accessLevel" value="{{code}}" />
+	<label for="access-level-{{code}}" style="display: inline; margin-right: 20px;">{{value}}</label>
+</script>
+
 <!-- healthplan:templates / -->

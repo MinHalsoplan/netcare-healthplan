@@ -18,7 +18,6 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 
@@ -38,7 +37,7 @@ public interface ActivityTypeService {
 	 *            the user creating this type.
 	 * @return
 	 */
-	ServiceResult<ActivityType> createActivityType(final ActivityType dto, final CareActorBaseView careActor);
+	ServiceResult<ActivityType> createActivityType(final ActivityType dto);
 
 	/**
 	 * Searches for activity types
@@ -81,7 +80,7 @@ public interface ActivityTypeService {
 	 * @param careActor
 	 * @return the saved activity.
 	 */
-	ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl activityType, final CareActorBaseView careActor);
+	ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl activityType);
 	
 	/**
 	 * Deletes the activity template with the specified id

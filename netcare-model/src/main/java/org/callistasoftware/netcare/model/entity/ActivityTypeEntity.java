@@ -144,7 +144,7 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		return careUnit;
 	}
 
-	void setCareUnit(CareUnitEntity careUnit) {
+	public void setCareUnit(CareUnitEntity careUnit) {
 		this.careUnit = careUnit;
 	}
 

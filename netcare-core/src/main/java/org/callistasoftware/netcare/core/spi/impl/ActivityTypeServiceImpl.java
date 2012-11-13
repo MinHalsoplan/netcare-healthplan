@@ -27,7 +27,6 @@ import javax.persistence.EntityManagerFactory;
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
@@ -221,7 +220,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	@Override
-	public ServiceResult<ActivityType> createActivityType(ActivityType dto, CareActorBaseView careActor) {
+	public ServiceResult<ActivityType> createActivityType(ActivityType dto) {
 		log.info("Creating new activity type. Name: {}", dto.getName());
 
 		final ActivityCategoryEntity category = this.catRepo.findOne(dto.getCategory().getId());
@@ -230,7 +229,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 					.getCategory().getId()));
 		}
 
-		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(careActor.getCareUnit().getHsaId());
+		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(getCareActor().getCareUnit().getHsaId());
 
 		ActivityTypeEntity activityTypeEntity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit,
 				AccessLevel.CAREUNIT);
@@ -261,7 +260,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	@Override
-	public ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl dto, CareActorBaseView careActor) {
+	public ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl dto) {
 		Long id = dto.getId();
 		System.out.println("update of activity with id " + id);
 		ActivityTypeEntity repoItem = this.repo.findOne(id);
@@ -275,6 +274,12 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		}
 
 		repoItem.setName(dto.getName());
+		
+		if (dto.getAccessLevel().getCode().equals(AccessLevel.CAREUNIT.name())) {
+			getLog().debug("Access level set to care unit on activity. Setting current user's care unit on entity");
+			repoItem.setCareUnit(getCareActor().getCareUnit());
+		}
+		
 		repoItem.setAccessLevel(AccessLevel.valueOf(dto.getAccessLevel().getCode()));
 		if (repoItem.getCategory().getId() != category.getId()) {
 			repoItem.setCategory(category);
@@ -309,11 +314,10 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	protected void updateItemWithDtoValues(ActivityItemTypeEntity itemEntity, ActivityItemType dtoItem) {
 		
-		final MeasureUnitEntity mue = this.resolveMeasureUnit(dtoItem.getUnit().getId(), false);
-		
 		itemEntity.setName(dtoItem.getName());
 		itemEntity.setSeqno(dtoItem.getSeqno());
 		if (itemEntity instanceof MeasurementTypeEntity) {
+			final MeasureUnitEntity mue = this.resolveMeasureUnit(dtoItem.getUnit().getId(), false);
 			MeasurementTypeEntity entity = (MeasurementTypeEntity) itemEntity;
 			entity.setValueType(MeasurementValueType.valueOf(dtoItem.getValueType().getCode()));
 			entity.setUnit(mue);

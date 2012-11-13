@@ -997,8 +997,11 @@ var NC_MODULE = {
 					'click',
 					function() {
 						NC.log('Save button clicked');
-						activityTemplate.name = $('#activityTypeName')
-								.val();
+						activityTemplate.name = $('#activityTypeName').val();
+						
+						activityTemplate.accessLevel = new Object();
+						activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
+						
 						for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
 							delete activityTemplate.activityItems[i].details;
 						}
@@ -1037,14 +1040,29 @@ var NC_MODULE = {
 		};
 		
 		my.loadAccessLevels = function(my) {
-			new NC.Support().loadAccessLevels($('#activityTypeAccessLevel'));
-			
-			/*
-			 * Role check, remove items that we do not have access to
-			 */
-			if (my.params.isCareActor == "true" && my.params.isCountyActor == "false") {
-				$('#activityTypeAccessLevel').prop('disabled', 'disabled');
-			}
+			new NC.Ajax().getSynchronous('/support/accessLevels', function(data) {
+				$.each(data.data, function(i, v) {
+					$('#selectAccessLevel').append(
+						_.template($('#accessLevelsRadioOption').html())(v)
+					);
+				});
+				
+				$('#selectAccessLevel').css('margin-bottom', '10px');
+				
+				/*
+				 * Role check, remove items that we do not have access to
+				 */
+				if (my.params.isCareActor == "true" && my.params.isCountyActor == "false") {
+					NC.log('Disabling access levels...');
+					$('input[name="accessLevel"]').prop('disabled', true);
+					return;
+				}
+				
+				if (my.params.isCountyActor == "true" && my.params.isNationActor == "false") {
+					$('#access-level-NATIONAL').prop('disabled', true);
+				}
+				
+			});
 		};
 		
 		my.moveItemUp = function(my, itemId) {
@@ -1127,18 +1145,44 @@ var NC_MODULE = {
 				}
 			}
 		};
+		
+		var canModify = function(my, level) {
+			var careActorAccess = (my.params.isCareActor == "true" && level == "CAREUNIT")
+			var countyActorAccess = (my.params.isCountyActor == "true" && (level == "CAREUNIT" || level == "COUNTY_COUNCIL"));
+			var nationAccess = (my.params.isNationActor == "true" && (level == "CAREUNIT" || level == "NATIONAL"));
+			
+			NC.log('Care actor access: ' + careActorAccess);
+			NC.log('County actor access: ' + careActorAccess);
+			NC.log('Nation actor access: ' + careActorAccess);
+			
+			if (careActorAccess) {
+				NC.log('Care actor access');
+				return true;
+			} else if (countyActorAccess) {
+				NC.log('County actor access');
+				return true;
+			} else if (nationAccess) {
+				NC.log('Nation actor access');
+				return true;
+			} else {
+				NC.log('Not permitted to change template');
+				return false;
+			}
+			
+		};
 
 		var renderItems = function(my, activityTemplate) {
 			var aLevel = activityTemplate.accessLevel.code;
 			
-			if (my.params.isCareActor == "true" && my.params.isCountyActor == "false" && aLevel != "CAREUNIT") {
+			if (!canModify(my, aLevel)) {
 				$('#activitySaveButton').prop('disabled', true);
 				$('#accessNote').show();
 			}
 			
 			$('#activityTypeName').val(activityTemplate.name);
 			$('#activityTypeCategory > option[value="' + activityTemplate.category.id + '"]').prop('selected', true);
-			$('#activityTypeAccessLevel > option[value="' + aLevel + '"]').prop('selected', true);
+			
+			$('#access-level-' + aLevel).prop('checked', true);
 			
 			var template = _.template($('#activityItemTemplate').html());
 			$('#activityTypeItems').empty();

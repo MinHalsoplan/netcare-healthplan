@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
@@ -50,7 +49,7 @@ public class ActivityTypeApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityType> newTemplate(@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("create", "activity template");
-		return this.service.createActivityType(activityType, (CareActorBaseView) getUser());
+		return this.service.createActivityType(activityType);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -72,7 +71,7 @@ public class ActivityTypeApi extends ApiSupport {
 	public ServiceResult<ActivityType> updateActivityType(@PathVariable("id") final String id,
 			@RequestBody final ActivityTypeImpl activityType) {
 		this.logAccess("update", "activity type");
-		return this.service.updateActivityType(activityType, (CareActorBaseView) getUser());
+		return this.service.updateActivityType(activityType);
 	}
 
 }
