@@ -1366,5 +1366,75 @@ var NC_MODULE = {
 		}
 
 		return my;
+	})(),
+	
+	UNITS : (function() {
+		
+		var _data = new Object();
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			_data.id = -1;
+			
+			my.load(that);
+			my.initChangeListeners(that);
+		};
+		
+		my.initChangeListeners = function(my) {
+			$('#dn').bind('blur keyup change', function() {
+				_data.dn = $(this).val();
+			});
+			
+			$('#name').bind('blur keyup change', function() {
+				_data.name = $(this).val();
+			});
+			
+			$('#unitId').bind('blur change', function() {
+				_data.id = $(this).val();
+			});
+			
+			$('#unitForm').submit(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				my.save(my);
+			})
+		};
+		
+		my.buildUnitRow = function(unit) {
+			var template = _.template($('#measureUnitRow').html());
+			var dom = template(unit);
+			$('#measureUnitsTable tbody').append($(dom));
+		};
+		
+		my.load = function(my) {
+			new NC.Ajax().get('/units', function(data) {
+				$.each(data.data, function(i, v) {
+					my.buildUnitRow(v);
+				});
+				
+				if (data.data.length > 0) {
+					$('#measureUnitsTable').show();
+				}
+			});
+		};
+		
+		my.save = function(my) {
+			if (_data.id == -1) {
+				new NC.Ajax().post('/units', _data, function(data) {
+					my.buildUnitRow(data.data);
+				});
+			} else {
+				new NC.Ajax().post('/units/' + _data.id, _data, function(data) {
+					my.buildUnitRow(data.data);
+				});
+			}
+		};
+		
+		return my;
 	})()
 };

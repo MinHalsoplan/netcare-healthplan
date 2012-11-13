@@ -26,6 +26,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name="nc_role")
 public class RoleEntity {
+	
+	public static final String CARE_ACTOR = "CARE_ACTOR";
+	public static final String COUNTY_COUNCIL_ADMINISTRATOR = "COUNTY_COUNCIL_ADMINISTRATOR";
+	public static final String PATIENT = "PATIENT";
+	public static final String NATION_ADMINISTRATOR = "NATION_ADMINISTRATOR";
+	public static final String SYSTEM_ADMINISTRATOR = "SYSTEM_ADMINISTRATOR";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

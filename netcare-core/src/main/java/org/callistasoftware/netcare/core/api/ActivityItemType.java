@@ -102,7 +102,7 @@ public interface ActivityItemType {
 	/**
 	 * Get the unit of this activity type
 	 */
-	Option getUnit();
+	MeasureUnit getUnit();
 
 	/**
 	 * If this measurement is an interval, this flag tells whether an alarm

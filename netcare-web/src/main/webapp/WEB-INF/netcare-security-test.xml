@@ -34,6 +34,9 @@
 		<security:intercept-url pattern="/netcare/user/**" access="hasRole('PATIENT')"/>
 		
 		<security:intercept-url pattern="/netcare/admin/**" access="hasRole('CARE_ACTOR')"/>
+		
+		<security:intercept-url pattern="/netcare/county-admin/**" access="hasRole('COUNTY_COUNCIL_ADMINISTRATOR')"/>
+		
 		<security:intercept-url pattern="/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 		
 		<security:form-login login-page="/netcare/security/login" default-target-url="/netcare/home"/>

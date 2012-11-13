@@ -24,7 +24,7 @@
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
 
-<h3><spring:message code="systemAdministration" /></h3>
+<h3><spring:message code="county.menu.title" /></h3>
 <ul>
-	<li><a href="<spring:url value="/netcare/admin/categories" />"><spring:message code="activityCategories" /></a>
+	<li><a href="<spring:url value="/netcare/county-admin/units" />"><spring:message code="county.menu.units" /></a>
 </ul>

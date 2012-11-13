@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.model.entity;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("measurement")
@@ -27,8 +28,8 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 	@Column(name = "value_type")
 	private MeasurementValueType valueType;
 
-	@Column(name = "unit")
-	private MeasureUnit unit;
+	@ManyToOne
+	private MeasureUnitEntity unit;
 
 	@Column(name = "alarm_enabled")
 	private boolean alarmEnabled;
@@ -48,7 +49,7 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 	 * @return the entity.
 	 */
 	public static MeasurementTypeEntity newEntity(ActivityTypeEntity activityType, String name,
-			MeasurementValueType valueType, MeasureUnit unit, final boolean alarmEnabled, int seqno) {
+			MeasurementValueType valueType, MeasureUnitEntity unit, final boolean alarmEnabled, int seqno) {
 		MeasurementTypeEntity entity = new MeasurementTypeEntity();
 		entity.setActivityType(activityType);
 		entity.setName(name);
@@ -68,11 +69,11 @@ public class MeasurementTypeEntity extends ActivityItemTypeEntity {
 		this.valueType = valueType;
 	}
 
-	public MeasureUnit getUnit() {
+	public MeasureUnitEntity getUnit() {
 		return unit;
 	}
 
-	public void setUnit(MeasureUnit unit) {
+	public void setUnit(MeasureUnitEntity unit) {
 		this.unit = unit;
 	}
 

@@ -39,6 +39,7 @@
 		<class>org.callistasoftware.netcare.model.entity.EstimationEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.EstimationTypeEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity</class>
+		<class>org.callistasoftware.netcare.model.entity.MeasureUnitEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.MeasurementEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.MeasurementTypeEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity</class>

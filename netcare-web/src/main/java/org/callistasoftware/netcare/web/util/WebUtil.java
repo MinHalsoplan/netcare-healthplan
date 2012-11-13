@@ -47,7 +47,7 @@ import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
@@ -94,6 +94,8 @@ public final class WebUtil {
 		final WebApplicationContext wc = getWebRequest(sc);
 
 		final String careActorHsa = "app-test-giver";
+		
+		final TestDataHelper td = new TestDataHelper(sc);
 
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
 		final CareActorRepository careActorRepo = wc.getBean(CareActorRepository.class);
@@ -105,15 +107,16 @@ public final class WebUtil {
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
 		final RoleRepository roleRepo = wc.getBean(RoleRepository.class);
-
+		
+		
 		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 		
-		final RoleEntity careActorRole = roleRepo.save(RoleEntity.newRole("CARE_ACTOR"));
-
-		final CountyCouncilEntity jkpg = ccRepo.save(CountyCouncilEntity.newEntity("Landstinget i Jönköpings län"));
+		final RoleEntity careActorRole = td.newCareActorRole();
+		final CountyCouncilEntity jkpg = td.newCountyCouncil("Landstinget i Jönköpings Län");
+		final MeasureUnitEntity mue = td.newMeasureUnit("m", "Meter", jkpg);
 
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit", jkpg);
@@ -122,7 +125,7 @@ public final class WebUtil {
 		cuRepo.flush();
 
 		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
+		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, mue, false, 0);
 		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft", 0, 10, 1);
 		atRepo.save(ate);
 		atRepo.flush();
@@ -204,10 +207,16 @@ public final class WebUtil {
 		/*
 		 * Rosenhälsan
 		 */
+		final MeasureUnitEntity meter = td.newMeasureUnit("meter", "Meter", jkpg);
+		final MeasureUnitEntity kilogram = td.newMeasureUnit("kg", "Kilogram", jkpg);
+		final MeasureUnitEntity minute = td.newMeasureUnit("m", "Minuter", jkpg);
+		final MeasureUnitEntity pressure = td.newMeasureUnit("mmHg", "Tryck", jkpg);
+		
+		
 		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, jkpg_cu_1, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 1);
+		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, meter, false, 1);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
-				MeasureUnit.KILOGRAM, true, 2);
+				kilogram, true, 2);
 		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 3);
 		atRepo.saveAndFlush(t1);
 
@@ -216,7 +225,7 @@ public final class WebUtil {
 				AccessLevel.NATIONAL);
 
 		MeasurementTypeEntity
-				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 1);
+				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 1);
 		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5, 2);
 
 		atRepo.saveAndFlush(t2);
@@ -226,18 +235,18 @@ public final class WebUtil {
 		 */
 		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, jkpg_cu_2,
 				AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity
-				.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true, 1);
-		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG,
-				true, 2);
+		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, pressure, true, 1);
+		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, pressure, true, 2);
 
 		atRepo.saveAndFlush(t3);
 		
 		/*
 		 * Norsjö Rehab Center
 		 */
+		final MeasureUnitEntity minuteVbott = td.newMeasureUnit("m", "Meter", vbott);
+		
 		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 1);
+		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minuteVbott, false, 1);
 
 		atRepo.saveAndFlush(t4);
 
@@ -249,6 +258,11 @@ public final class WebUtil {
 		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", jkpg_cu_1);
 		ca.addRole(td.newCareActorRole());
 		careActorRepo.saveAndFlush(ca);
+		
+		final CareActorEntity ca3 = CareActorEntity.newEntity("Mikael", "Andersson", "hsa-lj-admin", jkpg_cu_1);
+		ca3.addRole(td.newCareActorRole());
+		ca3.addRole(td.newCountyAdminRole());
+		careActorRepo.saveAndFlush(ca3);
 
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");

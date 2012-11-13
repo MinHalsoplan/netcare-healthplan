@@ -286,4 +286,12 @@
 </div>
 </script>
 
+<script id="measureUnitRow" type="text/template">
+<tr id="measure-unit-{{id}}">
+	<td>{{dn}}</td>
+	<td>{{name}}</td>
+	<td><img id="measure-unit-{{id}}-edit" src="<c:url value="/img/24/edit.png" />" /></td>
+</tr>
+</script>
+
 <!-- healthplan:templates / -->

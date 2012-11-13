@@ -37,7 +37,6 @@ import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
@@ -79,8 +78,8 @@ public class HealthPlanRepositoryTest extends TestSupport {
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("test", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity
-				.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
-		MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 1);
+				.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, newMeasureUnit("m", "Meter", cc), false, 0);
+		MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL, newMeasureUnit("kg", "Kilogram", cc), true, 1);
 		typeRepo.save(type);
 		typeRepo.flush();
 

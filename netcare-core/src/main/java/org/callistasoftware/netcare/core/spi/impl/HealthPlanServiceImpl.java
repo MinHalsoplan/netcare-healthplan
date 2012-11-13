@@ -43,6 +43,7 @@ import org.callistasoftware.netcare.core.api.Value;
 import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.impl.MeasureUnitImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
@@ -387,10 +388,10 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 					AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, entity
 							.getActivityDefinitionEntity().getHealthPlan().getForPatient(), entity
 							.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
-					Option o = new Option(definition.getMeasurementType().getUnit().name(),
-							LocaleContextHolder.getLocale());
+					
 					ae.setInfo(definition.getMeasurementType().getName() + ": " + me.getReportedValue() + " "
-							+ o.getValue());
+							+ definition.getMeasurementType().getUnit().getName());
+					
 					alarmRepo.save(ae);
 				}
 			} else if (activityItemValuesEntity instanceof EstimationEntity) {
@@ -556,7 +557,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 						mv.setName(schedActivityEntity.getActivityDefinitionEntity().getActivityType().getName());
 						mv.setDefinitionId(schedActivityEntity.getActivityDefinitionEntity().getId());
 						mv.setValueType(new Option(measurementName, null));
-						mv.setUnit(new Option(type.getUnit().name(), LocaleContextHolder.getLocale()));
+						mv.setUnit(MeasureUnitImpl.newFromEntity(type.getUnit()));
 						mv.setInterval(type.equals(MeasurementValueType.INTERVAL));
 						measuredValues.add(mv);
 					}
@@ -697,17 +698,17 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 						.getMaxTarget() : md.getTarget();
 				int target = Math.round(t);
 
-				switch (md.getMeasurementType().getUnit()) {
-				case STEP:
-					minutes = Math.max(target / 50, minutes);
-					break;
-				case METER:
-					minutes = Math.max(target / 80, minutes);
-					break;
-				case MINUTE:
-					minutes = Math.max(target, minutes);
-					break;
-				}
+//				switch (md.getMeasurementType().getUnit()) {
+//				case STEP:
+//					minutes = Math.max(target / 50, minutes);
+//					break;
+//				case METER:
+//					minutes = Math.max(target / 80, minutes);
+//					break;
+//				case MINUTE:
+//					minutes = Math.max(target, minutes);
+//					break;
+//				}
 			}
 		}
 
@@ -876,8 +877,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 							.getActivityItemType();
 					String name = type.getName();
 					if (first) {
-						Option unit = new Option(type.getUnit().name(), LocaleContextHolder.getLocale());
-						hb.append(CSV_SEP).append(quotedString(name + " [" + unit.getValue() + "]"));
+						hb.append(CSV_SEP).append(quotedString(name + " [" + type.getUnit().getName() + "]"));
 						if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
 							hb.append(CSV_SEP).append(quotedString(name + " - min"));
 							hb.append(CSV_SEP).append(quotedString(name + " - max"));

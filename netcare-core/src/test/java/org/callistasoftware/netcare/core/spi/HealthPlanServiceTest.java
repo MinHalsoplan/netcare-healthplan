@@ -65,7 +65,6 @@ import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
@@ -131,8 +130,8 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 
 		ActivityTypeEntity at = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
-		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true, 1);
+		MeasurementTypeEntity.newEntity(at, "Distans", MeasurementValueType.SINGLE_VALUE, newMeasureUnit("m", "Meter", cc), false, 0);
+		MeasurementTypeEntity.newEntity(at, "Vikt", MeasurementValueType.INTERVAL, newMeasureUnit("kg", "Kilogram", cc), true, 1);
 		EstimationTypeEntity.newEntity(at, "Känsla", "Väldigt lätt", "Mycket Trötthet", 0, 10, 2);
 		typeRepo.save(at);
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
@@ -203,9 +202,9 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		final ActivityTypeEntity type = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
 		MeasurementTypeEntity
-				.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false, 0);
+				.newEntity(type, "Distans", MeasurementValueType.SINGLE_VALUE, newMeasureUnit("m", "Meter", cc), false, 0);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL,
-				MeasureUnit.KILOGRAM, true, 1);
+				newMeasureUnit("kg", "Kilogram", cc), true, 1);
 
 		final ActivityTypeEntity savedType = typeRepo.save(type);
 		final CareActorEntity ca = CareActorEntity.newEntity("Test Testgren", "", "hsa-123", cu);
@@ -282,7 +281,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final HealthPlanEntity after = this.ordinationRepo.findOne(savedOrd.getId());
 		final ActivityDefinitionEntity ent = after.getActivityDefinitions().get(0);
 		// FIXME: multi-values
-		assertEquals(MeasureUnit.METER, ((MeasurementTypeEntity) ent.getActivityItemDefinitions().get(0)
+		assertEquals(newMeasureUnit("m", "Meter", cc), ((MeasurementTypeEntity) ent.getActivityItemDefinitions().get(0)
 				.getActivityItemType()).getUnit());
 		assertEquals("Löpning", ent.getActivityType().getName());
 		// FIXME: multi-values
@@ -515,9 +514,12 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private ActivityTypeEntity createActivityType() {
+		
+		final CareUnitEntity cu = createCareUnit("123");
+		
 		final ActivityTypeEntity at = ActivityTypeEntity.newEntity("Yoga", this.createActivityCategory(),
-				createCareUnit("123"), AccessLevel.CAREUNIT);
-		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false, 0);
+				cu, AccessLevel.CAREUNIT);
+		MeasurementTypeEntity.newEntity(at, "Tid", MeasurementValueType.SINGLE_VALUE, newMeasureUnit("m", "Meter", cu.getCountyCouncil()), false, 0);
 		return this.typeRepo.save(at);
 	}
 

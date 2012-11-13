@@ -40,6 +40,7 @@ import org.callistasoftware.netcare.core.api.messages.NoAccessMessage;
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.MeasureUnitRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
@@ -48,7 +49,7 @@ import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.TextTypeEntity;
@@ -83,6 +84,9 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	@Autowired
 	private CareUnitRepository cuRepo;
+	
+	@Autowired
+	private MeasureUnitRepository measureRepo;
 
 	public ServiceResult<ActivityType[]> loadAllActivityTypes(final CareUnitEntity careUnit) {
 		log.info("Loading all activity templates accessible from care unit {}", careUnit.getHsaId());
@@ -304,12 +308,15 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	protected void updateItemWithDtoValues(ActivityItemTypeEntity itemEntity, ActivityItemType dtoItem) {
+		
+		final MeasureUnitEntity mue = this.resolveMeasureUnit(dtoItem.getUnit().getId(), false);
+		
 		itemEntity.setName(dtoItem.getName());
 		itemEntity.setSeqno(dtoItem.getSeqno());
 		if (itemEntity instanceof MeasurementTypeEntity) {
 			MeasurementTypeEntity entity = (MeasurementTypeEntity) itemEntity;
 			entity.setValueType(MeasurementValueType.valueOf(dtoItem.getValueType().getCode()));
-			entity.setUnit(MeasureUnit.valueOf(dtoItem.getUnit().getCode()));
+			entity.setUnit(mue);
 			entity.setAlarmEnabled(dtoItem.isAlarm());
 		} else if (itemEntity instanceof EstimationTypeEntity) {
 			EstimationTypeEntity entity = (EstimationTypeEntity) itemEntity;
@@ -336,10 +343,14 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	protected ActivityItemTypeEntity createNewItemEntity(ActivityItemType dtoItem, ActivityTypeEntity parent) {
+		
+		// Resolve measure unit
+		final MeasureUnitEntity mue = resolveMeasureUnit(dtoItem.getUnit().getId(), false);
+		
 		if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.MEASUREMENT_ITEM_TYPE)) {
 			return MeasurementTypeEntity.newEntity(parent, dtoItem.getName(),
 					MeasurementValueType.valueOf(dtoItem.getValueType().getCode()),
-					MeasureUnit.valueOf(dtoItem.getUnit().getCode()), dtoItem.isAlarm(), dtoItem.getSeqno());
+					mue, dtoItem.isAlarm(), dtoItem.getSeqno());
 		} else if (dtoItem.getActivityItemTypeName().equals(ActivityItemType.ESTIMATION_ITEM_TYPE)) {
 			return EstimationTypeEntity.newEntity(parent, dtoItem.getName(), dtoItem.getMinScaleText(),
 					dtoItem.getMaxScaleText(), dtoItem.getMinScaleValue(), dtoItem.getMaxScaleValue(),
@@ -416,5 +427,20 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		} else {
 			return ServiceResultImpl.createFailedResult(new NoAccessMessage());
 		}
+	}
+	
+	private MeasureUnitEntity resolveMeasureUnit(final Long id, final boolean write) {
+		final MeasureUnitEntity mue = measureRepo.findOne(id);
+		if (id == null) {
+			throw new IllegalStateException("Could not find measure unit with id " + id);
+		}
+		
+		if (write) {
+			this.verifyWriteAccess(mue);
+		} else {
+			this.verifyReadAccess(mue);
+		}
+		
+		return mue;
 	}
 }

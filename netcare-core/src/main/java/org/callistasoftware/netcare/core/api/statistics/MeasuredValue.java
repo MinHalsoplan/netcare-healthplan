@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.api.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.MeasureUnit;
 import org.callistasoftware.netcare.core.api.Option;
 
 public class MeasuredValue {
@@ -26,7 +27,7 @@ public class MeasuredValue {
 	private String name;
 	private boolean interval;
 	private Option valueType;
-	private Option unit;
+	private MeasureUnit unit;
 	private Long definitionId;
 	
 	private List<ReportedValue> reportedValues;
@@ -51,11 +52,11 @@ public class MeasuredValue {
 		this.valueType = valueType;
 	}
 
-	public Option getUnit() {
+	public MeasureUnit getUnit() {
 		return unit;
 	}
 
-	public void setUnit(Option unit) {
+	public void setUnit(MeasureUnit unit) {
 		this.unit = unit;
 	}
 	

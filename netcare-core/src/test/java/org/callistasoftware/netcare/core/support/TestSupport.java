@@ -22,9 +22,11 @@ import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
+import org.callistasoftware.netcare.core.repository.MeasureUnitRepository;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
+import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +48,9 @@ public abstract class TestSupport {
 	
 	@Autowired
 	private CountyCouncilRepository ccRepo;
+	
+	@Autowired
+	private MeasureUnitRepository measureUnitRepository;
 	
 	protected void runAs(final UserBaseView user) {
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null));
@@ -72,6 +77,19 @@ public abstract class TestSupport {
 		
 		final CareActorBaseView ca = CareActorBaseViewImpl.newFromEntity(entity);
 		runAs(ca);
+	}
+	
+	protected final MeasureUnitEntity newMeasureUnit(final String name, final String dn, final CountyCouncilEntity cce) {
+		MeasureUnitEntity mue = getMeasureUnitRepository().findByDnAndCountyCouncil(dn, cce);
+		if (mue == null) {
+			mue = getMeasureUnitRepository().saveAndFlush(MeasureUnitEntity.newEntity(name, dn, cce));
+		}
+		
+		return mue;
+	}
+	
+	protected final MeasureUnitRepository getMeasureUnitRepository() {
+		return measureUnitRepository;
 	}
 	
 	protected final CareActorRepository getCareActorRepository() {

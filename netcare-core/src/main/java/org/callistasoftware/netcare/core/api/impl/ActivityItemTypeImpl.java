@@ -17,6 +17,7 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.ActivityItemType;
+import org.callistasoftware.netcare.core.api.MeasureUnit;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
@@ -43,7 +44,7 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 	// Measurement
 	private boolean alarm;
 	private Option valueType;
-	private Option unit;
+	private MeasureUnit unit;
 
 	// YesNo
 	private String question;
@@ -69,7 +70,7 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 			MeasurementTypeEntity e = (MeasurementTypeEntity) entity;
 			dto.setActivityItemTypeName(MEASUREMENT_ITEM_TYPE);
 			dto.setAlarm(e.isAlarmEnabled());
-			dto.setUnit(new Option(e.getUnit().name(), LocaleContextHolder.getLocale()));
+			dto.setUnit(MeasureUnitImpl.newFromEntity(((MeasurementTypeEntity) entity).getUnit()));
 			dto.setValueType(new Option(e.getValueType().name(), LocaleContextHolder.getLocale()));
 		} else if (entity instanceof YesNoTypeEntity) {
 			YesNoTypeEntity e = (YesNoTypeEntity) entity;
@@ -165,11 +166,11 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 	}
 
 	@Override
-	public Option getUnit() {
+	public MeasureUnit getUnit() {
 		return this.unit;
 	}
 
-	public void setUnit(final Option unit) {
+	public void setUnit(final MeasureUnit unit) {
 		this.unit = unit;
 	}
 
@@ -212,7 +213,7 @@ public class ActivityItemTypeImpl implements ActivityItemType {
 		buf.append("LabelMax: ").append(this.getMaxScaleText()).append("\n");
 		buf.append("ValueMin: ").append(this.getMinScaleValue()).append("\n");
 		buf.append("ValueMax: ").append(this.getMaxScaleValue()).append("\n");
-		buf.append("Unit: ").append(this.getUnit() != null ? this.getUnit().getCode() : "").append("\n");
+		buf.append("Unit: ").append(this.getUnit() != null ? this.getUnit().getName() : "").append("\n");
 		buf.append("Type: ").append(this.getValueType() != null ? this.getValueType().getCode() : "").append("\n");
 		buf.append("Question: ").append(this.getQuestion()).append("\n");
 		buf.append("Label: ").append(this.getLabel()).append("\n");

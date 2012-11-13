@@ -158,4 +158,9 @@ public class HomeController extends ControllerSupport {
 		log.info("Displaying home for user");
 		return "user/report";
 	}
+	
+	@RequestMapping(value="/county-admin/units", method=RequestMethod.GET)
+	public String displayUnitAdministration() {
+		return "county-admin/units";
+	}
 }
