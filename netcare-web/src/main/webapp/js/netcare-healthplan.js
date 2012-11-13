@@ -109,7 +109,7 @@ var NC_MODULE = {
 					
 					$('#patientList').append($(dom));
 					
-					$('#patientItem' + v.id).next('li').click(function(e) {
+					$('#patientItem' + v.id).click(function(e) {
 						e.preventDefault();
 						
 						NC_MODULE.GLOBAL.selectPatient(v.id, function(data) {
@@ -231,7 +231,7 @@ var NC_MODULE = {
 			/*
 			 * Bind click event
 			 */
-			var liElem = $('#healthPlanItem' + hp.id).next('.item');
+			var liElem = $('#healthPlanItem' + hp.id);
 			liElem.click(function() {
 				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id;
 			});
@@ -298,7 +298,7 @@ var NC_MODULE = {
 		my.inactivate = function(my, healthPlan) {
 			var id = healthPlan.id;
 			new NC.Ajax().http_delete('/healthplans/' + id, function() {
-				$('#healthPlanItem' + id).next('li').fadeOut('fast');
+				$('#healthPlanItem' + id).fadeOut('fast');
 				$('#healthPlanItem' + id).remove();
 			});
 		};
