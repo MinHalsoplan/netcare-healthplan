@@ -978,8 +978,8 @@ var NC_MODULE = {
 						'value' : null
 					},
 					'unit' : {
-						'code' : null,
-						'value' : null
+						'id' : null,
+						'name' : null
 					},
 					"minScaleText" : null,
 					"maxScaleText" : null,
@@ -1165,7 +1165,7 @@ var NC_MODULE = {
 			function setDetailsText(item) {
 				if (item.activityItemTypeName == 'measurement') {
 					if (item.unit != null && item.valueType != null) {
-						item.details = item.unit.value + ' | '
+						item.details = item.unit.name + ' | '
 								+ item.valueType.value;
 					} else {
 						item.details = 'Värden saknas';
@@ -1270,7 +1270,7 @@ var NC_MODULE = {
 			$('#valueType').change();
 
 			$.each(unitOpts, function(i, v) {
-				if (item.unit != null && item.unit.code == v.attr('value')) {
+				if (item.unit != null && item.unit.id == v.attr('value')) {
 					v.attr('selected', 'selected');
 				}
 				$('#measurementUnit').append(v);
@@ -1298,8 +1298,8 @@ var NC_MODULE = {
 			collected.alarm = $('#measurementAlarm:checked').val() == "on"
 			// Do some validation
 			item.name = collected.name;
-			item.unit.code = collected.measurementUnitCode;
-			item.unit.value = collected.measurementUnitValue;
+			item.unit.id = collected.measurementUnitCode;
+			item.unit.name = collected.measurementUnitValue;
 			item.valueType.code = collected.valueTypeCode;
 			item.valueType.value = collected.valueTypeValue;
 			item.alarm = collected.alarm;
@@ -1342,14 +1342,6 @@ var NC_MODULE = {
 			return true;
 		}
 
-		var flash = function(something) {
-			something.animate({
-				'backgroundColor' : '#eee'
-			}, 100).animate({
-				'backgroundColor' : 'white'
-			}, 200);
-		}
-
 		var initMeasureValues = function(my) {
 			support.getMeasureValueTypes(function(data) {
 				$.each(data.data, function(i, v) {
@@ -1359,10 +1351,10 @@ var NC_MODULE = {
 			});
 		}
 		var initUnitValues = function(my) {
-			support.getUnits(function(data) {
+			NC_MODULE.UNITS.load(function(data) {
 				$.each(data.data, function(i, v) {
-					unitOpts.push($('<option>').attr('value', v.code).html(
-							v.value));
+					unitOpts.push($('<option>').attr('value', v.id).html(
+							v.name));
 				});
 			});
 		}
@@ -1382,7 +1374,7 @@ var NC_MODULE = {
 			
 			_data.id = -1;
 			
-			my.load(that);
+			my.processUnits(that);
 			my.initChangeListeners(that);
 		};
 		
@@ -1407,10 +1399,21 @@ var NC_MODULE = {
 			})
 		};
 		
-		my.buildUnitRow = function(my, unit) {
+		my.buildUnitRow = function(my, unit, update) {
 			var template = _.template($('#measureUnitRow').html());
 			var dom = template(unit);
-			$('#measureUnitsTable tbody').append($(dom));
+			
+			if (update == true) {
+				NC.log('Updating row')
+	 			var row = $('#measure-unit-' + unit.id);
+				if (row == undefined) {
+					$('#measureUnitsTable tbody').append($(dom));
+				} else {
+					row.replaceWith($(dom));
+				}
+			} else {
+				$('#measureUnitsTable tbody').append($(dom));
+			}
 			
 			$('#measure-unit-' + unit.id + '-edit').click(function() {
 				_data.id = unit.id;
@@ -1421,10 +1424,16 @@ var NC_MODULE = {
 			});
 		};
 		
-		my.load = function(my) {
+		my.load = function(callback) {
 			new NC.Ajax().get('/units', function(data) {
+				callback(data);
+			});
+		};
+		
+		my.processUnits = function(my) {
+			my.load(function(data) {
 				$.each(data.data, function(i, v) {
-					my.buildUnitRow(my, v);
+					my.buildUnitRow(my, v, false);
 				});
 				
 				if (data.data.length > 0) {
@@ -1439,14 +1448,24 @@ var NC_MODULE = {
 			$('#unitId').val(_data.id);
 		};
 		
+		my.resetForm = function() {
+			_data.id = -1;
+			_data.dn = '';
+			_data.name = '';
+			
+			my.renderForm(my);
+		}
+		
 		my.save = function(my) {
 			if (_data.id == -1) {
 				new NC.Ajax().post('/units', _data, function(data) {
-					my.buildUnitRow(data.data);
+					my.buildUnitRow(my, data.data, true);
+					my.resetForm(my);
 				});
 			} else {
 				new NC.Ajax().post('/units/' + _data.id, _data, function(data) {
-					my.buildUnitRow(data.data);
+					my.buildUnitRow(my, data.data, true);
+					my.resetForm(my);
 				});
 			}
 		};

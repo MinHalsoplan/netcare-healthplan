@@ -16,10 +16,7 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.MessageFields;
@@ -29,7 +26,6 @@ import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -52,21 +48,6 @@ public class SupportApi extends ApiSupport {
 	
 	@Autowired
 	private MessageSource messageSource;
-
-	@RequestMapping(value="/units/load", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<Option[]> loadUnits() {
-		final MeasureUnit[] units = MeasureUnit.values();
-		final Option[] opts = new Option[units.length];
-		for (int i = 0; i < units.length; i++) {
-			opts[i] = new Option(units[i].name(), LocaleContextHolder.getLocale());
-		}
-		
-		final List<Option> list = Arrays.asList(opts);
-		Collections.sort(list);
-		
-		return ServiceResultImpl.createSuccessResult(list.toArray(new Option[list.size()]), new GenericSuccessMessage());
-	}
 	
 	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
