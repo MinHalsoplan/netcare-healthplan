@@ -127,9 +127,6 @@
 </form>
 
 <div class="span3 menu">
-		
-	<h3 id="patientName" class="menuHeader"><netcare:image name="user" size="16"/><spring:message code="admin.menu.patient" /></h3>
-	
 	<c:if test="${not empty sessionScope.currentPatient}">
 		<div id="workWith" style="padding-left: 5px;">
 			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
@@ -147,23 +144,7 @@
 		<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />"><spring:message code="admin.menu.patient.pick" /></a>
 		<li><netcare:image name="gtk-find" size="16" /><a data-backdrop="true" data-toggle="modal" href="#modal-from-dom"><spring:message code="admin.menu.patient.search" /></a>
 		<li><netcare:image name="new-patient" size="16" /><a href="<spring:url value="/netcare/admin/patients?showForm=true" />"><spring:message code="admin.menu.patient.new" /></a>
+		<li><netcare:image name="new-activity" size="16" /><a href="<spring:url value="/netcare/admin/templates" />"><spring:message code="admin.menu.activityType" /></a></li>
 	</ul>
-	
-	<div id="system">
-		<h3 class="menuHeader"><spring:message code="admin.menu.create" /></h3>
-		<ul class="menuList">
-			<li><netcare:image name="new-activity" size="16" /><a href="<spring:url value="/netcare/admin/templates" />"><spring:message code="admin.menu.activityType" /></a></li>
-		</ul>
-	</div>
-
-	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
-	<p>
-		<sec:authentication property="principal.name" /> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
-	</p>
-	<p>
-		<strong><spring:message code="careUnit" />:</strong><br />
-		<sec:authentication property="principal.careUnit.name" /> <br /><small>(<sec:authentication property="principal.careUnit.hsaId" />)</small>
-	</p>
-
 </div>
 </body>

@@ -26,12 +26,22 @@
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <mvk:body>
-<sec:authentication property="principal.username" var="username"/>
-<mvk:pageHeader title="${title}"
-	loggedInUser="${username}"
-	loggedInAsText="Inloggad som : "
-	logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
-	logoutText="Logga ut" />
+<sec:authentication property="principal" var="p"/>
+
+<sec:authorize access="hasRole('CARE_ACTOR')">
+	<mvk:pageHeader title="${title}"
+		loggedInUser="${p.name} (${p.careUnit.name})"
+		loggedInAsText="Inloggad som : "
+		logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
+		logoutText="Logga ut" />
+</sec:authorize>
+<sec:authorize access="hasRole('PATIENT')">
+	<mvk:pageHeader title="${title}"
+		loggedInUser="${p.name} (${p.civicRegistrationNumber})"
+		loggedInAsText="Inloggad som : "
+		logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
+		logoutText="Logga ut" />
+</sec:authorize>
 
 <mvk:pageContent>
 	

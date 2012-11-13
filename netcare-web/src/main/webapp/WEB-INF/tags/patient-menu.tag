@@ -59,26 +59,11 @@
 </script>
 
 <div class="span3 menu">
-	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
-	<p>
-		<sec:authentication property="principal.name" /> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
-	</p>
-	<p>
-		<strong><spring:message code="cnr" />:</strong> <span id="crn"></span>
-	</p>
-	
 	<ul class="menuList">
 		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
-	</ul>
-	
-	<h3 class="menuHeader"><spring:message code="patient.menu.healthplans" /></h3>
-	<ul class="menuList">
 		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
 		<li><netcare:image name="result-overview" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
 	</ul>
-	
-	<h3 class="menuList"><spring:message code="patient.menu.addActivities" /></h3>
-	<ul id="menuHealthplans" class="menuList"></ul>
 </div>
 	
 </body>

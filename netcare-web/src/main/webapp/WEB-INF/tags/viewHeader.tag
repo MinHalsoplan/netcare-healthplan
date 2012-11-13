@@ -26,7 +26,7 @@
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="resourcePath" value="/netcare/resources" />
-<mvk:header title="Netcare 2.0" resourcePath="${resourcePath}" contextPath="${contextPath}">
+<mvk:header title="Min hälsoplan" resourcePath="${resourcePath}" contextPath="${contextPath}">
 	<netcare:css resourcePath="${resourcePath}" />
 	<link rel="stylesheet" href="<c:url value='/css/netcare-healthplan.css' />" type="text/css" />
 	
