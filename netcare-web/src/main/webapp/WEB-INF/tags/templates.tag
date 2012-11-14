@@ -299,4 +299,21 @@
 	<label for="access-level-{{code}}" style="display: inline; margin-right: 20px;">{{value}}</label>
 </script>
 
+<script id="scheduledItem" type="text/template">
+<li id="scheduled-activity-{{id}}" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item>
+<div id="item-{{id}}" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span6">
+			<h4 class="titel">{{type.name}}</h4>
+			<div class="subRow"></div>
+		</div>
+		<div class="mainBody actionBody span6">
+
+		</div>
+	</div>
+</div>
+</mvk:touch-item>
+</script>
+
 <!-- healthplan:templates / -->

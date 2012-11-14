@@ -126,7 +126,7 @@ public interface HealthPlanService {
 	 * @param patient the patient.
 	 * @return the result.
 	 */
-	ServiceResult<ScheduledActivity[]> getActivitiesForPatient(final PatientBaseView patient);
+	ServiceResult<ScheduledActivity[]> getActivitiesForPatient();
 	
 	/**
 	 * Comment a performed activity

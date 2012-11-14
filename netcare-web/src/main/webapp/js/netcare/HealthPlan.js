@@ -119,42 +119,13 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			_ajax.get('/healthplans/' + healthPlanId + '/statistics', callback, true);
 		},
 		
-		/**
-		 * Add an activity to a health plan
-		 */
-		addActivity : function(healthPlanId, formData, callback, activityTableId) {
-			_ajax.post('/healthplans/' + healthPlanId + '/activity/new', formData, callback, true);
-		},
-		
-		/**
-		 * Delete an activity that is attached to a health
-		 * plan.
-		 */
-		deleteActivity : function(tableId, healthPlanId, activityId) {
-			_ajax.post('/healthplans/' + healthPlanId + '/activity/' + activityId + '/delete', null, function(data){
-				public.listActivities(healthPlanId, tableId);
-			}, true);
-		},
-		
 		loadScheduledActivity : function(activityId, callback) {
 			_ajax.get('/healthplans/activity/' + activityId + '/load', callback);
-		},
-		
-		loadLatestComments : function(patientId, callback) {
-			_ajax.get('/healthplans/activity/reported/' + patientId + '/comments', callback, true);
 		},
 		
 		loadNewReplies : function(callback) {
 			_ajax.get('/healthplans/activity/reported/comments/newreplies', callback, true);
 		},
-		
-		sendCommentReply : function(commentId, reply, callback) {
-			_ajax.postWithParams('/healthplans/activity/reported/comment/' + commentId + '/reply', { reply : reply }, callback, true);
-		},
-		
-		deleteComment : function(commentId, callback) {
-			_ajax.post('/healthplans/activity/reported/comments/' + commentId + '/delete', null, callback, true);
-		}
 	};
 	
 	return public;

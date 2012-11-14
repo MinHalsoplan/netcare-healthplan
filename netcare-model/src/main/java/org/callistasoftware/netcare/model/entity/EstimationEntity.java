@@ -27,11 +27,11 @@ public class EstimationEntity extends ActivityItemValuesEntity {
 	@Column(name = "perceived_sense")
 	private Integer perceivedSense;
 
-	public int getPerceivedSense() {
+	public Integer getPerceivedSense() {
 		return perceivedSense;
 	}
 
-	public void setPerceivedSense(int perceivedSense) {
+	public void setPerceivedSense(Integer perceivedSense) {
 		this.perceivedSense = perceivedSense;
 	}
 

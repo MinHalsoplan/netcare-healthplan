@@ -158,6 +158,44 @@ ul.itemList {
 	background-image: url('../css/images/togglerClosedBlue.png');
 }
 
+.bubble {
+	position: relative;
+	width: 580px;
+	height: 120px;
+	padding: 0px;
+	background: #FFFFFF;
+	border: #008391 solid 2px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.bubble:after {
+	content: "";
+	position: absolute;
+	top: 39.5px;
+	left: -20px;
+	border-style: solid;
+	border-width: 20px 20px 20px 0;
+	border-color: transparent #FFFFFF;
+	display: block;
+	width: 0;
+	z-index: 1;
+}
+
+.bubble:before {
+	content: "";
+	position: absolute;
+	top: 38.5px;
+	left: -23px;
+	border-style: solid;
+	border-width: 21px 21px 21px 0;
+	border-color: transparent #008391;
+	display: block;
+	width: 0;
+	z-index: 0;
+}
+
 /*
  * TO BE REMOVED AFTER MVK RELEASE
  */

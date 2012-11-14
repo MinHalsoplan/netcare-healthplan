@@ -257,7 +257,7 @@ public final class WebUtil {
 		ca.addRole(td.newCareActorRole());
 		careActorRepo.saveAndFlush(ca);
 		
-		final CareActorEntity ca3 = CareActorEntity.newEntity("Mikael", "Andersson", "hsa-lj-admin", jkpg_cu_1);
+		final CareActorEntity ca3 = CareActorEntity.newEntity("Mikael", "Andersson", "hsa-lj-admin", jkpg_cu_2);
 		ca3.addRole(td.newCareActorRole());
 		ca3.addRole(td.newCountyAdminRole());
 		careActorRepo.saveAndFlush(ca3);

@@ -25,39 +25,6 @@
 
 <c:url value="/netcare/user/home" var="userHome" scope="page" />
 
-<script type="text/javascript">
-	$(function() {
-		var patientId = "<sec:authentication property='principal.id' />";
-		var crn = "<sec:authentication property="principal.civicRegistrationNumber" />";
-		
-		var format = new NC.Util().formatCnr(crn);
-		
-		$('#crn').html(format);
-		
-		var hps = new NC.HealthPlan();
-		hps.list(patientId, function(data) {
-			var util = new NC.Util();
-			$.each(data.data, function(i, v) {
-				
-				var li = $('<li>');
-				li.append(
-					util.createIcon('add', 16)
-				);
-				
-				var link = $('<a>').html(v.name);
-				link.click(function(e) {
-					window.location = NC.getContextPath() + '/netcare/user/healthplan/' + v.id + '/view';
-				});
-				
-				li.append(link);
-				
-				$('#menuHealthplans').append(li);
-			});
-			
-		}, false);
-	});
-</script>
-
 <div class="span3 menu">
 	<ul class="menuList">
 		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>

@@ -184,7 +184,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				new ListEntitiesMessage(HealthPlanEntity.class, plans.size()));
 	}
 
-	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient(PatientBaseView patient) {
+	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient() {
 		Calendar c = Calendar.getInstance();
 		c.setFirstDayOfWeek(1);
 
@@ -196,9 +196,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		c.add(Calendar.DATE, SCHEMA_HISTORY_DAYS + SCHEMA_FUTURE_DAYS);
 		Date endDate = ApiUtil.dayEnd(c).getTime();
 
-		PatientEntity forPatient = patientRepository.findOne(patient.getId());
 		List<ScheduledActivityEntity> entities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(
-				forPatient, startDate, endDate);
+				getPatient(), startDate, endDate);
 		Collections.sort(entities);
 
 		ScheduledActivity[] arr = ScheduledActivityImpl.newFromEntities(entities);
@@ -771,8 +770,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<ActivityComment[]> loadCommentsForPatient() {
 		final PatientEntity patient = this.getPatient();
+		
 		final List<ActivityCommentEntity> entities = this.commentRepository.findCommentsForPatient(patient);
-
 		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(entities),
 				new ListEntitiesMessage(ActivityCommentEntity.class, entities.size()));
 	}

@@ -1638,5 +1638,83 @@ var NC_MODULE = {
 		};
 		
 		return my;
+	})(),
+	
+	COMMENTS : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.load(that);
+		};
+		
+		my.load = function(my) {
+			new NC.Ajax().get('/comments', function(data) {
+				if (data.data.length > 0) {
+					
+				}
+			});
+		};
+		
+		my.sendReply = function(replyId, message, callback) {
+			new NC.Ajax().post('/comments/' + commentId, message, callback);
+		};
+		
+		my.remove = function(commentId, callback) {
+			new NC.Ajax().http_delete('/comments/' + commentId, callback);
+		};
+		
+		return my;
+	})(),
+	
+	PATIENT_REPORTS : (function() {
+		var my = {};
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.load(that);
+		};
+		
+		my.load = function(my) {
+			
+		};
+		
+		return my;
+	})(),
+	
+	SCHEDULE : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.renderSchedule(that);
+		};
+		
+		my.load = function(my, callback) {
+			new NC.Ajax().get('/schedule', callback);
+		};
+		
+		my.renderSchedule = function(my) {
+			my.load(my, function(data) {
+				NC.log('Scheduled activities loaded: ' + data.data.length);
+				if (data.data.length > 0) {
+					$.each(data.data, function(i, v) {
+						my.renderScheduleItem(my, v);
+					});
+				}
+			});
+		};
+		
+		my.renderScheduleItem = function(my, scheduledActivity) {
+			var dom = _.template($('#scheduledItem').html())(scheduledActivity);
+			$('#reportList').append($(dom));
+		};
+		
+		return my;
 	})()
 };
