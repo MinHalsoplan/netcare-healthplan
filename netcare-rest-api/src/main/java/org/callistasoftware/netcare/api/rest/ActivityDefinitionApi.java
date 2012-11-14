@@ -29,20 +29,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/activityPlans")
+@RequestMapping(value="/activityPlans", produces="application/json")
 public class ActivityDefinitionApi extends ApiSupport {
 
 	@Autowired 
 	private HealthPlanService service;
 	
-	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity) {
 		logAccess("create", "activity definition");
 		return this.service.addActvitiyToHealthPlan(activity);
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> updateDefinition(@PathVariable("id") final Long id,
 			@RequestBody final ActivityDefinition data) {
@@ -50,10 +50,17 @@ public class ActivityDefinitionApi extends ApiSupport {
 		return this.service.updateActivity(data);
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> loadActivityDefinition(@PathVariable("id") final Long id) {
 		logAccess("load", "activity definition");
 		return this.service.loadDefinition(id);
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	@ResponseBody
+	public ServiceResult<ActivityDefinition> deleteDefinition(@PathVariable(value="id") final Long definitionId) {
+		this.logAccess("delete", "activity definition");
+		return this.service.deleteActivity(definitionId);
 	}
 }

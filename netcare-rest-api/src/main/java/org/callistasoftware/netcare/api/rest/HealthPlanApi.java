@@ -25,7 +25,6 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
@@ -95,24 +94,6 @@ public class HealthPlanApi extends ApiSupport {
  		this.logAccess("renewal", "health plan");
  		return this.service.healthPlanRenewal(healthPlan, true);
  	}
-	
-	
-	
-	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/updateGoalValues", method=RequestMethod.POST, produces="application/json", consumes="application/json")
-	@ResponseBody
-	public ServiceResult<ActivityDefinition> updateGoalValuesOnActivityDefinition(@PathVariable("healthPlanId") final Long healthPlanId
-			, @PathVariable("activityDefinitionId") final Long activityDefinitionId
-			, @RequestBody final ActivityDefinitionImpl ad) {
-		this.logAccess("update", "goal-values");
-		return this.service.updateActivity(ad);
-	}
-	
-	@RequestMapping(value="/{healthPlanId}/activity/{activityDefinitionId}/delete", method=RequestMethod.POST, produces="application/json")
-	@ResponseBody
-	public ServiceResult<ActivityDefinition> deleteActivityDefinition(@PathVariable(value="healthPlanId") final Long healthPlanId, @PathVariable("activityDefinitionId") final Long activityDefinitionId) {
-		this.logAccess("delete", "activity definition");
-		return this.service.deleteActivity(activityDefinitionId);
-	}
 	
 	@RequestMapping(value="/activity/reported/{patient}/comments", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody

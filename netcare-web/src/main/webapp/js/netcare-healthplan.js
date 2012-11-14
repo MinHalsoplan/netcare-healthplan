@@ -275,24 +275,56 @@ var NC_MODULE = {
 			if (hp.activityDefinitions.length == 0) {
 				NC.log('No activity definitions yet available');
 				$('#hp-details-' + hp.id).find('.span12').append(
-					$('<p>').css({'font-style' : 'italic'}).html('Inga aktiviteter planerade ännu')
+					$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
 				);
 			} else {
-				$.each(hp.activityDefinitions, function(idx, ad) {
+				
+				var added = 0;
+				
+				defLoop:for (var i = 0; i < hp.activityDefinitions.length; i++) {
+					var ad = hp.activityDefinitions[i];
+					
+					NC.log('Processing ' + ad.type.name + '(' + ad.id + ')');
+					
+					if (!ad.active) {
+						ad = null;
+						continue defLoop;
+					}
 					
 					var t = _.template($('#healthPlanDefinitions').html());
 					var dom = t(ad);
 					
 					$('#hp-details-' + hp.id).find('.span12').append($(dom));
 					
-					$('#hp-ad-' + ad.id + '-edit').click(function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						
-						window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id + '/plan/' + ad.id;
-					});
-				});
+					my.addEventHandlersForDefinition(ad.id);
+					
+					added++;
+				}
+				
+				if (added == 0) {
+					$('#hp-details-' + hp.id).find('.span12').append(
+						$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
+					);
+				}
 			}
+		};
+		
+		my.addEventHandlersForDefinition = function(id) {
+			$('#hp-ad-' + id + '-edit').click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + id + '/plan/' + id;
+			});
+			
+			$('#hp-ad-' + id + '-remove').click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				new NC.Ajax().http_delete('/activityPlans/' + id, function(data) {
+					$('#hp-ad-' + id).fadeOut('fast');
+				});
+			});
 		};
 		
 		my.inactivate = function(my, healthPlan) {

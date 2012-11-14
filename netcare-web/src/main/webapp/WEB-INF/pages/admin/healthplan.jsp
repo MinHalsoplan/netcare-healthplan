@@ -38,7 +38,8 @@
 				var lang = {
 					active : '<spring:message code="healthplan.active" />',
 					autoRenew : '<spring:message code="healthplan.autoRenew" />',
-					ends : '<spring:message code="healthplan.ends" />'
+					ends : '<spring:message code="healthplan.ends" />',
+					noActivities : '<spring:message code="healthplan.noActivities" />'
 				}
 				
 				var params = {
