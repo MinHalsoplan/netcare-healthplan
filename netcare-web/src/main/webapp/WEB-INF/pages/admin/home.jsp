@@ -28,6 +28,7 @@
 
 <hp:view>
 	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 				var hp = new NC.HealthPlan();
@@ -46,44 +47,6 @@
 				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,comments.sendComment,alarm.delete', function(messages) {
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
-				});
-				
-				_ra.loadData('latest', function(data) {
-					_ra.loadUI(data, function(row) {
-						$('#latest-activities tbody').append(row);	
-					},
-					function(data) {
-						
-						NC.log('Send comment icon clicked');
-						
-						$('#commentActivity').modal('show');
-						$('#commentActivity a.btn-info').click(function(e) {
-							
-							NC.log('Submit comment');
-							
-							e.preventDefault();
-							
-							var val = $('#commentActivity input[name="comment"]').val();
-							NC.log('Comment value is ' + val);
-							
-							if (val.length == 0) {
-								$('#commentActivity').modal('hide');
-								return;
-							}
-							
-							_ra.sendComment(data.id, val, function() {
-								NC.log('Comment completed.');
-								$('#commentActivity input[name="comment"]').val('');
-								$('#commentActivity').modal('hide');
-								
-								$('#commentActivity a.btn-info').unbind('click');
-							});
-						});
-					});
-				}, 
-				function() {
-					$('#latest-activities').hide();
-					$('#noReportedActivities').show();
 				});
 				
 				var loadAlarms = function() {
@@ -134,11 +97,7 @@
 				};
 				
 				loadAlarms();
-				
-				$('#commentActivity').bind('shown', function() {
-					$('#commentActivity input[name="comment"]').focus();
-				});
-				
+								
 				var loadReplies = function() {
 					hp.loadNewReplies(function(data) {
 						if (data.data.length > 0) {
@@ -177,6 +136,9 @@
 				};
 				
 				loadReplies();
+				
+				NC_MODULE.REPORTED_ACTIVITIES.init();
+
 			});
 		</script>
 	</hp:viewHeader>
@@ -234,25 +196,12 @@
 				<netcare:block-message id="noReportedActivities" type="info" style="display: none;">
 					<spring:message code="activity.reported.noneLastDay" />
 				</netcare:block-message>
-				<netcare:table id="latest-activities">
-					<thead>
-						<tr>
-							<th><spring:message code="activity.reported.patient" /></th>
-							<th><spring:message code="activity.reported.type" /></th>
-							<th><spring:message code="activity.reported.healthplan" /></th>
-							<th><spring:message code="activity.reported.value" /></th>
-							<th><spring:message code="activity.reported.when" /></th>
-							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-							<th width="32px">&nbsp;</th>
-					</thead>
-					<tbody></tbody>
-				</netcare:table>
+				<mvk:touch-list id="latestActivitiesContainer">
+		
+				</mvk:touch-list>
 			</div>
 			
-			<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
-				<input type="text" name="comment" class="xlarge" />
-			</netcare:modal>
-			
+		
 		</section>
 		
 		<br />

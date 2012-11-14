@@ -1716,5 +1716,102 @@ var NC_MODULE = {
 		};
 		
 		return my;
+	})(),
+	
+	REPORTED_ACTIVITIES : (function() {
+		
+		var _data = new Object();
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			my.loadReportedActivities(that);
+		};
+		
+		my.loadReportedActivities = function(my) {
+			new NC.Ajax().get('/healthplans/activity/reported/latest', function(data) {
+				$('#latestActivitiesContainer').empty();
+				
+				if(data.data.length==0) {
+						$('#latestActivitiesContainer').hide();
+						$('#noReportedActivities').show();
+				} else {
+					$('#noReportedActivities').hide();
+					$('#latestActivitiesContainer').show();
+					$.each(data.data, function(i, v) {
+						my.buildReportedActivityItem(my, v);
+					});
+				}
+				
+			}, false);
+		};
+		
+		my.buildReportedActivityItem = function(my, act) {
+			var t = _.template($('#reportedActivityItem').html());
+			var dom = t(act);
+			$('#latestActivitiesContainer').append($(dom));
+			
+			/*
+			 * Bind click event
+			 */
+			var liElem = $('#reportedActivityItem' + act.id);
+			
+//			liElem.click(function() {
+//				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id;
+//			});
+
+			var detailsTemplate = _.template($('#reportedActivityDetails').html());
+			var detailsDom = detailsTemplate(act);
+			
+			liElem.find('.row-fluid').after($(detailsDom));
+			
+			my.processValues(my, act);
+			
+			var expander = $('<div>').addClass('mvk-icon toggle').click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$('#ra-details-' + act.id).toggle();
+			}) ;
+
+			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
+			
+			var commentText = liElem.find('#activitycomment');
+			liElem.find('.btn').click(function(e) {
+				var text = commentText.val();
+				if(text!=null && text!="") {
+					
+					NC.log('Submit comment: ' + text);
+					e.preventDefault();
+					new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/comment', { comment : text }, function() {
+						NC.log('Comment completed.');
+						commentText.val('');
+						liElem.find('#actcomment').fadeOut();
+					}, true);
+				}
+			});
+		};
+		
+		my.processValues = function(my, act) {
+			NC.log('Processing details of reported activity ' + act.id);
+			if (act.activityItemValues.length == 0) {
+				NC.log('No activities reported');
+				$('#ra-details-' + act.id).find('.span12').append(
+					$('<p>').css({'font-style' : 'italic'}).html('Inga aktiviteter rapporterade.')
+				);
+			} else {
+				$.each(act.activityItemValues, function(idx, actItem) {
+					var activityValuesTemplate = '#' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
+					var t = _.template($(activityValuesTemplate).html());
+					var dom = t(actItem);
+					$('#ra-details-' + act.id).find('.span12').append($(dom));
+				});
+			}
+		};
+		
+		return my;
+		
 	})()
+	
 };

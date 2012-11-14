@@ -65,6 +65,22 @@ div[id*=hp-ad].row-fluid {
 	margin-bottom: 10px;
 }
 
+div[id*=ra-row].row-fluid { 
+	border-bottom: 1px #cccccc dotted;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+}
+
+div[id*=ra-details] { 
+	background-color: #FDF9D5 !important;
+}
+
+#actcomment {
+	margin-bottom: 15px;
+	margin-left: 5px;
+}
+
 ul.itemList {
 	list-style: none;
 	margin: 0 0 0 0;

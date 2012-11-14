@@ -314,6 +314,77 @@
 	</div>
 </div>
 </mvk:touch-item>
+</li>
+</script>
+
+<%-- This template is used to show a reported activity --%>
+<script id="reportedActivityItem" type="text/template">
+<li id="reportedActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item>
+<div id="raItem{{id}}" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span6">
+			<h4 class="titel">{{patient.surName}}, {{patient.firstName}}</h4>
+			<div class="subRow">{{definition.type.name}} - Rapporterad {{reported}}</div>
+		</div>
+		<div class="mainBody actionBody span6">
+
+		</div>
+	</div>
+</div>
+</mvk:touch-item>
+</li>
+</script>
+
+<%--Reported Activity details --%>
+<script id="reportedActivityDetails" type="text/template">
+<div id="ra-details-{{id}}" class="span10" style="display: none;">
+	<div class="row-fluid">
+		<div class="span12">
+		
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div id="actcomment" class="span11">
+			<label for="activitycomment"><spring:message code="comments.sendComment" /></label>
+			<textarea id="activitycomment" rows="2" class="span11"></textarea>
+			<button class="btn"><spring:message code="report.save" /></button>
+		</div>
+	</div>
+</div>
+</script>
+
+<%--Reported Activity values --%>
+<%--Estimation values --%>
+<script id="estimationValues" type="text/template">
+<div id="ra-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}}
+{{definition.activityItemType.minScaleValue}} ({{definition.activityItemType.minScaleText}}) - {{definition.activityItemType.maxScaleValue}} ({{definition.activityItemType.maxScaleText}})</div>
+<div class="span5">{{perceivedSense}}</div>
+</div>
+</script>
+<%--Measurement values --%>
+<script id="measurementValues" type="text/template">
+<div id="ra-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}}</div>
+<div class="span5">{{reportedValue}} {{definition.activityItemType.unit.name}}</div>
+</div>
+</div>
+</script>
+<%--Reported Activity values --%>
+<script id="yesnoValues" type="text/template">
+<div id="ra-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.question}}
+</div>
+<div class="span5">{{answer}}</div>
+</div>
+</script>
+<%--Reported Activity values --%>
+<script id="textValues" type="text/template">
+<div id="ra-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.label}}</div>
+<div class="span5">{{textComment}}</div>
+</div>
 </script>
 
 <!-- healthplan:templates / -->
