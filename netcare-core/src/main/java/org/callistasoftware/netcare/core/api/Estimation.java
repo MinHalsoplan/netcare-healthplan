@@ -23,5 +23,5 @@ public interface Estimation extends ActivityItemValues {
 	 * 
 	 * @return The value.
 	 */
-	int getPerceivedSense();
+	Integer getPerceivedSense();
 }

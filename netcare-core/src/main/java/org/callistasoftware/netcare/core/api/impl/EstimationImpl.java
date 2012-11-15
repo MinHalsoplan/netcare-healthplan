@@ -21,6 +21,7 @@ import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
 
 public class EstimationImpl extends ActivityItemValuesImpl implements Estimation {
+	
 	private Integer perceivedSense;
 
 	public static Estimation newFromEntity(EstimationEntity entity) {
@@ -28,12 +29,14 @@ public class EstimationImpl extends ActivityItemValuesImpl implements Estimation
 		estimation.setId(entity.getId());
 		estimation.setDefinition(EstimationDefinitionImpl.newFromEntity((EstimationDefinitionEntity) entity
 				.getActivityItemDefinitionEntity()));
-		estimation.perceivedSense = entity.getPerceivedSense();
+
+		estimation.setPerceivedSense(entity.getPerceivedSense());
+		
 		return estimation;
 	}
 
 	@Override
-	public int getPerceivedSense() {
+	public Integer getPerceivedSense() {
 		return this.perceivedSense;
 	}
 

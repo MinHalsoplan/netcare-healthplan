@@ -1686,6 +1686,9 @@ var NC_MODULE = {
 	})(),
 	
 	SCHEDULE : (function() {
+		
+		var _data = new Array();
+		
 		var my = {};
 		
 		my.init = function(params) {
@@ -1704,6 +1707,7 @@ var NC_MODULE = {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
+						_data[i] = v;
 						my.renderScheduleItem(my, v);
 					});
 				}
@@ -1711,8 +1715,60 @@ var NC_MODULE = {
 		};
 		
 		my.renderScheduleItem = function(my, scheduledActivity) {
-			var dom = _.template($('#scheduledItem').html())(scheduledActivity);
+			var dom = _.template($('#scheduledActivityItem').html())(scheduledActivity);
 			$('#reportList').append($(dom));
+			
+			var subrow = $('#saItem' + scheduledActivity.id).find('.subRow');
+			if (scheduledActivity.reported == null) {
+				subrow.html(scheduledActivity.date + ' ' + scheduledActivity.time)
+				if (scheduledActivity.due == true) {
+					subrow.css({'color' : 'red', 'font-weight' : 'bold' });
+				}
+			} else if (scheduledActivity.rejected == true) {
+				subrow.html('Rapporterad som ej utförd');
+			} else {
+				subrow.html('Rapporterad ' + scheduledActivity.reported);
+				
+				// Hide reported by default
+				$('#scheduledActivityItem' + scheduledActivity.id).hide();
+			}
+			
+			var liElem = $('#scheduledActivityItem' + scheduledActivity.id);
+			var expander = $('<div>').addClass('mvk-icon toggle').click(function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$('#sa-details-' + scheduledActivity.id).toggle();
+			}) ;
+
+			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
+			
+			var detailsDom = _.template($('#scheduledActivityDetails').html())(scheduledActivity);
+			liElem.find('.row-fluid').after($(detailsDom));
+			
+			my.processItemValues(my, scheduledActivity);
+			
+		};
+		
+		my.processItemValues = function(my, activity) {
+			$.each(activity.activityItemValues, function(idx, actItem) {
+				var activityValuesTemplate = '#scheduled-' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
+				var t = _.template($(activityValuesTemplate).html());
+				var dom = t(actItem);
+				$('#sa-details-' + activity.id).find('.span12').append($(dom));
+				
+				
+				var dp = $('#' + activity.id + '-report-date').datepicker({
+					dateFormat : 'yy-mm-dd',
+					firstDay : 1,
+					minDate : +0
+				});
+				
+				dp.datepicker('setDate', new Date());
+				var d = new Date();
+				
+				$('#' + activity.id + '-report-time').val(d.getHours() + ':' + d.getMinutes());
+				
+			});
 		};
 		
 		return my;

@@ -387,4 +387,90 @@
 </div>
 </script>
 
+<%-- This template is used to show a scheduled activity --%>
+<script id="scheduledActivityItem" type="text/template">
+<li id="scheduledActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item>
+<div id="saItem{{id}}" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span6">
+			<h4 class="titel">{{definition.type.name}}</h4>
+			<div class="subRow">
+			</div>
+		</div>
+		<div class="mainBody actionBody span6">
+
+		</div>
+	</div>
+</div>
+</mvk:touch-item>
+</li>
+</script>
+
+<%--Scheduled Activity details --%>
+<script id="scheduledActivityDetails" type="text/template">
+<div id="sa-details-{{id}}" class="span10" style="display: none;">
+	<div class="row-fluid">
+		<div class="span12">
+		
+		</div>
+	</div>
+	<div class="row-fluid external">
+		<div class="span5">
+			Ange tidpunkt då aktiviteten utfördes
+		</div>
+		<div class="span7">
+			<input id="{{id}}-report-date" type="text" style="display: inline;" class="span5 dateInput"/>
+			<input id="{{id}}-report-time" type="text" style="display: inline;" class="span3"/>
+		</div>
+	</div>
+	<div class="form-actions" style="margin: 0">
+		<button type="button" class="btn btn-primary btn-info">Rapportera</button>
+		<button type="button" class="btn btn-danger">Rapportera som ej utförd</button>
+	</div>
+</div>
+</script>
+
+<%--Scheduled Activity values --%>
+<%--Estimation values --%>
+<script id="scheduled-estimationValues" type="text/template">
+<div id="sa-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}}</div>
+<div class="span7">
+	<span style="display: inline;">{{definition.activityItemType.minScaleText}}</span>
+	<input type="range" min="{{definition.activityItemType.minScaleValue}}" max="{{definition.activityItemType.maxScaleValue}}" step="1" value="{{perceivedSense}}" />
+	<span style="display: inline;">{{definition.activityItemType.maxScaleText}}</span>
+</div>
+</div>
+</script>
+<%--Measurement values --%>
+<script id="scheduled-measurementValues" type="text/template">
+<div id="sa-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}}</div>
+<div class="span7">
+	<input type="text" value="{{reportedValue}}" />
+	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
+</div>
+</div>
+</div>
+</script>
+<%--Yes/No values --%>
+<script id="scheduled-yesnoValues" type="text/template">
+<div id="sa-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.question}}
+</div>
+<div class="span7">
+	<input type="radio" name="answer" value="true" /> Ja
+	<input type="radio" name="answer" value="false" /> Nej 
+</div>
+</div>
+</script>
+<%--Text values --%>
+<script id="scheduled-textValues" type="text/template">
+<div id="ra-row-{{id}}" class="row-fluid">
+<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.label}}</div>
+<div class="span7"><input type="text" value="{{textComment}}" /></div>
+</div>
+</script>
+
 <!-- healthplan:templates / -->

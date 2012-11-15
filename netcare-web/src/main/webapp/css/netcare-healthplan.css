@@ -65,14 +65,16 @@ div[id*=hp-ad].row-fluid {
 	margin-bottom: 10px;
 }
 
-div[id*=ra-row].row-fluid { 
+div[id*=ra-row].row-fluid,
+div[id*=sa-row].row-fluid,
+div[id*=sa-details-] div.external { 
 	border-bottom: 1px #cccccc dotted;
 	margin-top: 10px;
 	margin-bottom: 5px;
 	margin-left: 5px;
 }
 
-div[id*=ra-details] { 
+div[id*=ra-details], div[id*=sa-details], div[id*=sa-details-] div.external { 
 	background-color: #FDF9D5 !important;
 }
 

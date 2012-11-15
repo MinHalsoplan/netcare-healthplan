@@ -44,4 +44,22 @@ _.templateSettings = {
 	  interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
 };
 </script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		// Initialize all date pickers
+		$('.dateInput').each(function(i, v) {
+			
+			$(v).datepicker({
+				dateFormat : 'yy-mm-dd',
+				firstDay : 1,
+				minDate : +0
+			});
+			
+		});
+		
+	});
+</script>
+
 <!-- healthplan:js / -->
