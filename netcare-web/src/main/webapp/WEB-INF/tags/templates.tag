@@ -320,7 +320,7 @@
 <%-- This template is used to show a reported activity --%>
 <script id="reportedActivityItem" type="text/template">
 <li id="reportedActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
-<mvk:touch-item>
+<mvk:touch-item style="padding-right:0px;">
 <div id="raItem{{id}}" class="listItemBase">
 	<div class="row-fluid">
 		<div class="mainBody span6">

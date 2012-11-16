@@ -42,13 +42,6 @@
 					util.updateCurrentPatient(name);
 				}
 				
-				var _ra = null;
-				var msgs;
-				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,comments.sendComment,alarm.delete', function(messages) {
-					msgs = messages;
-					_ra = new NC.ReportedActivities(msgs);
-				});
-				
 				var loadAlarms = function() {
 					alarms.loadAlarms(function(data) {
 						

@@ -32,15 +32,6 @@
 		<script type="text/javascript">
 			$(function() {
 				
-				var _support = new NC.Support();
-				
-				var _ra
-				var msgs;
-				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,activity.reported.none,comments.sendComment', function(messages) {
-					msgs = messages;
-					_ra = new NC.ReportedActivities(msgs);
-				});
-
 				var module = NC_MODULE.REPORTED_ACTIVITIES;
 				
 				function twoDigits(number) {
