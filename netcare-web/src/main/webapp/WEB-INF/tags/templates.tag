@@ -424,6 +424,14 @@
 			<input id="{{id}}-report-time" type="text" style="display: inline;" class="span3"/>
 		</div>
 	</div>
+	<div class="row-fluid external">
+		<div class="span5">
+			Övriga kommentarer
+		</div>
+		<div class="span7">
+			<textarea id="{{id}}-report-note" class="span11">{{note}}</textarea>
+		</div>
+	</div>
 	<div class="form-actions" style="margin: 0">
 		<button id="sa-report-{{id}}" type="button" class="btn btn-primary btn-info">Rapportera</button>
 		<button id="sa-noreport-{{id}}" type="button" class="btn btn-danger">Rapportera som ej utförd</button>

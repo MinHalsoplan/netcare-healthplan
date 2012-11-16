@@ -26,7 +26,6 @@ var NC_MODULE = {
 		};
 		
 		my.showLoader = function(elemId, msg) {
-			NC.log('Showing loader for section ' + elemId);
 			$(elemId).find('.sectionLoader').find('.loaderMessage').html(msg);
 			$(elemId).find('.sectionLoader').show();
 		};
@@ -1753,7 +1752,7 @@ var NC_MODULE = {
 				subrow.html('Rapporterad ' + scheduledActivity.reported);
 				
 				// Hide reported by default
-				$('#scheduledActivityItem' + scheduledActivity.id).hide();
+				//$('#scheduledActivityItem' + scheduledActivity.id).hide();
 			}
 			
 			var liElem = $('#scheduledActivityItem' + scheduledActivity.id);
@@ -1761,9 +1760,13 @@ var NC_MODULE = {
 				e.preventDefault();
 				e.stopPropagation();
 				$('#sa-details-' + scheduledActivity.id).toggle();
-			}) ;
-
-			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
+			});
+			
+			if (liElem.find('.mvk-icon.toggle').size() > 0) {
+				liElem.find('.mvk-icon.toggle').replaceWith(expander);
+			} else {
+				liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
+			}
 			
 			var detailsDom = _.template($('#scheduledActivityDetails').html())(scheduledActivity);
 			liElem.find('.row-fluid').after($(detailsDom));
@@ -1782,6 +1785,11 @@ var NC_MODULE = {
 			var date = $('#' + id + '-report-date');
 			var report = $('#sa-report-' + id);
 			var noreport = $('#sa-noreport-' + id);
+			var note = $('#' + id + '-report-note');
+			
+			$(note).bind('change blur keyup', function() {
+				_data[idx].note = $(this).val();
+			});
 			
 			$(date).bind('change blur keyup', function(e) {
 				e.stopPropagation();
@@ -1802,6 +1810,9 @@ var NC_MODULE = {
 					
 					// Save the updated data
 					_data[idx] = data.data;
+					
+					// Fold the activity
+					$('#sa-details-' + _data[idx].id).slideUp('fast');
 					
 					// Rerender
 					my.updateScheduleItem(my, idx, _data[idx]);
