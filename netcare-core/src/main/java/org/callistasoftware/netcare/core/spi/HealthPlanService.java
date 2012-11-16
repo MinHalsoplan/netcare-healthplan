@@ -20,7 +20,6 @@ import java.util.Date;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
@@ -169,7 +168,7 @@ public interface HealthPlanService {
 	 * @param value the value.
 	 * @return an updated {@link ScheduledActivity}
 	 */
-	ServiceResult<ScheduledActivity> reportReady(final Long scheduledActivityId, final ActivityReport report);
+	ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report);
 	
 	/**
 	 * Load the latest reported activities for all patients that

@@ -1762,12 +1762,12 @@ var NC_MODULE = {
 			
 			$(date).bind('change blur keyup', function(e) {
 				e.stopPropagation();
-				_data[idx].reported = $(this).val() + ' ' + time.val();
+				_data[idx].actualTime = $(this).val() + ' ' + time.val();
 			});
 			
 			$(time).bind('change blur keyup', function(e) {
 				e.stopPropagation();
-				_data[idx].reported = date.val() + ' ' + $(this).val();
+				_data[idx].actualTime = date.val() + ' ' + $(this).val();
 			});
 			
 			$(report).click(function(e) {

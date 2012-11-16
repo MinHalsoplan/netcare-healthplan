@@ -46,6 +46,7 @@ public class ScheduleApi extends ApiSupport {
 	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report) {
-		throw new UnsupportedOperationException();
+		logAccess("report", "activity");
+		return service.reportReady(report);
 	}
 }

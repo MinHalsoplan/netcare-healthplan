@@ -25,21 +25,24 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ActivityItemValues;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
-import org.callistasoftware.netcare.core.api.ActivityReport;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
+import org.callistasoftware.netcare.core.api.Estimation;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.Text;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.Value;
+import org.callistasoftware.netcare.core.api.YesNo;
 import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
@@ -60,6 +63,7 @@ import org.callistasoftware.netcare.core.api.statistics.ReportedValue;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
+import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
@@ -163,6 +167,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 	@Autowired
 	private ActivityCommentRepository commentRepository;
+	
+	@Autowired
+	private ActivityItemValuesEntityRepository valueRepository;
 
 	@Autowired
 	private AlarmRepository alarmRepo;
@@ -356,19 +363,26 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ScheduledActivity> reportReady(Long scheduledActivityId, ActivityReport report) {
-		log.info("Report done for scheduled activity {}", scheduledActivityId);
-		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(scheduledActivityId);
+	public ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report) {
+		log.info("Report done for scheduled activity {}", report.getId());
+		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(report.getId());
 		entity.setReportedTime(new Date());
 		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.OPEN);
 		entity.setNote(report.getNote());
-		for (Value value : report.getValues()) {
-			ActivityItemValuesEntity activityItemValuesEntity = entity.lookupActivity(value.getSeqno());
-			if (activityItemValuesEntity instanceof MeasurementEntity) {
-				MeasurementEntity me = (MeasurementEntity) activityItemValuesEntity;
-				me.setReportedValue(value.getValue());
-				MeasurementDefinitionEntity definition = (MeasurementDefinitionEntity) me
-						.getActivityItemDefinitionEntity();
+		for (final ActivityItemValues value : report.getActivityItemValues()) {
+			
+			final ActivityItemValuesEntity valueEntity = this.valueRepository.findOne(value.getId());
+			
+			if (valueEntity instanceof MeasurementEntity) {
+				
+				final Measurement m = (Measurement) value;
+				final MeasurementEntity me = (MeasurementEntity) valueEntity;
+				
+				// Set reported value
+				me.setReportedValue(m.getReportedValue());
+				
+				// Update goal values at this point in time
+				MeasurementDefinitionEntity definition = (MeasurementDefinitionEntity) me.getActivityItemDefinitionEntity();
 				MeasurementValueType valueType = definition.getMeasurementType().getValueType();
 
 				switch (valueType) {
@@ -383,6 +397,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 				log.debug("Alarm status: enabled {} raised {}", definition.getMeasurementType().isAlarmEnabled(),
 						me.isAlarm());
+				
 				if (!report.isRejected() && me.isAlarm()) {
 					AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, entity
 							.getActivityDefinitionEntity().getHealthPlan().getForPatient(), entity
@@ -393,15 +408,33 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 					
 					alarmRepo.save(ae);
 				}
-			} else if (activityItemValuesEntity instanceof EstimationEntity) {
-				throw new RuntimeException("Missing estimation implementation");
-			} else if (activityItemValuesEntity instanceof YesNoEntity) {
-				throw new RuntimeException("Missing yesno implementation");
-			} else if (activityItemValuesEntity instanceof TextEntity) {
-				throw new RuntimeException("Missing text implementation");
+			} else if (valueEntity instanceof EstimationEntity) {
+				
+				final Estimation e = (Estimation) value;
+				final EstimationEntity ee = (EstimationEntity) valueEntity;
+				
+				ee.setPerceivedSense(e.getPerceivedSense());
+				
+			} else if (valueEntity instanceof YesNoEntity) {
+				
+				final YesNo yn = (YesNo) value;
+				final YesNoEntity yne = (YesNoEntity) valueEntity;
+				
+				yne.setAnswer(yn.getAnswer());
+				
+			} else if (valueEntity instanceof TextEntity) {
+				
+				final Text t = (Text) value;
+				final TextEntity te = (TextEntity) valueEntity;
+				
+				te.setTextComment(t.getTextComment());
+				
+			} else {
+				throw new IllegalArgumentException();
 			}
 		}
-		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
+		
+		Date d = ApiUtil.parseDateTime(report.getActualTime());
 		entity.setActualTime(d);
 		entity = scheduledActivityRepository.save(entity);
 
