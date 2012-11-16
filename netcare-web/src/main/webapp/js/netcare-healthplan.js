@@ -1747,12 +1747,11 @@ var NC_MODULE = {
 					subrow.css({'color' : 'red', 'font-weight' : 'bold' });
 				}
 			} else if (scheduledActivity.rejected == true) {
-				subrow.html('Rapporterad som ej utförd');
+				subrow.html('Rapporterad som ej utförd').css({'color' : 'red', 'font-weight' : 'bold'});
+				$('#scheduledActivityItem' + scheduledActivity.id).hide();
 			} else {
 				subrow.html('Rapporterad ' + scheduledActivity.reported);
-				
-				// Hide reported by default
-				//$('#scheduledActivityItem' + scheduledActivity.id).hide();
+				$('#scheduledActivityItem' + scheduledActivity.id).hide();
 			}
 			
 			var liElem = $('#scheduledActivityItem' + scheduledActivity.id);
@@ -1802,26 +1801,31 @@ var NC_MODULE = {
 			});
 			
 			$(report).click(function(e) {
-				
-				// Remove definition from data
-				_data[idx].activityDefinition = undefined;
-				_data[idx].patient = undefined;
-				new NC.Ajax().post('/scheduledActivities/' + id, _data[idx], function(data) {
-					
-					// Save the updated data
-					_data[idx] = data.data;
-					
-					// Fold the activity
-					$('#sa-details-' + _data[idx].id).slideUp('fast');
-					
-					// Rerender
-					my.updateScheduleItem(my, idx, _data[idx]);
-					NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
-				});
+				my.performReport(my, idx);
 			});
 			
 			$(noreport).click(function(e) {
-				alert('Hej 2');
+				_data[idx].rejected = true;
+				my.performReport(my, idx);
+			});
+		};
+		
+		my.performReport = function(my, idx) {
+			// Remove definition from data
+			_data[idx].activityDefinition = undefined;
+			_data[idx].patient = undefined;
+			
+			new NC.Ajax().post('/scheduledActivities/' + _data[idx].id, _data[idx], function(data) {
+				
+				// Save the updated data
+				_data[idx] = data.data;
+				
+				// Fold the activity
+				$('#sa-details-' + _data[idx].id).slideUp('fast');
+				
+				// Rerender
+				my.updateScheduleItem(my, idx, _data[idx]);
+				NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
 			});
 		};
 		
@@ -1830,9 +1834,19 @@ var NC_MODULE = {
 				var activityValuesTemplate = '#scheduled-' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
-				$('#sa-details-' + activity.id).find('.span12').append($(dom));
 				
+				$('#sa-details-' + activity.id).find('.span12').append($(dom));
 				my.initActivityItemListener(my, activityIndex, idx, actItem.id);
+				
+				// FIX FOR YES NO INITIAL VALUE CHECKED
+				if (actItem.valueType == "yesno") {
+					
+					if (actItem.answer == true) {
+						$('#sa-row-' + actItem.id).find('input[value="true"]').prop('checked', true);
+					} else {
+						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
+					}
+				}
 				
 				var dp = $('#' + activity.id + '-report-date').datepicker({
 					dateFormat : 'yy-mm-dd',
@@ -1854,14 +1868,41 @@ var NC_MODULE = {
 		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
 			
 			var inputs = $('#sa-row-' + id).find('input');
+			
+			// Determine type
+			var type = _data[activityIndex].activityItemValues[itemIndex].valueType;
+			var reportedField;
+			if (type == "measurement") {
+				reportedField = "reportedValue";
+			} else if (type == "estimation") {
+				reportedField = "perceivedSense";
+			} else if (type == "yesno") {
+				reportedField = "answer";
+			} else if (type == "text") {
+				reportedField = "textComment";
+			} else {
+				throw new Error('Unsupported value type: ' + type);
+			}
+			
+			
 			if (inputs.length == 1) {
 				
 				inputs.bind('change blur keyup', function() {
-					_data[activityIndex].activityItemValues[itemIndex].reportedValue = $(this).val();
+					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
 					NC.log('Setting value to: ' + $(this).val());
 				});
 				
 			} else if (inputs.length == 2) {
+				
+				// yes no input
+				inputs.bind('click change', function() {
+					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
+				});
+				
+				inputs.bind('click change', function() {
+					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
+					NC.log('Setting value to: ' + $(this).val());
+				});
 				
 			} else {
 				throw new Error('Expected 1 or 2 inputs and nothing else.');
