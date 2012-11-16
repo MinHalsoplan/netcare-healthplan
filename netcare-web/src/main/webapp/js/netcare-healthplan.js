@@ -1708,16 +1708,20 @@ var NC_MODULE = {
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						_data[i] = v;
-						my.renderScheduleItem(my, i, v);
+						my.createScheduleItem(my, i, v);
 					});
 				}
 			});
 		};
 		
-		my.renderScheduleItem = function(my, activityIndex, scheduledActivity) {
+		my.createScheduleItem = function(my, activityIndex, scheduledActivity) {
 			var dom = _.template($('#scheduledActivityItem').html())(scheduledActivity);
 			$('#reportList').append($(dom));
 			
+			my.updateScheduleItem(my, activityIndex, scheduledActivity);
+		};
+		
+		my.updateScheduleItem = function(my, activityIndex, scheduledActivity) {
 			var subrow = $('#saItem' + scheduledActivity.id).find('.subRow');
 			if (scheduledActivity.reported == null) {
 				subrow.html(scheduledActivity.date + ' ' + scheduledActivity.time)
@@ -1776,7 +1780,13 @@ var NC_MODULE = {
 				_data[idx].activityDefinition = undefined;
 				_data[idx].patient = undefined;
 				new NC.Ajax().post('/scheduledActivities/' + id, _data[idx], function(data) {
-					alert('Success');
+					
+					// Save the updated data
+					_data[idx] = data.data;
+					
+					// Rerender
+					my.updateScheduledItem(my, idx, _data[idx]);
+					NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
 				});
 			});
 			
