@@ -19,7 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.Estimation;
 import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EstimationImpl extends ActivityItemValuesImpl implements Estimation {
 	
 	private Integer perceivedSense;

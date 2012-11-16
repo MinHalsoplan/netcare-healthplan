@@ -17,10 +17,11 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.Measurement;
-import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MeasurementImpl extends ActivityItemValuesImpl implements Measurement {
 
 	private float target;
@@ -55,11 +56,6 @@ public class MeasurementImpl extends ActivityItemValuesImpl implements Measureme
 
 	public void setReportedValue(float reportedValue) {
 		this.reportedValue = reportedValue;
-	}
-
-	@Override
-	public MeasurementDefinition getMeasurementDefinition() {
-		return (MeasurementDefinition) this.getDefinition();
 	}
 
 	@Override

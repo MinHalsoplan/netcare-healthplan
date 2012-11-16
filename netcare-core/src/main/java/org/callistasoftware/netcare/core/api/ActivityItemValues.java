@@ -16,6 +16,18 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeInfo.As;
+import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="valueType")
+@JsonSubTypes({
+	@JsonSubTypes.Type(value=Estimation.class),
+    @JsonSubTypes.Type(value=Measurement.class),
+    @JsonSubTypes.Type(value=Text.class),
+    @JsonSubTypes.Type(value=YesNo.class)
+})
 public interface ActivityItemValues {
 
 	/**

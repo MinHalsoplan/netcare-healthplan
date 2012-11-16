@@ -394,7 +394,7 @@
 <div id="saItem{{id}}" class="listItemBase">
 	<div class="row-fluid">
 		<div class="mainBody span6">
-			<h4 class="titel">{{definition.type.name}}</h4>
+			<h4 class="titel">{{activityDefinition.type.name}}</h4>
 			<div class="subRow">
 			</div>
 		</div>

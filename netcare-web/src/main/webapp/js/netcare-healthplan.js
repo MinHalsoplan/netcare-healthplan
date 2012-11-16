@@ -1771,6 +1771,10 @@ var NC_MODULE = {
 			});
 			
 			$(report).click(function(e) {
+				
+				// Remove definition from data
+				_data[idx].activityDefinition = undefined;
+				_data[idx].patient = undefined;
 				new NC.Ajax().post('/scheduledActivities/' + id, _data[idx], function(data) {
 					alert('Success');
 				});
@@ -1802,6 +1806,8 @@ var NC_MODULE = {
 				var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
 				$('#' + activity.id + '-report-time').val(d.getHours() + ':' + min);
 				
+				// Needed for correct deserialization
+				actItem.valueType = actItem.definition.valueType; 
 			});
 		};
 		

@@ -19,7 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.Text;
 import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TextImpl extends ActivityItemValuesImpl implements Text {
 
 	private String textComment;

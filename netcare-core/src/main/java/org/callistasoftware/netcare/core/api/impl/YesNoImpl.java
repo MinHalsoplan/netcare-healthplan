@@ -19,7 +19,9 @@ package org.callistasoftware.netcare.core.api.impl;
 import org.callistasoftware.netcare.core.api.YesNo;
 import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class YesNoImpl extends ActivityItemValuesImpl implements YesNo {
 
 	private Boolean answer;
