@@ -24,6 +24,16 @@ var NC_MODULE = {
 			var that = this;
 			this.params = params;
 		};
+		
+		my.showLoader = function(elemId, msg) {
+			NC.log('Showing loader for section ' + elemId);
+			$(elemId).find('.sectionLoader').find('.loaderMessage').html(msg);
+			$(elemId).find('.sectionLoader').show();
+		};
+		
+		my.suspendLoader = function(elemId, msg) {
+			$(elemId).find('.sectionLoader').slideUp('fast').html('');
+		};
 
 		my.loadNewPage = function(url, module, moduleParams) {
 
@@ -1703,6 +1713,10 @@ var NC_MODULE = {
 		};
 		
 		my.renderSchedule = function(my) {
+			
+			// Show loader
+			NC_MODULE.GLOBAL.showLoader('#report', 'Laddar dina aktiviteter...');
+			
 			my.load(my, function(data) {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
@@ -1710,7 +1724,12 @@ var NC_MODULE = {
 						_data[i] = v;
 						my.createScheduleItem(my, i, v);
 					});
+					
+					NC_MODULE.GLOBAL.suspendLoader('#report');
+					$('#reportContainer').show();
 				}
+				
+				NC_MODULE.GLOBAL.suspendLoader('#report');
 			});
 		};
 		
@@ -1785,7 +1804,7 @@ var NC_MODULE = {
 					_data[idx] = data.data;
 					
 					// Rerender
-					my.updateScheduledItem(my, idx, _data[idx]);
+					my.updateScheduleItem(my, idx, _data[idx]);
 					NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
 				});
 			});
@@ -1859,8 +1878,8 @@ var NC_MODULE = {
 				$('#latestActivitiesContainer').empty();
 				
 				if(data.data.length==0) {
-						$('#latestActivitiesContainer').hide();
-						$('#noReportedActivities').show();
+					$('#latestActivitiesContainer').hide();
+					$('#noReportedActivities').show();
 				} else {
 					$('#noReportedActivities').hide();
 					$('#latestActivitiesContainer').show();

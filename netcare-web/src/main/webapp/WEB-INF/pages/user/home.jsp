@@ -40,30 +40,6 @@
 				
 				NC_MODULE.COMMENTS.init(params);
 				NC_MODULE.SCHEDULE.init(params);
-								
-				
-				// reporting stuff				
-				/*var report = new NC.PatientReport('schemaTable', true);
-				report.init();
-				report.reportCallback(function(id, done, last) {
-					if (last) {
-						$('#eventBody').hide();
-					}
-					var gid = 'gauge-' + id;
-					var arr = home.perfData();
-					for (var i = 0; i < arr.length; i++) {
-						if (arr[i].id == gid) {
-							var pd = arr[i];
-							pd.numDone += done;
-							var pctDone = Math.ceil((pd.numDone / pd.numTarget)*100);						
-					        pd.options.max = Math.max(120, pctDone);
-							pd.data.setValue(0, 1, pctDone);
-				        	pd.gauge.draw(pd.data, pd.options);
-				        	break;
-						}
-					}
-				});*/
-
 			});
 
 		</script>
@@ -71,9 +47,14 @@
 	<hp:viewBody title="Startsida">
 		
 		<section id="report">
-			<mvk:touch-list id="reportList">
-			
-			</mvk:touch-list>
+			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="reportContainer" style="display: none;">
+				<h2>Du har aktiviteter att rapportera</h2>
+				<mvk:touch-list id="reportList"></mvk:touch-list>
+			</div>
 		</section>
 		
 		<section id="comments" style="display: none;">
@@ -84,7 +65,12 @@
 			</div>
 		</section>
 		
-		<br />
+		<section id="my-schedule">
+			<h2>Mitt schema</h2>
+			
+			
+			
+		</section>
 
 <%-- 		<section id="healthPlan"> --%>
 <%-- 			<h2><spring:message code="phome.header" /></h2> --%>

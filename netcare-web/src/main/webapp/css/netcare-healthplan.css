@@ -241,3 +241,9 @@ li.item .itemStateText {
 	background-position: right center;
 	background-repeat: repeat-y;
 }
+
+.sectionLoader {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
