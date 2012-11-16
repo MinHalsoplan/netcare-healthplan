@@ -139,6 +139,34 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 	@Test
 	@Transactional
 	@Rollback(true)
+	public void testFindByCareUnitPatientBetween() {
+
+		String careUnit = "hsa-id-4321";
+
+		ScheduledActivityEntity e = setup();
+		e.setReportedTime(new Date());
+		e = this.repo.save(e);
+
+		Date zero = new Date(0);
+		Date now = new Date();
+
+		PatientEntity patient = e.getActivityDefinitionEntity().getHealthPlan().getForPatient();
+
+		final List<ScheduledActivityEntity> result = this.repo.findByCareUnitPatientBetween(careUnit, patient, zero,
+				now);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+
+		assertEquals("hsa-id-4321", result.get(0).getActivityDefinitionEntity().getHealthPlan().getCareUnit()
+				.getHsaId());
+		assertEquals(patient.getCivicRegistrationNumber(), result.get(0).getActivityDefinitionEntity().getHealthPlan()
+				.getForPatient().getCivicRegistrationNumber());
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
 	public void testFindByScheduledTimeLessThanAndReportedTimeIsNull() {
 		setup();
 

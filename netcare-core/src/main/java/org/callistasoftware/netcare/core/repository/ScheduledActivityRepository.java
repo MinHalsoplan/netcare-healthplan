@@ -48,6 +48,25 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			@Param("end") final Date end);
 		
 	/**
+	 * Get a list of all reported activities for a specific patient within a time interval.
+	 * 
+	 * @param hsaId
+	 * @param patient
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp inner join " +
+			"hp.careUnit as c where c.hsaId = :careUnit " +
+			"and hp.forPatient = :patient " +
+			"and ad.removedFlag = 'false' " +
+			"and e.reportedTime is not null and e.status != 1 and (e.reportedTime between :start and :end)")
+	List<ScheduledActivityEntity> findByCareUnitPatientBetween(@Param("careUnit") final String careUnit,
+			@Param("patient") PatientEntity patient, @Param("start") final Date start, @Param("end") final Date end);
+
+	/**
 	 * Used to display activity reports for a care giver within a time interval.
 	 * 
 	 * @param careUnit the unit.
@@ -113,4 +132,5 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"ad.removedFlag = 'false' and " +
 			"hp.id = :healthPlanId")
 	List<ScheduledActivityEntity> findScheduledActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId);
+
 }

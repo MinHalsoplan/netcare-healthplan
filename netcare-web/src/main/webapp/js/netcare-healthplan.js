@@ -1908,7 +1908,6 @@ var NC_MODULE = {
 		};
 		
 		my.processValues = function(my, act) {
-			NC.log('Processing details of reported activity ' + act.id);
 			if (act.activityItemValues.length == 0) {
 				NC.log('No activities reported');
 				$('#ra-details-' + act.id).find('.span12').append(
@@ -1922,6 +1921,31 @@ var NC_MODULE = {
 					$('#ra-details-' + act.id).find('.span12').append($(dom));
 				});
 			}
+		};
+		
+		my.doFilter = function(pnr, date1, date2) {
+			
+			var params = {
+				personnummer : pnr,
+				dateFrom : date1,
+				dateTo : date2
+			}
+			
+			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
+				$('#latestActivitiesContainer').empty();
+				
+				if(data.data.length==0) {
+						$('#latestActivitiesContainer').hide();
+						$('#noReportedActivities').show();
+				} else {
+					$('#noReportedActivities').hide();
+					$('#latestActivitiesContainer').show();
+					$.each(data.data, function(i, v) {
+						my.buildReportedActivityItem(my, v);
+					});
+				}
+				
+			}, false);
 		};
 		
 		return my;

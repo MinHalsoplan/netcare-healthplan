@@ -28,6 +28,7 @@
 
 <hp:view>
 	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 				
@@ -39,56 +40,66 @@
 					msgs = messages;
 					_ra = new NC.ReportedActivities(msgs);
 				});
+
+				var module = NC_MODULE.REPORTED_ACTIVITIES;
 				
-				_ra.loadData('latest', function(data) {
-					
-					_ra.loadUI(data, function(row) {
-						NC.log('Appending row');
-						$('#activity-table tbody').append(row);	
-					},
-					function(data) {
-						$('#commentActivity').modal('show');
-						$('#commentActivity a.btn-info').click(function(e) {
-							e.preventDefault();
-							
-							var val = $('#commentActivity input[name="comment"]').val();
-							
-							_ra.sendComment(data.id, val, function() {
-								$('#commentActivity input[name="comment"]').val('');
-								$('#commentActivity').modal('hide');
-								
-								$('#commentActivity a.btn-info').unbind('click');
-							});
-						});
-					});
-				}, 
-				function() {
-					$('#activity-table').hide();
-					$('#list-empty').html(msgs['activity.reported.none']).show();
+				function twoDigits(number) {
+					if(number<10) {
+						return "0" + number;
+					} else {
+						return number
+					}
+				}
+				function formattedDate(date) {
+					return "" + date.getFullYear() + (twoDigits(date.getMonth()+1)) + twoDigits(date.getDate());
+				}
+				function threeDaysAgo() {
+					var now = new Date();
+					var then = new Date()
+					then.setDate(now.getDate()-3);
+					return formattedDate(then);
+				}
+
+				function filter() {
+					var personnummer = $('#personnummer').val();
+					var dateFrom = $('#dateFrom').val();
+					var dateTo = $('#dateTo').val();
+					module.doFilter(personnummer, dateFrom, dateTo);
+				}
+
+				$("#dateFrom").val(threeDaysAgo());
+				$("#dateTo").val(formattedDate(new Date()));
+				$('.btn').click(function() {
+					filter();
 				});
+
+				filter();
 				
 			});
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Genomförda aktiviteter">
-		<hp:list-content descriptionCode="activity.reported.desc2" titleCode="activity.reported.title">
-			<netcare:table id="activity-table">
-				<thead>
-					<tr>
-						<th><spring:message code="activity.reported.patient" /></th>
-						<th><spring:message code="activity.reported.type" /></th>
-						<th><spring:message code="activity.reported.healthplan" /></th>
-						<th><spring:message code="activity.reported.value" /></th>
-						<th><spring:message code="activity.reported.when" /></th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</netcare:table>
-			
-			<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
-				<input type="text" name="comment" class="xlarge" />
-			</netcare:modal>
-		</hp:list-content>
+		<h2><spring:message code="activity.reported.title" /></h2>
+		<p>
+			<span class="label label-info"><spring:message code="label.information" /></span>
+			<spring:message code="activity.reported.desc2" />
+		</p>
+		<div class="controls">
+    		<label class="control-label" for="personnummer">Personnummer</label>
+    		<div class="controls">
+      			<input type="text" id="personnummer">
+    		</div>
+    		<label class="control-label" for="personnummer">Datumperiod</label>
+    		<div class="controls">
+      			<input type="text" id="dateFrom" class="span2"> -
+      			<input type="text" id="dateTo" class="span2">
+    		</div>
+    		<div class="form-actions">
+    			<button class="btn btn-info">Sök</button>
+    		</div>
+  		</div>
+		<mvk:touch-list id="latestActivitiesContainer">
+
+		</mvk:touch-list>
 	</hp:viewBody>
 </hp:view>
