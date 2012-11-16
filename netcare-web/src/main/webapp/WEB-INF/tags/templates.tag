@@ -325,7 +325,7 @@
 	<div class="row-fluid">
 		<div class="mainBody span6">
 			<h4 class="titel">{{patient.surName}}, {{patient.firstName}}</h4>
-			<div class="subRow">{{definition.type.name}} - Rapporterad {{reported}}</div>
+			<div class="subRow">{{activityDefinition.type.name}} - Rapporterad {{reported}}</div>
 		</div>
 		<div class="mainBody actionBody span6">
 
