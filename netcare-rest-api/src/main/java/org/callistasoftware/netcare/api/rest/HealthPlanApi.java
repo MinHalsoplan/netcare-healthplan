@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -115,6 +118,44 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.loadLatestReportedForAllPatients(unit, start, end);
 	}
 	
+	@RequestMapping(value = "/activity/reported/filter", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<ScheduledActivity[]> filterReportedActivities(
+			@RequestParam(value = "personnummer") final String personnummer,
+			@RequestParam(value = "dateFrom") final String dateFrom, @RequestParam(value = "dateTo") final String dateTo) {
+		this.logAccess("filter", "reported activities");
+
+		Date start = null;
+		Date end = null;
+
+		try {
+			if (StringUtils.hasText(dateFrom)) {
+				start = new SimpleDateFormat("yyyyMMdd").parse(dateFrom);
+			} else {
+				start = new Date(System.currentTimeMillis() - 3 * DateUtil.MILLIS_PER_DAY);
+			}
+			if (StringUtils.hasText(dateTo)) {
+				end = new SimpleDateFormat("yyyyMMdd").parse(dateTo);
+			} else {
+				end = new Date();
+			}
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+
+		if (StringUtils.hasText(personnummer) && !isPersonnummer(personnummer)) {
+			throw new RuntimeException("Personnummer har fel format");
+		}
+
+		final CareUnit unit = ((CareActorBaseView) this.getUser()).getCareUnit();
+		return this.service.filterReportedActivities(unit, personnummer, start, end);
+	}
+	
+	protected boolean isPersonnummer(String personnummer) {
+		//TODO Validate personnummer
+		return true;
+	}
+
 	@RequestMapping(value="/activity/reported/all", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> loadAllReportedActivities() {

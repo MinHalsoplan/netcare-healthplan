@@ -106,6 +106,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * Implementation of service definition
@@ -466,6 +467,33 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 
 		log.info("latest reports: found {} activities", activities.size());
+
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities),
+				new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity[]> filterReportedActivities(final CareUnit careUnit, final String personnummer,
+			final Date start, final Date end) {
+		log.info("Loading a filtered out list of reported activities belonging to care unit {}", careUnit.getHsaId());
+
+		final CareUnitEntity entity = this.careUnitRepository.findByHsaId(careUnit.getHsaId());
+		if (entity == null) {
+			ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, -1L));
+		}
+		final PatientEntity patient = patientRepository.findByCivicRegistrationNumber(personnummer);
+		this.verifyReadAccess(entity);
+
+		log.info("filtered reports: pnr: {}, start: {}, end: {}, unit: \"{}\"", new Object[] { personnummer, start, end, entity.getHsaId() });
+
+		final List<ScheduledActivityEntity> activities;
+		if (StringUtils.hasText(personnummer)) {
+			activities = this.scheduledActivityRepository.findByCareUnitPatientBetween(entity.getHsaId(), patient, start, end);
+		} else {
+			activities = this.scheduledActivityRepository.findByCareUnitBetween(entity.getHsaId(), start, end);
+		}
+
+		log.info("filter reports: found {} activities", activities.size());
 
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities),
 				new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));

@@ -178,6 +178,17 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit, final Date start, final Date end);
 	
 	/**
+	 * Filter out a list of reported activities with supplied params.
+	 * @param careUnit the actual care unit
+	 * @param personnummer what person
+	 * @param start date from
+	 * @param end date to
+	 * @return the list of reported activities
+	 */
+	ServiceResult<ScheduledActivity[]> filterReportedActivities(CareUnit careUnit, String personnummer, Date start,
+			Date end);
+
+	/**
 	 * Returns actual activity definitions.
 	 * 
 	 * @return the result with actual activity definitions.
@@ -243,4 +254,5 @@ public interface HealthPlanService {
 	 * 
 	 */
 	ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop);
+
 }
