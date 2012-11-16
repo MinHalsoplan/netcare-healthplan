@@ -1699,7 +1699,7 @@ var NC_MODULE = {
 		};
 		
 		my.load = function(my, callback) {
-			new NC.Ajax().get('/schedule', callback);
+			new NC.Ajax().get('/scheduledActivities', callback);
 		};
 		
 		my.renderSchedule = function(my) {
@@ -1708,13 +1708,13 @@ var NC_MODULE = {
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						_data[i] = v;
-						my.renderScheduleItem(my, v);
+						my.renderScheduleItem(my, i, v);
 					});
 				}
 			});
 		};
 		
-		my.renderScheduleItem = function(my, scheduledActivity) {
+		my.renderScheduleItem = function(my, activityIndex, scheduledActivity) {
 			var dom = _.template($('#scheduledActivityItem').html())(scheduledActivity);
 			$('#reportList').append($(dom));
 			
@@ -1745,17 +1745,50 @@ var NC_MODULE = {
 			var detailsDom = _.template($('#scheduledActivityDetails').html())(scheduledActivity);
 			liElem.find('.row-fluid').after($(detailsDom));
 			
-			my.processItemValues(my, scheduledActivity);
+			my.processItemValues(my, activityIndex, scheduledActivity);
 			
+			/*
+			 * Listen for changes on the activity
+			 */
+			my.initActivityListeners(my, activityIndex);
 		};
 		
-		my.processItemValues = function(my, activity) {
+		my.initActivityListeners = function(my, idx) {
+			var id = _data[idx].id;
+			var time = $('#' + id + '-report-time');
+			var date = $('#' + id + '-report-date');
+			var report = $('#sa-report-' + id);
+			var noreport = $('#sa-noreport-' + id);
+			
+			$(date).bind('change blur keyup', function(e) {
+				e.stopPropagation();
+				_data[idx].reported = $(this).val() + ' ' + time.val();
+			});
+			
+			$(time).bind('change blur keyup', function(e) {
+				e.stopPropagation();
+				_data[idx].reported = date.val() + ' ' + $(this).val();
+			});
+			
+			$(report).click(function(e) {
+				new NC.Ajax().post('/scheduledActivities/' + id, _data[idx], function(data) {
+					alert('Success');
+				});
+			});
+			
+			$(noreport).click(function(e) {
+				alert('Hej 2');
+			});
+		};
+		
+		my.processItemValues = function(my, activityIndex, activity) {
 			$.each(activity.activityItemValues, function(idx, actItem) {
 				var activityValuesTemplate = '#scheduled-' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				$('#sa-details-' + activity.id).find('.span12').append($(dom));
 				
+				my.initActivityItemListener(my, activityIndex, idx, actItem.id);
 				
 				var dp = $('#' + activity.id + '-report-date').datepicker({
 					dateFormat : 'yy-mm-dd',
@@ -1766,9 +1799,28 @@ var NC_MODULE = {
 				dp.datepicker('setDate', new Date());
 				var d = new Date();
 				
-				$('#' + activity.id + '-report-time').val(d.getHours() + ':' + d.getMinutes());
+				var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+				$('#' + activity.id + '-report-time').val(d.getHours() + ':' + min);
 				
 			});
+		};
+		
+		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
+			
+			var inputs = $('#sa-row-' + id).find('input');
+			if (inputs.length == 1) {
+				
+				inputs.bind('change blur keyup', function() {
+					_data[activityIndex].activityItemValues[itemIndex].reportedValue = $(this).val();
+					NC.log('Setting value to: ' + $(this).val());
+				});
+				
+			} else if (inputs.length == 2) {
+				
+			} else {
+				throw new Error('Expected 1 or 2 inputs and nothing else.');
+			}
+			
 		};
 		
 		return my;

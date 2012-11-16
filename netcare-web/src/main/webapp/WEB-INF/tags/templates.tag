@@ -425,8 +425,8 @@
 		</div>
 	</div>
 	<div class="form-actions" style="margin: 0">
-		<button type="button" class="btn btn-primary btn-info">Rapportera</button>
-		<button type="button" class="btn btn-danger">Rapportera som ej utförd</button>
+		<button id="sa-report-{{id}}" type="button" class="btn btn-primary btn-info">Rapportera</button>
+		<button id="sa-noreport-{{id}}" type="button" class="btn btn-danger">Rapportera som ej utförd</button>
 	</div>
 </div>
 </script>
@@ -467,7 +467,7 @@
 </script>
 <%--Text values --%>
 <script id="scheduled-textValues" type="text/template">
-<div id="ra-row-{{id}}" class="row-fluid">
+<div id="sa-row-{{id}}" class="row-fluid">
 <div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.label}}</div>
 <div class="span7"><input type="text" value="{{textComment}}" /></div>
 </div>

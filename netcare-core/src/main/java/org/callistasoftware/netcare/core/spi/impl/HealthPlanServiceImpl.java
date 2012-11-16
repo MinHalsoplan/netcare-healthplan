@@ -513,7 +513,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final List<ActivityCount> activityCount = new ArrayList<ActivityCount>();
 
 		for (final ScheduledActivity ac : activities) {
-			final String name = ac.getDefinition().getType().getName();
+			final String name = ac.getActivityDefinition().getType().getName();
 			final ActivityCount act = new ActivityCount(name);
 			final ActivityCount existing = this.findActivityCount(name, activityCount);
 

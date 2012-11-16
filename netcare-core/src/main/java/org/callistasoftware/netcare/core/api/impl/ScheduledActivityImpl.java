@@ -32,8 +32,10 @@ import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ScheduledActivityImpl implements ScheduledActivity {
 
 	private static final long serialVersionUID = 1L;
@@ -117,10 +119,6 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return id;
 	}
 
-	public ActivityDefinition getActivityDefinition() {
-		return activityDefinition;
-	}
-
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -176,7 +174,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public ActivityDefinition getDefinition() {
+	public ActivityDefinition getActivityDefinition() {
 		return activityDefinition;
 	}
 

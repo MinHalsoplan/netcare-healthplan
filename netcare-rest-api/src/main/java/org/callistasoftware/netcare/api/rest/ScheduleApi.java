@@ -24,12 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/schedule", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="/scheduledActivities", produces=MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize(RoleEntity.PATIENT)
 public class ScheduleApi extends ApiSupport {
 
@@ -40,5 +41,11 @@ public class ScheduleApi extends ApiSupport {
 	public ServiceResult<ScheduledActivity[]> getSchema() {
 		logAccess("lista", "schema");
 		return service.getActivitiesForPatient();
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report) {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -18,11 +18,15 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Keeps scheduled activity information, used to display a list of activities.
  * 
  * @author Peter
  */
+@JsonDeserialize(as=ScheduledActivityImpl.class)
 public interface ScheduledActivity extends Serializable {
 	/**
 	 * Returns the id.
@@ -64,7 +68,7 @@ public interface ScheduledActivity extends Serializable {
 	 * 
 	 * @return the definition.
 	 */
-	ActivityDefinition getDefinition();
+	ActivityDefinition getActivityDefinition();
 
 	/**
 	 * Returns if this activity is due.
