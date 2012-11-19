@@ -516,7 +516,7 @@
 			</div>
 			<div id="activity-comment-{{id}}-showReply" class="row-fluid" style="display: none;">
 				<div style="text-align: center;">
-					<h2><i>{{reply}}</i></h2>
+					<h2><i>"{{reply}}"</i></h2>
 				</div>
 				<div style="text-align: right;">
 					<small>- {{repliedBy}}, {{repliedAt}}</small>

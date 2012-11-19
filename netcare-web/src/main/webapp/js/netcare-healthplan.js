@@ -1698,16 +1698,17 @@ var NC_MODULE = {
 				$('#activity-comment-' + _data[idx].id).replaceWith($(dom));
 			}
 			
+			if (update == false) {
+				$('#comments').append($(dom));
+			}
 			
-			$('#comments').append($(dom));
-			
-			if (star == true && !update) {
+			if (star == true) {
 				$('#activity-awards-' + _data[idx].id).append(
 					$('<img>').prop('src', NC.getContextPath() + '/img/icons/star.png')
 				);
 			}
 			
-			if (like == true && !update) {
+			if (like == true) {
 				$('#activity-awards-' + _data[idx].id).append(
 					$('<img>').prop('src', NC.getContextPath() + '/img/icons/like.png')
 				);
