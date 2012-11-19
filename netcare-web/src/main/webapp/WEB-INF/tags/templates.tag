@@ -504,7 +504,7 @@
 					</thead>
 					<tbody></tbody>
 				</netcare:table>
-				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -518,6 +518,44 @@
 	<td>{{causeText}}</td>
 	<td>{{createdTime}}</td>
 	<td><img id="resolve{{id}}" src="{{contextPath}}/img/icons/24/trash.png"></td>
+</tr>
+</script>
+
+<%-- This template is used to show alarms --%>
+<script id="repliesPaperSheet" type="text/template">
+<li id="repliesSheet" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item style="padding-right:0px;">
+<div id="repliesItem" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span11">
+			<div class="subRow">
+				<netcare:table>
+					<thead>
+						<tr>
+							<th><spring:message code="comments.comment" /></th>
+							<th><spring:message code="comments.reply" /></th>
+							<th><spring:message code="comments.from" />
+							<th><spring:message code="comments.activity" /></th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="32px">&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</netcare:table>
+			</div>
+		</div>
+	</div>
+</div>
+</mvk:touch-item>
+</li>
+</script>
+<script id="repliesRow" type="text/template">
+<tr>
+	<td>{{comment}}</td>
+	<td>{{reply}}</td>
+	<td>{{repliedBy}}</td>
+	<td>{{activityName}}</td>
+	<td><img id="deleteComment{{id}}" src="{{contextPath}}/img/icons/24/trash.png"></td>
 </tr>
 </script>
 

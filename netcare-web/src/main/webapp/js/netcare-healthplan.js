@@ -2138,9 +2138,8 @@ var NC_MODULE = {
 				} else {
 					var t = _.template($('#alarmPaperSheet').html());
 					var dom = t();
-					$('#alarmContainer2').append($(dom));
+					$('#alarmContainer').append($(dom));
 					$.each(data.data, function(index, value) {
-						NC.log(value);
 						var info =  value.cause.value;
 						if (value.info != null) {
 							info += '<br/>' + value.info;
@@ -2155,6 +2154,45 @@ var NC_MODULE = {
 						$('#resolve' + value.id).click(function() {
 							NC.log("Resolving alarm...");
 							new NC.Ajax().post('/alarm/' + value.id + '/resolve', {}, my.load, true);
+						});
+
+					});
+				}
+			});
+		};
+		
+		return my;
+	})(),
+	
+	REPLIES : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.load(that);
+		};
+		
+		my.load = function(my) {
+			new NC.Ajax().get('/healthplans/activity/reported/comments/newreplies', function(data) {
+				if (data.data.length == 0) {
+					$('#replies').hide();
+				} else {
+					var t = _.template($('#repliesPaperSheet').html());
+					var dom = t();
+					$('#repliesContainer').append($(dom));
+					$.each(data.data, function(index, value) {
+
+						value.contextPath = NC.getContextPath();
+
+						var t = _.template($('#repliesRow').html());
+						var dom = t(value);
+						$('#repliesItem table tbody').append(dom);
+						
+						$('#deleteComment' + value.id).click(function() {
+							NC.log("Deleting comment...");
+							new NC.Ajax().post('/healthplans/activity/reported/comments/' + value.id + '/delete', {}, my.load, true);
 						});
 
 					});

@@ -123,9 +123,6 @@ NC.HealthPlan = function(descriptionId, tableId) {
 			_ajax.get('/healthplans/activity/' + activityId + '/load', callback);
 		},
 		
-		loadNewReplies : function(callback) {
-			_ajax.get('/healthplans/activity/reported/comments/newreplies', callback, true);
-		},
 	};
 	
 	return public;

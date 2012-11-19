@@ -26,7 +26,6 @@
 <script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
 
 <script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/Alarm.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
 <script type="text/javascript" src="<c:url value='/js/netcare/ActivityTypes.js' />"></script>
