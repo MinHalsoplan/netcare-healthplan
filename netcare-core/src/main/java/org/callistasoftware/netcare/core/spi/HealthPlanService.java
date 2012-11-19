@@ -136,6 +136,22 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity> commentOnPerformedActivity(final Long activityId, final String comment);
 	
 	/**
+	 * Like an activity.
+	 * @param activityId
+	 * @param like
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> likePerformedActivity(final Long activityId, boolean like);
+
+	/**
+	 * Star an activity.
+	 * @param activityId
+	 * @param star
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> starPerformedActivity(final Long activityId, boolean star);
+
+	/**
 	 * Reply to a comment
 	 * @param comment
 	 * @return

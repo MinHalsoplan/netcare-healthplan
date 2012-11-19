@@ -343,10 +343,10 @@
 <div id="ra-details-{{id}}" class="span10" style="display: none;">
 	<div class="row-fluid">
 		<div class="span12">
-		
 		</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row-fluid">	
+		<div class="likeReported span4"></div><div class="starReported span7"></div>
 		<div id="actcomment" class="span11">
 			<label for="activitycomment"><spring:message code="comments.sendComment" /></label>
 			<textarea id="activitycomment" rows="2" class="span11"></textarea>

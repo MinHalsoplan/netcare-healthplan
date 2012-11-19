@@ -808,6 +808,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 	@Override
 	public ServiceResult<ScheduledActivity> commentOnPerformedActivity(Long activityId, String comment) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, comment, null, null);
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> likePerformedActivity(Long activityId, boolean like) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, null, like, null);
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> starPerformedActivity(Long activityId, boolean star) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, null, null, star);
+	}
+
+	protected ServiceResult<ScheduledActivity> createOrUpdateCommentOnPerformedActivity(Long activityId, String comment, Boolean like, Boolean star) {
 		final ScheduledActivityEntity ent = this.scheduledActivityRepository.findOne(activityId);
 		if (ent == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class,
@@ -819,7 +833,22 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		final UserEntity user = this.getCurrentUser();
 		if (user.isCareActor()) {
 			final CareActorEntity ca = (CareActorEntity) user;
-			ent.getComments().add(ActivityCommentEntity.newEntity(comment, ca, ent));
+			
+			ActivityCommentEntity commentEntity = null; 
+			if(ent.getComments().size()>0) {
+				commentEntity = ent.getComments().get(0);
+			} else {
+				commentEntity = ActivityCommentEntity.newEntity("", ca, ent);
+				ent.getComments().add(commentEntity);
+			}
+			
+			if(StringUtils.hasText(comment)) {
+				commentEntity.setComment(comment);
+			} else if(like!=null) {
+				commentEntity.setLike(like);
+			} else if(star!=null) {
+				commentEntity.setStar(star);
+			}
 
 			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent),
 					new GenericSuccessMessage());
@@ -828,6 +857,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 	}
 
+	
 	@Override
 	public ServiceResult<ActivityComment[]> loadCommentsForPatient() {
 		final PatientEntity patient = this.getPatient();

@@ -2007,13 +2007,13 @@ var NC_MODULE = {
 		
 		var my = {};
 		
-		my.init = function(params) {
+		my.init = function(msgs) {
 			var that = this;
-			this.params = params;
-			my.loadReportedActivities(that);
+			this.msgs = msgs;
+			my.loadReportedActivities(that, msgs);
 		};
 		
-		my.loadReportedActivities = function(my) {
+		my.loadReportedActivities = function(my, msgs) {
 			new NC.Ajax().get('/healthplans/activity/reported/latest', function(data) {
 				$('#latestActivitiesContainer').empty();
 				
@@ -2024,14 +2024,14 @@ var NC_MODULE = {
 					$('#noReportedActivities').hide();
 					$('#latestActivitiesContainer').show();
 					$.each(data.data, function(i, v) {
-						my.buildReportedActivityItem(my, v);
+						my.buildReportedActivityItem(my, v, msgs);
 					});
 				}
 				
 			}, false);
 		};
 		
-		my.buildReportedActivityItem = function(my, act) {
+		my.buildReportedActivityItem = function(my, act, msgs) {
 			var t = _.template($('#reportedActivityItem').html());
 			var dom = t(act);
 			$('#latestActivitiesContainer').append($(dom));
@@ -2060,6 +2060,27 @@ var NC_MODULE = {
 
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
 			
+			var like = liElem.find('.likeReported');
+			like.html(msgs.like);
+			like.click(function(e) {
+				NC.log('Liking reported value: ' + act.id);
+				new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/like', { like : true }, function() {
+					NC.log('Liked.');
+					like.html('<span style="font-weight: bold;">' + msgs.liked + '</span>');
+					like.unbind('click');
+				}, true);
+			});
+			var star = liElem.find('.starReported');
+			star.html(msgs.star);
+			star.click(function(e) {
+				NC.log('Star reported value: ' + act.id);
+				new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/star', { star : true }, function() {
+					NC.log('Starred.');
+					star.html('<span style="font-weight: bold;">' + msgs.starred + '</span>');
+					star.unbind('click');
+				}, true);
+			});
+
 			var commentText = liElem.find('#activitycomment');
 			liElem.find('.btn').click(function(e) {
 				var text = commentText.val();

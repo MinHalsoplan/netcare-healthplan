@@ -31,8 +31,15 @@
 		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
+				var msgs = {
+					like : '<spring:message code="activity.reported.like" />',
+					liked : '<spring:message code="activity.reported.liked" />',
+					star : '<spring:message code="activity.reported.star" />',
+					starred : '<spring:message code="activity.reported.starred" />'
+				};
+				
 				NC_MODULE.REPLIES.init();
-				NC_MODULE.REPORTED_ACTIVITIES.init();
+				NC_MODULE.REPORTED_ACTIVITIES.init(msgs);
 				NC_MODULE.ALARM.init();
 			});
 		</script>

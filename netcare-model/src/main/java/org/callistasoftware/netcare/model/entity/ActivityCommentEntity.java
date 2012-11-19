@@ -72,9 +72,6 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		ent.setComment(comment);
 		ent.setCommentedBy(commentedBy);
 		ent.setCommentedAt(new Date());
-		ent.setStar(true);
-		ent.setLike(true);
-		
 		return ent;
 	}
 	
@@ -90,7 +87,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		return comment;
 	}
 
-	void setComment(String comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
@@ -138,7 +135,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		return like;
 	}
 	
-	void setLike(boolean like) {
+	public void setLike(boolean like) {
 		this.like = like;
 	}
 	
@@ -146,7 +143,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		return star;
 	}
 	
-	void setStar(boolean star) {
+	public void setStar(boolean star) {
 		this.star = star;
 	}
 
