@@ -517,7 +517,7 @@
 	<td>{{patient.phoneNumber}}</td>
 	<td>{{causeText}}</td>
 	<td>{{createdTime}}</td>
-	<td></td>
+	<td><img id="resolve{{id}}" src="{{contextPath}}/img/icons/24/trash.png"></td>
 </tr>
 </script>
 

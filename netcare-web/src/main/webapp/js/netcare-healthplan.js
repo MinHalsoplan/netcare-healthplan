@@ -2146,10 +2146,16 @@ var NC_MODULE = {
 							info += '<br/>' + value.info;
 						}
 						value.causeText = info;
+						value.contextPath = NC.getContextPath();
 
 						var t = _.template($('#alarmRow').html());
 						var dom = t(value);
 						$('#alarmsItem table tbody').append(dom);
+						
+						$('#resolve' + value.id).click(function() {
+							NC.log("Resolving alarm...");
+							new NC.Ajax().post('/alarm/' + value.id + '/resolve', {}, my.load, true);
+						});
 
 					});
 				}
