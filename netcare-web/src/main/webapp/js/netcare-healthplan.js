@@ -2031,6 +2031,44 @@ var NC_MODULE = {
 		
 		return my;
 		
+	})(),
+
+	ALARM : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.load(that);
+		};
+		
+		my.load = function(my) {
+			new NC.Ajax().get('/alarm/list', function(data) {
+				if (data.data.length == 0) {
+					$('#alarms').hide();
+				} else {
+					var t = _.template($('#alarmPaperSheet').html());
+					var dom = t();
+					$('#alarmContainer2').append($(dom));
+					$.each(data.data, function(index, value) {
+						NC.log(value);
+						var info =  value.cause.value;
+						if (value.info != null) {
+							info += '<br/>' + value.info;
+						}
+						value.causeText = info;
+
+						var t = _.template($('#alarmRow').html());
+						var dom = t(value);
+						$('#alarmsItem table tbody').append(dom);
+
+					});
+				}
+			});
+		};
+		
+		return my;
 	})()
-	
+
 };

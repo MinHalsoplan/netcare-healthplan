@@ -56,7 +56,7 @@
 							NC.log("Processing " + value.id + "...");
 							var tr = $('<tr>');
 							var created = $('<td>' + value.createdTime + '</td>');
-							var patient = $('<td>' + value.patient.name + '<br/>' + util.formatCnr(value.patient.civicRegistrationNumber)  + '</td>');
+							var patient = $('<td>' + value.patient.name + '<br/>' + value.patient.civicRegistrationNumber  + '</td>');
 							var contact = $('<td>' + value.patient.phoneNumber + '</td>');
 							var info =  value.cause.value;
 							if (value.info != null) {
@@ -67,7 +67,7 @@
 							var processIcon = util.createIcon('trash', '24', function() {
 								NC.log("Resolving alarm...");
 								alarms.resolve(value.id, loadAlarms);
-							}, msgs['alarm.delete'], true);
+							}, null, true);
 							
 							var actionCol = $('<td>').css('text-align', 'right');
 							
@@ -89,7 +89,7 @@
 					});
 				};
 				
-				loadAlarms();
+				//loadAlarms();
 								
 				var loadReplies = function() {
 					hp.loadNewReplies(function(data) {
@@ -131,6 +131,7 @@
 				loadReplies();
 				
 				NC_MODULE.REPORTED_ACTIVITIES.init();
+				NC_MODULE.ALARM.init();
 
 			});
 		</script>
@@ -186,9 +187,6 @@
 			</netcare:block-message>
 			
 			<div id="reportedActivities">
-				<netcare:block-message id="noReportedActivities" type="info" style="display: none;">
-					<spring:message code="activity.reported.noneLastDay" />
-				</netcare:block-message>
 				<mvk:touch-list id="latestActivitiesContainer">
 		
 				</mvk:touch-list>
@@ -205,11 +203,10 @@
 				<span class="label label-info"><spring:message code="information" /></span>
 				<spring:message code="alarm.desc" />
 			</p>
-			
+			<mvk:touch-list id="alarmContainer2">
+		
+			</mvk:touch-list>
 			<div id="alarmContainer">	
-				<netcare:block-message type="info" style="display: none;">
-					<spring:message code="alarm.none" />
-				</netcare:block-message>
 				<netcare:table style="display: none;">
 					<thead>
 						<tr>

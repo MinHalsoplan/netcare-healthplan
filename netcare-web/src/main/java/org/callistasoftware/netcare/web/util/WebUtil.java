@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
+import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
@@ -39,6 +40,8 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.AlarmCause;
+import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
@@ -108,7 +111,6 @@ public final class WebUtil {
 		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
 		final RoleRepository roleRepo = wc.getBean(RoleRepository.class);
 		
-		
 		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
@@ -172,6 +174,7 @@ public final class WebUtil {
 		final ScheduledActivityRepository sar = wc.getBean(ScheduledActivityRepository.class);
 		final ActivityItemValuesEntityRepository actRepo = wc.getBean(ActivityItemValuesEntityRepository.class);
 		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
+		final AlarmRepository alarmRepo = wc.getBean(AlarmRepository.class);
 
 		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
@@ -369,5 +372,9 @@ public final class WebUtil {
 		
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
+		
+		AlarmEntity alarm1 = AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, p2, "hsa-cu-1", 1L );
+		alarmRepo.save(alarm1);
+		
 	}
 }

@@ -20,6 +20,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+
 <!-- healthplan:templates -->
 <script id="activityTemplate" type="text/template">
 <li id="liActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
@@ -481,4 +483,41 @@
 </div>
 </script>
 
+<%-- This template is used to show alarms --%>
+<script id="alarmPaperSheet" type="text/template">
+<li id="alarmsSheet" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item style="padding-right:0px;">
+<div id="alarmsItem" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span11">
+			<div class="subRow">
+				<netcare:table>
+					<thead>
+						<tr>
+							<th><spring:message code="alarm.patient" /></th>
+							<th><spring:message code="alarm.contact" /></th>
+							<th><spring:message code="alarm.cause" /></th>
+							<th><spring:message code="alarm.created" /></th>
+							<!-- work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
+							<th width="32px">&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</netcare:table>
+				</div>
+		</div>
+	</div>
+</div>
+</mvk:touch-item>
+</li>
+</script>
+<script id="alarmRow" type="text/template">
+<tr>
+	<td>{{patient.name}}<br/>{{patient.civicRegistrationNumber}}</td>
+	<td>{{patient.phoneNumber}}</td>
+	<td>{{causeText}}</td>
+	<td>{{createdTime}}</td>
+	<td></td>
+</tr>
+</script>
 <!-- healthplan:templates / -->
