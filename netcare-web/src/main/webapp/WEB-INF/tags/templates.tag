@@ -392,7 +392,7 @@
 <%-- This template is used to show a scheduled activity --%>
 <script id="scheduledActivityItem" type="text/template">
 <li id="scheduledActivityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
-<mvk:touch-item>
+<mvk:touch-item style="padding-right:0px;">
 <div id="saItem{{id}}" class="listItemBase">
 	<div class="row-fluid">
 		<div class="mainBody span6">
@@ -520,4 +520,58 @@
 	<td></td>
 </tr>
 </script>
+
+<%-- Comment --%>
+<script id="activity-comment" type="text/template">
+<div id="activity-comment-{{id}}" class="alert alert-success activity-comment">
+	<button type="button" class="close" data-dismiss="alert">×</button>
+	<div class="row-fluid">
+		<div class="span12">
+			<div style="text-align: center;">
+				<h2><i>"{{comment}}"</i></h2>
+			</div>
+			<div style="text-align: right;">
+				<small>- {{commentedBy}}, {{commentedByCareUnit}}, {{commentedAt}}</small> 
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="activity-comment-awarded" type="text/template">
+<div id="activity-comment-{{id}}" class="alert alert-success activity-comment">
+	<button type="button" class="close" data-dismiss="alert">×</button>
+	<div class="row-fluid">
+		<div id="activity-awards-{{id}}" class="span4">
+			
+		</div>
+		<div class="span8">
+			<div class="row-fluid">
+				<div style="text-align: center;">
+					<h2><i>"{{comment}}"</i></h2>
+				</div>
+				<div style="text-align: right;">
+					<small>- {{commentedBy}}, {{commentedByCareUnit}}, {{commentedAt}}</small> 
+				</div>
+			</div>
+			<div id="activity-comment-{{id}}-showReply" class="row-fluid" style="display: none;">
+				<div style="text-align: center;">
+					<h2><i>"{{reply}}"</i></h2>
+				</div>
+				<div style="text-align: right;">
+					<small>- {{repliedBy}}, {{repliedAt}}</small>
+				</div>
+			</div>
+			<div id="activity-comment-{{id}}-replyButton" style="text-align:center; padding-top: 20px; display: none;">
+				<button type="button" class="btn">Svara</button>
+			</div>
+			<div id="activity-comment-{{id}}-replyForm" style="text-align:center; padding-top: 20px; display: none;">
+				<textarea class="span12"></textarea>
+				<button type="button" class="btn">Skicka svar</button>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+
 <!-- healthplan:templates / -->

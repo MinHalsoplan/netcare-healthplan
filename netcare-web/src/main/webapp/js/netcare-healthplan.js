@@ -1650,20 +1650,108 @@ var NC_MODULE = {
 	})(),
 	
 	COMMENTS : (function() {
+		
+		var _data = new Array();
+		
 		var my = {};
 		
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
 			
-			my.load(that);
+			my.renderComments(that);
 		};
 		
-		my.load = function(my) {
-			new NC.Ajax().get('/comments', function(data) {
+		my.load = function(my, callback) {
+			new NC.Ajax().get('/comments', callback);
+		};
+		
+		my.renderComments = function(my) {
+			my.load(my, function(data) {
+				
 				if (data.data.length > 0) {
 					
+					$('#comments').show();
+					
+					$.each(data.data, function(i, v) {
+						_data[i] = v;
+						my.createComment(my, i, false);
+					});
 				}
+			});
+		};
+		
+		my.createComment = function(my, idx, update) {
+			
+			var star = _data[idx].star;
+			var like = _data[idx].like;
+			var reply = _data[idx].reply;
+			
+			var dom;
+			if (star == true || like == true) {
+				dom = _.template($('#activity-comment-awarded').html())(_data[idx]);
+			} else {
+				dom = _.template($('#activity-comment').html())(_data[idx]);
+			}
+			
+			if ($('#activity-comment-' + _data[idx].id).size() > 0) {
+				$('#activity-comment-' + _data[idx].id).replaceWith($(dom));
+			}
+			
+			if (update == false) {
+				$('#comments').append($(dom));
+			}
+			
+			if (star == true) {
+				$('#activity-awards-' + _data[idx].id).append(
+					$('<img>').prop('src', NC.getContextPath() + '/img/icons/star.png')
+				);
+			}
+			
+			if (like == true) {
+				$('#activity-awards-' + _data[idx].id).append(
+					$('<img>').prop('src', NC.getContextPath() + '/img/icons/like.png')
+				);
+			}
+			
+			if (reply != null) {
+				$('#activity-comment-' + _data[idx].id + '-showReply').show();
+			} else {
+				$('#activity-comment-' + _data[idx].id + '-replyButton').show();
+			}
+			
+			my.initListenersForComment(my, idx);
+		};
+		
+		my.initListenersForComment = function(my, idx) {
+			
+			var closeBtn = $('#activity-comment-' + _data[idx].id).find('button.close');
+			var replyBtn = $('#activity-comment-' + _data[idx].id + '-replyButton').find('button');
+			var replyArea = $('#activity-comment-'+ _data[idx].id +'-replyForm').find('textarea');
+			var doReply = $('#activity-comment-'+ _data[idx].id +'-replyForm').find('button');
+			
+			closeBtn.click(function(e) {
+				my.remove(_data[idx].id, function(data) {
+					alert('Remve');
+				});
+			});
+			
+			replyBtn.click(function() {
+				replyBtn.parent().hide();
+				doReply.parent().show();
+				replyArea.focus();
+			});
+			
+			replyArea.bind('blur keyup change', function() {
+				_data[idx].reply = $(this).val();
+			});
+			
+			doReply.click(function() {
+				new NC.Ajax().post('/comments/' + _data[idx].id, _data[idx], function(data) {
+					// Rerender
+					_data[idx] = data.data;
+					my.createComment(my, idx, true);
+				});
 			});
 		};
 		

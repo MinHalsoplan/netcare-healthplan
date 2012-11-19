@@ -46,6 +46,10 @@
 	</hp:viewHeader>
 	<hp:viewBody title="Startsida">
 		
+		<section id="comments" style="display: none;">
+			
+		</section>
+		
 		<section id="report">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
@@ -54,14 +58,6 @@
 			<div id="reportContainer" style="display: none;">
 				<h2>Du har aktiviteter att rapportera</h2>
 				<mvk:touch-list id="reportList"></mvk:touch-list>
-			</div>
-		</section>
-		
-		<section id="comments" style="display: none;">
-			<div class="row-fluid bubble">
-				<div class="span12">
-					Hello
-				</div>
 			</div>
 		</section>
 		

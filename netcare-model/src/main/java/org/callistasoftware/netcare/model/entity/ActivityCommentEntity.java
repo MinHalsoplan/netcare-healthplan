@@ -39,6 +39,12 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	@Column(nullable=false)
 	private String comment;
 	
+	@Column(name="is_liked")
+	private boolean like;
+	
+	@Column(name="is_starred")
+	private boolean star;
+	
 	@Column
 	private String reply;
 	
@@ -66,6 +72,8 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		ent.setComment(comment);
 		ent.setCommentedBy(commentedBy);
 		ent.setCommentedAt(new Date());
+		ent.setStar(true);
+		ent.setLike(true);
 		
 		return ent;
 	}
@@ -124,6 +132,22 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 
 	void setActivity(ScheduledActivityEntity activity) {
 		this.activity = activity;
+	}
+	
+	public boolean isLike() {
+		return like;
+	}
+	
+	void setLike(boolean like) {
+		this.like = like;
+	}
+	
+	public boolean isStar() {
+		return star;
+	}
+	
+	void setStar(boolean star) {
+		this.star = star;
 	}
 
 	@Override

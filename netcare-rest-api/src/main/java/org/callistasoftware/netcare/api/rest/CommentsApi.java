@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,6 +41,20 @@ public class CommentsApi extends ApiSupport {
 	public ServiceResult<ActivityComment[]> list() {
 		logAccess("list", "comments");
 		return service.loadCommentsForPatient();
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	@ResponseBody
+	public ServiceResult<ActivityComment> remove(final Long id) {
+		logAccess("remove", "comment");
+		return service.deleteComment(id);
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ActivityComment> update(@RequestBody final ActivityComment comment) {
+		logAccess("update", "comment");
+		return service.replyToComment(comment.getId(), comment.getReply());
 	}
 	
 }
