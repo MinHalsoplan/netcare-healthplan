@@ -158,6 +158,21 @@ ul.itemList {
 	
 }
 
+.likeReported {
+	background-image: url(../img/icons/little-like.png);
+	background-repeat: no-repeat;
+	background-position: 10px 0px;
+	text-indent: 30px;
+	margin-top: 5px;
+}
+
+.starReported {
+	background-image: url(../img/icons/little-star.png);
+	background-repeat: no-repeat;
+	text-indent: 20px;
+	margin-top: 5px;
+}
+
 .mvk-icon.copy {
 	background-image: url(../css/images/toolbarIconsBlue.png);
 	background-position: -250px 0px;
