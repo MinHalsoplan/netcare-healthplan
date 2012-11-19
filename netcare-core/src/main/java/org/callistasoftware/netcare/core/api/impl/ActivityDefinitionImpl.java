@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.ActivityType;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
+import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.util.JsonDateSerializer;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
@@ -68,6 +69,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private int numDone;
 	private int numTarget;
 	private CareActorBaseView issuedBy;
+	private CareUnit healthPlanCareUnit;
 	
 	private ActivityItemValuesDefinition[] goalValues;
 
@@ -92,6 +94,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		dto.setHealthPlanId(entity.getHealthPlan().getId());
 		dto.setActive(!entity.isRemovedFlag());
+		dto.setHealthPlanCareUnit(CareUnitImpl.newFromEntity(entity.getHealthPlan().getCareUnit()));
 
 		List<ActivityItemDefinitionEntity> mdl = entity.getActivityItemDefinitions();
 		final ActivityItemValuesDefinition[] goalValues = new ActivityItemValuesDefinition[mdl.size()];
@@ -302,5 +305,14 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		buf.append("=============================\n");
 
 		return buf.toString();
+	}
+
+	@Override
+	public CareUnit getHealthPlanCareUnit() {
+		return this.healthPlanCareUnit;
+	}
+	
+	void setHealthPlanCareUnit(CareUnit healthPlanCareUnit) {
+		this.healthPlanCareUnit = healthPlanCareUnit;
 	}
 }

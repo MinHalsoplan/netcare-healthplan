@@ -2201,6 +2201,52 @@ var NC_MODULE = {
 		};
 		
 		return my;
+	})(),
+	
+	PATIENT_ACTIVITIES : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.createSchemaTable(that);
+		};
+		
+		my.createSchemaTable = function(my) {
+			NC_MODULE.GLOBAL.showLoader('#my-schedule', 'Laddar ditt schema...');
+			my.load(my, function(data) {
+				if (data.data.length > 0) {
+					$.each(data.data, function(i, v) {
+						my.createSchemaRow(my, v);
+					});
+				}
+				
+				NC_MODULE.GLOBAL.suspendLoader('#my-schedule');
+			});
+		};
+		
+		my.createSchemaRow = function(my, activity) {
+			
+			var period;
+			if (activity.activityRepeat == 0) {
+				activity.period = activity.startDate;
+			} else {
+				activity.period = activity.endDate;
+			}
+			
+			activity.totalDone = Math.ceil((activity.numDone / activity.numTotal)*100);
+			activity.targetDone = Math.ceil((activity.numDone / activity.numTarget)*100);
+			
+			var dom = _.template($('#patient-schema').html())(activity);
+			$('#activity-list').append($(dom));
+		};
+		
+		my.load = function(my, callback) {
+			new NC.Ajax().get('/activityPlans', callback);
+		};
+		
+		return my;
 	})()
 
 };

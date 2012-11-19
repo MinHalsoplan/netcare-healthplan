@@ -16,7 +16,6 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
@@ -50,16 +49,6 @@ public class PatientApi extends ApiSupport {
 		final ServiceResult<HealthPlan[]> plans = planService.loadHealthPlansForPatient(patientId);
 		log.debug("Found # plans {} for patient {}", plans.getData().length, patientId);
 		return plans;
-	}
-	
-	@RequestMapping(value="/activities", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<ActivityDefinition[]> listActivities(final Authentication auth) {
-		logAccess("lista", "aktiviteter");
-		log.info("User {} list activities", auth);
-		ServiceResult<ActivityDefinition[]> sr = planService.getPlannedActivitiesForPatient((PatientBaseView)auth.getPrincipal());
-		log.debug("Found # activities {} for patient {}", sr.getData().length, auth);
-		return sr;
 	}
 	
 	@RequestMapping(value="/event", method=RequestMethod.GET, produces="application/json")

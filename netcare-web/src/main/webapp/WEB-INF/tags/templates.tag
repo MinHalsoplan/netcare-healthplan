@@ -612,4 +612,55 @@
 </div>
 </script>
 
+<script id="patient-schema" type="text/template">
+<li id="activityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
+<mvk:touch-item style="padding-right:0px;">
+<div id="activityItem" class="listItemBase">
+	<div class="row-fluid">
+		<div class="mainBody span6">
+			<h4 class="titel">{{type.name}}</h4>
+			<div class="subRow">
+				{{healthPlanName}}, <i>{{healthPlanCareUnit.name}}</i>
+			</div>
+		</div>
+		<div class="span6" style="text-align:right; margin-top: 15px; padding-right: 20px;">
+			<small>Pågår till och med: <strong>{{period}}</strong></small>
+		</div>
+	</div>
+	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
+		<div class="span12">
+			<h4>Planerade tider</h4>
+			<small><strong>Schemat repeteras <span id="activity-repeat-{{id}}"></span>
+			<netcare:table>
+				<thead><tr>
+					<th>Må</th>
+					<th>Ti</th>
+					<th>On</th>
+					<th>To</th>
+					<th>Fr</th>
+					<th>Lö</th>
+					<th>Sö</th>
+				</tr></thead>
+				<tbody></tbody>
+			</netcare:table>
+		</div>
+	</div>
+	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
+		<div class="span12">
+			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
+			<div class="progress progress-warning" style="margin-right: 15px;">
+				<div class="bar" style="width: {{targetDone}}%">{{targetDone}}%</div>
+			</div>
+
+			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTotal}}</strong> schemalagda aktiviteter för <i><strong>hela planen</strong></i>.</small>
+			<div class="progress progress-success" style="margin-right: 15px;">
+				<div class="bar" style="width: {{totalDone}}%">{{totalDone}}%</div>
+			</div>
+		</div>
+	</div>
+</div>
+</mvk:touch-item>
+</li>
+</script>
+
 <!-- healthplan:templates / -->

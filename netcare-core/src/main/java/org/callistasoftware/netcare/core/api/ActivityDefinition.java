@@ -105,6 +105,12 @@ public interface ActivityDefinition extends Serializable {
 	CareActorBaseView getIssuedBy();
 	
 	/**
+	 * returns the health plans care unit
+	 * @return
+	 */
+	CareUnit getHealthPlanCareUnit();
+	
+	/**
 	 * Returns number of times an activity should have been carried out.
 	 */
 	int getNumTarget();
