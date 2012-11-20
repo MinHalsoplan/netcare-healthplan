@@ -204,6 +204,11 @@ table[id*=planned-times] tbody tr td {
 	background-image: url('../css/images/togglerClosedBlue.png');
 }
 
+.mvk-icon.toggle-open {
+	background-image: url('../css/images/togglerOpen.png');
+}
+
+
 /*
  * TO BE REMOVED AFTER MVK RELEASE
  */
