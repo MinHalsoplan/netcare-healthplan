@@ -56,6 +56,19 @@
 			
 		</section>
 		
+		<section id="alarms">
+			<h2><spring:message code="alarm.title" /></h2>
+			<p>
+				<span class="label label-info"><spring:message code="information" /></span>
+				<spring:message code="alarm.desc" />
+			</p>
+			<mvk:touch-list id="alarmContainer">
+		
+			</mvk:touch-list>
+		</section>
+
+		<br />
+		
 		<section id="replies">
 			<h2><spring:message code="comments.replies" /></h2>
 			<p>
@@ -89,17 +102,5 @@
 		
 		</section>
 		
-		<br />
-		
-		<section id="alarms">
-			<h2><spring:message code="alarm.title" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="alarm.desc" />
-			</p>
-			<mvk:touch-list id="alarmContainer">
-		
-			</mvk:touch-list>
-		</section>
 	</hp:viewBody>
 </hp:view>
