@@ -500,8 +500,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(PatientBaseView patient) {
-		PatientEntity forPatient = patientRepository.findOne(patient.getId());
+	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient() {
+		PatientEntity forPatient = patientRepository.findOne(getPatient().getId());
 		Date now = new Date();
 		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
 		ActivityDefinition[] arr = ActivityDefinitionImpl.newFromEntities(defs);

@@ -40,6 +40,7 @@
 				
 				NC_MODULE.COMMENTS.init(params);
 				NC_MODULE.SCHEDULE.init(params);
+				NC_MODULE.PATIENT_ACTIVITIES.init(params);
 			});
 
 		</script>
@@ -62,10 +63,14 @@
 		</section>
 		
 		<section id="my-schedule">
-			<h2>Mitt schema</h2>
-			
-			
-			
+			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="schemaContainer">
+				<h2>Mina aktiviteter</h2>
+				<mvk:touch-list id="activity-list"></mvk:touch-list>
+			</div>
 		</section>
 
 <%-- 		<section id="healthPlan"> --%>
