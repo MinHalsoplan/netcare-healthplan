@@ -113,4 +113,10 @@ public interface ScheduledActivity extends Serializable {
 	 * Returns activityItemValues.
 	 */
 	ActivityItemValues[] getActivityItemValues();
+	
+	/**
+	 * Returns the comments for this activity.
+	 * @return
+	 */
+	ActivityComment[] getComments();
 }

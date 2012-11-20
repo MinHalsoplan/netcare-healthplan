@@ -2041,10 +2041,6 @@ var NC_MODULE = {
 			 */
 			var liElem = $('#reportedActivityItem' + act.id);
 			
-//			liElem.click(function() {
-//				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id;
-//			});
-
 			var detailsTemplate = _.template($('#reportedActivityDetails').html());
 			var detailsDom = detailsTemplate(act);
 			
@@ -2060,41 +2056,69 @@ var NC_MODULE = {
 
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
 			
+			var commented = false;
+			var liked = false;
+			var starred = false;
+			if(act.comments.length>0) {
+				commented = act.comments[0].comment!=null && act.comments[0].comment!='';
+				liked = act.comments[0].like;
+				starred = act.comments[0].star;
+			}
 			var like = liElem.find('.likeReported');
-			like.html(msgs.like);
-			like.click(function(e) {
-				NC.log('Liking reported value: ' + act.id);
-				new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/like', { like : true }, function() {
-					NC.log('Liked.');
-					like.html('<span style="font-weight: bold;">' + msgs.liked + '</span>');
-					like.unbind('click');
-				}, true);
-			});
-			var star = liElem.find('.starReported');
-			star.html(msgs.star);
-			star.click(function(e) {
-				NC.log('Star reported value: ' + act.id);
-				new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/star', { star : true }, function() {
-					NC.log('Starred.');
-					star.html('<span style="font-weight: bold;">' + msgs.starred + '</span>');
-					star.unbind('click');
-				}, true);
-			});
-
-			var commentText = liElem.find('#activitycomment');
-			liElem.find('.btn').click(function(e) {
-				var text = commentText.val();
-				if(text!=null && text!="") {
-					
-					NC.log('Submit comment: ' + text);
-					e.preventDefault();
-					new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/comment', { comment : text }, function() {
-						NC.log('Comment completed.');
-						commentText.val('');
-						liElem.find('#actcomment').fadeOut();
+			var likedText = '<span style="font-weight: bold;">' + msgs.liked + '</span>';
+			if(liked) {
+				like.html(likedText);
+			} else {
+				like.html(msgs.like);
+				like.click(function(e) {
+					new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/like', { like : true }, function() {
+						NC.log('Liked.');
+						like.html(likedText);
+						like.unbind('click');
 					}, true);
-				}
-			});
+				});
+			}
+			var star = liElem.find('.starReported');
+			var starredText = '<span style="font-weight: bold;">' + msgs.starred + '</span>';
+			if(starred) {
+				star.html(starredText);
+			} else {
+				star.html(msgs.star);
+				star.click(function(e) {
+					NC.log('Star reported value: ' + act.id);
+					new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/star', { star : true }, function() {
+						NC.log('Starred.');
+						star.html(starredText);
+						star.unbind('click');
+					}, true);
+				});
+			}
+
+			if(commented) {
+				var commentedDiv = liElem.find('#actcommented');
+				commentedDiv.html('<span style="font-style: italic;">"' + act.comments[0].comment + '"</span> - ' + act.comments[0].commentedBy);
+				liElem.find('#actcomment').hide();
+				commentedDiv.show();
+			} else {
+				var commentText = liElem.find('#activitycomment');
+				liElem.find('.btn').click(function(e) {
+					var text = commentText.val();
+					if(text!=null && text!="") {
+						
+						NC.log('Submit comment: ' + text);
+						e.preventDefault();
+						new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/comment', { comment : text }, function() {
+							NC.log('Comment completed.');
+							commentText.val('');
+							liElem.find('#actcomment').fadeOut(function() {
+								var commentedDiv = liElem.find('#actcommented');
+								commentedDiv.html('<span style="font-style: italic;">"' + text + '"</span>');
+								commentedDiv.fadeIn();
+							});
+						}, true);
+					}
+				});
+			}
 		};
 		
 		my.processValues = function(my, act) {

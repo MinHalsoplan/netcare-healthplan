@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ActivityItemValues;
 import org.callistasoftware.netcare.core.api.ApiUtil;
@@ -52,6 +53,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private String note;
 	private ActivityItemValues[] activityItemValues;
 	private boolean rejected;
+	private ActivityComment[] comments;
 
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
@@ -110,7 +112,12 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		scheduledActivity.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity()
 				.getHealthPlan().getForPatient());
 		scheduledActivity.note = entity.getNote();
-
+		
+		scheduledActivity.comments = new ActivityComment[entity.getComments().size()];
+		for(int i=0; i < entity.getComments().size(); i++) {
+			scheduledActivity.comments[i] = ActivityCommentImpl.newFromEntity(entity.getComments().get(i));
+		}
+		
 		return scheduledActivity;
 	}
 
@@ -220,5 +227,10 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 
 	public void setActivityItemValues(ActivityItemValues[] activityItemValues) {
 		this.activityItemValues = activityItemValues;
+	}
+	
+	@Override
+	public ActivityComment[] getComments() {
+		return comments;
 	}
 }

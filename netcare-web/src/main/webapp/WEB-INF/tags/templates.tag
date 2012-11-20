@@ -352,6 +352,8 @@
 			<textarea id="activitycomment" rows="2" class="span11"></textarea>
 			<button class="btn"><spring:message code="report.save" /></button>
 		</div>
+		<div id="actcommented" class="span11" style="visibility:none;padding-bottom: 5px;">
+		</div>
 	</div>
 </div>
 </script>
