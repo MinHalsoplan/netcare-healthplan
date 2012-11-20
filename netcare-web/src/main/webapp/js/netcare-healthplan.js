@@ -2137,7 +2137,7 @@ var NC_MODULE = {
 			}
 		};
 		
-		my.doFilter = function(pnr, date1, date2) {
+		my.doFilter = function(pnr, date1, date2, msgs) {
 			
 			var params = {
 				personnummer : pnr,
@@ -2155,7 +2155,7 @@ var NC_MODULE = {
 					$('#noReportedActivities').hide();
 					$('#latestActivitiesContainer').show();
 					$.each(data.data, function(i, v) {
-						my.buildReportedActivityItem(my, v);
+						my.buildReportedActivityItem(my, v, msgs);
 					});
 				}
 				

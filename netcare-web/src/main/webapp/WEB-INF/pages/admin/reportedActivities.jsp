@@ -32,6 +32,13 @@
 		<script type="text/javascript">
 			$(function() {
 				
+				var msgs = {
+						like : '<spring:message code="activity.reported.like" />',
+						liked : '<spring:message code="activity.reported.liked" />',
+						star : '<spring:message code="activity.reported.star" />',
+						starred : '<spring:message code="activity.reported.starred" />'
+				};
+				
 				var module = NC_MODULE.REPORTED_ACTIVITIES;
 				
 				function twoDigits(number) {
@@ -55,7 +62,7 @@
 					var personnummer = $('#personnummer').val();
 					var dateFrom = $('#dateFrom').val();
 					var dateTo = $('#dateTo').val();
-					module.doFilter(personnummer, dateFrom, dateTo);
+					module.doFilter(personnummer, dateFrom, dateTo, msgs);
 				}
 
 				$("#dateFrom").val(threeDaysAgo());
