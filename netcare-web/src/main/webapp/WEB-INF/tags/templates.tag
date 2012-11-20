@@ -632,23 +632,26 @@
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="span12">
 			<h4>Planerade tider</h4>
-			<small><strong>Schemat repeteras <span id="activity-repeat-{{id}}"></span>
-			<netcare:table>
-				<thead><tr>
-					<th>Må</th>
-					<th>Ti</th>
-					<th>On</th>
-					<th>To</th>
-					<th>Fr</th>
-					<th>Lö</th>
-					<th>Sö</th>
-				</tr></thead>
-				<tbody></tbody>
-			</netcare:table>
+			<span id="schedule-{{id}}-repeat"><i><small></small></i></span>
+			<div style="margin-right: 15px;">
+				<table id="planned-times-{{id}}" class="table table-striped table-condensed">
+					<thead><tr>
+						<th>Må</th>
+						<th>Ti</th>
+						<th>On</th>
+						<th>To</th>
+						<th>Fr</th>
+						<th>Lö</th>
+						<th>Sö</th>
+					</tr></thead>
+					<tbody></tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="span12">
+			<h4>Progress</h4>
 			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
 			<div class="progress progress-warning" style="margin-right: 15px;">
 				<div class="bar" style="width: {{targetDone}}%">{{targetDone}}%</div>

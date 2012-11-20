@@ -34,8 +34,24 @@
 		<script type="text/javascript">
 			$(function() {
 				
+				var freq = new Array();
+				freq[0] = '<spring:message code="util.freq0" />';
+				freq[1] = '<spring:message code="util.freq1" />';
+				freq[2] = '<spring:message code="util.freq2" />';
+				freq[3] = '<spring:message code="util.freq3" />';
+				freq[4] = '<spring:message code="util.freq4" />';
+				freq[5] = '<spring:message code="util.freq5" />';
+				
+				var schemaLang = {
+					freqs : freq,
+					week : '<spring:message code="util.week" />',
+					every : '<spring:message code="util.every" />',
+					repeat : '<spring:message code="phome.repeat" />'
+				};
+				
 				var params = {
-					patientId : '<sec:authentication property="principal.id" />'
+					patientId : '<sec:authentication property="principal.id" />',
+					lang : schemaLang
 				};
 				
 				NC_MODULE.COMMENTS.init(params);

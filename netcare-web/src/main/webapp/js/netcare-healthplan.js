@@ -92,6 +92,38 @@ var NC_MODULE = {
 				return false;
 			}
 		};
+		
+		formatFrequency = function (activityDefinition, freqMsgs) {
+			var text = '';
+			
+			$.each(activityDefinition.dayTimes, function (index1, day) {
+				text += day.dayCaption.value;
+				$.each(day.times, function(index2, time) {
+					if (index2 > 0) {
+						text += ',';
+					}
+					text += '&nbsp;' + time;
+				});
+				text += '<br/>';				
+			});
+			
+			text += '<i style="font-size: 10px;">';			
+			switch (activityDefinition.activityRepeat) {
+				case 0: text += _captions.freq0; break;
+				case 1: text += _captions.freq1; break;
+				case 2: text +=_captions.freq2; break;
+				case 3: text += _captions.freq3; break;
+				case 4: text += _captions.freq4; break;
+				case 5: text += _captions.freq5; break;
+				default:
+					text += _captions.every + activityDefinition.activityRepeat + ' ' + _captions.week;
+				break;
+			}
+
+			text += '</i>';
+			
+			return text;
+		}
 
 		return my;
 	})(),
@@ -2271,6 +2303,18 @@ var NC_MODULE = {
 			});
 		};
 		
+		var findMax = function(dayTimes) {
+			var max = 0;
+			$.each(dayTimes, function(i, v) {
+				var cur = v.times.length;
+				if (cur > max) {
+					max = cur;
+				}
+			});
+			
+			return max;
+		};
+		
 		my.createSchemaRow = function(my, activity) {
 			
 			var period;
@@ -2285,6 +2329,78 @@ var NC_MODULE = {
 			
 			var dom = _.template($('#patient-schema').html())(activity);
 			$('#activity-list').append($(dom));
+			
+			my.buildSchemaTable(my, activity);
+		};
+		
+		my.buildSchemaTable = function(my, activity) {
+			// Find out max times for our daytimes
+			var rows = findMax(activity.dayTimes);
+			for (var i = 0; i < rows; i++) {
+				$('#planned-times-' + activity.id + ' tbody').append('<tr>');
+			}
+			
+			var trs = $('#planned-times-' + activity.id + ' tbody tr');
+			$.each(trs, function(i, v) {
+				for (var j = 0; j < 7; j++) {
+					$(this).append($('<td>'));
+				}
+			});
+			
+			$.each(activity.dayTimes, function(i, v) {
+				
+				var col;
+				if (v.day == "monday") {
+					col = 0;
+				}
+				
+				if (v.day == "tuesday") {
+					col = 1;
+				}
+				
+				if (v.day == "wednesday") {
+					col = 2;
+				}
+
+				if (v.day == "thursday") {
+					col = 3;
+				}
+
+				if (v.day == "friday") {
+					col = 4;
+				}
+
+				if (v.day == "saturday") {
+					col = 5;
+				}
+
+				if (v.day == "sunday") {
+					col = 6;
+				}
+				
+				$.each(v.times, function(idx, val) {
+					NC.log('Processing ' + val + ' for day ' + v.day + ' td' + col + ', tr' + idx);
+					
+					var td = $('#planned-times-' + activity.id + ' tr:eq(' + (idx + 1) + ') td:eq(' + col + ')');
+					td.html(val);
+				})
+			});
+			
+			var text = '';
+			switch (activity.activityRepeat) {
+			case 0: text += my.params.lang.freqs[0]; break;
+			case 1: text += my.params.lang.freqs[1]; break;
+			case 2: text +=my.params.lang.freqs[2]; break;
+			case 3: text += my.params.lang.freqs[3]; break;
+			case 4: text += my.params.lang.freqs[4]; break;
+			case 5: text += my.params.lang.freqs[5]; break;
+			default:
+				text += my.params.lang.every + activityDefinition.activityRepeat + ' ' + my.params.lang.week;
+			break;
+			}
+			
+			$('#schedule-' + activity.id + '-repeat > i > small').html(my.params.lang.repeat + ' ' + text);
+			
 		};
 		
 		my.load = function(my, callback) {

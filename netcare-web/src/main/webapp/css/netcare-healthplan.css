@@ -147,6 +147,19 @@ ul.itemList {
 	text-decoration: none;
 }
 
+table[id*=planned-times] {
+	table-layout: fixed;
+}
+
+table[id*=planned-times] thead tr th {
+	width: 14%;
+}
+
+table[id*=planned-times] thead tr th,
+table[id*=planned-times] tbody tr td {
+	font-size: small;
+}
+ 
 .actionBody .mvk-icon {
 	background-position: center center;
 	background-repeat: no-repeat;
