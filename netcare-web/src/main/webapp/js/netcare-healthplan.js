@@ -2208,11 +2208,12 @@ var NC_MODULE = {
 			my.load(that);
 		};
 		
-		my.load = function(my) {
+		my.load = function() {
 			new NC.Ajax().get('/alarm/list', function(data) {
 				if (data.data.length == 0) {
 					$('#alarms').hide();
 				} else {
+					$('#alarmContainer').empty();
 					var t = _.template($('#alarmPaperSheet').html());
 					var dom = t();
 					$('#alarmContainer').append($(dom));
