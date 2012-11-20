@@ -1798,22 +1798,6 @@ var NC_MODULE = {
 		return my;
 	})(),
 	
-	PATIENT_REPORTS : (function() {
-		var my = {};
-		my.init = function(params) {
-			var that = this;
-			this.params = params;
-			
-			my.load(that);
-		};
-		
-		my.load = function(my) {
-			
-		};
-		
-		return my;
-	})(),
-	
 	SCHEDULE : (function() {
 		
 		var _data = new Array();
@@ -1879,6 +1863,9 @@ var NC_MODULE = {
 				e.preventDefault();
 				e.stopPropagation();
 				$('#sa-details-' + scheduledActivity.id).toggle();
+				
+				$(this).toggleClass('toggle').toggleClass('toggle-open');
+				
 			});
 			
 			if (liElem.find('.mvk-icon.toggle').size() > 0) {

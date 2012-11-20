@@ -95,11 +95,14 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	 * @return a scheduled activity
 	 */
 	public static ScheduledActivityEntity newEntity(ActivityDefinitionEntity activityDefinition, Date scheduledTime) {
+		
 		ScheduledActivityEntity scheduledActivityEntity = new ScheduledActivityEntity();
 		scheduledActivityEntity.setActivityDefinitionEntity(activityDefinition);
 		scheduledActivityEntity.setScheduledTime(scheduledTime);
+		
 		for (ActivityItemDefinitionEntity activityItemDefinitionEntity : activityDefinition
 				.getActivityItemDefinitions()) {
+			
 			ActivityItemValuesEntity itemEntity = null;
 			if (activityItemDefinitionEntity instanceof MeasurementDefinitionEntity) {
 				itemEntity = MeasurementEntity.newEntity(scheduledActivityEntity,
@@ -111,6 +114,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 			} else if (activityItemDefinitionEntity instanceof TextDefinitionEntity) {
 				itemEntity = TextEntity.newEntity(scheduledActivityEntity, activityItemDefinitionEntity);
 			}
+			
 			if (itemEntity != null) {
 				scheduledActivityEntity.activities.add(itemEntity);
 			}

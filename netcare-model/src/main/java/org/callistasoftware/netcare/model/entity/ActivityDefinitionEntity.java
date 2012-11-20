@@ -101,18 +101,21 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 			ActivityItemDefinitionEntity activityItemDefinition = null;
 			if (activityItemType instanceof MeasurementTypeEntity) {
 				activityItemDefinition = MeasurementDefinitionEntity.newEntity(entity, activityItemType);
-				entity.activityItemDefinitions.add(activityItemDefinition);
 			} else if (activityItemType instanceof EstimationTypeEntity) {
 				activityItemDefinition = EstimationDefinitionEntity.newEntity(entity, activityItemType);
 			} else if (activityItemType instanceof YesNoTypeEntity) {
 				activityItemDefinition = YesNoDefinitionEntity.newEntity(entity, activityItemType);
 			} else if (activityItemType instanceof TextTypeEntity) {
 				activityItemDefinition = TextDefinitionEntity.newEntity(entity, activityItemType);
+			} else {
+				throw new IllegalArgumentException("Unsupported  item type.");
 			}
+			
 			if (activityItemDefinition != null) {
 				entity.activityItemDefinitions.add(activityItemDefinition);
-			}
+			}	
 		}
+		
 		healthPlanEntity.addActivityDefinition(entity);
 
 		return entity;
@@ -253,12 +256,12 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 			scheduledActivities.removeAll(tbr);
 		}
 		
-		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
 		LinkedList<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
 		Frequency freq = getFrequency();
 		while (cal.getTime().compareTo(getHealthPlan().getEndDate()) <= 0) {
+			
 			if (freq.isDaySet(cal)) {
 				scheduleActivity(list, cal, freq.getDay(cal.get(Calendar.DAY_OF_WEEK)));
 				// single event.
@@ -266,6 +269,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 					break;
 				}
 			}
+			
 			if (freq.getWeekFrequency() > 1 && cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
 					&& cal.getTime().compareTo(getStartDate()) > 0) {
 				cal.add(Calendar.DATE, 8 * (freq.getWeekFrequency() - 1));
@@ -273,8 +277,8 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 				cal.add(Calendar.DATE, 1);
 			}
 		}
+		
 		this.scheduledActivities.addAll(list);
-
 		return list;
 	}
 
