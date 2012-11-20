@@ -2071,6 +2071,8 @@ var NC_MODULE = {
 				e.preventDefault();
 				e.stopPropagation();
 				$('#ra-details-' + act.id).toggle();
+				$(this).toggleClass('toggle');
+				$(this).toggleClass('toggle-open');
 			}) ;
 
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
