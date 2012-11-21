@@ -21,37 +21,36 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code="system.name" /></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	
-	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.0.1.min.css" />" />
+	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.2.0.min.css" />" />
 
 	<style>
-		.ui-body {
-	        background: #eee;
+		.ui-bar-c {
+			color: white;
+			text-shadow: none;
+			background-color: #2DA1AE;
+			background-image: -webkit-gradient(linear,left top,left bottom,from( #33B4C3 ),to( #2DA1AE ));
+		}
+
+		.ui-btn-active {
+	        background: #008391;
 		}
 		
 		.ui-li-has-count {
-	        background: #8d0017;
+	        background: #aaa;
 		}
-		
+			
 		.ui-btn-c {
 			background: #8d0017;
 		}
 		
-		.ui-bar-b {
-        	border: 1px solid #8d0017  /*{a-bar-border}*/;
-        	background: #8d0017 /*{a-bar-background-color}*/;
-		}		
-		.ui-btn-active {
-	        background: #8d0017;
-		}
 				
 	</style>
 			
-	<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.4.min.js" />"></script>
-	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.1.min.js" />"></script>
-	
+	<script type="text/javascript" src="<spring:url value="/js/jquery-1.7.1.min.js" />"></script>
 	<script type="text/javascript">
 	
 		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
@@ -71,7 +70,6 @@
 			}
 		};
 	</script>
-	
 	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare/PageMessages.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Mobile.js' />"></script>
@@ -80,5 +78,9 @@
 	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
+	<!-- Include NETCARE javascripts END  -->
+	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>
+	
 	<jsp:doBody />
+	
 </head>

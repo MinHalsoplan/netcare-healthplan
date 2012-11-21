@@ -16,11 +16,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
-<%@ attribute name="id" required="true" %>
+<%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
-<div id="${id}" data-role="content-primary">
-	<jsp:doBody />
-</div>
+<!-- mobile:templates -->
+<script id="someTemplate" type="text/template">
+
+</script>
+<!-- mobile:templates / -->
