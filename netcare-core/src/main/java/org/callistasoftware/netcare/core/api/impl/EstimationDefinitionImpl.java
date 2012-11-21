@@ -23,11 +23,12 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EstimationDefinitionImpl extends ActivityItemValuesDefinitionImpl implements EstimationDefinition {
-
+	
 	public static ActivityItemValuesDefinition newFromEntity(EstimationDefinitionEntity entity) {
 		EstimationDefinitionImpl estimationDefinition = new EstimationDefinitionImpl();
 		estimationDefinition.setId(entity.getId());
 		estimationDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
+		estimationDefinition.setActive(entity.isActive());
 		return estimationDefinition;
 	}
 }

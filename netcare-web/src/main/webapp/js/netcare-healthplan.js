@@ -521,7 +521,9 @@ var NC_MODULE = {
 		
 		my.renderGoals = function(my) {
 			NC.log('Render goals');
-			$.each(_templateData.activityItems, function(i, v) {
+			for (var i = 0; i < _templateData.activityItems.length; i++) {
+				
+				var v = _templateData.activityItems[i];
 				
 				if (v.activityItemTypeName == "measurement") {
 					if (v.valueType.code == "INTERVAL") {
@@ -546,6 +548,17 @@ var NC_MODULE = {
 				} else {
 					throw new Error('Unknown activity item type');
 				}
+				
+				// Make it possible to remove item
+				my.initDeleteItem(my, v);
+				
+			}
+		};
+		
+		my.initDeleteItem = function(my, item) {
+			$('#field-' + item.id + '-delete').click(function() {
+				var idx = findGoalValue(item.id);
+				_data.goalValues[idx].active = false;
 			});
 		};
 		
@@ -592,10 +605,8 @@ var NC_MODULE = {
 			NC.log('Render estimation goal');
 			var idx = initGoalValue(activityItem.id, 'estimation');
 			
-			var i = activityItem;
-			$('#estimationItemsFieldset').append(
-				$('<p>').html(i.name + ' (' + i.minScaleValue + ' = ' + i.minScaleText + ', ' + i.maxScaleValue + ' = ' + i.maxScaleText + ')')
-			);
+			var dom = _.template($('#estimationItem').html())(activityItem);
+			$('#estimationItemsFieldset').append($(dom));
 		};
 		
 		my.renderYesNoGoal = function(my, activityItem) {
@@ -603,7 +614,7 @@ var NC_MODULE = {
 			var idx = initGoalValue(activityItem.id, 'yesno');
 			
 			$('#yesNoItemsFieldset').append(
-				$('<p>').html(activityItem.question)
+				$(_.template($('#yesNoItem').html())(activityItem))
 			);
 		};
 		
@@ -613,7 +624,7 @@ var NC_MODULE = {
 			var idx = initGoalValue(activityItem.id, 'text');
 			
 			$('#textItemsFieldset').append(
-				$('<p>').html(activityItem.label)
+				$(_.template($('#textItem').html())(activityItem))
 			);
 		};
 		

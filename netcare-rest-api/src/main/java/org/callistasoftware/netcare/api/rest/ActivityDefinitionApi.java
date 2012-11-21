@@ -21,7 +21,6 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +37,7 @@ public class ActivityDefinitionApi extends ApiSupport {
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition[]> listActivities(final Authentication auth) {
+	public ServiceResult<ActivityDefinition[]> listActivities() {
 		logAccess("lista", "aktiviteter");
 		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient();
 		return sr;

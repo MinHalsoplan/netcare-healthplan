@@ -33,6 +33,7 @@ public class MeasurementDefinitionImpl extends ActivityItemValuesDefinitionImpl 
 		m.target = entity.getTarget();
 		m.maxTarget = entity.getMaxTarget();
 		m.minTarget = entity.getMinTarget();
+		m.setActive(entity.isActive());
 		return m;
 	}
 

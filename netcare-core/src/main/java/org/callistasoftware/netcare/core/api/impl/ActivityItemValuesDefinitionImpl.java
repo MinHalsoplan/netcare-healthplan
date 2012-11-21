@@ -23,6 +23,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public abstract class ActivityItemValuesDefinitionImpl implements ActivityItemValuesDefinition {
 	private Long id;
+	private boolean active;
 	private ActivityItemType activityItemType;
 
 	@Override
@@ -42,5 +43,13 @@ public abstract class ActivityItemValuesDefinitionImpl implements ActivityItemVa
 	public void setActivityItemType(ActivityItemType activityItemType) {
 		this.activityItemType = activityItemType;
 	}
-
+	
+	@Override
+	public boolean isActive() {
+		return active;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 }

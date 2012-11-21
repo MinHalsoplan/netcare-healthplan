@@ -42,4 +42,10 @@ public interface ActivityItemValuesDefinition {
 	 * @return An subclass of ActivityItemType
 	 */
 	ActivityItemType getActivityItemType();
+	
+	/**
+	 * Whether this item is enabled in this definition
+	 * @return
+	 */
+	boolean isActive();
 }

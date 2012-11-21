@@ -118,26 +118,40 @@
 
 <%-- Activity planning - Single value --%>
 <script id="singleValue" type="text/template">
-<h4>{{name}}</h4>
+<div class="row-fluid">
+	<div class="span11">
+		<h4>{{name}}</h4>
+	</div>
+	<div class="span1">
+		<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+	</div>
+</div>
 <div class="control-group">
 	<label for="field-{{id}}">Målvärde</label>
 	<div class="controls">
 		<input id="field-{{id}}" type="text" />
-		<span class="help-inline">{{unit.value}}</span>
+		<span class="help-inline"><small>{{unit.name}}</small></span>
 	</div>
 </div>
 </script>
 
 <%-- Activity planning - Interval value --%>
 <script id="intervalValue" type="text/template">
-<h4>{{name}}</h4>
+<div class="row-fluid">
+	<div class="span11">
+		<h4>{{name}}</h4>
+	</div>
+	<div class="span1">
+		<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+	</div>
+</div>
 <div class="row-fluid">
 	<div class="span6">
 		<div class="control-group">
 			<label for="field-{{id}}-min">Målvärde (min)</label>
 			<div class="controls">
 				<input id="field-{{id}}-min" type="text" />
-				<span class="help-inline">{{unit.value}}</span>
+				<span class="help-inline"><small>{{unit.name}}</small></span>
 			</div>
 		</div>
 	</div>
@@ -146,10 +160,43 @@
 		<label for="field-{{id}}-max">Målvärde (max)</label>
 		<div class="controls">
 			<input id="field-{{id}}-max" type="text" />
-			<span class="help-inline">{{unit.value}}</span>
+			<span class="help-inline"><small>{{unit.name}}</small></span>
 		</div>
 	</div>
 </div>
+</script>
+
+<script id="estimationItem" type="text/template">
+	<div class="row-fluid">
+		<div class="span11">
+			<h4>{{name}} ({{minScaleValue}} = {{minScaleText}}, {{maxScaleValue}} = {{maxScaleText}})
+		</div>
+		<div class="span1">
+			<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+		</div>
+	</div>
+</script>
+
+<script id="yesNoItem" type="text/template">
+	<div class="row-fluid">
+		<div class="span11">
+			<h4>{{question}}</h4>
+		</div>
+		<div class="span1">
+			<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+		</div>
+	</div>
+</script>
+
+<script id="textItem" type="text/template">
+	<div class="row-fluid">
+		<div class="span11">
+			<h4>{{label}}</h4>
+		</div>
+		<div class="span1">
+			<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+		</div>
+	</div>
 </script>
 
 <%-- This template is used to show an activity type item --%>

@@ -28,6 +28,7 @@ public class YesNoDefinitionImpl extends ActivityItemValuesDefinitionImpl implem
 		YesNoDefinitionImpl yesNoDefinition = new YesNoDefinitionImpl();
 		yesNoDefinition.setId(entity.getId());
 		yesNoDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
+		yesNoDefinition.setActive(entity.isActive());
 		return yesNoDefinition;
 	}
 }

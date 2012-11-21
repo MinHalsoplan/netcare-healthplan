@@ -28,6 +28,7 @@ public class TextDefinitionImpl extends ActivityItemValuesDefinitionImpl impleme
 		TextDefinitionImpl textDefinition = new TextDefinitionImpl();
 		textDefinition.setId(entity.getId());
 		textDefinition.setActivityItemType(ActivityItemTypeImpl.newFromEntity(entity.getActivityItemType()));
+		textDefinition.setActive(entity.isActive());
 		return textDefinition;
 	}
 }

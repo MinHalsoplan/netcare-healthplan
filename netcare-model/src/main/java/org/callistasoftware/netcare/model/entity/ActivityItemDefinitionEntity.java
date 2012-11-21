@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -38,6 +39,9 @@ public class ActivityItemDefinitionEntity implements Comparable<ActivityItemDefi
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
+	@Column(name="active", nullable=false)
+	private boolean active = true;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "activity_def_id")
@@ -47,6 +51,10 @@ public class ActivityItemDefinitionEntity implements Comparable<ActivityItemDefi
 	@JoinColumn(name = "measurement_type_id")
 	private ActivityItemTypeEntity activityItemType;
 
+	ActivityItemDefinitionEntity() {
+		setActive(true);
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -65,6 +73,14 @@ public class ActivityItemDefinitionEntity implements Comparable<ActivityItemDefi
 
 	public void setActivityItemType(ActivityItemTypeEntity activityItemType) {
 		this.activityItemType = activityItemType;
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override
