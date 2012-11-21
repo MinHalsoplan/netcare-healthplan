@@ -84,6 +84,7 @@ import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
+import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
@@ -96,8 +97,10 @@ import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
+import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
+import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1031,17 +1034,18 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		 * Process measurement defintions
 		 */
 		getLog().debug("Updating activity items...");
-		for (final ActivityItemDefinitionEntity aid : entity.getActivityItemDefinitions()) {
-			if (aid instanceof MeasurementDefinitionEntity) {
-				MeasurementDefinitionEntity mde = (MeasurementDefinitionEntity) aid;
-				getLog().debug("Found measurement {}", mde.getActivityItemType().getName());
-				
-				for (final ActivityItemValuesDefinition aivDefinition : dto.getGoalValues()) {
-
-					getLog().debug("Found goal value of type {}. Instance: {}", aivDefinition.getActivityItemType().getName(), aivDefinition.getClass().getSimpleName());
+		entLoop: for (final ActivityItemDefinitionEntity aid : entity.getActivityItemDefinitions()) {
+			
+			for (final ActivityItemValuesDefinition aivDefinition : dto.getGoalValues()) {
+				if (aid.getActivityItemType().getId().equals(aivDefinition.getActivityItemType().getId())) {
 					
-					if (mde.getMeasurementType().getId().equals(aivDefinition.getActivityItemType().getId())) {
-
+					log.debug((aivDefinition.isActive() ? "Including " : "Excluding") + " measure value {}", aid.getActivityItemType().getName());
+					aid.setActive(aivDefinition.isActive());
+					
+					// Check types
+					if (aid instanceof MeasurementDefinitionEntity) {
+						final MeasurementDefinitionEntity mde = (MeasurementDefinitionEntity) aid;
+						
 						log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType()
 								.getName(), mde.getMeasurementType().getActivityType().getName());
 
@@ -1059,6 +1063,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 							break;
 						}
 					}
+					
+					continue entLoop;
 				}
 			}
 		}

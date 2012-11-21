@@ -423,6 +423,8 @@ var NC_MODULE = {
 			_data.goalValues = new Array();
 			_data.dayTimes = new Array();
 			
+			NC_MODULE.GLOBAL.showLoader('#plan', 'Laddar planering...');
+			
 			if (params.definitionId != '') {
 				new NC.Ajax().get('/activityPlans/' + params.definitionId, function(data) {
 					
@@ -449,6 +451,9 @@ var NC_MODULE = {
 					my.renderGoals(that);
 					my.renderAllTimes(that);
 					my.renderForm(that);
+					
+					NC_MODULE.GLOBAL.suspendLoader('#plan');
+					$('#planContainer').show();
 				});
 			} else {
 				NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
@@ -462,6 +467,9 @@ var NC_MODULE = {
 					_data.type.id = _templateData.id;
 					
 					my.renderGoals(that);
+					
+					NC_MODULE.GLOBAL.suspendLoader('#plan');
+					$('#planContainer').show();
 				});
 			}
 			
@@ -550,16 +558,66 @@ var NC_MODULE = {
 				}
 				
 				// Make it possible to remove item
-				my.initDeleteItem(my, v);
-				
+				my.initItemStateChange(my, v);
 			}
 		};
 		
-		my.initDeleteItem = function(my, item) {
-			$('#field-' + item.id + '-delete').click(function() {
-				var idx = findGoalValue(item.id);
-				_data.goalValues[idx].active = false;
+		my.initItemStateChange = function(my, item) {
+			var idx = findGoalValue(item.id);
+			
+			var container = '#item-value-' + item.id + '-container';
+			var incId = '#field-' + item.id + '-include';
+			var excId = '#field-' + item.id + '-exclude';
+			
+			NC.log('Item state: ' + _data.goalValues[idx].active);
+			
+			if (_data.goalValues[idx].active == true) {
+				includeItem(item, container, excId, incId, idx);
+				$(excId).toggle();
+			} else {
+				excludeItem(item, container, excId, incId, idx);
+				$(incId).toggle();
+			}
+			
+			$(excId).click(function(e) {
+				e.preventDefault();
+				excludeItem(item, container, excId, incId, idx);
 			});
+			
+			$(incId).click(function(e) {
+				e.preventDefault();
+				includeItem(item, container, excId, incId, idx);
+			});
+		};
+		
+		var excludeItem = function(item, container, excId, incId, idx) {
+			NC.log('Excluding item ' + item.id);
+			
+			_data.goalValues[idx].active = false;
+			$(container).find('h4').css({'text-decoration' : 'line-through', 'color' : '#999' });
+			
+			var divs = $(container + ' > .row-fluid');
+			for (var i = 1; i < divs.length; i++) {
+				$(divs.get(i)).hide();
+			}
+			
+			$(excId).toggle();
+			$(incId).toggle();
+		};
+		
+		var includeItem = function(item, container, excId, incId, idx) {
+			NC.log('Including item ' + item.id);
+			
+			_data.goalValues[idx].active = true;
+			$(container).find('h4').css({'text-decoration' : 'none', 'color' : '#000' } );
+			
+			var divs = $(container + ' > .row-fluid');
+			for (var i = 1; i < divs.length; i++) {
+				$(divs.get(i)).show();
+			}
+			
+			$(excId).toggle();
+			$(incId).toggle();
 		};
 		
 		var findGoalValue = function(id) {

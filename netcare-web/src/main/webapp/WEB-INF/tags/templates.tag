@@ -118,14 +118,18 @@
 
 <%-- Activity planning - Single value --%>
 <script id="singleValue" type="text/template">
+<div id="item-value-{{id}}-container">
 <div class="row-fluid">
-	<div class="span11">
+	<div class="span10">
 		<h4>{{name}}</h4>
 	</div>
-	<div class="span1">
-		<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+	<div class="span2" style="padding-top: 10px; text-align: right;">
+		<a href="#" id="field-{{id}}-exclude">Exkludera</a>
+		<a href="#" id="field-{{id}}-include">Inkludera</a>
 	</div>
 </div>
+<div class="row-fluid">
+<div class="span12">
 <div class="control-group">
 	<label for="field-{{id}}">Målvärde</label>
 	<div class="controls">
@@ -133,16 +137,21 @@
 		<span class="help-inline"><small>{{unit.name}}</small></span>
 	</div>
 </div>
+</div>
+</div>
+</div>
 </script>
 
 <%-- Activity planning - Interval value --%>
 <script id="intervalValue" type="text/template">
+<div id="item-value-{{id}}-container">
 <div class="row-fluid">
-	<div class="span11">
+	<div class="span10">
 		<h4>{{name}}</h4>
 	</div>
-	<div class="span1">
-		<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+	<div class="span2" style="padding-top: 10px; text-align: right;">
+		<a href="#" id="field-{{id}}-exclude">Exkludera</a>
+		<a href="#" id="field-{{id}}-include">Inkludera</a>
 	</div>
 </div>
 <div class="row-fluid">
@@ -164,39 +173,49 @@
 		</div>
 	</div>
 </div>
+</div>
 </script>
 
 <script id="estimationItem" type="text/template">
+<div id="item-value-{{id}}-container">
 	<div class="row-fluid">
-		<div class="span11">
+		<div class="span10">
 			<h4>{{name}} ({{minScaleValue}} = {{minScaleText}}, {{maxScaleValue}} = {{maxScaleText}})
 		</div>
-		<div class="span1">
-			<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+		<div class="span2" style="padding-top: 10px; text-align: right;">
+			<a href="#" id="field-{{id}}-exclude">Exkludera</a>
+			<a href="#" id="field-{{id}}-include">Inkludera</a>
 		</div>
 	</div>
+</div>
 </script>
 
 <script id="yesNoItem" type="text/template">
+<div id="item-value-{{id}}-container">
 	<div class="row-fluid">
-		<div class="span11">
+		<div class="span10">
 			<h4>{{question}}</h4>
 		</div>
-		<div class="span1">
-			<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+		<div class="span2" style="padding-top: 10px; text-align: right;">
+			<a href="#" id="field-{{id}}-exclude">Exkludera</a>
+			<a href="#" id="field-{{id}}-include">Inkludera</a>
 		</div>
 	</div>
+</div>
 </script>
 
 <script id="textItem" type="text/template">
+<div id="item-value-{{id}}-container">
 	<div class="row-fluid">
-		<div class="span11">
+		<div class="span10">
 			<h4>{{label}}</h4>
 		</div>
-		<div class="span1">
-			<div id="field-{{id}}-delete" class="mvk-icon delete" style="height: 50px; width: 50px; cursor: pointer;"></div>
+		<div class="span2" style="padding-top: 10px; text-align: right;">
+			<a href="#" id="field-{{id}}-exclude">Exkludera</a>
+			<a href="#" id="field-{{id}}-include">Inkludera</a>
 		</div>
 	</div>
+</div>
 </script>
 
 <%-- This template is used to show an activity type item --%>

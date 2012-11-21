@@ -45,105 +45,113 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Planera aktivitet">
-		
-			<fieldset id="activityFieldset" style="display: none;">
-				<legend><spring:message code="activity.form.goals" /></legend>
-			</fieldset>
-			
-			<fieldset id="yesNoItemsFieldset" style="display: none;">
-				<legend><spring:message code="activity.form.yesnoItems" /></legend>
-			</fieldset>
-			
-			<fieldset id="estimationItemsFieldset" style="display: none;">
-				<legend><spring:message code="activity.form.estimationItems" /></legend>
-			</fieldset>
-			
-			<fieldset id="textItemsFieldset" style="display: none;">
-				<legend><spring:message code="activity.form.textItems" /></legend>
-			</fieldset>
-			
-			<fieldset id="scheduleFieldset">
-				<legend>Period</legend>
-				<netcare:row>
-					<netcare:col span="6">
-						<spring:message code="startDate" var="start" scope="page" />
-						<netcare:field containerId="startDate" name="startDate" label="${start}">
-							<netcare:dateInput name="startDate" />
+	
+		<section id="plan">
+			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="planContainer" style="display: none;">
+				<fieldset id="activityFieldset" style="display: none;">
+					<legend><spring:message code="activity.form.goals" /></legend>
+				</fieldset>
+				
+				<fieldset id="yesNoItemsFieldset" style="display: none;">
+					<legend><spring:message code="activity.form.yesnoItems" /></legend>
+				</fieldset>
+				
+				<fieldset id="estimationItemsFieldset" style="display: none;">
+					<legend><spring:message code="activity.form.estimationItems" /></legend>
+				</fieldset>
+				
+				<fieldset id="textItemsFieldset" style="display: none;">
+					<legend><spring:message code="activity.form.textItems" /></legend>
+				</fieldset>
+				
+				<fieldset id="scheduleFieldset">
+					<legend>Period</legend>
+					<netcare:row>
+						<netcare:col span="6">
+							<spring:message code="startDate" var="start" scope="page" />
+							<netcare:field containerId="startDate" name="startDate" label="${start}">
+								<netcare:dateInput name="startDate" />
+							</netcare:field>
+						</netcare:col>
+						<netcare:col span="6">
+							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
+							<netcare:field name="activityRepeat" label="${repeat}">
+								<input name="activityRepeat" type="number" value="1"/>
+								<span><spring:message code="week" /></span>
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
+				</fieldset>
+				
+				
+				<spring:message code="activity.form.time" var="addTime" scope="page" />
+				
+				<fieldset>
+					<legend><spring:message code="activity.form.specifyTimes" /></legend>
+					<form id="addTimesForm" class="form-inline">
+						<netcare:field name="specifyTime" label="${addTime}">
+							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2"/>
+							<button type="submit" class="btn btn-info">Lägg till</button>
+							<button type="reset" class="btn btn-danger">Rensa</button>
 						</netcare:field>
-					</netcare:col>
-					<netcare:col span="6">
-						<spring:message code="repeatSchedule" var="repeat" scope="page"/>
-						<netcare:field name="activityRepeat" label="${repeat}">
-							<input name="activityRepeat" type="number" value="1"/>
-							<span><spring:message code="week" /></span>
-						</netcare:field>
-					</netcare:col>
-				</netcare:row>
-			</fieldset>
-			
-			
-			<spring:message code="activity.form.time" var="addTime" scope="page" />
-			
-			<fieldset>
-				<legend><spring:message code="activity.form.specifyTimes" /></legend>
-				<form id="addTimesForm" class="form-inline">
-					<netcare:field name="specifyTime" label="${addTime}">
-						<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2"/>
-						<button type="submit" class="btn btn-info">Lägg till</button>
-						<button type="reset" class="btn btn-danger">Rensa</button>
-					</netcare:field>
+						
+						<input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>
+						<input type="checkbox" name="tuesday"> <label for="tuesday" style="padding-right: 10px;">Ti</label>
+						<input type="checkbox" name="wednesday"> <label for="wednesday" style="padding-right: 10px;">On</label>
+						<input type="checkbox" name="thursday"> <label for="thursday" style="padding-right: 10px;">To</label>
+						<input type="checkbox" name="friday"> <label for="friday" style="padding-right: 10px;">Fr</label>
+						<input type="checkbox" name="saturday"> <label for="saturday" style="padding-right: 10px;">Lö</label>
+						<input type="checkbox" name="sunday"> <label for="sunday" style="padding-right: 10px;">Sö</label>
+					</form>
 					
-					<input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>
-					<input type="checkbox" name="tuesday"> <label for="tuesday" style="padding-right: 10px;">Ti</label>
-					<input type="checkbox" name="wednesday"> <label for="wednesday" style="padding-right: 10px;">On</label>
-					<input type="checkbox" name="thursday"> <label for="thursday" style="padding-right: 10px;">To</label>
-					<input type="checkbox" name="friday"> <label for="friday" style="padding-right: 10px;">Fr</label>
-					<input type="checkbox" name="saturday"> <label for="saturday" style="padding-right: 10px;">Lö</label>
-					<input type="checkbox" name="sunday"> <label for="sunday" style="padding-right: 10px;">Sö</label>
+					<div id="monday-container" style="display: none;">
+						<h4>Måndag</h4>
+						<div class="times"></div>
+					</div>
+					
+					<div id="tuesday-container" style="display: none;">
+						<h4>Tisdag</h4>
+						<div class="times"></div>
+					</div>
+					
+					<div id="wednesday-container" style="display: none;">
+						<h4>Onsdag</h4>
+						<div class="times"></div>
+					</div>
+					
+					<div id="thursday-container" style="display: none;">
+						<h4>Torsdag</h4>
+						<div class="times"></div>
+					</div>
+					
+					<div id="friday-container" style="display: none;">
+						<h4>Fredag</h4>
+						<div class="times"></div>
+					</div>
+					
+					<div id="saturday-container" style="display: none;">
+						<h4>Lördag</h4>
+						<div class="times"></div>
+					</div>
+					
+					<div id="sunday-container" style="display: none;">
+						<h4>Söndag</h4>
+						<div class="times"></div>
+					</div>
+					
+				</fieldset>
+				
+				<form id="saveForm">
+					<div class="form-actions">
+						<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
+						<button type="reset" class="btn"><spring:message code="clear" /></button>
+					</div>
 				</form>
-				
-				<div id="monday-container" style="display: none;">
-					<h4>Måndag</h4>
-					<div class="times"></div>
-				</div>
-				
-				<div id="tuesday-container" style="display: none;">
-					<h4>Tisdag</h4>
-					<div class="times"></div>
-				</div>
-				
-				<div id="wednesday-container" style="display: none;">
-					<h4>Onsdag</h4>
-					<div class="times"></div>
-				</div>
-				
-				<div id="thursday-container" style="display: none;">
-					<h4>Torsdag</h4>
-					<div class="times"></div>
-				</div>
-				
-				<div id="friday-container" style="display: none;">
-					<h4>Fredag</h4>
-					<div class="times"></div>
-				</div>
-				
-				<div id="saturday-container" style="display: none;">
-					<h4>Lördag</h4>
-					<div class="times"></div>
-				</div>
-				
-				<div id="sunday-container" style="display: none;">
-					<h4>Söndag</h4>
-					<div class="times"></div>
-				</div>
-				
-			</fieldset>
-			
-			<form id="saveForm">
-				<div class="form-actions">
-					<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
-					<button type="reset" class="btn"><spring:message code="clear" /></button>
-				</div>
-			</form>
+			</div>
+		</section>
 	</hp:viewBody>
 </hp:view>

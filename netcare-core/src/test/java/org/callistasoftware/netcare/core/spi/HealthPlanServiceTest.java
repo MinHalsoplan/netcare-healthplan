@@ -206,7 +206,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(type, "Vikt", MeasurementValueType.INTERVAL,
 				newMeasureUnit("kg", "Kilogram", cc), true, 1);
 
-		final ActivityTypeEntity savedType = typeRepo.save(type);
+		final ActivityTypeEntity savedType = typeRepo.saveAndFlush(type);
 		final CareActorEntity ca = CareActorEntity.newEntity("Test Testgren", "", "hsa-123", cu);
 		final CareActorEntity savedCa = this.careActorRepo.save(ca);
 
@@ -225,6 +225,8 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		final ActivityItemTypeImpl mdType = new ActivityItemTypeImpl();
 		mdType.setId(me.getId());
+		mdType.setName(me.getName());
+		
 		final MeasurementDefinitionImpl md = new MeasurementDefinitionImpl();
 		md.setTarget(1200);
 		md.setActivityItemType(mdType);
