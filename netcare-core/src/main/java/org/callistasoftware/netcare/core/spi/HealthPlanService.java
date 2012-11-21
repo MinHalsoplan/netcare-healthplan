@@ -122,7 +122,7 @@ public interface HealthPlanService {
 	/**
 	 * Returns scheduled activities for a patient.
 	 * 
-	 * @param patient the patient.
+	 * @param active whether or not to only include active or not
 	 * @return the result.
 	 */
 	ServiceResult<ScheduledActivity[]> getActivitiesForPatient();

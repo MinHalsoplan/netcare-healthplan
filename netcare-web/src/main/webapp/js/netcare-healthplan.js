@@ -294,6 +294,7 @@ var NC_MODULE = {
 				e.preventDefault();
 				e.stopPropagation();
 				$('#hp-details-' + hp.id).toggle();
+				$(this).toggleClass('toggle').toggleClass('toggle-open');
 			}) ;
 			
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
@@ -1865,7 +1866,6 @@ var NC_MODULE = {
 				$('#sa-details-' + scheduledActivity.id).toggle();
 				
 				$(this).toggleClass('toggle').toggleClass('toggle-open');
-				
 			});
 			
 			if (liElem.find('.mvk-icon.toggle').size() > 0) {
