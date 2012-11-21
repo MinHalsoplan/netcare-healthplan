@@ -65,7 +65,7 @@ NC.Mobile = function() {
 		},
 		
 		createListRow : function(parent, href, value, clickCallback, reportedLabel) {
-			if (!value.definition.active) {
+			if (!value.activityDefinition.active) {
 				return false;
 			}
 			
@@ -95,20 +95,22 @@ NC.Mobile = function() {
 			
 			var activityText = $('<div>').addClass('ui-btn-text');
 			activityText.append(
-				$('<h3>' + value.definition.type.name + '</h3>').addClass('ui-li-heading')
+				$('<h3>' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
 			);
 			
 			var desc = '';
-			$.each(value.definition.goalValues, function(i, v) {
-				var interval = v.measurementType.valueType.code;
-				if (interval == "INTERVAL") {
-					desc += v.measurementType.name + ': ' + v.minTarget + '-' + v.maxTarget + ' ' + v.measurementType.unit.value; 
-				} else if (interval == "SINGLE_VALUE") {
-					desc += v.measurementType.name + ': ' + v.target + ' ' + v.measurementType.unit.value;
-				}
-				
-				if (i != value.definition.goalValues.length -1) {
-					desc += ', ';
+			$.each(value.activityDefinition.goalValues, function(i, activityItem) {
+				if(activityItem.activityItemType=='measurement') {
+					var interval = v.measurementType.valueType.code;
+					if (interval == "INTERVAL") {
+						desc += v.measurementType.name + ': ' + v.minTarget + '-' + v.maxTarget + ' ' + v.measurementType.unit.value; 
+					} else if (interval == "SINGLE_VALUE") {
+						desc += v.measurementType.name + ': ' + v.target + ' ' + v.measurementType.unit.value;
+					}
+					
+					if (i != value.definition.goalValues.length -1) {
+						desc += ', ';
+					}
 				}
 			});
 			
