@@ -2006,7 +2006,13 @@ var NC_MODULE = {
 		};
 		
 		my.processItemValues = function(my, activityIndex, activity) {
-			$.each(activity.activityItemValues, function(idx, actItem) {
+			for (var idx = 0; idx < activity.activityItemValues.length; idx++) {
+				var actItem = activity.activityItemValues[idx];
+				
+				if (actItem.definition.active == false) {
+					continue;
+				}
+			
 				var activityValuesTemplate = '#scheduled-' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
@@ -2016,7 +2022,6 @@ var NC_MODULE = {
 				
 				// FIX FOR YES NO INITIAL VALUE CHECKED
 				if (actItem.valueType == "yesno") {
-					
 					if (actItem.answer == true) {
 						$('#sa-row-' + actItem.id).find('input[value="true"]').prop('checked', true);
 					} else {
@@ -2038,7 +2043,7 @@ var NC_MODULE = {
 				
 				// Needed for correct deserialization
 				actItem.valueType = actItem.definition.valueType; 
-			});
+			}
 		};
 		
 		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
