@@ -113,6 +113,15 @@ public class SystemAlarmJob {
 		List<ScheduledActivityEntity> list = saRepo.findByScheduledTimeLessThanAndReportedTimeIsNull(start);
 		log.debug("Reminder: {} candidates found", list.size());
 		for (ScheduledActivityEntity sae : list) {
+			
+			/*
+			 * Don't send reminder unless the patient
+			 * wants it
+			 */
+			if (!sae.getActivityDefinitionEntity().isReminder()) {
+				continue;
+			}
+			
 			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
 			log.debug("Reminder: for patient {}, activity {}", patient.getFirstName(), sae.getActivityDefinitionEntity().getActivityType().getName());
 			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null && patient.isPushEnbaled()) {
