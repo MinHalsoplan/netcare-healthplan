@@ -89,16 +89,16 @@ NC.Mobile = function() {
 			var link = $('<a>').attr('href', '#report').addClass('ui-link-inherit');
 			activityContentDiv.append(link);
 			
-			link.append(
-				$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
-			);
+//			link.append(
+//				$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
+//			);
 			
 			var activityText = $('<div>').addClass('ui-btn-text');
 			activityText.append(
-				$('<h3>' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
+				$('<h3>' + value.time + ' ' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
 			);
 			
-			var desc = '';
+			var desc = 'Johannes';
 			$.each(value.activityDefinition.goalValues, function(i, activityItem) {
 				if(activityItem.activityItemType=='measurement') {
 					var interval = v.measurementType.valueType.code;

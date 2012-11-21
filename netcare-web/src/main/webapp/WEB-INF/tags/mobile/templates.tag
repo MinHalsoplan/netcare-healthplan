@@ -21,9 +21,34 @@
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
-
 <!-- mobile:templates -->
-<script id="someTemplate" type="text/template">
 
+<!-- Activity items templates -->
+<script id="measurementItemTemplate" type="text/template">
+</script>
+<script id="estimationItemTemplate" type="text/template">
+	<div id="slider-div" data-role="fieldcontain">
+		<label for="slider" id="slider-label" class="ui-slider ui-input-text"></label>
+		<input type="number" data-type="range" name="slider" id="slider" value="5" min="1" max="10"
+			class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
+	</div>
+</script>
+<script id="yesnoItemTemplate" type="text/template">
+</script>
+<script id="textItemTemplate" type="text/template">
+</script>
+<script id="commonActivityItemTemplate" type="text/template">
+					<div data-role="fieldcontain">
+						<label for="date"><spring:message code="mobile.report.form.date" /></label> <input type="date"
+							id="date" name="date" />
+					</div>
+					<div data-role="fieldcontain">
+						<label for="time"><spring:message code="mobile.report.form.time" /></label> <input type="time"
+							id="time" name="time" />
+					</div>
+					<div data-role="fieldcontain">
+						<label for="note" class="ui-input-text"><spring:message code="mobile.report.form.note" /></label>
+						<textarea name="note" id="note" class="ui-input-text"></textarea>
+					</div>
 </script>
 <!-- mobile:templates / -->

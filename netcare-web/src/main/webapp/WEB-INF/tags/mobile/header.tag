@@ -50,7 +50,9 @@
 				
 	</style>
 			
-	<script type="text/javascript" src="<spring:url value="/js/jquery-1.7.1.min.js" />"></script>
+	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+	<c:set var="resourcePath" value="/netcare/resources" />
+	<script type="text/javascript" src="${contextPath}${resourcePath}/js/jquery-1.8.2.min.js"></script>
 	<script type="text/javascript">
 	
 		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
