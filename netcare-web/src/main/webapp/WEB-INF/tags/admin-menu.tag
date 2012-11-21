@@ -128,7 +128,7 @@
 
 <div class="span3 menu">
 	<c:if test="${not empty sessionScope.currentPatient}">
-		<div id="workWith" style="padding-left: 5px;">
+		<div id="workWith" style="padding-left: 5px; margin-right: 15px; margin-top: 10px;">
 			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
 			<p>
 				<span id="cnr"></span>
