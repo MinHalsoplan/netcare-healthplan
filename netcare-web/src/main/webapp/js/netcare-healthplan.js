@@ -1150,6 +1150,8 @@ var NC_MODULE = {
 						activityTemplate.accessLevel = new Object();
 						activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
 						
+						activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
+						
 						for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
 							delete activityTemplate.activityItems[i].details;
 						}
