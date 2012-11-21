@@ -130,4 +130,11 @@ public interface ActivityDefinition extends Serializable {
 	 * @return
 	 */
 	boolean isActive();
+	
+	/**
+	 * Whether a reminder for the definition is
+	 * enabled or not
+	 * @return
+	 */
+	boolean isReminder();
 }

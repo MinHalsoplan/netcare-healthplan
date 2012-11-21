@@ -58,6 +58,20 @@ public class ActivityDefinitionApi extends ApiSupport {
 		return this.service.updateActivity(data);
 	}
 	
+	@RequestMapping(value="/{id}/enableReminder", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ActivityDefinition> enableReminder(@PathVariable("id") final Long id) {
+		logAccess("enable", "reminder");
+		return service.updateReminder(id, true);
+	}
+	
+	@RequestMapping(value="/{id}/disableReminder", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ActivityDefinition> disableReminder(@PathVariable("id") final Long id) {
+		logAccess("disable", "reminder");
+		return service.updateReminder(id, false);
+	}
+	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> loadActivityDefinition(@PathVariable("id") final Long id) {

@@ -61,6 +61,9 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 
 	@Column(name = "removed_flag")
 	private boolean removedFlag;
+	
+	@Column(name = "reminder")
+	private boolean reminder;
 
 	@ManyToOne
 	@JoinColumn(name = "health_plan_id")
@@ -87,6 +90,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		uuid = UUID.randomUUID().toString();
 		createdTime = new Date();
 		removedFlag = false;
+		reminder = true;
 	}
 
 	public static ActivityDefinitionEntity newEntity(HealthPlanEntity healthPlanEntity,
@@ -108,7 +112,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 			} else if (activityItemType instanceof TextTypeEntity) {
 				activityItemDefinition = TextDefinitionEntity.newEntity(entity, activityItemType);
 			} else {
-				throw new IllegalArgumentException("Unsupported  item type.");
+				throw new IllegalArgumentException("Unsupported item type.");
 			}
 			
 			if (activityItemDefinition != null) {
@@ -332,5 +336,13 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 
 	public void setRemovedFlag(boolean removedFlag) {
 		this.removedFlag = removedFlag;
+	}
+	
+	public boolean isReminder() {
+		return reminder;
+	}
+	
+	public void setReminder(boolean reminder) {
+		this.reminder = reminder;
 	}
 }

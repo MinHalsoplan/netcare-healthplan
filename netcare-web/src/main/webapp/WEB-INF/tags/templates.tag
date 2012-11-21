@@ -683,7 +683,7 @@
 <script id="patient-schema" type="text/template">
 <li id="activityItem{{id}}" class="item withNavigation" style="cursor: pointer;">
 <mvk:touch-item style="padding-right:0px;">
-<div id="activityItem" class="listItemBase">
+<div class="listItemBase">
 	<div class="row-fluid">
 		<div class="mainBody span6">
 			<h4 class="titel">{{type.name}}</h4>
@@ -693,6 +693,15 @@
 		</div>
 		<div class="span6" style="text-align:right; margin-top: 15px; padding-right: 20px;">
 			<small>Pågår till och med: <strong>{{period}}</strong></small>
+		</div>
+	</div>
+	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
+		<div class="mainBody span12">
+			<h4>Inställningar</h4>
+			<div class="subRow">
+				<input id="activityItem{{id}}-reminder" type="checkbox" /> 
+				<label for="activityItem{{id}}-reminder" style="display: inline;"><small>Skicka en påminnelse till min mobiltelefon när denna aktivitet skall utföras.</small></label>
+			</div>
 		</div>
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">

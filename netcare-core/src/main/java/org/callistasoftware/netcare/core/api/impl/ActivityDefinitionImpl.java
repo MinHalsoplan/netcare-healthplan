@@ -74,6 +74,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private ActivityItemValuesDefinition[] goalValues;
 
 	private boolean active;
+	private boolean reminder = true;
 
 	public static ActivityDefinition[] newFromEntities(final List<ActivityDefinitionEntity> entities) {
 		final ActivityDefinition[] dtos = new ActivityDefinitionImpl[entities.size()];
@@ -94,6 +95,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		dto.setHealthPlanId(entity.getHealthPlan().getId());
 		dto.setActive(!entity.isRemovedFlag());
+		dto.setReminder(entity.isReminder());
 		dto.setHealthPlanCareUnit(CareUnitImpl.newFromEntity(entity.getHealthPlan().getCareUnit()));
 
 		List<ActivityItemDefinitionEntity> mdl = entity.getActivityItemDefinitions();
@@ -314,5 +316,14 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	
 	void setHealthPlanCareUnit(CareUnit healthPlanCareUnit) {
 		this.healthPlanCareUnit = healthPlanCareUnit;
+	}
+
+	@Override
+	public boolean isReminder() {
+		return reminder;
+	}
+	
+	public void setReminder(boolean reminder) {
+		this.reminder = reminder;
 	}
 }

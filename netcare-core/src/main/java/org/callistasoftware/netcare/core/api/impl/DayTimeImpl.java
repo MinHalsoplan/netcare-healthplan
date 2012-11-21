@@ -18,8 +18,10 @@ package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.Option;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class DayTimeImpl implements DayTime {
 	private String day;
 	private String[] times;

@@ -42,6 +42,13 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 public interface HealthPlanService {
 	
 	/**
+	 * Update the reminder on this activity definition
+	 * @param reminderOn True, reminder is on. False otherwise
+	 * @return
+	 */
+	ServiceResult<ActivityDefinition> updateReminder(final Long id, final boolean reminderOn);
+	
+	/**
 	 * Load a scheduled activity
 	 * @param activity
 	 * @return

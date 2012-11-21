@@ -18,6 +18,10 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.core.api.impl.CareUnitImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+@JsonDeserialize(as=CareUnitImpl.class)
 public interface CareUnit extends Serializable {
 
 	/**

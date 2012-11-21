@@ -2388,13 +2388,31 @@ var NC_MODULE = {
 				activity.period = activity.endDate;
 			}
 			
-			activity.totalDone = Math.ceil((activity.numDone / activity.numTotal)*100);
-			activity.targetDone = Math.ceil((activity.numDone / activity.numTarget)*100);
+			activity.totalDone = Math.ceil((activity.numDone / activity.numTotal) * 100);
+			activity.targetDone = Math.ceil((activity.numDone / activity.numTarget) * 100);
 			
 			var dom = _.template($('#patient-schema').html())(activity);
 			$('#activity-list').append($(dom));
 			
+			if (activity.reminder) {
+				$('#activityItem' + activity.id + '-reminder').prop('checked', true);
+			}
+			
+			my.initReminderListener(my, activity);
 			my.buildSchemaTable(my, activity);
+		};
+		
+		my.initReminderListener = function(my, activity) {
+			
+			$('#activityItem' + activity.id + '-reminder').click(function() {
+				var reminder =  $(this).is(':checked');
+				var url = reminder ? '/enableReminder' : '/disableReminder';
+				
+				new NC.Ajax().post('/activityPlans/' + activity.id + url, null, function(data) {
+					NC.log('Activity updated...');
+				});
+			});
+			
 		};
 		
 		my.buildSchemaTable = function(my, activity) {

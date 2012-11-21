@@ -88,32 +88,5 @@
 				<mvk:touch-list id="activity-list"></mvk:touch-list>
 			</div>
 		</section>
-
-<%-- 		<section id="healthPlan"> --%>
-<%-- 			<h2><spring:message code="phome.header" /></h2> --%>
-<!-- 			<p> -->
-<%-- 				<span class="label label-info"><spring:message code="information" /></span> --%>
-<%-- 				<spring:message code="phome.headerDesc" /> --%>
-<!-- 			</p> -->
-<!-- 			<div id="planDescription" style="margin: 10px"></div> -->
-<%-- 			<netcare:table id="planTable"> --%>
-<!-- 				<thead> -->
-<!-- 					<tr> -->
-<!-- 						work-around (twitter bootstrap problem): hard coded width to avoid compression of icon -->
-<!-- 						<th width="40px">&nbsp;</th> -->
-<%-- 						<th><spring:message code="phome.plan" /></th> --%>
-<%-- 						<th><spring:message code="phome.activity" /></th> --%>
-<%-- 						<th><spring:message code="phome.until" /></th> --%>
-<%-- 						<th><spring:message code="phome.frequency" /></th> --%>
-<%-- 						<th><spring:message code="phome.done" /><br /> <input id="totalBoxId" type="checkbox" /> <spring:message code="phome.showTot" /></th> --%>
-<!-- 					</tr> -->
-<!-- 				</thead> -->
-<!-- 				<tbody></tbody> -->
-<%-- 			</netcare:table> --%>
-<!-- 			<br /> -->
-<!-- 			<div style="text-align: right"> -->
-<%-- 				<a href="<c:out value="${GLOB_CTX_PATH}" />/api/patient/schema/min-halso-plan"><spring:message code="phome.icalLink" /></a> --%>
-<!-- 			</div> -->
-<%-- 		</section> --%>
 	</hp:viewBody>
 </hp:view>

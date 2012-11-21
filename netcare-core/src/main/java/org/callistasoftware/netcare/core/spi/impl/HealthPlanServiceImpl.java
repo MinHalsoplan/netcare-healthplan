@@ -84,7 +84,6 @@ import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
-import org.callistasoftware.netcare.model.entity.EstimationDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
@@ -97,10 +96,8 @@ import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
-import org.callistasoftware.netcare.model.entity.TextDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
-import org.callistasoftware.netcare.model.entity.YesNoDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1018,6 +1015,11 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.setFrequency(createFrequency(dto));
 		
 		/*
+		 * Update reminder
+		 */
+		entity.setReminder(dto.isReminder());
+		
+		/*
 		 * Remove all future scheduled activties and add
 		 * new ones
 		 */
@@ -1100,5 +1102,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		one.isReadAllowed(getCareActor());
 		
 		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(one), new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> updateReminder(final Long id, final boolean reminderOn) {
+		final ActivityDefinitionEntity def = this.activityDefintionRepository.findOne(id);
+		if (def == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, id));
+		}
+		
+		verifyWriteAccess(getPatient());
+		
+		log.debug("Setting reminder for {} to {}", def.getActivityType().getName(), reminderOn);
+		def.setReminder(reminderOn);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(def), new GenericSuccessMessage());
 	}
 }
