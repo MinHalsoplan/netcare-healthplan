@@ -26,12 +26,14 @@ var NC_MODULE = {
 		};
 		
 		my.showLoader = function(elemId, msg) {
+			NC.log('Showing loader for ' + elemId);
 			$(elemId).find('.sectionLoader').find('.loaderMessage').html(msg);
-			$(elemId).find('.sectionLoader').show();
+			$(elemId).find('.sectionLoader').slideDown('fast');
 		};
 		
 		my.suspendLoader = function(elemId, msg) {
-			$(elemId).find('.sectionLoader').slideUp('fast').html('');
+			NC.log('Suspending loader for ' + elemId);
+			$(elemId).find('.sectionLoader').slideUp('fast');
 		};
 
 		my.loadNewPage = function(url, module, moduleParams) {
@@ -2018,6 +2020,12 @@ var NC_MODULE = {
 			
 			createControl();
 			
+			if (_pages <= 1) {
+				$(_paginationId).hide();
+			} else {
+				$(_paginationId).show();
+			}
+			
 			showPage(1);
 		};
 		
@@ -2056,7 +2064,6 @@ var NC_MODULE = {
 		};
 		
 		my.renderSchedule = function(my) {
-			
 			// Show loader
 			NC_MODULE.GLOBAL.showLoader('#report', 'Laddar dina aktiviteter...');
 			
@@ -2076,7 +2083,7 @@ var NC_MODULE = {
 						'nextLabel' : 'Nästa'
 					});
 					
-					NC_MODULE.GLOBAL.suspendLoader('#report');
+					//NC_MODULE.GLOBAL.suspendLoader('#report');
 					$('#reportContainer').show();
 				}
 				
@@ -2290,7 +2297,7 @@ var NC_MODULE = {
 			my.initListeners(that);
 			my.setFormDefaults();
 			
-			//$('#filter').click();
+			$('#filter-submit').click();
 			
 		};
 		

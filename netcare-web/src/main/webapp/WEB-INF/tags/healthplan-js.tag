@@ -49,11 +49,18 @@ _.templateSettings = {
 		// Initialize all date pickers
 		$('.dateInput').each(function(i, v) {
 			
-			$(v).datepicker({
+			var opts = {
 				dateFormat : 'yy-mm-dd',
-				firstDay : 1,
-				minDate : +0
-			});
+				firstDay : 1
+			}
+			
+			if ( $(this).hasClass('allow-previous') ) {
+				
+			} else {
+				opts.minDate = +0;
+			}
+			
+			$(v).datepicker(opts);
 			
 		});
 		

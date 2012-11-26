@@ -46,7 +46,7 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Mina resultat">
+	<hp:viewBody title="Mitt schema">
 	
 		<section id="filter">
 			<form id="filterForm">
@@ -56,12 +56,12 @@
 					<netcare:row>
 						<netcare:col span="2">
 							<netcare:field name="start" label="Startdatum">
-								<input id="start" type="text" name="start" class="dateInput span12">
+								<input id="start" type="text" name="start" class="dateInput allow-previous span12">
 							</netcare:field>	
 						</netcare:col>
 						<netcare:col span="2">
 							<netcare:field name="end" label="Slutdatum">
-								<input id="end" type="text" name="end" class="dateInput span12"/>
+								<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
 							</netcare:field>	
 						</netcare:col>
 					</netcare:row>
@@ -92,7 +92,7 @@
 				<span class="loaderMessage"></span>
 			</div>
 			<div id="reportContainer" style="display: none;">
-				<h2>Dina rapporteringar</h2>
+				<h2>Aktiviteter</h2>
 				<mvk:touch-list id="reportList"></mvk:touch-list>
 				
 				<div id="siPagination" class="pagination pagination-centered">

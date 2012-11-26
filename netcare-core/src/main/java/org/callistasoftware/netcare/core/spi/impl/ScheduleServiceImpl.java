@@ -56,26 +56,34 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 			end = new DateTime().withMillisOfDay(0).plusDays(1).toDate().getTime();
 		}
 		
+		final DateTime s = new DateTime(start);
+		final DateTime e = new DateTime(end);
+		
+		if (s.getDayOfYear() == e.getDayOfYear()) {
+			start = s.withMillisOfDay(0).toDate().getTime();
+			end = s.withMillisOfDay(0).plusDays(1).toDate().getTime();
+		}
+		
 		final List<ScheduledActivityEntity> list = this.repo.findByPatientAndScheduledTimeBetween(getPatient(), new Date(start), new Date(end));
 		final List<ScheduledActivityEntity> filtered = new ArrayList<ScheduledActivityEntity>();
+		getLog().debug("Query found {} in interval {} - {}", new Object[] { list.size(), new Date(start), new Date(end) });
 		
 		for (final ScheduledActivityEntity sae : list) {
 		
-			/*
-			 * Om vi inkluderar due gäller följande:
-			 * 1. Aktiviteten får ej vara rapporterad
-			 * 2. Den måste vara open
-			 */
 			
+			boolean dueCheck = sae.getReportedTime() == null && sae.getStatus().equals(ScheduledActivityStatus.OPEN) && sae.getScheduledTime().before(new Date(System.currentTimeMillis()));
+			boolean reportCheck = sae.getReportedTime() != null && (sae.getStatus().equals(ScheduledActivityStatus.CLOSED) || sae.getStatus().equals(ScheduledActivityStatus.REJECTED));
 			
-			if (
-				(includeDue && (sae.getReportedTime() != null && !sae.getStatus().equals(ScheduledActivityStatus.OPEN)))
-				||
-				(includeReported && (sae.getReportedTime() == null && sae.getStatus().equals(ScheduledActivityStatus.OPEN)))
-			) {
-				continue;
-			} else {
+			getLog().debug("due check: {}, report check: {}", dueCheck, reportCheck);
+			
+			if ((includeDue && dueCheck) || (includeReported && reportCheck)) {
 				filtered.add(sae);
+			} else {
+				
+				boolean openCheck = sae.getReportedTime() == null && sae.getStatus().equals(ScheduledActivityStatus.OPEN); 
+				if (openCheck && !includeDue) {
+					filtered.add(sae);
+				}
 			}
 		}
 		

@@ -490,7 +490,7 @@
 			Ange tidpunkt då aktiviteten utfördes
 		</div>
 		<div class="span7">
-			<input id="{{id}}-report-date" type="text" style="display: inline;" class="span5 dateInput"/>
+			<input id="{{id}}-report-date" type="text" style="display: inline;" class="span5 dateInput allow-previous"/>
 			<input id="{{id}}-report-time" type="text" style="display: inline;" class="span3"/>
 		</div>
 	</div>

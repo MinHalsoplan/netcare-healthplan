@@ -368,7 +368,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		log.info("Report done for scheduled activity {}", report.getId());
 		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(report.getId());
 		entity.setReportedTime(new Date());
-		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.OPEN);
+		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.CLOSED);
 		entity.setNote(report.getNote());
 		for (final ActivityItemValues value : report.getActivityItemValues()) {
 			
