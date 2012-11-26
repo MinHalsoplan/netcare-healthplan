@@ -28,12 +28,27 @@
 <!DOCTYPE html>
 <html>
 <mobile:header>
+	<mobile:templates />
 	<script type="text/javascript">
+		_.templateSettings.variable = "us";
+		_.templateSettings = {
+			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
+		};
+
 		var reportedLabel = '<spring:message code="mobile.activity.reported" />';
-		var senseLabel = '<spring:message code="mobile.report.form.sense" />';
 
 		var mobile = new NC.Mobile();
 		var util = new NC.Util();
+		
+		var templateNames = ['measurementSingleItemTemplate', 'measurementIntervalItemTemplate', 'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 'commonActivityItemTemplate'];
+		var templates = {};
+		
+		var precompileTemplates = function() {
+			$.each(templateNames, function(index, name) {
+				templates[name] =  _.template($('#'+name).html());
+			});
+		};
+		
 		var buildListView = function(value, buildHeader) {
 			if (buildHeader) {
 				mobile.createListHeader($('#schema'), value.day.value + ' '
@@ -50,94 +65,126 @@
 
 		var loadScheduledActivity = function(activityId, callback) {
 			var activity;
-			$.each(actual, function(index, act){
-				if(act.id==activityId)
+			var allActivities = due.concat(actual, reported);
+			$.each(allActivities, function(index, act){
+				if(act.id==activityId) {
 					activity = act;
-				break;
+					return false;
+				}
 			});
-			if(activity==null) {
-				$.each(due, function(index, act){
-					if(act.id==activityId)
-						activity = act;
-					break;
-				});
+			if(activity!=null) {
+				callback(activity);
 			}
-			if(activity==null) {
-				$.each(reported, function(index, act){
-					if(act.id==activityId)
-						activity = act;
-					break;
-				});
-			}
-			callback(activity);
 		}
+		
+		var buildFromArray = function(object) {
+			var currentDay = '';
+
+			$('#schema').empty();
+
+			$.each(object, function(index, value) {
+				NC.log("Processing " + value.id + " ...");
+				if (currentDay != value.day.value) {
+					currentDay = value.day.value;
+					buildListView(value, true);
+				} else {
+					buildListView(value, false);
+				}
+			});
+		};
+
+		var loadFromServer = function(callback) {
+
+			due = new Array();
+			actual = new Array();
+			reported = new Array();
+
+			new NC.Ajax().get('/scheduledActivities', function(data) {
+				$.each(data.data, function(index, value) {
+
+					NC.log('Id: ' + value.id + " Reported: " + value.reported
+							+ " Due: " + value.due);
+
+					if (value.reported != null) {
+						NC.log("Pushing " + value.id + " to reported");
+						reported.push(value);
+					} else if (value.reported == null && value.due && value.activityDefinition.active==false) {
+						NC.log("Pushing " + value.id + " to due");
+						due.push(value);
+					} else {
+						NC.log("Pushing " + value.id + " to actual");
+						actual.push(value);
+					}
+				});
+
+				callback();
+			});
+		};
+
+		$('#start').live('pageinit', function(e) {
+
+			precompileTemplates(templateNames);
+			
+			loadFromServer(function() {
+				NC.log("Done fetching data.");
+
+				$('#actual').click(function(e) {
+					NC.log("Loading actual activities...");
+					buildFromArray(actual);
+				});
+
+				$('#due').click(function(e) {
+					NC.log("Loading due activities...");
+					buildFromArray(due);
+				});
+
+				$('#reported').click(function(e) {
+					NC.log("Loading reported activities...");
+					buildFromArray(reported);
+				});
+
+				$('#actual').click();
+			});
+
+			$('#ical').click(function(e) {
+				NC.log("Getting calendar as ical");
+				new NC.Patient().getCalendar(function(data) {
+					NC.log("Success!");
+				});
+			});
+		});
 		
 		var loadActivity = function(activityId) {
 			NC.log("Load activity: " + activityId);
 
-			loadScheduledActivity(45, function(activity) {
+			loadScheduledActivity(activityId, function(activity) {
 				NC.log(activity.id + '-' + activity.activityDefinition.healthPlanName);
+				$('#reportForm').empty();
+				$('#report div h3').html(activity.activityDefinition.type.name);
+				$('#report div p').html(activity.day.value + ', ' + activity.date + ' ' + activity.time);
+
+				var reported = (activity.reported != null);
+				$.each(activity.activityItemValues,function(index, item) {
+					var templateName;
+					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
+						if(item.definition.activityItemType.valueType.code=='INTERVAL') {
+							templateName = 'measurementIntervalItemTemplate';					
+						} else {
+							templateName = 'measurementSingleItemTemplate';					
+						}
+					} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
+						templateName = 'estimationItemTemplate';					
+					} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
+						templateName = 'yesnoItemTemplate';					
+					} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
+						templateName = 'textItemTemplate';					
+					}  
+					var myTemplate = templates[templateName];
+					$('#reportForm').append(myTemplate(item));
+				});
+				$('#reportForm').append(templates['commonActivityItemTemplate'](activity));
+				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
 			});
-			
-			new NC.HealthPlan()
-					.loadScheduledActivity(
-							activityId,
-							function(data) {
-								$('#report div h3').html(
-										data.data.definition.type.name);
-								$('#report div p').html(
-										data.data.day.value + ', '
-												+ data.data.date + ' '
-												+ data.data.time);
-								$('#slider-label')
-										.html(
-												senseLabel
-														+ '&nbsp;('
-														+ data.data.definition.type.minScaleText
-														+ '-'
-														+ data.data.definition.type.maxScaleText
-														+ ')');
-
-								if (data.data.definition.type.measuringSense) {
-									$('#slider-div').show();
-								} else {
-									$('#slider-div').hide();
-								}
-
-								var reported = (data.data.reported != null);
-								$
-										.each(
-												data.data.measurements,
-												function(i, v) {
-
-													var id = 'report-'
-															+ v.measurementDefinition.measurementType.seqno;
-													// remove existing
-													$('#' + id).remove();
-													if (v.measurementDefinition.measurementType.valueType.code == "INTERVAL") {
-														mobile
-																.createReportField(
-																		id,
-																		$('#reportForm'),
-																		v.measurementDefinition.measurementType.name,
-																		reported ? v.reportedValue
-																				: Math
-																						.round((v.measurementDefinition.maxTarget + v.measurementDefinition.minTarget) / 2));
-													} else {
-														mobile
-																.createReportField(
-																		id,
-																		$('#reportForm'),
-																		v.measurementDefinition.measurementType.name,
-																		reported ? v.reportedValue
-																				: v.measurementDefinition.target);
-													}
-												});
-
-								$('#date').val(data.data.date);
-								$('#time').val(data.data.time);
-								$('#note').val(data.data.note);
-							});
 
 			/*
 			 * Report value
@@ -208,81 +255,7 @@
 								$('#sendReport').unbind('click');
 							});
 		};
-
-		var buildFromArray = function(object) {
-			var currentDay = '';
-
-			$('#schema').empty();
-
-			$.each(object, function(index, value) {
-				NC.log("Processing " + value.id + " ...");
-				if (currentDay != value.day.value) {
-					currentDay = value.day.value;
-					buildListView(value, true);
-				} else {
-					buildListView(value, false);
-				}
-			});
-		};
-
-		var loadFromServer = function(callback) {
-
-			due = new Array();
-			actual = new Array();
-			reported = new Array();
-
-			new NC.Ajax().get('/scheduledActivities', function(data) {
-				$.each(data.data, function(index, value) {
-
-					NC.log('Id: ' + value.id + " Reported: " + value.reported
-							+ " Due: " + value.due);
-
-					if (value.reported != null) {
-						NC.log("Pushing " + value.id + " to reported");
-						reported.push(value);
-					} else if (value.reported == null && value.due) {
-						NC.log("Pushing " + value.id + " to due");
-						due.push(value);
-					} else {
-						NC.log("Pushing " + value.id + " to actual");
-						actual.push(value);
-					}
-				});
-
-				callback();
-			});
-		};
-
-		$('#start').live('pageinit', function(e) {
-
-			loadFromServer(function() {
-				NC.log("Done fetching data.");
-
-				$('#actual').click(function(e) {
-					NC.log("Loading actual activities...");
-					buildFromArray(actual);
-				});
-
-				$('#due').click(function(e) {
-					NC.log("Loading due activities...");
-					buildFromArray(due);
-				});
-
-				$('#reported').click(function(e) {
-					NC.log("Loading reported activities...");
-					buildFromArray(reported);
-				});
-
-				$('#actual').click();
-			});
-
-			$('#ical').click(function(e) {
-				NC.log("Getting calendar as ical");
-				new NC.Patient().getCalendar(function(data) {
-					NC.log("Success!");
-				});
-			});
-		});
+		
 	</script>
 </mobile:header>
 <body>

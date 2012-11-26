@@ -58,7 +58,7 @@ NC.Mobile = function() {
 			.addClass('ui-btn')
 			.addClass('ui-bar-b')
 			.addClass('ui-li-has-count')
-			.addClass('ui-btn-up-undefined') 
+			.addClass('ui-btn-up-undefined')
 			.html(title);
 			
 			parent.append(header);
@@ -86,7 +86,7 @@ NC.Mobile = function() {
 			
 			activityContainer.append(activityContentDiv);
 			
-			var link = $('<a>').attr('href', '#report').addClass('ui-link-inherit');
+			var link = $('<a>').attr('href', '#report').attr('data-transition', 'slide').addClass('ui-link-inherit');
 			activityContentDiv.append(link);
 			
 //			link.append(
