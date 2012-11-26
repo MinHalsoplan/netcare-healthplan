@@ -51,6 +51,9 @@
 				
 				var params = {
 					patientId : '<sec:authentication property="principal.id" />',
+					showAll : false,
+					showDue : true,
+					showReported : false,
 					lang : schemaLang
 				};
 				

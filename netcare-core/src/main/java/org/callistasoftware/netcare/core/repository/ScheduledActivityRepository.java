@@ -46,6 +46,15 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			@Param("patient") final PatientEntity patient,
 			@Param("start") final Date start,
 			@Param("end") final Date end);
+	
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp " +
+			"where hp.forPatient = :patient and ad.removedFlag = 'false' " +
+			"and (e.scheduledTime < :expires and e.reportedTime is null and e.status = 0) " +
+			"order by e.scheduledTime asc")
+	List<ScheduledActivityEntity> findDueExpiresAt(@Param("patient") final PatientEntity patient
+			, @Param("expires") final Date expires);
 		
 	/**
 	 * Get a list of all reported activities for a specific patient within a time interval.

@@ -32,7 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public abstract class ApiSupport {
 	
-	private static final Logger log = LoggerFactory.getLogger(ApiSupport.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	protected UserBaseView getUser() {
 		return (UserBaseView) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -52,16 +52,20 @@ public abstract class ApiSupport {
 	}
 	
 	protected void logAccess(final String action, final String what) {
-		log.info("User {}, Action: {}->{}", new Object[] {this.getUser().getUsername(), action, what});
+		getLog().info("User {}, Action: {}->{}", new Object[] {this.getUser().getUsername(), action, what});
 	}
 	
 	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareActorBaseView careActor) {
-		log.info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
+		getLog().info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
 				, new Object[] {careActor.getFirstName()
 						, careActor.getHsaId()
 						, action
 						, what
 						, target.getFirstName()
 						, target.getCivicRegistrationNumber()});
+	}
+	
+	protected final Logger getLog() {
+		return this.log;
 	}
 }
