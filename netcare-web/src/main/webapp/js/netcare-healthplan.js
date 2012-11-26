@@ -155,7 +155,7 @@ var NC_MODULE = {
 						
 						NC_MODULE.GLOBAL.selectPatient(v.id, function(data) {
 							NC_MODULE.GLOBAL.updateCurrentPatient(data.data.name);
-							window.location = '/netcare/admin/healthplans?showForm=true';
+							window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
 						});
 					});
 				});
@@ -1004,9 +1004,8 @@ var NC_MODULE = {
 		};
 
 		my.searchTemplates = function(my) {
-			NC.log('Searching... Text: ' + _name + ', Category: ' + _category
-					+ ', Level: ' + _level);
-			var ajax = new NC.Ajax().getWithParams('/templates/', {
+			NC.log('Searching... Text: ' + _name + ', Category: ' + _category + ', Level: ' + _level);
+			new NC.Ajax().getWithParams('/templates/', {
 				'name' : _name,
 				'category' : _category,
 				'level' : _level
@@ -1870,6 +1869,161 @@ var NC_MODULE = {
 		return my;
 	})(),
 	
+	PAGINATION : (function() {
+		
+		var _itemIdPrefix;
+		var _current_page;
+		var _numberToShow;
+		var _data;
+		var _index;
+		
+		var _paginationId;
+		var _previousLabel;
+		var _nextLabel;
+		
+		var _onPrevClick;
+		var _onNextClick;
+		var _onItemClick;
+		
+		var _count;
+		var _pages;
+		
+		var _paginationPrefix;
+		
+		var my = {};
+		
+		var createControl = function() {
+			$(_paginationId + ' > ul').append(
+				_.template( $('#paginationItem').html() )({
+					'prefix' : _paginationPrefix.split('#')[1],
+					'page' : 'previous',
+					'text' : _previousLabel
+				})
+			);
+			
+			for (var i = 0; i < _pages; i++) {
+				$(_paginationId + ' > ul').append(
+					_.template( $('#paginationItem').html() )({
+						'prefix' : _paginationPrefix.split('#')[1],
+						'page' : i+1,
+						'text' : i+1
+					})
+				);
+			}
+			
+			$(_paginationId + ' > ul').append(
+				_.template( $('#paginationItem').html() )({
+					'prefix' : _paginationPrefix.split('#')[1],
+					'page' : 'next',
+					'text' : _nextLabel
+				})
+			);
+			
+			$(_paginationId + ' > ul > li').click(function(e) {
+				e.preventDefault();
+				
+				var text = $(this).find('a').html();
+				if (text == _nextLabel) {
+					NC.log('Next click');
+					nextPage();
+					return;
+				}
+				
+				if (text == _previousLabel) {
+					NC.log('Previous click');
+					previousPage();
+					return;
+				}
+				
+				showPage(parseInt(text));
+			});
+		};
+		
+		var showPage = function(pageNum) {
+			
+			hideAll();
+			$('li[id^="' + _paginationPrefix.split('#')[1] + '"]').removeClass('disabled');
+			
+			var dispArr = _index[pageNum - 1];
+			NC.log('Show page: ' + (pageNum - 1));
+			
+			$.each(dispArr, function(i, v) {
+				NC.log('Show item ' + _itemIdPrefix + v.id);
+				$('#' + _itemIdPrefix + v.id).show();
+			});
+			
+			_current_page = pageNum;
+			
+			$(_paginationPrefix + '-' + pageNum).addClass('disabled');
+			if (pageNum == 1) {
+				$(_paginationPrefix + '-previous').addClass('disabled');
+			}
+			
+			if (pageNum == _pages) {
+				$(_paginationPrefix + '-next').addClass('disabled');
+			}
+		};
+		
+		var nextPage = function() {
+			if (_current_page == _pages) {
+				throw new Error('Invalid pagination state. Next button should be disabled');
+			}
+			
+			showPage(_current_page + 1);
+		};
+		
+		var previousPage = function() {
+			if (_current_page == 1) {
+				throw new Error('Invalid pagination state. Previous button should be disabled');
+			}
+			
+			showPage(_current_page - 1);
+		}
+		
+		var hideAll = function() {
+			$('[id*="' + _itemIdPrefix + '"]').hide();
+		};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			_numberToShow = 5;
+			_current_page = 0;
+			_itemIdPrefix = params.itemIdPrefix;
+			_paginationId = params.paginationId;
+			_previousLabel = params.previousLabel;
+			_nextLabel = params.nextLabel;
+			
+			_count = params.data.length;
+			_pages = Math.ceil(_count / _numberToShow);
+			
+			_paginationPrefix = '#pi-pag-' + Math.floor(1000 + Math.random() * 1000);
+			
+			// Index our stuff
+			_index = new Array();
+			for (var i = 0; i < _pages; i++) {
+				_index[i] = new Array();
+				
+				var startAt = i * _numberToShow;
+				for (var j = 0; j < _numberToShow; j++) {
+					var rowData = params.data[(startAt + j)];
+					if (rowData != undefined) {
+						_index[i].push(rowData);
+					}
+				}
+			}
+			
+			hideAll();
+			
+			createControl();
+			
+			showPage(1);
+		};
+		
+		return my;
+	})(),
+	
 	SCHEDULE : (function() {
 		
 		var _data = new Array();
@@ -1883,8 +2037,12 @@ var NC_MODULE = {
 			my.renderSchedule(that);
 		};
 		
-		my.load = function(my, callback) {
-			new NC.Ajax().get('/scheduledActivities', callback);
+		my.load = function(due, reported, start, end, callback) {
+			new NC.Ajax().getWithParams(
+				'/scheduledActivities', 
+				{ 'due' : due, 'reported' : reported, 'start' : start, 'end' : end }, 
+				callback
+			);
 		};
 		
 		my.renderSchedule = function(my) {
@@ -1892,12 +2050,20 @@ var NC_MODULE = {
 			// Show loader
 			NC_MODULE.GLOBAL.showLoader('#report', 'Laddar dina aktiviteter...');
 			
-			my.load(my, function(data) {
+			my.load(my.params.showDue, my.params.showReported, null, null, function(data) {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						_data[i] = v;
 						my.createScheduleItem(my, i, v);
+					});
+					
+					NC_MODULE.PAGINATION.init({
+						'itemIdPrefix' : 'scheduledActivityItem',
+						'paginationId' : '#siPagination',
+						'data' : data.data,
+						'previousLabel' : 'Föregående',
+						'nextLabel' : 'Nästa'
 					});
 					
 					NC_MODULE.GLOBAL.suspendLoader('#report');
@@ -1924,10 +2090,17 @@ var NC_MODULE = {
 				}
 			} else if (scheduledActivity.rejected == true) {
 				subrow.html('Rapporterad som ej utförd').css({'color' : 'red', 'font-weight' : 'bold'});
-				$('#scheduledActivityItem' + scheduledActivity.id).hide();
+				
+				if (my.params.showReported == false) {
+					$('#scheduledActivityItem' + scheduledActivity.id).hide();
+				}
+				
 			} else {
 				subrow.html('Rapporterad ' + scheduledActivity.reported);
-				$('#scheduledActivityItem' + scheduledActivity.id).hide();
+				
+				if (my.params.showReported == false) {
+					$('#scheduledActivityItem' + scheduledActivity.id).hide();
+				}
 			}
 			
 			var liElem = $('#scheduledActivityItem' + scheduledActivity.id);

@@ -131,7 +131,9 @@ public interface HealthPlanService {
 	 * 
 	 * @param active whether or not to only include active or not
 	 * @return the result.
+	 * @deprecated Use methods in {@link ScheduleService} instead
 	 */
+	@Deprecated
 	ServiceResult<ScheduledActivity[]> getActivitiesForPatient();
 	
 	/**

@@ -743,4 +743,8 @@
 </li>
 </script>
 
+<script id="paginationItem" type="text/template">
+	<li id="{{prefix}}-{{page}}"><a href="#">{{text}}</a></li> 
+</script>
+
 <!-- healthplan:templates / -->

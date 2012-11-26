@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.api.rest;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
+import org.callistasoftware.netcare.core.spi.ScheduleService;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -35,12 +37,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ScheduleApi extends ApiSupport {
 
 	@Autowired private HealthPlanService service;
+	@Autowired private ScheduleService schedule;
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity[]> getSchema() {
+	public ServiceResult<ScheduledActivity[]> getSchema(
+			@RequestParam(value = "reported", required=false) final boolean reported,
+			@RequestParam(value = "due", required=false) final boolean due,
+			@RequestParam(value = "start", required=false) final Long start,
+			@RequestParam(value = "end", required=false) final Long end) {
 		logAccess("lista", "schema");
-		return service.getActivitiesForPatient();
+		
+		getLog().debug("Reported: {}, Due: {}, Start: {}, End: {}", new Object[] { reported, due, start, end });
+		return schedule.loadToday(reported, due, start, end);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)

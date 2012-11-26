@@ -30,19 +30,36 @@
 
 <hp:view>
 	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
-				var report = new NC.PatientReport('schemaTable', false);
-				report.init();
+				var params = {
+					patientId : '<sec:authentication property="principal.id" />',
+					showAll : true,
+					showDue : true,
+					showReported : true
+				};
+					
+				NC_MODULE.SCHEDULE.init(params);
 			});
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Rapportera resultat">
-		<h2><spring:message code="report.header" /></h2>
-		<p>
-			<span class="label label-info"><spring:message code="information" /></span>
-			<spring:message code="report.desc" />
-		</p>
-		<hp:report />
+		<section id="report">
+			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="reportContainer" style="display: none;">
+				<h2>Dina rapporteringar</h2>
+				<mvk:touch-list id="reportList"></mvk:touch-list>
+				
+				<div id="siPagination" class="pagination pagination-centered">
+					<ul>
+					</ul>
+				</div>
+				
+			</div>
+		</section>
 	</hp:viewBody>
 </hp:view>
