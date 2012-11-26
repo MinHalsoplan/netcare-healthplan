@@ -82,6 +82,7 @@
 	<script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
 	<!-- Include NETCARE javascripts END  -->
 	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>
+	<script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
 	
 	<jsp:doBody />
 	

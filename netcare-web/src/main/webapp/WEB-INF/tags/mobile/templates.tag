@@ -24,31 +24,54 @@
 <!-- mobile:templates -->
 
 <!-- Activity items templates -->
-<script id="measurementItemTemplate" type="text/template">
+<script id="measurementSingleItemTemplate" type="text/template">
+	<div data-role="fieldcontain">
+    	<label for="measurement{{id}}">{{definition.activityItemType.name}}</label>
+    	<input type="text" name="measurement{{id}}" id="measurement{{id}}" value="{{reportedValue}}" data-mini="true" />
+	</div>	
+</script>
+<script id="measurementIntervalItemTemplate" type="text/template">
+	<div data-role="fieldcontain">
+    	<label for="measurement{{id}}">{{definition.activityItemType.name}} ({{definition.minTarget}} - {{definition.maxTarget}})</label>
+    	<input type="text" name="measurement{{id}}" id="measurement{{id}}" value="{{reportedValue}}" data-mini="true" />
+	</div>	
 </script>
 <script id="estimationItemTemplate" type="text/template">
-	<div id="slider-div" data-role="fieldcontain">
-		<label for="slider" id="slider-label" class="ui-slider ui-input-text"></label>
-		<input type="number" data-type="range" name="slider" id="slider" value="5" min="1" max="10"
-			class="ui-slider-input ui-input-text ui-corner-all ui-shadow-inset" />
+	<div data-role="fieldcontain">
+		<label for="slider{{id}}">{{definition.activityItemType.name}} ({{definition.activityItemType.minScaleText}} - {{definition.activityItemType.maxScaleText}})</label>
+		<input type="number" data-type="range" name="slider{{id}}" id="slider{{id}}" data-mini="true"
+			value="{{perceivedSense}}" min="{{definition.activityItemType.minScaleValue}}" max="{{definition.activityItemType.maxScaleValue}}" />
 	</div>
 </script>
 <script id="yesnoItemTemplate" type="text/template">
+	<div data-role="fieldcontain">
+		<fieldset data-role="controlgroup">
+			<legend>{{definition.activityItemType.name}}</legend>
+			<input type="radio" name="radio{{id}}" id="radioyes{{id}}" data-mini="true" />
+			<label for="radioyes{{id}}">Ja</label>
+			<input type="radio" name="radio{{id}}" id="radiono{{id}}" data-mini="true" />
+			<label for="radiono{{id}}">Nej</label>
+		</fieldset>
+	</div>
 </script>
 <script id="textItemTemplate" type="text/template">
+	<div data-role="fieldcontain">
+		<label for="text{{id}}">{{definition.activityItemType.name}}</label>
+		<textarea name="text{{id}}" id="text{{id}}" data-mini="true">{{textComment}}</textarea>
+	</div>
 </script>
 <script id="commonActivityItemTemplate" type="text/template">
-					<div data-role="fieldcontain">
-						<label for="date"><spring:message code="mobile.report.form.date" /></label> <input type="date"
-							id="date" name="date" />
-					</div>
-					<div data-role="fieldcontain">
-						<label for="time"><spring:message code="mobile.report.form.time" /></label> <input type="time"
-							id="time" name="time" />
-					</div>
-					<div data-role="fieldcontain">
-						<label for="note" class="ui-input-text"><spring:message code="mobile.report.form.note" /></label>
-						<textarea name="note" id="note" class="ui-input-text"></textarea>
-					</div>
+	<div data-role="fieldcontain">
+		<label for="date"><spring:message code="mobile.report.form.date" /></label>
+		<input type="date" id="date" name="date" data-mini="true" value="{{date}}" />
+	</div>
+	<div data-role="fieldcontain">
+		<label for="time"><spring:message code="mobile.report.form.time" /></label>
+		<input type="time" id="time" name="time" data-mini="true" value="{{time}}" />
+	</div>
+	<div data-role="fieldcontain">
+		<label for="note" class="ui-input-text"><spring:message code="mobile.report.form.note" /></label>
+		<textarea name="note" id="note" data-mini="true">{{note}}</textarea>
+	</div>
 </script>
 <!-- mobile:templates / -->
