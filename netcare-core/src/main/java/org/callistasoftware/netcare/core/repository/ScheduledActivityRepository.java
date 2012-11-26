@@ -41,7 +41,8 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"ad.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
 			"ad.removedFlag = 'false' and " +
-			"e.scheduledTime between :start and :end and e.status != 1")
+			"e.scheduledTime between :start and :end " +
+			"order by e.scheduledTime asc")
 	List<ScheduledActivityEntity> findByPatientAndScheduledTimeBetween(
 			@Param("patient") final PatientEntity patient,
 			@Param("start") final Date start,

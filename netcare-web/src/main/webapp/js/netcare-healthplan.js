@@ -2026,6 +2026,11 @@ var NC_MODULE = {
 	
 	SCHEDULE : (function() {
 		
+		var _due;
+		var _reported;
+		var _start;
+		var _end;
+		
 		var _data = new Array();
 		
 		var my = {};
@@ -2033,6 +2038,11 @@ var NC_MODULE = {
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
+			
+			_due = params.due;
+			_reported = params.reported;
+			_start = params.start;
+			_end = params.end;
 			
 			my.renderSchedule(that);
 		};
@@ -2050,7 +2060,7 @@ var NC_MODULE = {
 			// Show loader
 			NC_MODULE.GLOBAL.showLoader('#report', 'Laddar dina aktiviteter...');
 			
-			my.load(my.params.showDue, my.params.showReported, null, null, function(data) {
+			my.load(_due, _reported, _start, _end, function(data) {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
@@ -2091,14 +2101,14 @@ var NC_MODULE = {
 			} else if (scheduledActivity.rejected == true) {
 				subrow.html('Rapporterad som ej utförd').css({'color' : 'red', 'font-weight' : 'bold'});
 				
-				if (my.params.showReported == false) {
+				if (_reported == false) {
 					$('#scheduledActivityItem' + scheduledActivity.id).hide();
 				}
 				
 			} else {
 				subrow.html('Rapporterad ' + scheduledActivity.reported);
 				
-				if (my.params.showReported == false) {
+				if (_reported == false) {
 					$('#scheduledActivityItem' + scheduledActivity.id).hide();
 				}
 			}
@@ -2264,6 +2274,57 @@ var NC_MODULE = {
 				throw new Error('Expected 1 or 2 inputs and nothing else.');
 			}
 			
+		};
+		
+		return my;
+	})(),
+	
+	PATIENT_SCHEDULE : (function() {
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.initListeners(that);
+			my.setFormDefaults();
+			
+			//$('#filter').click();
+			
+		};
+		
+		my.setFormDefaults = function() {
+			$('#start').datepicker('setDate', new Date());
+			$('#end').datepicker('setDate', new Date());
+			$('#reported').prop('checked', true);
+			$('#due').prop('checked', true);
+		};
+		
+		my.initListeners = function(my) {
+			
+			$('#filter-submit').click(function(e) {
+				e.preventDefault();
+				my.search(
+					$('#start').datepicker('getDate').getTime(),
+					$('#end').datepicker('getDate').getTime(),
+					$('#due').is(':checked'),
+					$('#reported').is(':checked')
+				);
+			});
+		};
+		
+		my.search = function(start, end, due, reported) {
+			NC.log('Searching scheduled activities');
+			$('#reportList').empty();
+			$('#siPagination > ul').empty();
+			
+			NC_MODULE.SCHEDULE.init({
+				'due' : due,
+				'reported' : reported,
+				'start' : start,
+				'end' : end
+			});
 		};
 		
 		return my;

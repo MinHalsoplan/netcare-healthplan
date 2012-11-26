@@ -36,15 +36,56 @@
 				var params = {
 					patientId : '<sec:authentication property="principal.id" />',
 					showAll : true,
-					showDue : true,
-					showReported : true
+					due : true,
+					reported : true,
+					start : new Date().getTime(),
+					end : new Date().getTime()
 				};
-					
-				NC_MODULE.SCHEDULE.init(params);
+				
+				NC_MODULE.PATIENT_SCHEDULE.init(params);
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Rapportera resultat">
+	<hp:viewBody title="Mina resultat">
+	
+		<section id="filter">
+			<form id="filterForm">
+				<fieldset>
+					<legend>Välj vad som skall visas</legend>
+				
+					<netcare:row>
+						<netcare:col span="2">
+							<netcare:field name="start" label="Startdatum">
+								<input id="start" type="text" name="start" class="dateInput span12">
+							</netcare:field>	
+						</netcare:col>
+						<netcare:col span="2">
+							<netcare:field name="end" label="Slutdatum">
+								<input id="end" type="text" name="end" class="dateInput span12"/>
+							</netcare:field>	
+						</netcare:col>
+					</netcare:row>
+					<netcare:row>
+						<netcare:col span="3">
+							<netcare:field name="reported">
+								<input id="reported" type="checkbox" name="reported" /><label style="display: inline;" for="reported"> Visa rapporterade</label>
+							</netcare:field>	
+						</netcare:col>
+						<netcare:col span="3">
+							<netcare:field name="due">
+								<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa försenade</label>
+							</netcare:field>
+						</netcare:col>
+					</netcare:row>
+					
+					<div class="form-actions">
+						<button id="filter-submit" type="submit" class="btn btn-primary btn-info">Visa</button>
+					</div>
+				
+				</fieldset>
+			</form>
+		</section>
+	
 		<section id="report">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />

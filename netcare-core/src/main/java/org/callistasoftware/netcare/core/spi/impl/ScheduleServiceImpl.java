@@ -16,11 +16,11 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -30,6 +30,7 @@ import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.ScheduleService;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,38 +56,30 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 			end = new DateTime().withMillisOfDay(0).plusDays(1).toDate().getTime();
 		}
 		
-		final StringBuilder query = new StringBuilder();
-		query.append("select e from ScheduledActivityEntity as e inner join e.activityDefinition as ad "); 
-		query.append("inner join ad.healthPlan as hp where hp.forPatient = :patient and ad.removedFlag = 'false' ");
+		final List<ScheduledActivityEntity> list = this.repo.findByPatientAndScheduledTimeBetween(getPatient(), new Date(start), new Date(end));
+		final List<ScheduledActivityEntity> filtered = new ArrayList<ScheduledActivityEntity>();
 		
-		if (includeDue && includeReported) {
-			query.append("and ((e.scheduledTime between :start and :end ");
-			query.append("or e.scheduledTime < :end and e.reportedTime is null) ");
-			query.append("or (e.reportedTime is not null and e.scheduledTime < :end))");
-		}
+		for (final ScheduledActivityEntity sae : list) {
 		
-		if (includeDue && !includeReported) {
-			query.append("and (e.scheduledTime between :start and :end ");
-			query.append("or e.scheduledTime < :end and e.reportedTime is null) ");
-		}
-		
-		if (!includeDue && includeReported) {
-			query.append("and (e.reportedTime is not null and e.scheduledTime < :end))");
-		}
+			/*
+			 * Om vi inkluderar due gäller följande:
+			 * 1. Aktiviteten får ej vara rapporterad
+			 * 2. Den måste vara open
+			 */
 			
-		if (!includeDue && !includeReported) {
-			query.append("and ((e.reportedTime is not null) and (e.scheduledTime < :end and e.reportedTime is not null))");
+			
+			if (
+				(includeDue && (sae.getReportedTime() != null && !sae.getStatus().equals(ScheduledActivityStatus.OPEN)))
+				||
+				(includeReported && (sae.getReportedTime() == null && sae.getStatus().equals(ScheduledActivityStatus.OPEN)))
+			) {
+				continue;
+			} else {
+				filtered.add(sae);
+			}
 		}
 		
-		query.append("order by e.scheduledTime asc");
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(filtered), new GenericSuccessMessage());
 		
-		final Query q = eMan.createEntityManager().createQuery(query.toString());
-		q.setParameter("patient", getPatient());
-		q.setParameter("start", new Date(start));
-		q.setParameter("end", new Date(end));
-		
-		@SuppressWarnings("unchecked")
-		List<ScheduledActivityEntity> resultList = q.getResultList();
-		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(resultList), new GenericSuccessMessage());
 	}
 }
