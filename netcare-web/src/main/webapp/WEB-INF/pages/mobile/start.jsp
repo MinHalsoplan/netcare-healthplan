@@ -30,247 +30,28 @@
 <mobile:header>
 	<mobile:templates />
 	<script type="text/javascript">
-		_.templateSettings.variable = "us";
-		_.templateSettings = {
-			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
-		};
 
 		var reportedLabel = '<spring:message code="mobile.activity.reported" />';
-
-		var mobile = new NC.Mobile();
-		var util = new NC.Util();
+		var templateNames = ['measurementSingleItemTemplate', 'measurementIntervalItemTemplate', 
+		                     'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 
+		                     'commonActivityItemTemplate'];
 		
-		var templateNames = ['measurementSingleItemTemplate', 'measurementIntervalItemTemplate', 'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 'commonActivityItemTemplate'];
-		var templates = {};
-		
-		var precompileTemplates = function() {
-			$.each(templateNames, function(index, name) {
-				templates[name] =  _.template($('#'+name).html());
-			});
-		};
-		
-		var buildListView = function(value, buildHeader) {
-			if (buildHeader) {
-				mobile.createListHeader($('#schema'), value.day.value + ' '
-						+ value.date);
-			}
+		NC_MOBILE.ACTIVITIES.init(templateNames, reportedLabel);
 
-			mobile.createListRow($('#schema'), '#report', value, loadActivity,
-					reportedLabel);
-		};
-
-		var due = new Array();
-		var actual = new Array();
-		var reported = new Array();
-
-		var loadScheduledActivity = function(activityId, callback) {
-			var activity;
-			var allActivities = due.concat(actual, reported);
-			$.each(allActivities, function(index, act){
-				if(act.id==activityId) {
-					activity = act;
-					return false;
-				}
-			});
-			if(activity!=null) {
-				callback(activity);
-			}
-		}
-		
-		var buildFromArray = function(object) {
-			var currentDay = '';
-
-			$('#schema').empty();
-
-			$.each(object, function(index, value) {
-				NC.log("Processing " + value.id + " ...");
-				if (currentDay != value.day.value) {
-					currentDay = value.day.value;
-					buildListView(value, true);
-				} else {
-					buildListView(value, false);
-				}
-			});
-		};
-
-		var loadFromServer = function(callback) {
-
-			due = new Array();
-			actual = new Array();
-			reported = new Array();
-
-			new NC.Ajax().get('/scheduledActivities', function(data) {
-				$.each(data.data, function(index, value) {
-
-					NC.log('Id: ' + value.id + " Reported: " + value.reported
-							+ " Due: " + value.due);
-
-					if (value.reported != null) {
-						NC.log("Pushing " + value.id + " to reported");
-						reported.push(value);
-					} else if (value.reported == null && value.due && value.activityDefinition.active==false) {
-						NC.log("Pushing " + value.id + " to due");
-						due.push(value);
-					} else {
-						NC.log("Pushing " + value.id + " to actual");
-						actual.push(value);
-					}
-				});
-
-				callback();
-			});
-		};
-
-		$('#start').live('pageinit', function(e) {
-
-			precompileTemplates(templateNames);
-			
-			loadFromServer(function() {
-				NC.log("Done fetching data.");
-
-				$('#actual').click(function(e) {
-					NC.log("Loading actual activities...");
-					buildFromArray(actual);
-				});
-
-				$('#due').click(function(e) {
-					NC.log("Loading due activities...");
-					buildFromArray(due);
-				});
-
-				$('#reported').click(function(e) {
-					NC.log("Loading reported activities...");
-					buildFromArray(reported);
-				});
-
-				$('#actual').click();
-			});
-
-			$('#ical').click(function(e) {
-				NC.log("Getting calendar as ical");
-				new NC.Patient().getCalendar(function(data) {
-					NC.log("Success!");
-				});
-			});
-		});
-		
-		var loadActivity = function(activityId) {
-			NC.log("Load activity: " + activityId);
-
-			loadScheduledActivity(activityId, function(activity) {
-				NC.log(activity.id + '-' + activity.activityDefinition.healthPlanName);
-				$('#reportForm').empty();
-				$('#report div h3').html(activity.activityDefinition.type.name);
-				$('#report div p').html(activity.day.value + ', ' + activity.date + ' ' + activity.time);
-
-				var reported = (activity.reported != null);
-				$.each(activity.activityItemValues,function(index, item) {
-					var templateName;
-					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
-						if(item.definition.activityItemType.valueType.code=='INTERVAL') {
-							templateName = 'measurementIntervalItemTemplate';					
-						} else {
-							templateName = 'measurementSingleItemTemplate';					
-						}
-					} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
-						templateName = 'estimationItemTemplate';					
-					} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
-						templateName = 'yesnoItemTemplate';					
-					} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
-						templateName = 'textItemTemplate';					
-					}  
-					var myTemplate = templates[templateName];
-					$('#reportForm').append(myTemplate(item));
-				});
-				$('#reportForm').append(templates['commonActivityItemTemplate'](activity));
-				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
-			});
-
-			/*
-			 * Report value
-			 */
-			$('#sendReport')
-					.click(
-							function(e) {
-
-								$.mobile.showPageLoadingMsg();
-								e.preventDefault();
-
-								var formData = new Object();
-								formData.values = new Array();
-
-								$.each($('input[id*="report-"]'),
-										function(i, v) {
-											formData.values.push({
-												seqno : $(v).attr('id').substr(
-														7),
-												value : $(v).val()
-											});
-										});
-
-								formData.actualDate = $('#date').val();
-								formData.actualTime = $('#time').val();
-								formData.sense = $('#slider').val();
-								formData.rejected = false;
-								formData.note = $('#note').val();
-
-								new NC.Patient()
-										.reportActivity(
-												activityId,
-												formData,
-												function(data) {
-													if (data.success) {
-
-														loadFromServer(function() {
-
-															var msg = $('<div>')
-																	.addClass(
-																			'ui-bar')
-																	.addClass(
-																			'ui-bar-e')
-																	.append(
-																			$('<h3>'
-																					+ data.successMessages[0].message
-																					+ '</h3>'));
-
-															$('#schema')
-																	.before(msg);
-
-															$('#back').click();
-															$('#actual')
-																	.click();
-
-															$.mobile
-																	.hidePageLoadingMsg();
-
-															setTimeout(
-																	function() {
-																		msg
-																				.slideUp('slow');
-																	}, 5000);
-														});
-													}
-												});
-
-								$('#sendReport').unbind('click');
-							});
-		};
-		
 	</script>
 </mobile:header>
 <body>
 	<div data-role="page" id="start" data-external-page="true">
 		<div data-role="header" id="today-header" data-theme="c" data-position="fixed">
+			<a style="display:none;"></a>
 			<h1>
 				<spring:message code="mobile.activity.title" />
 			</h1>
-			<!-- doesn't work, other integration method has to be used
- 				<a rel="external" href="/api/patient/schema/min-halso-plan" data-icon="grid" class="ui-btn-right">iCal</a>
- 				 -->
+			<a href="index.html" data-icon="refresh" data-iconpos="notext"></a>
 		</div>
 		<div id="today-body" data-role="content-primary">
-			<mobile:list id="schema">
-			</mobile:list>
+			<ul id="schema" data-role="listview">
+			</ul>
 		</div>
 		<div id="nc-footer" data-role="footer" data-theme="c" data-position="fixed">
 			<div data-role="navbar" class="ui-navbar">

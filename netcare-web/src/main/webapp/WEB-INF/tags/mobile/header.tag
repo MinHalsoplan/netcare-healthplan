@@ -74,16 +74,17 @@
 	</script>
 	<!-- Include NETCARE javascripts  -->
 	<script type="text/javascript" src="<c:url value='/js/netcare/PageMessages.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Mobile.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare/Ajax.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare-mobile-healthplan.js' />"></script>
 	<!-- Include NETCARE javascripts END  -->
-	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>
+	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>
 	<script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
-	
+	<script type="text/javascript">
+			_.templateSettings.variable = "us";
+		_.templateSettings = {
+			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
+		};
+	</script>	
 	<jsp:doBody />
 	
 </head>

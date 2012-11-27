@@ -61,6 +61,7 @@
 	</div>
 </script>
 <script id="commonActivityItemTemplate" type="text/template">
+	<input type="hidden" id="activityId" value="{{id}}" />
 	<div data-role="fieldcontain">
 		<label for="date"><spring:message code="mobile.report.form.date" /></label>
 		<input type="date" id="date" name="date" data-mini="true" value="{{date}}" />
