@@ -51,10 +51,9 @@
 				
 				var params = {
 					patientId : '<sec:authentication property="principal.id" />',
-					showAll : false,
 					due : true,
 					reported : false,
-					start : new Date().getTime(),
+					start : new Date().getTime() - 1209600000,
 					end : new Date().getTime(),
 					lang : schemaLang
 				};
