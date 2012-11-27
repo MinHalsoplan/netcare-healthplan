@@ -21,7 +21,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 
 public interface ScheduleService {
 
-	ServiceResult<ScheduledActivity[]> loadToday(boolean includeReported
+	ServiceResult<ScheduledActivity[]> load(boolean includeReported
 			, boolean includeDue
 			, final Long startTs
 			, final Long endTs);

@@ -318,7 +318,7 @@ public final class WebUtil {
 				int offset = (int) Math.round(Math.random() * 240) + 30;
 				c.add(Calendar.MINUTE, offset);
 				sce.setReportedTime(c.getTime());
-				sce.setStatus(ScheduledActivityStatus.CLOSED);
+				sce.setStatus(ScheduledActivityStatus.OPEN);
 				sce.setActualTime(sce.getScheduledTime());
 				for (ActivityItemValuesEntity aiv : sce.getActivities()) {
 					

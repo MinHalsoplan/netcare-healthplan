@@ -49,7 +49,7 @@ public class ScheduleApi extends ApiSupport {
 		logAccess("lista", "schema");
 		
 		getLog().debug("Reported: {}, Due: {}, Start: {}, End: {}", new Object[] { reported, due, start, end });
-		return schedule.loadToday(reported, due, start, end);
+		return schedule.load(reported, due, start, end);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)

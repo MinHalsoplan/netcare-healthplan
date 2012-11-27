@@ -46,7 +46,7 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 	@Autowired private ScheduledActivityRepository repo;
 	
 	@Override
-	public ServiceResult<ScheduledActivity[]> loadToday(final boolean includeReported
+	public ServiceResult<ScheduledActivity[]> load(final boolean includeReported
 			, final boolean includeDue
 			, Long start
 			, Long end) {
@@ -69,10 +69,9 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 		getLog().debug("Query found {} in interval {} - {}", new Object[] { list.size(), new Date(start), new Date(end) });
 		
 		for (final ScheduledActivityEntity sae : list) {
-		
 			
 			boolean dueCheck = sae.getReportedTime() == null && sae.getStatus().equals(ScheduledActivityStatus.OPEN) && sae.getScheduledTime().before(new Date(System.currentTimeMillis()));
-			boolean reportCheck = sae.getReportedTime() != null && (sae.getStatus().equals(ScheduledActivityStatus.CLOSED) || sae.getStatus().equals(ScheduledActivityStatus.REJECTED));
+			boolean reportCheck = sae.getReportedTime() != null && (sae.getStatus().equals(ScheduledActivityStatus.OPEN) || sae.getStatus().equals(ScheduledActivityStatus.REJECTED));
 			
 			getLog().debug("due check: {}, report check: {}", dueCheck, reportCheck);
 			
@@ -81,7 +80,7 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 			} else {
 				
 				boolean openCheck = sae.getReportedTime() == null && sae.getStatus().equals(ScheduledActivityStatus.OPEN); 
-				if (openCheck && !includeDue) {
+				if (openCheck) {
 					filtered.add(sae);
 				}
 			}

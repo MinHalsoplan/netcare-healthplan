@@ -2079,8 +2079,8 @@ var NC_MODULE = {
 						'itemIdPrefix' : 'scheduledActivityItem',
 						'paginationId' : '#siPagination',
 						'data' : data.data,
-						'previousLabel' : 'Föregående',
-						'nextLabel' : 'Nästa'
+						'previousLabel' : '<<',
+						'nextLabel' : '>>'
 					});
 					
 					//NC_MODULE.GLOBAL.suspendLoader('#report');
