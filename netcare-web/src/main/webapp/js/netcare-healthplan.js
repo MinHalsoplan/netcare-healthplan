@@ -2090,17 +2090,17 @@ var NC_MODULE = {
 			});
 		};
 		
-		my.createScheduleItem = function(my, activityIndex, scheduledActivity) {
+		my.createScheduleItem = function(my, activityIndex, scheduledActivity, callback) {
 			
 			_data[activityIndex] = scheduledActivity;
 			
 			var dom = _.template($('#scheduledActivityItem').html())(scheduledActivity);
 			$('#reportList').append($(dom));
 			
-			my.updateScheduleItem(my, activityIndex, scheduledActivity);
+			my.updateScheduleItem(my, activityIndex, scheduledActivity, callback);
 		};
 		
-		my.updateScheduleItem = function(my, activityIndex, scheduledActivity) {
+		my.updateScheduleItem = function(my, activityIndex, scheduledActivity, callback) {
 			var subrow = $('#saItem' + scheduledActivity.id).find('.subRow');
 			if (scheduledActivity.reported == null) {
 				subrow.html(scheduledActivity.date + ' ' + scheduledActivity.time)
@@ -2145,10 +2145,10 @@ var NC_MODULE = {
 			/*
 			 * Listen for changes on the activity
 			 */
-			my.initActivityListeners(my, activityIndex);
+			my.initActivityListeners(my, activityIndex, callback);
 		};
 		
-		my.initActivityListeners = function(my, idx) {
+		my.initActivityListeners = function(my, idx, callback) {
 			var id = _data[idx].id;
 			var time = $('#' + id + '-report-time');
 			var date = $('#' + id + '-report-date');
@@ -2171,31 +2171,35 @@ var NC_MODULE = {
 			});
 			
 			$(report).click(function(e) {
-				my.performReport(my, idx);
+				my.performReport(my, idx, callback);
 			});
 			
 			$(noreport).click(function(e) {
 				_data[idx].rejected = true;
-				my.performReport(my, idx);
+				my.performReport(my, idx, callback);
 			});
 		};
 		
-		my.performReport = function(my, idx) {
+		my.performReport = function(my, idx, callback) {
 			// Remove definition from data
 			_data[idx].activityDefinition = undefined;
 			_data[idx].patient = undefined;
 			
 			new NC.Ajax().post('/scheduledActivities/' + _data[idx].id, _data[idx], function(data) {
 				
-				// Save the updated data
-				_data[idx] = data.data;
-				
-				// Fold the activity
-				$('#sa-details-' + _data[idx].id).slideUp('fast');
-				
-				// Rerender
-				my.updateScheduleItem(my, idx, _data[idx]);
-				NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
+				if (callback != undefined) {
+					callback(data);
+				} else {
+					// Save the updated data
+					_data[idx] = data.data;
+					
+					// Fold the activity
+					$('#sa-details-' + _data[idx].id).slideUp('fast');
+					
+					// Rerender
+					my.updateScheduleItem(my, idx, _data[idx]);
+					NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
+				}
 			});
 		};
 		
@@ -2805,18 +2809,36 @@ var NC_MODULE = {
 					
 					NC.log('Creating schedule item');
 					var schedule = NC_MODULE.SCHEDULE;
-					schedule.createScheduleItem(schedule, idx, template);
+					schedule.createScheduleItem(schedule, idx, template, function(data) {
+						
+						// Callback when save has been success
+						my.cleanup(template.id);
+						
+						$('div.form-actions').prepend(
+							$('<div>')
+							.css('margin-bottom', '20px')
+							.addClass('alert alert-success')
+							.html('<i>Rapportering genomförd</i>')
+						);
+						
+					});
 					
 					// Hide report as not performed
-					$('.subRow').html('<i>Extra rapportering</i>');
-					$('div.mvk-icon.toggle').remove();
-					$('#sa-noreport-' + template.id).remove();
-					$('div[id*="sa-row-"]').find('input').val('');
-					
-					$('#sa-details-' + template.id).show();
+					my.cleanup(template.id);
 				});
 				
 			});
+		};
+		
+		my.cleanup = function(id) {
+			$('.subRow').html('<i>Extra rapportering</i>');
+			$('div.mvk-icon.toggle').remove();
+			$('#sa-noreport-' + id).remove();
+			$('div[id*="sa-row-"]').find('input').val('');
+			$('textarea[id*="-report-note"]').val('');
+			$('div[id*="sa-details-"]').find('.alert').remove();
+			
+			$('#sa-details-' + id).show();
 		};
 		
 		my.loadActivities = function() {
@@ -2833,10 +2855,6 @@ var NC_MODULE = {
 				$('#activityDefinitions').select();
 				
 			});
-		};
-		
-		my.renderInputForm = function() {
-			
 		};
 		
 		return my;
