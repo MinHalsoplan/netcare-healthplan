@@ -1924,15 +1924,15 @@ var NC_MODULE = {
 			$(_paginationId + ' > ul > li').click(function(e) {
 				e.preventDefault();
 				
-				var text = $(this).find('a').html();
-				if (text == _nextLabel) {
-					NC.log('Next click');
+				var text = $(this).prop('id');
+				text = text.substr((text.lastIndexOf('-') + 1), text.length);
+				
+				if (text == "next") {
 					nextPage();
 					return;
 				}
 				
-				if (text == _previousLabel) {
-					NC.log('Previous click');
+				if (text == "previous") {
 					previousPage();
 					return;
 				}
@@ -2210,6 +2210,27 @@ var NC_MODULE = {
 				var dom = t(actItem);
 				
 				$('#sa-details-' + activity.id).find('.span12').append($(dom));
+				
+				/*
+				 * If reporting isn't possible due to scheduled time is
+				 * more than a week away. Disable all form elements
+				 */
+				if (activity.reportingPossible == false) {
+					$('#sa-details-' + activity.id).find('input').prop('disabled', true);
+					$('#sa-details-' + activity.id).find('textarea').prop('disabled', true);
+					$('#sa-details-' + activity.id).find('button').prop('disabled', true);
+					
+					$('#sa-details-' + activity.id).prepend(
+						$('<div>')
+						.css('margin-bottom', '20px')
+						.addClass('alert alert-info')
+						.html('<i>Aktiviteten är inte öppen för rapportering ännu.</i>')
+					);
+					
+					return;
+				}
+				
+				
 				my.initActivityItemListener(my, activityIndex, idx, actItem.id);
 				
 				// FIX FOR YES NO INITIAL VALUE CHECKED

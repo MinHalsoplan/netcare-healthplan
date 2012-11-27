@@ -34,6 +34,7 @@ import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.joda.time.DateTime;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -54,6 +55,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private ActivityItemValues[] activityItemValues;
 	private boolean rejected;
 	private ActivityComment[] comments;
+	
+	private boolean reportingPossible;
 
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
@@ -90,6 +93,18 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 			scheduledActivity.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " "
 					+ ApiUtil.formatTime(entity.getActualTime());
 		}
+		
+		// Scheduled time within one week?
+		final Date oneWeek = new DateTime(System.currentTimeMillis()).plusWeeks(1).toDate();
+		final Date scheduled = entity.getScheduledTime();
+		
+		if (scheduled.before(oneWeek)) {
+			scheduledActivity.setReportingPossible(true);
+		} else {
+			scheduledActivity.setReportingPossible(false);
+		}
+		
+		
 
 		List<ActivityItemValuesEntity> activityEntities = entity.getActivities();
 		scheduledActivity.activityItemValues = new ActivityItemValues[activityEntities.size()];
@@ -232,5 +247,14 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	@Override
 	public ActivityComment[] getComments() {
 		return comments;
+	}
+
+	@Override
+	public boolean isReportingPossible() {
+		return this.reportingPossible;
+	}
+	
+	public void setReportingPossible(final boolean reportingPossible) {
+		this.reportingPossible = reportingPossible;
 	}
 }

@@ -119,4 +119,10 @@ public interface ScheduledActivity extends Serializable {
 	 * @return
 	 */
 	ActivityComment[] getComments();
+	
+	/**
+	 * Whether reporting is possible or not for this activity
+	 * @return
+	 */
+	boolean isReportingPossible();
 }
