@@ -57,6 +57,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private ActivityComment[] comments;
 	
 	private boolean reportingPossible;
+	private boolean extra;
 
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
@@ -104,7 +105,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 			scheduledActivity.setReportingPossible(false);
 		}
 		
-		
+		scheduledActivity.setExtra(entity.isExtra());
 
 		List<ActivityItemValuesEntity> activityEntities = entity.getActivities();
 		scheduledActivity.activityItemValues = new ActivityItemValues[activityEntities.size()];
@@ -256,5 +257,14 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	
 	public void setReportingPossible(final boolean reportingPossible) {
 		this.reportingPossible = reportingPossible;
+	}
+
+	@Override
+	public boolean isExtra() {
+		return this.extra;
+	}
+	
+	public void setExtra(final boolean extra) {
+		this.extra = extra;
 	}
 }

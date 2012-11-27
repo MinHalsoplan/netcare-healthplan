@@ -2071,7 +2071,6 @@ var NC_MODULE = {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
-						_data[i] = v;
 						my.createScheduleItem(my, i, v);
 					});
 					
@@ -2092,6 +2091,9 @@ var NC_MODULE = {
 		};
 		
 		my.createScheduleItem = function(my, activityIndex, scheduledActivity) {
+			
+			_data[activityIndex] = scheduledActivity;
+			
 			var dom = _.template($('#scheduledActivityItem').html())(scheduledActivity);
 			$('#reportList').append($(dom));
 			
@@ -2620,7 +2622,7 @@ var NC_MODULE = {
 		
 		my.createSchemaTable = function(my) {
 			NC_MODULE.GLOBAL.showLoader('#my-schedule', 'Laddar ditt schema...');
-			my.load(my, function(data) {
+			my.load(function(data) {
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						my.createSchemaRow(my, v);
@@ -2749,8 +2751,92 @@ var NC_MODULE = {
 			
 		};
 		
-		my.load = function(my, callback) {
+		my.load = function(callback) {
 			new NC.Ajax().get('/activityPlans', callback);
+		};
+		
+		return my;
+	})(),
+	
+	PATIENT_EXTRA_REPORT : (function() {
+		
+		var _data;
+		
+		var findIndexForDefinition = function(id) {
+			NC.log('Find definition with id: ' + id);
+			for (var i = 0; i < _data.length; i++) {
+				
+				var d = _data[i];
+				if (d.id == id) {
+					return i;
+				}
+			}
+		}
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			_data = new Array();
+			
+			my.initListeners();
+			my.loadActivities();
+		};
+		
+		my.initListeners = function() {
+			$('#activityDefinitions').bind('change select', function() {
+				var idx = findIndexForDefinition($(this).find('option:selected').prop('value'));
+				var def = _data[idx];
+				
+				$('#reportList').empty();
+				
+				/*
+				 * Load latest scheduled activity of
+				 * this definition and use it as a template
+				 */
+				new NC.Ajax().getWithParams('/scheduledActivities/latestForDefinition', { 'definitionId' : def.id }, function(data) {
+					
+					var template = data.data;
+					template.activityDefinition = def;
+					template.reportingPossible = true;
+					template.extra = true;
+					
+					NC.log('Creating schedule item');
+					var schedule = NC_MODULE.SCHEDULE;
+					schedule.createScheduleItem(schedule, idx, template);
+					
+					// Hide report as not performed
+					$('.subRow').html('<i>Extra rapportering</i>');
+					$('div.mvk-icon.toggle').remove();
+					$('#sa-noreport-' + template.id).remove();
+					$('div[id*="sa-row-"]').find('input').val('');
+					
+					$('#sa-details-' + template.id).show();
+				});
+				
+			});
+		};
+		
+		my.loadActivities = function() {
+			NC_MODULE.PATIENT_ACTIVITIES.load(function(data) {
+				$.each(data.data, function(i, v) {
+					
+					_data[i] = v;
+					
+					$('#activityDefinitions').append(
+						$('<option>').prop('value', v.id).html(v.type.name)
+					);
+				});
+				
+				$('#activityDefinitions').select();
+				
+			});
+		};
+		
+		my.renderInputForm = function() {
+			
 		};
 		
 		return my;

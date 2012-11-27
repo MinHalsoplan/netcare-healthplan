@@ -146,5 +146,12 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"ad.removedFlag = 'false' and " +
 			"hp.id = :healthPlanId")
 	List<ScheduledActivityEntity> findScheduledActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId);
+	
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp where " +
+			"ad.removedFlag = 'false' and hp.archived = 'false' " +
+			"and ad.id = :definitionId and e.extra = 'false' order by e.scheduledTime desc limit 1")
+	List<ScheduledActivityEntity> findLatestScheduledActivityForActivity(@Param("definitionId") final Long definitionId);
 
 }

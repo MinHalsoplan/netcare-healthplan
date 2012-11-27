@@ -18,7 +18,6 @@ package org.callistasoftware.netcare.api.rest;
 
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.core.spi.ScheduleService;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PreAuthorize(RoleEntity.PATIENT)
 public class ScheduleApi extends ApiSupport {
 
-	@Autowired private HealthPlanService service;
 	@Autowired private ScheduleService schedule;
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
@@ -56,6 +54,13 @@ public class ScheduleApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report) {
 		logAccess("report", "activity");
-		return service.reportReady(report);
+		return schedule.reportReady(report);
+	}
+	
+	@RequestMapping(value="/latestForDefinition", method=RequestMethod.GET)
+	@ResponseBody
+	public ServiceResult<ScheduledActivity> loadLatestForDefinition(@RequestParam("definitionId") final Long definition) {
+		logAccess("load latest", "activity");
+		return schedule.loadLatestForDefinition(definition);
 	}
 }

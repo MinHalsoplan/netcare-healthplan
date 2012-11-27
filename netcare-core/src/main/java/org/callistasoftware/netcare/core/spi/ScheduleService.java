@@ -25,4 +25,20 @@ public interface ScheduleService {
 			, boolean includeDue
 			, final Long startTs
 			, final Long endTs);
+	
+	/**
+	 * Load the latest scheduled activity for a specific activity definition
+	 * @param definitionId
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> loadLatestForDefinition(final Long definitionId);
+	
+	/**
+	 * Reports on an activity and returns the update.
+	 * 
+	 * @param scheduledActivityId the id.
+	 * @param value the value.
+	 * @return an updated {@link ScheduledActivity}
+	 */
+	ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report);
 }

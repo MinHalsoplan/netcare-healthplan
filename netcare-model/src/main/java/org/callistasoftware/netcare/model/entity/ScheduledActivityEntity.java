@@ -66,6 +66,9 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 
 	@Column(name = "reminder_done")
 	private boolean reminderDone;
+	
+	@Column(name = "extra")
+	private boolean extra;
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "activity_def_id")
@@ -83,6 +86,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		this.setActivities(new LinkedList<ActivityItemValuesEntity>());
 		this.setStatus(ScheduledActivityStatus.OPEN);
 		this.setReminderDone(false);
+		this.setExtra(false);
 	}
 
 	/**
@@ -236,4 +240,11 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 		this.reminderDone = reminderDone;
 	}
 
+	public boolean isExtra() {
+		return this.extra;
+	}
+	
+	public void setExtra(final boolean extra) {
+		this.extra = extra;
+	}
 }

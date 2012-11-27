@@ -29,6 +29,7 @@
 	<ul class="menuList">
 		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
 		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
+		<li><netcare:image name="edit" size="16" /><a id="extraReportLink" href="<spring:url value="/netcare/user/extra-report" />"><spring:message code="patient.menu.extra-report" /></a></li>
 		<li><netcare:image name="result-overview" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
 	</ul>
 </div>

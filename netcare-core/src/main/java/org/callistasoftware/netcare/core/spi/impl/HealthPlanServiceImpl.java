@@ -25,24 +25,19 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.ActivityItemValues;
 import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
-import org.callistasoftware.netcare.core.api.Estimation;
 import org.callistasoftware.netcare.core.api.HealthPlan;
-import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.MeasurementDefinition;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.Text;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.YesNo;
 import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
@@ -63,9 +58,7 @@ import org.callistasoftware.netcare.core.api.statistics.ReportedValue;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
-import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
@@ -78,13 +71,10 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.AlarmCause;
-import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
-import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.FrequencyDay;
 import org.callistasoftware.netcare.model.entity.FrequencyTime;
@@ -95,10 +85,7 @@ import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
-import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
-import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
-import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,12 +155,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 	@Autowired
 	private ActivityCommentRepository commentRepository;
-	
-	@Autowired
-	private ActivityItemValuesEntityRepository valueRepository;
-
-	@Autowired
-	private AlarmRepository alarmRepo;
 
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
@@ -363,87 +344,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				.getActivityDefinitions().size()));
 	}
 
-	@Override
-	public ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report) {
-		log.info("Report done for scheduled activity {}", report.getId());
-		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(report.getId());
-		entity.setReportedTime(new Date());
-		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.CLOSED);
-		entity.setNote(report.getNote());
-		for (final ActivityItemValues value : report.getActivityItemValues()) {
-			
-			final ActivityItemValuesEntity valueEntity = this.valueRepository.findOne(value.getId());
-			
-			if (valueEntity instanceof MeasurementEntity) {
-				
-				final Measurement m = (Measurement) value;
-				final MeasurementEntity me = (MeasurementEntity) valueEntity;
-				
-				// Set reported value
-				me.setReportedValue(m.getReportedValue());
-				
-				// Update goal values at this point in time
-				MeasurementDefinitionEntity definition = (MeasurementDefinitionEntity) me.getActivityItemDefinitionEntity();
-				MeasurementValueType valueType = definition.getMeasurementType().getValueType();
-
-				switch (valueType) {
-				case INTERVAL:
-					me.setMaxTarget(definition.getMaxTarget());
-					me.setMinTarget(definition.getMinTarget());
-					break;
-				case SINGLE_VALUE:
-					me.setTarget(definition.getTarget());
-					break;
-				}
-
-				log.debug("Alarm status: enabled {} raised {}", definition.getMeasurementType().isAlarmEnabled(),
-						me.isAlarm());
-				
-				if (!report.isRejected() && me.isAlarm()) {
-					AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, entity
-							.getActivityDefinitionEntity().getHealthPlan().getForPatient(), entity
-							.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
-					
-					ae.setInfo(definition.getMeasurementType().getName() + ": " + me.getReportedValue() + " "
-							+ definition.getMeasurementType().getUnit().getName());
-					
-					alarmRepo.save(ae);
-				}
-			} else if (valueEntity instanceof EstimationEntity) {
-				
-				final Estimation e = (Estimation) value;
-				final EstimationEntity ee = (EstimationEntity) valueEntity;
-				
-				ee.setPerceivedSense(e.getPerceivedSense());
-				
-			} else if (valueEntity instanceof YesNoEntity) {
-				
-				final YesNo yn = (YesNo) value;
-				final YesNoEntity yne = (YesNoEntity) valueEntity;
-				
-				yne.setAnswer(yn.getAnswer());
-				
-			} else if (valueEntity instanceof TextEntity) {
-				
-				final Text t = (Text) value;
-				final TextEntity te = (TextEntity) valueEntity;
-				
-				te.setTextComment(t.getTextComment());
-				
-			} else {
-				throw new IllegalArgumentException();
-			}
-		}
-		
-		Date d = ApiUtil.parseDateTime(report.getActualTime());
-		entity.setActualTime(d);
-		entity = scheduledActivityRepository.save(entity);
-
-		log.debug("Reported time for activity is: {}", entity.getReportedTime());
-
-		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(entity),
-				new GenericSuccessMessage());
-	}
+	
 
 	@Override
 	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit,

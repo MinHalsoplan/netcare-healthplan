@@ -125,4 +125,10 @@ public interface ScheduledActivity extends Serializable {
 	 * @return
 	 */
 	boolean isReportingPossible();
+	
+	/**
+	 * Whether this activity was created by the patient.
+	 * @return
+	 */
+	boolean isExtra();
 }

@@ -187,15 +187,6 @@ public interface HealthPlanService {
 	ServiceResult<ActivityComment> deleteComment(final Long commentId);
 	
 	/**
-	 * Reports on an activity and returns the update.
-	 * 
-	 * @param scheduledActivityId the id.
-	 * @param value the value.
-	 * @return an updated {@link ScheduledActivity}
-	 */
-	ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report);
-	
-	/**
 	 * Load the latest reported activities for all patients that
 	 * has health plans belonging to the caller's care unit
 	 * @return

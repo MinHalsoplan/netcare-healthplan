@@ -155,6 +155,12 @@ public class HomeController extends ControllerSupport {
 		return "user/report";
 	}
 	
+	@RequestMapping(value = "/user/extra-report", method = RequestMethod.GET)
+	public String displayUserExtraReport() {
+		log.info("Displaying home for user");
+		return "user/extra-report";
+	}
+	
 	@RequestMapping(value="/nation-admin/units", method=RequestMethod.GET)
 	public String displayUnitAdministration() {
 		return "nation-admin/units";
