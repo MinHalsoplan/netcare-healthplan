@@ -29,99 +29,96 @@
 
 <hp:view>
 	<hp:viewHeader>
+		<script src="/js/highcharts-2.3.3/highcharts.js" type="text/javascript"></script>
+		<script src="/js/highstock-1.2.4/highstock.js" type="text/javascript"></script>
+		
 		<script type="text/javascript">
-			google.load('visualization', '1.0', {'packages' : ['corechart']});
 
+			var over = [
+			            [Date.UTC(2012,11,01), 100],
+			            [Date.UTC(2012,11,02), 110],
+			            [Date.UTC(2012,11,03), 110],
+			            [Date.UTC(2012,11,04), 110],
+			            [Date.UTC(2012,11,05), 130],
+			            [Date.UTC(2012,11,06), 130],
+			            [Date.UTC(2012,11,07), 120],
+			            [Date.UTC(2012,11,08), 120],
+			            [Date.UTC(2012,11,09), 130],
+			            [Date.UTC(2012,11,10), 110],
+			            [Date.UTC(2012,11,11), 110],
+			            [Date.UTC(2012,11,12), 120],
+			            [Date.UTC(2012,11,13), 110],
+			            [Date.UTC(2012,11,14), 120],
+			            [Date.UTC(2012,11,15), 110],
+			            [Date.UTC(2012,11,16), 115],
+			            [Date.UTC(2012,11,17), 115],
+			            [Date.UTC(2012,11,18), 110],
+			            [Date.UTC(2012,11,19), 110],
+			         ];
+			var under = [
+			            [Date.UTC(2012,11,01), 60],
+			            [Date.UTC(2012,11,02), 60],
+			            [Date.UTC(2012,11,03), 65],
+			            [Date.UTC(2012,11,04), 60],
+			            [Date.UTC(2012,11,05), 75],
+			            [Date.UTC(2012,11,06), 75],
+			            [Date.UTC(2012,11,07), 70],
+			            [Date.UTC(2012,11,08), 80],
+			            [Date.UTC(2012,11,09), 80],
+			            [Date.UTC(2012,11,10), 70],
+			            [Date.UTC(2012,11,11), 60],
+			            [Date.UTC(2012,11,12), 60],
+			            [Date.UTC(2012,11,13), 70],
+			            [Date.UTC(2012,11,14), 70],
+			            [Date.UTC(2012,11,15), 65],
+			            [Date.UTC(2012,11,16), 65],
+			            [Date.UTC(2012,11,17), 65],
+			            [Date.UTC(2012,11,18), 60],
+			            [Date.UTC(2012,11,19), 60],
+			         ];
+			
 			$(function() {
-				var drawOverview = function() {
-					
-					NC.log("Drawing overview...");
-					
-					var captions = null;
-					new NC.Support().loadCaptions('result', ['activityType'
-					                                         , 'numberOfActivities'
-					                                         , 'date'
-					                                         , 'reportedValue'
-					                                         , 'targetValue'
-					                                         , 'resultLink'
-					                                         , 'targetMinValue'
-					                                         , 'targetMaxValue'], function(data) {
-						NC.log("Load captions returned success...");
-						captions = data;
-					});
-					
-					NC.log("Captions are: " + captions);
-					
-					var hp = new NC.HealthPlan();
-					
-					var loadStatistics = function(healthPlanId) {
-						NC.log("Loading statistics for health plan " + healthPlanId);
-						var reports = null;
-						hp.loadStatistics(healthPlanId, function(data) {
-							reports = new NC.Reports(data, captions);
-							reports.getHealthPlanOverview('pieChart', captions.activityType, captions.numberOfActivities);
-							$('#pieChart').show();
-							
-							/*
-							 * For each activity type draw diagrams for each
-							 */
-							var processed = '';
-							$.each(data.data.measuredValues, function(i, v) {
-								if (v.name != processed) {
-									var div = $('<div>').attr('id', 'activity-' + i);
-									
-									var div2 = $('<div>').css('text-align', 'right');
-									
-									var link = $('<a>').attr('href', NC.getContextPath() + '/api/patient/result/' + v.definitionId + '/resultat.csv');
-									link.html(captions.resultLink);
-									div2.append(link);
-									
-									$('#activities').append(
-										$('<h2>').html(v.name)
-									).append(div2).append(div);
-									
-									setupFilter($('#activity-' + i), v.name);
-									
-									NC.log("Drawing diagrams for: " + v.name);
-									reports.getResultsForActivityType(v.name, 'activity-' + i);
-									
-									processed = v.name;
-								}
-							});
-
-							$('div[class="shadow-box"]').each(function(i) {
-								$(this).after('<br />');
-							});
-							
-							$('#filter').show();
-						});
-					};
-					
-					var setupFilter = function(forElement, label) {
-						var id = 'filter-for-' + forElement.attr('id');
-						var input = new NC.Util().createCheckbox(id, label);
-						
-						$('#filter-row').append(
-							$('<div>').addClass('span1').append(input)
-						);
-						
-						$('#' + id).attr('checked', 'checked');
-						input.click(function(e) {
-							forElement.toggle();
-						});
-					}
-					
-					var healthPlanId = "<c:out value="${param.healthPlan}" />";
-					if (healthPlanId == "")  {
-						hp.list(<sec:authentication property="principal.id" />, function(data) {
-							loadStatistics(data.data[0].id);
-						});	
-					} else {
-						loadStatistics(healthPlanId);
-					}
-				};
-								
-				google.setOnLoadCallback(drawOverview);
+				
+				var chart1; // globally available
+				$(document).ready(function() {
+				      chart1 = new Highcharts.StockChart({
+				         chart: {
+				            renderTo: 'chartcontainer',
+				            type: 'line'
+				         },
+				         rangeSelector: {
+					            enabled: false
+				         },
+				         title: {
+				            text: 'Blodtryck'
+				         },
+				         xAxis: {
+				            dateTimeLabelFormats: {
+				                second: '%Y-%m-%d<br/>%H:%M:%S',
+				                minute: '%Y-%m-%d<br/>%H:%M',
+				                hour: '%Y-%m-%d<br/>%H:%M',
+				                day: '%Y<br/>%m-%d',
+				                week: '%Y<br/>%m-%d',
+				                month: '%Y-%m',
+				                year: '%Y'
+				            }
+				         },
+				         yAxis: {
+				            title: {
+				               text: 'mmHg'
+				            },
+				         },
+				         series: [{
+				            name: 'Övertryck',
+				            data: over
+				         }, {
+				            name: 'Undertryck',
+				            data: under
+				         }]
+				      });
+				   });
+				
+				
 			});
 		</script>
 	</hp:viewHeader>
@@ -144,5 +141,6 @@
 			</form>
 		</section>
 		<div id="activities"></div>
+		<div id="chartcontainer" style="width: 100%; height: 400px"></div>
 	</hp:viewBody>
 </hp:view>
