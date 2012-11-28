@@ -93,7 +93,7 @@
   			<remote.protocol>http</remote.protocol>
   			<remote.hostname>netcare-dev.callistasoftware.org</remote.hostname>
   			<remote.port>8080</remote.port>
-  			<remote.context>/netcare2</remote.context>
+  			<remote.context>/v2</remote.context>
   		</properties>
   	</profile>
   </profiles>
