@@ -256,13 +256,18 @@ var NC_MODULE = {
 		};
 		
 		my.loadHealthPlans = function(my) {
-			new NC.Ajax().getWithParams('/healthplans', { patient : my.params.patientId }, function(data) {
+			my.list(my.params.patientId, function(data) {
 				$('#healthPlanContainer').empty();
 				
 				$.each(data.data, function(i, v) {
 					my.buildHealthPlanItem(my, v);
 				});
-				
+			});
+		};
+		
+		my.list = function(patientId, callback) {
+			new NC.Ajax().getWithParams('/healthplans', { patient : patientId }, function(data) {
+				callback(data);
 			}, false);
 		};
 		
@@ -2858,6 +2863,74 @@ var NC_MODULE = {
 		};
 		
 		return my;
+	})(),
+	
+	SELECT_RESULTS : (function() {
+		
+		var _hps;
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			_hps = new Array();
+			
+			my.loadActivities(that);
+		};
+		
+		my.loadActivities = function(my) {
+			NC_MODULE.PATIENT_ACTIVITIES.load(function(data) {
+				
+				// Okey, we need to group the results by health plan
+				for (var i = 0; i < data.data.length; i++) {
+					_hps.push(data.data[i]);
+				};
+				
+				// Let's render
+				my.render(my);
+			});
+		};
+		
+		my.render = function(my) {
+			for (var i = 0; i < _hps.length; i++) {
+				
+				if ( $('#healthplans h2').html() != _hps[i].healthPlanName ) {
+					$('#healthplans').append(
+						$('<h2>').html(_hps[i].healthPlanName)
+					);
+					
+					$('#healthplans').append(
+						$('<ul>').prop('id', 'healthplan-' + _hps[i].healthPlanId).addClass('itemList facility')
+					);
+				}
+				
+				// Build comma separated activity string
+				var str = '';
+				for (var j = 0; j < _hps[i].goalValues.length; j++) {
+					str += _hps[i].goalValues[j].activityItemType.name + ', ';
+				}
+				
+				str += 'Anteckning';
+				
+				_hps[i].cs = str;
+				
+				var dom = _.template($('#activityResultItem').html())(_hps[i]);
+				$('#healthplan-' + _hps[i].healthPlanId).append($(dom));
+				
+				my.initItemListener(my, '#activityResultItem-' + _hps[i].id, _hps[i].id);
+			};
+		};
+		
+		my.initItemListener = function(my, elemId, activityId) {
+			
+			$(elemId).bind('click', function(e) {
+				window.location = NC.getContextPath() + '/netcare/user/results?activity=' + activityId;
+			});
+		};
+		
+		return my; 
 	})()
 
 };

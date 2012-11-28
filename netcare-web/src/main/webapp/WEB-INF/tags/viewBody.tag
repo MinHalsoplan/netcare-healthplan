@@ -21,6 +21,7 @@
 <%@ attribute name="backTitle" required="false" %>
 <%@ attribute name="backUrl" required="false" %>
 <%@ attribute name="backToWhat" required="false" %>
+<%@ attribute name="plain" required="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -55,7 +56,8 @@
 	<mvk:content title="${title}" 
 		backTitle="${backTitle}" 
 		backUrl="${backUrl}" 
-		backToWhat="${backToWhat}">
+		backToWhat="${backToWhat}"
+		plain="${plain}">
 		<jsp:doBody/>
 	</mvk:content>
 </mvk:pageContent>

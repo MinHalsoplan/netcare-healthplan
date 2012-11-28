@@ -136,6 +136,11 @@ public class HomeController extends ControllerSupport {
 	public String displayPatientResults() {
 		return "user/results";
 	}
+	
+	@RequestMapping(value="/user/select-results", method=RequestMethod.GET)
+	public String selectResults() {
+		return "user/select-results";
+	}
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public String displayUserProfile() {

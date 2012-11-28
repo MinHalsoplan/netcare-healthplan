@@ -747,4 +747,18 @@
 	<li id="{{prefix}}-{{page}}"><a href="#">{{text}}</a></li> 
 </script>
 
+<script id="activityResultItem" type="text/template">
+	<li id="activityResultItem-{{id}}" class="item withNavigation" style="cursor: pointer;">
+		<mvk:touch-item>
+			<div id="result-item-{{id}}" class="listItemBase">
+				<div class="mainBody">
+					<h4 class="titel">{{type.name}} | {{numDone}} rapporteringar</h4>
+					<div class="subRow">{{cs}}</div>
+				</div>
+			</div>
+			<a id="result-item-{{id}}-showResults" href="#" class="itemNavigation assistiveText"></a>
+		</mvk:touch-item>
+	</li>
+</script>
+
 <!-- healthplan:templates / -->
