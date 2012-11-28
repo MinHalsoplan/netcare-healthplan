@@ -322,6 +322,9 @@
 	  					<exclude>**/scripts/*</exclude>
 						<!-- Exclude underscorejs -->
 	  					<exclude>**/*underscore*</exclude>
+						<!-- Exclude highcharts -->
+	  					<exclude>**/highcharts/**</exclude>
+	  					<exclude>**/highstock/**</exclude>
 	  				</excludes>
 	  				<mapping>
 	  					<tag>DYNASCRIPT_STYLE</tag>
