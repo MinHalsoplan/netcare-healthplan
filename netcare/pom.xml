@@ -314,6 +314,10 @@
 	  					<include>src/test/**</include>
 	  				</includes>
 	  				<excludes>
+						<!-- Exclude HighCharts files -->
+						<exclude>**/highcharts*/**/*.js</exclude>
+						<exclude>**/highstock*/**/*.js</exclude>
+						
 	  					<!-- Exclude JQuery files -->
 	  					<exclude>**/*jquery*</exclude>
 	  					<exclude>**/*bootstrap*</exclude>
@@ -322,9 +326,6 @@
 	  					<exclude>**/scripts/*</exclude>
 						<!-- Exclude underscorejs -->
 	  					<exclude>**/*underscore*</exclude>
-						<!-- Exclude highcharts -->
-	  					<exclude>**/highcharts/**</exclude>
-	  					<exclude>**/highstock/**</exclude>
 	  				</excludes>
 	  				<mapping>
 	  					<tag>DYNASCRIPT_STYLE</tag>
