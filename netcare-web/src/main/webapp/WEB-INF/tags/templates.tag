@@ -390,11 +390,11 @@
 <mvk:touch-item style="padding-right:0px;">
 <div id="raItem{{id}}" class="listItemBase">
 	<div class="row-fluid">
-		<div class="mainBody span6">
+		<div class="mainBody span8">
 			<h4 class="titel">{{patient.surName}}, {{patient.firstName}}</h4>
 			<div class="subRow">{{activityDefinition.type.name}} - Rapporterad {{reported}}</div>
 		</div>
-		<div class="mainBody actionBody span6">
+		<div class="mainBody actionBody span4">
 
 		</div>
 	</div>
@@ -405,7 +405,7 @@
 
 <%--Reported Activity details --%>
 <script id="reportedActivityDetails" type="text/template">
-<div id="ra-details-{{id}}" class="span10" style="display: none;">
+<div id="ra-details-{{id}}" class="item-with-form" style="display: none; margin-right: 15px;">
 	<div class="row-fluid">
 		<div class="span12">
 		</div>
@@ -417,7 +417,7 @@
 			<textarea id="activitycomment" rows="2" class="span11"></textarea>
 			<button class="btn"><spring:message code="report.save" /></button>
 		</div>
-		<div id="actcommented" class="span11" style="visibility:none;padding-bottom: 5px;">
+		<div id="actcommented" class="span11" style="display:none;padding-bottom: 5px;">
 		</div>
 	</div>
 </div>
@@ -427,15 +427,15 @@
 <%--Estimation values --%>
 <script id="estimationValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}}
-{{definition.activityItemType.minScaleValue}} ({{definition.activityItemType.minScaleText}}) - {{definition.activityItemType.maxScaleValue}} ({{definition.activityItemType.maxScaleText}})</div>
+<div class="span5"><span>{{definition.activityItemType.name}}
+{{definition.activityItemType.minScaleValue}} ({{definition.activityItemType.minScaleText}}) - {{definition.activityItemType.maxScaleValue}} ({{definition.activityItemType.maxScaleText}})</span></div>
 <div class="span5">{{perceivedSense}}</div>
 </div>
 </script>
 <%--Measurement values --%>
 <script id="measurementValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}}</div>
+<div class="span5"><span>{{definition.activityItemType.name}}</span></div>
 <div class="span5">{{reportedValue}} {{definition.activityItemType.unit.name}}</div>
 </div>
 </div>
@@ -443,15 +443,15 @@
 <%--Reported Activity values --%>
 <script id="yesnoValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.question}}
-</div>
+<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.question}}
+</span></div>
 <div class="span5">{{answer}}</div>
 </div>
 </script>
 <%--Reported Activity values --%>
 <script id="textValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.label}}</div>
+<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.label}}</span></div>
 <div class="span5">{{textComment}}</div>
 </div>
 </script>
@@ -478,7 +478,7 @@
 
 <%--Scheduled Activity details --%>
 <script id="scheduledActivityDetails" type="text/template">
-<div id="sa-details-{{id}}" class="span10" style="display: none;">
+<div id="sa-details-{{id}}" class="item-with-form" style="display: none; margin-right: 15px;">
 	<div class="row-fluid">
 		<div class="span12">
 		
@@ -486,7 +486,7 @@
 	</div>
 	<div class="row-fluid external">
 		<div class="span5">
-			Ange tidpunkt då aktiviteten utfördes
+			<span>Ange tidpunkt då aktiviteten utfördes</span>
 		</div>
 		<div class="span7">
 			<input id="{{id}}-report-date" type="text" style="display: inline;" class="span5 dateInput allow-previous"/>
@@ -495,7 +495,7 @@
 	</div>
 	<div class="row-fluid external">
 		<div class="span5">
-			Övriga kommentarer
+			<span>Övriga kommentarer</span>
 		</div>
 		<div class="span7">
 			<textarea id="{{id}}-report-note" class="span11">{{note}}</textarea>
@@ -512,7 +512,7 @@
 <%--Estimation values --%>
 <script id="scheduled-estimationValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}}</div>
+<div class="span5"><span>{{definition.activityItemType.name}}</span></div>
 <div class="span7">
 	<span style="display: inline;">{{definition.activityItemType.minScaleText}}</span>
 	<input type="range" min="{{definition.activityItemType.minScaleValue}}" max="{{definition.activityItemType.maxScaleValue}}" step="1" value="{{perceivedSense}}" />
@@ -523,7 +523,7 @@
 <%--Measurement values --%>
 <script id="scheduled-measurementValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}}</div>
+<div class="span5"><span>{{definition.activityItemType.name}}</span></div>
 <div class="span7">
 	<input type="text" value="{{reportedValue}}" />
 	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
@@ -534,8 +534,8 @@
 <%--Yes/No values --%>
 <script id="scheduled-yesnoValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.question}}
-</div>
+<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.question}}
+</span></div>
 <div class="span7">
 	<input type="radio" name="answer" value="true" /> Ja
 	<input type="radio" name="answer" value="false" /> Nej 
@@ -545,7 +545,7 @@
 <%--Text values --%>
 <script id="scheduled-textValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5">{{definition.activityItemType.name}} {{definition.activityItemType.label}}</div>
+<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.label}}</span></div>
 <div class="span7"><input type="text" value="{{textComment}}" /></div>
 </div>
 </script>
@@ -556,7 +556,7 @@
 <mvk:touch-item style="padding-right:0px;">
 <div id="alarmsItem" class="listItemBase">
 	<div class="row-fluid">
-		<div class="mainBody span11">
+		<div class="mainBody span12">
 			<div class="subRow">
 				<netcare:table>
 					<thead>
@@ -594,7 +594,7 @@
 <mvk:touch-item style="padding-right:0px;">
 <div id="repliesItem" class="listItemBase">
 	<div class="row-fluid">
-		<div class="mainBody span11">
+		<div class="mainBody span12">
 			<div class="subRow">
 				<netcare:table>
 					<thead>
