@@ -65,7 +65,7 @@
 
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Startsida">
+	<hp:viewBody title="Startsida" plain="true">
 		
 		<section id="comments" style="display: none;">
 			

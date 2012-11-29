@@ -62,6 +62,4 @@
 	</mvk:content>
 </mvk:pageContent>
 
-<mvk:pageFooter></mvk:pageFooter>
-
 </mvk:body>
