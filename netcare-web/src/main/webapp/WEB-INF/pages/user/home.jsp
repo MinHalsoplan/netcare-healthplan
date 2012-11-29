@@ -77,7 +77,7 @@
 				<span class="loaderMessage"></span>
 			</div>
 			<div id="reportContainer" style="display: none;">
-				<h2>Du har aktiviteter att rapportera</h2>
+				<h3 class="title">Du har aktiviteter att rapportera</h3>
 				<mvk:touch-list id="reportList"></mvk:touch-list>
 			</div>
 		</section>
@@ -88,7 +88,7 @@
 				<span class="loaderMessage"></span>
 			</div>
 			<div id="schemaContainer">
-				<h2>Mina aktiviteter</h2>
+				<h3 class="title">Mina aktiviteter</h3>
 				<mvk:touch-list id="activity-list"></mvk:touch-list>
 			</div>
 		</section>

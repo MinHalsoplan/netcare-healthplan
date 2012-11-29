@@ -57,7 +57,7 @@
 		<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
 		<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
 		
-		<h2><spring:message code="healthplan.title" arguments="${curPatient}"/></h2>
+		<h3 class="title"><spring:message code="healthplan.title" arguments="${curPatient}"/></h3>
 		
 		<mvk:touch-list id="healthPlanContainer">
 		

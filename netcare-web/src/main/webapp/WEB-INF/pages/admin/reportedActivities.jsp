@@ -77,7 +77,7 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Genomförda aktiviteter">
-		<h2><spring:message code="activity.reported.title" /></h2>
+		<h3 class="title"><spring:message code="activity.reported.title" /></h3>
 		<p>
 			<span class="label label-info"><spring:message code="label.information" /></span>
 			<spring:message code="activity.reported.desc2" />

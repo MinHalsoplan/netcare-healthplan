@@ -51,7 +51,7 @@
 		</form>
 		
 		<section id="categoryList">
-			<h3><spring:message code="category.list.title" /></h3>
+			<h3 class="title"><spring:message code="category.list.title" /></h3>
 			<netcare:table id="categoryTable">
 				<thead>
 					<tr>

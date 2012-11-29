@@ -105,7 +105,7 @@
 	</hp:viewHeader>
 	<hp:viewBody title="Patienter">
 		<section id="patients">
-			<h2><spring:message code="admin.patients.list" /></h2>
+			<h3 class="title"><spring:message code="admin.patients.list" /></h3>
 			
 <%-- 			<netcare:block-message type="info" style="display:none;"> --%>
 <%-- 				<spring:message code="admin.patients.none" /> --%>

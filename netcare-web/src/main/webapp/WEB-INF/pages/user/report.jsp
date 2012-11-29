@@ -54,12 +54,12 @@
 					<legend>Välj vad som skall visas</legend>
 				
 					<netcare:row>
-						<netcare:col span="2">
+						<netcare:col span="4">
 							<netcare:field name="start" label="Startdatum">
 								<input id="start" type="text" name="start" class="dateInput allow-previous span12">
 							</netcare:field>	
 						</netcare:col>
-						<netcare:col span="2">
+						<netcare:col span="4">
 							<netcare:field name="end" label="Slutdatum">
 								<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
 							</netcare:field>	

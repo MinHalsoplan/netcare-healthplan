@@ -156,9 +156,7 @@
 			<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
 			<spring:message code="profile.update" var="update" scope="page" />
 
-			<h2>
-				<spring:message code="profile.title" arguments="${currentPrincipal}" />
-			</h2>
+			<h3 class="title"><spring:message code="profile.title" arguments="${currentPrincipal}" /></h3>
 			<p>
 				<span class="label label-info"><spring:message code="information" /></span>
 				<spring:message code="profile.desc" arguments="${update}" />
@@ -167,7 +165,6 @@
 
 			<div id="userprofile">
 				<form>
-
 					<netcare:row>
 						<netcare:col span="12">
 							<spring:message code="profile.crn" var="crn" scope="page" />
