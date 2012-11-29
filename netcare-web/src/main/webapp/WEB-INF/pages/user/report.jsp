@@ -46,45 +46,46 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Mitt schema">
+	<hp:viewBody title="Mitt schema" plain="true">
 	
-		<section id="filter">
-			<form id="filterForm">
-				<fieldset>
-					<legend>Välj vad som skall visas</legend>
-				
-					<netcare:row>
-						<netcare:col span="4">
-							<netcare:field name="start" label="Startdatum">
-								<input id="start" type="text" name="start" class="dateInput allow-previous span12">
-							</netcare:field>	
-						</netcare:col>
-						<netcare:col span="4">
-							<netcare:field name="end" label="Slutdatum">
-								<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
-							</netcare:field>	
-						</netcare:col>
-					</netcare:row>
-					<netcare:row>
-						<netcare:col span="3">
-							<netcare:field name="reported">
-								<input id="reported" type="checkbox" name="reported" /><label style="display: inline;" for="reported"> Visa rapporterade</label>
-							</netcare:field>	
-						</netcare:col>
-						<netcare:col span="3">
-							<netcare:field name="due">
-								<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa försenade</label>
-							</netcare:field>
-						</netcare:col>
-					</netcare:row>
+		<mvk:sheet>
+			<section id="filter">
+				<form id="filterForm">
+					<fieldset>
+						<legend>Välj vad som skall visas</legend>
+						<netcare:row>
+							<netcare:col span="4">
+								<netcare:field name="start" label="Startdatum">
+									<input id="start" type="text" name="start" class="dateInput allow-previous span12">
+								</netcare:field>	
+							</netcare:col>
+							<netcare:col span="4">
+								<netcare:field name="end" label="Slutdatum">
+									<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
+								</netcare:field>	
+							</netcare:col>
+						</netcare:row>
+						<netcare:row>
+							<netcare:col span="3">
+								<netcare:field name="reported">
+									<input id="reported" type="checkbox" name="reported" /><label style="display: inline;" for="reported"> Visa rapporterade</label>
+								</netcare:field>	
+							</netcare:col>
+							<netcare:col span="3">
+								<netcare:field name="due">
+									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa försenade</label>
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+						
+						<div class="form-actions">
+							<button id="filter-submit" type="submit" class="btn btn-primary btn-info">Visa</button>
+						</div>
 					
-					<div class="form-actions">
-						<button id="filter-submit" type="submit" class="btn btn-primary btn-info">Visa</button>
-					</div>
-				
-				</fieldset>
-			</form>
-		</section>
+					</fieldset>
+				</form>
+			</section>
+		</mvk:sheet>
 	
 		<section id="report">
 			<div class="sectionLoader" style="display: none;">
@@ -95,6 +96,7 @@
 				<h2>Aktiviteter</h2>
 				<mvk:touch-list id="reportList"></mvk:touch-list>
 				
+				
 				<div id="siPagination" class="pagination pagination-centered">
 					<ul>
 					</ul>
@@ -102,5 +104,6 @@
 				
 			</div>
 		</section>
+		
 	</hp:viewBody>
 </hp:view>

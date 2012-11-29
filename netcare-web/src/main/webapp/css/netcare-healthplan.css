@@ -333,3 +333,8 @@ div.row-fluid.external > div.span5 > span {
 div[id*="ra-row-"] > div.span5 > span {
 	margin-left: 15px;
 }
+
+.pagination ul > .disabled > a,
+.pagination ul > .disabled > a:hover {
+	background-color: whitesmoke;
+}
