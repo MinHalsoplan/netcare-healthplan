@@ -45,7 +45,6 @@
 	<hp:viewBody title="Resultat" plain="true">
 		
 		<section id="healthplans">
-		
 		</section>
 		
 	</hp:viewBody>

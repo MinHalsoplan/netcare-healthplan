@@ -2896,9 +2896,9 @@ var NC_MODULE = {
 		my.render = function(my) {
 			for (var i = 0; i < _hps.length; i++) {
 				
-				if ( $('#healthplans h2').html() != _hps[i].healthPlanName ) {
+				if ( $('#healthplans h3').html() != _hps[i].healthPlanName ) {
 					$('#healthplans').append(
-						$('<h2>').html(_hps[i].healthPlanName)
+						$('<h3>').addClass('title').html(_hps[i].healthPlanName)
 					);
 					
 					$('#healthplans').append(

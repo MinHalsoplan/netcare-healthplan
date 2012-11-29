@@ -212,7 +212,7 @@ table[id*=planned-times] tbody tr td {
 /*
  * TO BE REMOVED AFTER MVK RELEASE
  */
-li.item .itemStateText {
+/*li.item .itemStateText {
 	position: absolute;
 	display: block;
 	top: 0px;
@@ -223,19 +223,19 @@ li.item .itemStateText {
 	background-image: url(/netcare/resources/img/shadow-btn.png);
 	background-position: bottom right;
 	background-repeat: no-repeat;
-}
+}*/
 
 /*
  * TO BE REMOVED AFTER MVK RELEASE
  */
-#inboxDetailWrapper li.item .itemStateText>.wrapper {
+/*#inboxDetailWrapper li.item .itemStateText>.wrapper {
 	padding: 5px 13px;
 	display: block;
 	background-color: #fabd17;
 	background-image: url(/netcare/resources/img/stateTextBg.png);
 	background-position: right center;
 	background-repeat: repeat-y;
-}
+}*/
 
 .sectionLoader {
 	font-size: 14px;
