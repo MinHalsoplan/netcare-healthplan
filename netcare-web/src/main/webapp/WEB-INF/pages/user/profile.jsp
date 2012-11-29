@@ -190,13 +190,13 @@
 						<netcare:col span="6">
 							<spring:message code="profile.email" var="email" scope="page" />
 							<netcare:field name="email" label="${email}">
-								<input type="email" name="email" />
+								<input type="text" name="email" />
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="6">
 							<spring:message code="profile.phone" var="phone" scope="page" />
 							<netcare:field name="phone" label="${phone}">
-								<input type="tel" name="phone" />
+								<input type="text" name="phone" />
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>

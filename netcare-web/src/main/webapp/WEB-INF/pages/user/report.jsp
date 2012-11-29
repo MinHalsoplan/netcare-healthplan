@@ -89,11 +89,11 @@
 	
 		<section id="report">
 			<div class="sectionLoader" style="display: none;">
-				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
+				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
 			</div>
 			<div id="reportContainer" style="display: none;">
-				<h2>Aktiviteter</h2>
+				<h3 class="title">Aktiviteter</h3>
 				<mvk:touch-list id="reportList"></mvk:touch-list>
 				
 				

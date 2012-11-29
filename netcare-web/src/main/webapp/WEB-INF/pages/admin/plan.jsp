@@ -48,7 +48,7 @@
 	
 		<section id="plan">
 			<div class="sectionLoader" style="display: none;">
-				<img src="<c:url value="/netcare/resources/img/loaders/ajax-loader-medium.gif" />" />
+				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
 			</div>
 			<div id="planContainer" style="display: none;">

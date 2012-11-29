@@ -76,26 +76,28 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Genomförda aktiviteter">
-		<h3 class="title"><spring:message code="activity.reported.title" /></h3>
-		<p>
-			<span class="label label-info"><spring:message code="label.information" /></span>
+	
+	<spring:message code="activity.reported.title" var="reported"/>
+	<hp:viewBody title="${reported}" plain="true">
+		<mvk:heading title="${reported}">
 			<spring:message code="activity.reported.desc2" />
-		</p>
-		<div class="controls">
-    		<label class="control-label" for="personnummer">Personnummer</label>
-    		<div class="controls">
-      			<input type="text" id="personnummer">
-    		</div>
-    		<label class="control-label" for="personnummer">Datumperiod</label>
-    		<div class="controls">
-      			<input type="text" id="dateFrom" class="span2"> -
-      			<input type="text" id="dateTo" class="span2">
-    		</div>
-    		<div class="form-actions">
-    			<button class="btn btn-info">Sök</button>
-    		</div>
-  		</div>
+		</mvk:heading>
+		<mvk:sheet>
+			<div class="controls">
+	    		<label class="control-label" for="personnummer">Personnummer</label>
+	    		<div class="controls">
+	      			<input type="text" id="personnummer">
+	    		</div>
+	    		<label class="control-label" for="personnummer">Datumperiod</label>
+	    		<div class="controls">
+	      			<input type="text" id="dateFrom" class="span3 dateInput allow-previous"> -
+	      			<input type="text" id="dateTo" class="span3 dateInput allow-previous">
+	    		</div>
+	    		<div class="form-actions">
+	    			<button class="btn btn-info">Sök</button>
+	    		</div>
+	  		</div>
+  		</mvk:sheet>
 		<mvk:touch-list id="latestActivitiesContainer">
 
 		</mvk:touch-list>

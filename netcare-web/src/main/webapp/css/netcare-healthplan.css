@@ -245,7 +245,7 @@ table[id*=planned-times] tbody tr td {
 /*
  * BUTTONS
  */
-.button, .btn, input[type="reset"] {
+.button, .btn, input[type="reset"], a.btn {
 	background-color: #008391;
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#008391),
 		to(#00606a) );
@@ -267,7 +267,7 @@ table[id*=planned-times] tbody tr td {
 	border-radius: 5px;
 }
 
-button:hover, .btn:hover, input[type="reset"]:hover {
+button:hover, .btn:hover, input[type="reset"]:hover, a.btn:hover {
 	background-color: #1d8692;
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#1d8692),
 		to(#0b6a7a) );
@@ -277,7 +277,7 @@ button:hover, .btn:hover, input[type="reset"]:hover {
 	background-image: -o-linear-gradient(top, #1d8692, #0b6a7a);
 }
 
-button:active,.btn:active, input[type="reset"]:active {
+button:active,.btn:active, input[type="reset"]:active, a.btn:active {
 	background-color: #0f8da3;
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0f8da3),
 		to(#27b3c3) );
@@ -289,6 +289,13 @@ button:active,.btn:active, input[type="reset"]:active {
 	box-shadow: inset 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
 }
 
+.btn, .btn:hover {
+	color: #fff;
+	text-decoration: none;
+	text-shadow: none;
+	background-position: 0;
+}
+
 /*
  * INPUT TEXT
  */
@@ -297,7 +304,7 @@ input[type="text"] {
 	display: inline;
 }
 
-input[type="number"], select {
+input[type="number"], input[type="password"], select {
 	padding:8px 10px;
 	background-color:#ededed;
 	border:1px solid #e0dfdd;

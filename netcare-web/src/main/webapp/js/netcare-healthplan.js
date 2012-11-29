@@ -94,38 +94,6 @@ var NC_MODULE = {
 				return false;
 			}
 		};
-		
-		formatFrequency = function (activityDefinition, freqMsgs) {
-			var text = '';
-			
-			$.each(activityDefinition.dayTimes, function (index1, day) {
-				text += day.dayCaption.value;
-				$.each(day.times, function(index2, time) {
-					if (index2 > 0) {
-						text += ',';
-					}
-					text += '&nbsp;' + time;
-				});
-				text += '<br/>';				
-			});
-			
-			text += '<i style="font-size: 10px;">';			
-			switch (activityDefinition.activityRepeat) {
-				case 0: text += _captions.freq0; break;
-				case 1: text += _captions.freq1; break;
-				case 2: text +=_captions.freq2; break;
-				case 3: text += _captions.freq3; break;
-				case 4: text += _captions.freq4; break;
-				case 5: text += _captions.freq5; break;
-				default:
-					text += _captions.every + activityDefinition.activityRepeat + ' ' + _captions.week;
-				break;
-			}
-
-			text += '</i>';
-			
-			return text;
-		}
 
 		return my;
 	})(),
