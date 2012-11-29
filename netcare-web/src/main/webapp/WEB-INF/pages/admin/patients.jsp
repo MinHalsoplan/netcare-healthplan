@@ -134,13 +134,13 @@
 		
 		<form id="patientForm" style="display: none;">
 			<netcare:row>
-				<netcare:col span="4">
+				<netcare:col span="6">
 					<spring:message code="patient.firstName" var="name" scope="page"/>
 					<netcare:field containerId="nameContainer" name="firstName" label="${name}">
 						<input type="text" name="firstName" />
 					</netcare:field>
 				</netcare:col>
-				<netcare:col span="4">
+				<netcare:col span="6">
 					<spring:message code="patient.surName" var="surName" scope="page"/>
 					<netcare:field containerId="nameContainer" name="surName" label="${surName}">
 						<input type="text" name="surName" />
@@ -149,7 +149,7 @@
 			</netcare:row>
 			
 			<netcare:row>
-				<netcare:col span="4">
+				<netcare:col span="6">
 					<spring:message code="patient.crn" var="cnr" scope="page" />
 					<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
 						<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
@@ -157,10 +157,10 @@
 						<span class="help-block"><small>Exempel: 191212121212</small></span>
 					</netcare:field>
 				</netcare:col>
-				<netcare:col span="4">
+				<netcare:col span="6">
 					<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
 					<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
-						<input type="tel" name="phoneNumber" />
+						<input type="text" name="phoneNumber" />
 					</netcare:field>
 				</netcare:col>
 			</netcare:row>

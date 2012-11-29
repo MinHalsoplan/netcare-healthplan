@@ -50,32 +50,32 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Aktivitetsmallar">
-		<netcare:row>
-			<netcare:col span="6">
-				<form class="form-search">
+		<form class="form-search">
+			<netcare:row>
+				<netcare:col span="6">
 					<div class="input-append">
 						<input type="text" class="span12 search-query" placeholder="Sök mall"/>
 						<button type="submit" class="btn">Sök</button>
 					</div>
-				</form>
-			</netcare:col>
-			<netcare:col span="6" style="text-align: right;">
-				<a href="<c:url value="/netcare/admin/template" />" class="btn btn-info"><i class="icon-plus-sign icon-white"></i> Skapa ny mall</a>
-			</netcare:col>
-		</netcare:row>
-		
-		<netcare:row>
-			<netcare:col span="4">
-				<netcare:field name="category" label="Välj en kategori">
-					<select name="category" class="span10"></select>
-				</netcare:field>
-			</netcare:col>
-			<netcare:col span="4">
-				<netcare:field name="level" label="Välj en nivå">
-					<select name="level" class="span10"></select>
-				</netcare:field>
-			</netcare:col>
-		</netcare:row>
+				</netcare:col>
+				<netcare:col span="6" style="text-align: right;">
+					<a href="<c:url value="/netcare/admin/template" />" class="btn btn-info">Skapa ny mall</a>
+				</netcare:col>
+			</netcare:row>
+			
+			<netcare:row>
+				<netcare:col span="4">
+					<netcare:field name="category" label="Välj en kategori">
+						<select name="category" class="span10"></select>
+					</netcare:field>
+				</netcare:col>
+				<netcare:col span="4">
+					<netcare:field name="level" label="Välj en nivå">
+						<select name="level" class="span10"></select>
+					</netcare:field>
+				</netcare:col>
+			</netcare:row>
+		</form>
 		
 		<mvk:touch-list id="templateList">
 		
