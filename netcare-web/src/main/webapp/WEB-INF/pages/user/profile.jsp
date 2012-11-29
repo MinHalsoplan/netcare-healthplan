@@ -45,8 +45,8 @@
 							data.data.surName);
 					$('#userprofile input[name="cnr"]')
 							.val(
-									new NC.Util()
-											.formatCnr(data.data.civicRegistrationNumber));
+									NC_MODULE.GLOBAL
+											.formatCrn(data.data.civicRegistrationNumber));
 					$('#userprofile input[name="email"]').val(data.data.email);
 					$('#userprofile input[name="phone"]').val(
 							data.data.phoneNumber);
@@ -151,18 +151,15 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Profil">
+	
+	<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
+	<spring:message code="profile.title" arguments="${currentPrincipal}" var="title"/>
+	<hp:viewBody title="${title}" plain="true">
 		<section id="profile">
-			<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
+			
 			<spring:message code="profile.update" var="update" scope="page" />
-
-			<h3 class="title"><spring:message code="profile.title" arguments="${currentPrincipal}" /></h3>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="profile.desc" arguments="${update}" />
-			</p>
-
-
+			
+			<mvk:sheet>
 			<div id="userprofile">
 				<form>
 					<netcare:row>
@@ -224,14 +221,14 @@
 							<netcare:col span="2">
 								<spring:message code="profile.mobile.pin" var="pin" scope="page" />
 								<netcare:field name="password" label="${pin}">
-									<input type="password" name="password" class="input-small numericInput" />
+									<input type="password" name="password" class="span12 numericInput" />
 								</netcare:field>
 							</netcare:col>
 
 							<netcare:col span="2">
 								<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
 								<netcare:field name="password2" label="${pin2}">
-									<input type="password" name="password2" class="input-small numericInput" />
+									<input type="password" name="password2" class="span12 numericInput" />
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>
@@ -248,6 +245,7 @@
 
 				</form>
 			</div>
+			</mvk:sheet>
 		</section>
 	</hp:viewBody>
 </hp:view>

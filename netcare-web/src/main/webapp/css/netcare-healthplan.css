@@ -298,6 +298,21 @@ input[type="text"] {
 	display: inline;
 }
 
+input[type="number"], select {
+	padding:8px 10px;
+	background-color:#ededed;
+	border:1px solid #e0dfdd;
+	margin:10px 0 20px;
+	display:block;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
 .help-block {
+	font-size: 0.75em;
+}
+
+div.subRow table {
 	font-size: 0.75em;
 }

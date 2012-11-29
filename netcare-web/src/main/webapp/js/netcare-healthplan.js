@@ -196,7 +196,7 @@ var NC_MODULE = {
 			my.loadHealthPlans(that);
 			
 			if (my.params.showForm != '') {
-				$('#createHealthPlanForm').toggle();
+				$('#createHealthPlanSheet').toggle();
 			}
 		};
 		
@@ -207,7 +207,7 @@ var NC_MODULE = {
 		my.initListeners = function() {
 			
 			$('#showCreateHealthPlan').click(function() {
-				$('#createHealthPlanForm').toggle();
+				$('#createHealthPlanSheet').toggle();
 			});
 			
 			$('input[name="name"]').on('keyup blur', function() {
@@ -402,7 +402,7 @@ var NC_MODULE = {
 					/*
 					 * Add new item in list and hide form
 					 */
-					$('#createHealthPlanForm').hide();
+					$('#createHealthPlanSheet').hide();
 					
 					NC.log('New healthplan created with id: ' + data.data.id);
 					my.buildHealthPlanItem(data.data);

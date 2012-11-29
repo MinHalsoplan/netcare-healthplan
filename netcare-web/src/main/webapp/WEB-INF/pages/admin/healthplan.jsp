@@ -53,14 +53,13 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Hälsoplaner">
+	<hp:viewBody title="Hälsoplaner" plain="true">
 		<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
 		<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
 		
 		<h3 class="title"><spring:message code="healthplan.title" arguments="${curPatient}"/></h3>
 		
 		<mvk:touch-list id="healthPlanContainer">
-		
 		</mvk:touch-list>
 
 		<spring:message code="clear" var="clear" scope="page" />
@@ -75,7 +74,8 @@
 			<spring:message code="healthplan.new" />
 		</button>
 		
-		<form id="createHealthPlanForm" action="#" method="post" style="display: none;">
+		<mvk:sheet id="createHealthPlanSheet" style="display: none;">
+		<form id="createHealthPlanForm" action="#" method="post">
 			<fieldset>
 				<netcare:field name="name" label="${name}">
 					<input type="text" name="name" class="xlarge" />
@@ -112,19 +112,6 @@
 			</div>
 			
 		</form>
-
-		<netcare:modal titleCode="healthplan.icons.performRenewal" confirmCode="label.yes" id="perform-renewal">
-			<p>
-				<span class="label label-info"><spring:message code="label.information" /></span>
-				<spring:message code="healthplan.confirm.performRenewal" />
-			</p>
-		</netcare:modal>
-
-		<netcare:modal titleCode="healthplan.icons.stopRenewal" confirmCode="label.yes" id="stop-renewal">
-			<p>
-				<span class="label label-info"><spring:message code="label.information" /></span>
-				<spring:message code="healthplan.confirm.stopAutoRenewal" />
-			</p>
-		</netcare:modal>
+		</mvk:sheet>
 	</hp:viewBody>
 </hp:view>

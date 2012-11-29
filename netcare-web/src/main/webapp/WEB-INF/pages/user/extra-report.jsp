@@ -46,17 +46,17 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Mitt schema">
+	<hp:viewBody title="Extra rapportering" plain="true">
 		<section id="extraReport">
 			<form>
-				<fieldset>
-					<legend>1. Välj aktivitet</legend>
-					<select id="activityDefinitions"></select>
-				</fieldset>
-				<fieldset>
-					<legend>2. Mata in värden</legend>
-					<mvk:touch-list id="reportList"></mvk:touch-list>
-				</fieldset>
+				<mvk:sheet>
+					<fieldset>
+						<legend>1. Välj aktivitet</legend>
+						<select id="activityDefinitions"></select>
+					</fieldset>
+				</mvk:sheet>
+				
+				<mvk:touch-list id="reportList"></mvk:touch-list>
 			</form>
 		</section>
 	</hp:viewBody>

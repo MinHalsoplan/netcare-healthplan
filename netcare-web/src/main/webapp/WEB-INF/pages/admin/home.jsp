@@ -44,62 +44,38 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Min hälsoplan - Profil">
-		<section id="dashboard">
-			<p>
-				<spring:message code="admin.home.description" />
-			</p>
-			<p>
-				<span class="label label-important"><spring:message code="important" /></span>
-				<spring:message code="admin.home.important" />
-			</p>
-			
-		</section>
-		
+	<hp:viewBody title="Startsida" plain="true">
 		<section id="alarms">
-			<h2><spring:message code="alarm.title" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="alarm.title" var="alarms" />
+			<mvk:heading title="${alarms}">
 				<spring:message code="alarm.desc" />
-			</p>
-			<mvk:touch-list id="alarmContainer">
-		
-			</mvk:touch-list>
+			</mvk:heading>
+			<mvk:touch-list id="alarmContainer"></mvk:touch-list>
 		</section>
 
 		<br />
 		
 		<section id="replies">
-			<h2><spring:message code="comments.replies" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="comments.replies" var="replies"/>
+			<mvk:heading title="${replies}">
 				<spring:message code="comments.repliesDescription" />
-			</p>
-			<mvk:touch-list id="repliesContainer">
-		
-			</mvk:touch-list>
+			</mvk:heading>
+			<mvk:touch-list id="repliesContainer"></mvk:touch-list>
 		</section>
 		
 		<br />
 		
 		<section id="aktiviteter">
-			<h2><spring:message code="activity.reported.title" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
+			<spring:message code="activity.reported.title" var="reportedTitle"/>
+			<mvk:heading title="${reportedTitle}">
 				<spring:message code="activity.reported.desc" />
-			</p>
+			</mvk:heading>
 			
-			<netcare:block-message type="warning">
-				<a href="<spring:url value="/netcare/admin/activity/list" />"><spring:message code="activity.reported.list" /></a>
-			</netcare:block-message>
+			<a href="<spring:url value="/netcare/admin/activity/list" />" class="btn"><spring:message code="activity.reported.list" /></a>
 			
 			<div id="reportedActivities">
-				<mvk:touch-list id="latestActivitiesContainer">
-		
-				</mvk:touch-list>
+				<mvk:touch-list id="latestActivitiesContainer"></mvk:touch-list>
 			</div>
-			
-		
 		</section>
 		
 	</hp:viewBody>

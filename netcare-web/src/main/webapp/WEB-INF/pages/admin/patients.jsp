@@ -93,37 +93,20 @@
 				});
 				
 				$('#showCreatePatient').click(function(e) {
-					$('#patientForm').toggle();
+					$('#patientSheet').toggle();
 				});
 				
 				var showForm = '<c:out value="${param.showForm}" />';
 				if (showForm != '') {
-					$('#patientForm').toggle();
+					$('#patientSheet').toggle();
 				}
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Patienter">
+	<hp:viewBody title="Patienter" plain="true">
 		<section id="patients">
 			<h3 class="title"><spring:message code="admin.patients.list" /></h3>
-			
-<%-- 			<netcare:block-message type="info" style="display:none;"> --%>
-<%-- 				<spring:message code="admin.patients.none" /> --%>
-<%-- 			</netcare:block-message> --%>
-<%-- 			<netcare:table id="patientsTable"> --%>
-<!-- 				<thead> -->
-<!-- 					<tr> -->
-<%-- 						<th><spring:message code="patient.surName" /></th> --%>
-<%-- 						<th><spring:message code="patient.firstName" /></th> --%>
-<%-- 						<th><spring:message code="patient.crn" /></th> --%>
-<%-- 						<th><spring:message code="patient.phoneNumber" /> --%>
-<!-- 						<th>&nbsp;</th> -->
-<!-- 					</tr> -->
-<!-- 				</thead> -->
-<!-- 				<tbody></tbody> -->
-<%-- 			</netcare:table> --%>
 			<mvk:touch-list id="patientList">
-			
 			</mvk:touch-list>
 
 		</section>
@@ -132,7 +115,8 @@
 			<spring:message code="admin.patients.new" />
 		</button>
 		
-		<form id="patientForm" style="display: none;">
+		<mvk:sheet id="patientSheet" style="display: none;">
+		<form id="patientForm">
 			<netcare:row>
 				<netcare:col span="6">
 					<spring:message code="patient.firstName" var="name" scope="page"/>
@@ -171,5 +155,6 @@
 			</div>
 			
 		</form>
+		</mvk:sheet>
 	</hp:viewBody>
 </hp:view>

@@ -71,8 +71,8 @@
 
 <%-- This template is used to show a healthplan --%>
 <script id="healthPlanItem" type="text/template">
-<li id="healthPlanItem{{id}}" class="item withNavigation" style="cursor: pointer;">
-<mvk:touch-item>
+<li id="healthPlanItem{{id}}" class="item withNavigation">
+<mvk:touch-item style="padding-right:0px;">
 <div id="item{{id}}" class="listItemBase">
 	<div class="row-fluid">
 		<div class="mainBody span6">
@@ -84,7 +84,6 @@
 		</div>
 	</div>
 </div>
-<a href="#" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
 </li>
 </script>
