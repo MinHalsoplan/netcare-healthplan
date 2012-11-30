@@ -103,17 +103,17 @@ public class ReportingServiceImpl implements ReportingService {
 		ReportingValuesImpl report = null;
 		ActivityItemValuesEntity itemValue = reportedValues.get(0);
 		if (itemValue instanceof MeasurementEntity) {
-			MeasurementValueType valueType = ((MeasurementTypeEntity) itemValue.getActivityItemDefinitionEntity()
-					.getActivityItemType()).getValueType();
-			String label = itemValue.getActivityItemDefinitionEntity().getActivityItemType().getName();
-			String unit = ((MeasurementTypeEntity) itemValue.getActivityItemDefinitionEntity().getActivityItemType())
-					.getUnit().getDn();
+			MeasurementTypeEntity measurement = (MeasurementTypeEntity) itemValue.getActivityItemDefinitionEntity()
+					.getActivityItemType();
+			MeasurementValueType valueType = measurement.getValueType();
+			String label = measurement.getName();
+			String unit = measurement.getUnit().getDn() + " (" + measurement.getUnit().getName() + ")";
 			report = new ReportingValuesImpl(itemDefId, ActivityItemType.MEASUREMENT_ITEM_TYPE, valueType.name(),
 					label, unit, reportedValues.size());
 		} else if (itemValue instanceof EstimationEntity) {
 			EstimationTypeEntity est = (EstimationTypeEntity) itemValue.getActivityItemDefinitionEntity()
 					.getActivityItemType();
-			String label = itemValue.getActivityItemDefinitionEntity().getActivityItemType().getName();
+			String label = est.getName();
 			String unit = est.getSenseLabelLow() + " (" + est.getSenseValueLow() + ") - " + est.getSenseLabelHigh()
 					+ " (" + est.getSenseValueHigh() + ")";
 			report = new ReportingValuesImpl(itemDefId, ActivityItemType.ESTIMATION_ITEM_TYPE, label, unit,

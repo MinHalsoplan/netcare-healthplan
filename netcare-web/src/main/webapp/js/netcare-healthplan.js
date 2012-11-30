@@ -2929,9 +2929,16 @@ var NC_MODULE = {
 		};
 		
 		my.loadActivity = function(my, activityId) {
-			
 			new NC.Ajax().get('/activityPlans/' + activityId, function(data) {
 				activity = data.data;
+				Highcharts.setOptions({
+					lang: {
+						months: ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'],
+						shortMonths : ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+						weekdays: ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'],
+						thousandsSep: ' '
+					}
+				});
 				for(var i = 0; i < activity.goalValues.length; i++) {
 					var divId = 'report' + activity.goalValues[i].id;
 					var div = $('<div>').attr('id', divId).addClass('reportdiagram');
@@ -2940,13 +2947,15 @@ var NC_MODULE = {
 					new NC.Ajax().get('/healthplans/activity/item/' + activity.goalValues[i].id + '/statistics', function(data) {
 						console.log(data.data);
 						var report = data.data;
-						if(report.type=='measurement' || report.type=="estimation") {
-							my.renderDiagram(my, report);
-						} else if(report.type=='yesno') {
-							my.renderPie(my, report);
-						} else if(report.type=='text') {
-							my.renderText(my, report);
-						} 
+						if(report.type!=null) {
+							if(report.type=='measurement' || report.type=="estimation") {
+								my.renderDiagram(my, report);
+							} else if(report.type=='yesno') {
+								my.renderPie(my, report);
+							} else if(report.type=='text') {
+								my.renderText(my, report);
+							} 
+						}
 					});
 				}
 			});
