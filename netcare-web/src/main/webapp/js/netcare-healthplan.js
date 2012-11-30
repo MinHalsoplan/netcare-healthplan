@@ -2913,6 +2913,111 @@ var NC_MODULE = {
 		};
 		
 		return my; 
+	})(),
+
+	RESULTS : (function() {
+		
+		var activity;
+		
+		var my = {};
+		
+		my.init = function(params) {
+			this.params = params;
+			var that = this;
+			
+			my.loadActivity(that, params.activityId);
+		};
+		
+		my.loadActivity = function(my, activityId) {
+			
+			new NC.Ajax().get('/activityPlans/' + activityId, function(data) {
+				activity = data.data;
+				for(var i = 0; i < activity.goalValues.length; i++) {
+					var divId = 'report' + activity.goalValues[i].id;
+					var div = $('<div>').attr('id', divId).addClass('reportdiagram');
+					$('#activities').append(div);
+					
+					new NC.Ajax().get('/healthplans/activity/item/' + activity.goalValues[i].id + '/statistics', function(data) {
+						console.log(data.data);
+						var report = data.data;
+						if(report.type=='measurement' || report.type=="estimation") {
+							my.renderDiagram(my, report);
+						} else if(report.type=='yesno') {
+							my.renderPie(my, report);
+						} else if(report.type=='text') {
+							my.renderText(my, report);
+						} 
+					});
+				}
+			});
+		};
+		
+		my.renderDiagram = function(my, report) {
+			var divId = 'report' + report.id;
+			
+			var reportSeries = [{
+	            name: report.label,
+	            data: report.reportedValues
+	         }];
+			
+			if(report.subtype!=null) {
+				if(report.subtype=='SINGLE_VALUE') {
+					reportSeries.push({
+						name: 'Målvärde',
+						data: report.targets
+					});
+				} else {
+					reportSeries.push({
+						name: 'Målvärde (min)',
+						data: report.minTargets
+					});
+					reportSeries.push({
+						name: 'Målvärde (max)',
+						data: report.maxTargets
+					});
+				}
+			}
+		
+			var chart = new Highcharts.StockChart({
+		         chart: {
+		            renderTo: divId,
+		            type: 'line'
+		         },
+		         rangeSelector: {
+			            enabled: false
+		         },
+		         title: {
+		            text: report.label
+		         },
+		         xAxis: {
+		            dateTimeLabelFormats: {
+		                second: '%Y-%m-%d<br/>%H:%M:%S',
+		                minute: '%Y-%m-%d<br/>%H:%M',
+		                hour: '%Y-%m-%d<br/>%H:%M',
+		                day: '%Y<br/>%m-%d',
+		                week: '%Y<br/>%m-%d',
+		                month: '%Y-%m',
+		                year: '%Y'
+		            }
+		         },
+		         yAxis: {
+		            title: {
+		               text: report.unit
+		            },
+		         },
+		         series: reportSeries
+		      });
+		};
+
+		my.renderPie = function(my) {
+			
+		};
+
+		my.renderText = function(my) {
+			
+		};
+
+		return my; 
 	})()
 
 };

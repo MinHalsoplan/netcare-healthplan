@@ -1000,7 +1000,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, definitionId));
 		}
 		
-		one.isReadAllowed(getCareActor());
+		one.isReadAllowed(getCurrentUser());
 		
 		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(one), new GenericSuccessMessage());
 	}

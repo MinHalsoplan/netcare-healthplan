@@ -345,3 +345,7 @@ div[id*="ra-row-"] > div.span5 > span {
 .pagination ul > .disabled > a:hover {
 	background-color: whitesmoke;
 }
+
+.reportdiagram {
+	padding-bottom: 40px;
+}

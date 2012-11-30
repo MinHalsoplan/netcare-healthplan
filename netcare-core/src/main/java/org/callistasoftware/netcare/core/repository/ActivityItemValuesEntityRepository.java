@@ -16,9 +16,19 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.List;
+
 import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ActivityItemValuesEntityRepository extends JpaRepository<ActivityItemValuesEntity, Long> {
+
+	@Query("select values from ActivityItemValuesEntity as values "
+			+ "where values.scheduledActivity.reportedTime is not null "
+			+ "and activityItemDefinitionEntity.id = :itemId "
+			+ "order by values.scheduledActivity.actualTime")
+	List<ActivityItemValuesEntity> findValuesByActivityItemId(@Param("itemId") final Long itemId);
 
 }

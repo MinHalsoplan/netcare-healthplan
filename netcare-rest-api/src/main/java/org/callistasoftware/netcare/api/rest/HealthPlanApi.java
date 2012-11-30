@@ -25,12 +25,14 @@ import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
+import org.callistasoftware.netcare.core.api.ReportingValues;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
+import org.callistasoftware.netcare.core.spi.ReportingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,9 @@ public class HealthPlanApi extends ApiSupport {
 	
 	@Autowired 
 	private HealthPlanService service;
+	
+	@Autowired
+	private ReportingService reportingService;
 	
 	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json", produces="application/json")
 	@ResponseBody
@@ -225,5 +230,12 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlanStatistics> loadReportedActivitites(@PathVariable(value="healthPlanId") final Long healthPlanId) {
 		this.logAccess("list", "scheduled activities");
 		return this.service.getStatisticsForHealthPlan(healthPlanId);
+	}
+
+	@RequestMapping(value = "/activity/item/{itemDefId}/statistics", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<ReportingValues> getActivitites(@PathVariable(value = "itemDefId") final Long itemDefId) {
+		this.logAccess("list", "statistics");
+		return this.reportingService.getAllValuesByActivityItemDefId(getUser(), itemDefId);
 	}
 }

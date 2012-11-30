@@ -35,4 +35,8 @@ public interface ActivityDefinitionRepository extends JpaRepository<ActivityDefi
 	List<ActivityDefinitionEntity> findByPatientAndNow(
 			@Param("patient") final PatientEntity patient,
 			@Param("now") final Date now);
+
+	@Query("select itemdef.activityDefinition from ActivityItemDefinitionEntity as itemdef " + 
+			"where itemdef.id=:itemDefId")
+	ActivityDefinitionEntity findByActivityItemDefinitionId(@Param("itemDefId") final Long itemDefId);
 }

@@ -48,7 +48,7 @@ public class ActivityItemDefinitionEntity implements Comparable<ActivityItemDefi
 	private ActivityDefinitionEntity activityDefinition;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "measurement_type_id")
+	@JoinColumn(name = "activity_item_type_id")
 	private ActivityItemTypeEntity activityItemType;
 
 	ActivityItemDefinitionEntity() {
