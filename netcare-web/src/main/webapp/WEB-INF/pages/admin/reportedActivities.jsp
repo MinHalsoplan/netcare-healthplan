@@ -98,8 +98,19 @@
 	    		</div>
 	  		</div>
   		</mvk:sheet>
-		<mvk:touch-list id="latestActivitiesContainer">
-
-		</mvk:touch-list>
+  		
+  		<section id="report">
+  			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="reportContainer" style="display: none;">
+  				<mvk:touch-list id="latestActivitiesContainer"></mvk:touch-list>
+				<div id="riPagination" class="pagination pagination-centered">
+					<ul></ul>
+				</div>
+			</div>
+  		</section>
+		
 	</hp:viewBody>
 </hp:view>

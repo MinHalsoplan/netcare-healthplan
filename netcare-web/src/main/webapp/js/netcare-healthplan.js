@@ -2350,21 +2350,28 @@ var NC_MODULE = {
 		};
 		
 		my.loadReportedActivities = function(my, msgs) {
+			NC_MODULE.GLOBAL.showLoader('#report', 'Vänligen vänta...');
 			new NC.Ajax().get('/healthplans/activity/reported/latest', function(data) {
-				$('#latestActivitiesContainer').empty();
 				
-				if(data.data.length==0) {
-					$('#latestActivitiesContainer').hide();
-					$('#noReportedActivities').show();
-				} else {
-					$('#noReportedActivities').hide();
-					$('#latestActivitiesContainer').show();
+				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						my.buildReportedActivityItem(my, v, msgs);
 					});
+					
+					NC_MODULE.PAGINATION.init({
+						'itemIdPrefix' : 'reportedActivityItem',
+						'paginationId' : '#riPagination',
+						'data' : data.data,
+						'previousLabel' : '<<',
+						'nextLabel' : '>>'
+					});
+					
+					$('#reportContainer').show();
 				}
 				
-			}, false);
+				NC_MODULE.GLOBAL.suspendLoader('#report');
+				
+			});
 		};
 		
 		my.buildReportedActivityItem = function(my, act, msgs) {
@@ -2483,21 +2490,28 @@ var NC_MODULE = {
 				dateTo : date2
 			}
 			
+			NC_MODULE.GLOBAL.showLoader('#report');
 			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
-				$('#latestActivitiesContainer').empty();
 				
-				if(data.data.length==0) {
-						$('#latestActivitiesContainer').hide();
-						$('#noReportedActivities').show();
-				} else {
-					$('#noReportedActivities').hide();
-					$('#latestActivitiesContainer').show();
+				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						my.buildReportedActivityItem(my, v, msgs);
 					});
+					
+					NC_MODULE.PAGINATION.init({
+						'itemIdPrefix' : 'reportedActivityItem',
+						'paginationId' : '#riPagination',
+						'data' : data.data,
+						'previousLabel' : '<<',
+						'nextLabel' : '>>'
+					});
+					
+					$('#reportContainer').show();
 				}
 				
-			}, false);
+				NC_MODULE.GLOBAL.suspendLoader('#report');
+				
+			});
 		};
 		
 		return my;
