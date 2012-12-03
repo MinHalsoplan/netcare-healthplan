@@ -38,6 +38,7 @@ import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.callistasoftware.netcare.model.entity.TextTypeEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +120,9 @@ public class ReportingServiceImpl implements ReportingService {
 			report = new ReportingValuesImpl(itemDefId, ActivityItemType.ESTIMATION_ITEM_TYPE, label, unit,
 					reportedValues.size());
 		} else if (itemValue instanceof TextEntity) {
-			report = new ReportingValuesImpl(itemDefId, ActivityItemType.TEXT_ITEM_TYPE, reportedValues.size());
+			TextTypeEntity text = (TextTypeEntity) itemValue.getActivityItemDefinitionEntity().getActivityItemType();
+			report = new ReportingValuesImpl(itemDefId, ActivityItemType.TEXT_ITEM_TYPE, text.getLabel(),
+					reportedValues.size());
 		}
 		for (ActivityItemValuesEntity value : reportedValues) {
 			report.addItem(value);

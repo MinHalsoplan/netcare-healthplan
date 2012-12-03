@@ -36,7 +36,7 @@
 			$(function() {
 
 				var params = {
-					activityId : 1
+					activityId : <c:out value="${param.activity}" />
 				};
 				
 				NC_MODULE.RESULTS.init(params);

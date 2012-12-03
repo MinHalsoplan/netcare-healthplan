@@ -57,9 +57,13 @@ public class ReportingValuesImpl implements ReportingValues {
 		this.reportedValues = new Object[size];
 	}
 
-	public ReportingValuesImpl(Long id, String type, String label, String unit, int size) {
+	public ReportingValuesImpl(Long id, String type, String label, int size) {
 		this(id, type, size);
 		this.label = label;
+	}
+
+	public ReportingValuesImpl(Long id, String type, String label, String unit, int size) {
+		this(id, type, label, size);
 		this.unit = unit;
 	}
 

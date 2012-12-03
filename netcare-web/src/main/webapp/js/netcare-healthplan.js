@@ -2947,13 +2947,14 @@ var NC_MODULE = {
 					new NC.Ajax().get('/healthplans/activity/item/' + activity.goalValues[i].id + '/statistics', function(data) {
 						console.log(data.data);
 						var report = data.data;
+						var divId = 'report' + report.id;
 						if(report.type!=null) {
 							if(report.type=='measurement' || report.type=="estimation") {
 								my.renderDiagram(my, report);
 							} else if(report.type=='yesno') {
 								my.renderPie(my, report);
 							} else if(report.type=='text') {
-								my.renderText(my, report);
+								my.renderText(my, report, divId);
 							} 
 						}
 					});
@@ -3022,10 +3023,24 @@ var NC_MODULE = {
 			
 		};
 
-		my.renderText = function(my) {
-			
+		my.renderText = function(my, report, divId) {
+			var dom = _.template($('#textReportHead').html())(report);
+			$('#' + divId).append(dom);
+			_.each(report.reportedValues, function(item){
+				var arg = {
+						date:getFormattedDate(item[0]),
+						text:item[1]
+				}
+				var dom = _.template($('#textReportRow').html())(arg);
+				$('#' + divId).append(dom);
+			});
 		};
 
+		function getFormattedDate(millis) {
+			var date = new Date(millis);
+			return date.getFullYear() + "-" + (date.getMonth()<10?'0':'') + date.getMonth() + "-" + (date.getDay()<10?'0':'') + date.getDay();
+		}
+		
 		return my; 
 	})()
 

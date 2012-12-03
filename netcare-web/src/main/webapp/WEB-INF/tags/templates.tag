@@ -451,7 +451,7 @@
 <%--Reported Activity values --%>
 <script id="textValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.label}}</span></div>
+<div class="span5"><span>{{definition.activityItemType.label}}</span></div>
 <div class="span5">{{textComment}}</div>
 </div>
 </script>
@@ -545,7 +545,7 @@
 <%--Text values --%>
 <script id="scheduled-textValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.label}}</span></div>
+<div class="span5"><span>{{definition.activityItemType.label}}</span></div>
 <div class="span7"><input type="text" value="{{textComment}}" /></div>
 </div>
 </script>
@@ -758,6 +758,20 @@
 			<a id="result-item-{{id}}-showResults" href="#" class="itemNavigation assistiveText"></a>
 		</mvk:touch-item>
 	</li>
+</script>
+
+<script id="textReportHead" type="text/template">
+	<h3>{{label}}</h3>
+</script>
+<script id="textReportRow" type="text/template">
+	<div class="controls">
+		<div class="span3" style="display;">
+			{{date}}
+		</div> 
+		<div class="span9" style="float:left;">
+			{{text}}
+		</div>
+	</div> 
 </script>
 
 <!-- healthplan:templates / -->
