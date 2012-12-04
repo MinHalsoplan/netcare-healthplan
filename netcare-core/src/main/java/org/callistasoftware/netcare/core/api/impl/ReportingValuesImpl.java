@@ -22,6 +22,7 @@ import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,17 +40,11 @@ public class ReportingValuesImpl implements ReportingValues {
 	private String label;
 	private String unit;
 
+	private String question;
 	private int yes;
 	private int no;
 
 	private int index = 0;
-
-	public ReportingValuesImpl(Long id, String type, int yes, int no) {
-		this.id = id.toString();
-		this.type = type;
-		this.yes = yes;
-		this.no = no;
-	}
 
 	public ReportingValuesImpl(Long id, String type, int size) {
 		this.id = id.toString();
@@ -57,12 +52,41 @@ public class ReportingValuesImpl implements ReportingValues {
 		this.reportedValues = new Object[size];
 	}
 
-	public ReportingValuesImpl(Long id, String type, String label, String unit, int size) {
+	public ReportingValuesImpl(Long id, String type, String label, int size) {
 		this(id, type, size);
 		this.label = label;
+	}
+
+	/**
+	 * Used by YesNoQuestions.
+	 * 
+	 * @param id
+	 * @param type
+	 * @param label
+	 * @param question
+	 */
+	public ReportingValuesImpl(Long id, String type, String label, String question) {
+		this(id, type, label, 0);
+		this.question = question;
+		this.yes = 0;
+		this.no = 0;
+	}
+
+	public ReportingValuesImpl(Long id, String type, String label, String unit, int size) {
+		this(id, type, label, size);
 		this.unit = unit;
 	}
 
+	/**
+	 * Used by measurements.
+	 * 
+	 * @param id
+	 * @param type
+	 * @param subtype
+	 * @param label
+	 * @param unit
+	 * @param size
+	 */
 	public ReportingValuesImpl(Long id, String type, String subtype, String label, String unit, int size) {
 		this(id, type, label, unit, size);
 		this.subtype = subtype;
@@ -81,6 +105,8 @@ public class ReportingValuesImpl implements ReportingValues {
 			addEstimationItem((EstimationEntity) itemValue);
 		} else if (itemValue instanceof TextEntity) {
 			addTextItem((TextEntity) itemValue);
+		} else if (itemValue instanceof YesNoEntity) {
+			addYesNoItem((YesNoEntity) itemValue);
 		}
 		index++;
 	}
@@ -110,6 +136,15 @@ public class ReportingValuesImpl implements ReportingValues {
 	protected void addTextItem(TextEntity itemValue) {
 		Object[] pair = { itemValue.getScheduledActivity().getActualTime().getTime(), itemValue.getTextComment() };
 		this.reportedValues[index] = pair;
+	}
+
+	protected void addYesNoItem(YesNoEntity itemValue) {
+		if (itemValue.getAnswer()) {
+			this.yes++;
+		} else {
+			this.no++;
+		}
+
 	}
 
 	@Override
@@ -143,13 +178,18 @@ public class ReportingValuesImpl implements ReportingValues {
 	}
 
 	@Override
-	public int getYes() {
-		return yes;
+	public int getPercentYes() {
+		int total = this.yes + this.no;
+		int percent = 0;
+		if (total != 0) {
+			percent = 100 * this.yes / total;
+		}
+		return percent;
 	}
 
 	@Override
-	public int getNo() {
-		return no;
+	public int getPercentNo() {
+		return 100 - this.getPercentYes();
 	}
 
 	@Override
@@ -165,6 +205,11 @@ public class ReportingValuesImpl implements ReportingValues {
 	@Override
 	public String getId() {
 		return this.id;
+	}
+
+	@Override
+	public String getQuestion() {
+		return this.question;
 	}
 
 	private static final long serialVersionUID = 1L;

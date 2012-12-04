@@ -18,6 +18,7 @@ package org.callistasoftware.netcare.web.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 
@@ -59,6 +60,10 @@ import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
+import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.callistasoftware.netcare.model.entity.TextTypeEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -221,6 +226,8 @@ public final class WebUtil {
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
 				kilogram, true, 2);
 		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 3);
+		TextTypeEntity.newEntity(t1, "Kommentar", "Kommentar", 4);
+		YesNoTypeEntity.newEntity(t1, "Utrustning", "Pulsmätare på?", 5);
 		atRepo.saveAndFlush(t1);
 
 
@@ -352,6 +359,13 @@ public final class WebUtil {
 						EstimationEntity est = (EstimationEntity) aiv;
 						int sense = (int) Math.round(Math.random() * 10);
 						est.setPerceivedSense(sense == 0 ? 1 : sense);
+					} else if (aiv instanceof TextEntity) {
+						TextEntity text = (TextEntity) aiv;
+						text.setTextComment(getRandomComment());
+					} else if (aiv instanceof YesNoEntity) {
+						YesNoEntity yesno = (YesNoEntity) aiv;
+						yesno.setAnswer(new Random().nextInt(2)==1);
+						System.out.print(yesno.getAnswer());
 					}
 				}
 				actRepo.save(sce.getActivities());
@@ -376,5 +390,13 @@ public final class WebUtil {
 		AlarmEntity alarm1 = AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, p2, "hsa-cu-1", 1L );
 		alarmRepo.save(alarm1);
 		
+	}
+
+	protected static final String[] comments = { "Trevlig promenad, fint väder", "Skoskav",
+			"Tog det lugnt. Misstanke om virus", "Känns som om det går bättre och bättre", "Tungt idag",
+			"Nya skor. De var bekväma", "Varför orkar jag inte. Frustrerande!" };
+
+	protected static String getRandomComment() {
+		return comments[new Random().nextInt(comments.length)];
 	}
 }

@@ -94,13 +94,20 @@ public interface ReportingValues extends Serializable {
 	 * 
 	 * @return the yes's
 	 */
-	int getYes();
+	int getPercentYes();
 
 	/**
 	 * If the type is yesno, this is the number of no's.
 	 * 
 	 * @return the no's
 	 */
-	int getNo();
+	int getPercentNo();
+
+	/**
+	 * IF the type is yesno, this is the question.
+	 * 
+	 * @return the question
+	 */
+	String getQuestion();
 
 }

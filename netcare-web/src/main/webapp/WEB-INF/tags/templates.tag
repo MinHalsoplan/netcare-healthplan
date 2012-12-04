@@ -451,7 +451,7 @@
 <%--Reported Activity values --%>
 <script id="textValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.label}}</span></div>
+<div class="span5"><span>{{definition.activityItemType.label}}</span></div>
 <div class="span5">{{textComment}}</div>
 </div>
 </script>
@@ -545,7 +545,7 @@
 <%--Text values --%>
 <script id="scheduled-textValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.label}}</span></div>
+<div class="span5"><span>{{definition.activityItemType.label}}</span></div>
 <div class="span7"><input type="text" value="{{textComment}}" /></div>
 </div>
 </script>
@@ -758,6 +758,42 @@
 			<a id="result-item-{{id}}-showResults" href="#" class="itemNavigation assistiveText"></a>
 		</mvk:touch-item>
 	</li>
+</script>
+
+<script id="reportHead" type="text/template">
+	<h3>{{label}}</h3>
+</script>
+
+<script id="yesNoReportRow" type="text/template">
+	<h4>{{question}}</h4>
+	<div class="span10">
+		<div class="progress">
+  			<div class="bar bar-success" style="width: {{percentYes}}%;">{{percentYes}}%</div>
+  			<div class="bar bar-danger" style="width: {{percentNo}}%;">{{percentNo}}%</div>
+		</div>
+	</div>
+</script>
+
+<script id="textReportTable" type="text/template">
+	<table id="{{id}}" class="table table-condensed table-hover">
+	<tbody>{{rows}}</tbody>
+	</table>
+</script>
+<script id="textReportRow" type="text/template">
+	<tr>
+		<td>{{date}}</td>
+		<td>{{text}}</td>
+	</tr>
+</script>
+<script id="textReportRowOld" type="text/template">
+	<div class="controls">
+		<div class="span3" style="display;">
+			{{date}}
+		</div> 
+		<div class="span9" style="float:left;">
+			{{text}}
+		</div>
+	</div> 
 </script>
 
 <!-- healthplan:templates / -->

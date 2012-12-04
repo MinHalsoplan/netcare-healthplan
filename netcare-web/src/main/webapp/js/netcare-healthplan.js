@@ -2741,9 +2741,16 @@ var NC_MODULE = {
 		};
 		
 		my.loadActivity = function(my, activityId) {
-			
 			new NC.Ajax().get('/activityPlans/' + activityId, function(data) {
 				activity = data.data;
+				Highcharts.setOptions({
+					lang: {
+						months: ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'],
+						shortMonths : ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+						weekdays: ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'],
+						thousandsSep: ' '
+					}
+				});
 				for(var i = 0; i < activity.goalValues.length; i++) {
 					var divId = 'report' + activity.goalValues[i].id;
 					var div = $('<div>').attr('id', divId).addClass('reportdiagram');
@@ -2752,13 +2759,16 @@ var NC_MODULE = {
 					new NC.Ajax().get('/healthplans/activity/item/' + activity.goalValues[i].id + '/statistics', function(data) {
 						console.log(data.data);
 						var report = data.data;
-						if(report.type=='measurement' || report.type=="estimation") {
-							my.renderDiagram(my, report);
-						} else if(report.type=='yesno') {
-							my.renderPie(my, report);
-						} else if(report.type=='text') {
-							my.renderText(my, report);
-						} 
+						var divId = 'report' + report.id;
+						if(report.type!=null) {
+							if(report.type=='measurement' || report.type=="estimation") {
+								my.renderDiagram(my, report);
+							} else if(report.type=='yesno') {
+								my.renderYesNo(my, report, divId);
+							} else if(report.type=='text') {
+								my.renderText(my, report, divId);
+							} 
+						}
 					});
 				}
 			});
@@ -2821,14 +2831,33 @@ var NC_MODULE = {
 		      });
 		};
 
-		my.renderPie = function(my) {
-			
+		my.renderYesNo = function(my, report, divId) {
+			var dom = _.template($('#reportHead').html())(report);
+			$('#' + divId).append(dom);
+			var dom = _.template($('#yesNoReportRow').html())(report);
+			$('#' + divId).append(dom);
 		};
 
-		my.renderText = function(my) {
-			
+		my.renderText = function(my, report, divId) {
+			var dom = _.template($('#reportHead').html())(report);
+			$('#' + divId).append(dom);
+			var table = $('<table>').addClass('table table-condensed table-hover').append('<tbody>');
+			_.each(report.reportedValues, function(item){
+				var arg = {
+						date:getFormattedDate(item[0]),
+						text:item[1]
+				}
+				var dom = _.template($('#textReportRow').html())(arg);
+				table.children().append(dom);
+			});
+			$('#' + divId).append(table);
 		};
 
+		function getFormattedDate(millis) {
+			var date = new Date(millis);
+			return date.getFullYear() + "-" + (date.getMonth()<10?'0':'') + date.getMonth() + "-" + (date.getDay()<10?'0':'') + date.getDay();
+		}
+		
 		return my; 
 	})()
 
