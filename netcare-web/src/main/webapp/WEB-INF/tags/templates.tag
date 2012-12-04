@@ -760,10 +760,32 @@
 	</li>
 </script>
 
-<script id="textReportHead" type="text/template">
+<script id="reportHead" type="text/template">
 	<h3>{{label}}</h3>
 </script>
+
+<script id="yesNoReportRow" type="text/template">
+	<h4>{{question}}</h4>
+	<div class="span10">
+		<div class="progress">
+  			<div class="bar bar-success" style="width: {{percentYes}}%;">{{percentYes}}%</div>
+  			<div class="bar bar-danger" style="width: {{percentNo}}%;">{{percentNo}}%</div>
+		</div>
+	</div>
+</script>
+
+<script id="textReportTable" type="text/template">
+	<table id="{{id}}" class="table table-condensed table-hover">
+	<tbody>{{rows}}</tbody>
+	</table>
+</script>
 <script id="textReportRow" type="text/template">
+	<tr>
+		<td>{{date}}</td>
+		<td>{{text}}</td>
+	</tr>
+</script>
+<script id="textReportRowOld" type="text/template">
 	<div class="controls">
 		<div class="span3" style="display;">
 			{{date}}

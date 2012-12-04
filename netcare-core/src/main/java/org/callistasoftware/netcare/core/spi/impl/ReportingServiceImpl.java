@@ -41,6 +41,7 @@ import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.TextTypeEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,27 +78,9 @@ public class ReportingServiceImpl implements ReportingService {
 	protected ReportingValues transform(Long itemDefId, List<ActivityItemValuesEntity> reportedValues) {
 		ReportingValues report = null;
 		if (reportedValues != null && reportedValues.size() > 0) {
-			if (reportedValues.get(0) instanceof YesNoEntity) {
-				report = countYesNo(itemDefId, report, reportedValues);
-			} else {
-				report = transformIntoLists(itemDefId, reportedValues);
-			}
+			report = transformIntoLists(itemDefId, reportedValues);
 		}
 		return report;
-	}
-
-	protected ReportingValues countYesNo(Long itemDefId, ReportingValues report,
-			List<ActivityItemValuesEntity> reportedValues) {
-		int yes = 0;
-		int no = 0;
-		for (ActivityItemValuesEntity value : reportedValues) {
-			if (((YesNoEntity) value).getAnswer()) {
-				yes++;
-			} else {
-				no++;
-			}
-		}
-		return new ReportingValuesImpl(itemDefId, ActivityItemType.YESNO_ITEM_TYPE, yes, no);
 	}
 
 	protected ReportingValues transformIntoLists(Long itemDefId, List<ActivityItemValuesEntity> reportedValues) {
@@ -123,6 +106,10 @@ public class ReportingServiceImpl implements ReportingService {
 			TextTypeEntity text = (TextTypeEntity) itemValue.getActivityItemDefinitionEntity().getActivityItemType();
 			report = new ReportingValuesImpl(itemDefId, ActivityItemType.TEXT_ITEM_TYPE, text.getLabel(),
 					reportedValues.size());
+		} else if (itemValue instanceof YesNoEntity) {
+			YesNoTypeEntity yesno = (YesNoTypeEntity) itemValue.getActivityItemDefinitionEntity().getActivityItemType();
+			report = new ReportingValuesImpl(itemDefId, ActivityItemType.YESNO_ITEM_TYPE, yesno.getName(),
+					yesno.getQuestion());
 		}
 		for (ActivityItemValuesEntity value : reportedValues) {
 			report.addItem(value);

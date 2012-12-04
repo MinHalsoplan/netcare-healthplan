@@ -62,6 +62,8 @@ import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.callistasoftware.netcare.model.entity.TextEntity;
 import org.callistasoftware.netcare.model.entity.TextTypeEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -225,6 +227,7 @@ public final class WebUtil {
 				kilogram, true, 2);
 		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 3);
 		TextTypeEntity.newEntity(t1, "Kommentar", "Kommentar", 4);
+		YesNoTypeEntity.newEntity(t1, "Utrustning", "Pulsmätare på?", 5);
 		atRepo.saveAndFlush(t1);
 
 
@@ -356,9 +359,13 @@ public final class WebUtil {
 						EstimationEntity est = (EstimationEntity) aiv;
 						int sense = (int) Math.round(Math.random() * 10);
 						est.setPerceivedSense(sense == 0 ? 1 : sense);
-					}	else if (aiv instanceof TextEntity) {
+					} else if (aiv instanceof TextEntity) {
 						TextEntity text = (TextEntity) aiv;
 						text.setTextComment(getRandomComment());
+					} else if (aiv instanceof YesNoEntity) {
+						YesNoEntity yesno = (YesNoEntity) aiv;
+						yesno.setAnswer(new Random().nextInt(2)==1);
+						System.out.print(yesno.getAnswer());
 					}
 				}
 				actRepo.save(sce.getActivities());

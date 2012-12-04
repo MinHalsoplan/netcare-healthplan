@@ -2952,7 +2952,7 @@ var NC_MODULE = {
 							if(report.type=='measurement' || report.type=="estimation") {
 								my.renderDiagram(my, report);
 							} else if(report.type=='yesno') {
-								my.renderPie(my, report);
+								my.renderYesNo(my, report, divId);
 							} else if(report.type=='text') {
 								my.renderText(my, report, divId);
 							} 
@@ -3019,21 +3019,26 @@ var NC_MODULE = {
 		      });
 		};
 
-		my.renderPie = function(my) {
-			
+		my.renderYesNo = function(my, report, divId) {
+			var dom = _.template($('#reportHead').html())(report);
+			$('#' + divId).append(dom);
+			var dom = _.template($('#yesNoReportRow').html())(report);
+			$('#' + divId).append(dom);
 		};
 
 		my.renderText = function(my, report, divId) {
-			var dom = _.template($('#textReportHead').html())(report);
+			var dom = _.template($('#reportHead').html())(report);
 			$('#' + divId).append(dom);
+			var table = $('<table>').addClass('table table-condensed table-hover').append('<tbody>');
 			_.each(report.reportedValues, function(item){
 				var arg = {
 						date:getFormattedDate(item[0]),
 						text:item[1]
 				}
 				var dom = _.template($('#textReportRow').html())(arg);
-				$('#' + divId).append(dom);
+				table.children().append(dom);
 			});
+			$('#' + divId).append(table);
 		};
 
 		function getFormattedDate(millis) {
