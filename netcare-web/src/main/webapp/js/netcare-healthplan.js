@@ -24,17 +24,6 @@ var NC_MODULE = {
 			var that = this;
 			this.params = params;
 		};
-		
-		my.showLoader = function(elemId, msg) {
-			NC.log('Showing loader for ' + elemId);
-			$(elemId).find('.sectionLoader').find('.loaderMessage').html(msg);
-			$(elemId).find('.sectionLoader').slideDown('fast');
-		};
-		
-		my.suspendLoader = function(elemId, msg) {
-			NC.log('Suspending loader for ' + elemId);
-			$(elemId).find('.sectionLoader').slideUp('fast');
-		};
 
 		my.loadNewPage = function(url, module, moduleParams) {
 
@@ -59,21 +48,6 @@ var NC_MODULE = {
 			$('#currentpatient').show();
 		};
 		
-		my.formatCrn = function(crn) {
-			var first = crn.substring(0, 8);
-			var last = crn.substring(8, 12);
-			
-			return first + '-' + last;
-		};
-		
-		my.flash = function(something) {
-			something.animate({
-				'backgroundColor' : '#eee'
-			}, 100).animate({
-				'backgroundColor' : 'white'
-			}, 200);
-		};
-		
 		my.validateField = function(field) {
 			if (field.val().length == 0 || field.val() == "") {
 				field.parent().parent().addClass('error');
@@ -82,7 +56,6 @@ var NC_MODULE = {
 				
 				if (field.hasClass('signedNumeric')) {
 					var value = parseInt(field.val());
-					NC.log('Value of field is: ' + value);
 					
 					if (value <= 0) {
 						field.parent().parent().addClass('error');
@@ -398,7 +371,7 @@ var NC_MODULE = {
 			_data.goalValues = new Array();
 			_data.dayTimes = new Array();
 			
-			NC_MODULE.GLOBAL.showLoader('#plan', 'Laddar planering...');
+			NC.GLOBAL.showLoader('#plan', 'Laddar planering...');
 			
 			if (params.definitionId != '') {
 				new NC.Ajax().get('/activityPlans/' + params.definitionId, function(data) {
@@ -427,7 +400,7 @@ var NC_MODULE = {
 					my.renderAllTimes(that);
 					my.renderForm(that);
 					
-					NC_MODULE.GLOBAL.suspendLoader('#plan');
+					NC.GLOBAL.suspendLoader('#plan');
 					$('#planContainer').show();
 				});
 			} else {
@@ -443,7 +416,7 @@ var NC_MODULE = {
 					
 					my.renderGoals(that);
 					
-					NC_MODULE.GLOBAL.suspendLoader('#plan');
+					NC.GLOBAL.suspendLoader('#plan');
 					$('#planContainer').show();
 				});
 			}
@@ -975,7 +948,7 @@ var NC_MODULE = {
 				}
 			});
 			
-			NC_MODULE.GLOBAL.flash($('#item-' + template.id).parent());
+			NC.GLOBAL.flash($('#item-' + template.id).parent());
 		};
 
 		my.searchTemplates = function(my) {
@@ -1224,7 +1197,7 @@ var NC_MODULE = {
 				}
 			}
 			renderItems(my, activityTemplate);
-			NC_MODULE.GLOBAL.flash($('#item' + itemId).parent());
+			NC.GLOBAL.flash($('#item' + itemId).parent());
 		};
 
 		my.moveItemDown = function(my, itemId) {
@@ -1248,7 +1221,7 @@ var NC_MODULE = {
 				}
 			}
 			renderItems(my, activityTemplate);
-			NC_MODULE.GLOBAL.flash($('#item' + itemId).parent());
+			NC.GLOBAL.flash($('#item' + itemId).parent());
 		};
 
 		my.deleteItem = function(my, itemId) {
@@ -1844,167 +1817,6 @@ var NC_MODULE = {
 		return my;
 	})(),
 	
-	PAGINATION : (function() {
-		
-		var _itemIdPrefix;
-		var _current_page;
-		var _numberToShow;
-		var _data;
-		var _index;
-		
-		var _paginationId;
-		var _previousLabel;
-		var _nextLabel;
-		
-		var _onPrevClick;
-		var _onNextClick;
-		var _onItemClick;
-		
-		var _count;
-		var _pages;
-		
-		var _paginationPrefix;
-		
-		var my = {};
-		
-		var createControl = function() {
-			$(_paginationId + ' > ul').append(
-				_.template( $('#paginationItem').html() )({
-					'prefix' : _paginationPrefix.split('#')[1],
-					'page' : 'previous',
-					'text' : _previousLabel
-				})
-			);
-			
-			for (var i = 0; i < _pages; i++) {
-				$(_paginationId + ' > ul').append(
-					_.template( $('#paginationItem').html() )({
-						'prefix' : _paginationPrefix.split('#')[1],
-						'page' : i+1,
-						'text' : i+1
-					})
-				);
-			}
-			
-			$(_paginationId + ' > ul').append(
-				_.template( $('#paginationItem').html() )({
-					'prefix' : _paginationPrefix.split('#')[1],
-					'page' : 'next',
-					'text' : _nextLabel
-				})
-			);
-			
-			$(_paginationId + ' > ul > li').click(function(e) {
-				e.preventDefault();
-				
-				var text = $(this).prop('id');
-				text = text.substr((text.lastIndexOf('-') + 1), text.length);
-				
-				if (text == "next") {
-					nextPage();
-					return;
-				}
-				
-				if (text == "previous") {
-					previousPage();
-					return;
-				}
-				
-				showPage(parseInt(text));
-			});
-		};
-		
-		var showPage = function(pageNum) {
-			
-			hideAll();
-			$('li[id^="' + _paginationPrefix.split('#')[1] + '"]').removeClass('disabled');
-			
-			var dispArr = _index[pageNum - 1];
-			NC.log('Show page: ' + (pageNum - 1));
-			
-			$.each(dispArr, function(i, v) {
-				NC.log('Show item ' + _itemIdPrefix + v.id);
-				$('#' + _itemIdPrefix + v.id).show();
-			});
-			
-			_current_page = pageNum;
-			
-			$(_paginationPrefix + '-' + pageNum).addClass('disabled');
-			if (pageNum == 1) {
-				$(_paginationPrefix + '-previous').addClass('disabled');
-			}
-			
-			if (pageNum == _pages) {
-				$(_paginationPrefix + '-next').addClass('disabled');
-			}
-		};
-		
-		var nextPage = function() {
-			if (_current_page == _pages) {
-				throw new Error('Invalid pagination state. Next button should be disabled');
-			}
-			
-			showPage(_current_page + 1);
-		};
-		
-		var previousPage = function() {
-			if (_current_page == 1) {
-				throw new Error('Invalid pagination state. Previous button should be disabled');
-			}
-			
-			showPage(_current_page - 1);
-		}
-		
-		var hideAll = function() {
-			$('[id*="' + _itemIdPrefix + '"]').hide();
-		};
-		
-		my.init = function(params) {
-			var that = this;
-			this.params = params;
-			
-			_numberToShow = 5;
-			_current_page = 0;
-			_itemIdPrefix = params.itemIdPrefix;
-			_paginationId = params.paginationId;
-			_previousLabel = params.previousLabel;
-			_nextLabel = params.nextLabel;
-			
-			_count = params.data.length;
-			_pages = Math.ceil(_count / _numberToShow);
-			
-			_paginationPrefix = '#pi-pag-' + Math.floor(1000 + Math.random() * 1000);
-			
-			// Index our stuff
-			_index = new Array();
-			for (var i = 0; i < _pages; i++) {
-				_index[i] = new Array();
-				
-				var startAt = i * _numberToShow;
-				for (var j = 0; j < _numberToShow; j++) {
-					var rowData = params.data[(startAt + j)];
-					if (rowData != undefined) {
-						_index[i].push(rowData);
-					}
-				}
-			}
-			
-			hideAll();
-			
-			createControl();
-			
-			if (_pages <= 1) {
-				$(_paginationId).hide();
-			} else {
-				$(_paginationId).show();
-			}
-			
-			showPage(1);
-		};
-		
-		return my;
-	})(),
-	
 	SCHEDULE : (function() {
 		
 		var _due;
@@ -2038,7 +1850,7 @@ var NC_MODULE = {
 		
 		my.renderSchedule = function(my) {
 			// Show loader
-			NC_MODULE.GLOBAL.showLoader('#report', 'Laddar dina aktiviteter...');
+			NC.GLOBAL.showLoader('#report', 'Laddar dina aktiviteter...');
 			
 			my.load(_due, _reported, _start, _end, function(data) {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
@@ -2047,7 +1859,7 @@ var NC_MODULE = {
 						my.createScheduleItem(my, i, v);
 					});
 					
-					NC_MODULE.PAGINATION.init({
+					NC.PAGINATION.init({
 						'itemIdPrefix' : 'scheduledActivityItem',
 						'paginationId' : '#siPagination',
 						'data' : data.data,
@@ -2059,7 +1871,7 @@ var NC_MODULE = {
 					$('#reportContainer').show();
 				}
 				
-				NC_MODULE.GLOBAL.suspendLoader('#report');
+				NC.GLOBAL.suspendLoader('#report');
 			});
 		};
 		
@@ -2171,7 +1983,7 @@ var NC_MODULE = {
 					
 					// Rerender
 					my.updateScheduleItem(my, idx, _data[idx]);
-					NC_MODULE.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
+					NC.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
 				}
 			});
 		};
@@ -2350,7 +2162,7 @@ var NC_MODULE = {
 		};
 		
 		my.loadReportedActivities = function(my, msgs) {
-			NC_MODULE.GLOBAL.showLoader('#report', 'Vänligen vänta...');
+			NC.GLOBAL.showLoader('#report', 'Vänligen vänta...');
 			new NC.Ajax().get('/healthplans/activity/reported/latest', function(data) {
 				
 				if (data.data.length > 0) {
@@ -2358,7 +2170,7 @@ var NC_MODULE = {
 						my.buildReportedActivityItem(my, v, msgs);
 					});
 					
-					NC_MODULE.PAGINATION.init({
+					NC.PAGINATION.init({
 						'itemIdPrefix' : 'reportedActivityItem',
 						'paginationId' : '#riPagination',
 						'data' : data.data,
@@ -2369,7 +2181,7 @@ var NC_MODULE = {
 					$('#reportContainer').show();
 				}
 				
-				NC_MODULE.GLOBAL.suspendLoader('#report');
+				NC.GLOBAL.suspendLoader('#report');
 				
 			});
 		};
@@ -2490,7 +2302,7 @@ var NC_MODULE = {
 				dateTo : date2
 			}
 			
-			NC_MODULE.GLOBAL.showLoader('#report');
+			NC.GLOBAL.showLoader('#report');
 			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
 				
 				if (data.data.length > 0) {
@@ -2498,7 +2310,7 @@ var NC_MODULE = {
 						my.buildReportedActivityItem(my, v, msgs);
 					});
 					
-					NC_MODULE.PAGINATION.init({
+					NC.PAGINATION.init({
 						'itemIdPrefix' : 'reportedActivityItem',
 						'paginationId' : '#riPagination',
 						'data' : data.data,
@@ -2509,7 +2321,7 @@ var NC_MODULE = {
 					$('#reportContainer').show();
 				}
 				
-				NC_MODULE.GLOBAL.suspendLoader('#report');
+				NC.GLOBAL.suspendLoader('#report');
 				
 			});
 		};
@@ -2612,7 +2424,7 @@ var NC_MODULE = {
 		};
 		
 		my.createSchemaTable = function(my) {
-			NC_MODULE.GLOBAL.showLoader('#my-schedule', 'Laddar ditt schema...');
+			NC.GLOBAL.showLoader('#my-schedule', 'Laddar ditt schema...');
 			my.load(function(data) {
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
@@ -2620,7 +2432,7 @@ var NC_MODULE = {
 					});
 				}
 				
-				NC_MODULE.GLOBAL.suspendLoader('#my-schedule');
+				NC.GLOBAL.suspendLoader('#my-schedule');
 			});
 		};
 		

@@ -158,7 +158,7 @@ table[id*=planned-times] thead tr th,
 table[id*=planned-times] tbody tr td {
 	font-size: small;
 }
- 
+
 .actionBody .mvk-icon {
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -168,21 +168,6 @@ table[id*=planned-times] tbody tr td {
 	width: 30px;
 	display: inline-block;
 	
-}
-
-.likeReported {
-	background-image: url(../img/icons/little-like.png);
-	background-repeat: no-repeat;
-	background-position: 10px 0px;
-	text-indent: 30px;
-	margin-top: 5px;
-}
-
-.starReported {
-	background-image: url(../img/icons/little-star.png);
-	background-repeat: no-repeat;
-	text-indent: 20px;
-	margin-top: 5px;
 }
 
 .mvk-icon.copy {
@@ -207,93 +192,19 @@ table[id*=planned-times] tbody tr td {
 	background-image: url('../css/images/togglerOpen.png');
 }
 
-
-/*
- * TO BE REMOVED AFTER MVK RELEASE
- */
-/*li.item .itemStateText {
-	position: absolute;
-	display: block;
-	top: 0px;
-	right: 60px;
-	padding-bottom: 3px;
-	font-size: 0.75em;
-	font-weight: bold;
-	background-image: url(/netcare/resources/img/shadow-btn.png);
-	background-position: bottom right;
+.likeReported {
+	background-image: url(../img/icons/little-like.png);
 	background-repeat: no-repeat;
-}*/
-
-/*
- * TO BE REMOVED AFTER MVK RELEASE
- */
-/*#inboxDetailWrapper li.item .itemStateText>.wrapper {
-	padding: 5px 13px;
-	display: block;
-	background-color: #fabd17;
-	background-image: url(/netcare/resources/img/stateTextBg.png);
-	background-position: right center;
-	background-repeat: repeat-y;
-}*/
-
-.sectionLoader {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
+	background-position: 10px 0px;
+	text-indent: 30px;
+	margin-top: 5px;
 }
 
-/*
- * BUTTONS
- */
-.button, .btn, input[type="reset"], a.btn {
-	background-color: #008391;
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#008391),
-		to(#00606a) );
-	background-image: -webkit-linear-gradient(top, #008391, #00606a);
-	background-image: -moz-linear-gradient(top, #008391, #00606a);
-	background-image: -ms-linear-gradient(top, #008391, #00606a);
-	background-image: -o-linear-gradient(top, #008391, #00606a);
-	cursor: pointer;
-	-webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3);
-	box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3);
-	border: 0;
-	color: white;
-	margin: 10px 5px;
-	padding: 5px 15px;
-	font-size: 0.9375em;
-	font-weight: bold;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-}
-
-button:hover, .btn:hover, input[type="reset"]:hover, a.btn:hover {
-	background-color: #1d8692;
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#1d8692),
-		to(#0b6a7a) );
-	background-image: -webkit-linear-gradient(top, #1d8692, #0b6a7a);
-	background-image: -moz-linear-gradient(top, #1d8692, #0b6a7a);
-	background-image: -ms-linear-gradient(top, #1d8692, #0b6a7a);
-	background-image: -o-linear-gradient(top, #1d8692, #0b6a7a);
-}
-
-button:active,.btn:active, input[type="reset"]:active, a.btn:active {
-	background-color: #0f8da3;
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0f8da3),
-		to(#27b3c3) );
-	background-image: -webkit-linear-gradient(top, #0f8da3, #27b3c3);
-	background-image: -moz-linear-gradient(top, #0f8da3, #27b3c3);
-	background-image: -ms-linear-gradient(top, #0f8da3, #27b3c3);
-	background-image: -o-linear-gradient(top, #0f8da3, #27b3c3);
-	-webkit-box-shadow: inset 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
-	box-shadow: inset 0px 0px 0px 0px rgba(0, 0, 0, 0.3);
-}
-
-.btn, .btn:hover {
-	color: #fff;
-	text-decoration: none;
-	text-shadow: none;
-	background-position: 0;
+.starReported {
+	background-image: url(../img/icons/little-star.png);
+	background-repeat: no-repeat;
+	text-indent: 20px;
+	margin-top: 5px;
 }
 
 /*
@@ -339,11 +250,6 @@ div.row-fluid.external > div.span5 > span {
 
 div[id*="ra-row-"] > div.span5 > span {
 	margin-left: 15px;
-}
-
-.pagination ul > .disabled > a,
-.pagination ul > .disabled > a:hover {
-	background-color: whitesmoke;
 }
 
 .reportdiagram {

@@ -35,36 +35,4 @@
 
 <script type="text/javascript" src="<c:url value='/js/netcare-healthplan.js' />"></script>
 
-<script type="text/javascript">
-// Det här ska nog inte ligga här, men funkar så länge.
-_.templateSettings.variable = "us";
-_.templateSettings = {
-	  interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
-};
-</script>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		
-		// Initialize all date pickers
-		$('.dateInput').each(function(i, v) {
-			
-			var opts = {
-				dateFormat : 'yy-mm-dd',
-				firstDay : 1
-			}
-			
-			if ( $(this).hasClass('allow-previous') ) {
-				
-			} else {
-				opts.minDate = +0;
-			}
-			
-			$(v).datepicker(opts);
-			
-		});
-		
-	});
-</script>
-
 <!-- healthplan:js / -->
