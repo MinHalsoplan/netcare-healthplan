@@ -44,9 +44,7 @@
 					$('#userprofile input[name="surname"]').val(
 							data.data.surName);
 					$('#userprofile input[name="cnr"]')
-							.val(
-									NC_MODULE.GLOBAL
-											.formatCrn(data.data.civicRegistrationNumber));
+							.val(NC.GLOBAL.formatCrn(data.data.civicRegistrationNumber));
 					$('#userprofile input[name="email"]').val(data.data.email);
 					$('#userprofile input[name="phone"]').val(
 							data.data.phoneNumber);

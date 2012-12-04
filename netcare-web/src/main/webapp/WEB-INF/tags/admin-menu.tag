@@ -50,7 +50,7 @@
 					NC.log("Found " + data.data.length + " patients.");
 					response($.map(data.data, function(item) {
 						console.log("Processing item: " + item.name);
-						return { label : item.name + ' (' + NC_MODULE.GLOBAL.formatCrn(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
+						return { label : item.name + ' (' + NC.GLOBAL.formatCrn(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
 					}));
 				});
 			},
@@ -104,7 +104,7 @@
 		NC.log("Current patient cnr is: " + cnr);
 		if (cnr.length != 0) {
 			NC.log("Displaying patient cnr");
-			$('#cnr').html('<strong>Personnummer:</strong> ' + NC_MODULE.GLOBAL.formatCrn(cnr));
+			$('#cnr').html('<strong>Personnummer:</strong> ' + NC.GLOBAL.formatCrn(cnr));
 		}
 		
 		$('#quitPatientSession').click(function(e) {

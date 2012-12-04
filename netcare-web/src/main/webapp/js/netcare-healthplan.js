@@ -88,7 +88,7 @@ var NC_MODULE = {
 					
 					var t = _.template($('#patientItem').html());
 					
-					v.civicRegistrationNumber = NC_MODULE.GLOBAL.formatCrn(v.civicRegistrationNumber);
+					v.civicRegistrationNumber = NC.GLOBAL.formatCrn(v.civicRegistrationNumber);
 					var dom = t(v);
 					
 					$('#patientList').append($(dom));
