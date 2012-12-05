@@ -53,6 +53,13 @@
 	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 	<c:set var="resourcePath" value="/netcare/resources" />
 	<script type="text/javascript" src="${contextPath}${resourcePath}/js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="${contextPath}${resourcePath}/js/underscore-1.4.2-min.js"></script>
+	<script type="text/javascript">
+			_.templateSettings.variable = "us";
+		_.templateSettings = {
+			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
+		};
+	</script>
 	<script type="text/javascript">
 	
 		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
@@ -72,19 +79,11 @@
 			}
 		};
 	</script>
-	<!-- Include NETCARE javascripts  -->
-	<script type="text/javascript" src="<c:url value='/js/netcare/PageMessages.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Ajax.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${contextPath}${resourcePath}/js/netcare-ui/Util.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${contextPath}${resourcePath}/js/netcare-ui/PageMessages.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${contextPath}${resourcePath}/js/netcare-ui/Ajax.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare-mobile-healthplan.js' />"></script>
-	<!-- Include NETCARE javascripts END  -->
-	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>
-	<script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
-	<script type="text/javascript">
-			_.templateSettings.variable = "us";
-		_.templateSettings = {
-			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
-		};
-	</script>	
+	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>	
 	<jsp:doBody />
 	
 </head>
