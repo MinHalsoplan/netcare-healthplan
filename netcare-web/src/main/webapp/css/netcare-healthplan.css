@@ -256,3 +256,8 @@ div[id*="ra-row-"] > div.span5 > span {
 	padding-bottom: 40px;
 }
 
+.scheduledDetails {
+	background-color: yellow;
+}
+
+.popover {width: 300px;}

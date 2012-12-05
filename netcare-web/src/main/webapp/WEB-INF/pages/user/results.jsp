@@ -62,6 +62,7 @@
 				<netcare:row id="filter-row"></netcare:row>
 			</form>
 		</section>
+		<div id="popop"></div>
 		<div id="activities"></div>
 		<div id="chartcontainer" style="width: 100%; height: 400px"></div>
 	</hp:viewBody>

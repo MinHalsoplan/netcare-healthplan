@@ -365,7 +365,6 @@ public final class WebUtil {
 					} else if (aiv instanceof YesNoEntity) {
 						YesNoEntity yesno = (YesNoEntity) aiv;
 						yesno.setAnswer(new Random().nextInt(2)==1);
-						System.out.print(yesno.getAnswer());
 					}
 				}
 				actRepo.save(sce.getActivities());
