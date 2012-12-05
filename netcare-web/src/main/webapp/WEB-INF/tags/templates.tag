@@ -774,26 +774,26 @@
 	</div>
 </script>
 
-<script id="textReportTable" type="text/template">
-	<table id="{{id}}" class="table table-condensed table-hover">
-	<tbody>{{rows}}</tbody>
-	</table>
-</script>
 <script id="textReportRow" type="text/template">
-	<tr>
+	<tr id='{{divId}}'>
 		<td>{{date}}</td>
 		<td>{{text}}</td>
 	</tr>
 </script>
-<script id="textReportRowOld" type="text/template">
-	<div class="controls">
-		<div class="span3" style="display;">
-			{{date}}
-		</div> 
-		<div class="span9" style="float:left;">
-			{{text}}
-		</div>
-	</div> 
+
+<script id="myModal" type="text/template">
+<div id="myModalItems" style="display: none;" class="modal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Modal header</h3>
+  </div>
+  <div class="modal-body">
+    <p>One fine body…</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Stäng</button>
+  </div>
+</div>
 </script>
 
 <!-- healthplan:templates / -->

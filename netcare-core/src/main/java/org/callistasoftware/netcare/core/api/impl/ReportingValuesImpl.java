@@ -112,30 +112,38 @@ public class ReportingValuesImpl implements ReportingValues {
 	}
 
 	public void addMeasurementItem(MeasurementEntity itemValue) {
-		Object[] pair = { itemValue.getScheduledActivity().getActualTime().getTime(), itemValue.getReportedValue() };
-		this.reportedValues[index] = pair;
+		long date = itemValue.getScheduledActivity().getActualTime().getTime();
+		Long schedId = itemValue.getScheduledActivity().getId();
+
+		Object[] triple = { date, itemValue.getReportedValue(), schedId };
+		this.reportedValues[index] = triple;
+
 		if (subtype.equals(MeasurementValueType.SINGLE_VALUE.name())) {
-			Object[] targetPair = { itemValue.getScheduledActivity().getActualTime().getTime(), itemValue.getTarget() };
+			Object[] targetPair = { date, itemValue.getTarget(), schedId };
 			this.targets[index] = targetPair;
 		} else {
-			Object[] minTargetPair = { itemValue.getScheduledActivity().getActualTime().getTime(),
-					itemValue.getMinTarget() };
+			Object[] minTargetPair = { date, itemValue.getMinTarget(), schedId };
 			this.minTargets[index] = minTargetPair;
-			Object[] maxTargetPair = { itemValue.getScheduledActivity().getActualTime().getTime(),
-					itemValue.getMaxTarget() };
+			Object[] maxTargetPair = { date, itemValue.getMaxTarget(), schedId };
 			this.maxTargets[index] = maxTargetPair;
 		}
 
 	}
 
 	protected void addEstimationItem(EstimationEntity itemValue) {
-		Object[] pair = { itemValue.getScheduledActivity().getActualTime().getTime(), itemValue.getPerceivedSense() };
-		this.reportedValues[index] = pair;
+		long date = itemValue.getScheduledActivity().getActualTime().getTime();
+		Long schedId = itemValue.getScheduledActivity().getId();
+
+		Object[] triple = { date, itemValue.getPerceivedSense(), schedId };
+		this.reportedValues[index] = triple;
 	}
 
 	protected void addTextItem(TextEntity itemValue) {
-		Object[] pair = { itemValue.getScheduledActivity().getActualTime().getTime(), itemValue.getTextComment() };
-		this.reportedValues[index] = pair;
+		long date = itemValue.getScheduledActivity().getActualTime().getTime();
+		Long schedId = itemValue.getScheduledActivity().getId();
+
+		Object[] triple = { date, itemValue.getTextComment(), schedId };
+		this.reportedValues[index] = triple;
 	}
 
 	protected void addYesNoItem(YesNoEntity itemValue) {
@@ -213,4 +221,5 @@ public class ReportingValuesImpl implements ReportingValues {
 	}
 
 	private static final long serialVersionUID = 1L;
+
 }

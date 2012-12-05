@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityItemType;

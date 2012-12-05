@@ -422,8 +422,8 @@ var NC_MODULE = {
 			}
 			
 			/*
-			 * Check if we should load an activity
-			 * definition here and populate the form
+			 * Check if we should load an activity definition here and populate
+			 * the form
 			 */
 			my.initListeners(that);
 		};
@@ -1867,7 +1867,7 @@ var NC_MODULE = {
 						'nextLabel' : '>>'
 					});
 					
-					//NC_MODULE.GLOBAL.suspendLoader('#report');
+					// NC_MODULE.GLOBAL.suspendLoader('#report');
 					$('#reportContainer').show();
 				}
 				
@@ -2003,8 +2003,8 @@ var NC_MODULE = {
 				$('#sa-details-' + activity.id).find('.span12').append($(dom));
 				
 				/*
-				 * If reporting isn't possible due to scheduled time is
-				 * more than a week away. Disable all form elements
+				 * If reporting isn't possible due to scheduled time is more
+				 * than a week away. Disable all form elements
 				 */
 				if (activity.reportingPossible == false) {
 					$('#sa-details-' + activity.id).find('input').prop('disabled', true);
@@ -2596,8 +2596,8 @@ var NC_MODULE = {
 				$('#reportList').empty();
 				
 				/*
-				 * Load latest scheduled activity of
-				 * this definition and use it as a template
+				 * Load latest scheduled activity of this definition and use it
+				 * as a template
 				 */
 				new NC.Ajax().getWithParams('/scheduledActivities/latestForDefinition', { 'definitionId' : def.id }, function(data) {
 					
@@ -2752,17 +2752,20 @@ var NC_MODULE = {
 					}
 				});
 				for(var i = 0; i < activity.goalValues.length; i++) {
-					var divId = 'report' + activity.goalValues[i].id;
+					var id = activity.goalValues[i].id;
+					var divId = 'report' + id;
 					var div = $('<div>').attr('id', divId).addClass('reportdiagram');
 					$('#activities').append(div);
+					var detailsDiv = $('<div>').attr('id', 'details' + id).addClass('scheduledDetails');
+					$('#activities').append(detailsDiv);
 					
-					new NC.Ajax().get('/healthplans/activity/item/' + activity.goalValues[i].id + '/statistics', function(data) {
+					new NC.Ajax().get('/healthplans/activity/item/' + id + '/statistics', function(data) {
 						console.log(data.data);
 						var report = data.data;
 						var divId = 'report' + report.id;
 						if(report.type!=null) {
 							if(report.type=='measurement' || report.type=="estimation") {
-								my.renderDiagram(my, report);
+							 my.renderDiagram(my, report);
 							} else if(report.type=='yesno') {
 								my.renderYesNo(my, report, divId);
 							} else if(report.type=='text') {
@@ -2780,7 +2783,10 @@ var NC_MODULE = {
 			var reportSeries = [{
 	            name: report.label,
 	            data: report.reportedValues
-	         }];
+	         },{
+		        data: report.ids,
+		        visible: false
+		     }];
 			
 			if(report.subtype!=null) {
 				if(report.subtype=='SINGLE_VALUE') {
@@ -2804,6 +2810,18 @@ var NC_MODULE = {
 		         chart: {
 		            renderTo: divId,
 		            type: 'line'
+		         },
+		         plotOptions: {
+		             series: {
+		                 allowPointSelect: true,
+		                 point: {
+		                     events: {
+		                         click: function() {
+		                        	 loadAndShowScheduledActivity(this.config[2], report.id, openPopoverOnChart);
+		                         }
+		                     }
+		                 }
+		             }
 		         },
 		         rangeSelector: {
 			            enabled: false
@@ -2831,6 +2849,51 @@ var NC_MODULE = {
 		      });
 		};
 
+		var loadAndShowScheduledActivity = function(id, reportId, openFun) {
+			new NC.Ajax().get('/healthplans/activity/' + id + '/load', function(data) {
+				openFun(data.data, reportId);
+			});
+		}
+		var openPopoverOnChart = function(data, reportId) {
+			var popoverId = '#report' + reportId + ' .highcharts-title';
+			openPopoverWithId(data, popoverId);
+		}
+		var openPopoverOnTextRow = function(data, rowId) {
+			openPopoverWithId(data, '#'+rowId);
+		}
+		var openPopoverWithId = function(data, id) {
+			var popTemplate = '<div class="popover" onclick="$(\'' + id + '\').popover(\'destroy\');"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>';
+			var activityTitle = data.activityDefinition.type.name + ' - ' + data.actualTime.substring(0,10);
+			$(id).popover('destroy');
+			$(id).popover({ title: activityTitle, content: getAllActivities(data), trigger:'manual',placement:'bottom', template:popTemplate });
+			$(id).popover('show');
+		}
+		var getAllActivities = function(data) {
+			var values = data.activityItemValues;
+			var result = '';
+			var label;
+			var unit;
+			for(var i = 0 ; i < values.length ; i++) {
+				var item = values[i];
+				label = '<span style="font-weight: bold;">' + item.definition.activityItemType.name + ": </span>";
+				if(item.valueType=='measurement') {
+					unit = item.definition.activityItemType.unit.name;
+					if(item.target==0) {
+						result += label + item.reportedValue + ' ' + unit + ' (Min:' + item.minTarget + ', Max: ' + item.maxTarget + ')<br/>'; 
+					} else {
+						result += label + item.reportedValue + ' ' + unit + ' (Mål:' + item.target + ')<br/>'; 
+					}
+				} else if(item.valueType=='estimation') {
+					result += label + item.perceivedSense + ' (1=Lätt - 10=Mycket besvärligt)<br/>'; 
+				} else if(item.valueType=='yesno') {
+					result += label + (item.answer?'Ja':'Nej') + '<br/>'; 
+				} else if(item.valueType=='text') {
+					result += label + item.textComment + '<br/>'; 
+				}
+			}
+			return result;
+		}
+		
 		my.renderYesNo = function(my, report, divId) {
 			var dom = _.template($('#reportHead').html())(report);
 			$('#' + divId).append(dom);
@@ -2842,23 +2905,32 @@ var NC_MODULE = {
 			var dom = _.template($('#reportHead').html())(report);
 			$('#' + divId).append(dom);
 			var table = $('<table>').addClass('table table-condensed table-hover').append('<tbody>');
+			$('#' + divId).append(table);
 			_.each(report.reportedValues, function(item){
 				var arg = {
+						id: item[2],
+						divId: divId + 'r' + item[2],
 						date:getFormattedDate(item[0]),
 						text:item[1]
 				}
-				var dom = _.template($('#textReportRow').html())(arg);
-				table.children().append(dom);
+				var domRow = _.template($('#textReportRow').html())(arg);
+				table.children().append(domRow);
+				console.log(arg.divId);
+				$('#' + arg.divId).click(function() {
+					//loadAndShowScheduledActivity(arg.id, arg.divId, openPopoverOnTextRow));
+					loadAndShowScheduledActivity(arg.id,arg.divId,openPopoverOnTextRow);
+				});
 			});
-			$('#' + divId).append(table);
+			
 		};
 
 		function getFormattedDate(millis) {
 			var date = new Date(millis);
-			return date.getFullYear() + "-" + (date.getMonth()<10?'0':'') + date.getMonth() + "-" + (date.getDay()<10?'0':'') + date.getDay();
+			return date.getFullYear() + "-" + ((date.getMonth()+1)<10?'0':'') + (date.getMonth()+1) + "-" + (date.getDate()<10?'0':'') + date.getDate();
 		}
 		
 		return my; 
 	})()
 
+	
 };
