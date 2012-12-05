@@ -19,20 +19,8 @@
 <!-- healthplan:js -->
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<script type="text/javascript" src="<c:url value="/js/json2.js" />"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="<c:url value='/js/underscore-1.4.2-min.js' />"></script>
-
-<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/ActivityTypes.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/PatientReport.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/PatientHome.js' />"></script>
-<script type="text/javascript" src="<c:url value='/js/netcare/Report.js' />"></script>
-
 <script type="text/javascript" src="<c:url value='/js/netcare-healthplan.js' />"></script>
 
 <!-- healthplan:js / -->

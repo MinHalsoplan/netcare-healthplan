@@ -138,21 +138,23 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		
 		this.verifyWriteAccess(p);
 		
-		p.setFirstName(patient.getFirstname());
-		p.setSurName(patient.getSurname());
+		p.setFirstName(patient.getFirstName());
+		p.setSurName(patient.getSurName());
 		p.setEmail(patient.getEmail());
 		p.setMobile(patient.isMobile());
-		p.setPhoneNumber(patient.getPhone());
+		p.setPhoneNumber(patient.getPhoneNumber());
 		
 		final Object salt = this.saltSource.getSalt((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		
 		if (patient.isMobile()) {
 			
-			if (patient.getPassword() == null || patient.getPassword2() == null) {
+			getLog().debug("Setting mobile password for patient {}. P1 = {}, P2 = {}", new Object[] { patient.getId(), patient.getPassword(), patient.getPassword2() });
+			
+			if (patient.getPassword1() == null || patient.getPassword2() == null) {
 				throw new NullPointerException("User password must not be null");
 			}
 			
-			if (!patient.getPassword().equals(patient.getPassword2())) {
+			if (!patient.getPassword1().equals(patient.getPassword2())) {
 				throw new IllegalArgumentException("User password must not be null and the two entered values must match.");
 			}
 			

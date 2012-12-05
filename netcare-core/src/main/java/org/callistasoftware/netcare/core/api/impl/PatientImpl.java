@@ -31,8 +31,6 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 	private static final long serialVersionUID = 1L;
 	
 	private String phoneNumber;
-	private String password2;
-	
 	private String email;
 	
 	public PatientImpl() {
@@ -67,14 +65,6 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 	
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	public String getPassword2() {
-		return password2;
-	}
-
-	public void setPassword2(String password2) {
-		this.password2 = password2;
 	}
 
 	@Override

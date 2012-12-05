@@ -27,9 +27,6 @@
 
 <script type="text/javascript">
 	$(function() {
-		var support = new NC.Support();
-		var util = new NC.Util();
-		var patient = new NC.Patient();
 		var patientSearchInput = $('#pickPatientForm input[name="pickPatient"]'); 
 		
 		/*
@@ -46,7 +43,7 @@
 				 * Call find patients. Pass in the search value as well as
 				 * a function that should be executed upon success.
 				 */
-				patient.findPatients(request.term, function(data) {
+				NC_MODULE.PATIENTS.findPatients(request.term, function(data) {
 					NC.log("Found " + data.data.length + " patients.");
 					response($.map(data.data, function(item) {
 						console.log("Processing item: " + item.name);
@@ -62,13 +59,13 @@
 		
 		var selectPatientSuccess = function(data) {
 			var name = data.data.name;
-			util.updateCurrentPatient(name);
+			NC_MODULE.GLOBAL.updateCurrentPatient(name);
 		};
 		
 		var selectPatient = function(event) {
 			NC.log("Selecting patient...");
 			event.preventDefault();
-			support.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
+			NC_MODULE.GLOBAL.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
 			
 			NC.log("Hide modal.");
 			$('#modal-from-dom').modal('hide');
@@ -109,7 +106,7 @@
 		
 		$('#quitPatientSession').click(function(e) {
 			e.preventDefault();
-			support.unselect(function(d) {
+			NC_MODULE.GLOBAL.unselect(function(d) {
 				window.location = NC.getContextPath() + '/netcare/home';
 			});
 		});

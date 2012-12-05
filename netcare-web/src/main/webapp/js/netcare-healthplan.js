@@ -15,8 +15,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 var NC_MODULE = {
-
+		
 	GLOBAL : (function() {
+		
+		/**
+		 * Method that will make call to the server, if the call was
+		 * successful, the onDataLoaded()-function will be executed
+		 * with the array of values
+		 */
+		var _loadOptions = function(url, onDataLoaded) {
+			new NC.Ajax().get(url, function(data) {
+				var arr = new Array();
+				$.each(data.data, function(index, value) {				
+					arr[index] = value;
+				});
+				
+				onDataLoaded(arr);
+			});
+		};
+		
+		var _createOptions = function(options, selectElem) {
+			NC.log("Creating options...");
+			if (selectElem === undefined) {
+				NC.log("Select element is undefined.");
+				return false;
+			}
+			
+			$.each(options, function(index, value) {
+				NC.log("Creating option: " + value.code);
+				var opt = $('<option>', { value : value.code });
+				opt.html(value.value);
+				opt.appendTo(selectElem);
+			});
+		};
 
 		var my = {};
 
@@ -67,6 +98,57 @@ var NC_MODULE = {
 				return false;
 			}
 		};
+		
+		/**
+		 * Called when care giver selects a patient to
+		 * work with. This method adds the selected patient
+		 * to the session scope and the menu should always
+		 * display the selected patient
+		 */
+		my.selectPatient = function(patientId, successFunction) {
+			if (patientId === undefined || patientId == '') {
+				throw new Error('Cannot select patient since there is no patient to select');
+			}
+			new NC.Ajax().postSynchronous('/user/' + patientId + '/select', null, successFunction);
+		};
+		
+		my.unselect = function(callback) {
+			new NC.Ajax().postSynchronous('/user/unselect', null, callback);
+		};
+		
+		/**
+		 * Update the current patient shown in the menu
+		 * of the applica
+		 */
+		my.updateCurrentPatient = function(name) {
+			NC.log("Updating current patient. Display: " + name);
+			$('#currentpatient a').html(name);
+			$('#nopatient').hide();
+			$('#currentpatient').show();
+		};
+		
+		/**
+		 * Load all durations as options that exist in the
+		 * application
+		 */
+		my.loadDurations = function(selectElem) {
+			var url = '/support/durations/load';
+			
+			_loadOptions(url, function(data) {
+				_createOptions(data, selectElem);
+			});
+		};
+		
+		my.loadAccessLevels = function(selectElem) {
+			var url = '/support/accessLevels';
+			_loadOptions(url, function(data) {
+				_createOptions(data, selectElem);
+			});
+		};
+		
+		my.getMeasureValueTypes = function(callback) {
+			new NC.Ajax().get('/support/measureValueTypes', callback);
+		};
 
 		return my;
 	})(),
@@ -106,6 +188,82 @@ var NC_MODULE = {
 			});
 		};
 		
+		/**
+		 * Called when the care giver wants to find a patient
+		 */
+		my.findPatients = function(searchValue, successFunction) {
+			if (searchValue.length < 3) {
+				return false;
+			}
+			new NC.Ajax().getWithParams('/user/find', { search : searchValue }, successFunction, false);
+		};
+		
+		return my;
+	})(),
+	
+	PATIENT_FORM : (function() {
+		var _data;
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			_data = {
+				firstName : '',
+				surName : '',
+				civicRegistrationNumber : '',
+				phoneNumber : ''
+			};
+			
+			my.initListeners(that);
+			my.render(that);
+			
+		};
+		
+		my.initListeners = function(my) {
+			
+			$('#showCreatePatient').click(function() {
+				$('#patientSheet').toggle();
+			});
+			
+			$('input[name="firstName"]').on('keyup change blur', function() {
+				_data.firstName = $(this).val();
+			});
+			
+			$('input[name="surName"]').on('keyup change blur', function() {
+				_data.surName = $(this).val();
+			});
+			
+			$('input[name="civicRegistrationNumber"]').on('keyup change blur', function() {
+				_data.civicRegistrationNumber = $(this).val();
+			});
+			
+			$('input[name="phoneNumber"]').on('keyup change blur', function() {
+				_data.phoneNumber = $(this).val();
+			});
+			
+			$('#patientForm').submit(function(e) {
+				e.preventDefault();
+				new NC.Ajax().post('/user/create', _data, function(data) {
+					_data = data.data;
+					my.render();
+					
+					NC_MODULE.GLOBAL.selectPatient(_data.id, function() {
+						window.location = NC.getContextPath() + '/netcare/admin/healthplans';
+					});
+					
+				});
+			});
+		};
+		
+		my.render = function() {
+			$('input[name="firstName"]').val(_data.firstName);
+			$('input[name="lastName"]').val(_data.lastName);
+			$('input[name="civicRegistrationNumber"]').val(_data.civicRegistrationNumber);
+			$('input[name="phoneNumber"]').val(_data.phoneNumber);
+		};
+		
 		return my;
 	})(),
 	
@@ -142,7 +300,7 @@ var NC_MODULE = {
 		};
 		
 		my.loadDurations = function() {
-			new NC.Support().loadDurations($('#createHealthPlanForm select'));
+			NC_MODULE.GLOBAL.loadDurations($('#createHealthPlanForm select'));
 		};
 		
 		my.initListeners = function() {
@@ -340,13 +498,15 @@ var NC_MODULE = {
 				NC.log('Saving health plan. Data is: ' + _data);
 				new NC.Ajax().post('/healthplans', _data, function(data) {
 					
+					_data = data.data;
+					
 					/*
 					 * Add new item in list and hide form
 					 */
 					$('#createHealthPlanSheet').hide();
 					
 					NC.log('New healthplan created with id: ' + data.data.id);
-					my.buildHealthPlanItem(data.data);
+					my.buildHealthPlanItem(my, _data);
 				}, true);
 			}
 		};
@@ -881,8 +1041,7 @@ var NC_MODULE = {
 			});
 			opt.html('-- Alla --');
 
-			var tc = new NC.Support();
-			tc.loadAccessLevels($('select[name="level"]'));
+			NC_MODULE.GLOBAL.loadAccessLevels($('select[name="level"]'));
 
 			$('select[name="level"]').prepend(opt);
 		};
@@ -969,7 +1128,7 @@ var NC_MODULE = {
 			NC.log('Copy template');
 			template.name = template.name + ' (Kopia)';
 
-			new NC.ActivityTypes().create(template, function(data) {
+			new NC.Ajax().post('/templates/', template, function(data) {
 				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
 				my.buildTemplateItem(my, data.data, '#item-' + template.id);
 			});
@@ -977,7 +1136,7 @@ var NC_MODULE = {
 
 		my.deleteTemplate = function(my, templateId) {
 			NC.log('Delete template');
-			new NC.ActivityTypes().deleteTemplate(templateId, function() {
+			new NC.Ajax().http_delete('/templates/' + templateId, function() {
 				NC.log('Item removed');
 				$('#item-' + templateId).parents('.item:first').fadeOut('fast');
 			});
@@ -990,16 +1149,13 @@ var NC_MODULE = {
 	ACTIVITY_TEMPLATE : (function() {
 		var activityTemplate;
 		var my = {};
-		var support;
 		var typeOpts;
 		var unitOpts;
 		var categories;
 		var nextItemId = -1;
 
-		my.initSingleTemplate = function(params, paramSupport) {
-			var at = new NC.ActivityTypes();
+		my.initSingleTemplate = function(params) {
 			activityTemplate = new Object();
-			support = paramSupport;
 			typeOpts = new Array();
 			unitOpts = new Array();
 			categories = new Array();
@@ -1009,7 +1165,7 @@ var NC_MODULE = {
 			
 			if (params.templateId != -1) {
 				my.loadTemplate(params.templateId, function(data) {
-					activityTemplate = data;
+					activityTemplate = data.data;
 					renderItems(my, activityTemplate);
 					NC.log(activityTemplate);
 				});
@@ -1126,14 +1282,7 @@ var NC_MODULE = {
 		};
 
 		my.loadTemplate = function(templateId, callback) {
-			/*
-			 * Load single template
-			 */
-			var at = new NC.ActivityTypes();
-
-			at.get(templateId, function(data) {
-				callback(data.data);
-			});
+			new NC.Ajax().get('/templates/' + templateId, callback);
 		};
 
 		my.loadCategories = function() {
@@ -1498,7 +1647,7 @@ var NC_MODULE = {
 		}
 
 		var initMeasureValues = function(my) {
-			support.getMeasureValueTypes(function(data) {
+			NC_MODULE.GLOBAL.getMeasureValueTypes(function(data) {
 				$.each(data.data, function(i, v) {
 					typeOpts.push($('<option>').attr('value', v.code).html(
 							v.value));
@@ -1694,6 +1843,100 @@ var NC_MODULE = {
 			new NC.Ajax().post('/categories/', _data, function(data) {
 				my.buildTableRow(data.data);
 				my.resetForm();
+			});
+		};
+		
+		return my;
+	})(),
+	
+	PROFILE : (function() {
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.load(function(data) {
+				_data = data.data;
+				
+				my.initListeners(that);
+				my.render(that);
+			});
+		};
+		
+		my.load = function(callback) {
+			new NC.Ajax().get('/user/' + my.params.patientId + '/load', callback);
+		};
+		
+		my.render = function(my) {
+			$('#userprofile input[name="firstname"]').val(_data.firstName);
+			$('#userprofile input[name="surname"]').val(_data.surName);
+			$('#userprofile input[name="cnr"]').val(NC.GLOBAL.formatCrn(_data.civicRegistrationNumber));
+			$('#userprofile input[name="email"]').val(_data.email);
+			$('#userprofile input[name="phone"]').val(_data.phoneNumber);
+
+			var mobile = _data.mobile;
+			if (mobile) {
+				$('#userprofile input[name="mobile"]').prop('checked', true);
+				$('#userprofile input[name="password"]').val('');
+				$('#userprofile input[name="password2"]').val('');
+			} else {
+				$('#userprofile input[type="password"]').prop('disabled', true);
+			}
+		};
+		
+		my.initListeners = function(my) {
+			$('#userprofile input[name="firstname"]').on('keyup change blur', function() {
+				_data.firstName = $(this).val();
+			});
+			
+			$('#userprofile input[name="surname"]').on('keyup change blur', function() {
+				_data.surName = $(this).val();
+			});
+			
+			$('#userprofile input[name="email"]').on('keyup change blur', function() {
+				_data.email = $(this).val();
+			});
+			
+			$('#userprofile input[name="phone"]').on('keyup change blur', function() {
+				_data.phoneNumber = $(this).val();
+			});
+			
+			$('#userprofile input[name="mobile"]').click(function() {
+				if ($(this).attr('checked') == 'checked') {
+					$('#userprofile input[type="password"]')
+							.removeAttr('disabled');
+					_data.mobile = true;
+				} else {
+					$('#userprofile input[type="password"]').attr(
+							'disabled', 'disabled');
+					_data.mobile = false;
+				}
+			});
+			
+			$('#userprofile input[name="password"]').on('keyup change blur', function() {
+				_data.password1 = $(this).val();
+			});
+			
+			$('#userprofile input[name="password2"]').on('keyup change blur', function() {
+				_data.password2 = $(this).val();
+			});
+			
+			$('#userprofile').submit(function(e) {
+				e.preventDefault();
+				
+				if (_data.mobile == "true") {
+					if (_data.password !== _data.password2) {
+						$('#userprofile input[name="password"]').css('background','#F2DEDE');
+						$('#userprofile input[name="password2"]').css('background','#F2DEDE');
+						return;
+					}
+				}
+
+				new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
+					_data = data.data;
+					my.render();
+				});
 			});
 		};
 		
@@ -2300,29 +2543,24 @@ var NC_MODULE = {
 				personnummer : pnr,
 				dateFrom : date1,
 				dateTo : date2
-			}
+			};
 			
 			NC.GLOBAL.showLoader('#report');
 			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
+				$.each(data.data, function(i, v) {
+					my.buildReportedActivityItem(my, v, msgs);
+				});
 				
-				if (data.data.length > 0) {
-					$.each(data.data, function(i, v) {
-						my.buildReportedActivityItem(my, v, msgs);
-					});
-					
-					NC.PAGINATION.init({
-						'itemIdPrefix' : 'reportedActivityItem',
-						'paginationId' : '#riPagination',
-						'data' : data.data,
-						'previousLabel' : '<<',
-						'nextLabel' : '>>'
-					});
-					
-					$('#reportContainer').show();
-				}
+				NC.PAGINATION.init({
+					'itemIdPrefix' : 'reportedActivityItem',
+					'paginationId' : '#riPagination',
+					'data' : data.data,
+					'previousLabel' : '<<',
+					'nextLabel' : '>>'
+				});
 				
-				NC.GLOBAL.suspendLoader('#report');
-				
+				$('#reportContainer').show();
+				NC.GLOBAL.suspendLoader('#report');	
 			});
 		};
 		

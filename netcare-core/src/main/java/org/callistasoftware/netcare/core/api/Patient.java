@@ -29,13 +29,6 @@ public interface Patient extends PatientBaseView {
 	String getPhoneNumber();
 	
 	/**
-	 * Whether the user is signed up for mobile usage 
-	 * or not
-	 * @return
-	 */
-	boolean isMobile();
-	
-	/**
 	 * Get the email address of the user
 	 * @return
 	 */

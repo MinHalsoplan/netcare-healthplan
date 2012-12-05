@@ -38,67 +38,11 @@
 				};
 				
 				NC_MODULE.PATIENTS.init(params);
+				NC_MODULE.PATIENT_FORM.init(params);
 				
-				var util = new NC.Util();
-				var support = new NC.Support();
-				
-				util.bindNotEmptyField($('#nameContainer'), $('input[name="firstName"]'));
-				util.bindNotEmptyField($('#nameContainer'), $('input[name="surName"]'));
-				util.bindNotEmptyField($('#cnrContainer'), $('input[name="cnr"]'));
-				util.bindLengthField($('#cnrContainer'), $('input[name="cnr"]'), 12);
-				
-				var patients = new NC.Patient();
-							
-				var validateMandatory = function(field) {
-					field.focusout(function() {
-						var first = $('input[name="firstName"]');
-						var sur = $('input[name="surName"]');
-						var crn = $('input[name="crn"]');
-						if (first.val() != '' && sur.val() != '' && crn.val().length == 12) {
-							$('#patientForm :submit').removeAttr('disabled');						
-						} else {
-							$('#patientForm :submit').attr('disabled', 'disbaled');						
-						}
-					});
-				};
-				
-				/**
-				 * Validate crn, only allow [0-9], maxlength of 6
-				 */
-				$('.numericInput').each(function(i, v) {
-					util.validateNumericField($(v), 12);
-				});
-
-				/**
-				 * Disable.
-				 */
-				$('#patientForm :submit').attr('disabled', 'disabled');
-				validateMandatory($('input[name="crn"]'));
-				validateMandatory($('input[name="firstName"]'));
-				validateMandatory($('input[name="surName"]'));
-				
-				$('#patientForm :submit').click(function(event) {
-					NC.log("Submitting form...");
-					event.preventDefault();
-					
-					var formData = new Object();
-					formData.firstName = $('input[name="firstName"]').val();
-					formData.surName = $('input[name="surName"]').val();
-					formData.civicRegistrationNumber = $('input[name="crn"]').val();
-					formData.phoneNumber = $('input[name="phoneNumber"]').val();
-					
-					patients.create(formData, updatePatientTable);
-					
-					$('#patientForm :reset').click();
-				});
-				
-				$('#showCreatePatient').click(function(e) {
-					$('#patientSheet').toggle();
-				});
-				
-				var showForm = '<c:out value="${param.showForm}" />';
-				if (showForm != '') {
-					$('#patientSheet').toggle();
+				var show = '<c:out value="${param.showForm}" />';
+				if (show != '') {
+					$('#patientSheet').show();
 				}
 			});
 		</script>
@@ -136,7 +80,7 @@
 				<netcare:col span="6">
 					<spring:message code="patient.crn" var="cnr" scope="page" />
 					<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
-						<input type="text" name="crn" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
+						<input type="text" name="civicRegistrationNumber" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
 						<br />
 						<span class="help-block"><small>Exempel: 191212121212</small></span>
 					</netcare:field>
@@ -151,7 +95,6 @@
 			
 			<div class="form-actions">
 				<input type="submit" class="btn btn-info" value="<spring:message code="create" />" />
-				<input type="reset" class="btn" value="<spring:message code="reset" />" />
 			</div>
 			
 		</form>

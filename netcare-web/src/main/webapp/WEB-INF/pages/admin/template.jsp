@@ -44,7 +44,7 @@
 					isNationActor : '<c:out value="${isNationActor}" />'
 				};
 				var my = NC_MODULE.ACTIVITY_TEMPLATE;
-				my.initSingleTemplate(params, new NC.Support());
+				my.initSingleTemplate(params);
 
 			});
 		</script>
