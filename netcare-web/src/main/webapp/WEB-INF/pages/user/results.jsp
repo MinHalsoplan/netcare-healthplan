@@ -44,26 +44,8 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Resultat">
-		<h2><spring:message code="result.title" /></h2>
-		<p>
-			<span class="label label-info"><spring:message code="information" /></span>
-			<spring:message code="result.desc" />
-		</p>
-		<div id="pieChart" style="display: none;" class="shadow-box"></div><br />
-		
-		<section id="filter" style="display:none;">
-			<h2><spring:message code="result.filter" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="result.filter.desc" />
-			</p>
-			<form>
-				<netcare:row id="filter-row"></netcare:row>
-			</form>
-		</section>
-		<div id="popop"></div>
+	<c:url value="/netcare/user/select-results" var="backToUrl" />
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till alla hälsoprogram">
 		<div id="activities"></div>
-		<div id="chartcontainer" style="width: 100%; height: 400px"></div>
 	</hp:viewBody>
 </hp:view>
