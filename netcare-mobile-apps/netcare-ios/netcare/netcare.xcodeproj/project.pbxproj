@@ -10,7 +10,6 @@
 		D058BA4215285F2C0040EDD0 /* heart-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D058BA4115285F2C0040EDD0 /* heart-logo.png */; };
 		D0599165150B691D00EB3F6D /* 57px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599164150B691D00EB3F6D /* 57px.png */; };
 		D0599168150B69BD00EB3F6D /* 114px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599167150B69BD00EB3F6D /* 114px.png */; };
-		D059916C150BA3BE00EB3F6D /* lj-logox280.png in Resources */ = {isa = PBXBuildFile; fileRef = D059916B150BA3BE00EB3F6D /* lj-logox280.png */; };
 		D05D409514FA4B3D00335899 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05D409414FA4B3D00335899 /* UIKit.framework */; };
 		D05D409714FA4B3D00335899 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05D409614FA4B3D00335899 /* Foundation.framework */; };
 		D05D409914FA4B3D00335899 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05D409814FA4B3D00335899 /* CoreGraphics.framework */; };
@@ -24,6 +23,7 @@
 		D05D40C014FD059B00335899 /* HTTPAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40BF14FD059B00335899 /* HTTPAuthentication.m */; };
 		D05D40C314FD08D200335899 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = D05D40C214FD08D200335899 /* Util.m */; };
 		D061895A1504F394002030EB /* icon-transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = D06189591504F394002030EB /* icon-transparent.png */; };
+		D0E630561670D0D700452408 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E630551670D0D700452408 /* Default-568h@2x.png */; };
 		D0F4E582150A2A6800DD1B94 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D0F4E581150A2A6800DD1B94 /* Default.png */; };
 /* End PBXBuildFile section */
 
@@ -31,7 +31,6 @@
 		D058BA4115285F2C0040EDD0 /* heart-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "heart-logo.png"; path = "../../../../netcare-web/src/main/webapp/img/icons/32/heart-logo.png"; sourceTree = "<group>"; };
 		D0599164150B691D00EB3F6D /* 57px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 57px.png; sourceTree = "<group>"; };
 		D0599167150B69BD00EB3F6D /* 114px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 114px.png; sourceTree = "<group>"; };
-		D059916B150BA3BE00EB3F6D /* lj-logox280.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "lj-logox280.png"; path = "../../../../../../../Callista/callistasoftware/projects/netcare/docs/icons/lj-logox280.png"; sourceTree = "<group>"; };
 		D05D409014FA4B3D00335899 /* netcare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = netcare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05D409414FA4B3D00335899 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D05D409614FA4B3D00335899 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -55,6 +54,7 @@
 		D05D40C214FD08D200335899 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 		D06189591504F394002030EB /* icon-transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-transparent.png"; sourceTree = "<group>"; };
 		D08E69A81509525D00209FE0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		D0E630551670D0D700452408 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D0F4E581150A2A6800DD1B94 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,6 +75,7 @@
 		D05D408514FA4B3D00335899 = {
 			isa = PBXGroup;
 			children = (
+				D0E630551670D0D700452408 /* Default-568h@2x.png */,
 				D0599167150B69BD00EB3F6D /* 114px.png */,
 				D0599164150B691D00EB3F6D /* 57px.png */,
 				D0F4E581150A2A6800DD1B94 /* Default.png */,
@@ -128,7 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				D058BA4115285F2C0040EDD0 /* heart-logo.png */,
-				D059916B150BA3BE00EB3F6D /* lj-logox280.png */,
 				D06189591504F394002030EB /* icon-transparent.png */,
 				D05D409C14FA4B3D00335899 /* netcare-Info.plist */,
 				D05D409D14FA4B3D00335899 /* InfoPlist.strings */,
@@ -164,7 +164,7 @@
 		D05D408714FA4B3D00335899 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = D05D408A14FA4B3D00335899 /* Build configuration list for PBXProject "netcare" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -194,8 +194,8 @@
 				D0F4E582150A2A6800DD1B94 /* Default.png in Resources */,
 				D0599165150B691D00EB3F6D /* 57px.png in Resources */,
 				D0599168150B69BD00EB3F6D /* 114px.png in Resources */,
-				D059916C150BA3BE00EB3F6D /* lj-logox280.png in Resources */,
 				D058BA4215285F2C0040EDD0 /* heart-logo.png in Resources */,
+				D0E630561670D0D700452408 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +270,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Peter Larsson";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos5.1]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -279,7 +279,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos5.1]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -291,6 +291,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
@@ -307,6 +308,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -323,7 +325,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos5.1]" = "iPhone Distribution: Peter Larsson";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Peter Larsson";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -332,7 +334,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos5.1]" = "18AA4D71-ACCC-424D-B332-98252418B830";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "18AA4D71-ACCC-424D-B332-98252418B830";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -346,6 +348,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
