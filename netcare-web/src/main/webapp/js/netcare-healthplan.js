@@ -24,7 +24,7 @@ var NC_MODULE = {
 		 * with the array of values
 		 */
 		var _loadOptions = function(url, onDataLoaded) {
-			new NC.Ajax().get(url, function(data) {
+			new NC.Ajax().getSynchronous(url, function(data) {
 				var arr = new Array();
 				$.each(data.data, function(index, value) {				
 					arr[index] = value;
@@ -148,6 +148,13 @@ var NC_MODULE = {
 		
 		my.getMeasureValueTypes = function(callback) {
 			new NC.Ajax().get('/support/measureValueTypes', callback);
+		};
+		
+		my.loadCountyCouncils = function(selectElem) {
+			var url = '/support/countyCouncils';
+			_loadOptions(url, function(data) {
+				_createOptions(data, selectElem);
+			});
 		};
 
 		return my;
@@ -3166,7 +3173,150 @@ var NC_MODULE = {
 		}
 		
 		return my; 
+	})(),
+	
+	CARE_UNIT_ADMIN : (function() {
+		var _formData = new Object();
+		var _data = new Array();
+		
+		var resetData = function() {
+			var cc = $('#countyCouncil option:first').val();
+			_formData = {
+				id : -1,
+				name : '',
+				hsaId : '',
+				countyCouncil : {
+					code : cc
+				}
+			};
+		};
+		
+		var my = {};
+		
+		my.init = function(params) {
+			var that = this;
+			this.params = params;
+			
+			my.loadCountyCouncils(that);
+			
+			resetData();
+			
+			my.initListeners(that);
+			my.renderCareUnits(that);
+			my.initFormListeners(that, my.onSave);
+			my.renderForm(my, _formData);
+		};
+		
+		my.onSave = function(my, data) {
+			resetData();
+			my.renderForm(my, _formData);
+			my.renderCareUnits(my);
+			
+			$('#careunits-form-sheet').hide();
+		};
+		
+		my.loadCountyCouncils = function(my) {
+			NC_MODULE.GLOBAL.loadCountyCouncils($('#countyCouncil'));
+		}
+		
+		my.initListeners = function(my) {
+			$('#show-careunits-sheet').on('click', function(e) {
+				e.preventDefault();
+				$('#careunit-form-sheet').toggle();
+			});
+		};
+		
+		my.initFormListeners = function(my, onSave) {
+			$('#name').on('keyup change blur', function(e) {
+				_formData.name = $(this).val();
+			});
+			
+			$('#hsaId').on('keyup change blur', function(e) {
+				_formData.hsaId = $(this).val();
+			});
+			
+			$('#countyCouncil').on('change', function(e) {
+				var cc = new Object();
+				cc.code = $(this).find('option:selected').val();
+				
+				_formData.countyCouncil = cc;
+				NC.log('Selected ' + cc.code); 
+			});
+			
+			$('#careunit-form').submit(function(e) {
+				e.preventDefault();
+				my.saveCareUnit(_formData, function(data) {
+					my.onSave(my, data);
+				});
+			});
+		};
+		
+		my.saveCareUnit = function(data, callback) {
+			new NC.Ajax().post('/careunits/' + data.id, data, callback);
+		};
+		
+		my.loadCareUnits = function(callback) {
+			new NC.Ajax().get('/careunits', callback);
+		};
+		
+		my.renderCareUnits = function(my) {
+			NC.GLOBAL.showLoader('#careunits', 'Laddar vårdenheter...');
+			$('#careunitsListContainer').empty();
+			my.loadCareUnits(function(data) {
+				_data = data.data;
+				
+				$.each(_data, function(i, v) {
+					my.renderCareUnit(my, i, v);
+				});
+				
+				NC.PAGINATION.init({
+					'itemIdPrefix' : 'careUnitItem-',
+					'paginationId' : '#cuPagination',
+					'data' : _data,
+					'previousLabel' : '<<',
+					'nextLabel' : '>>'
+				});
+				
+				if (_data.length > 0) {
+					$('#careunitsContainer').show();
+				}
+				
+				NC.GLOBAL.suspendLoader('#careunits');
+			});
+		};
+		
+		my.renderCareUnit = function(my, idx, careunit) {
+			var dom = _.template($('#careUnitItem').html())(careunit);
+			var note = _.template($('#itemNote').html())({ value : careunit.hsaId });
+			
+			$('#careunitsListContainer').append($(dom));
+			$('#careunit-item-' + careunit.id).next('a.itemNavigation').after($(note));
+			
+			my.initCareUnitListener(my, idx, careunit);
+		};
+		
+		my.initCareUnitListener = function(my, idx, careunit) {
+			$('#careunit-item-' + careunit.id).on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				my.renderForm(my, careunit);
+				$('#careunit-form-sheet').show();
+			})
+		};
+		
+		my.renderForm = function(my, data) {
+			_formData = data;
+			$('#name').val(_formData.name);
+			$('#hsaId').val(_formData.hsaId);
+			$('#countyCouncil option').each(function(i, v) {
+				if ($(this).val() == _formData.countyCouncil.code) {
+					$(this).prop('selected', true);
+				}
+			});
+		};
+		
+		return my;
 	})()
-
 	
 };

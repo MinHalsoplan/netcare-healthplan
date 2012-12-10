@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.model.entity.AccessLevel;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +44,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 @Controller
-@RequestMapping(value="/support")
+@RequestMapping(value="/support", produces="application/json")
 public class SupportApi extends ApiSupport {
 	
 	@Autowired
 	private MessageSource messageSource;
 	
-	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadMeasureValueTypes() {
 		this.logAccess("load", "measure value types");
@@ -62,7 +63,7 @@ public class SupportApi extends ApiSupport {
 		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
 	}
 	
-	@RequestMapping(value="/accessLevels", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/accessLevels", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadAccessLevels() {
 		this.logAccess("load", "access levels");
@@ -75,7 +76,24 @@ public class SupportApi extends ApiSupport {
 		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
 	}
 	
-	@RequestMapping(value="/durations/load", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/countyCouncils", method=RequestMethod.GET)
+	@ResponseBody
+	public ServiceResult<Option[]> loadCountyCouncils() {
+		this.logAccess("load", "county councils");
+		final CountyCouncil[] opts = CountyCouncil.values();
+		final Option[] options = new Option[opts.length];
+		for (int i = 0; i < opts.length; i++) {
+			
+			final CountyCouncil cc = opts[i];
+			options[i] = new Option();
+			options[i].setCode(String.valueOf(cc.getCode()));
+			options[i].setValue(cc.getName());
+		}
+		
+		return ServiceResultImpl.createSuccessResult(options, new GenericSuccessMessage());
+	}
+	
+	@RequestMapping(value="/durations/load", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadDurations(final Locale locale) {
 		final DurationUnit[] units = DurationUnit.values();
@@ -88,7 +106,7 @@ public class SupportApi extends ApiSupport {
 		return ServiceResultImpl.createSuccessResult(durationUnits, new GenericSuccessMessage());
 	}
 	
-	@RequestMapping(value="/months/load", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/months/load", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<String[]> loadMonths(final Locale locale) {
 		
@@ -132,7 +150,7 @@ public class SupportApi extends ApiSupport {
 	 * @param locale the locale (set by system).
 	 * @return a JSON pbject as a string representation, with all fields and values.
 	 */
-	@RequestMapping(value="/caption", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@RequestMapping(value="/caption", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public ServiceResult<HashMap<String, String>> getLocalizedMessage(@RequestBody final MessageFields fields, final Locale locale) {
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -144,7 +162,7 @@ public class SupportApi extends ApiSupport {
 		return ServiceResultImpl.createSuccessResult(map, new GenericSuccessMessage());	
 	}
 	
-	@RequestMapping(value="/message", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/message", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadMessage(@RequestParam(value="codes") final String codes, final Locale locale) {
 		final String[] sep = codes.split(",");

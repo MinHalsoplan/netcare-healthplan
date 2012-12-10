@@ -24,6 +24,7 @@ import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.repository.MeasureUnitRepository;
 import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
@@ -122,7 +123,7 @@ public class TestDataHelper {
 		return r;
 	}
 	
-	public CountyCouncilEntity newCountyCouncil(final String name) {
+	public CountyCouncilEntity newCountyCouncil(final CountyCouncil name) {
 		return getCountyCouncilRepository().saveAndFlush(CountyCouncilEntity.newEntity(name));
 	}
 	

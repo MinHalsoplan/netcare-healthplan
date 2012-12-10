@@ -16,21 +16,43 @@
  */
 package org.callistasoftware.netcare.core.api.impl;
 
+import java.util.List;
+
 import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.core.api.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 
 public class CareUnitImpl implements CareUnit {
 	private static final long serialVersionUID = 1L;
+	
+	private Long id;
 	private String hsaId;
 	private String name;
+	private CountyCouncil countyCouncil;
 	
-	CareUnitImpl(final String hsaId, final String name) {
+	CareUnitImpl() {
+	
+	}
+	
+	CareUnitImpl(final Long id, final String hsaId, final String name, final CountyCouncil cc) {
+		this.setId(id);
 		this.setHsaId(hsaId);
 		this.setName(name);
+		this.setCountyCouncil(cc);
 	}
 	
 	public static CareUnit newFromEntity(final CareUnitEntity entity) {
-		return new CareUnitImpl(entity.getHsaId(), entity.getName());
+		return new CareUnitImpl(entity.getId(), entity.getHsaId(), entity.getName(), CountyCouncilImpl.newFromEntity(entity.getCountyCouncil()));
+	}
+	
+	public static CareUnit[] newFromEntities(final List<CareUnitEntity> entities) {
+		
+		final CareUnit[] cus = new CareUnitImpl[entities.size()];
+		for (int i = 0; i < entities.size(); i++) {
+			cus[i] = newFromEntity(entities.get(i));
+		}
+		
+		return cus;
 	}
 	
 	@Override
@@ -51,4 +73,21 @@ public class CareUnitImpl implements CareUnit {
 		this.name = name;
 	}
 
+	@Override
+	public CountyCouncil getCountyCouncil() {
+		return this.countyCouncil;
+	}
+	
+	public void setCountyCouncil(final CountyCouncil countyCouncil) {
+		this.countyCouncil = countyCouncil;
+	}
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+	
+	public void setId(final Long id) {
+		this.id = id;
+	}
 }

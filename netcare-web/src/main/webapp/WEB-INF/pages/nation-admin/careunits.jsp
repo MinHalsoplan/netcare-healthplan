@@ -28,15 +28,55 @@
 
 <hp:view>
 	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
-				NC_MODULE.CATEGORIES.init();
+				NC_MODULE.CARE_UNIT_ADMIN.init();
 			});
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Administrera vårdenheter" plain="true">
 		
-		<a href="#" class="btn">Skapa ny vårdenhet</a>
+		<a id="show-careunits-sheet" href="#" class="btn">Lägg till vårdenhet</a>
+		
+		<mvk:sheet id="careunit-form-sheet" style="display: none;">
+			<form id="careunit-form">
+				<netcare:field name="name" label="Namn">
+					<input type="text" name="name" id="name" />
+				</netcare:field>
+				<netcare:field name="hsaId" label="HSA-ID">
+					<input type="text" name="hsaId" id="hsaId" />
+				</netcare:field>
+				<netcare:field name="countyCouncil" label="Landsting">
+					<select name="countryCouncil" id="countyCouncil">
+					
+					</select>
+				</netcare:field>
+				
+				<div class="form-actions">
+					<button type="submit" class="btn">Spara</button>
+				</div>
+			</form>
+		</mvk:sheet>
+		
+		<br />
+		
+		<section id="careunits">
+			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="careunitsContainer" style="display: none;">
+				<mvk:heading title="Vårdenheter">
+					Listan visar alla vårdenheter som finns upplagda i Min hälsoplan. Klicka på en för att
+					uppdatera dess information. 
+				</mvk:heading>
+				<mvk:touch-list id="careunitsListContainer"></mvk:touch-list>
+				<div id="cuPagination" class="pagination pagination-centered">
+					<ul></ul>
+				</div>
+			</div>
+		</section>
 		
 		
 	</hp:viewBody>

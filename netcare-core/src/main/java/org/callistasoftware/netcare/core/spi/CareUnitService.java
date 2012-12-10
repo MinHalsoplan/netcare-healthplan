@@ -14,33 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.core.spi;
 
-import java.io.Serializable;
+import org.callistasoftware.netcare.core.api.CareUnit;
+import org.callistasoftware.netcare.core.api.ServiceResult;
 
-import org.callistasoftware.netcare.core.api.impl.CareUnitImpl;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
+public interface CareUnitService {
 
-@JsonDeserialize(as=CareUnitImpl.class)
-public interface CareUnit extends Serializable {
+	public ServiceResult<CareUnit[]> listCareUnits();
 	
-	Long getId();
-
-	/**
-	 * Get the hsa id of the care unit
-	 * @return
-	 */
-	String getHsaId();
-	
-	/**
-	 * Get the name of the care unit
-	 * @return
-	 */
-	String getName();
-	
-	/**
-	 * Get the county council
-	 * @return
-	 */
-	CountyCouncil getCountyCouncil();
+	public ServiceResult<CareUnit> saveCareUnit(final CareUnit careUnit);
 }

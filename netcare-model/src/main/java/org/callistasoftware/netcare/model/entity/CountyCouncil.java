@@ -56,7 +56,7 @@ public enum CountyCouncil {
 		return this.name;
 	}
 	
-	public CountyCouncil fromCode(final int code) {
+	public static CountyCouncil fromCode(final int code) {
 		final CountyCouncil[] opts = CountyCouncil.values();
 		for (final CountyCouncil o : opts) {
 			if (o.getCode() == code) {

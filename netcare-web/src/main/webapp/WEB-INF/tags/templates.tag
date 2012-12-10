@@ -796,4 +796,18 @@
 </div>
 </script>
 
+<script id="careUnitItem" type="text/template">
+	<li id="careUnitItem-{{id}}" class="item withNavigation" style="cursor: pointer;">
+		<mvk:touch-item>
+			<div id="careunit-item-{{id}}" class="listItemBase">
+				<div class="mainBody">
+					<h4 class="titel">{{name}}</h4>
+					<div class="subRow">{{countyCouncil.name}}</div>
+				</div>
+			</div>
+			<a id="result-item-{{id}}-showResults" href="#" class="itemNavigation assistiveText"></a>
+		</mvk:touch-item>
+	</li>
+</script>
+
 <!-- healthplan:templates / -->

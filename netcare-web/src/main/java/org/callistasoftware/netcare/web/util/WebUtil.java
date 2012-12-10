@@ -45,6 +45,7 @@ import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EstimationEntity;
@@ -122,7 +123,7 @@ public final class WebUtil {
 		}
 		
 		final RoleEntity careActorRole = td.newCareActorRole();
-		final CountyCouncilEntity jkpg = td.newCountyCouncil("Landstinget i Jönköpings Län");
+		final CountyCouncilEntity jkpg = td.newCountyCouncil(CountyCouncil.JONKOPING);
 		final MeasureUnitEntity mue = td.newMeasureUnit("m", "Meter");
 
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
@@ -191,9 +192,9 @@ public final class WebUtil {
 		/*
 		 * County councils
 		 */
-		final CountyCouncilEntity jkpg = td.newCountyCouncil("Landstinget i Jönköpings län");
-		final CountyCouncilEntity hall = td.newCountyCouncil("Region Halland");
-		final CountyCouncilEntity vbott = td.newCountyCouncil("Västerbottens läns landsting");
+		final CountyCouncilEntity jkpg = td.newCountyCouncil(CountyCouncil.JONKOPING);
+		final CountyCouncilEntity hall = td.newCountyCouncil(CountyCouncil.HALLAND);
+		final CountyCouncilEntity vbott = td.newCountyCouncil(CountyCouncil.VASTERBOTTEN);
 
 		/*
 		 * Care units

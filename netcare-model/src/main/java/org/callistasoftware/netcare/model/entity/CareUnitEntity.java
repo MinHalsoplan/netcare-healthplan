@@ -69,7 +69,7 @@ public class CareUnitEntity implements PermissionRestrictedEntity {
 		return hsaId;
 	}
 
-	void setHsaId(String hsaId) {
+	public void setHsaId(String hsaId) {
 		this.hsaId = hsaId;
 	}
 
