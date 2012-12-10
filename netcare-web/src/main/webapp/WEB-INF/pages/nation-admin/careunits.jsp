@@ -41,16 +41,14 @@
 		
 		<mvk:sheet id="careunit-form-sheet" style="display: none;">
 			<form id="careunit-form">
-				<netcare:field name="name" label="Namn">
-					<input type="text" name="name" id="name" />
+				<netcare:field containerId="nameContainer" name="name" label="Namn">
+					<input type="text" name="name" id="name" class="required"/>
 				</netcare:field>
-				<netcare:field name="hsaId" label="HSA-ID">
-					<input type="text" name="hsaId" id="hsaId" />
+				<netcare:field containerId="hsaIdContainer" name="hsaId" label="HSA-ID">
+					<input type="text" name="hsaId" id="hsaId" class="required" />
 				</netcare:field>
 				<netcare:field name="countyCouncil" label="Landsting">
-					<select name="countryCouncil" id="countyCouncil">
-					
-					</select>
+					<select name="countyCouncil" id="countyCouncil"></select>
 				</netcare:field>
 				
 				<div class="form-actions">

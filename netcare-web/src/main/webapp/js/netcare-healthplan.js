@@ -3214,6 +3214,27 @@ var NC_MODULE = {
 			};
 		};
 		
+		var initValidation = function() {
+			$('#careunit-form').validate({
+				messages: {
+					name: "Namn på vårdenhet saknas",
+					hsaId: "Vårdenhetens hsa-id saknas"
+				},
+				errorClass: "field-error",
+					highlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').addClass('field-error');
+				},
+					unhighlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').removeClass('field-error');
+				}
+			});
+		};
+		
+		var validate = function() {
+			var validator =  $('#careunit-form').validate();
+			return validator.numberOfInvalids() == 0;
+		};
+		
 		var my = {};
 		
 		my.init = function(params) {
@@ -3228,6 +3249,8 @@ var NC_MODULE = {
 			my.renderCareUnits(that);
 			my.initFormListeners(that, my.onSave);
 			my.renderForm(my, _formData);
+			
+			initValidation();
 		};
 		
 		my.onSave = function(my, data) {
@@ -3268,9 +3291,12 @@ var NC_MODULE = {
 			
 			$('#careunit-form').submit(function(e) {
 				e.preventDefault();
-				my.saveCareUnit(_formData, function(data) {
-					my.onSave(my, data);
-				});
+				//$('#careunit-form').validate();
+				if (validate() == true) {
+					my.saveCareUnit(_formData, function(data) {
+						my.onSave(my, data);
+					});
+				}
 			});
 		};
 		
