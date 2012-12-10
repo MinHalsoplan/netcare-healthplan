@@ -261,3 +261,12 @@ div[id*="ra-row-"] > div.span5 > span {
 }
 
 .popover {width: 300px;}
+
+.field-error {
+	background-color: #eacdce;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+}
+

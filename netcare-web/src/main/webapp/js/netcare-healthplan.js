@@ -235,33 +235,56 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="firstName"]').on('keyup change blur', function() {
+				validate();
 				_data.firstName = $(this).val();
 			});
 			
 			$('input[name="surName"]').on('keyup change blur', function() {
+				validate();
 				_data.surName = $(this).val();
 			});
 			
 			$('input[name="civicRegistrationNumber"]').on('keyup change blur', function() {
+				validate();
 				_data.civicRegistrationNumber = $(this).val();
 			});
 			
 			$('input[name="phoneNumber"]').on('keyup change blur', function() {
 				_data.phoneNumber = $(this).val();
 			});
-			
+
 			$('#patientForm').submit(function(e) {
 				e.preventDefault();
-				new NC.Ajax().post('/user/create', _data, function(data) {
-					_data = data.data;
-					my.render();
-					
-					NC_MODULE.GLOBAL.selectPatient(_data.id, function() {
-						window.location = NC.getContextPath() + '/netcare/admin/healthplans';
+				var validator = validate();
+				console.log(validator);
+				if(validator.numberOfInvalids()==0) {
+					new NC.Ajax().post('/user/create', _data, function(data) {
+						_data = data.data;
+						my.render();
+						
+						NC_MODULE.GLOBAL.selectPatient(_data.id, function() {
+							window.location = NC.getContextPath() + '/netcare/admin/healthplans';
+						});
 					});
-					
-				});
+				}
 			});
+			
+			var validate = function() {
+				return $('#patientForm').validate({
+					messages: {
+						firstName: "Patientens förnamn saknas",
+						surName: "Patientens efternamn saknas",
+						civicRegistrationNumber: "Felaktigt personnummer"
+					},
+					errorClass: "field-error",
+ 					highlight: function(element, errorClass, validClass) {
+ 						$('#' + element.id + 'Container').addClass('field-error');
+					},
+ 					unhighlight: function(element, errorClass, validClass) {
+ 						$('#' + element.id + 'Container').removeClass('field-error');
+					}
+				});
+			};
 		};
 		
 		my.render = function() {
