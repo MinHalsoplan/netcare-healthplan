@@ -43,14 +43,14 @@
 			<input id="unitId" name="unitId" type="hidden" />
 		
 			<spring:message code="units.dn" var="dn" />
-			<netcare:field name="dn" label="${dn}">
-				<input id="dn" type="text" name="dn" />
+			<netcare:field containerId="dnContainer" name="dn" label="${dn}">
+				<input id="dn" type="text" name="dn" class="required"/>
 				<span class="help-block"><small>Exempel: <spring:message code="units.dn.ex" /></small></span>
 			</netcare:field>
 			
 			<spring:message code="units.abbr" var="abbr" />
-			<netcare:field name="name" label="${abbr}">
-				<input id="name" type="text" name="name" />
+			<netcare:field containerId="nameContainer" name="name" label="${abbr}">
+				<input id="name" type="text" name="name" class="required"/>
 				<span class="help-block"><small>Exempel: <spring:message code="units.abbr.ex" /></small></span>
 			</netcare:field>
 			

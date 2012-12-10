@@ -38,8 +38,8 @@
 	<hp:viewBody title="${cat}">
 		<form id="activityCategoryForm">
 			<spring:message code="category.name" var="categoryName" scope="page" />
-			<netcare:field name="name" label="${categoryName}">
-				<input type="text" name="name" />
+			<netcare:field containerId="nameContainer" name="name" label="${categoryName}">
+				<input type="text" id="name" name="name" class="required"/>
 			</netcare:field>
 			
 			<input type="hidden" name="id" value="-1" />

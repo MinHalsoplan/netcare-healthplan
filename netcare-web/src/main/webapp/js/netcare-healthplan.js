@@ -1700,6 +1700,27 @@ var NC_MODULE = {
 		
 		var _data = new Object();
 		
+		var initValidation = function() {
+			$('#unitForm').validate({
+				messages: {
+					dn : "Unikt namn på enheten saknas",
+					name: "Förkortning på enheten saknas"
+				},
+				errorClass: "field-error",
+					highlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').addClass('field-error');
+				},
+					unhighlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').removeClass('field-error');
+				}
+			});
+		};
+		
+		var validate = function() {
+			var validate = $('#unitForm').validate();
+			return validate.numberOfInvalids() == 0;
+		};
+		
 		var my = {};
 		
 		my.init = function(params) {
@@ -1710,6 +1731,7 @@ var NC_MODULE = {
 			
 			my.processUnits(that);
 			my.initChangeListeners(that);
+			initValidation();
 		};
 		
 		my.initChangeListeners = function(my) {
@@ -1729,7 +1751,9 @@ var NC_MODULE = {
 				e.preventDefault();
 				e.stopPropagation();
 				
-				my.save(my);
+				if (validate()) {
+					my.save(my);
+				}
 			})
 		};
 		
@@ -1793,7 +1817,7 @@ var NC_MODULE = {
 		my.save = function(my) {
 			if (_data.id == -1) {
 				new NC.Ajax().post('/units', _data, function(data) {
-					my.buildUnitRow(my, data.data, true);
+					my.buildUnitRow(my, data.data, false);
 					my.resetForm(my);
 				});
 			} else {
@@ -1811,6 +1835,26 @@ var NC_MODULE = {
 		
 		var _data = new Object();
 		
+		var initValidation = function() {
+			$('#activityCategoryForm').validate({
+				messages: {
+					name: "Namn på kategori saknas"
+				},
+				errorClass: "field-error",
+					highlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').addClass('field-error');
+				},
+					unhighlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').removeClass('field-error');
+				}
+			});
+		};
+		
+		var validate = function() {
+			var validate = $('#activityCategoryForm').validate();
+			return validate.numberOfInvalids() == 0;
+		};
+		
 		var my = {};
 		my.init = function(params) {
 			var that = this;
@@ -1821,6 +1865,7 @@ var NC_MODULE = {
 			my.loadTable(that);
 			my.initChangeListeners(that);
 			my.renderForm();
+			initValidation();
 		};
 		
 		my.initChangeListeners = function(my) {
@@ -1832,7 +1877,9 @@ var NC_MODULE = {
 				e.preventDefault();
 				e.stopPropagation();
 				
-				my.save(my);
+				if (validate() == true) {
+					my.save(my);
+				}
 			});
 		};
 		
@@ -3291,7 +3338,6 @@ var NC_MODULE = {
 			
 			$('#careunit-form').submit(function(e) {
 				e.preventDefault();
-				//$('#careunit-form').validate();
 				if (validate() == true) {
 					my.saveCareUnit(_formData, function(data) {
 						my.onSave(my, data);
