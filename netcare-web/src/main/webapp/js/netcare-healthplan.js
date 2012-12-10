@@ -3001,6 +3001,7 @@ var NC_MODULE = {
 						console.log(data.data);
 						var report = data.data;
 						var divId = 'report' + report.id;
+						var header = _.template($('#reportHead').html())(report);
 						if(report.type!=null) {
 							if(report.type=='measurement' || report.type=="estimation") {
 							 my.renderDiagram(my, report);
@@ -3010,6 +3011,7 @@ var NC_MODULE = {
 								my.renderText(my, report, divId);
 							} 
 						}
+						$('#' + divId).prepend(header);
 					});
 				}
 			});
@@ -3065,7 +3067,7 @@ var NC_MODULE = {
 			            enabled: false
 		         },
 		         title: {
-		            text: report.label
+		            text: ''//report.label
 		         },
 		         xAxis: {
 		            dateTimeLabelFormats: {
@@ -3133,15 +3135,11 @@ var NC_MODULE = {
 		}
 		
 		my.renderYesNo = function(my, report, divId) {
-			var dom = _.template($('#reportHead').html())(report);
-			$('#' + divId).append(dom);
 			var dom = _.template($('#yesNoReportRow').html())(report);
 			$('#' + divId).append(dom);
 		};
 
 		my.renderText = function(my, report, divId) {
-			var dom = _.template($('#reportHead').html())(report);
-			$('#' + divId).append(dom);
 			var table = $('<table>').addClass('table table-condensed table-hover').append('<tbody>');
 			$('#' + divId).append(table);
 			_.each(report.reportedValues, function(item){
