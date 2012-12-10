@@ -26,6 +26,7 @@ import org.callistasoftware.netcare.core.repository.MeasureUnitRepository;
 import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
@@ -63,10 +64,10 @@ public abstract class TestSupport {
 	
 	protected final void authenticatedUser(final String hsaId
 			, final String careUnitHsa
-			, final String countyCouncil
+			, final CountyCouncil countyCouncil
 			, final RoleEntity... roles) {
 		
-		CountyCouncilEntity councilEntity = getCountyCouncilRepository().findByName(countyCouncil);
+		CountyCouncilEntity councilEntity = getCountyCouncilRepository().findByMeta(countyCouncil);
 		if (councilEntity == null) {
 			councilEntity = ccRepo.saveAndFlush(CountyCouncilEntity.newEntity(countyCouncil));
 		}
@@ -98,8 +99,8 @@ public abstract class TestSupport {
 		return mue;
 	}
 	
-	protected final CountyCouncilEntity newCountyCouncil(final String name) {
-		CountyCouncilEntity cc = getCountyCouncilRepository().findByName(name);
+	protected final CountyCouncilEntity newCountyCouncil(final CountyCouncil name) {
+		CountyCouncilEntity cc = getCountyCouncilRepository().findByMeta(name);
 		if (cc == null) {
 			cc = getCountyCouncilRepository().saveAndFlush(CountyCouncilEntity.newEntity(name));
 		}

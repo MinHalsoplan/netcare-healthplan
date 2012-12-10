@@ -27,6 +27,7 @@ import java.util.List;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
@@ -53,7 +54,7 @@ public class PatientRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		cuRepo.save(cu);
 
@@ -76,7 +77,7 @@ public class PatientRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testProperties() {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		cuRepo.save(cu);
 
@@ -107,7 +108,7 @@ public class PatientRepositoryTest extends TestSupport {
 	@Rollback(true)
 	public void testFindByFreeText() throws Exception {
 		final List<PatientEntity> ents = new ArrayList<PatientEntity>();
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 		final CareActorEntity ca = CareActorEntity.newEntity("Doctor Hook", "", "12345-67", cu);
@@ -154,7 +155,7 @@ public class PatientRepositoryTest extends TestSupport {
 	@Rollback(true)
 	public void findPatientsWithHealthPlansAtCareUnit() throws Exception {
 
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
 		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Test", "", "hsa-2", cu));
 		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus", "", "123456789004"));

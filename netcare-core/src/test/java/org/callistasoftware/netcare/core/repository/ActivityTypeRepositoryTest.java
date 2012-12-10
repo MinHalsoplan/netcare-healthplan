@@ -24,6 +24,7 @@ import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
@@ -54,7 +55,7 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 
-		final CountyCouncilEntity cc = newCountyCouncil("SLL");
+		final CountyCouncilEntity cc = newCountyCouncil(CountyCouncil.STOCKHOLM);
 		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
 
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
@@ -75,8 +76,8 @@ public class ActivityTypeRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testInsertFindCountyCouncil() throws Exception {
-		CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		CountyCouncilEntity ccFind = ccRepo.findOne(cc.getId());
-		assertEquals("SLL", ccFind.getName());
+		assertEquals(CountyCouncil.STOCKHOLM, ccFind.getMeta());
 	}
 }

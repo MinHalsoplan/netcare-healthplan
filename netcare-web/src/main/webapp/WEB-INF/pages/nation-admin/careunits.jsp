@@ -16,28 +16,28 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
-<h3><spring:message code="admin.menu.title" /></h3>
-<ul>
-	<li>
-		<a href="<spring:url value="/netcare/nation-admin/units" />">
-			<spring:message code="admin.menu.units" />
-		</a>
-	</li>
-	<li>
-		<netcare:image name="new-category" size="16" />
-		<a href="<spring:url value="/netcare/nation-admin/categories" />">
-			<spring:message code="admin.menu.categories" />
-		</a>
-	</li>
-	<li>
-		<a href="<c:url value="/netcare/nation-admin/careunits" />">Vårdenheter</a>
-	</li>
-</ul>
+<hp:view>
+	<hp:viewHeader>
+		<script type="text/javascript">
+			$(function() {
+				NC_MODULE.CATEGORIES.init();
+			});
+		</script>
+	</hp:viewHeader>
+	<hp:viewBody title="Administrera vårdenheter" plain="true">
+		
+		<a href="#" class="btn">Skapa ny vårdenhet</a>
+		
+		
+	</hp:viewBody>
+</hp:view>

@@ -30,6 +30,7 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.Frequency;
@@ -73,7 +74,7 @@ public class ScheduledActivityRepositoryTest extends TestSupport {
 	private CountyCouncilRepository ccRepo;
 
 	private ScheduledActivityEntity setup() {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-id-4321", cc);
 		final CareUnitEntity savedCu = cuRepo.save(cu);
 

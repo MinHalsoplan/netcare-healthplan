@@ -31,34 +31,30 @@ public class CountyCouncilEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "name", length = 128)
-	private String name;
+	@Column(name="meta")
+	private CountyCouncil meta;
 
 	public CountyCouncilEntity() {
 	}
 
-	public CountyCouncilEntity(String name) {
-		this.name = name;
+	public CountyCouncilEntity(CountyCouncil metaData) {
+		this.meta = metaData;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getName() {
-		return name;
+	public CountyCouncil getMeta() {
+		return meta;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public static CountyCouncilEntity newEntity(String name) {
-		return new CountyCouncilEntity(name);
+	public static CountyCouncilEntity newEntity(CountyCouncil meta) {
+		return new CountyCouncilEntity(meta);
 	}
 
 }

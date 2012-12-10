@@ -30,6 +30,7 @@ import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class PatientServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testFindPatients() {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 
@@ -82,7 +83,7 @@ public class PatientServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testLoadPatient() throws Exception {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 

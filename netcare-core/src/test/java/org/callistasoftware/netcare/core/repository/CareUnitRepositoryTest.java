@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class CareUnitRepositoryTest extends TestSupport {
 	@Transactional
 	@Rollback
 	public void testFindByHsaId() throws Exception {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu1 = CareUnitEntity.newEntity("hsa-123", cc);
 		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-432", cc);
 		cu2.setName("Vårdcentralen Jönköping");

@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.support.TestSupport;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class ActivityCommentRepositoryTest extends TestSupport {
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
 
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-unit", cc));
 
 		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Marcus", "", "hsa", cu));
@@ -75,7 +76,7 @@ public class ActivityCommentRepositoryTest extends TestSupport {
 	@Rollback(true)
 	public void testFindComments() {
 
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-unit", cc));
 		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Marcus", "", "hsa", cu));
 

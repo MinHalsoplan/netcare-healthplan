@@ -33,6 +33,7 @@ import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
@@ -60,7 +61,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 
 		final ActivityCategory impl = ActivityCategoryImpl.createNewDto("Fysisk aktivitet");
 		
-		authenticatedUser("hsa-user", "hsa-cu", "SLL", new RoleEntity[] { newRole(RoleEntity.CARE_ACTOR)
+		authenticatedUser("hsa-user", "hsa-cu", CountyCouncil.STOCKHOLM, new RoleEntity[] { newRole(RoleEntity.CARE_ACTOR)
 				, newRole(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR)
 				, newRole(RoleEntity.NATION_ADMINISTRATOR) });
 		
@@ -75,7 +76,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testCreateDuplicateActivityCategory() throws Exception {
 
-		authenticatedUser("hsa-user", "hsa-cu", "SLL", new RoleEntity[] { newRole(RoleEntity.CARE_ACTOR)
+		authenticatedUser("hsa-user", "hsa-cu", CountyCouncil.STOCKHOLM, new RoleEntity[] { newRole(RoleEntity.CARE_ACTOR)
 				, newRole(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR)
 				, newRole(RoleEntity.NATION_ADMINISTRATOR) });
 		
@@ -96,7 +97,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 	@Rollback(true)
 	public void testGetActivityType() throws Exception {
 		// First create an entity in the database
-		final CountyCouncilEntity cc = getCountyCouncilRepository().save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = getCountyCouncilRepository().save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = getCareUnitRepository().save(CareUnitEntity.newEntity("hsa-id", cc));
 
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Tempkategori"));
@@ -120,10 +121,10 @@ public class ActivityTypeServiceTest extends TestSupport {
 	@Rollback(true)
 	public void searchTemplates() {
 
-		authenticatedUser("hsa-care-actor", "hsa-care-unit", "LJ");
+		authenticatedUser("hsa-care-actor", "hsa-care-unit", CountyCouncil.JONKOPING);
 
-		final CountyCouncilEntity cc = newCountyCouncil("LJ");
-		final CountyCouncilEntity cc2 = newCountyCouncil("SLL");
+		final CountyCouncilEntity cc = newCountyCouncil(CountyCouncil.JONKOPING);
+		final CountyCouncilEntity cc2 = newCountyCouncil(CountyCouncil.STOCKHOLM);
 		
 		final CareUnitEntity cu = getCareUnitRepository().findByHsaId("hsa-care-unit");
 		final CareUnitEntity cu2 = getCareUnitRepository().saveAndFlush(CareUnitEntity.newEntity("hsa-care-unit-2", cc2));
@@ -178,7 +179,7 @@ public class ActivityTypeServiceTest extends TestSupport {
 		/*
 		 * Test with another user
 		 */
-		authenticatedUser("hsa-care-actor-2", "hsa-care-unit-2", "LJ");
+		authenticatedUser("hsa-care-actor-2", "hsa-care-unit-2", CountyCouncil.JONKOPING);
 		
 		result = this.service.searchForActivityTypes("ring", "all", "all");
 		assertEquals(2, result.getData().length);

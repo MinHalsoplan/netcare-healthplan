@@ -58,6 +58,7 @@ import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
@@ -110,7 +111,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private ActivityDefinitionEntity createActivityDefinitionEntity() {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("care-unit-hsa-123", cc);
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
@@ -156,7 +157,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private ServiceResult<HealthPlan> createHealthPlan(HealthPlan o) {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
 
@@ -195,7 +196,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Transactional
 	@Rollback(true)
 	public void testAddActivityDefintion() throws Exception {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final CareUnitEntity cu = CareUnitEntity.newEntity("cu", cc);
 		this.cuRepo.save(cu);
@@ -531,7 +532,7 @@ public class HealthPlanServiceTest extends TestSupport {
 	}
 
 	private CareUnitEntity createCareUnit(final String hsaId) {
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity("SLL"));
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
 		final CareUnitEntity cu = CareUnitEntity.newEntity(hsaId == null ? "hsa-cu-123" : hsaId, cc);
 		return this.cuRepo.save(cu);
 	}

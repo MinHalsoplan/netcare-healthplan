@@ -175,4 +175,9 @@ public class HomeController extends ControllerSupport {
 	public String displayActivityCategories() {
 		return "nation-admin/categories";
 	}
+	
+	@RequestMapping(value="/nation-admin/careunits", method = RequestMethod.GET)
+	public String displayCareUnits() {
+		return "nation-admin/careunits";
+	}
 }
