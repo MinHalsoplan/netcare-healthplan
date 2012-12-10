@@ -49,12 +49,12 @@
 			
 			<mvk:sheet>
 			<div id="userprofile">
-				<form>
+				<form id="profile-form">
 					<netcare:row>
 						<netcare:col span="12">
 							<spring:message code="profile.crn" var="crn" scope="page" />
-							<netcare:field name="cnr" label="${crn}">
-								<input type="text" name="cnr" disabled class="span4" />
+							<netcare:field name="crn" label="${crn}">
+								<input type="text" name="crn" disabled class="span4" />
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
@@ -62,14 +62,14 @@
 					<netcare:row>
 						<netcare:col span="6">
 							<spring:message code="profile.firstName" var="firstName" scope="page" />
-							<netcare:field name="firstName" label="${firstName}">
-								<input type="text" name="firstname" class="medium" />
+							<netcare:field containerId="firstNameContainer" name="firstName" label="${firstName}">
+								<input type="text" id="firstName" name="firstName" class="medium required"/>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="6">
 							<spring:message code="profile.surName" var="surName" scope="page" />
-							<netcare:field name="surName" label="${surName}">
-								<input type="text" name="surname" class="medium" />
+							<netcare:field containerId="surNameContainer" name="surName" label="${surName}">
+								<input type="text" id="surName" name="surName" class="medium required"/>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>

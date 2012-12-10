@@ -40,7 +40,7 @@ public class CareUnitEntity implements PermissionRestrictedEntity {
 	@Column(length = 64)
 	private String name;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "county_council_id")
 	private CountyCouncilEntity countyCouncil;
 

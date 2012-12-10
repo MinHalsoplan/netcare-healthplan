@@ -1929,10 +1929,32 @@ var NC_MODULE = {
 	PROFILE : (function() {
 		var my = {};
 		
+		var initValidation = function() {
+			$('#profile-form').validate({
+				messages: {
+					firstName : "Förnamn saknas",
+					surName: "Efternamn saknas"
+				},
+				errorClass: "field-error",
+					highlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').addClass('field-error');
+				},
+					unhighlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').removeClass('field-error');
+				}
+			});
+		};
+		
+		var validate = function() {
+			var validate = $('#profile-form').validate();
+			return validate.numberOfInvalids() == 0;
+		};
+		
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
 			
+			initValidation();
 			my.load(function(data) {
 				_data = data.data;
 				
@@ -1946,9 +1968,9 @@ var NC_MODULE = {
 		};
 		
 		my.render = function(my) {
-			$('#userprofile input[name="firstname"]').val(_data.firstName);
-			$('#userprofile input[name="surname"]').val(_data.surName);
-			$('#userprofile input[name="cnr"]').val(NC.GLOBAL.formatCrn(_data.civicRegistrationNumber));
+			$('#userprofile input[name="firstName"]').val(_data.firstName);
+			$('#userprofile input[name="surName"]').val(_data.surName);
+			$('#userprofile input[name="crn"]').val(NC.GLOBAL.formatCrn(_data.civicRegistrationNumber));
 			$('#userprofile input[name="email"]').val(_data.email);
 			$('#userprofile input[name="phone"]').val(_data.phoneNumber);
 
@@ -1963,11 +1985,11 @@ var NC_MODULE = {
 		};
 		
 		my.initListeners = function(my) {
-			$('#userprofile input[name="firstname"]').on('keyup change blur', function() {
+			$('#userprofile input[name="firstName"]').on('keyup change blur', function() {
 				_data.firstName = $(this).val();
 			});
 			
-			$('#userprofile input[name="surname"]').on('keyup change blur', function() {
+			$('#userprofile input[name="surName"]').on('keyup change blur', function() {
 				_data.surName = $(this).val();
 			});
 			
@@ -2002,18 +2024,20 @@ var NC_MODULE = {
 			$('#userprofile').submit(function(e) {
 				e.preventDefault();
 				
-				if (_data.mobile == "true") {
-					if (_data.password !== _data.password2) {
-						$('#userprofile input[name="password"]').css('background','#F2DEDE');
-						$('#userprofile input[name="password2"]').css('background','#F2DEDE');
-						return;
+				if (validate()) {
+					if (_data.mobile == "true") {
+						if (_data.password !== _data.password2) {
+							$('#userprofile input[name="password"]').css('background','#F2DEDE');
+							$('#userprofile input[name="password2"]').css('background','#F2DEDE');
+							return;
+						}
 					}
+	
+					new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
+						_data = data.data;
+						my.render();
+					});
 				}
-
-				new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
-					_data = data.data;
-					my.render();
-				});
 			});
 		};
 		
