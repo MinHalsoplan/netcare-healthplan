@@ -64,14 +64,14 @@
 			<netcare:row>
 				<netcare:col span="6">
 					<spring:message code="patient.firstName" var="name" scope="page"/>
-					<netcare:field containerId="nameContainer" name="firstName" label="${name}">
-						<input type="text" name="firstName" />
+					<netcare:field containerId="firstNameContainer" name="firstName" label="${name}">
+						<input type="text" id="firstName" name="firstName" class="required" />
 					</netcare:field>
 				</netcare:col>
 				<netcare:col span="6">
 					<spring:message code="patient.surName" var="surName" scope="page"/>
-					<netcare:field containerId="nameContainer" name="surName" label="${surName}">
-						<input type="text" name="surName" />
+					<netcare:field containerId="surNameContainer" name="surName" label="${surName}">
+						<input type="text" id="surName" name="surName" class="required" />
 					</netcare:field>
 				</netcare:col>
 			</netcare:row>
@@ -79,8 +79,8 @@
 			<netcare:row>
 				<netcare:col span="6">
 					<spring:message code="patient.crn" var="cnr" scope="page" />
-					<netcare:field containerId="cnrContainer" name="crn" label="${cnr}">
-						<input type="text" name="civicRegistrationNumber" placeholder="<spring:message code="pattern.crn" />" class="numericInput"/>
+					<netcare:field containerId="civicRegistrationNumberContainer" name="crn" label="${cnr}">
+						<input type="text" id="civicRegistrationNumber" name="civicRegistrationNumber" placeholder="<spring:message code="pattern.crn" />" class="personnummer"/>
 						<br />
 						<span class="help-block"><small>Exempel: 191212121212</small></span>
 					</netcare:field>
@@ -88,7 +88,7 @@
 				<netcare:col span="6">
 					<spring:message code="patient.phoneNumber" var="phoneNumber" scope="page" />
 					<netcare:field containerId="phoneNumberContainer" name="phoneNumber" label="${phoneNumber}">
-						<input type="text" name="phoneNumber" />
+						<input type="text" id="phoneNumber" name="phoneNumber" />
 					</netcare:field>
 				</netcare:col>
 			</netcare:row>
