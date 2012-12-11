@@ -78,27 +78,7 @@ var NC_MODULE = {
 			$('#nopatient').hide();
 			$('#currentpatient').show();
 		};
-		
-		my.validateField = function(field) {
-			if (field.val().length == 0 || field.val() == "") {
-				field.parent().parent().addClass('error');
-				return true;
-			} else {
 				
-				if (field.hasClass('signedNumeric')) {
-					var value = parseInt(field.val());
-					
-					if (value <= 0) {
-						field.parent().parent().addClass('error');
-						return true;	
-					}
-				}
-				
-				field.parent().parent().removeClass('error').addClass('success');
-				return false;
-			}
-		};
-		
 		/**
 		 * Called when care giver selects a patient to
 		 * work with. This method adds the selected patient
@@ -223,9 +203,11 @@ var NC_MODULE = {
 				phoneNumber : ''
 			};
 			
+			my.initValidate();
+
 			my.initListeners(that);
 			my.render(that);
-			
+
 		};
 		
 		my.initListeners = function(my) {
@@ -235,17 +217,17 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="firstName"]').on('keyup change blur', function() {
-				validate();
+				my.validate();
 				_data.firstName = $(this).val();
 			});
 			
 			$('input[name="surName"]').on('keyup change blur', function() {
-				validate();
+				my.validate();
 				_data.surName = $(this).val();
 			});
 			
 			$('input[name="civicRegistrationNumber"]').on('keyup change blur', function() {
-				validate();
+				my.validate();
 				_data.civicRegistrationNumber = $(this).val();
 			});
 			
@@ -255,36 +237,37 @@ var NC_MODULE = {
 
 			$('#patientForm').submit(function(e) {
 				e.preventDefault();
-				var validator = validate();
-				console.log(validator);
-				if(validator.numberOfInvalids()==0) {
+				if(my.validate()) {
 					new NC.Ajax().post('/user/create', _data, function(data) {
 						_data = data.data;
 						my.render();
-						
 						NC_MODULE.GLOBAL.selectPatient(_data.id, function() {
 							window.location = NC.getContextPath() + '/netcare/admin/healthplans';
 						});
 					});
 				}
 			});
-			
-			var validate = function() {
-				return $('#patientForm').validate({
-					messages: {
-						firstName: "Patientens förnamn saknas",
-						surName: "Patientens efternamn saknas",
-						civicRegistrationNumber: "Felaktigt personnummer"
-					},
-					errorClass: "field-error",
- 					highlight: function(element, errorClass, validClass) {
- 						$('#' + element.id + 'Container').addClass('field-error');
-					},
- 					unhighlight: function(element, errorClass, validClass) {
- 						$('#' + element.id + 'Container').removeClass('field-error');
-					}
-				});
-			};
+		};
+
+		my.initValidate = function() {
+			$('#patientForm').validate({
+				messages: {
+					firstName: "Patientens förnamn saknas",
+					surName: "Patientens efternamn saknas",
+					civicRegistrationNumber: "Felaktigt personnummer"
+				},
+				errorClass: "field-error",
+					highlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').addClass('field-error');
+				},
+					unhighlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').removeClass('field-error');
+				}
+			});
+		};
+		
+		my.validate = function() {
+			return $('#patientForm').validate().numberOfInvalids()==0;
 		};
 		
 		my.render = function() {
@@ -307,16 +290,21 @@ var NC_MODULE = {
 			var that = this;
 			this.params = params;
 			
-			my.loadDurations();
+			NC_MODULE.GLOBAL.loadDurations($('#createHealthPlanForm select'));
 			
 			if (params.id > 1) {
 				my.loadHealthPlan(that);
 			} else {
 				_data = new Object();
+				_data.duration = 1
+				_data.durationUnit = new Object();
+				_data.durationUnit.code = $('#createHealthPlanForm select').val();
 				_data.patient = new Object();
 				_data.patient.id = params.patientId;
 			}
 			
+			my.initValidate();
+
 			my.initListeners();
 			
 			/*
@@ -327,10 +315,7 @@ var NC_MODULE = {
 			if (my.params.showForm != '') {
 				$('#createHealthPlanSheet').toggle();
 			}
-		};
-		
-		my.loadDurations = function() {
-			NC_MODULE.GLOBAL.loadDurations($('#createHealthPlanForm select'));
+			
 		};
 		
 		my.initListeners = function() {
@@ -341,16 +326,19 @@ var NC_MODULE = {
 			
 			$('input[name="name"]').on('keyup blur', function() {
 				_data.name = $(this).val();
+				my.validate();
 				NC.log('Updated name to: ' + _data.name);
 			});
 			
-			$('input[name="startDate"]').on('keyup blur', function() {
+			$('input[name="startDate"]').on('keyup blur change', function() {
+				console.log($(this).val());
 				_data.startDate = $(this).val();
 				NC.log('Updated start date to: ' + _data.startDate);
 			});
 			
 			$('input[name="duration"]').on('keyup blur', function() {
 				_data.duration = $(this).val();
+				my.validate();
 				NC.log('Updated duration to: ' + _data.duration);
 			});
 			
@@ -373,7 +361,12 @@ var NC_MODULE = {
 			
 			$('#createHealthPlanForm').submit(function(e) {
 				e.preventDefault();
-				my.save();
+				my.validate();
+				if (my.validate()) {
+					my.save();
+					console.log('submit-saved');
+				}
+				console.log('submit-end');
 			})
 		};
 		
@@ -513,32 +506,42 @@ var NC_MODULE = {
 			});
 		};
 		
+		my.initValidate = function() {
+			$('#createHealthPlanForm').validate({
+				messages: {
+					name: "Skriv in ett namn på hälsoplanen",
+					startDate: "Startdatum saknas",
+					duration: "Skriv in varaktighet för hälsoplanen"
+				},
+				errorClass: "field-error",
+				highlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').addClass('field-error');
+				},
+				unhighlight: function(element, errorClass, validClass) {
+						$('#' + element.id + 'Container').removeClass('field-error');
+				}
+			});	
+		};
+		
 		my.validate = function() {
-			var errors = false;
-			
-			errors = NC_MODULE.GLOBAL.validateField($('input[name="name"]'));
-			errors = NC_MODULE.GLOBAL.validateField($('input[name="startDate"]'));
-			errors = NC_MODULE.GLOBAL.validateField($('input[name="duration"]'));
-			
-			return !errors;
+			var validator = $('#createHealthPlanForm').validate();
+			return validator.numberOfInvalids()==0;
 		};
 		
 		my.save = function() {
-			if (my.validate()) {
-				NC.log('Saving health plan. Data is: ' + _data);
-				new NC.Ajax().post('/healthplans', _data, function(data) {
-					
-					_data = data.data;
-					
-					/*
-					 * Add new item in list and hide form
-					 */
-					$('#createHealthPlanSheet').hide();
-					
-					NC.log('New healthplan created with id: ' + data.data.id);
-					my.buildHealthPlanItem(my, _data);
-				}, true);
-			}
+			NC.log('Saving health plan. Data is: ' + _data);
+			new NC.Ajax().post('/healthplans', _data, function(data) {
+				
+				_data = data.data;
+				
+				/*
+				 * Add new item in list and hide form
+				 */
+				$('#createHealthPlanSheet').hide();
+				
+				NC.log('New healthplan created with id: ' + data.data.id);
+				my.buildHealthPlanItem(my, _data);
+			}, true);
 		};
 		
 		return my;
@@ -1289,16 +1292,15 @@ var NC_MODULE = {
 							delete activityTemplate.activityItems[i].details;
 						}
 						if (activityTemplate.id == -1) {
-							at.create(activityTemplate, function(data) {
+							new NC.Ajax().post('/templates/', activityTemplate, function(data) {
 								activityTemplate = data.data;
 								renderItems(my, activityTemplate);
 								NC.log(activityTemplate);
 								
 								window.location = NC.getContextPath() + '/netcare/admin/templates';
-							});
+							}, true);
 						} else {
-							at.update(params.templateId, activityTemplate,
-									function(data) {
+							new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
 										activityTemplate = data.data;
 										renderItems(my,
 												activityTemplate);
@@ -1306,7 +1308,7 @@ var NC_MODULE = {
 										
 										window.location = NC.getContextPath() + '/netcare/admin/templates';
 										
-									});
+									}, true);
 						}
 					});
 		};

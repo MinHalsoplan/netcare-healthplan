@@ -77,18 +77,18 @@
 		<mvk:sheet id="createHealthPlanSheet" style="display: none;">
 		<form id="createHealthPlanForm" action="#" method="post">
 			<fieldset>
-				<netcare:field name="name" label="${name}">
-					<input type="text" name="name" class="xlarge" />
+				<netcare:field containerId="nameContainer" name="name" label="${name}">
+					<input type="text" id="name" name="name" class="xlarge required" />
 				</netcare:field>
 				
-				<netcare:field name="startDate" label="${startDate}">
-					<netcare:dateInput name="startDate" />
+				<netcare:field containerId="startDateContainer" name="startDate" label="${startDate}">
+					<netcare:dateInput id="startDate" name="startDate" classes="dateISO required"/>
 				</netcare:field>
 				
 				<netcare:row>
 					<netcare:col span="6">
-						<netcare:field name="duration" label="${duration}">
-							<input type="number" min="1" name="duration" class="medium signedNumeric"/>
+						<netcare:field containerId="durationContainer" name="duration" label="${duration}">
+							<input type="number" min="1" id="duration" name="duration" class="medium digits" value="1"/>
 						</netcare:field>
 					</netcare:col>
 				</netcare:row>
