@@ -1292,16 +1292,15 @@ var NC_MODULE = {
 							delete activityTemplate.activityItems[i].details;
 						}
 						if (activityTemplate.id == -1) {
-							at.create(activityTemplate, function(data) {
+							new NC.Ajax().post('/templates/', activityTemplate, function(data) {
 								activityTemplate = data.data;
 								renderItems(my, activityTemplate);
 								NC.log(activityTemplate);
 								
 								window.location = NC.getContextPath() + '/netcare/admin/templates';
-							});
+							}, true);
 						} else {
-							at.update(params.templateId, activityTemplate,
-									function(data) {
+							new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
 										activityTemplate = data.data;
 										renderItems(my,
 												activityTemplate);
@@ -1309,7 +1308,7 @@ var NC_MODULE = {
 										
 										window.location = NC.getContextPath() + '/netcare/admin/templates';
 										
-									});
+									}, true);
 						}
 					});
 		};
