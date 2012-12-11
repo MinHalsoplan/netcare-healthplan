@@ -17,35 +17,35 @@
 
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
-<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
 
-<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
 <hp:view>
 	<hp:viewHeader>
+		<script src="<c:url value="/js/highstock-1.2.4/highstock.js" />" type="text/javascript"></script>
+		
 		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 
 				var params = {
-					patientId : '<sec:authentication property="principal.id" />'
+					activityId : <c:out value="${param.activity}" />
 				};
 				
-				NC_MODULE.SELECT_RESULTS.init(params);
+				NC_MODULE.RESULTS.init(params);
 				
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Resultat" plain="true">
-		
-		<section id="healthplans">
-		</section>
-		
+	<c:url value="/netcare/shared/select-results" var="backToUrl" />
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till alla hälsoprogram">
+		<div id="activities"></div>
 	</hp:viewBody>
 </hp:view>

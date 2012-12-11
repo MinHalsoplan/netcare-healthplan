@@ -17,35 +17,43 @@
 
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
-<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
-<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <hp:view>
 	<hp:viewHeader>
-		<script src="<c:url value="/js/highstock-1.2.4/highstock.js" />" type="text/javascript"></script>
-		
 		<hp:templates />
+		
+		<c:if test="${not empty requestScope.patientId}">
+			<c:set var="patientId" value="${requestScope.patientId}" />
+		</c:if>
+		
+		
 		<script type="text/javascript">
 			$(function() {
+				
+				
 
 				var params = {
-					activityId : <c:out value="${param.activity}" />
+					patientId : '<c:out value="${patientId}" />'
 				};
 				
-				NC_MODULE.RESULTS.init(params);
+				NC_MODULE.SELECT_RESULTS.init(params);
 				
 			});
 		</script>
 	</hp:viewHeader>
-	<c:url value="/netcare/user/select-results" var="backToUrl" />
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till alla hälsoprogram">
-		<div id="activities"></div>
+	<hp:viewBody title="Resultat" plain="true">
+		
+		<section id="healthplans">
+		</section>
+		
 	</hp:viewBody>
 </hp:view>

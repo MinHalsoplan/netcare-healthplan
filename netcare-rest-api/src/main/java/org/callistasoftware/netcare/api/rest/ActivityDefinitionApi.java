@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -37,9 +38,9 @@ public class ActivityDefinitionApi extends ApiSupport {
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition[]> listActivities() {
+	public ServiceResult<ActivityDefinition[]> listActivities(@RequestParam(value="patient", required=false) final Long patientId) {
 		logAccess("lista", "aktiviteter");
-		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient();
+		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient(patientId);
 		return sr;
 	}
 	

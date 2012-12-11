@@ -132,14 +132,26 @@ public class HomeController extends ControllerSupport {
 		return "admin/reportedActivities";
 	}
 
-	@RequestMapping(value = "/user/results", method = RequestMethod.GET)
+	@RequestMapping(value = "/shared/results", method = RequestMethod.GET)
 	public String displayPatientResults() {
-		return "user/results";
+		return "shared/results";
 	}
 	
-	@RequestMapping(value="/user/select-results", method=RequestMethod.GET)
-	public String selectResults() {
-		return "user/select-results";
+	@RequestMapping(value="/shared/select-results", method=RequestMethod.GET)
+	public String selectResults(final HttpSession session, final Model model) {
+		
+		final UserBaseView user = getLoggedInUser();
+		if (user.isCareActor()) {
+			final PatientBaseView patient = getCurrentPatient(session);
+			if (patient == null) {
+				throw new IllegalStateException("Could not retreive patient from session when displaying. The care giver does not seem to work with any patient at the moment.");
+			}
+			model.addAttribute("patientId", patient.getId());
+		} else {
+			model.addAttribute("patientId", user.getId());
+		}
+		
+		return "shared/select-results";
 	}
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)

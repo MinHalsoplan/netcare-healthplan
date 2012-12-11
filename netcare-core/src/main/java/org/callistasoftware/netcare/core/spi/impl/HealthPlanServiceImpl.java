@@ -344,8 +344,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				.getActivityDefinitions().size()));
 	}
 
-	
-
 	@Override
 	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit,
 			final Date start, final Date end) {
@@ -401,12 +399,42 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient() {
-		PatientEntity forPatient = patientRepository.findOne(getPatient().getId());
-		Date now = new Date();
-		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
-		ActivityDefinition[] arr = ActivityDefinitionImpl.newFromEntities(defs);
-		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
+	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId) {
+		
+		final UserEntity currentUser = getCurrentUser();
+		if (patientId == null && currentUser.isCareActor()) {
+			throw new IllegalStateException("Don't know which patient to load...");
+		}
+		
+		final PatientEntity patient;
+		if (currentUser.isCareActor()) {
+			patient = patientRepository.findOne(patientId);
+		} else {
+			patient = patientRepository.findOne(getPatient().getId());
+		}
+		
+		final Date now = new Date();
+		final List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(patient, now);
+		
+		if (currentUser.isCareActor()) {
+			getLog().debug("Filter definitions and include only definitions that the care actor are allowed to see.");
+			final Long careUnit = getCareActor().getCareUnit().getId();
+			final List<ActivityDefinitionEntity> filter = new ArrayList<ActivityDefinitionEntity>();
+			
+			for (final ActivityDefinitionEntity ent : defs) {
+				if (ent.getHealthPlan().getCareUnit().getId().equals(careUnit)) {
+					filter.add(ent);
+				}
+			}
+			
+			return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(filter), new GenericSuccessMessage());
+		}
+		
+		if (defs.size() > 0) {
+			this.verifyReadAccess(defs.get(0));
+		}
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(defs), new GenericSuccessMessage());
 	}
 
 	@Override

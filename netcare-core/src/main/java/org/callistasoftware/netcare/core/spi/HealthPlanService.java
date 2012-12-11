@@ -209,7 +209,7 @@ public interface HealthPlanService {
 	 * 
 	 * @return the result with actual activity definitions.
 	 */
-	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient();
+	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId);
 	
 	/**
 	 * Returns events for a patient.

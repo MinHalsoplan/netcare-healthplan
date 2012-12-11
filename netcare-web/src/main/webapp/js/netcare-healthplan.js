@@ -2210,8 +2210,7 @@ var NC_MODULE = {
 						'previousLabel' : '<<',
 						'nextLabel' : '>>'
 					});
-					
-					// NC_MODULE.GLOBAL.suspendLoader('#report');
+
 					$('#reportContainer').show();
 				}
 				
@@ -2893,8 +2892,12 @@ var NC_MODULE = {
 			
 		};
 		
-		my.load = function(callback) {
-			new NC.Ajax().get('/activityPlans', callback);
+		my.load = function(callback, patientId) {
+			if (patientId != undefined) {
+				new NC.Ajax().get('/activityPlans?patient=' + patientId, callback);
+			} else {
+				new NC.Ajax().get('/activityPlans', callback);
+			}
 		};
 		
 		return my;
@@ -3014,6 +3017,7 @@ var NC_MODULE = {
 		};
 		
 		my.loadActivities = function(my) {
+			NC.log('load for patient: ' + my.params.patientId);
 			NC_MODULE.PATIENT_ACTIVITIES.load(function(data) {
 				
 				// Okey, we need to group the results by health plan
@@ -3023,7 +3027,7 @@ var NC_MODULE = {
 				
 				// Let's render
 				my.render(my);
-			});
+			}, my.params.patientId);
 		};
 		
 		my.render = function(my) {
@@ -3059,7 +3063,7 @@ var NC_MODULE = {
 		my.initItemListener = function(my, elemId, activityId) {
 			
 			$(elemId).bind('click', function(e) {
-				window.location = NC.getContextPath() + '/netcare/user/results?activity=' + activityId;
+				window.location = NC.getContextPath() + '/netcare/shared/results?activity=' + activityId;
 			});
 		};
 		
