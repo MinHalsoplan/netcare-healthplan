@@ -601,7 +601,7 @@ var NC_MODULE = {
 					
 					_isNew = true;
 					
-					_templateData = data;
+					_templateData = data.data;
 					
 					_data.healthPlanId = params.healthPlanId;
 					_data.type = new Object();
@@ -790,6 +790,7 @@ var NC_MODULE = {
 				gv.target = '';
 				gv.minTarget = '';
 				gv.maxTarget = '';
+				gv.active = true;
 				
 				_data.goalValues.push(gv);
 				idx = _data.goalValues.length - 1;

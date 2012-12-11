@@ -44,7 +44,8 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Planera aktivitet">
+	<c:url value="/netcare/admin/healthplans" var="backToUrl" />
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Hälsoplaner">
 	
 		<section id="plan">
 			<div class="sectionLoader" style="display: none;">
@@ -73,8 +74,8 @@
 					<netcare:row>
 						<netcare:col span="6">
 							<spring:message code="startDate" var="start" scope="page" />
-							<netcare:field containerId="startDate" name="startDate" label="${start}">
-								<netcare:dateInput name="startDate" />
+							<netcare:field containerId="startDateContainer" name="startDate" label="${start}">
+								<netcare:dateInput id="startDate" name="startDate" />
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="6">
