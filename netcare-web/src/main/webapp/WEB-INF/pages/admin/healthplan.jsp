@@ -54,14 +54,6 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Hälsoplaner" plain="true">
-		<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
-		<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
-		
-		<h3 class="title"><spring:message code="healthplan.title" arguments="${curPatient}"/></h3>
-		
-		<mvk:touch-list id="healthPlanContainer">
-		</mvk:touch-list>
-
 		<spring:message code="clear" var="clear" scope="page" />
 		<spring:message code="healthplan.duration" var="duration" scope="page" />
 		<spring:message code="healthplan.name" var="name" scope="page" />
@@ -70,7 +62,10 @@
 		<spring:message code="healthplan.issuedBy" var="issuedBy" scope="page" />
 		<spring:message code="healthplan.autoRenewal" var="autoRenewal" scope="page" />
 		
-		<button id="showCreateHealthPlan" class="btn btn-block btn-large btn-info" style="margin-top: 20px; margin-bottom: 20px;">
+		<c:set var="curPatient" value="${sessionScope.currentPatient.name}" scope="page" />
+		<spring:message code="healthplan.new" var="newHealthPlan" scope="page"/>
+		
+		<button id="showCreateHealthPlan" class="btn" style="margin-top: 20px; margin-bottom: 20px;">
 			<spring:message code="healthplan.new" />
 		</button>
 		
@@ -113,5 +108,10 @@
 			
 		</form>
 		</mvk:sheet>
+		
+		<h3 class="title"><spring:message code="healthplan.title" arguments="${curPatient}"/></h3>
+		
+		<mvk:touch-list id="healthPlanContainer">
+		</mvk:touch-list>
 	</hp:viewBody>
 </hp:view>

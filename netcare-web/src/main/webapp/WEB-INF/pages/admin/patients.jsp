@@ -48,14 +48,7 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Patienter" plain="true">
-		<section id="patients">
-			<h3 class="title"><spring:message code="admin.patients.list" /></h3>
-			<mvk:touch-list id="patientList">
-			</mvk:touch-list>
-
-		</section>
-	
-		<button id="showCreatePatient" class="btn btn-block btn-large btn-info" style="margin-top: 20px; margin-bottom: 20px;">
+		<button id="showCreatePatient" class="btn" style="margin-top: 20px; margin-bottom: 20px;">
 			<spring:message code="admin.patients.new" />
 		</button>
 		
@@ -99,5 +92,12 @@
 			
 		</form>
 		</mvk:sheet>
+	
+		<section id="patients">
+			<h3 class="title"><spring:message code="admin.patients.list" /></h3>
+			<mvk:touch-list id="patientList">
+			</mvk:touch-list>
+
+		</section>
 	</hp:viewBody>
 </hp:view>
