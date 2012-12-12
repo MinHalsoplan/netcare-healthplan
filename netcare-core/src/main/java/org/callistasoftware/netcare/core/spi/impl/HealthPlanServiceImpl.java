@@ -323,7 +323,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 	@Override
 	public void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
-		scheduledActivityRepository.save(activityDefinition.scheduleActivities());
+		List<ScheduledActivityEntity> scheduleActivities = activityDefinition.scheduleActivities();
+		getLog().debug("Scheduled {} activities.", scheduleActivities.size());
+		scheduledActivityRepository.save(scheduleActivities);
 	}
 
 	@Override
@@ -1009,11 +1011,16 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		final Frequency frequency = new Frequency();
 		frequency.setWeekFrequency(dto.getActivityRepeat());
+		
+		log.debug("Week frequency is: {}", dto.getActivityRepeat());
+		
 		for (final DayTime dt : dto.getDayTimes()) {
 			FrequencyDay fd = FrequencyDay.newFrequencyDay(ApiUtil.toIntDay(dt.getDay()));
 			for (String time : dt.getTimes()) {
 				fd.addTime(FrequencyTime.unmarshal(time));
 			}
+			
+			log.debug("ADDING TIME {}", fd);
 			frequency.addDay(fd);
 		}
 		

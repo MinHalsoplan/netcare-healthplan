@@ -101,5 +101,14 @@ public class FrequencyDay {
 	public int getDay() {
 		return day;
 	}
+	
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("Weekday ").append(getDay()).append(":");
+		for (final FrequencyTime t : getTimes()) {
+			builder.append(t);
+		}
+		
+		return builder.toString();
+	}
 
 }

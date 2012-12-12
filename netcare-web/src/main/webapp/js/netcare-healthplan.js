@@ -589,6 +589,8 @@ var NC_MODULE = {
 					
 					_templateData = data.data.type;
 					
+					my.initListeners(that);
+					
 					my.renderGoals(that);
 					my.renderAllTimes(that);
 					my.renderForm(that);
@@ -607,23 +609,21 @@ var NC_MODULE = {
 					_data.type = new Object();
 					_data.type.id = _templateData.id;
 					
+					my.initListeners(that);
+					
 					my.renderGoals(that);
 					
 					NC.GLOBAL.suspendLoader('#plan');
 					$('#planContainer').show();
+					
+					
 				});
 			}
-			
-			/*
-			 * Check if we should load an activity definition here and populate
-			 * the form
-			 */
-			my.initListeners(that);
 		};
 		
 		my.renderForm = function(my) {
 			$('input[name="startDate"]').val(_data.startDate);
-			$('input[name="duration"]').val(_data.activityRepeat);
+			$('input[name="activityRepeat"]').val(_data.activityRepeat);
 		};
 		
 		my.initListeners = function(my) {
@@ -663,7 +663,7 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="activityRepeat"]').on('blur change keyup', function() {
-				_data.duration = $(this).val();
+				_data.activityRepeat = $(this).val();
 				NC.log('Setting duration to: ' + _data.activityRepeat);
 			});
 		};
