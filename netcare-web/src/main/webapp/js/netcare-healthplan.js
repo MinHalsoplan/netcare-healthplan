@@ -608,6 +608,7 @@ var NC_MODULE = {
 					_data.healthPlanId = params.healthPlanId;
 					_data.type = new Object();
 					_data.type.id = _templateData.id;
+					_data.activityRepeat = 1;
 					
 					my.initListeners(that);
 					
