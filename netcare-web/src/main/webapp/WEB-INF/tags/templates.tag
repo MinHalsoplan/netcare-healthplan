@@ -235,7 +235,7 @@
 </li>
 </script>
 
-<%-- This template is used to show an measurement item form --%>
+<%-- This template is used to show a measurement item form --%>
 
 <script id="activityItemMeasurementForm" type="text/template">
 <h2>
@@ -521,9 +521,19 @@
 </div>
 </script>
 <%--Measurement values --%>
-<script id="scheduled-measurementValues" type="text/template">
+<script id="scheduled-measurementSingleValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}}</span></div>
+<div class="span5"><span>{{definition.activityItemType.name}} ({{definition.target}} {{definition.activityItemType.unit.name}})</span></div>
+<div class="span7">
+	<input type="text" value="{{reportedValue}}" />
+	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
+</div>
+</div>
+</div>
+</script>
+<script id="scheduled-measurementIntervalValues" type="text/template">
+<div id="sa-row-{{id}}" class="row-fluid">
+<div class="span5"><span>{{definition.activityItemType.name}} ({{definition.minTarget}} - {{definition.maxTarget}} {{definition.activityItemType.unit.name}})</span></div>
 <div class="span7">
 	<input type="text" value="{{reportedValue}}" />
 	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>

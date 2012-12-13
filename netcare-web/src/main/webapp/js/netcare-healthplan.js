@@ -364,9 +364,7 @@ var NC_MODULE = {
 				my.validate();
 				if (my.validate()) {
 					my.save();
-					console.log('submit-saved');
 				}
-				console.log('submit-end');
 			})
 		};
 		
@@ -2343,7 +2341,16 @@ var NC_MODULE = {
 					continue;
 				}
 			
-				var activityValuesTemplate = '#scheduled-' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
+				var type = actItem.definition.activityItemType.activityItemTypeName;
+				if(type==='measurement') {
+					if(actItem.definition.target && actItem.definition.target!=='') {
+						type += 'Single';
+					} else {
+						type += 'Interval';
+					}
+					
+				}
+				var activityValuesTemplate = '#scheduled-' + type + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				
@@ -3260,7 +3267,6 @@ var NC_MODULE = {
 				}
 				var domRow = _.template($('#textReportRow').html())(arg);
 				table.children().append(domRow);
-				console.log(arg.divId);
 				$('#' + arg.divId).click(function() {
 					//loadAndShowScheduledActivity(arg.id, arg.divId, openPopoverOnTextRow));
 					loadAndShowScheduledActivity(arg.id,arg.divId,openPopoverOnTextRow);

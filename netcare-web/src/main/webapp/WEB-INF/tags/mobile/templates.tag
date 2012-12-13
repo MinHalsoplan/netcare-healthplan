@@ -26,13 +26,13 @@
 <!-- Activity items templates -->
 <script id="measurementSingleItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
-    	<label for="measurement{{id}}">{{definition.activityItemType.name}}</label>
+    	<label for="measurement{{id}}">{{definition.activityItemType.name}} ({{definition.target}} {{definition.activityItemType.unit.name}})</label>
     	<input type="text" name="measurement{{id}}" id="measurement{{id}}" value="{{reportedValue}}" data-mini="true" />
 	</div>	
 </script>
 <script id="measurementIntervalItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
-    	<label for="measurement{{id}}">{{definition.activityItemType.name}} ({{definition.minTarget}} - {{definition.maxTarget}})</label>
+    	<label for="measurement{{id}}">{{definition.activityItemType.name}} ({{definition.minTarget}} - {{definition.maxTarget}} {{definition.activityItemType.unit.name}})</label>
     	<input type="text" name="measurement{{id}}" id="measurement{{id}}" value="{{reportedValue}}" data-mini="true" />
 	</div>	
 </script>
