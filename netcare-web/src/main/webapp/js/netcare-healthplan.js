@@ -2348,7 +2348,6 @@ var NC_MODULE = {
 					} else {
 						type += 'Interval';
 					}
-					
 				}
 				var activityValuesTemplate = '#scheduled-' + type + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
@@ -2605,8 +2604,9 @@ var NC_MODULE = {
 				});
 			}
 
+			var commentedDiv;
 			if(commented) {
-				var commentedDiv = liElem.find('#actcommented');
+				commentedDiv = liElem.find('#actcommented');
 				commentedDiv.html('<span style="font-style: italic;">"' + act.comments[0].comment + '"</span> - ' + act.comments[0].commentedBy);
 				liElem.find('#actcomment').hide();
 				commentedDiv.show();
@@ -2622,7 +2622,7 @@ var NC_MODULE = {
 							NC.log('Comment completed.');
 							commentText.val('');
 							liElem.find('#actcomment').fadeOut(function() {
-								var commentedDiv = liElem.find('#actcommented');
+								commentedDiv = liElem.find('#actcommented');
 								commentedDiv.html('<span style="font-style: italic;">"' + text + '"</span>');
 								commentedDiv.fadeIn();
 							});
@@ -2640,7 +2640,15 @@ var NC_MODULE = {
 				);
 			} else {
 				$.each(act.activityItemValues, function(idx, actItem) {
-					var activityValuesTemplate = '#' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
+					var type = actItem.definition.activityItemType.activityItemTypeName;
+					if(type==='measurement') {
+						if(actItem.definition.target && actItem.definition.target!=='') {
+							type += 'Single';
+						} else {
+							type += 'Interval';
+						}
+					}
+					var activityValuesTemplate = '#' + type	+ 'Values';
 					var t = _.template($(activityValuesTemplate).html());
 					var dom = t(actItem);
 					$('#ra-details-' + act.id).find('.span12').append($(dom));

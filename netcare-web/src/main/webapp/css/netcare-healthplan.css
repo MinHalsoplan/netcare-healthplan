@@ -207,6 +207,14 @@ table[id*=planned-times] tbody tr td {
 	margin-top: 5px;
 }
 
+.commentReported {
+	padding-left: 15px;
+	border-bottom: 1px #CCC dotted;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 0;	
+}
+
 /*
  * INPUT TEXT
  */
