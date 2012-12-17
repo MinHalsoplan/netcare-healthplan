@@ -200,8 +200,8 @@ table[id*=planned-times] tbody tr td {
 	margin-top: 5px;
 }
 
-.starReported {
-	background-image: url(../img/icons/little-star.png);
+.markReported {
+	background-image: url(../img/icons/little-read.png);
 	background-repeat: no-repeat;
 	text-indent: 20px;
 	margin-top: 5px;

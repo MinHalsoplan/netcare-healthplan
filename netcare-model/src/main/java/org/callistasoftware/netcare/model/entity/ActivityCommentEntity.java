@@ -42,8 +42,8 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	@Column(name="is_liked")
 	private boolean like;
 	
-	@Column(name="is_starred")
-	private boolean star;
+	@Column(name="is_marked_as_read")
+	private boolean markedAsRead;
 	
 	@Column
 	private String reply;
@@ -138,15 +138,15 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	public void setLike(boolean like) {
 		this.like = like;
 	}
-	
-	public boolean isStar() {
-		return star;
-	}
-	
-	public void setStar(boolean star) {
-		this.star = star;
-	}
 
+	public boolean isMarkedAsRead() {
+		return markedAsRead;
+	}
+	
+	public void setMarkedAsRead(boolean markedAsRead) {
+		this.markedAsRead = markedAsRead;
+	}
+	
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
 		return this.isWriteAllowed(user);

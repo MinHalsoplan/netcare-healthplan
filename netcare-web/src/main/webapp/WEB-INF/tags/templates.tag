@@ -415,7 +415,7 @@
 		<div class="span7" style="margin-left:0px;">{{note}}</div>
 	</div>
 	<div class="row-fluid">	
-		<div class="likeReported span4"></div><div class="starReported span7"></div>
+		<div class="likeReported span4"></div><div class="markReported span7"></div>
 	</div>
 	<div class="row-fluid">	
 		<div id="actcomment" class="span11">
@@ -656,7 +656,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div style="text-align: center;">
-				<h2><i>"{{comment}}"</i></h2>
+				<h2><i>{{(comment!==null && comment!=='')?'"' + comment + '"':''}}</i></h2>
 			</div>
 			<div style="text-align: right;">
 				<small>- {{commentedBy}}, {{commentedByCareUnit}}, {{commentedAt}}</small> 
@@ -676,7 +676,7 @@
 		<div class="span8">
 			<div class="row-fluid">
 				<div style="text-align: center;">
-					<h2><i>"{{comment}}"</i></h2>
+					<h2><i>{{(comment!==null && comment!=='')?'"' + comment + '"':''}}</i></h2>
 				</div>
 				<div style="text-align: right;">
 					<small>- {{commentedBy}}, {{commentedByCareUnit}}, {{commentedAt}}</small> 

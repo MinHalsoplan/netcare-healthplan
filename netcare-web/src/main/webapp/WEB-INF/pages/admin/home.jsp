@@ -34,8 +34,8 @@
 				var msgs = {
 					like : '<spring:message code="activity.reported.like" />',
 					liked : '<spring:message code="activity.reported.liked" />',
-					star : '<spring:message code="activity.reported.star" />',
-					starred : '<spring:message code="activity.reported.starred" />'
+					markasread : '<spring:message code="activity.reported.markasread" />',
+					markedasread : '<spring:message code="activity.reported.markedasread" />'
 				};
 				
 				NC_MODULE.REPLIES.init();

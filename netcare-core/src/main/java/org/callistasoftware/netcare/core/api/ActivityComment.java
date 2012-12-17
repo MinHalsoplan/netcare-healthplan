@@ -37,9 +37,9 @@ public interface ActivityComment extends Serializable {
 	String getComment();
 	
 	/**
-	 * If the comment is decorated with a golden star
+	 * If the comment has been read
 	 */
-	boolean isStar();
+	boolean isMarkedAsRead();
 	
 	/**
 	 * If the comment is decorated with a "like"
