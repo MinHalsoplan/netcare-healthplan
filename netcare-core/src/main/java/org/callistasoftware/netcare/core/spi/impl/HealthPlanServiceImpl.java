@@ -958,6 +958,10 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		entity.reschedule();
 		getLog().debug("After rescheduling {}", entity.getScheduledActivities().size());
 
+		
+		final ActivityDefinitionEntity one = activityDefintionRepository.findOne(entity.getId());
+		getLog().debug("After loaded: {} activities.", one.getScheduledActivities().size());
+		
 		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(entity),
 				new GenericSuccessMessage());
 	}

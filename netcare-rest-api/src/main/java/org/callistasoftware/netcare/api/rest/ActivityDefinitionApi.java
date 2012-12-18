@@ -48,6 +48,7 @@ public class ActivityDefinitionApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity) {
 		logAccess("create", "activity definition");
+		
 		return this.service.addActvitiyToHealthPlan(activity);
 	}
 	
