@@ -197,11 +197,11 @@ public class HealthPlanApi extends ApiSupport {
 		return this.service.likePerformedActivity(activity, like);
 	}
 	
-    @RequestMapping(value="/activity/{activity}/star", produces="application/json", method=RequestMethod.POST)
+    @RequestMapping(value="/activity/{activity}/read", produces="application/json", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> starActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="star") final boolean star) {
-		this.logAccess("star", "activity");
-		return this.service.starPerformedActivity(activity, star);
+	public ServiceResult<ScheduledActivity> markActivityAsRead(@PathVariable(value="activity") final Long activity, @RequestParam(value="read") final boolean hasBeenRead) {
+		this.logAccess("markAsRead", "activity");
+		return this.service.markPerformedActivityAsRead(activity, hasBeenRead);
 	}
 	
 	@RequestMapping(value="/activity/reported/comments/newreplies", method=RequestMethod.GET, produces="application/json")

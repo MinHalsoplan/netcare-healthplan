@@ -153,12 +153,12 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity> likePerformedActivity(final Long activityId, boolean like);
 
 	/**
-	 * Star an activity.
+	 * Mark an activity as read.
 	 * @param activityId
-	 * @param star
+	 * @param hasBeenRead
 	 * @return
 	 */
-	ServiceResult<ScheduledActivity> starPerformedActivity(final Long activityId, boolean star);
+	ServiceResult<ScheduledActivity> markPerformedActivityAsRead(final Long activityId, boolean hasBeenRead);
 
 	/**
 	 * Reply to a comment

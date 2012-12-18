@@ -41,7 +41,7 @@ public class ActivityCommentImpl implements ActivityComment {
 	private String activityName;
 	private String activityReportedAt;
 	
-	private boolean star;
+	private boolean markedAsRead;
 	private boolean like;
 	
 	ActivityCommentImpl() {
@@ -58,7 +58,7 @@ public class ActivityCommentImpl implements ActivityComment {
 		this.commentedByCareUnit = entity.getCommentedBy().getCareUnit().getName();
 		
 		this.like = entity.isLike();
-		this.star = entity.isStar();
+		this.markedAsRead = entity.isMarkedAsRead();
 		
 		if (entity.getRepliedAt() != null) {
 			this.reply = entity.getReply();
@@ -137,8 +137,8 @@ public class ActivityCommentImpl implements ActivityComment {
 	}
 
 	@Override
-	public boolean isStar() {
-		return star;
+	public boolean isMarkedAsRead() {
+		return markedAsRead;
 	}
 
 	@Override

@@ -748,11 +748,11 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ScheduledActivity> starPerformedActivity(Long activityId, boolean star) {
-		return createOrUpdateCommentOnPerformedActivity(activityId, null, null, star);
+	public ServiceResult<ScheduledActivity> markPerformedActivityAsRead(Long activityId, boolean hasBeenRead) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, null, null, hasBeenRead);
 	}
 
-	protected ServiceResult<ScheduledActivity> createOrUpdateCommentOnPerformedActivity(Long activityId, String comment, Boolean like, Boolean star) {
+	protected ServiceResult<ScheduledActivity> createOrUpdateCommentOnPerformedActivity(Long activityId, String comment, Boolean like, Boolean hasBeenRead) {
 		final ScheduledActivityEntity ent = this.scheduledActivityRepository.findOne(activityId);
 		if (ent == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class,
@@ -777,8 +777,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				commentEntity.setComment(comment);
 			} else if(like!=null) {
 				commentEntity.setLike(like);
-			} else if(star!=null) {
-				commentEntity.setStar(star);
+			} else if(hasBeenRead!=null) {
+				commentEntity.setMarkedAsRead(hasBeenRead);
 			}
 
 			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent),

@@ -364,9 +364,7 @@ var NC_MODULE = {
 				my.validate();
 				if (my.validate()) {
 					my.save();
-					console.log('submit-saved');
 				}
-				console.log('submit-end');
 			})
 		};
 		
@@ -2082,12 +2080,12 @@ var NC_MODULE = {
 		
 		my.createComment = function(my, idx, update) {
 			
-			var star = _data[idx].star;
+			var markedAsRead = _data[idx].markedAsRead;
 			var like = _data[idx].like;
 			var reply = _data[idx].reply;
 			
 			var dom;
-			if (star == true || like == true) {
+			if (markedAsRead == true || like == true) {
 				dom = _.template($('#activity-comment-awarded').html())(_data[idx]);
 			} else {
 				dom = _.template($('#activity-comment').html())(_data[idx]);
@@ -2101,9 +2099,9 @@ var NC_MODULE = {
 				$('#comments').append($(dom));
 			}
 			
-			if (star == true) {
+			if (markedAsRead == true) {
 				$('#activity-awards-' + _data[idx].id).append(
-					$('<img>').prop('src', NC.getContextPath() + '/img/icons/star.png')
+					$('<img>').prop('src', NC.getContextPath() + '/img/icons/read.png')
 				);
 			}
 			
@@ -2131,7 +2129,7 @@ var NC_MODULE = {
 			
 			closeBtn.click(function(e) {
 				my.remove(_data[idx].id, function(data) {
-					alert('Remve');
+					NC.log('Comment removed');
 				});
 			});
 			
@@ -2343,7 +2341,15 @@ var NC_MODULE = {
 					continue;
 				}
 			
-				var activityValuesTemplate = '#scheduled-' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
+				var type = actItem.definition.activityItemType.activityItemTypeName;
+				if(type==='measurement') {
+					if(actItem.definition.target && actItem.definition.target!=='') {
+						type += 'Single';
+					} else {
+						type += 'Interval';
+					}
+				}
+				var activityValuesTemplate = '#scheduled-' + type + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				
@@ -2562,11 +2568,11 @@ var NC_MODULE = {
 			
 			var commented = false;
 			var liked = false;
-			var starred = false;
+			var hasBeenRead = false;
 			if(act.comments.length>0) {
 				commented = act.comments[0].comment!=null && act.comments[0].comment!='';
 				liked = act.comments[0].like;
-				starred = act.comments[0].star;
+				hasBeenRead = act.comments[0].markedAsRead;
 			}
 			var like = liElem.find('.likeReported');
 			var likedText = '<span style="font-weight: bold;">' + msgs.liked + '</span>';
@@ -2582,24 +2588,25 @@ var NC_MODULE = {
 					}, true);
 				});
 			}
-			var star = liElem.find('.starReported');
-			var starredText = '<span style="font-weight: bold;">' + msgs.starred + '</span>';
-			if(starred) {
-				star.html(starredText);
+			var markAsRead = liElem.find('.markReported');
+			var hasBeenReadText = '<span style="font-weight: bold;">' + msgs.markedasread + '</span>';
+			if(hasBeenRead) {
+				markAsRead.html(hasBeenReadText);
 			} else {
-				star.html(msgs.star);
-				star.click(function(e) {
-					NC.log('Star reported value: ' + act.id);
-					new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/star', { star : true }, function() {
-						NC.log('Starred.');
-						star.html(starredText);
-						star.unbind('click');
+				markAsRead.html(msgs.markasread);
+				markAsRead.click(function(e) {
+					NC.log('Marked-as-read reported value: ' + act.id);
+					new NC.Ajax().postWithParams('/healthplans/activity/' + act.id + '/read', { read : true }, function() {
+						NC.log('Marked as read.');
+						markAsRead.html(hasBeenReadText);
+						markAsRead.unbind('click');
 					}, true);
 				});
 			}
 
+			var commentedDiv;
 			if(commented) {
-				var commentedDiv = liElem.find('#actcommented');
+				commentedDiv = liElem.find('#actcommented');
 				commentedDiv.html('<span style="font-style: italic;">"' + act.comments[0].comment + '"</span> - ' + act.comments[0].commentedBy);
 				liElem.find('#actcomment').hide();
 				commentedDiv.show();
@@ -2615,7 +2622,7 @@ var NC_MODULE = {
 							NC.log('Comment completed.');
 							commentText.val('');
 							liElem.find('#actcomment').fadeOut(function() {
-								var commentedDiv = liElem.find('#actcommented');
+								commentedDiv = liElem.find('#actcommented');
 								commentedDiv.html('<span style="font-style: italic;">"' + text + '"</span>');
 								commentedDiv.fadeIn();
 							});
@@ -2633,7 +2640,15 @@ var NC_MODULE = {
 				);
 			} else {
 				$.each(act.activityItemValues, function(idx, actItem) {
-					var activityValuesTemplate = '#' + actItem.definition.activityItemType.activityItemTypeName + 'Values';
+					var type = actItem.definition.activityItemType.activityItemTypeName;
+					if(type==='measurement') {
+						if(actItem.definition.target && actItem.definition.target!=='') {
+							type += 'Single';
+						} else {
+							type += 'Interval';
+						}
+					}
+					var activityValuesTemplate = '#' + type	+ 'Values';
 					var t = _.template($(activityValuesTemplate).html());
 					var dom = t(actItem);
 					$('#ra-details-' + act.id).find('.span12').append($(dom));
@@ -3260,7 +3275,6 @@ var NC_MODULE = {
 				}
 				var domRow = _.template($('#textReportRow').html())(arg);
 				table.children().append(domRow);
-				console.log(arg.divId);
 				$('#' + arg.divId).click(function() {
 					//loadAndShowScheduledActivity(arg.id, arg.divId, openPopoverOnTextRow));
 					loadAndShowScheduledActivity(arg.id,arg.divId,openPopoverOnTextRow);
