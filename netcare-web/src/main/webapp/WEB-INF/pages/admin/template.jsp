@@ -53,13 +53,14 @@
 	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till aktivitetsmallar">
 			<div id="activityTypeContainer">
 				<section id="template">
+					<form id="templateForm">
 					<div id="chooseName">
 						<spring:message code="template.select.name" var="selectNameLabel" scope="page"/>
 						<spring:message code="template.select.category" var="selectCategoryLabel" scope="page"/>
 						<spring:message code="template.select.level" var="selectLevelLabel" scope="page"/>
 						<h4>1. <spring:message code="template.step1.title" /></h4>
-						<netcare:field name="activityTypeName" label="${selectNameLabel}">
-							<input id="activityTypeName" name="activityTypeName" type="text">
+						<netcare:field containerId="activityTypeNameContainer" name="activityTypeName" label="${selectNameLabel}">
+							<input id="activityTypeName" name="activityTypeName" type="text" class="required">
 						</netcare:field>
 					</div>
 					<div id="selectCategory">
@@ -98,6 +99,7 @@
 							<button id="activitySaveButton" class="btn btn-info" type="button"><spring:message code="template.save" /></button>
 						</div>
 					</div>
+					</form>
 				</section>
 			</div>
 			<div id="activityItemFormContainer" style="display: none;"></div>
