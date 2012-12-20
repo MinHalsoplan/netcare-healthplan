@@ -1287,33 +1287,33 @@ var NC_MODULE = {
 						if(my.validate(activityTemplate.name)) {
 							console.log('validated');
 							
-//							activityTemplate.accessLevel = new Object();
-//							activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
-//							
-//							activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
-//							
-//							for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
-//								delete activityTemplate.activityItems[i].details;
-//							}
-//							if (activityTemplate.id == -1) {
-//								new NC.Ajax().post('/templates/', activityTemplate, function(data) {
-//									activityTemplate = data.data;
-//									renderItems(my, activityTemplate);
-//									NC.log(activityTemplate);
-//									
-//									window.location = NC.getContextPath() + '/netcare/admin/templates';
-//								}, true);
-//							} else {
-//								new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
-//											activityTemplate = data.data;
-//											renderItems(my,
-//													activityTemplate);
-//											NC.log(activityTemplate);
-//											
-//											window.location = NC.getContextPath() + '/netcare/admin/templates';
-//											
-//										}, true);
-//							}
+							activityTemplate.accessLevel = new Object();
+							activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
+							
+							activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
+							
+							for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
+								delete activityTemplate.activityItems[i].details;
+							}
+							if (activityTemplate.id == -1) {
+								new NC.Ajax().post('/templates/', activityTemplate, function(data) {
+									activityTemplate = data.data;
+									renderItems(my, activityTemplate);
+									NC.log(activityTemplate);
+									
+									window.location = NC.getContextPath() + '/netcare/admin/templates';
+								}, true);
+							} else {
+								new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
+											activityTemplate = data.data;
+											renderItems(my,
+													activityTemplate);
+											NC.log(activityTemplate);
+											
+											window.location = NC.getContextPath() + '/netcare/admin/templates';
+											
+										}, true);
+							}
 						}
 					});
 		};
