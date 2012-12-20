@@ -1276,41 +1276,62 @@ var NC_MODULE = {
 				renderItems(my, activityTemplate);
 				$('#item' + item.id + 'showDetails').click();
 			}
+			
 			$('#activitySaveButton')
 			.on(
 					'click',
 					function() {
 						NC.log('Save button clicked');
+						
 						activityTemplate.name = $('#activityTypeName').val();
-						
-						activityTemplate.accessLevel = new Object();
-						activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
-						
-						activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
-						
-						for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
-							delete activityTemplate.activityItems[i].details;
-						}
-						if (activityTemplate.id == -1) {
-							new NC.Ajax().post('/templates/', activityTemplate, function(data) {
-								activityTemplate = data.data;
-								renderItems(my, activityTemplate);
-								NC.log(activityTemplate);
-								
-								window.location = NC.getContextPath() + '/netcare/admin/templates';
-							}, true);
-						} else {
-							new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
-										activityTemplate = data.data;
-										renderItems(my,
-												activityTemplate);
-										NC.log(activityTemplate);
-										
-										window.location = NC.getContextPath() + '/netcare/admin/templates';
-										
-									}, true);
+						if(my.validate(activityTemplate.name)) {
+							console.log('validated');
+							
+							activityTemplate.accessLevel = new Object();
+							activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
+							
+							activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
+							
+							for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
+								delete activityTemplate.activityItems[i].details;
+							}
+							if (activityTemplate.id == -1) {
+								new NC.Ajax().post('/templates/', activityTemplate, function(data) {
+									activityTemplate = data.data;
+									renderItems(my, activityTemplate);
+									NC.log(activityTemplate);
+									
+									window.location = NC.getContextPath() + '/netcare/admin/templates';
+								}, true);
+							} else {
+								new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
+											activityTemplate = data.data;
+											renderItems(my,
+													activityTemplate);
+											NC.log(activityTemplate);
+											
+											window.location = NC.getContextPath() + '/netcare/admin/templates';
+											
+										}, true);
+							}
 						}
 					});
+		};
+		
+		my.validate = function(name) {
+			var result = true;
+			var msg = 'Mallen måste ha ett namn';
+			var container = $('#activityTypeNameContainer');
+			if(name == null || name ==='') {
+				if(container.find('.nameerror').length==0) {
+					container.addClass('field-error').append('<label class="nameerror">' + msg + '</label>')
+				}
+				result = false;
+			} else {
+				container.removeClass('field-error');
+				$('.nameerror').remove();
+			}
+			return result;
 		};
 
 		my.loadTemplate = function(templateId, callback) {
