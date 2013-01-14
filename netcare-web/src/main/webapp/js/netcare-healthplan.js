@@ -951,7 +951,7 @@ var NC_MODULE = {
 		
 		my.doTimeRendering = function(my) {
 			
-			var val = $('#specifyTime').val().trim();
+			var val = $('#specifyTime').val();
 			
 			NC.log('Adding time ' + val);
 			
@@ -1653,13 +1653,9 @@ var NC_MODULE = {
 
 		}
 
-		var applyTemplate = function(formTemplate, item) {
-			template = _.template($('#' + formTemplate).html());
-			$('#activityItemFormContainer').append(template(item));
-		}
-
 		var renderMeasurementForm = function(item) {
-			applyTemplate('activityItemMeasurementForm', item);
+			var template = _.template($('#activityItemMeasurementForm').html());
+			$('#activityItemFormContainer').append(template(item));
 			$.each(typeOpts, function(i, v) {
 				if (item.valueType != null
 						&& item.valueType.code == v.attr('value')) {
