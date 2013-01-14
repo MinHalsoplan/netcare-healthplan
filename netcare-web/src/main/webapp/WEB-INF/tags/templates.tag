@@ -493,8 +493,7 @@
 <script id="scheduledActivityDetails" type="text/template">
 <div id="sa-details-{{id}}" class="item-with-form" style="display: none; margin-right: 15px;">
 	<div class="row-fluid">
-		<div class="span12">
-		
+		<div class="span12 sa-details">
 		</div>
 	</div>
 	<div class="row-fluid external">
@@ -542,7 +541,6 @@
 	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
 </div>
 </div>
-</div>
 </script>
 <script id="scheduled-measurementIntervalValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
@@ -552,13 +550,11 @@
 	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
 </div>
 </div>
-</div>
 </script>
 <%--Yes/No values --%>
 <script id="scheduled-yesnoValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.question}}
-</span></div>
+<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.question}}</span></div>
 <div class="span7">
 	<input type="radio" name="answer" value="true" /> Ja
 	<input type="radio" name="answer" value="false" /> Nej 

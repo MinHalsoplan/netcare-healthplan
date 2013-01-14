@@ -2425,7 +2425,7 @@ var NC_MODULE = {
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				
-				$('#sa-details-' + activity.id).find('.span12').append($(dom));
+				$('#sa-details-' + activity.id).find('.sa-details').append(dom);
 				
 				/*
 				 * If reporting isn't possible due to scheduled time is more
@@ -2476,7 +2476,7 @@ var NC_MODULE = {
 		};
 		
 		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
-			
+
 			var inputs = $('#sa-row-' + id).find('input');
 			
 			// Determine type
