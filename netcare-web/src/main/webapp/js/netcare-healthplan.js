@@ -280,6 +280,67 @@ var NC_MODULE = {
 		return my;
 	})(),
 	
+	PATIENT_SEARCH : (function() {
+		
+		var selectPatientSuccess = function(data) {
+			var name = data.data.name;
+			NC_MODULE.GLOBAL.updateCurrentPatient(name);
+		};
+		
+		var selectPatient = function(event) {
+			NC.log("Selecting patient...");
+			event.preventDefault();
+			NC_MODULE.GLOBAL.selectPatient($('#pickPatientForm input[name="selectedPatient"]').val(), selectPatientSuccess);
+			
+			NC.log("Hide modal.");
+			$('#modal-from-dom').modal('hide');
+			
+			// Redirect to new health plan
+			window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans?showForm=true';
+		};
+		
+		var my = {};
+		
+		my.init = function() {
+			
+			$('#modal-from-dom').bind('shown', function() {
+				$('#pickPatient').focus();
+			});
+			
+			$('#pickPatient').autocomplete({
+				source : function(request, response) {
+					/*
+					 * Call find patients. Pass in the search value as well as
+					 * a function that should be executed upon success.
+					 */
+					NC_MODULE.PATIENTS.findPatients(request.term, function(data) {
+						NC.log("Found " + data.data.length + " patients.");
+						response($.map(data.data, function(item) {
+							console.log("Processing item: " + item.name);
+							return { label : item.name + ' (' + NC.GLOBAL.formatCrn(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
+						}));
+					});
+				},
+				select : function(event, ui) {
+					NC.log("Setting hidden field value to: " + ui.item.patientId);
+					$('#pickPatientForm input[name="selectedPatient"]').prop('value', ui.item.patientId);
+				}
+			});
+			
+			$('#pickPatient').keypress(function(e) {
+				if (e.which == 13) {
+					selectPatient(e);
+				}
+			});
+			
+			$('#pickPatientForm').submit(function(event) {
+				selectPatient(event);
+			});	
+		}
+		
+		return my;
+	})(),
+	
 	HEALTH_PLAN : (function() {
 		
 		var _data = new Object();
@@ -396,14 +457,8 @@ var NC_MODULE = {
 			var dom = t(hp);
 			$('#healthPlanContainer').append($(dom));
 			
-			/*
-			 * Bind click event
-			 */
-			var liElem = $('#healthPlanItem' + hp.id);
-			liElem.click(function() {
-				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + hp.id;
-			});
 			
+			var liElem = $('#healthPlanItem' + hp.id);
 			if (hp.autoRenewal) {
 				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
 			} else {

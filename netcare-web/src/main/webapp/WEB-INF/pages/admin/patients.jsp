@@ -39,6 +39,7 @@
 				
 				NC_MODULE.PATIENTS.init(params);
 				NC_MODULE.PATIENT_FORM.init(params);
+				NC_MODULE.PATIENT_SEARCH.init();
 				
 				var show = '<c:out value="${param.showForm}" />';
 				if (show != '') {
@@ -48,9 +49,24 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Patienter" plain="true">
+	
+		<form id="pickPatientForm" action="#" method="post">
+			<netcare:modal id="modal-from-dom" confirmCode="admin.menu.patient.pickFromSearch" titleCode="admin.menu.patient.search">
+				<spring:message code="admin.menu.patient.searchValue" var="pick" scope="page"/>
+				<netcare:field name="pickPatient" label="${pick}">
+					<input name="pickPatient" class="xlarge nc-autocomplete" size="30" type="text" />
+					<input name="selectedPatient" type="hidden" />
+				</netcare:field>
+			</netcare:modal>
+		</form>
+	
 		<button id="showCreatePatient" class="btn" style="margin-top: 20px; margin-bottom: 20px;">
 			<spring:message code="admin.patients.new" />
 		</button>
+		
+		<a href="#modal-from-dom" role="button" data-toggle="modal" class="btn" style="margin-top: 20px; margin-bottom: 20px">
+			<spring:message code="admin.menu.patient.search" />
+		</a>
 		
 		<mvk:sheet id="patientSheet" style="display: none;">
 		<form id="patientForm">
