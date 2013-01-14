@@ -1,7 +1,5 @@
 package org.callistasoftware.netcare.android;
 
-import org.callistasoftware.android.c2dm.PushService;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,6 +10,8 @@ import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.google.android.gcm.GCMRegistrar;
 
 public class WebViewActivity extends Activity {
 
@@ -35,9 +35,10 @@ public class WebViewActivity extends Activity {
 		final boolean push = ApplicationUtil.getBooleanProperty(getApplicationContext(), "push");
 		if (push) {
 			Log.d(TAG, "Registering for push");
-			final Intent i = new Intent(this.getApplicationContext(), org.callistasoftware.netcare.android.push.PushService.class);
-			i.setAction(PushService.REGISTER_APP_FOR_PUSH);
-			startService(i);
+			GCMRegistrar.checkDevice(this);
+			GCMRegistrar.checkManifest(this);
+
+			GCMRegistrar.register(this, "1072676211966");
 		}
 		
 		final WebView wv = (WebView) this.findViewById(R.id.webview);

@@ -1,4 +1,4 @@
-package org.callistasoftware.netcare.android.push;
+package org.callistasoftware.netcare.android;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -17,9 +17,6 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
-import org.callistasoftware.netcare.android.ApplicationUtil;
-import org.callistasoftware.netcare.android.R;
-import org.callistasoftware.netcare.android.WebViewActivity;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -28,19 +25,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-/**
- * Handles push events from Google C2DM servers
- * 
- * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
- */
-public class PushHandler implements
-		org.callistasoftware.android.c2dm.PushHandler {
+import com.google.android.gcm.GCMBaseIntentService;
 
-	private static final String TAG = PushHandler.class.getSimpleName();
-	
+public class GCMIntentService extends GCMBaseIntentService {
+
 	@Override
-	public void handlePushEvent(Context context, Intent intent) {
+	protected void onError(Context arg0, String arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onMessage(Context context, Intent intent) {
 		Log.i(TAG, "Received push message: " + intent.getAction());
 		final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
@@ -51,7 +47,7 @@ public class PushHandler implements
 		final Intent notificationIntent = new Intent(context, WebViewActivity.class);
 		final PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, 0);
 		
-		final Notification notification = new Notification(R.drawable.jkpg_icon, message, Long.valueOf(when));
+		final Notification notification = new Notification(R.drawable.mhp_icon, message, Long.valueOf(when));
 		notification.defaults |= Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		
@@ -60,8 +56,7 @@ public class PushHandler implements
 	}
 
 	@Override
-	public void handlePushRegistration(Context context, Intent intent,
-			String registrationId, String server) {
+	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Received push registration message. Registration id is: " + registrationId);
 		final String username = ApplicationUtil.getProperty(context, "crn");
 		final String pin = ApplicationUtil.getProperty(context, "pin");
@@ -97,7 +92,9 @@ public class PushHandler implements
 	}
 
 	@Override
-	public void handlePushUnregistration(Context context, Intent intent) {
-		Log.i(TAG, "Received push unregistration message");
+	protected void onUnregistered(Context arg0, String arg1) {
+		// TODO Auto-generated method stub
+		
 	}
+
 }

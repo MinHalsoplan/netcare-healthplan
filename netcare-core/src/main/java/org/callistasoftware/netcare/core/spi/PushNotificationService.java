@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import org.callistasoftware.netcare.model.entity.PatientEntity;
+
 
 /**
  * Sends push notifications through Google C2DM or Apple APN
@@ -30,5 +32,5 @@ public interface PushNotificationService {
 	 * @param message - The message
 	 * @param toUserId - The id of the receiving user
 	 */
-	void sendPushNotification(final String subject, final String message, final Long toUserId);
+	void sendPushNotification(final String subject, final String message, final PatientEntity user);
 }

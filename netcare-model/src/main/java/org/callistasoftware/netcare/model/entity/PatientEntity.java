@@ -117,6 +117,14 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	public boolean isPushEnbaled() {
 		return this.getProperties().containsKey("apnsRegistrationId") || this.getProperties().containsKey("c2dmRegistrationId");
 	}
+	
+	public boolean isGcmUser() {
+		return this.getProperties().containsKey("c2dmRegistrationId");
+	}
+	
+	public boolean isApnsUser() {
+		return this.getProperties().containsKey("apnsRegistrationId");
+	}
 
 	@Override
 	public boolean isCareActor() {
