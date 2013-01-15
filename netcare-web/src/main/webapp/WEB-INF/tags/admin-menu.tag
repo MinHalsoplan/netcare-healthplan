@@ -48,24 +48,37 @@
 	});
 </script>
 
-<div class="span3 menu">
-	<c:if test="${not empty sessionScope.currentPatient}">
-		<div id="workWith" style="padding-left: 5px; margin-right: 15px; margin-top: 10px;">
-			<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
-			<p>
-				<span id="cnr"></span>
-			</p>
-			<ul>
-				<li><a href="<spring:url value="/netcare/admin/healthplans" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
-				<li><a href="<spring:url value="/netcare/shared/select-results" />"><spring:message code="admin.menu.patient.results" /></a></li>
-				<li><a id="quitPatientSession" href="#"><spring:message code="admin.menu.patient.quit" /></a></li>
-			</ul>
-		</div>
-	</c:if>
-	
-	<ul class="menuList">
-		<li><netcare:image name="list" size="16" /><a href="<spring:url value="/netcare/admin/patients" />">Patienter</a>
-		<li><netcare:image name="new-activity" size="16" /><a href="<spring:url value="/netcare/admin/templates" />"><spring:message code="admin.menu.activityType" /></a></li>
-	</ul>
-</div>
-</body>
+<c:if test="${not empty sessionScope.currentPatient}">
+	<div id="workWith" style="padding-left: 5px; margin-right: 15px; margin-top: 10px;">
+		<h4><c:out value="${sessionScope.currentPatient.name}" /></h4>
+		<p>
+			<span id="cnr"></span>
+		</p>
+		<ul>
+			<li><a href="<spring:url value="/netcare/admin/healthplans" />"><spring:message code="admin.menu.patient.healthplans" /></a></li>
+			<li><a href="<spring:url value="/netcare/shared/select-results" />"><spring:message code="admin.menu.patient.results" /></a></li>
+			<li><a id="quitPatientSession" href="#"><spring:message code="admin.menu.patient.quit" /></a></li>
+		</ul>
+	</div>
+</c:if>
+
+<ul id="permanent">
+	<li>
+		<a href="<spring:url value="/netcare/home" />">
+			<span class="icon start"></span>
+			<span class="iconLabel">Startsida</span>
+		</a>
+	</li>
+	<li>
+		<a href="<spring:url value="/netcare/admin/patients" />">
+			<span class="icon patients"></span>
+			<span class="iconLabel">Patienter</span>
+		</a>
+	</li>
+	<li>
+		<a href="<spring:url value="/netcare/admin/templates" />">
+			<span class="icon profile"></span>
+			<span class="iconLabel"><spring:message code="admin.menu.activityType" /></span>
+		</a>
+	</li>
+</ul>

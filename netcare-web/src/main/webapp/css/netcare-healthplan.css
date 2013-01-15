@@ -48,11 +48,25 @@
 	height: 50px;
 }
 
-#leftMenu #permanent li.active .icon.profile,
+#leftMenu #permanent li .icon.patients {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 -220px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.templates {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -275px 0;
+	width: 50px;
+	height: 50px;
+}
+
+/*#leftMenu #permanent li.active .icon.profile,
 #leftMenu #permanent a:hover .icon.profile {
 	background-image: url('../img/icons/menu_icons.png');
 	background-position: -70px 0;
-}
+}*/
 
 #leftMenu #permanent li.active .icon.report,
 #leftMenu #permanent a:hover .icon.report {
@@ -70,6 +84,18 @@
 #leftMenu #permanent a:hover .icon.results {
 	background-image: url('../img/icons/menu_icons.png');
 	background-position: -70px -165px;
+}
+
+#leftMenu #permanent li.active .icon.patients,
+#leftMenu #permanent a:hover .icon.patients {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -220px;
+}
+
+#leftMenu #permanent li.active .icon.templates,
+#leftMenu #permanent a:hover .icon.templates {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -275px;
 }
 
 #workWith {
