@@ -25,13 +25,33 @@
 
 <c:url value="/netcare/user/home" var="userHome" scope="page" />
 
-<div class="span3 menu">
-	<ul class="menuList">
-		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
-		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
-		<li><netcare:image name="edit" size="16" /><a id="extraReportLink" href="<spring:url value="/netcare/user/extra-report" />"><spring:message code="patient.menu.extra-report" /></a></li>
-		<li><netcare:image name="result-overview" size="16" /><a id="selectResults" href="<spring:url value="/netcare/shared/select-results" />"><spring:message code="patient.menu.results" /></a></li>
-	</ul>
-</div>
-	
-</body>
+<li>
+	<a href="<spring:url value="/netcare/home" />">
+		<span class="icon start"></span>
+		<span class="iconLabel">Startsida</span>
+	</a>
+</li>
+<li>
+	<a class="profile" href="<spring:url value="/netcare/user/profile" />">
+		<span class="icon profile"></span>
+		<span class="iconLabel"><spring:message code="phome.profile" /></span>
+	</a>
+</li>
+<li>
+	<a href="<spring:url value="/netcare/user/report" />">
+		<span class="icon report"></span>
+		<span class="iconLabel"><spring:message code="patient.menu.report" /></span>
+	</a>
+</li>
+<li>
+	<a href="<spring:url value="/netcare/user/extra-report" />">
+		<span class="icon extra-report"></span>
+		<span class="iconLabel"><spring:message code="patient.menu.extra-report" /></span>
+	</a>
+</li>
+<li>
+	<a href="<spring:url value="/netcare/shared/select-results" />">
+		<span class="icon results"></span>
+		<span class="iconLabel"><spring:message code="patient.menu.results" /></span>
+	</a>
+</li>
