@@ -23,6 +23,16 @@
          <artifactId>netcare-ui</artifactId>
          <version>1.0-SNAPSHOT</version>
      </dependency>
+    <dependency>
+  		<groupId>org.callistasoftware.netcare.commons</groupId>
+  		<artifactId>mvk-integration</artifactId>
+  		<version>1.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  	    <groupId>org.callistasoftware.commons</groupId>
+  	    <artifactId>spring-bankid</artifactId>
+  	    <version>1.0</version>
+  	</dependency>
   	<dependency>
   		<groupId>org.callistasoftware.netcare</groupId>
   		<artifactId>netcare-core</artifactId>
@@ -32,11 +42,6 @@
   		<groupId>org.callistasoftware.netcare</groupId>
   		<artifactId>netcare-rest-api</artifactId>
   		<version>${project.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.callistasoftware.netcare.commons</groupId>
-  		<artifactId>mvk-integration</artifactId>
-  		<version>1.1-SNAPSHOT</version>
   	</dependency>
   	
   	<dependency>

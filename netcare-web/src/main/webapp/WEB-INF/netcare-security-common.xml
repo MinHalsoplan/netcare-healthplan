@@ -34,34 +34,49 @@
 		<security:http security="none" pattern="/netcare/error/**" />
 		<security:http security="none" pattern="/netcare/security/**" />
 		<security:http security="none" pattern="/index*" />
-
-		<security:http 
-			pattern="/mobile/**"
-			use-expressions="true"
-			create-session="never"
-			entry-point-ref="httpBasicAuthEntryPoint">
-			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
-			<security:custom-filter ref="mobileLoginFilter" position="BASIC_AUTH_FILTER"/>
-		</security:http>
-		
-		<bean id="mobileAuthenticationProvider" class="org.callistasoftware.netcare.web.security.MobileAuthenticationProvider">
-			<property name="passwordEncoder" ref="passwordEncoder" />
-			<property name="saltSource" ref="saltSource" />
-		</bean>
-		
-		<bean id="mobileAuthenticationManager" class="org.callistasoftware.netcare.web.security.MobileAuthenticationManager">
-			<constructor-arg name="providers">
-				<list>
-					<ref bean="mobileAuthenticationProvider"/>
-				</list>
-			</constructor-arg>
-		</bean>
-		<bean id="httpBasicAuthEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
-			<property name="realmName" value="netcare-mobile" />
-		</bean>
-		<bean id="mobileLoginFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-			<property name="authenticationManager" ref="mobileAuthenticationManager" />
-			<property name="authenticationEntryPoint" ref="httpBasicAuthEntryPoint" />
-		</bean>
 	</beans>
+	
+	<beans profile="mobile-prod">
+	    
+	    <bean id="bankIdEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 
+                name="http403ForbiddenEntryPoint">
+        </bean>
+	    
+	    <bean id="bankIdPreAuthFilter" class="org.callistasoftware.commons.bankid.web.filter.AuthenticationFilter" />
+	    
+	    <security:http use-expressions="true" entry-point-ref="bankIdEntryPoint" access-denied-page="/netcare/security/denied">
+			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
+		</security:http>
+	    
+	</beans>
+
+<!-- 		<security:http  -->
+<!-- 			pattern="/mobile/**" -->
+<!-- 			use-expressions="true" -->
+<!-- 			create-session="never" -->
+<!-- 			entry-point-ref="httpBasicAuthEntryPoint"> -->
+<!-- 			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/> -->
+<!-- 			<security:custom-filter ref="mobileLoginFilter" position="BASIC_AUTH_FILTER"/> -->
+<!-- 		</security:http> -->
+		
+<!-- 		<bean id="mobileAuthenticationProvider" class="org.callistasoftware.netcare.web.security.MobileAuthenticationProvider"> -->
+<!-- 			<property name="passwordEncoder" ref="passwordEncoder" /> -->
+<!-- 			<property name="saltSource" ref="saltSource" /> -->
+<!-- 		</bean> -->
+		
+<!-- 		<bean id="mobileAuthenticationManager" class="org.callistasoftware.netcare.web.security.MobileAuthenticationManager"> -->
+<!-- 			<constructor-arg name="providers"> -->
+<!-- 				<list> -->
+<!-- 					<ref bean="mobileAuthenticationProvider"/> -->
+<!-- 				</list> -->
+<!-- 			</constructor-arg> -->
+<!-- 		</bean> -->
+<!-- 		<bean id="httpBasicAuthEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint"> -->
+<!-- 			<property name="realmName" value="netcare-mobile" /> -->
+<!-- 		</bean> -->
+<!-- 		<bean id="mobileLoginFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter"> -->
+<!-- 			<property name="authenticationManager" ref="mobileAuthenticationManager" /> -->
+<!-- 			<property name="authenticationEntryPoint" ref="httpBasicAuthEntryPoint" /> -->
+<!-- 		</bean> -->
+<!-- 	</beans> -->
 </beans>
