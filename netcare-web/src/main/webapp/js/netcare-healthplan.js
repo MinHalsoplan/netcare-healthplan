@@ -304,10 +304,10 @@ var NC_MODULE = {
 		my.init = function() {
 			
 			$('#modal-from-dom').bind('shown', function() {
-				$('#pickPatient').focus();
+				$('input[name="pickPatient"]').focus();
 			});
 			
-			$('#pickPatient').autocomplete({
+			$('input[name="pickPatient"]').autocomplete({
 				source : function(request, response) {
 					/*
 					 * Call find patients. Pass in the search value as well as
