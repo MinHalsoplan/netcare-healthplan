@@ -77,7 +77,7 @@
 	</li>
 	<li>
 		<a href="<spring:url value="/netcare/admin/templates" />">
-			<span class="icon profile"></span>
+			<span class="icon templates"></span>
 			<span class="iconLabel"><spring:message code="admin.menu.activityType" /></span>
 		</a>
 	</li>
