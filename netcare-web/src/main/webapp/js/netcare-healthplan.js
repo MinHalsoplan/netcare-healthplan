@@ -2358,6 +2358,9 @@ var NC_MODULE = {
 			var noreport = $('#sa-noreport-' + id);
 			var note = $('#' + id + '-report-note');
 			
+			// First time init fix.
+			_data[idx].actualTime = date.val() + ' ' + time.val();
+			
 			$(note).bind('change blur keyup', function() {
 				_data[idx].note = $(this).val();
 			});
@@ -2458,7 +2461,8 @@ var NC_MODULE = {
 					}
 				}
 				
-				var dp = $('#' + activity.id + '-report-date').datepicker({
+				var datefield = $('#' + activity.id + '-report-date');
+				var dp = datefield.datepicker({
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0
@@ -2468,8 +2472,9 @@ var NC_MODULE = {
 				var d = new Date();
 				
 				var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-				$('#' + activity.id + '-report-time').val(d.getHours() + ':' + min);
-				
+				var timeString = d.getHours() + ':' + min;
+				$('#' + activity.id + '-report-time').val(timeString);
+
 				// Needed for correct deserialization
 				actItem.valueType = actItem.definition.valueType; 
 			}

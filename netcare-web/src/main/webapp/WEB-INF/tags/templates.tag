@@ -746,12 +746,12 @@
 		<div class="span12">
 			<h4>Progress</h4>
 			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
-			<div class="progress progress-warning" style="margin-right: 15px;">
+			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{targetDone}}%">{{targetDone}}%</div>
 			</div>
 
 			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTotal}}</strong> schemalagda aktiviteter för <i><strong>hela planen</strong></i>.</small>
-			<div class="progress progress-success" style="margin-right: 15px;">
+			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{totalDone}}%">{{totalDone}}%</div>
 			</div>
 		</div>
@@ -787,8 +787,8 @@
 	<h4>{{question}}</h4>
 	<div class="span10">
 		<div class="progress">
-  			<div class="bar bar-success" style="width: {{percentYes}}%;">{{percentYes}}%</div>
-  			<div class="bar bar-danger" style="width: {{percentNo}}%;">{{percentNo}}%</div>
+  			<div class="bar bar-info" style="width: {{percentYes}}%;">{{percentYes}}%</div>
+  			<div class="bar bar-warning" style="width: {{percentNo}}%;">{{percentNo}}%</div>
 		</div>
 	</div>
 </script>
