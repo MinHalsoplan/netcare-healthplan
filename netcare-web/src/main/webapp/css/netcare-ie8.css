@@ -1,0 +1,6 @@
+input[type="number"], input[type="password"], select {
+	padding:0px 0px 4px 10px;
+}
+input[type="text"], textarea {
+	padding:4px 10px;
+}
