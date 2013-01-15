@@ -787,8 +787,8 @@
 	<h4>{{question}}</h4>
 	<div class="span10">
 		<div class="progress">
-  			<div class="bar bar-info" style="width: {{percentYes}}%;">{{percentYes}}%</div>
-  			<div class="bar bar-warning" style="width: {{percentNo}}%;">{{percentNo}}%</div>
+  			<div class="bar bar-info" style="width: {{percentYes}}%;">Ja {{percentYes}}%</div>
+  			<div class="bar bar-warning" style="width: {{percentNo}}%;">Nej {{percentNo}}%</div>
 		</div>
 	</div>
 </script>
