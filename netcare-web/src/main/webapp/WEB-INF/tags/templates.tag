@@ -493,8 +493,7 @@
 <script id="scheduledActivityDetails" type="text/template">
 <div id="sa-details-{{id}}" class="item-with-form" style="display: none; margin-right: 15px;">
 	<div class="row-fluid">
-		<div class="span12">
-		
+		<div class="span12 sa-details">
 		</div>
 	</div>
 	<div class="row-fluid external">
@@ -542,7 +541,6 @@
 	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
 </div>
 </div>
-</div>
 </script>
 <script id="scheduled-measurementIntervalValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
@@ -552,13 +550,11 @@
 	<span style="display: inline;">{{definition.activityItemType.unit.name}}</span>
 </div>
 </div>
-</div>
 </script>
 <%--Yes/No values --%>
 <script id="scheduled-yesnoValues" type="text/template">
 <div id="sa-row-{{id}}" class="row-fluid">
-<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.question}}
-</span></div>
+<div class="span5"><span>{{definition.activityItemType.name}} {{definition.activityItemType.question}}</span></div>
 <div class="span7">
 	<input type="radio" name="answer" value="true" /> Ja
 	<input type="radio" name="answer" value="false" /> Nej 
@@ -750,12 +746,12 @@
 		<div class="span12">
 			<h4>Progress</h4>
 			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
-			<div class="progress progress-warning" style="margin-right: 15px;">
+			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{targetDone}}%">{{targetDone}}%</div>
 			</div>
 
 			<small>Du har genomfört <strong>{{numDone}}</strong> av <strong>{{numTotal}}</strong> schemalagda aktiviteter för <i><strong>hela planen</strong></i>.</small>
-			<div class="progress progress-success" style="margin-right: 15px;">
+			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{totalDone}}%">{{totalDone}}%</div>
 			</div>
 		</div>
@@ -791,8 +787,8 @@
 	<h4>{{question}}</h4>
 	<div class="span10">
 		<div class="progress">
-  			<div class="bar bar-success" style="width: {{percentYes}}%;">{{percentYes}}%</div>
-  			<div class="bar bar-danger" style="width: {{percentNo}}%;">{{percentNo}}%</div>
+  			<div class="bar bar-info" style="width: {{percentYes}}%;">{{percentYes}}%</div>
+  			<div class="bar bar-warning" style="width: {{percentNo}}%;">{{percentNo}}%</div>
 		</div>
 	</div>
 </script>
