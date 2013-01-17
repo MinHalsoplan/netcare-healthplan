@@ -304,10 +304,10 @@ var NC_MODULE = {
 		my.init = function() {
 			
 			$('#modal-from-dom').bind('shown', function() {
-				$('#pickPatient').focus();
+				$('input[name="pickPatient"]').focus();
 			});
 			
-			$('#pickPatient').autocomplete({
+			$('input[name="pickPatient"]').autocomplete({
 				source : function(request, response) {
 					/*
 					 * Call find patients. Pass in the search value as well as
@@ -951,7 +951,7 @@ var NC_MODULE = {
 		
 		my.doTimeRendering = function(my) {
 			
-			var val = $('#specifyTime').val().trim();
+			var val = $('#specifyTime').val();
 			
 			NC.log('Adding time ' + val);
 			
@@ -1653,13 +1653,9 @@ var NC_MODULE = {
 
 		}
 
-		var applyTemplate = function(formTemplate, item) {
-			template = _.template($('#' + formTemplate).html());
-			$('#activityItemFormContainer').append(template(item));
-		}
-
 		var renderMeasurementForm = function(item) {
-			applyTemplate('activityItemMeasurementForm', item);
+			var template = _.template($('#activityItemMeasurementForm').html());
+			$('#activityItemFormContainer').append(template(item));
 			$.each(typeOpts, function(i, v) {
 				if (item.valueType != null
 						&& item.valueType.code == v.attr('value')) {
@@ -2362,6 +2358,9 @@ var NC_MODULE = {
 			var noreport = $('#sa-noreport-' + id);
 			var note = $('#' + id + '-report-note');
 			
+			// First time init fix.
+			_data[idx].actualTime = date.val() + ' ' + time.val();
+			
 			$(note).bind('change blur keyup', function() {
 				_data[idx].note = $(this).val();
 			});
@@ -2429,7 +2428,7 @@ var NC_MODULE = {
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				
-				$('#sa-details-' + activity.id).find('.span12').append($(dom));
+				$('#sa-details-' + activity.id).find('.sa-details').append(dom);
 				
 				/*
 				 * If reporting isn't possible due to scheduled time is more
@@ -2462,7 +2461,8 @@ var NC_MODULE = {
 					}
 				}
 				
-				var dp = $('#' + activity.id + '-report-date').datepicker({
+				var datefield = $('#' + activity.id + '-report-date');
+				var dp = datefield.datepicker({
 					dateFormat : 'yy-mm-dd',
 					firstDay : 1,
 					minDate : +0
@@ -2472,15 +2472,16 @@ var NC_MODULE = {
 				var d = new Date();
 				
 				var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-				$('#' + activity.id + '-report-time').val(d.getHours() + ':' + min);
-				
+				var timeString = d.getHours() + ':' + min;
+				$('#' + activity.id + '-report-time').val(timeString);
+
 				// Needed for correct deserialization
 				actItem.valueType = actItem.definition.valueType; 
 			}
 		};
 		
 		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
-			
+
 			var inputs = $('#sa-row-' + id).find('input');
 			
 			// Determine type

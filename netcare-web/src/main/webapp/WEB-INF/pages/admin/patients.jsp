@@ -40,11 +40,6 @@
 				NC_MODULE.PATIENTS.init(params);
 				NC_MODULE.PATIENT_FORM.init(params);
 				NC_MODULE.PATIENT_SEARCH.init();
-				
-				var show = '<c:out value="${param.showForm}" />';
-				if (show != '') {
-					$('#patientSheet').show();
-				}
 			});
 		</script>
 	</hp:viewHeader>

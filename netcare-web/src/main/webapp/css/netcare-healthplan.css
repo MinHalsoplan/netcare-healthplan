@@ -16,6 +16,102 @@
  */
 @CHARSET "UTF-8";
 
+/*
+ * MAIN MENU
+ */
+
+#leftMenu #permanent li .icon.profile {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 0;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.report {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 -330px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.extra-report {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 -495px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.results {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 -220px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.patients {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 -110px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.templates {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: 0 -165px;
+	width: 50px;
+	height: 50px;
+}
+
+/*
+1. 0px;
+2. -55px;
+3. -110px;
+4. -165px;
+5. -220px;
+6. -275px;
+7. -330px;
+8. -385px;
+9. -440px;
+10. -495px;
+11. -550px*/
+
+
+#leftMenu #permanent li.active .icon.profile,
+#leftMenu #permanent a:hover .icon.profile {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px 0;
+}
+
+#leftMenu #permanent li.active .icon.report,
+#leftMenu #permanent a:hover .icon.report {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -330px;
+}
+
+#leftMenu #permanent li.active .icon.extra-report,
+#leftMenu #permanent a:hover .icon.extra-report {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -495px;
+}
+
+#leftMenu #permanent li.active .icon.results,
+#leftMenu #permanent a:hover .icon.results {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -220px;
+}
+
+#leftMenu #permanent li.active .icon.patients,
+#leftMenu #permanent a:hover .icon.patients {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -110px;
+}
+
+#leftMenu #permanent li.active .icon.templates,
+#leftMenu #permanent a:hover .icon.templates {
+	background-image: url('../img/icons/menu_icons.png');
+	background-position: -70px -165px;
+}
+
 #workWith {
 	border: 1px solid #eee;
 	margin-bottom: 10px;
@@ -37,12 +133,6 @@
 	margin-bottom: 0;
 	padding-bottom: 20px;
 }
-
-/*#chooseName,#chooseActivities,#chooseSave,#selectCategory {
-	border-top: 1px #cccccc dotted;
-	padding-left: 5px;
-	width: 94%;
-}*/
 
 #chooseName {
 	border-top: none;
@@ -278,3 +368,4 @@ div[id*="ra-row-"] > div.span5 > span {
 	padding: 5px;
 }
 
+.sa-details {}

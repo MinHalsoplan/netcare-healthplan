@@ -52,8 +52,7 @@
 	</hp:viewHeader>
 	<hp:viewBody title="Resultat" plain="true">
 		
-		<section id="healthplans">
-		</section>
+		<div id="healthplans"></div>
 		
 	</hp:viewBody>
 </hp:view>
