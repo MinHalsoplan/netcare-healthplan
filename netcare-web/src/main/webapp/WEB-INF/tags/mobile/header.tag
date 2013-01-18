@@ -79,9 +79,9 @@
 			}
 		};
 	</script>
-	<script type="text/javascript" src="<c:url value='${contextPath}${resourcePath}/js/netcare-ui/Util.js' />"></script>
-	<script type="text/javascript" src="<c:url value='${contextPath}${resourcePath}/js/netcare-ui/PageMessages.js' />"></script>
-	<script type="text/javascript" src="<c:url value='${contextPath}${resourcePath}/js/netcare-ui/Ajax.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/Util.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/PageMessages.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/Ajax.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare-mobile-healthplan.js' />"></script>
 	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>	
 	<jsp:doBody />
