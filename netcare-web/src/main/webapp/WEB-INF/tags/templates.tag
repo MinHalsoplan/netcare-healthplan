@@ -444,13 +444,11 @@
 <div class="span5"><span>{{definition.activityItemType.name}} ({{definition.target}} {{definition.activityItemType.unit.name}})</span></div>
 <div class="span5">{{reportedValue}} {{definition.activityItemType.unit.name}}</div>
 </div>
-</div>
 </script>
 <script id="measurementIntervalValues" type="text/template">
 <div id="ra-row-{{id}}" class="row-fluid">
 <div class="span5"><span>{{definition.activityItemType.name}} ({{definition.minTarget}} - {{definition.maxTarget}} {{definition.activityItemType.unit.name}})</span></div>
 <div class="span5">{{reportedValue}} {{definition.activityItemType.unit.name}}</div>
-</div>
 </div>
 </script>
 <%--Reported Activity values --%>
