@@ -29,7 +29,8 @@
 			file:${user.home}/.netcare-prod/email.properties,
 			file:${user.home}/.netcare-prod/push.properties,
 			file:${user.home}/.netcare-prod/mvk.properties,
-			file:${user.home}/.netcare-prod/application.properties"/>
+			file:${user.home}/.netcare-prod/application.properties,
+			file:${user.home}/.netcare-prod/bankid.properties"/>
 		
 		<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
@@ -46,6 +47,10 @@
 		<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
 	</beans>
+	
+	<beans profile="bankid">
+	    <import resource="classpath*:/bankid-config.xml"/>
+	</beans>
 
   	<beans profile="test">
   	</beans>
@@ -54,7 +59,12 @@
   	</beans>
 
   	<beans profile="db-embedded">
-  		<context:property-placeholder location="classpath:/db-embedded.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
+  		<context:property-placeholder location="classpath:/db-embedded.properties,
+  		    classpath:/application.properties,
+  		    classpath:/email.properties,
+  		    classpath:/push.properties,
+  		    classpath*:/mvk.properties,
+  		    classpath*:/bankid-config.properties" />
 
      	<bean  
          	id="org.h2.tools.Server-WebServer"  

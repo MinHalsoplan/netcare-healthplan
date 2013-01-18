@@ -29,6 +29,10 @@
 		<import resource="netcare-security-common.xml"/>
 	</beans>
 	
+	<beans profile="bankid">
+	    <import resource="netcare-security-mobile-prod.xml"/>
+	</beans>
+	
 	<beans profile="test">
 		<import resource="netcare-security-test.xml"/>
 	</beans>

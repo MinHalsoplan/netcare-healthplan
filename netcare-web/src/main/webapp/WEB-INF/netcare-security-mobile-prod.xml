@@ -19,37 +19,29 @@
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 	
-    <beans profile="bankid">
-	    
-	</beans>
+    <import resource="classpath*:/bankid-security-config.xml"/>
     
-    <beans>
-		<context:annotation-config />
-		<context:component-scan base-package="org.callistasoftware.netcare.web.mobile.controller, org.callistasoftware.netcare.commons.bankid.web.controller" />
-		
-		<mvc:annotation-driven />
-		
-		<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-	    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-	    	<property name="prefix" value="/WEB-INF/pages/mobile/"/>
-	    	<property name="suffix" value=".jsp"/>
-		</bean>
-		
-		<bean id="exceptionResolver" class="org.callistasoftware.netcare.web.ExceptionResolver">
-			<property name="exceptionMappings">
-				<props>
-					<prop key="java.lang.RuntimeException">error</prop>
-					<prop key="java.lang.Exception">error</prop>
-				</props>
-			</property>
-			<property name="defaultErrorView" value="error" />
-		</bean>
-	</beans>
+    <security:http security="none" pattern="/mobile/bankid/authenticate/**" />
+    
+    <security:http 
+        pattern="/mobile/bankid/collect/**" 
+        entry-point-ref="bankIdEntryPoint" 
+        access-denied-page="/netcare/security/denied">
+        <security:custom-filter ref="bankIdPreAuthFilter" position="PRE_AUTH_FILTER"/>
+    </security:http>
+    
+    <security:http 
+        use-expressions="true" 
+        entry-point-ref="bankIdEntryPoint" 
+        access-denied-page="/netcare/security/denied"
+        pattern="/mobile/**">
+		<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
+	</security:http>
+	
 </beans>

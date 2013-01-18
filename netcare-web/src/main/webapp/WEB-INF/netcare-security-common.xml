@@ -36,19 +36,6 @@
 		<security:http security="none" pattern="/index*" />
 	</beans>
 	
-	<beans profile="mobile-prod">
-	    
-	    <bean id="bankIdEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" 
-                name="http403ForbiddenEntryPoint">
-        </bean>
-	    
-	    <bean id="bankIdPreAuthFilter" class="org.callistasoftware.commons.bankid.web.filter.AuthenticationFilter" />
-	    
-	    <security:http use-expressions="true" entry-point-ref="bankIdEntryPoint" access-denied-page="/netcare/security/denied">
-			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
-		</security:http>
-	    
-	</beans>
 
 <!-- 		<security:http  -->
 <!-- 			pattern="/mobile/**" -->

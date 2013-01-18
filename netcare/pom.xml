@@ -28,6 +28,7 @@
   	
   	<!-- Default profile -->
   	<system.mode>test</system.mode>
+  	<mobile.mode>bankid</mobile.mode>
   	<database.mode>db-embedded</database.mode>
   	
   	<!-- Versions -->

@@ -30,10 +30,10 @@
 	<logger name="org.codehaus.jackson" level="WARN" />
 	
 	<logger name="org.springframework" level="WARN" />
-	<logger name="org.springframework.security" level="WARN" />
+	<logger name="org.springframework.security" level="DEBUG" />
 	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN" />
-	<logger name="org.springframework.web" level="DEBUG" />
-	<logger name="org.springframework.http" level="DEBUG" />
+	<logger name="org.springframework.web" level="WARN" />
+	<logger name="org.springframework.http" level="WARN" />
 	
 	<logger name="org.callistasoftware.netcare" level="DEBUG" />
 	<logger name="org.callistasoftware.netcare.core.job" level="DEBUG" />

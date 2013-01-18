@@ -25,6 +25,12 @@
   	</dependency>
   	
   	<dependency>
+  	    <groupId>org.callistasoftware.commons</groupId>
+  	    <artifactId>spring-bankid</artifactId>
+  	    <version>1.0</version>
+  	</dependency>
+  	
+  	<dependency>
   	    <groupId>com.google.android.gcm</groupId>
   	    <artifactId>gcm-server</artifactId>
   	    <version>1.0</version>
