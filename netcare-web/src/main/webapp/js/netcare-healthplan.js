@@ -316,7 +316,7 @@ var NC_MODULE = {
 					NC_MODULE.PATIENTS.findPatients(request.term, function(data) {
 						NC.log("Found " + data.data.length + " patients.");
 						response($.map(data.data, function(item) {
-							console.log("Processing item: " + item.name);
+							NC.log("Processing item: " + item.name);
 							return { label : item.name + ' (' + NC.GLOBAL.formatCrn(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
 						}));
 					});
@@ -392,7 +392,7 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="startDate"]').on('keyup blur change', function() {
-				console.log($(this).val());
+				NC.log($(this).val());
 				_data.startDate = $(this).val();
 				NC.log('Updated start date to: ' + _data.startDate);
 			});
@@ -1340,7 +1340,7 @@ var NC_MODULE = {
 						
 						activityTemplate.name = $('#activityTypeName').val();
 						if(my.validate(activityTemplate.name)) {
-							console.log('validated');
+							NC.log('validated');
 							
 							activityTemplate.accessLevel = new Object();
 							activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
@@ -3199,7 +3199,7 @@ var NC_MODULE = {
 					$('#activities').append(detailsDiv);
 					
 					new NC.Ajax().get('/healthplans/activity/item/' + id + '/statistics', function(data) {
-						console.log(data.data);
+						NC.log(data.data);
 						var report = data.data;
 						var divId = 'report' + report.id;
 						var header = _.template($('#reportHead').html())(report);

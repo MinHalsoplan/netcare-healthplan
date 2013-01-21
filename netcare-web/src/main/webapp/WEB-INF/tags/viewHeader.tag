@@ -31,8 +31,6 @@
 	<link rel="stylesheet" href="<c:url value='/css/netcare-healthplan.css' />" type="text/css" />
 	<!--[if lte IE 8]> <link rel="stylesheet" type="text/css" href="<c:url value='/css/netcare-ie8.css' />" /> <![endif]-->
 
-	<script>if ( ! window.console ) console = { log: function(){} };</script>
-
 	<netcare:js resourcePath="${resourcePath}"/>
 	<hp:healthplan-js />
 	

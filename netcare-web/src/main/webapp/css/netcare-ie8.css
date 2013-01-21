@@ -31,4 +31,5 @@ input[type="text"], textarea {
 }
 .btn {
 	background-color: #008391;
+	font-size: 14px;
 }
