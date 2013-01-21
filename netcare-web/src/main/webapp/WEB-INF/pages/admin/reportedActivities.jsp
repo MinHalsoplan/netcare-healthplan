@@ -99,7 +99,7 @@
 	  		</div>
   		</mvk:sheet>
   		
-  		<section id="report">
+  		<div id="report">
   			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -110,7 +110,7 @@
 					<ul></ul>
 				</div>
 			</div>
-  		</section>
+  		</div>
 		
 	</hp:viewBody>
 </hp:view>

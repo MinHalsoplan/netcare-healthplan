@@ -52,7 +52,7 @@
 	<c:url value="/netcare/admin/templates" var="backToUrl" />
 	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till aktivitetsmallar">
 			<div id="activityTypeContainer">
-				<section id="template">
+				<div id="template">
 					<form id="templateForm">
 					<div id="chooseName">
 						<spring:message code="template.select.name" var="selectNameLabel" scope="page"/>
@@ -100,7 +100,7 @@
 						</div>
 					</div>
 					</form>
-				</section>
+				</div>
 			</div>
 			<div id="activityItemFormContainer" style="display: none;"></div>
 	</hp:viewBody>

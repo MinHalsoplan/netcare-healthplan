@@ -185,7 +185,14 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<ActivityComment> deleteComment(final Long commentId);
-	
+
+	/**
+	 * 
+	 * @param commentId
+	 * @return
+	 */
+	ServiceResult<ActivityComment> hideComment(final Long commentId, boolean isAdmin);
+
 	/**
 	 * Load the latest reported activities for all patients that
 	 * has health plans belonging to the caller's care unit

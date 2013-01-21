@@ -59,7 +59,7 @@
 		
 		<br />
 		
-		<section id="careunits">
+		<div id="careunits">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -74,7 +74,7 @@
 					<ul></ul>
 				</div>
 			</div>
-		</section>
+		</div>
 		
 		
 	</hp:viewBody>

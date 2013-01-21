@@ -58,5 +58,14 @@ public class CommentsApi extends ApiSupport {
 		logAccess("update", "comment");
 		return service.replyToComment(comment.getId(), comment.getReply());
 	}
+
+	@RequestMapping(value="/{id}/hide", method=RequestMethod.POST)
+	@ResponseBody
+	public ServiceResult<ActivityComment> hide(@PathVariable(value="id") final Long id) {
+		logAccess("hide", "comment");
+		// Used by patients only right now!
+		return service.hideComment(id, false);
+	}
+
 	
 }

@@ -47,7 +47,7 @@
 	<c:url value="/netcare/admin/healthplans" var="backToUrl" />
 	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Hälsoplaner">
 	
-		<section id="plan">
+		<div id="plan">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -153,6 +153,6 @@
 					</div>
 				</form>
 			</div>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

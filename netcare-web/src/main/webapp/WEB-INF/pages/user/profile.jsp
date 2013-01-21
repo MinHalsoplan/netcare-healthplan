@@ -43,7 +43,7 @@
 	<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
 	<spring:message code="profile.title" arguments="${currentPrincipal}" var="title"/>
 	<hp:viewBody title="${title}" plain="true">
-		<section id="profile">
+		<div id="profile">
 			
 			<spring:message code="profile.update" var="update" scope="page" />
 			
@@ -136,6 +136,6 @@
 				</form>
 			</div>
 			</mvk:sheet>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

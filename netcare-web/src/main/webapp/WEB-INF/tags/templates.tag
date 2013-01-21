@@ -425,6 +425,8 @@
 		</div>
 		<div id="actcommented" class="span11" style="display:none;padding-bottom: 5px;">
 		</div>
+		<div id="actreplied" class="span11" style="display:none;padding-bottom: 5px;">
+		</div>
 	</div>
 </div>
 </script>
@@ -639,7 +641,7 @@
 	<td>{{=reply}}</td>
 	<td>{{=repliedBy}}</td>
 	<td>{{=activityName}}</td>
-	<td><img id="deleteComment{{=id}}" src="{{=contextPath}}/img/icons/24/trash.png"></td>
+	<td><img id="hideComment{{=id}}" src="{{=contextPath}}/img/icons/24/trash.png"></td>
 </tr>
 </script>
 
@@ -648,26 +650,8 @@
 <div id="activity-comment-{{=id}}" class="alert alert-success activity-comment">
 	<button type="button" class="close" data-dismiss="alert">×</button>
 	<div class="row-fluid">
-		<div class="span12">
-			<div style="text-align: center;">
-				<h2><i>{{=(comment!==null && comment!=='')?'"' + comment + '"':''}}</i></h2>
-			</div>
-			<div style="text-align: right;">
-				<small>- {{=commentedBy}}, {{=commentedByCareUnit}}, {{=commentedAt}}</small> 
-			</div>
-		</div>
-	</div>
-</div>
-</script>
-
-<script id="activity-comment-awarded" type="text/template">
-<div id="activity-comment-{{=id}}" class="alert alert-success activity-comment">
-	<button type="button" class="close" data-dismiss="alert">×</button>
-	<div class="row-fluid">
-		<div id="activity-awards-{{=id}}" class="span4">
-			
-		</div>
-		<div class="span8">
+		<div id="activity-awards-{{=id}}" class="span2"></div>
+		<div class="span10">
 			<div class="row-fluid">
 				<div style="text-align: center;">
 					<h2><i>{{=(comment!==null && comment!=='')?'"' + comment + '"':''}}</i></h2>

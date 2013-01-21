@@ -67,11 +67,9 @@
 	</hp:viewHeader>
 	<hp:viewBody title="Startsida" plain="true">
 		
-		<section id="comments" style="display: none;">
-			
-		</section>
+		<div id="comments" style="display: none;"></div>
 		
-		<section id="report">
+		<div id="report">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -80,9 +78,9 @@
 				<h3 class="title">Du har aktiviteter att rapportera</h3>
 				<mvk:touch-list id="reportList"></mvk:touch-list>
 			</div>
-		</section>
+		</div>
 		
-		<section id="my-schedule">
+		<div id="my-schedule">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -91,6 +89,6 @@
 				<h3 class="title">Mina aktiviteter</h3>
 				<mvk:touch-list id="activity-list"></mvk:touch-list>
 			</div>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

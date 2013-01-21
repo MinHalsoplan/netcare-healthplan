@@ -217,7 +217,14 @@ public class HealthPlanApi extends ApiSupport {
 		this.logAccess("delete", "comment");
 		return this.service.deleteComment(comment);
 	}
-	
+
+    @RequestMapping(value="/activity/reported/comments/{comment}/hide", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityComment> hideComment(@PathVariable(value="comment") final Long comment) {
+		this.logAccess("hide", "comment");
+		return this.service.hideComment(comment, true);
+	}
+
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(@PathVariable(value="healthPlanId") final Long healthPlan) {
