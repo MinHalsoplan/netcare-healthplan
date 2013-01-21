@@ -49,6 +49,8 @@
 			
 			<mvk:sheet>
 			<div id="userprofile">
+				<div class="pageMessages"></div>
+			
 				<form id="profile-form">
 					<netcare:row>
 						<netcare:col span="12">

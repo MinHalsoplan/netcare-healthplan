@@ -2110,9 +2110,16 @@ var NC_MODULE = {
 					new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
 						_data = data.data;
 						my.render();
+						my.displaySuccess();
 					});
 				}
 			});
+		};
+		
+		my.displaySuccess = function(my) {
+			$('#userprofile').find('.pageMessages').append(
+				$('<div>').addClass('alert alert-success').html('Din profil har sparats')
+			);
 		};
 		
 		return my;
