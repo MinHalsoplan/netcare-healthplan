@@ -22,3 +22,14 @@ input[type="number"], input[type="password"], select {
 input[type="text"], textarea {
 	padding:4px 10px;
 }
+#specifyTime {
+	margin-right: 0px;
+	padding-top: 4px;
+	padding-bottom: 0px;
+	padding-right:0px;
+	padding-left: 10px;
+}
+.btn {
+	background-color: #008391;
+	font-size: 14px;
+}
