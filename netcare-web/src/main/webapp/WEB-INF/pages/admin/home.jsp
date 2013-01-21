@@ -45,27 +45,27 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Startsida" plain="true">
-		<section id="alarms">
+		<div id="alarms">
 			<spring:message code="alarm.title" var="alarms" />
 			<mvk:heading title="${alarms}">
 				<spring:message code="alarm.desc" />
 			</mvk:heading>
 			<mvk:touch-list id="alarmContainer"></mvk:touch-list>
-		</section>
+		</div>
 
 		<br />
 		
-		<section id="replies">
+		<div id="replies">
 			<spring:message code="comments.replies" var="replies"/>
 			<mvk:heading title="${replies}">
 				<spring:message code="comments.repliesDescription" />
 			</mvk:heading>
 			<mvk:touch-list id="repliesContainer"></mvk:touch-list>
-		</section>
+		</div>
 		
 		<br />
 		
-		<section id="aktiviteter">
+		<div id="aktiviteter">
 			<spring:message code="activity.reported.title" var="reportedTitle"/>
 			<mvk:heading title="${reportedTitle}">
 				<spring:message code="activity.reported.desc" />
@@ -73,7 +73,7 @@
 			
 			<a href="<spring:url value="/netcare/admin/activity/list" />" class="btn"><spring:message code="activity.reported.list" /></a>
 			
-			<section id="report">
+			<div id="report">
 				<div class="sectionLoader" style="display: none;">
 					<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 					<span class="loaderMessage"></span>
@@ -85,8 +85,8 @@
 						<ul></ul>
 					</div>
 				</div>
-			</section>
-		</section>
+			</div>
+		</div>
 		
 	</hp:viewBody>
 </hp:view>
