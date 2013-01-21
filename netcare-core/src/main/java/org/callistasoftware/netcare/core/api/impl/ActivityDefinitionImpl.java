@@ -68,6 +68,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private int numTotal;
 	private int numDone;
 	private int numTarget;
+	private int numExtra;
 	private CareActorBaseView issuedBy;
 	private CareUnit healthPlanCareUnit;
 	
@@ -207,20 +208,26 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private void calcCompletion(List<ScheduledActivityEntity> list) {
 		int numDone = 0;
 		int numTarget = 0;
+		int numExtra = 0;
 
 		Calendar cal = Calendar.getInstance();
 		ApiUtil.dayEnd(cal);
 
 		for (ScheduledActivityEntity a : list) {
-			if (a.getReportedTime() != null && a.getStatus().equals(ScheduledActivityStatus.OPEN)) {
+			if (a.isExtra()) {
+				numExtra++;
+			}
+			
+			if (a.getReportedTime() != null && a.getStatus().equals(ScheduledActivityStatus.OPEN) && !a.isExtra()) {
 				numDone++;
 			}
 
-			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0) {
+			if (a.getScheduledTime().compareTo(cal.getTime()) <= 0 && !a.isExtra()) {
 				numTarget++;
 			}
 		}
 
+		setNumExtra(numExtra);
 		setNumDone(numDone);
 		setNumTotal(list.size());
 		setNumTarget(numTarget);
@@ -232,6 +239,10 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 
 	private void setNumDone(int numDone) {
 		this.numDone = numDone;
+	}
+	
+	private void setNumExtra(final int numExtra) {
+		this.numExtra = numExtra;
 	}
 
 	@Override
@@ -325,5 +336,10 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	
 	public void setReminder(boolean reminder) {
 		this.reminder = reminder;
+	}
+
+	@Override
+	public int getNumExtra() {
+		return numExtra;
 	}
 }
