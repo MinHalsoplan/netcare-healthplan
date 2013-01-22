@@ -110,7 +110,6 @@
 		</mvk:sheet>
 		
 		<h3 class="title"><spring:message code="healthplan.title" arguments="${curPatient}"/></h3>
-		
 		<mvk:touch-list id="healthPlanContainer">
 		</mvk:touch-list>
 	</hp:viewBody>

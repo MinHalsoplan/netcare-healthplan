@@ -167,7 +167,7 @@ var NC_MODULE = {
 						
 						NC_MODULE.GLOBAL.selectPatient(v.id, function(data) {
 							NC_MODULE.GLOBAL.updateCurrentPatient(data.data.name);
-							window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
+							window.location = NC.getContextPath() + '/netcare/admin/healthplans';
 						});
 					});
 				});
