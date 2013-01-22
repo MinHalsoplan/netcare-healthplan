@@ -43,12 +43,14 @@
 	<sec:authentication property="principal.name" var="currentPrincipal" scope="page" />
 	<spring:message code="profile.title" arguments="${currentPrincipal}" var="title"/>
 	<hp:viewBody title="${title}" plain="true">
-		<section id="profile">
+		<div id="profile">
 			
 			<spring:message code="profile.update" var="update" scope="page" />
 			
 			<mvk:sheet>
 			<div id="userprofile">
+				<div class="pageMessages"></div>
+			
 				<form id="profile-form">
 					<netcare:row>
 						<netcare:col span="12">
@@ -134,6 +136,6 @@
 				</form>
 			</div>
 			</mvk:sheet>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

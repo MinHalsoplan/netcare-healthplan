@@ -44,6 +44,9 @@ public class ActivityCommentImpl implements ActivityComment {
 	private boolean markedAsRead;
 	private boolean like;
 	
+	private boolean hiddenByAdmin;
+	private boolean hiddenByPatient;
+	
 	ActivityCommentImpl() {
 	
 	}
@@ -59,6 +62,9 @@ public class ActivityCommentImpl implements ActivityComment {
 		
 		this.like = entity.isLike();
 		this.markedAsRead = entity.isMarkedAsRead();
+		
+		this.hiddenByAdmin = entity.isHiddenByAdmin();
+		this.hiddenByPatient = entity.isHiddenByPatient();
 		
 		if (entity.getRepliedAt() != null) {
 			this.reply = entity.getReply();
@@ -146,4 +152,13 @@ public class ActivityCommentImpl implements ActivityComment {
 		return like;
 	}
 
+	@Override
+	public boolean isHiddenByAdmin() {
+		return hiddenByAdmin;
+	}
+	
+	@Override
+	public boolean isHiddenByPatient() {
+		return hiddenByPatient;
+	}
 }

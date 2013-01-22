@@ -41,6 +41,19 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the day as an option.
 	 */
 	Option getDay();
+	
+	/**
+	 * Return the day in week when activity was reported in system
+	 * @return
+	 */
+	Option getReportedDay();
+	
+	/**
+	 * Get the actual day of reporting. This is when the patient claims that the activity was performed
+	 * performed the activity
+	 * @return
+	 */
+	Option getActDay();
 
 	/**
 	 * Returns if this activity has been rejected by the user.
@@ -55,6 +68,18 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the time.
 	 */
 	String getTime();
+	
+	/**
+	 * Returns the reported time
+	 * @return
+	 */
+	String getReportedTime();
+	
+	/**
+	 * Return the time when the patient claims that the activity was performed
+	 * @return
+	 */
+	String getActTime();
 
 	/**
 	 * Returns the scheduled date (yyyy-mm-dd)
@@ -62,6 +87,18 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the date.
 	 */
 	String getDate();
+	
+	/**
+	 * Returns the reported date
+	 * @return
+	 */
+	String getReportedDate();
+	
+	/**
+	 * Return the date when patient claims that the activity was performed
+	 * @return
+	 */
+	String getActDate();
 
 	/**
 	 * Returns the associated {@link ActivityDefinition}

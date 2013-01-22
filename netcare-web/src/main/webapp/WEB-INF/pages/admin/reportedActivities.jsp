@@ -40,23 +40,6 @@
 				};
 				
 				var module = NC_MODULE.REPORTED_ACTIVITIES;
-				
-				function twoDigits(number) {
-					if(number<10) {
-						return "0" + number;
-					} else {
-						return number
-					}
-				}
-				function formattedDate(date) {
-					return "" + date.getFullYear() + (twoDigits(date.getMonth()+1)) + twoDigits(date.getDate());
-				}
-				function threeDaysAgo() {
-					var now = new Date();
-					var then = new Date()
-					then.setDate(now.getDate()-3);
-					return formattedDate(then);
-				}
 
 				function filter() {
 					var personnummer = $('#personnummer').val();
@@ -64,15 +47,19 @@
 					var dateTo = $('#dateTo').val();
 					module.doFilter(personnummer, dateFrom, dateTo, msgs);
 				}
+				
+				var now = new Date();
+				var start = new Date();
+				start.setDate(now.getDate()-3);
+				
+				$('#dateFrom').datepicker('setDate', start);
+				$('#dateTo').datepicker('setDate', now);
 
-				$("#dateFrom").val(threeDaysAgo());
-				$("#dateTo").val(formattedDate(new Date()));
 				$('.btn').click(function() {
 					filter();
 				});
 
 				filter();
-				
 			});
 		</script>
 	</hp:viewHeader>
@@ -99,7 +86,7 @@
 	  		</div>
   		</mvk:sheet>
   		
-  		<section id="report">
+  		<div id="report">
   			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -110,7 +97,7 @@
 					<ul></ul>
 				</div>
 			</div>
-  		</section>
+  		</div>
 		
 	</hp:viewBody>
 </hp:view>

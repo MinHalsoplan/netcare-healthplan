@@ -46,11 +46,19 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private boolean due;
 	private String reported;
 	private String date;
+	private String reportedDate;
 	private String time;
+	private String reportedTime;
 	private Option day;
+	private Option reportedDay;
 	private ActivityDefinition activityDefinition;
 	private PatientBaseView patient;
 	private String actualTime;
+	
+	private String actTime;
+	private String actDate;
+	private Option actDay;
+	
 	private String note;
 	private ActivityItemValues[] activityItemValues;
 	private boolean rejected;
@@ -83,12 +91,35 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		cal.setTime(new Date());
 		ApiUtil.dayBegin(cal);
 		Date time = entity.getScheduledTime();
+		
+		
 		scheduledActivity.due = (time.compareTo(cal.getTime()) < 0);
 		scheduledActivity.date = ApiUtil.formatDate(time);
+		
 		scheduledActivity.time = ApiUtil.formatTime(time);
+		
+		
 		if (entity.getReportedTime() != null) {
-			scheduledActivity.reported = ApiUtil.formatDate(entity.getReportedTime()) + " "
-					+ ApiUtil.formatTime(entity.getReportedTime());
+			
+			Calendar reportedCal = Calendar.getInstance();
+			reportedCal.setTime(entity.getReportedTime());
+			
+			int repDay = reportedCal.get(Calendar.DAY_OF_WEEK);
+			
+			Date reportedTime = entity.getReportedTime();
+			scheduledActivity.reportedDay = new Option("weekday." + repDay, LocaleContextHolder.getLocale());
+			scheduledActivity.reportedDate = ApiUtil.formatDate(reportedTime);
+			scheduledActivity.reportedTime = ApiUtil.formatTime(reportedTime);
+			scheduledActivity.reported = new StringBuilder(scheduledActivity.reportedDate).append(" ").append(scheduledActivity.reportedTime).toString();
+			
+			final Calendar act = Calendar.getInstance();
+			act.setTime(entity.getActualTime());
+			
+			int actWeekday = act.get(Calendar.DAY_OF_WEEK);
+			scheduledActivity.actDay = new Option("weekday." + actWeekday, LocaleContextHolder.getLocale());
+			scheduledActivity.actDate = ApiUtil.formatDate(entity.getActualTime());
+			scheduledActivity.actTime = ApiUtil.formatTime(entity.getActualTime());
+			
 		}
 		if (entity.getActualTime() != null) {
 			scheduledActivity.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " "
@@ -266,5 +297,35 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	
 	public void setExtra(final boolean extra) {
 		this.extra = extra;
+	}
+
+	@Override
+	public Option getReportedDay() {
+		return this.reportedDay;
+	}
+
+	@Override
+	public String getReportedTime() {
+		return this.reportedTime;
+	}
+
+	@Override
+	public String getReportedDate() {
+		return this.reportedDate;
+	}
+
+	@Override
+	public Option getActDay() {
+		return this.actDay;
+	}
+
+	@Override
+	public String getActTime() {
+		return this.actTime;
+	}
+
+	@Override
+	public String getActDate() {
+		return this.actDate;
 	}
 }

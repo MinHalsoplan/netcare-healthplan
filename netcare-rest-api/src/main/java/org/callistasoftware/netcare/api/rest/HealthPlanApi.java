@@ -117,7 +117,7 @@ public class HealthPlanApi extends ApiSupport {
 		
 		long n = System.currentTimeMillis();
 		// three
-		final Date start = new Date(n - 3*DateUtil.MILLIS_PER_DAY);
+		final Date start = new Date(n - 3* DateUtil.MILLIS_PER_DAY);
 		final Date end = new Date(n);
 		final CareUnit unit = ((CareActorBaseView)this.getUser()).getCareUnit();
 		return this.service.loadLatestReportedForAllPatients(unit, start, end);
@@ -135,12 +135,12 @@ public class HealthPlanApi extends ApiSupport {
 
 		try {
 			if (StringUtils.hasText(dateFrom)) {
-				start = new SimpleDateFormat("yyyyMMdd").parse(dateFrom);
+				start = new SimpleDateFormat(DateUtil.DATE_PATTERN).parse(dateFrom);
 			} else {
 				start = new Date(System.currentTimeMillis() - 3 * DateUtil.MILLIS_PER_DAY);
 			}
 			if (StringUtils.hasText(dateTo)) {
-				end = new SimpleDateFormat("yyyyMMdd").parse(dateTo);
+				end = new SimpleDateFormat(DateUtil.DATE_PATTERN).parse(dateTo);
 			} else {
 				end = new Date();
 			}
@@ -217,7 +217,14 @@ public class HealthPlanApi extends ApiSupport {
 		this.logAccess("delete", "comment");
 		return this.service.deleteComment(comment);
 	}
-	
+
+    @RequestMapping(value="/activity/reported/comments/{comment}/hide", method=RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ServiceResult<ActivityComment> hideComment(@PathVariable(value="comment") final Long comment) {
+		this.logAccess("hide", "comment");
+		return this.service.hideComment(comment, true);
+	}
+
 	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(@PathVariable(value="healthPlanId") final Long healthPlan) {

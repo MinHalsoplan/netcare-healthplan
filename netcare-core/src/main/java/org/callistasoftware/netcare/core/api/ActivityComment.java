@@ -48,6 +48,18 @@ public interface ActivityComment extends Serializable {
 	boolean isLike();
 	
 	/**
+	 * Is the comment hidden by admin?
+	 * @return
+	 */
+	boolean isHiddenByAdmin();
+	
+	/**
+	 * Is the comment hidden by the patient?
+	 * @return
+	 */
+	boolean isHiddenByPatient();
+	
+	/**
 	 * Get the reply
 	 * @return
 	 */

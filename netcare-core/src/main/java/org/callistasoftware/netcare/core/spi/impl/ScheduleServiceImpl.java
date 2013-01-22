@@ -132,6 +132,16 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(act), new GenericSuccessMessage());
 	}
 	
+	private ActivityItemValuesEntity findItemValue(final ScheduledActivityEntity scheduledActivity, final Long id) {
+		for (final ActivityItemValuesEntity ent : scheduledActivity.getActivities()) {
+			if (ent.getActivityItemDefinitionEntity().getId().equals(id)) {
+				return ent;
+			}
+		}
+		
+		throw new IllegalArgumentException("Could not find item value " + id + " in scheduled activity " + scheduledActivity.getId());
+	}
+	
 	@Override
 	public ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report) {
 		getLog().info("Report done for scheduled activity {}", report.getId());
@@ -150,7 +160,8 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 		entity.setNote(report.getNote());
 		for (final ActivityItemValues value : report.getActivityItemValues()) {
 			
-			final ActivityItemValuesEntity valueEntity = this.valueRepository.findOne(value.getId());
+			getLog().debug("Find item value for definition: {}", value.getDefinition().getActivityItemType().getName());
+			final ActivityItemValuesEntity valueEntity = findItemValue(entity, value.getDefinition().getId());
 			
 			if (valueEntity instanceof MeasurementEntity) {
 				
@@ -177,7 +188,7 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 				getLog().debug("Alarm status: enabled {} raised {}", definition.getMeasurementType().isAlarmEnabled(),
 						me.isAlarm());
 				
-				if (!report.isRejected() && me.isAlarm()) {
+				if (!report.isRejected() && me.isAlarm() && !entity.isExtra()) {
 					AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, entity
 							.getActivityDefinitionEntity().getHealthPlan().getForPatient(), entity
 							.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());

@@ -47,7 +47,7 @@
 			<h1>
 				<spring:message code="mobile.activity.title" />
 			</h1>
-			<a href="index.html" data-icon="refresh" data-iconpos="notext"></a>
+			<a href="#" id="refresh" data-icon="refresh" data-iconpos="notext"></a>
 		</div>
 		<div id="today-body" data-role="content-primary">
 			<ul id="schema" data-role="listview">

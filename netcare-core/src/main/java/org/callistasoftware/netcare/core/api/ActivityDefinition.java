@@ -125,6 +125,8 @@ public interface ActivityDefinition extends Serializable {
 	 */
 	int getNumDone();
 	
+	int getNumExtra();
+	
 	/**
 	 * Whether the activity is active or not
 	 * @return

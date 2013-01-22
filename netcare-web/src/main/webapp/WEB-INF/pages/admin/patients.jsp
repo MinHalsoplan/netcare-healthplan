@@ -104,11 +104,10 @@
 		</form>
 		</mvk:sheet>
 	
-		<section id="patients">
+		<div id="patients">
 			<h3 class="title"><spring:message code="admin.patients.list" /></h3>
 			<mvk:touch-list id="patientList">
 			</mvk:touch-list>
-
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

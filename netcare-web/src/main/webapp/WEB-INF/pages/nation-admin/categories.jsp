@@ -50,7 +50,7 @@
 			
 		</form>
 		
-		<section id="categoryList">
+		<div id="categoryList">
 			<h3 class="title"><spring:message code="category.list.title" /></h3>
 			<netcare:table id="categoryTable">
 				<thead>
@@ -60,6 +60,6 @@
 				</thead>
 				<tbody></tbody>
 			</netcare:table>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

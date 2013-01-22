@@ -47,7 +47,7 @@
 		</script>
 	</hp:viewHeader>
 	<hp:viewBody title="Extra rapportering" plain="true">
-		<section id="extraReport">
+		<div id="extraReport">
 			<form>
 				<mvk:sheet>
 					<fieldset>
@@ -58,6 +58,6 @@
 				
 				<mvk:touch-list id="reportList"></mvk:touch-list>
 			</form>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

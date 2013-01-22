@@ -47,7 +47,7 @@
 	<c:url value="/netcare/admin/healthplans" var="backToUrl" />
 	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Hälsoplaner">
 	
-		<section id="plan">
+		<div id="plan">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -95,7 +95,7 @@
 					<legend><spring:message code="activity.form.specifyTimes" /></legend>
 					<form id="addTimesForm" class="form-inline">
 						<netcare:field name="specifyTime" label="${addTime}">
-							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2"/>
+							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2 spectime"/>
 							<button type="submit" class="btn btn-info">Lägg till</button>
 							<button type="reset" class="btn btn-danger">Rensa</button>
 						</netcare:field>
@@ -153,6 +153,6 @@
 					</div>
 				</form>
 			</div>
-		</section>
+		</div>
 	</hp:viewBody>
 </hp:view>

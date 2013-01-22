@@ -45,9 +45,7 @@
 			
 		.ui-btn-c {
 			background: #8d0017;
-		}
-		
-				
+		}		
 	</style>
 			
 	<c:set var="contextPath" value="${pageContext.request.contextPath}" />

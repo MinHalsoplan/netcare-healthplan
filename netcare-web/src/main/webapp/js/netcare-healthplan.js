@@ -167,7 +167,7 @@ var NC_MODULE = {
 						
 						NC_MODULE.GLOBAL.selectPatient(v.id, function(data) {
 							NC_MODULE.GLOBAL.updateCurrentPatient(data.data.name);
-							window.location = NC.getContextPath() + '/netcare/admin/healthplans?showForm=true';
+							window.location = NC.getContextPath() + '/netcare/admin/healthplans';
 						});
 					});
 				});
@@ -316,7 +316,7 @@ var NC_MODULE = {
 					NC_MODULE.PATIENTS.findPatients(request.term, function(data) {
 						NC.log("Found " + data.data.length + " patients.");
 						response($.map(data.data, function(item) {
-							console.log("Processing item: " + item.name);
+							NC.log("Processing item: " + item.name);
 							return { label : item.name + ' (' + NC.GLOBAL.formatCrn(item.civicRegistrationNumber) + ')', value : item.name, patientId : item.id };
 						}));
 					});
@@ -392,7 +392,7 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="startDate"]').on('keyup blur change', function() {
-				console.log($(this).val());
+				NC.log($(this).val());
 				_data.startDate = $(this).val();
 				NC.log('Updated start date to: ' + _data.startDate);
 			});
@@ -481,24 +481,28 @@ var NC_MODULE = {
 			
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
 			.append(expander);
-			
-			$('#hp-inactivate-' + hp.id).click(function(e) {
+	
+			var actions = liElem.find('.healthplan-actions');
+
+			actions.find('#hp-inactivate-' + hp.id).click(function(e) {
+				liElem.find('#hp-remove-confirmation-' + hp.id).modal('show');
+			});
+			actions.find('.modal-footer').find('.btn').click(function(e) {
 				e.preventDefault();
-				e.stopPropagation();
-				
 				NC.log('Inactivate health plan ' + hp.id);
 				my.inactivate(my, hp);
 			});
-			
 		};
 		
 		my.processDefinitions = function(my, hp) {
 			
 			NC.log('Processing activity definitions of health plan ' + hp.id);
 			
+			var hpDetails = $('#hp-details-' + hp.id); 
+			
 			if (hp.activityDefinitions.length == 0) {
 				NC.log('No activity definitions yet available');
-				$('#hp-details-' + hp.id).find('.span12').append(
+				hpDetails.find('.healthplan-activity-definitions').append(
 					$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
 				);
 			} else {
@@ -518,37 +522,42 @@ var NC_MODULE = {
 					var t = _.template($('#healthPlanDefinitions').html());
 					var dom = t(ad);
 					
-					$('#hp-details-' + hp.id).find('.span12').append($(dom));
+					hpDetails.find('.healthplan-activity-definitions').append($(dom));
 					
-					my.addEventHandlersForDefinition(ad.id);
+					my.addEventHandlersForDefinition(ad.id, hpDetails);
 					
 					added++;
 				}
 				
 				if (added == 0) {
-					$('#hp-details-' + hp.id).find('.span12').append(
+					hpDetails.find('.span12').append(
 						$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
 					);
 				}
 			}
 		};
 		
-		my.addEventHandlersForDefinition = function(id) {
-			$('#hp-ad-' + id + '-edit').click(function(e) {
+		my.addEventHandlersForDefinition = function(id, ancestor) {
+			var item = ancestor.find('#hp-ad-' + id);
+			item.find('#hp-ad-' + id + '-edit').click(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				
 				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + id + '/plan/' + id;
 			});
 			
-			$('#hp-ad-' + id + '-remove').click(function(e) {
+			item.find('#hp-ad-' + id + '-remove').click(function(e) {
 				e.preventDefault();
-				e.stopPropagation();
-				
+				ancestor.find('#hp-ad-remove-confirmation-' + id).modal('show');
+			});
+			item.find('.modal-footer').find('.btn').click(function(e) {
+				e.preventDefault();
+				NC.log('Removing activity.');
 				new NC.Ajax().http_delete('/activityPlans/' + id, function(data) {
 					$('#hp-ad-' + id).fadeOut('fast');
 				});
 			});
+
 		};
 		
 		my.inactivate = function(my, healthPlan) {
@@ -1340,7 +1349,7 @@ var NC_MODULE = {
 						
 						activityTemplate.name = $('#activityTypeName').val();
 						if(my.validate(activityTemplate.name)) {
-							console.log('validated');
+							NC.log('validated');
 							
 							activityTemplate.accessLevel = new Object();
 							activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
@@ -2110,9 +2119,16 @@ var NC_MODULE = {
 					new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
 						_data = data.data;
 						my.render();
+						my.displaySuccess();
 					});
 				}
 			});
+		};
+		
+		my.displaySuccess = function(my) {
+			$('#userprofile').find('.pageMessages').append(
+				$('<div>').addClass('alert alert-success').html('Din profil har sparats')
+			);
 		};
 		
 		return my;
@@ -2157,11 +2173,11 @@ var NC_MODULE = {
 			var reply = _data[idx].reply;
 			
 			var dom;
-			if (markedAsRead == true || like == true) {
-				dom = _.template($('#activity-comment-awarded').html())(_data[idx]);
-			} else {
+			//if (markedAsRead == true || like == true) {
 				dom = _.template($('#activity-comment').html())(_data[idx]);
-			}
+//			} else {
+//				dom = _.template($('#activity-comment').html())(_data[idx]);
+//			}
 			
 			if ($('#activity-comment-' + _data[idx].id).size() > 0) {
 				$('#activity-comment-' + _data[idx].id).replaceWith($(dom));
@@ -2200,8 +2216,8 @@ var NC_MODULE = {
 			var doReply = $('#activity-comment-'+ _data[idx].id +'-replyForm').find('button');
 			
 			closeBtn.click(function(e) {
-				my.remove(_data[idx].id, function(data) {
-					NC.log('Comment removed');
+				my.hide(_data[idx].id, function(data) {
+					NC.log('Comment hidden');
 				});
 			});
 			
@@ -2228,8 +2244,8 @@ var NC_MODULE = {
 			new NC.Ajax().post('/comments/' + commentId, message, callback);
 		};
 		
-		my.remove = function(commentId, callback) {
-			new NC.Ajax().http_delete('/comments/' + commentId, callback);
+		my.hide = function(commentId, callback) {
+			new NC.Ajax().post('/comments/' + commentId + '/hide', callback);
 		};
 		
 		return my;
@@ -2646,10 +2662,12 @@ var NC_MODULE = {
 			var commented = false;
 			var liked = false;
 			var hasBeenRead = false;
+			var replied = false;
 			if(act.comments.length>0) {
 				commented = act.comments[0].comment!=null && act.comments[0].comment!='';
 				liked = act.comments[0].like;
 				hasBeenRead = act.comments[0].markedAsRead;
+				replied = act.comments[0].repliedAt != null;
 			}
 			var like = liElem.find('.likeReported');
 			var likedText = '<span style="font-weight: bold;">' + msgs.liked + '</span>';
@@ -2707,6 +2725,12 @@ var NC_MODULE = {
 					}
 				});
 			}
+			if(replied) {
+				var repliedDiv = liElem.find('#actreplied');
+				repliedDiv.html('<span style="font-style: italic;">"' + act.comments[0].reply + '"</span> - ' + act.patient.firstName + ' ' + act.patient.surName);
+				repliedDiv.show();
+				
+			}
 		};
 		
 		my.processValues = function(my, act) {
@@ -2743,20 +2767,26 @@ var NC_MODULE = {
 			
 			NC.GLOBAL.showLoader('#report');
 			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
-				$.each(data.data, function(i, v) {
-					my.buildReportedActivityItem(my, v, msgs);
-				});
 				
-				NC.PAGINATION.init({
-					'itemIdPrefix' : 'reportedActivityItem',
-					'paginationId' : '#riPagination',
-					'data' : data.data,
-					'previousLabel' : '<<',
-					'nextLabel' : '>>'
-				});
+				$('#latestActivitiesContainer').empty();
 				
-				$('#reportContainer').show();
-				NC.GLOBAL.suspendLoader('#report');	
+				if (data.data.length > 0) {
+					$.each(data.data, function(i, v) {
+						my.buildReportedActivityItem(my, v, msgs);
+					});
+					
+					NC.PAGINATION.init({
+						'itemIdPrefix' : 'reportedActivityItem',
+						'paginationId' : '#riPagination',
+						'data' : data.data,
+						'previousLabel' : '<<',
+						'nextLabel' : '>>'
+					});
+					
+					$('#reportContainer').show();	
+				}
+				
+				NC.GLOBAL.suspendLoader('#report');
 			});
 		};
 		
@@ -2834,9 +2864,9 @@ var NC_MODULE = {
 						var dom = t(value);
 						$('#repliesItem table tbody').append(dom);
 						
-						$('#deleteComment' + value.id).click(function() {
-							NC.log("Deleting comment...");
-							new NC.Ajax().post('/healthplans/activity/reported/comments/' + value.id + '/delete', {}, my.load, true);
+						$('#hideComment' + value.id).click(function() {
+							NC.log("Hiding comment...");
+							new NC.Ajax().post('/healthplans/activity/reported/comments/' + value.id + '/hide', {}, my.load, true);
 						});
 
 					});
@@ -3199,7 +3229,7 @@ var NC_MODULE = {
 					$('#activities').append(detailsDiv);
 					
 					new NC.Ajax().get('/healthplans/activity/item/' + id + '/statistics', function(data) {
-						console.log(data.data);
+						NC.log(data.data);
 						var report = data.data;
 						var divId = 'report' + report.id;
 						var header = _.template($('#reportHead').html())(report);

@@ -44,7 +44,13 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	
 	@Column(name="is_marked_as_read")
 	private boolean markedAsRead;
+
+	@Column(name="is_hidden_by_admin")
+	private boolean hiddenByAdmin;
 	
+	@Column(name="is_hidden_by_patient")
+	private boolean hiddenByPatient;
+
 	@Column
 	private String reply;
 	
@@ -152,6 +158,22 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		return this.isWriteAllowed(user);
 	}
 
+	public boolean isHiddenByAdmin() {
+		return hiddenByAdmin;
+	}
+	
+	public void setHiddenByAdmin(boolean hiddenByAdmin) {
+		this.hiddenByAdmin = hiddenByAdmin;
+	}
+	
+	public boolean isHiddenByPatient() {
+		return hiddenByPatient;
+	}
+	
+	public void setHiddenByPatient(boolean hiddenByPatient) {
+		this.hiddenByPatient = hiddenByPatient;
+	}
+	
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
 		if (user.isCareActor()) {
