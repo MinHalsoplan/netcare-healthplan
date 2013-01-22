@@ -2750,20 +2750,23 @@ var NC_MODULE = {
 			
 			NC.GLOBAL.showLoader('#report');
 			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
-				$.each(data.data, function(i, v) {
-					my.buildReportedActivityItem(my, v, msgs);
-				});
+				if (data.data.length > 0) {
+					$.each(data.data, function(i, v) {
+						my.buildReportedActivityItem(my, v, msgs);
+					});
+					
+					NC.PAGINATION.init({
+						'itemIdPrefix' : 'reportedActivityItem',
+						'paginationId' : '#riPagination',
+						'data' : data.data,
+						'previousLabel' : '<<',
+						'nextLabel' : '>>'
+					});
+					
+					$('#reportContainer').show();	
+				}
 				
-				NC.PAGINATION.init({
-					'itemIdPrefix' : 'reportedActivityItem',
-					'paginationId' : '#riPagination',
-					'data' : data.data,
-					'previousLabel' : '<<',
-					'nextLabel' : '>>'
-				});
-				
-				$('#reportContainer').show();
-				NC.GLOBAL.suspendLoader('#report');	
+				NC.GLOBAL.suspendLoader('#report');
 			});
 		};
 		
