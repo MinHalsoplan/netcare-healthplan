@@ -35,17 +35,24 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.2</string>
+	<string>1.0.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.0</string>
+	<string>4.0</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NCCheckCredentialsPage</key>
 	<string>/mobile/checkcredentials</string>
 	<key>NCHost</key>
 	<string>netcare.callistasoftware.org</string>
+<<<<<<< HEAD
+=======
+	<key>NCLogoutPage</key>
+	<string>/netcare/security/logout</string>
+>>>>>>> master
 	<key>NCPort</key>
 	<string>0</string>
 	<key>NCProtocol</key>
@@ -54,10 +61,6 @@
 	<string>/mobile/push/register/apns</string>
 	<key>NCSecurityRealm</key>
 	<string>netcare-mobile</string>
-	<key>NCLogoutPage</key>
-	<string>/netcare/security/logout</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>NCStartPage</key>
 	<string>/mobile/start</string>
 	<key>UIMainStoryboardFile</key>
