@@ -2750,6 +2750,9 @@ var NC_MODULE = {
 			
 			NC.GLOBAL.showLoader('#report');
 			new NC.Ajax().getWithParams('/healthplans/activity/reported/filter', params, function(data) {
+				
+				$('#latestActivitiesContainer').empty();
+				
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						my.buildReportedActivityItem(my, v, msgs);

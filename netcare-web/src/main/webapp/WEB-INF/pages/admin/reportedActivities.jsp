@@ -52,20 +52,14 @@
 				var start = new Date();
 				start.setDate(now.getDate()-3);
 				
-				//$('#dateFrom').datepicker();
 				$('#dateFrom').datepicker('setDate', start);
-				
-				//$('#dateTo').datepicker();
 				$('#dateTo').datepicker('setDate', now);
 
-				//$("#dateFrom").val(threeDaysAgo());
-				//$("#dateTo").val(formattedDate(new Date()));
 				$('.btn').click(function() {
 					filter();
 				});
 
 				filter();
-				
 			});
 		</script>
 	</hp:viewHeader>
