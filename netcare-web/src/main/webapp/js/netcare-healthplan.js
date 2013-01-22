@@ -462,7 +462,7 @@ var NC_MODULE = {
 			if (hp.autoRenewal) {
 				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
 			} else {
-				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' ' + hp.endDate);
+				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' <span id="endDate">' + hp.endDate + '</span>');
 			}
 			
 			var detailsTemplate = _.template($('#healthPlanDetails').html());
@@ -483,11 +483,22 @@ var NC_MODULE = {
 			.append(expander);
 	
 			var actions = liElem.find('.healthplan-actions');
-
-			actions.find('#hp-inactivate-' + hp.id).click(function(e) {
-				liElem.find('#hp-remove-confirmation-' + hp.id).modal('show');
+			
+			var extend = actions.find('.extend');
+			var inactivate = actions.find('.inactivate');
+			
+			extend.find('#hp-extend-plan-' + hp.id).click(function(e) {
+				extend.find('#hp-extend-confirmation-' + hp.id).modal('show');
 			});
-			actions.find('.modal-footer').find('.btn').click(function(e) {
+			extend.find('.modal-footer').find('.btn').click(function(e) {
+				e.preventDefault();
+				NC.log('Extend health plan ' + hp.id);
+				my.extendPlan(my, hp.id, liElem);
+			});
+			inactivate.find('#hp-inactivate-' + hp.id).click(function(e) {
+				inactivate.find('#hp-remove-confirmation-' + hp.id).modal('show');
+			});
+			inactivate.find('.modal-footer').find('.btn').click(function(e) {
 				e.preventDefault();
 				NC.log('Inactivate health plan ' + hp.id);
 				my.inactivate(my, hp);
@@ -530,7 +541,7 @@ var NC_MODULE = {
 				}
 				
 				if (added == 0) {
-					hpDetails.find('.span12').append(
+					hpDetails.find('.healthplan-activity-definitions').append(
 						$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
 					);
 				}
@@ -567,7 +578,22 @@ var NC_MODULE = {
 				$('#healthPlanItem' + id).remove();
 			});
 		};
-		
+
+		my.extendPlan = function(my, id, ancestor) {
+			console.log('Extending...')
+			new NC.Ajax().post('/healthplans/' + id + '/renew', {}, function(data) {
+				var endDate = data.data.endDate;
+				var endDateElement = ancestor.find('#endDate');
+				console.log(endDateElement);
+				if(endDateElement) {
+					console.log('found');
+				}
+				console.log(endDate);
+				endDateElement.html(endDate);
+				endDateElement.css('font-weight','bold').fadeOut(500).fadeIn(500).fadeOut(500).fadeIn(500);
+			}, null);
+		};
+
 		my.initValidate = function() {
 			$('#createHealthPlanForm').validate({
 				messages: {
