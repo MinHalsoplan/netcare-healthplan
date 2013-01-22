@@ -27,10 +27,10 @@
 	
     <import resource="classpath*:/bankid-security-config.xml"/>
     
-    <security:http security="none" pattern="/mobile/bankid/authenticate/**" />
+    <security:http security="none" pattern="/mobile/bankid/authenticate*" />
     
     <security:http 
-        pattern="/mobile/bankid/collect/**" 
+        pattern="/mobile/bankid/complete*" 
         entry-point-ref="bankIdEntryPoint" 
         access-denied-page="/netcare/security/denied">
         <security:custom-filter ref="bankIdPreAuthFilter" position="PRE_AUTH_FILTER"/>
