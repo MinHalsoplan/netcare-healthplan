@@ -112,8 +112,11 @@ var NC_MOBILE = {
 
 			$.each(ListOfActivities, function(index, activity) {
 				NC.log("Processing " + activity.id + " ...");
-				if (currentDay != activity.day.value) {
-					currentDay = activity.day.value;
+				
+				var date = activity.reported != null ? activity.reportedDate : activity.date;
+				
+				if (currentDay != date) {
+					currentDay = date;
 					my.buildListView(my, activity, true);
 				} else {
 					my.buildListView(my, activity, false);
@@ -123,7 +126,10 @@ var NC_MOBILE = {
 
 		my.buildListView = function(my, activity, buildHeader) {
 			if (buildHeader) {
-				my.createListHeader($('#schema'), activity.day.value + ' ' + activity.date);
+				var day = activity.reported != null ? activity.reportedDay.value : activity.day.value;
+				var date = activity.reported != null ? activity.reportedDate : activity.date;
+				
+				my.createListHeader($('#schema'), day + ' ' + date);
 			}
 			my.createListRow(my, $('#schema'), '#report', activity, my.loadActivity, reportedLabel);
 		};
@@ -307,8 +313,9 @@ var NC_MOBILE = {
 //			);
 			
 			var activityText = $('<div>').addClass('ui-btn-text');
+			var time = value.reported != null ? value.reportedTime : value.time;
 			activityText.append(
-				$('<h3>' + value.time + ' ' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
+				$('<h3>' + time + ' ' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
 			);
 			
 			var desc = '';
