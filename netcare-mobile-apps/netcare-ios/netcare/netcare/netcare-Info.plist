@@ -48,11 +48,8 @@
 	<string>/mobile/checkcredentials</string>
 	<key>NCHost</key>
 	<string>netcare.callistasoftware.org</string>
-<<<<<<< HEAD
-=======
 	<key>NCLogoutPage</key>
 	<string>/netcare/security/logout</string>
->>>>>>> master
 	<key>NCPort</key>
 	<string>0</string>
 	<key>NCProtocol</key>

@@ -93,11 +93,7 @@
   			<remote.protocol>http</remote.protocol>
   			<remote.hostname>netcare-dev.callistasoftware.org</remote.hostname>
   			<remote.port>8080</remote.port>
-<<<<<<< HEAD
   			<remote.context>/v2</remote.context>
-=======
-  			<remote.context>/v1</remote.context>
->>>>>>> master
   		</properties>
   	</profile>
   </profiles>
