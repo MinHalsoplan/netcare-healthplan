@@ -17,6 +17,8 @@
 package org.callistasoftware.netcare.core.repository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
@@ -85,4 +87,31 @@ public class ActivityCommentRepositoryTest extends TestSupport {
 		assertEquals(0, replies.size());
 
 	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testHideComment() throws Exception {
+
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
+		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-unit", cc));
+
+		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Marcus", "", "hsa", cu));
+
+		final ScheduledActivityEntity ent = Mockito.mock(ScheduledActivityEntity.class);
+		Mockito.when(ent.getId()).thenReturn(1L);
+
+		final ActivityCommentEntity comment = ActivityCommentEntity.newEntity("Duktigt.", ca, ent);
+		comment.setHiddenByAdmin(true);
+		final ActivityCommentEntity saved = this.repo.save(comment);
+		assertNotNull(saved);
+
+		assertNotNull(saved.getId());
+		assertNotNull(saved.getCommentedAt());
+		assertEquals(ca, saved.getCommentedBy());
+		assertEquals("Duktigt.", saved.getComment());
+		assertTrue("Should be hidden by admin", saved.isHiddenByAdmin());
+		assertFalse("Should not be hidden by patient", saved.isHiddenByPatient());
+	}
+
 }

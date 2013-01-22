@@ -687,7 +687,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
 				float t = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md
 						.getMaxTarget() : md.getTarget();
-				int target = Math.round(t);
+				//int target = Math.round(t);
 
 //				switch (md.getMeasurementType().getUnit()) {
 //				case STEP:
@@ -839,6 +839,28 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		this.verifyWriteAccess(ent);
 		this.commentRepository.delete(ent);
+
+		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<ActivityComment> hideComment(Long commentId, boolean isAdmin) {
+		final UserEntity user = this.getCurrentUser();
+		log.info("User {} is hiding comment {}", user.getId(), commentId);
+
+		final ActivityCommentEntity ent = this.commentRepository.findOne(commentId);
+		if (ent == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class,
+					commentId));
+		}
+
+		this.verifyWriteAccess(ent);
+		if(isAdmin) {
+			ent.setHiddenByAdmin(true);
+		} else {
+			ent.setHiddenByPatient(true);
+		}
+		this.commentRepository.save(ent);
 
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}

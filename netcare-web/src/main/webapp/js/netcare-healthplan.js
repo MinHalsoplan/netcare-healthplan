@@ -2164,11 +2164,11 @@ var NC_MODULE = {
 			var reply = _data[idx].reply;
 			
 			var dom;
-			if (markedAsRead == true || like == true) {
-				dom = _.template($('#activity-comment-awarded').html())(_data[idx]);
-			} else {
+			//if (markedAsRead == true || like == true) {
 				dom = _.template($('#activity-comment').html())(_data[idx]);
-			}
+//			} else {
+//				dom = _.template($('#activity-comment').html())(_data[idx]);
+//			}
 			
 			if ($('#activity-comment-' + _data[idx].id).size() > 0) {
 				$('#activity-comment-' + _data[idx].id).replaceWith($(dom));
@@ -2207,8 +2207,8 @@ var NC_MODULE = {
 			var doReply = $('#activity-comment-'+ _data[idx].id +'-replyForm').find('button');
 			
 			closeBtn.click(function(e) {
-				my.remove(_data[idx].id, function(data) {
-					NC.log('Comment removed');
+				my.hide(_data[idx].id, function(data) {
+					NC.log('Comment hidden');
 				});
 			});
 			
@@ -2235,8 +2235,8 @@ var NC_MODULE = {
 			new NC.Ajax().post('/comments/' + commentId, message, callback);
 		};
 		
-		my.remove = function(commentId, callback) {
-			new NC.Ajax().http_delete('/comments/' + commentId, callback);
+		my.hide = function(commentId, callback) {
+			new NC.Ajax().post('/comments/' + commentId + '/hide', callback);
 		};
 		
 		return my;
@@ -2653,10 +2653,12 @@ var NC_MODULE = {
 			var commented = false;
 			var liked = false;
 			var hasBeenRead = false;
+			var replied = false;
 			if(act.comments.length>0) {
 				commented = act.comments[0].comment!=null && act.comments[0].comment!='';
 				liked = act.comments[0].like;
 				hasBeenRead = act.comments[0].markedAsRead;
+				replied = act.comments[0].repliedAt != null;
 			}
 			var like = liElem.find('.likeReported');
 			var likedText = '<span style="font-weight: bold;">' + msgs.liked + '</span>';
@@ -2713,6 +2715,12 @@ var NC_MODULE = {
 						}, true);
 					}
 				});
+			}
+			if(replied) {
+				var repliedDiv = liElem.find('#actreplied');
+				repliedDiv.html('<span style="font-style: italic;">"' + act.comments[0].reply + '"</span> - ' + act.patient.firstName + ' ' + act.patient.surName);
+				repliedDiv.show();
+				
 			}
 		};
 		
@@ -2847,9 +2855,9 @@ var NC_MODULE = {
 						var dom = t(value);
 						$('#repliesItem table tbody').append(dom);
 						
-						$('#deleteComment' + value.id).click(function() {
-							NC.log("Deleting comment...");
-							new NC.Ajax().post('/healthplans/activity/reported/comments/' + value.id + '/delete', {}, my.load, true);
+						$('#hideComment' + value.id).click(function() {
+							NC.log("Hiding comment...");
+							new NC.Ajax().post('/healthplans/activity/reported/comments/' + value.id + '/hide', {}, my.load, true);
 						});
 
 					});

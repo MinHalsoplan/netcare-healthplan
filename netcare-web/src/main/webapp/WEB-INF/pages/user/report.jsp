@@ -49,7 +49,7 @@
 	<hp:viewBody title="Mitt schema" plain="true">
 	
 		<mvk:sheet>
-			<section id="filter">
+			<div id="filter">
 				<form id="filterForm">
 					<fieldset>
 						<legend>Välj vad som skall visas</legend>
@@ -84,10 +84,10 @@
 					
 					</fieldset>
 				</form>
-			</section>
+			</div>
 		</mvk:sheet>
 	
-		<section id="report">
+		<div id="report">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
@@ -103,7 +103,7 @@
 				</div>
 				
 			</div>
-		</section>
+		</div>
 		
 	</hp:viewBody>
 </hp:view>

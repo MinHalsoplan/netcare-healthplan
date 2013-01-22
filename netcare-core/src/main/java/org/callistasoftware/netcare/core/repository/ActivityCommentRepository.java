@@ -30,11 +30,12 @@ public interface ActivityCommentRepository extends JpaRepository<ActivityComment
 
 	@Query(value = "select e from ActivityCommentEntity as e inner join " + "e.activity as a inner join "
 			+ "a.activityDefinition as ad inner join "
-			+ "ad.healthPlan as hp where hp.forPatient = :patient and e.repliedAt is null")
+			+ "ad.healthPlan as hp where hp.forPatient = :patient and e.hiddenByPatient = false")
 	List<ActivityCommentEntity> findCommentsForPatient(@Param("patient") final PatientEntity patient);
 
 	@Query(value = "select e from ActivityCommentEntity as e where e.commentedBy = :careActor "
-			+ "and e.repliedAt is not null " + "and e.activity.activityDefinition.healthPlan.careUnit = :careUnit")
+			+ "and e.repliedAt is not null " + "and e.activity.activityDefinition.healthPlan.careUnit = :careUnit "
+			+ "and e.hiddenByAdmin = false")
 	List<ActivityCommentEntity> findRepliesForCareActor(@Param("careActor") final CareActorEntity careActor,
 			@Param("careUnit") final CareUnitEntity careUnit);
 }
