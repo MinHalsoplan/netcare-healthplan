@@ -92,16 +92,23 @@
 <script id="healthPlanDetails" type="text/template">
 <div id="hp-details-{{=id}}" style="display: none;">
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="span12 healthplan-activity-definitions">
 		
 		</div>
 	</div>
-	<div class="row-fluid">
+	<div class="row-fluid healthplan-actions">
 		<div class="span6" style="text-align: left">
 			<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Planera ny aktivitet från mall</a>
 		</div>
 		<div class="span6" style="text-align: right">
-			<a id="hp-inactivate-{{=id}}" href="#" style="padding-right: 10px">Avaktivera hälsoplan</a>
+			<a id="hp-inactivate-{{=id}}" href="#" style="padding-right: 10px">Ta bort hälsoplan</a>
+			<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+				<div class="modal-body">Ta bort hälsoplanen?</div>
+				<div class="modal-footer">
+					<a href="#" data-dismiss="modal">Avbryt</a>
+					<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -112,6 +119,13 @@
 <div id="hp-ad-{{=id}}" class="row-fluid">
 	<div class="span6">{{=type.name}}</div>
 	<div class="span4"><a id="hp-ad-{{=id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{=id}}-remove" href="3">Avsluta</a></div>
+	<div id="hp-ad-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+		<div class="modal-body">Ta bort aktivitet?</div>
+		<div class="modal-footer">
+			<a href="#" data-dismiss="modal">Avbryt</a>
+			<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
+		</div>
+	</div>
 </div>
 </script>
 
