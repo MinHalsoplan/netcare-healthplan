@@ -3249,8 +3249,12 @@ var NC_MODULE = {
 				for(var i = 0; i < activity.goalValues.length; i++) {
 					var id = activity.goalValues[i].id;
 					var divId = 'report' + id;
+					var popoverDiv = $('<div>').attr('id', divId+'Popover');
+					$('#activities').append(popoverDiv);
+					
 					var div = $('<div>').attr('id', divId).addClass('reportdiagram');
 					$('#activities').append(div);
+					
 					var detailsDiv = $('<div>').attr('id', 'details' + id).addClass('scheduledDetails');
 					$('#activities').append(detailsDiv);
 					
@@ -3352,7 +3356,7 @@ var NC_MODULE = {
 			});
 		}
 		var openPopoverOnChart = function(data, reportId) {
-			var popoverId = '#report' + reportId + ' .highcharts-title';
+			var popoverId = '#report' + reportId + 'Popover';
 			openPopoverWithId(data, popoverId);
 		}
 		var openPopoverOnTextRow = function(data, rowId) {
@@ -3361,9 +3365,10 @@ var NC_MODULE = {
 		var openPopoverWithId = function(data, id) {
 			var popTemplate = '<div class="popover" onclick="$(\'' + id + '\').popover(\'destroy\');"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>';
 			var activityTitle = data.activityDefinition.type.name + ' - ' + data.actualTime.substring(0,10);
-			$(id).popover('destroy');
-			$(id).popover({ title: activityTitle, content: getAllActivities(data), trigger:'manual',placement:'bottom', template:popTemplate });
-			$(id).popover('show');
+			var where = $(id);
+			where.popover('destroy');
+			where.popover({ title: activityTitle, content: getAllActivities(data), trigger:'manual',placement:'bottom', template:popTemplate });
+			where.popover('show');
 		}
 		var getAllActivities = function(data) {
 			var values = data.activityItemValues;
