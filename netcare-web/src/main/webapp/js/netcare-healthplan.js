@@ -481,24 +481,28 @@ var NC_MODULE = {
 			
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
 			.append(expander);
-			
-			$('#hp-inactivate-' + hp.id).click(function(e) {
+	
+			var actions = liElem.find('.healthplan-actions');
+
+			actions.find('#hp-inactivate-' + hp.id).click(function(e) {
+				liElem.find('#hp-remove-confirmation-' + hp.id).modal('show');
+			});
+			actions.find('.modal-footer').find('.btn').click(function(e) {
 				e.preventDefault();
-				e.stopPropagation();
-				
 				NC.log('Inactivate health plan ' + hp.id);
 				my.inactivate(my, hp);
 			});
-			
 		};
 		
 		my.processDefinitions = function(my, hp) {
 			
 			NC.log('Processing activity definitions of health plan ' + hp.id);
 			
+			var hpDetails = $('#hp-details-' + hp.id); 
+			
 			if (hp.activityDefinitions.length == 0) {
 				NC.log('No activity definitions yet available');
-				$('#hp-details-' + hp.id).find('.span12').append(
+				hpDetails.find('.healthplan-activity-definitions').append(
 					$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
 				);
 			} else {
@@ -518,37 +522,42 @@ var NC_MODULE = {
 					var t = _.template($('#healthPlanDefinitions').html());
 					var dom = t(ad);
 					
-					$('#hp-details-' + hp.id).find('.span12').append($(dom));
+					hpDetails.find('.healthplan-activity-definitions').append($(dom));
 					
-					my.addEventHandlersForDefinition(ad.id);
+					my.addEventHandlersForDefinition(ad.id, hpDetails);
 					
 					added++;
 				}
 				
 				if (added == 0) {
-					$('#hp-details-' + hp.id).find('.span12').append(
+					hpDetails.find('.span12').append(
 						$('<p>').css({'font-style' : 'italic'}).html(my.params.lang.noActivities)
 					);
 				}
 			}
 		};
 		
-		my.addEventHandlersForDefinition = function(id) {
-			$('#hp-ad-' + id + '-edit').click(function(e) {
+		my.addEventHandlersForDefinition = function(id, ancestor) {
+			var item = ancestor.find('#hp-ad-' + id);
+			item.find('#hp-ad-' + id + '-edit').click(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				
 				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + id + '/plan/' + id;
 			});
 			
-			$('#hp-ad-' + id + '-remove').click(function(e) {
+			item.find('#hp-ad-' + id + '-remove').click(function(e) {
 				e.preventDefault();
-				e.stopPropagation();
-				
+				ancestor.find('#hp-ad-remove-confirmation-' + id).modal('show');
+			});
+			item.find('.modal-footer').find('.btn').click(function(e) {
+				e.preventDefault();
+				NC.log('Removing activity.');
 				new NC.Ajax().http_delete('/activityPlans/' + id, function(data) {
 					$('#hp-ad-' + id).fadeOut('fast');
 				});
 			});
+
 		};
 		
 		my.inactivate = function(my, healthPlan) {
