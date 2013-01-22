@@ -54,6 +54,11 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	private ActivityDefinition activityDefinition;
 	private PatientBaseView patient;
 	private String actualTime;
+	
+	private String actTime;
+	private String actDate;
+	private Option actDay;
+	
 	private String note;
 	private ActivityItemValues[] activityItemValues;
 	private boolean rejected;
@@ -106,6 +111,15 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 			scheduledActivity.reportedDate = ApiUtil.formatDate(reportedTime);
 			scheduledActivity.reportedTime = ApiUtil.formatTime(reportedTime);
 			scheduledActivity.reported = new StringBuilder(scheduledActivity.reportedDate).append(" ").append(scheduledActivity.reportedTime).toString();
+			
+			final Calendar act = Calendar.getInstance();
+			act.setTime(entity.getActualTime());
+			
+			int actWeekday = act.get(Calendar.DAY_OF_WEEK);
+			scheduledActivity.actDay = new Option("weekday." + actWeekday, LocaleContextHolder.getLocale());
+			scheduledActivity.actDate = ApiUtil.formatDate(entity.getActualTime());
+			scheduledActivity.actTime = ApiUtil.formatTime(entity.getActualTime());
+			
 		}
 		if (entity.getActualTime() != null) {
 			scheduledActivity.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " "
@@ -298,5 +312,20 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	@Override
 	public String getReportedDate() {
 		return this.reportedDate;
+	}
+
+	@Override
+	public Option getActDay() {
+		return this.actDay;
+	}
+
+	@Override
+	public String getActTime() {
+		return this.actTime;
+	}
+
+	@Override
+	public String getActDate() {
+		return this.actDate;
 	}
 }

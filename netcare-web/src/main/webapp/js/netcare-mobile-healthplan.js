@@ -38,8 +38,17 @@ var NC_MOBILE = {
 		
 		my.pageInit = function(my) {
 			$('#start').live('pageinit', function(e) {
+				
+				$.mobile.loading('show', {
+					text : 'Laddar aktiviteter',
+					textVisible : true
+				});
+				
 				my.precompileTemplates(my);
-				my.load(my, setupGUI);
+				my.load(my, function() {
+					setupGUI(my);
+					$.mobile.loading('hide');
+				});
 			});
 		};
 
@@ -64,18 +73,11 @@ var NC_MOBILE = {
 			}
 			new NC.Ajax().getWithParams('/scheduledActivities', params, function(data) {
 				$.each(data.data, function(index, value) {
-
-					NC.log('Id: ' + value.id + " Reported: " + value.reported
-							+ " Due: " + value.due);
-
 					if (value.reported != null) {
-						NC.log("Pushing " + value.id + " to reported");
 						reported.push(value);
 					} else if (value.reported == null && value.due) {
-						NC.log("Pushing " + value.id + " to due");
 						due.push(value);
 					} else {
-						NC.log("Pushing " + value.id + " to actual");
 						actual.push(value);
 					}
 				});
@@ -83,22 +85,33 @@ var NC_MOBILE = {
 				callback(my);
 			});
 		};
+		
+		my.resetGUI = function(my) {
+			$('#schema').empty();
+			due = null;
+			actual = null;
+			reported = null;
+		};
 
 		var setupGUI = function(my) {
-			NC.log("Done fetching data.");
+			
+			$('#refresh').click(function(e) {
+				my.resetGUI(my);
+				my.load(my, function() {
+					my.buildFromArray(my, actual);
+					$('#actual').click();
+				});
+			});
 
 			$('#actual').click(function(e) {
-				NC.log("Loading actual activities...");
 				my.buildFromArray(my, actual);
 			});
 
 			$('#due').click(function(e) {
-				NC.log("Loading due activities...");
 				my.buildFromArray(my, due);
 			});
 
 			$('#reported').click(function(e) {
-				NC.log("Loading reported activities...");
 				my.buildFromArray(my, reported);
 			});
 
@@ -111,9 +124,8 @@ var NC_MOBILE = {
 			$('#schema').empty();
 
 			$.each(ListOfActivities, function(index, activity) {
-				NC.log("Processing " + activity.id + " ...");
 				
-				var date = activity.reported != null ? activity.reportedDate : activity.date;
+				var date = activity.reported != null ? activity.actDate : activity.date;
 				
 				if (currentDay != date) {
 					currentDay = date;
@@ -126,8 +138,8 @@ var NC_MOBILE = {
 
 		my.buildListView = function(my, activity, buildHeader) {
 			if (buildHeader) {
-				var day = activity.reported != null ? activity.reportedDay.value : activity.day.value;
-				var date = activity.reported != null ? activity.reportedDate : activity.date;
+				var day = activity.reported != null ? activity.actDay.value : activity.day.value;
+				var date = activity.reported != null ? activity.actDate : activity.date;
 				
 				my.createListHeader($('#schema'), day + ' ' + date);
 			}
@@ -154,7 +166,10 @@ var NC_MOBILE = {
 		};
 
 		my.loadActivity = function(my, activityId) {
-			NC.log("Load activity: " + activityId);
+			$.mobile.loading('show', {
+				text : 'Laddar aktivitet',
+				textVisible : true
+			});
 			
 			my.loadScheduledActivity(activityId, function(activity) {
 				NC.log(activity.id + '-' + activity.activityDefinition.healthPlanName);
@@ -183,15 +198,20 @@ var NC_MOBILE = {
 				});
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
 				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
+				
+				$.mobile.loading('hide');
 			});
 
 			/*
 			 * Report value
 			 */
 			$('#sendReport').click(function(e) {
-				$.mobile.showPageLoadingMsg();
 				e.preventDefault();
-
+				
+				$.mobile.loading('show', {
+					text : 'Skickar rapportering...',
+					textVisible : true
+				});
 
 				var activityId = $('#activityId').val();
 				var activity = findActivityById(activityId);
@@ -210,6 +230,7 @@ var NC_MOBILE = {
 					var activityDataItem = new Object();
 					activityDataItem.id = item.id;
 					activityDataItem.valueType = item.valueType;
+					activityDataItem.definition = item.definition;
 					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
 						activityDataItem.reportedValue = $('#measurement' + item.id).val();
 						activityDataItem.target = item.target;
@@ -225,11 +246,11 @@ var NC_MOBILE = {
 					activityData.activityItemValues.push(activityDataItem);
 				});
 				new NC.Ajax().post('/scheduledActivities/' + activityId, activityData, function(data) {
-					if(data.success) {
+					if (data.success) {
 						my.load(my, setupGUI);
-						var msg = $('<div>').addClass('ui-bar').addClass('ui-bar-c').append($('<h3>' + data.successMessages[0].message + '</h3>'));
+						var msg = $('<div>').addClass('ui-bar ui-bar-e pageMessage').append($('<h3>' + activity.activityDefinition.type.name + ' rapporterades</h3>'));
 						$('#schema').before(msg);
-						$.mobile.hidePageLoadingMsg();
+						$.mobile.loading('hide');
 						setTimeout(function() {msg.slideUp('slow');}, 5000);
 					}
 				});
@@ -308,12 +329,8 @@ var NC_MOBILE = {
 			var link = $('<a>').attr('href', '#report').attr('data-transition', 'slide').addClass('ui-link-inherit');
 			activityContentDiv.append(link);
 			
-//			link.append(
-//				$('<p><strong>' + value.time + '</strong></p>').addClass('ui-li-aside').addClass('ui-li-desc')
-//			);
-			
 			var activityText = $('<div>').addClass('ui-btn-text');
-			var time = value.reported != null ? value.reportedTime : value.time;
+			var time = value.reported != null ? value.actTime : value.time;
 			activityText.append(
 				$('<h3>' + time + ' ' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
 			);
