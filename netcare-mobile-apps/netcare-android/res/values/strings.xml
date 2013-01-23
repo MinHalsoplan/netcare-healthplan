@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Min hälsoplan</string>
-    <string name="cnr">Personnummer</string>
+    <string name="crn">Personnummer</string>
+    <string name="bankid">OBS! Du behöver Mobilt BankID installerat för att använda denna tjänst samt en hälsoplan skapad av din vårdgivare.</string>
     <string name="error">Fel</string>
     <string name="host">Host</string>
     <string name="port">Port</string>
-    <string name="pin">Pin-kod</string>
     <string name="login">Logga in</string>
     <string name="loginProgress">Loggar in...</string>
     <string name="loadingActivities">Laddar dina aktiviteter...</string>
