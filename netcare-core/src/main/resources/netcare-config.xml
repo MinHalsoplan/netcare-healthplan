@@ -57,7 +57,8 @@
   	</beans>
   	
   	<beans profile="bankid">
-	    <context:property-placeholder location="classpath*:/bankid-config.properties" ignore-unresolvable="true"/>
+	    <context:property-placeholder location="
+	        classpath*:/bankid-config.properties" ignore-unresolvable="true"/>
 	    <import resource="classpath*:/bankid-config.xml"/>
 	</beans>
 
@@ -78,7 +79,8 @@
   	</beans>
 
   	<beans profile="db-psql">
-  		<context:property-placeholder location="classpath:/db-psql.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
+  		<context:property-placeholder location="
+  		    classpath:/db-psql.properties" ignore-unresolvable="true" />
   	</beans>
   	
   	<beans>
