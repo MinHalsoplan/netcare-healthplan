@@ -1,7 +1,5 @@
 package org.callistasoftware.netcare.android;
 
-import org.apache.http.HttpResponse;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +23,7 @@ public class StartActivity extends Activity {
 	private static final String TAG = StartActivity.class.getSimpleName();
 	private EditText crn;
 	private Button login;
+	private String orderRef;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,9 +39,12 @@ public class StartActivity extends Activity {
 			public void onClick(View v) {
 				
 				// Call authenticate
-				new LoginTask(getApplicationContext(), new ServiceCallback<HttpResponse>() {
+				new LoginTask(getApplicationContext(), new ServiceCallback<String>() {
 					@Override
-					public void onSuccess(HttpResponse response) {
+					public void onSuccess(String response) {
+						
+						orderRef = response;
+						
 						Intent intent = new Intent();
 						intent.setPackage("com.bankid.bus");
 						intent.setAction(Intent.ACTION_VIEW);
@@ -58,6 +60,7 @@ public class StartActivity extends Activity {
 						Log.e(TAG, "Error when doing authenticate(). Reason: " + reason);
 						Toast.makeText(StartActivity.this, "Anslutning misslyckades. Försök igen senare...", Toast.LENGTH_LONG).show();
 					}
+					
 				}).execute(crn.getText().toString());
 			}
 		});
@@ -72,6 +75,8 @@ public class StartActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
-    	Log.d(TAG, "BankID returned");
+    	if (orderRef == null) {
+    		throw new IllegalStateException("An orderRef should exist after BankID säkerhetsapp have returned.");
+    	}
     }
 }
