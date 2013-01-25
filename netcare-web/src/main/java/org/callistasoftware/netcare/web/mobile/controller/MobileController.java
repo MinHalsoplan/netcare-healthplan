@@ -16,9 +16,6 @@
  */
 package org.callistasoftware.netcare.web.mobile.controller;
 
-import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.web.controller.ControllerSupport;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,17 +23,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value="")
 public class MobileController extends ControllerSupport {
-	
-	@RequestMapping(value="/checkcredentials", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<Boolean> checkUserCredentials() {
-		return ServiceResultImpl.createSuccessResult(Boolean.TRUE, new GenericSuccessMessage());
-	}
 
 	@RequestMapping(value="/start", method=RequestMethod.GET)
 	public String displayMobileStartPage(final Authentication auth) {

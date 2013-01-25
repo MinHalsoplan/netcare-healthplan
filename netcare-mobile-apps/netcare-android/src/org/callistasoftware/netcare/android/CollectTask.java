@@ -3,6 +3,7 @@ package org.callistasoftware.netcare.android;
 import java.util.Map;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +26,7 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<Map<Str
 		super.onPreExecute();
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected ServiceResult<Map<String, String>> doInBackground(
 			String... args) {
@@ -35,14 +37,14 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<Map<Str
 			final RestTemplate rest = new RestTemplate(true);
 			final org.springframework.http.HttpEntity<Map<String, String>> ent = new org.springframework.http.HttpEntity<Map<String,String>>(params);
 			
-			@SuppressWarnings("unchecked")
-			final Map<String, String> user = (Map<String, String>) rest.exchange(
+			
+			final ResponseEntity<Map> exchange = rest.exchange(
 					ApplicationUtil.getServerBaseUrl(ctx) + "/mobile/bankid/complete", 
 					HttpMethod.POST, 
 					ent, 
 					Map.class);
 			
-			return new ServiceResultImpl<Map<String,String>>(user, true, null);
+			return new ServiceResultImpl<Map<String,String>>(exchange.getBody(), true, null);
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return new ServiceResultImpl<Map<String, String>>(null, false, e.getMessage());

@@ -44,6 +44,8 @@ public class StartActivity extends Activity {
 				new AuthenticateTask(getApplicationContext(), new ServiceCallback<String>() {
 					@Override
 					public void onSuccess(String response) {
+						crn.setEnabled(false);
+						login.setEnabled(false);
 						
 						orderRef = response;
 						
@@ -61,6 +63,9 @@ public class StartActivity extends Activity {
 					public void onFailure(String reason) {
 						Log.e(TAG, "Error when doing authenticate(). Reason: " + reason);
 						Toast.makeText(StartActivity.this, "Anslutning misslyckades. Försök igen senare...", Toast.LENGTH_LONG).show();
+						
+						crn.setEnabled(true);
+						login.setEnabled(true);
 					}
 					
 				}).execute(crn.getText().toString());
@@ -87,11 +92,18 @@ public class StartActivity extends Activity {
 			@Override
 			public void onSuccess(Map<String, String> response) {
 				Log.d(TAG, "We are now authenticated. User is: " + response.get("username"));
+				startActivity(new Intent(StartActivity.this, WebViewActivity.class));
 			}
 			
 			@Override
 			public void onFailure(String reason) {
 				Log.e(TAG, "Failed to collect. Error is: " + reason);
+				
+				Log.e(TAG, "Error when doing collect(). Reason: " + reason);
+				Toast.makeText(StartActivity.this, "Autentisering med Min hälsoplan misslyckades. Försök igen senare...", Toast.LENGTH_LONG).show();
+				
+				crn.setEnabled(true);
+				login.setEnabled(true);
 			}
 		}).execute(orderRef);
     }

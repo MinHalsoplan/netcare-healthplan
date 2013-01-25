@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -30,6 +31,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBaseView {
 
 	/**
