@@ -7,12 +7,12 @@ import org.springframework.web.client.RestTemplate;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class LoginTask extends AsyncTask<String, String, ServiceResult<String>> {
+public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<String>> {
 
 	private final Context ctx;
 	private final ServiceCallback<String> cb;
 	
-	public LoginTask(final Context ctx, final ServiceCallback<String> callback) {
+	public AuthenticateTask(final Context ctx, final ServiceCallback<String> callback) {
 		this.ctx = ctx;
 		this.cb = callback;
 	}

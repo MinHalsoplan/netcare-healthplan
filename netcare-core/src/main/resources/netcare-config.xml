@@ -59,9 +59,17 @@
   		    ignore-unresolvable="true"/>
   	</beans>
   	
-  	<beans profile="bankid">
+  	<beans profile="mobile-test">
 	    <context:property-placeholder location="
 	        classpath*:/bankid.properties" 
+	        ignore-unresolvable="true"/>
+	    
+	    <import resource="classpath*:/bankid-config.xml"/>
+	</beans>
+	
+  	<beans profile="mobile-prod">
+	    <context:property-placeholder location="
+	        file://${user.home}/.netcare-prod/bankid.properties" 
 	        ignore-unresolvable="true"/>
 	    
 	    <import resource="classpath*:/bankid-config.xml"/>

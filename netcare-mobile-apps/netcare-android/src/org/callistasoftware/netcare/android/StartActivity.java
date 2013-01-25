@@ -1,5 +1,7 @@
 package org.callistasoftware.netcare.android;
 
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,7 +41,7 @@ public class StartActivity extends Activity {
 			public void onClick(View v) {
 				
 				// Call authenticate
-				new LoginTask(getApplicationContext(), new ServiceCallback<String>() {
+				new AuthenticateTask(getApplicationContext(), new ServiceCallback<String>() {
 					@Override
 					public void onSuccess(String response) {
 						
@@ -78,5 +80,19 @@ public class StartActivity extends Activity {
     	if (orderRef == null) {
     		throw new IllegalStateException("An orderRef should exist after BankID säkerhetsapp have returned.");
     	}
+    	
+    	Log.d(TAG, "BankID application have returned control to us...");
+    	new CollectTask(StartActivity.this, new ServiceCallback<Map<String,String>>() {
+			
+			@Override
+			public void onSuccess(Map<String, String> response) {
+				Log.d(TAG, "We are now authenticated. User is: " + response.get("username"));
+			}
+			
+			@Override
+			public void onFailure(String reason) {
+				Log.e(TAG, "Failed to collect. Error is: " + reason);
+			}
+		}).execute(orderRef);
     }
 }

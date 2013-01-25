@@ -32,7 +32,8 @@
     <security:http 
         pattern="/mobile/bankid/complete*" 
         entry-point-ref="bankIdEntryPoint" 
-        access-denied-page="/netcare/security/denied">
+        access-denied-page="/netcare/security/denied"
+        authentication-manager-ref="bankIdAuthenticationManager">
         <security:custom-filter ref="bankIdPreAuthFilter" position="PRE_AUTH_FILTER"/>
     </security:http>
     
@@ -40,7 +41,8 @@
         use-expressions="true" 
         entry-point-ref="bankIdEntryPoint" 
         access-denied-page="/netcare/security/denied"
-        pattern="/mobile/**">
+        pattern="/mobile/**"
+        authentication-manager-ref="bankIdAuthenticationManager">
 		<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
 	</security:http>
 	
