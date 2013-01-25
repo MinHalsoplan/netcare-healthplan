@@ -26,17 +26,14 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-
+    
 	<security:http use-expressions="true">
 		<security:intercept-url pattern="/api/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 		<security:intercept-url pattern="/netcare/home*" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 		<security:intercept-url pattern="/netcare/user/results*" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 		<security:intercept-url pattern="/netcare/user/**" access="hasRole('PATIENT')"/>
-		
 		<security:intercept-url pattern="/netcare/admin/**" access="hasRole('CARE_ACTOR')"/>
-		
 		<security:intercept-url pattern="/netcare/nation-admin/**" access="hasRole('NATION_ADMINISTRATOR')"/>
-		
 		<security:intercept-url pattern="/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 		
 		<security:form-login login-page="/netcare/security/login" default-target-url="/netcare/home"/>

@@ -24,20 +24,10 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-
-	<beans>
-		<security:http security="none" pattern="/js/**" />
-		<security:http security="none" pattern="/css/**" />
-		<security:http security="none" pattern="/img/**" />
-		<security:http security="none" pattern="/netcare/resources/**" />
-		<security:http security="none" pattern="/favicon.ico" />
-		<security:http security="none" pattern="/netcare/error/**" />
-		<security:http security="none" pattern="/netcare/security/**" />
-		<security:http security="none" pattern="/index*" />
-	</beans>
 	
-
-<!-- 		<security:http  -->
+    <beans profile="mobile-test">
+    
+<!-- 	    <security:http  -->
 <!-- 			pattern="/mobile/**" -->
 <!-- 			use-expressions="true" -->
 <!-- 			create-session="never" -->
@@ -58,6 +48,7 @@
 <!-- 				</list> -->
 <!-- 			</constructor-arg> -->
 <!-- 		</bean> -->
+		
 <!-- 		<bean id="httpBasicAuthEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint"> -->
 <!-- 			<property name="realmName" value="netcare-mobile" /> -->
 <!-- 		</bean> -->
@@ -66,4 +57,26 @@
 <!-- 			<property name="authenticationEntryPoint" ref="httpBasicAuthEntryPoint" /> -->
 <!-- 		</bean> -->
 <!-- 	</beans> -->
+
+		<import resource="classpath*:/bankid-security-config.xml"/>
+	    
+	    <security:http security="none" pattern="/mobile/bankid/authenticate*" />
+	    
+	    <security:http 
+	        pattern="/mobile/bankid/complete*" 
+	        entry-point-ref="bankIdEntryPoint" 
+	        access-denied-page="/netcare/security/denied"
+	        authentication-manager-ref="bankIdAuthenticationManager">
+	        <security:custom-filter ref="bankIdPreAuthFilter" position="PRE_AUTH_FILTER"/>
+	    </security:http>
+	    
+	    <security:http 
+	        use-expressions="true" 
+	        entry-point-ref="bankIdEntryPoint" 
+	        access-denied-page="/netcare/security/denied"
+	        pattern="/mobile/**">
+			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
+		</security:http>
+		
+	</beans>
 </beans>

@@ -26,13 +26,16 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 	
-    <beans profile="bankid">
-	    
+    <beans>
+        <context:annotation-config />
+    </beans>
+    
+    <beans profile="mobile-test, mobile-prod">
+	    <context:component-scan base-package="org.callistasoftware.netcare.commons.bankid.web.controller" />
 	</beans>
     
     <beans>
-		<context:annotation-config />
-		<context:component-scan base-package="org.callistasoftware.netcare.web.mobile.controller, org.callistasoftware.netcare.commons.bankid.web.controller" />
+		<context:component-scan base-package="org.callistasoftware.netcare.web.mobile.controller" />
 		
 		<mvc:annotation-driven />
 		

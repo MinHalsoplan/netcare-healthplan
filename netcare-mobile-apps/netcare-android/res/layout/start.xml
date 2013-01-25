@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="@drawable/splash_background"
-    android:paddingTop="140dip"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip">
+    android:padding="40dip"
+    android:gravity="center_vertical">
 	    
     <LinearLayout 
         android:id="@+id/login_screen"

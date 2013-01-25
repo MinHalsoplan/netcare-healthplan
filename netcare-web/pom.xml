@@ -26,7 +26,7 @@
     <dependency>
   		<groupId>org.callistasoftware.netcare.commons</groupId>
   		<artifactId>mvk-integration</artifactId>
-  		<version>1.1-SNAPSHOT</version>
+  		<version>1.1</version>
   	</dependency>
   	<dependency>
   	    <groupId>org.callistasoftware.commons</groupId>
