@@ -23,6 +23,6 @@
 @interface Util : NSObject
 
 + (NSString*)infoValueForKey:(NSString*)key;
-+ (NSString*) toHexString:(NSData*) data;
-
++ (NSString*)toHexString:(NSData*) data;
++ (NSString*)baseURLString;
 @end

@@ -46,4 +46,19 @@
     return str;
 }
 
++ (NSString*)baseURLString
+{
+    NSString *urlString = [Util infoValueForKey:@"NCProtocol"];
+    urlString = [urlString stringByAppendingString:@"://"];
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCHost"]];
+    
+    int port = [[Util infoValueForKey:@"NCPort"] intValue];
+    if (port > 0)
+    {
+        urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
+    }
+    NSLog(@"BaseURL --> %@\n", urlString);
+    return urlString;
+}
+
 @end

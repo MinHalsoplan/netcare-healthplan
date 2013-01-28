@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D058BA4215285F2C0040EDD0 /* heart-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D058BA4115285F2C0040EDD0 /* heart-logo.png */; };
+		8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69A81509525D00209FE0 /* Default@2x.png */; };
+		8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63616B016F400549577 /* MobiltBankIdService.m */; };
+		8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */; };
+		8D3CD64116B149A700549577 /* HTTPCollect.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD64016B149A700549577 /* HTTPCollect.m */; };
 		D0599165150B691D00EB3F6D /* 57px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599164150B691D00EB3F6D /* 57px.png */; };
 		D0599168150B69BD00EB3F6D /* 114px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599167150B69BD00EB3F6D /* 114px.png */; };
 		D05D409514FA4B3D00335899 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05D409414FA4B3D00335899 /* UIKit.framework */; };
@@ -28,7 +31,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D058BA4115285F2C0040EDD0 /* heart-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "heart-logo.png"; path = "../../../../netcare-web/src/main/webapp/img/icons/32/heart-logo.png"; sourceTree = "<group>"; };
+		8D3CD63516B016F400549577 /* MobiltBankIdService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobiltBankIdService.h; sourceTree = "<group>"; };
+		8D3CD63616B016F400549577 /* MobiltBankIdService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobiltBankIdService.m; sourceTree = "<group>"; };
+		8D3CD63916B0170900549577 /* HTTPAuthenticate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPAuthenticate.h; sourceTree = "<group>"; };
+		8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPAuthenticate.m; sourceTree = "<group>"; };
+		8D3CD63F16B149A700549577 /* HTTPCollect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPCollect.h; sourceTree = "<group>"; };
+		8D3CD64016B149A700549577 /* HTTPCollect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPCollect.m; sourceTree = "<group>"; };
 		D0599164150B691D00EB3F6D /* 57px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 57px.png; sourceTree = "<group>"; };
 		D0599167150B69BD00EB3F6D /* 114px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 114px.png; sourceTree = "<group>"; };
 		D05D409014FA4B3D00335899 /* netcare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = netcare.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +123,12 @@
 				D05D40AC14FA4B3E00335899 /* FlipsideViewController.h */,
 				D05D40AD14FA4B3E00335899 /* FlipsideViewController.m */,
 				D05D409B14FA4B3D00335899 /* Supporting Files */,
+				8D3CD63516B016F400549577 /* MobiltBankIdService.h */,
+				8D3CD63616B016F400549577 /* MobiltBankIdService.m */,
+				8D3CD63916B0170900549577 /* HTTPAuthenticate.h */,
+				8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */,
+				8D3CD63F16B149A700549577 /* HTTPCollect.h */,
+				8D3CD64016B149A700549577 /* HTTPCollect.m */,
 				D05D40BB14FC22BC00335899 /* HTTPConnection.h */,
 				D05D40BC14FC22BD00335899 /* HTTPConnection.m */,
 				D05D40BE14FD059B00335899 /* HTTPAuthentication.h */,
@@ -128,7 +142,6 @@
 		D05D409B14FA4B3D00335899 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D058BA4115285F2C0040EDD0 /* heart-logo.png */,
 				D06189591504F394002030EB /* icon-transparent.png */,
 				D05D409C14FA4B3D00335899 /* netcare-Info.plist */,
 				D05D409D14FA4B3D00335899 /* InfoPlist.strings */,
@@ -194,8 +207,8 @@
 				D0F4E582150A2A6800DD1B94 /* Default.png in Resources */,
 				D0599165150B691D00EB3F6D /* 57px.png in Resources */,
 				D0599168150B69BD00EB3F6D /* 114px.png in Resources */,
-				D058BA4215285F2C0040EDD0 /* heart-logo.png in Resources */,
 				D0E630561670D0D700452408 /* Default-568h@2x.png in Resources */,
+				8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +226,9 @@
 				D05D40BD14FC22BD00335899 /* HTTPConnection.m in Sources */,
 				D05D40C014FD059B00335899 /* HTTPAuthentication.m in Sources */,
 				D05D40C314FD08D200335899 /* Util.m in Sources */,
+				8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */,
+				8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */,
+				8D3CD64116B149A700549577 /* HTTPCollect.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

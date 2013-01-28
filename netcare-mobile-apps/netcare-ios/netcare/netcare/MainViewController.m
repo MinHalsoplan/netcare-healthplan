@@ -19,14 +19,27 @@
 
 
 #import "MainViewController.h"
+
+#import "QuartzCore/QuartzCore.h"
 #import "Util.h"
 
 @implementation MainViewController
-
 @synthesize personNumberTextEdit;
-@synthesize pinCodeTextEdit;
 @synthesize nextPageButton;
 @synthesize loginButton;
+@synthesize shadowedLabel;
+
+
+- (IBAction)authenticate:(id)sender {
+    NSLog(@"autenthicate() called");
+    [loginButton setEnabled:NO];
+    NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
+    [self savePersonalNumber];
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:@"192011189228"];
+    [bankIdService authenticate];
+    
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -45,10 +58,6 @@
 - (NSString*)retrievePersonalNumber {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *s = [prefs stringForKey:@"personalNumber"];
-    if (s != nil) 
-    {
-        [pinCodeTextEdit becomeFirstResponder];
-    }
     return (s == nil) ? @"" : s;
 }
 
@@ -58,8 +67,11 @@
 {
     [super viewDidLoad];
     
+    shadowedLabel.layer.cornerRadius=10;
+    
     [nextPageButton setHidden:YES];
     [personNumberTextEdit setText:[self retrievePersonalNumber]];
+    
 }
 
 - (void)viewDidUnload
@@ -97,35 +109,9 @@
 #pragma mark - Basic Auth Stuff
 
 //
-- (NSString*)baseURLString
-{
-    NSString *urlString = [Util infoValueForKey:@"NCProtocol"];
-    urlString = [urlString stringByAppendingString:@"://"];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCHost"]];
-    
-    int port = [[Util infoValueForKey:@"NCPort"] intValue];
-    if (port > 0) 
-    {
-        urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
-    }
-    NSLog(@"BaseURL --> %@\n", urlString);
-    return urlString;
-}
-
-//
-- (NSURL*)checkCredentialURL 
-{
-    
-    NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCCheckCredentialsPage"]];    
-    NSLog(@"Authenticate: Check Auth URL --> %@\n", urlString);
-    return [NSURL URLWithString:urlString];     
-}
-
-//
 - (NSURL*)logoutURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCLogoutPage"]]; 
     NSLog(@"Logout:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
@@ -134,7 +120,7 @@
 //
 - (NSURL*)pushRegistrationURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCPushRegistrationPage"]]; 
     NSLog(@"Push Registration:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
@@ -154,34 +140,10 @@
     
 }
 
-// starts a request
-- (void)startAuthentication
-{
-    HTTPAuthentication *auth = [[HTTPAuthentication alloc] init:[self checkCredentialURL] withDelegate:self withUser:[personNumberTextEdit text] withPassword:[pinCodeTextEdit text]];
-  
-    [auth get];
-}
-
-- (void)authReady:(NSInteger)code
-{
-    if (code == 200)
-    {
-        [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
-    }
-    else
-    {
-        [self showAuthError:code];
-    }
-    [loginButton setEnabled:YES];
-}
-
-
-//
-- (IBAction)login:(id)sender {
-    [loginButton setEnabled:NO];
-    NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
-    [self savePersonalNumber];
-    [self startAuthentication];
+- (void)switchToWebView:(NSString*)ref {
+    NSLog(@"Switch to web view");
+    [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
+    [self setOrderrefToken:ref];
 }
 
 // hide keyboard
@@ -193,8 +155,6 @@
 - (IBAction)backgroundTouched:(id)sender {
     if ([personNumberTextEdit isFirstResponder])
         [personNumberTextEdit resignFirstResponder];
-    if ([pinCodeTextEdit isFirstResponder]) 
-        [pinCodeTextEdit resignFirstResponder];
 }
 
 // clean up stuff
@@ -205,8 +165,6 @@
     NSURL *url = [self logoutURL];
     HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:nil];
     [conn get];
-    // reset pinCode
-    [pinCodeTextEdit setText:@""];
 }
 
 - (void)pushKeeping
@@ -243,14 +201,14 @@
 // back to logon screen
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     [self cleanSession];
     
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"%@\n", [segue identifier]);
+    NSLog(@"prepareForSegue %@\n", [segue identifier]);
     
     if ([[segue identifier] isEqualToString:@"webView"]) {
         [[segue destinationViewController] setDelegate:self];
@@ -260,11 +218,19 @@
 
 - (NSURL*)startURL
 {
-    NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCStartPage"]];
+    NSString *urlString = [Util  baseURLString];
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCCollect"]];
     NSLog(@"Start URL --> %@\n", urlString);
     
     return [[NSURL alloc] initWithString:urlString];
 }
 
+- (void)setOrderrefToken:(NSString*)newToken {
+    self.orderrefToken = newToken;
+}
+
+- (NSString*)orderrefToken {
+    NSLog(@"get orderRefToken");
+    return self.orderrefToken;
+}
 @end
