@@ -11,12 +11,14 @@ import org.springframework.web.client.RestTemplate;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class CollectTask extends AsyncTask<String, String, ServiceResult<Map<String, String>>> {
+public class CollectTask extends AsyncTask<String, String, ServiceResult<String>> {
 
-	private Context ctx;
-	private ServiceCallback<Map<String, String>> cb;
+	private static final String TAG = CollectTask.class.getSimpleName();
 	
-	public CollectTask(final Context ctx, final ServiceCallback<Map<String, String>> cb) {
+	private Context ctx;
+	private ServiceCallback<String> cb;
+	
+	public CollectTask(final Context ctx, final ServiceCallback<String> cb) {
 		this.ctx = ctx;
 		this.cb = cb;
 	}
@@ -26,9 +28,8 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<Map<Str
 		super.onPreExecute();
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected ServiceResult<Map<String, String>> doInBackground(
+	protected ServiceResult<String> doInBackground(
 			String... args) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.add("X-netcare-order", args[0]);
@@ -38,21 +39,23 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<Map<Str
 			final org.springframework.http.HttpEntity<Map<String, String>> ent = new org.springframework.http.HttpEntity<Map<String,String>>(params);
 			
 			
+			@SuppressWarnings("rawtypes")
 			final ResponseEntity<Map> exchange = rest.exchange(
 					ApplicationUtil.getServerBaseUrl(ctx) + "/mobile/bankid/complete", 
-					HttpMethod.POST, 
+					HttpMethod.GET, 
 					ent, 
 					Map.class);
 			
-			return new ServiceResultImpl<Map<String,String>>(exchange.getBody(), true, null);
+			return new ServiceResultImpl<String>((String) exchange.getBody().get("username"), true, null);
+			
 		} catch (final Exception e) {
 			e.printStackTrace();
-			return new ServiceResultImpl<Map<String, String>>(null, false, e.getMessage());
+			return new ServiceResultImpl<String>(null, false, e.getMessage());
 		}
 	}
 	
 	@Override
-	protected void onPostExecute(ServiceResult<Map<String, String>> result) {
+	protected void onPostExecute(ServiceResult<String> result) {
 		super.onPostExecute(result);
 		
 		if (result.isSuccess()) {

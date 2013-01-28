@@ -1,8 +1,12 @@
 package org.callistasoftware.netcare.android;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,18 +22,18 @@ public class WebViewActivity extends Activity {
 	private ProgressDialog p;
 	
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		//super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.webview);
 		
-		final boolean push = ApplicationUtil.getBooleanProperty(getApplicationContext(), "push");
-		if (push) {
-			Log.d(TAG, "Registering for push");
-			GCMRegistrar.checkDevice(this);
-			GCMRegistrar.checkManifest(this);
-
-			GCMRegistrar.register(this, "1072676211966");
-		}
+		Log.d(TAG, "Displaying url in web view.");
+		p = ProgressDialog.show(this, getString(R.string.loading), getString(R.string.loadingActivities));
 		
 		final WebView wv = (WebView) this.findViewById(R.id.webview);
 		wv.getSettings().setJavaScriptEnabled(true);
@@ -46,12 +50,18 @@ public class WebViewActivity extends Activity {
 			}
 		});
 		
-		Log.d(TAG, "Displaying url in web view.");
-		p = ProgressDialog.show(this, getString(R.string.loading), getString(R.string.loadingActivities));
 		final String url = ApplicationUtil.getServerBaseUrl(getApplicationContext()) + "/mobile/start";
 		Log.d(TAG, "Load url: " + url);
 		
-		wv.loadUrl(url);
+		final String session = NetcareApp.getCurrentSession();
+		if (session == null) {
+			throw new IllegalStateException("Order reference is not set.");
+		}
+		
+		final Map<String, String> headers = new HashMap<String, String>();
+		headers.put("X-netcare-order", NetcareApp.getCurrentSession());
+		
+		wv.loadUrl(url, headers);
 	}
 	
 	@Override

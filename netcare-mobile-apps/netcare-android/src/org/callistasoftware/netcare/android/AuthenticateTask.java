@@ -29,7 +29,7 @@ public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<St
 		data.add("crn", params[0]);
 		
 		try {
-			final RestTemplate rest = new RestTemplate(true);
+			final RestTemplate rest = NetcareApp.getRestClient();
 			String orderRef = rest.postForObject(ApplicationUtil.getServerBaseUrl(ctx) + "/mobile/bankid/authenticate", data, String.class);
 			return new ServiceResultImpl<String>(orderRef, true, null);
 		} catch (final Exception e) {

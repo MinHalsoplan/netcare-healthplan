@@ -16,10 +16,13 @@
  */
 package org.callistasoftware.netcare.web.mobile.controller;
 
+import java.util.Map;
+
 import org.callistasoftware.netcare.api.rest.ApiSupport;
 import org.callistasoftware.netcare.core.spi.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,9 +37,9 @@ public class PushApi extends ApiSupport {
 	
     @RequestMapping(value="/register/c2dm", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
-	public void c2dmRegistration(@RequestParam(value="c2dmRegistrationId") final String c2dmRegistrationId) {
+	public void c2dmRegistration(@RequestBody final Map<String, String> data) {
 		this.logAccess("register", "c2dm");
-		service.registerForC2dmPush(c2dmRegistrationId);
+		service.registerForC2dmPush(data.get("c2dmRegistrationId"));
 	}
 
     @RequestMapping(value="/register/apns", method=RequestMethod.POST, produces="application/json")

@@ -1,7 +1,5 @@
 package org.callistasoftware.netcare.android;
 
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gcm.GCMRegistrar;
 
 /**
  * Start activity for the netcare app. Prompts for username and
@@ -48,6 +48,7 @@ public class StartActivity extends Activity {
 						login.setEnabled(false);
 						
 						orderRef = response;
+						Log.d(TAG, "Order reference returned: " + orderRef);
 						
 						Intent intent = new Intent();
 						intent.setPackage("com.bankid.bus");
@@ -87,12 +88,25 @@ public class StartActivity extends Activity {
     	}
     	
     	Log.d(TAG, "BankID application have returned control to us...");
-    	new CollectTask(StartActivity.this, new ServiceCallback<Map<String,String>>() {
+    	new CollectTask(StartActivity.this, new ServiceCallback<String>() {
 			
 			@Override
-			public void onSuccess(Map<String, String> response) {
-				Log.d(TAG, "We are now authenticated. User is: " + response.get("username"));
-				startActivity(new Intent(StartActivity.this, WebViewActivity.class));
+			public void onSuccess(String response) {
+				if (response != null) {
+					NetcareApp.setCurrentSession(orderRef);
+					startActivity(new Intent(StartActivity.this, WebViewActivity.class));
+					
+					final boolean push = ApplicationUtil.getBooleanProperty(getApplicationContext(), "push");
+					if (push) {
+						Log.d(TAG, "Registering for push");
+						GCMRegistrar.checkDevice(StartActivity.this);
+						GCMRegistrar.checkManifest(StartActivity.this);
+						GCMRegistrar.register(StartActivity.this, "1072676211966");
+					}
+					
+				} else {
+					Toast.makeText(StartActivity.this, "Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...", Toast.LENGTH_LONG).show();
+				}
 			}
 			
 			@Override
@@ -100,7 +114,7 @@ public class StartActivity extends Activity {
 				Log.e(TAG, "Failed to collect. Error is: " + reason);
 				
 				Log.e(TAG, "Error when doing collect(). Reason: " + reason);
-				Toast.makeText(StartActivity.this, "Autentisering med Min hälsoplan misslyckades. Försök igen senare...", Toast.LENGTH_LONG).show();
+				Toast.makeText(StartActivity.this, "Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...", Toast.LENGTH_LONG).show();
 				
 				crn.setEnabled(true);
 				login.setEnabled(true);

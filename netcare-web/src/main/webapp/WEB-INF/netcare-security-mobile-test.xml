@@ -70,11 +70,12 @@
 	        <security:custom-filter ref="bankIdPreAuthFilter" position="PRE_AUTH_FILTER"/>
 	    </security:http>
 	    
-	    <security:http 
+	    <security:http
 	        use-expressions="true" 
-	        entry-point-ref="bankIdEntryPoint" 
-	        access-denied-page="/netcare/security/denied"
-	        pattern="/mobile/**">
+	        entry-point-ref="bankIdEntryPoint"
+	        pattern="/mobile/**"
+	        authentication-manager-ref="bankIdAuthenticationManager">
+	        <security:custom-filter ref="bankIdPreAuthFilter" position="PRE_AUTH_FILTER"/>
 			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
 		</security:http>
 		

@@ -1,22 +1,16 @@
 package org.callistasoftware.netcare.android;
 
-import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthState;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -58,33 +52,28 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Received push registration message. Registration id is: " + registrationId);
-		final String username = ApplicationUtil.getProperty(context, "crn");
-		final String pin = ApplicationUtil.getProperty(context, "pin");
-		
 		try {
-			final DefaultHttpClient client = new DefaultHttpClient();
-			client.addRequestInterceptor(new HttpRequestInterceptor() {
-				
-				@Override
-				public void process(HttpRequest request, HttpContext context)
-						throws HttpException, IOException {
-					final AuthState state = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
-					state.setAuthScheme(new BasicScheme());
-					state.setCredentials(new UsernamePasswordCredentials(username, pin));
-				}
-			}, 0);
+			final RestTemplate rest = NetcareApp.getRestClient();
 			
-			final String baseUrl = ApplicationUtil.getServerBaseUrl(context);
-            final HttpPost post = new HttpPost(baseUrl + "/mobile/push/register/c2dm");           
-            post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("c2dmRegistrationId", registrationId))));
-            
-            final HttpResponse response = client.execute(post);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            	Log.i(TAG, "Successfully registered for push notifications.");
-            } else {
-            	Log.w(TAG, "Could not register for push notifications. Response code: " + response.getStatusLine().getStatusCode());
-            }
-            
+			final HttpHeaders headers = new HttpHeaders();
+			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));
+	
+			final MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+			body.add("c2dmRegistrationId", registrationId);
+			
+			final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(body.toSingleValueMap(), headers);
+	
+			@SuppressWarnings("rawtypes")
+			ResponseEntity<Map> result = rest.exchange(ApplicationUtil.getServerBaseUrl(context) + "/mobile/push/register/c2dm", 
+				HttpMethod.POST, 
+				ent, 
+				Map.class);
+			
+			if (result.getStatusCode().equals(HttpStatus.OK)) {
+				Log.i(TAG, "Successfully registered for push notifications.");
+			} else {
+				Log.w(TAG, "Could not register for push notifications. Response code: " + result.getStatusCode());
+			}
 	    } catch (final Exception e) {
 	            e.printStackTrace();
 	            Log.d(TAG, "Failed to register for push. Exception is: " + e.getMessage());

@@ -30,10 +30,6 @@
         <context:annotation-config />
     </beans>
     
-    <beans profile="mobile-test, mobile-prod">
-	    <context:component-scan base-package="org.callistasoftware.netcare.commons.bankid.web.controller" />
-	</beans>
-    
     <beans>
 		<context:component-scan base-package="org.callistasoftware.netcare.web.mobile.controller" />
 		
