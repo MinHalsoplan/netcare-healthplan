@@ -19,14 +19,26 @@
 
 
 #import "MainViewController.h"
+
+#import "QuartzCore/QuartzCore.h"
 #import "Util.h"
 
 @implementation MainViewController
-
 @synthesize personNumberTextEdit;
 @synthesize pinCodeTextEdit;
 @synthesize nextPageButton;
 @synthesize loginButton;
+@synthesize shadowedLabel;
+
+
+- (IBAction)authenticate:(id)sender {
+
+    NSLog(@"autenthicate() called");
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:@"192011189228"];
+    [bankIdService authenticate];
+    
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -58,8 +70,11 @@
 {
     [super viewDidLoad];
     
+    shadowedLabel.layer.cornerRadius=10;
+    
     [nextPageButton setHidden:YES];
     [personNumberTextEdit setText:[self retrievePersonalNumber]];
+    self.
 }
 
 - (void)viewDidUnload
@@ -96,27 +111,12 @@
 
 #pragma mark - Basic Auth Stuff
 
-//
-- (NSString*)baseURLString
-{
-    NSString *urlString = [Util infoValueForKey:@"NCProtocol"];
-    urlString = [urlString stringByAppendingString:@"://"];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCHost"]];
-    
-    int port = [[Util infoValueForKey:@"NCPort"] intValue];
-    if (port > 0) 
-    {
-        urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
-    }
-    NSLog(@"BaseURL --> %@\n", urlString);
-    return urlString;
-}
 
 //
 - (NSURL*)checkCredentialURL 
 {
     
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCCheckCredentialsPage"]];    
     NSLog(@"Authenticate: Check Auth URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];     
@@ -125,7 +125,7 @@
 //
 - (NSURL*)logoutURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCLogoutPage"]]; 
     NSLog(@"Logout:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
@@ -134,7 +134,7 @@
 //
 - (NSURL*)pushRegistrationURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCPushRegistrationPage"]]; 
     NSLog(@"Push Registration:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
@@ -260,7 +260,7 @@
 
 - (NSURL*)startURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCStartPage"]];
     NSLog(@"Start URL --> %@\n", urlString);
     

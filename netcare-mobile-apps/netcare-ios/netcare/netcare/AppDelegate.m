@@ -20,6 +20,7 @@
 
 #import "AppDelegate.h"
 #import "Util.h"
+#import "MobiltBankIdService.h"
 
 @implementation AppDelegate
 
@@ -40,6 +41,21 @@
         [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
         [prefs synchronize];
     }
+    self.window.rootViewController
+}
+
+- (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL*) url{
+    if (!url) return NO;
+    NSString* urlString=[url absoluteString];
+    NSLog(@"Received URL %@",urlString);
+
+    NSString *ref = [urlString substringFromIndex: 10];
+    NSLog (@"ref = %@", ref);
+
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] init];
+    [bankIdService collect:ref];
+    
+    return YES;
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
