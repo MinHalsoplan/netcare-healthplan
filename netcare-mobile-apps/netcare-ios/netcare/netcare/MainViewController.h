@@ -21,10 +21,11 @@
 #import "HTTPAuthentication.h"
 #import "MobiltBankIdService.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate, HTTPAuthenticationDelegate>
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate, HTTPAuthenticationDelegate> {
+    NSString *orderrefToken;
+}
 
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
-@property (weak, nonatomic) IBOutlet UITextField *pinCodeTextEdit;
 @property (weak, nonatomic) IBOutlet UILabel *shadowedLabel;
 // nextpage button is not really used, just keeps
 // a point to maintain a storyboard sequence, which really is invoked
@@ -35,5 +36,8 @@
 - (IBAction)login:(id)sender;
 - (IBAction)textFieldReturn:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
+- (void)switchToWebView:(NSString*)token;
+- (NSString*)orderrefToken;
+- (void)setOrderrefToken:(NSString*)newToken;
 
 @end

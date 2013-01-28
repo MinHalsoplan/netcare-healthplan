@@ -19,6 +19,8 @@
 
 
 #import "AppDelegate.h"
+
+#import "MainViewController.h"
 #import "Util.h"
 #import "MobiltBankIdService.h"
 
@@ -41,7 +43,6 @@
         [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
         [prefs synchronize];
     }
-    self.window.rootViewController
 }
 
 - (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL*) url{
@@ -49,11 +50,13 @@
     NSString* urlString=[url absoluteString];
     NSLog(@"Received URL %@",urlString);
 
-    NSString *ref = [urlString substringFromIndex: 10];
-    NSLog (@"ref = %@", ref);
+    NSString *token = [urlString substringFromIndex: 10];
+    NSLog (@"token = %@", token);
 
-    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] init];
-    [bankIdService collect:ref];
+    [((MainViewController*)self.window.rootViewController) switchToWebView:token];
+
+//    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] init];
+//    [bankIdService collect:ref];
     
     return YES;
 }

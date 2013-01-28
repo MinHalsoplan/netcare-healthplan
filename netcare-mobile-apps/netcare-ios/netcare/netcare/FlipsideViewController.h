@@ -25,6 +25,7 @@
 @protocol FlipsideViewControllerDelegate
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller;
 - (NSURL*)startURL;
+- (NSString*)orderrefToken;
 @end
 
 @interface FlipsideViewController : UIViewController  <UIWebViewDelegate>
