@@ -59,7 +59,7 @@
   		    ignore-unresolvable="true"/>
   	</beans>
   	
-  	<beans profile="mobile-test">
+  	<beans profile="mobile-qa">
 	    <context:property-placeholder location="
 	        classpath*:/bankid.properties" 
 	        ignore-unresolvable="true"/>

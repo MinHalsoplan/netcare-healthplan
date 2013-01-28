@@ -178,7 +178,12 @@ var NC_MOBILE = {
 				$('#report div p').html(activity.day.value + ', ' + activity.date + ' ' + activity.time);
 
 				var reported = (activity.reported != null);
-				$.each(activity.activityItemValues,function(index, item) {
+				for (var i = 0; i < activity.activityItemValues.length; i++) {
+					var item = activity.activityItemValues[i];
+					if (!item.definition.active) {
+						continue;
+					}
+					
 					var templateName;
 					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
 						if(item.definition.activityItemType.valueType.code=='INTERVAL') {
@@ -195,7 +200,26 @@ var NC_MOBILE = {
 					}  
 					var myTemplate = my.templates[templateName];
 					$('#reportForm').append(myTemplate(item));
-				});
+				}
+				
+				/*$.each(activity.activityItemValues,function(index, item) {
+					var templateName;
+					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
+						if(item.definition.activityItemType.valueType.code=='INTERVAL') {
+							templateName = 'measurementIntervalItemTemplate';					
+						} else {
+							templateName = 'measurementSingleItemTemplate';					
+						}
+					} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
+						templateName = 'estimationItemTemplate';					
+					} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
+						templateName = 'yesnoItemTemplate';					
+					} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
+						templateName = 'textItemTemplate';					
+					}  
+					var myTemplate = my.templates[templateName];
+					$('#reportForm').append(myTemplate(item));
+				});*/
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
 				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
 				

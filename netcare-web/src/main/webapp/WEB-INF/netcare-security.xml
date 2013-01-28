@@ -40,6 +40,10 @@
 	    <import resource="netcare-security-mobile-test.xml"/>
 	</beans>
 	
+	<beans profile="mobile-qa">
+	    <import resource="netcare-security-mobile-qa.xml"/>
+	</beans>
+	
 	<beans profile="mobile-prod">
 	    <import resource="netcare-security-mobile-prod.xml"/>
 	</beans>
