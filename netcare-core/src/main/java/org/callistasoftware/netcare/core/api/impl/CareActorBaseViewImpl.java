@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Role;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -32,6 +33,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActorBaseView {
 
 	/**

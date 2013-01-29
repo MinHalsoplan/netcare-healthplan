@@ -347,6 +347,15 @@ var NC_MODULE = {
 		
 		var my = {};
 		
+		my.emptyPlan = function(patientId) {
+			_data = new Object();
+			_data.duration = 1
+			_data.durationUnit = new Object();
+			_data.durationUnit.code = $('#createHealthPlanForm select').val();
+			_data.patient = new Object();
+			_data.patient.id = patientId;
+		}
+		
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
@@ -356,12 +365,7 @@ var NC_MODULE = {
 			if (params.id > 1) {
 				my.loadHealthPlan(that);
 			} else {
-				_data = new Object();
-				_data.duration = 1
-				_data.durationUnit = new Object();
-				_data.durationUnit.code = $('#createHealthPlanForm select').val();
-				_data.patient = new Object();
-				_data.patient.id = params.patientId;
+				my.emptyPlan(params.patientId);
 			}
 			
 			my.initValidate();
@@ -392,7 +396,6 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="startDate"]').on('keyup blur change', function() {
-				NC.log($(this).val());
 				_data.startDate = $(this).val();
 				NC.log('Updated start date to: ' + _data.startDate);
 			});
@@ -404,7 +407,6 @@ var NC_MODULE = {
 			});
 			
 			$('select[name="type"]').on('focus change', function() {
-				_data.durationUnit = new Object();
 				_data.durationUnit.code = $(this).val();
 				NC.log('Updated duration unit to: ' + _data.durationUnit.code);
 			});
@@ -424,14 +426,14 @@ var NC_MODULE = {
 				e.preventDefault();
 				my.validate();
 				if (my.validate()) {
-					my.save();
+					my.save(my);
 				}
 			})
 		};
 		
 		my.loadHealthPlan = function(my) {
 			new NC.Ajax().get('/healthplans/' + my.params.id, function(data) {
-				_data = data.data;
+				my.initPlan(data.data);
 				my.renderForm();
 			}, false);
 		};
@@ -456,7 +458,6 @@ var NC_MODULE = {
 			var t = _.template($('#healthPlanItem').html());
 			var dom = t(hp);
 			$('#healthPlanContainer').append($(dom));
-			
 			
 			var liElem = $('#healthPlanItem' + hp.id);
 			if (hp.autoRenewal) {
@@ -616,11 +617,23 @@ var NC_MODULE = {
 			return validator.numberOfInvalids()==0;
 		};
 		
-		my.save = function() {
+		my.initPlan = function(data) {
+			_data = {
+				duration : data.duration,
+				durationUnit : {
+					code : data.durationUnit.code,
+				},
+				patient : {
+					id : data.patient.id
+				}
+			};
+		}
+		
+		my.save = function(my) {
 			NC.log('Saving health plan. Data is: ' + _data);
 			new NC.Ajax().post('/healthplans', _data, function(data) {
 				
-				_data = data.data;
+				my.emptyPlan(my.params.patientId);
 				
 				/*
 				 * Add new item in list and hide form
@@ -628,7 +641,7 @@ var NC_MODULE = {
 				$('#createHealthPlanSheet').hide();
 				
 				NC.log('New healthplan created with id: ' + data.data.id);
-				my.buildHealthPlanItem(my, _data);
+				my.buildHealthPlanItem(my, data.data);
 			}, true);
 		};
 		
