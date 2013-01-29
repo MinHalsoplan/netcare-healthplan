@@ -1291,6 +1291,8 @@ var NC_MODULE = {
 					activityTemplate = data.data;
 					renderItems(my, activityTemplate);
 					NC.log(activityTemplate);
+					
+					$('#templateTitle').html(activityTemplate.name);
 				});
 			} else {
 				activityTemplate = {
@@ -1308,6 +1310,7 @@ var NC_MODULE = {
 					"activityItems" : []
 				}
 
+				$('#templateTitle').html('Skapa ny mall')
 			}
 
 			my.loadCategories();

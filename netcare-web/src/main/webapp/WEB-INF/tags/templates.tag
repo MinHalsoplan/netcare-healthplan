@@ -99,7 +99,7 @@
 	<div class="healthplan-actions">
 		<div class="row-fluid">
 			<div class="span12">
-				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Planera ny aktivitet från mall</a>
+				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
 			</div>
 		</div>
 		<div class="row-fluid extend">
@@ -116,7 +116,7 @@
 			<div class="span5 inactivate" style="text-align: right">
 				<a id="hp-inactivate-{{=id}}" href="#">Ta bort hälsoplan</a>
 				<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-					<div class="modal-body">Ta bort hälsoplanen?</div>
+					<div class="modal-body">Är du säker att hälsoplan {{=name}} ska tas bort. Inga data från hälsoplanen kommer då gå att nås genom applikationen.</div>
 					<div class="modal-footer">
 						<a href="#" data-dismiss="modal">Avbryt</a>
 						<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
@@ -289,7 +289,7 @@
 	&nbsp;<spring:message code="measureValue.alarm.text" />
 </div>
 <div class="form-actions" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </script>
 
@@ -326,7 +326,7 @@
 	<input type="text" class="span6" name="maxScaleText" id="maxScaleText" value="{{=maxScaleText}}"></input>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </div>
 </script>
@@ -351,7 +351,7 @@
 	<textarea id="yesNoQuestion" rows="2" class="span6">{{=question}}</textarea>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </div>
 </script>
@@ -376,7 +376,7 @@
 	<textarea id="textLabel" rows="2" class="span6">{{=label}}</textarea>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </div>
 </script>

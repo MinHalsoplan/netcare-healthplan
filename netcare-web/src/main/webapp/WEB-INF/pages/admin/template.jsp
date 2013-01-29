@@ -50,8 +50,15 @@
 		</script>
 	</hp:viewHeader>
 	<c:url value="/netcare/admin/templates" var="backToUrl" />
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till aktivitetsmallar">
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Aktivitetsmallar">
 			<div id="activityTypeContainer">
+			
+				<h3 id="templateTitle"></h3>
+				
+				<div id="accessNote" class="alert alert-error" style="display: none;">
+					<spring:message code="template.noAccess" />
+				</div>
+			
 				<div id="template">
 					<form id="templateForm">
 					<div id="chooseName">
@@ -59,7 +66,7 @@
 						<spring:message code="template.select.category" var="selectCategoryLabel" scope="page"/>
 						<spring:message code="template.select.level" var="selectLevelLabel" scope="page"/>
 						<h4>1. <spring:message code="template.step1.title" /></h4>
-						<netcare:field containerId="activityTypeNameContainer" name="activityTypeName" label="${selectNameLabel}">
+						<netcare:field containerId="activityTypeNameContainer" name="activityTypeName" label="">
 							<input id="activityTypeName" name="activityTypeName" type="text" class="required">
 						</netcare:field>
 					</div>
@@ -88,13 +95,7 @@
 						</div>
 					</div>
 					<div id="chooseSave">
-						<h4>
-							5.
-							<spring:message code="template.step3.title" />
-						</h4>
-						<div id="accessNote" class="alert alert-error" style="display: none;">
-							<spring:message code="template.noAccess" />
-						</div>
+						<h4><spring:message code="template.step3.title" /></h4>
 						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">
 							<button id="activitySaveButton" class="btn btn-info" type="button"><spring:message code="template.save" /></button>
 						</div>

@@ -53,7 +53,8 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Hälsoplaner" plain="true">
+	<c:set var="pageTitle" value="Hälsoplaner för ${sessionScope.currentPatient.name}" />
+	<hp:viewBody title="${pageTitle}" plain="true">
 		<spring:message code="clear" var="clear" scope="page" />
 		<spring:message code="healthplan.duration" var="duration" scope="page" />
 		<spring:message code="healthplan.name" var="name" scope="page" />
@@ -102,8 +103,7 @@
 			</fieldset>
 			
 			<div class="form-actions">
-				<input type="submit" class="btn btn-info" value="${newHealthPlan}" />
-				<input type="reset" class="btn" value="${clear}" />
+				<input type="submit" class="btn btn-info" value="Spara" />
 			</div>
 			
 		</form>

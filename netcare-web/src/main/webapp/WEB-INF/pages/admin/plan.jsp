@@ -53,36 +53,36 @@
 				<span class="loaderMessage"></span>
 			</div>
 			<div id="planContainer" style="display: none;">
+				<h2>Schemaläggning</h2>
 				<fieldset id="activityFieldset" style="display: none;">
-					<legend><spring:message code="activity.form.goals" /></legend>
+					<legend><h3><spring:message code="activity.form.goals" /></h3></legend>
 				</fieldset>
 				
 				<fieldset id="yesNoItemsFieldset" style="display: none;">
-					<legend><spring:message code="activity.form.yesnoItems" /></legend>
+					<legend><h3><spring:message code="activity.form.yesnoItems" /></h3></legend>
 				</fieldset>
 				
 				<fieldset id="estimationItemsFieldset" style="display: none;">
-					<legend><spring:message code="activity.form.estimationItems" /></legend>
+					<legend><h3><spring:message code="activity.form.estimationItems" /></h3></legend>
 				</fieldset>
 				
 				<fieldset id="textItemsFieldset" style="display: none;">
-					<legend><spring:message code="activity.form.textItems" /></legend>
+					<legend><h3><spring:message code="activity.form.textItems" /></h3></legend>
 				</fieldset>
 				
 				<fieldset id="scheduleFieldset">
-					<legend>Period</legend>
 					<netcare:row>
-						<netcare:col span="6">
+						<netcare:col span="5">
 							<spring:message code="startDate" var="start" scope="page" />
 							<netcare:field containerId="startDateContainer" name="startDate" label="${start}">
 								<netcare:dateInput id="startDate" name="startDate" />
 							</netcare:field>
 						</netcare:col>
-						<netcare:col span="6">
+						<netcare:col span="7">
 							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
 							<netcare:field name="activityRepeat" label="${repeat}">
 								<input name="activityRepeat" type="number" value="1"/>
-								<span><spring:message code="week" /></span>
+								<span class="help help-inline"><spring:message code="week" /></span>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
@@ -92,7 +92,6 @@
 				<spring:message code="activity.form.time" var="addTime" scope="page" />
 				
 				<fieldset>
-					<legend><spring:message code="activity.form.specifyTimes" /></legend>
 					<form id="addTimesForm" class="form-inline">
 						<netcare:field name="specifyTime" label="${addTime}">
 							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2 spectime"/>
