@@ -734,7 +734,7 @@
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="span12">
-			<h4>Planerade tider</h4>
+			<h4>Schema</h4>
 			<span id="schedule-{{=id}}-repeat"><i><small></small></i></span>
 			<div style="margin-right: 15px;">
 				<table id="planned-times-{{=id}}" class="table table-striped table-condensed">
@@ -754,17 +754,17 @@
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="span12">
-			<h4>Progress</h4>
+			<h4>Andel genomförda aktiviteter</h4>
 			{{ if(numExtra > 0) { }}
-				<small>Du har genomfört <strong>{{=numDone}}</strong> (+ <strong>{{=numExtra}}</strong> extra) av <strong>{{=numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
+				<small>Du har genomfört <strong>{{=numDone}}</strong> (+ <strong>{{=numExtra}}</strong> extra) av <strong>{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
 			{{ } else { }}
-				<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
+				<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
 			{{ } }}
 			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{=targetDone}}%">{{=targetDone}}%</div>
 			</div>
 
-			<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTotal}}</strong> schemalagda aktiviteter för <i><strong>hela planen</strong></i>.</small>
+			<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong><i>hela hälsoplanens</i></strong> <strong>{{=numTotal}}</strong> aktiviteter.</small>
 			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{=totalDone}}%">{{=totalDone}}%</div>
 			</div>

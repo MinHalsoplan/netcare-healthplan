@@ -65,7 +65,7 @@
 
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Startsida" plain="true">
+	<hp:viewBody title="Min hälsoplan" plain="true">
 		
 		<div id="comments" style="display: none;"></div>
 		

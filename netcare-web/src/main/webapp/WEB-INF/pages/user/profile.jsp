@@ -91,45 +91,9 @@
 						</netcare:col>
 					</netcare:row>
 
-					<br />
-
-					<fieldset>
-						<legend>
-							<spring:message code="profile.mobile.title" />
-						</legend>
-
-						<netcare:row>
-							<netcare:col span="12">
-								<p>
-									<input type="checkbox" name="mobile" value="true"> <span><spring:message
-											code="profile.mobile.enable" /></span>
-								</p>
-							</netcare:col>
-						</netcare:row>
-
-						<netcare:row>
-							<netcare:col span="2">
-								<spring:message code="profile.mobile.pin" var="pin" scope="page" />
-								<netcare:field name="password" label="${pin}">
-									<input type="password" name="password" class="span12 numericInput" />
-								</netcare:field>
-							</netcare:col>
-
-							<netcare:col span="2">
-								<spring:message code="profile.mobile.pinRepeat" var="pin2" scope="page" />
-								<netcare:field name="password2" label="${pin2}">
-									<input type="password" name="password2" class="span12 numericInput" />
-								</netcare:field>
-							</netcare:col>
-						</netcare:row>
-					</fieldset>
-
 					<div class="form-actions">
 						<button type="submit" class="btn btn-info">
 							<spring:message code="profile.update" />
-						</button>
-						<button type="reset" class="btn">
-							<spring:message code="clear" />
 						</button>
 					</div>
 

@@ -2085,15 +2085,6 @@ var NC_MODULE = {
 			$('#userprofile input[name="crn"]').val(NC.GLOBAL.formatCrn(_data.civicRegistrationNumber));
 			$('#userprofile input[name="email"]').val(_data.email);
 			$('#userprofile input[name="phone"]').val(_data.phoneNumber);
-
-			var mobile = _data.mobile;
-			if (mobile) {
-				$('#userprofile input[name="mobile"]').prop('checked', true);
-				$('#userprofile input[name="password"]').val('');
-				$('#userprofile input[name="password2"]').val('');
-			} else {
-				$('#userprofile input[type="password"]').prop('disabled', true);
-			}
 		};
 		
 		my.initListeners = function(my) {
@@ -2113,38 +2104,10 @@ var NC_MODULE = {
 				_data.phoneNumber = $(this).val();
 			});
 			
-			$('#userprofile input[name="mobile"]').click(function() {
-				if ($(this).attr('checked') == 'checked') {
-					$('#userprofile input[type="password"]')
-							.removeAttr('disabled');
-					_data.mobile = true;
-				} else {
-					$('#userprofile input[type="password"]').attr(
-							'disabled', 'disabled');
-					_data.mobile = false;
-				}
-			});
-			
-			$('#userprofile input[name="password"]').on('keyup change blur', function() {
-				_data.password1 = $(this).val();
-			});
-			
-			$('#userprofile input[name="password2"]').on('keyup change blur', function() {
-				_data.password2 = $(this).val();
-			});
-			
 			$('#userprofile').submit(function(e) {
 				e.preventDefault();
 				
 				if (validate()) {
-					if (_data.mobile == "true") {
-						if (_data.password !== _data.password2) {
-							$('#userprofile input[name="password"]').css('background','#F2DEDE');
-							$('#userprofile input[name="password2"]').css('background','#F2DEDE');
-							return;
-						}
-					}
-	
 					new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
 						_data = data.data;
 						my.render();
