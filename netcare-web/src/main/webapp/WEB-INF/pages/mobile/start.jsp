@@ -33,10 +33,16 @@
 
 		var reportedLabel = '<spring:message code="mobile.activity.reported" />';
 		var templateNames = ['measurementSingleItemTemplate', 'measurementIntervalItemTemplate', 
-		                     'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 
-		                     'commonActivityItemTemplate'];
+	                     'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 
+	                     'commonActivityItemTemplate'];
+	
+		$(document).bind('mobileinit', function() {
+			$.mobile.defaultPageTransition = 'none';
+		})
 		
-		NC_MOBILE.ACTIVITIES.init(templateNames, reportedLabel);
+		$(document).bind('pageinit', function() {
+			NC_MOBILE.ACTIVITIES.init(templateNames, reportedLabel);
+		});
 
 	</script>
 </mobile:header>

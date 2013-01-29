@@ -37,7 +37,7 @@ var NC_MOBILE = {
 		};
 		
 		my.pageInit = function(my) {
-			$('#start').live('pageinit', function(e) {
+			//$('#start').live('pageinit', function(e) {
 				
 				$.mobile.loading('show', {
 					text : 'Laddar aktiviteter',
@@ -49,7 +49,7 @@ var NC_MOBILE = {
 					setupGUI(my);
 					$.mobile.loading('hide');
 				});
-			});
+			//});
 		};
 
 		my.precompileTemplates = function(my) {
@@ -202,24 +202,6 @@ var NC_MOBILE = {
 					$('#reportForm').append(myTemplate(item));
 				}
 				
-				/*$.each(activity.activityItemValues,function(index, item) {
-					var templateName;
-					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
-						if(item.definition.activityItemType.valueType.code=='INTERVAL') {
-							templateName = 'measurementIntervalItemTemplate';					
-						} else {
-							templateName = 'measurementSingleItemTemplate';					
-						}
-					} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
-						templateName = 'estimationItemTemplate';					
-					} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
-						templateName = 'yesnoItemTemplate';					
-					} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
-						templateName = 'textItemTemplate';					
-					}  
-					var myTemplate = my.templates[templateName];
-					$('#reportForm').append(myTemplate(item));
-				});*/
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
 				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
 				
@@ -229,6 +211,10 @@ var NC_MOBILE = {
 			/*
 			 * Report value
 			 */
+			$('#sendReport').bind('click', function(e, ui) {
+				
+			})
+			
 			$('#sendReport').click(function(e) {
 				e.preventDefault();
 				
@@ -350,7 +336,7 @@ var NC_MOBILE = {
 			
 			activityContainer.append(activityContentDiv);
 			
-			var link = $('<a>').attr('href', '#report').attr('data-transition', 'slide').addClass('ui-link-inherit');
+			var link = $('<a>').attr('href', '#report').attr('data-transition', 'none').addClass('ui-link-inherit');
 			activityContentDiv.append(link);
 			
 			var activityText = $('<div>').addClass('ui-btn-text');

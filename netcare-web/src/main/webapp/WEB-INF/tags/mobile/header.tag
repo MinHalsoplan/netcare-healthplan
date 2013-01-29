@@ -53,7 +53,7 @@
 	<script type="text/javascript" src="${contextPath}${resourcePath}/js/jquery-1.8.2.min.js"></script>
 	<script type="text/javascript" src="${contextPath}${resourcePath}/js/underscore-1.4.2-min.js"></script>
 	<script type="text/javascript">
-			_.templateSettings.variable = "us";
+		_.templateSettings.variable = "us";
 		_.templateSettings = {
 			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
 		};
