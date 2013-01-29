@@ -31,8 +31,8 @@
 	<hp:viewHeader>
 		<sec:authentication property='principal.careUnit.hsaId' var="currentHsaId" scope="page" />
 		<sec:authorize access="hasRole('CARE_ACTOR')" var="isCareActor" />
-		<sec:authorize access="hasRole('COUNTY_ADMIN')" var="isCountyActor" />
-		<sec:authorize access="hasRole('NATION_ADMIN')" var="isNationActor" />
+		<sec:authorize access="hasRole('COUNTY_COUNCIL_ADMINISTRATOR')" var="isCountyActor" />
+		<sec:authorize access="hasRole('NATION_ADMINISTRATOR')" var="isNationActor" />
 		<hp:templates />
 		<script type="text/javascript">
 			$(document).ready(function() {
