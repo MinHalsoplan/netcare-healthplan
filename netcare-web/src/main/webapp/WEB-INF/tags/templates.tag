@@ -530,7 +530,7 @@
 		</div>
 		<div class="span7">
 			<input id="{{=id}}-report-date" type="text" style="display: inline;" class="span5 dateInput allow-previous"/>
-			<input id="{{=id}}-report-time" type="text" style="display: inline;" class="span3"/>
+			<input id="{{=id}}-report-time" type="text" style="display: inline;" class="span3 timeInput" placeholder="TT:MM"/>
 		</div>
 	</div>
 	<div class="row-fluid external">

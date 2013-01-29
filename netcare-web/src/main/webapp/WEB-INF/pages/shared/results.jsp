@@ -45,7 +45,7 @@
 		</script>
 	</hp:viewHeader>
 	<c:url value="/netcare/shared/select-results" var="backToUrl" />
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till alla hälsoprogram">
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Resultat">
 		<div id="activities"></div>
 	</hp:viewBody>
 </hp:view>

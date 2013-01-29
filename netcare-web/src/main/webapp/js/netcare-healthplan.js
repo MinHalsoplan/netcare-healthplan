@@ -2361,11 +2361,7 @@ var NC_MODULE = {
 				$(this).toggleClass('toggle').toggleClass('toggle-open');
 			});
 			
-			if (liElem.find('.mvk-icon.toggle').size() > 0) {
-				liElem.find('.mvk-icon.toggle').replaceWith(expander);
-			} else {
-				liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
-			}
+			liElem.find('.actionBody').empty().css('text-align', 'right').css('padding-right', '40px').append(expander);
 			
 			var detailsDom = _.template($('#scheduledActivityDetails').html())(scheduledActivity);
 			liElem.find('.row-fluid').after($(detailsDom));
@@ -2385,6 +2381,8 @@ var NC_MODULE = {
 			var report = $('#sa-report-' + id);
 			var noreport = $('#sa-noreport-' + id);
 			var note = $('#' + id + '-report-note');
+			
+			NC.GLOBAL.validateTimeField(time);
 			
 			// First time init fix.
 			_data[idx].actualTime = date.val() + ' ' + time.val();
@@ -2496,12 +2494,20 @@ var NC_MODULE = {
 					minDate : +0
 				});
 				
-				dp.datepicker('setDate', new Date());
-				var d = new Date();
+				if (activity.actDate) {
+					dp.datepicker('setDate', activity.actDate);
+				} else {
+					dp.datepicker('setDate', new Date());
+				}
 				
-				var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-				var timeString = d.getHours() + ':' + min;
-				$('#' + activity.id + '-report-time').val(timeString);
+				
+				if (activity.actTime) {
+					$('#' + activity.id + '-report-time').val(activity.actTime);
+				} else {
+					var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+					var timeString = d.getHours() + ':' + min;
+					$('#' + activity.id + '-report-time').val(timeString);
+				}
 
 				// Needed for correct deserialization
 				actItem.valueType = actItem.definition.valueType; 
