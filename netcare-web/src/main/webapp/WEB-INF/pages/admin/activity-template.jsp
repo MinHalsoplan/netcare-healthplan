@@ -53,13 +53,13 @@
 		<mvk:sheet>
 			<form class="form-search">
 				<netcare:row>
-					<netcare:col span="6">
-						<div class="input-append">
-							<input type="text" class="span12 search-query" placeholder="Sök mall"/>
-							<button type="submit" class="btn">Sök</button>
+					<netcare:col span="8">
+						<div>
+							<input type="text" class="search-query" placeholder="Sök mall"/>
+							<button type="submit" class="btn" style="vertical-align: top;">Sök</button>
 						</div>
 					</netcare:col>
-					<netcare:col span="6" style="text-align: right;">
+					<netcare:col span="4" style="text-align: right;">
 						<a href="<c:url value="/netcare/admin/template" />" class="btn btn-info">Skapa ny mall</a>
 					</netcare:col>
 				</netcare:row>
