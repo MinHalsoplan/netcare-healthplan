@@ -1339,6 +1339,7 @@ var NC_MODULE = {
 			$('#activityTypeCategory').on('change', function(event) {
 				activityTemplate.category.id = this.value;
 			});
+			
 			$('#addMeasurementButton').on('click', function(event) {
 				createItem('measurement');
 				return true;
@@ -1480,6 +1481,12 @@ var NC_MODULE = {
 				if (my.params.isNationActor == "true" && my.params.isCountyActor == "false") {
 					$('#access-level-COUNTY_COUNCIL').prop('disabled', true);
 				}
+				
+				$('input[name="accessLevel"]').click(function(e) {
+					if ($(this).prop('checked')) {
+						activityTemplate.accessLevel.code = $(this).val();
+					}
+				});
 				
 			});
 		};

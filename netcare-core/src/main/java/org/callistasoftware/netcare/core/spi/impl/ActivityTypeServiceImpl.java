@@ -234,7 +234,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(getCareActor().getCareUnit().getHsaId());
 
 		ActivityTypeEntity activityTypeEntity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit,
-				AccessLevel.CAREUNIT);
+				AccessLevel.valueOf(dto.getAccessLevel().getCode()));
 
 		for (final ActivityItemType type : dto.getActivityItems()) {
 			activityTypeEntity.addActivityItemType(createNewItemEntity(type, activityTypeEntity));
