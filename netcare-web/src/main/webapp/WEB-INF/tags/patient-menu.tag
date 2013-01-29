@@ -45,12 +45,6 @@
 		</a>
 	</li>
 	<li>
-		<a href="<spring:url value="/netcare/user/extra-report" />">
-			<span class="icon extra-report"></span>
-			<span class="iconLabel"><spring:message code="patient.menu.extra-report" /></span>
-		</a>
-	</li>
-	<li>
 		<a href="<spring:url value="/netcare/shared/select-results" />">
 			<span class="icon results"></span>
 			<span class="iconLabel"><spring:message code="patient.menu.results" /></span>

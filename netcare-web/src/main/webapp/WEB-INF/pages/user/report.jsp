@@ -48,6 +48,8 @@
 	</hp:viewHeader>
 	<hp:viewBody title="Rapportera resultat" plain="true">
 	
+		<a href="<spring:url value="/netcare/user/extra-report" />" class="btn">Extrarapportering</a>
+	
 		<mvk:sheet>
 			<div id="filter">
 				<form id="filterForm">
