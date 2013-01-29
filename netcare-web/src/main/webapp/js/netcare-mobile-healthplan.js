@@ -212,8 +212,9 @@ var NC_MOBILE = {
 			 * Report value
 			 */
 			$('#sendReport').bind('click', function(e, ui) {
-				
-			})
+				e.preventDefault();
+				NC.log('Report click!');
+			});
 			
 			$('#sendReport').click(function(e) {
 				e.preventDefault();
