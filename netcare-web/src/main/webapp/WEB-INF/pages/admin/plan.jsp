@@ -94,7 +94,7 @@
 				<fieldset>
 					<form id="addTimesForm" class="form-inline">
 						<netcare:field name="specifyTime" label="${addTime}">
-							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2 spectime"/>
+							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2 spectime timeInput"/>
 							<button type="submit" class="btn btn-info">Lägg till</button>
 							<button type="reset" class="btn btn-danger">Rensa</button>
 						</netcare:field>

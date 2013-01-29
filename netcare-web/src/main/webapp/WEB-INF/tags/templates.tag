@@ -35,7 +35,7 @@
 		<div class="mainBody actionBody span6"></div>
 	</div>
 </div>
-<a href="#" class="itemNavigation assistiveText"></a>
+<a href="<c:url value="/netcare/admin/template/{{=id}}" />" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
 </li>
 </script>
