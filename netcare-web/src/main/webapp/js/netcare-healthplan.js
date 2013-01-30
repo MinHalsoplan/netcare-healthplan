@@ -1492,6 +1492,11 @@ var NC_MODULE = {
 				
 				$('#selectAccessLevel').css('margin-bottom', '10px');
 				
+				var $radios = $('input[name="accessLevel"]');
+			    if($radios.is(':checked') === false) {
+			        $radios.filter('[value=CAREUNIT]').attr('checked', true);
+			    }
+			    
 				/*
 				 * Role check, remove items that we do not have access to
 				 */
