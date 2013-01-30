@@ -588,7 +588,7 @@
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.target}} {{=definition.activityItemType.unit.name}})</span></div>
 <div class="span7">
-	<input type="text" value="{{=reportedValue}}" />
+	<input type="text" value="{{=reportedValue}}" class="decimalNumber"/>
 	<span style="display: inline;">{{=definition.activityItemType.unit.name}}</span>
 </div>
 </div>
@@ -597,7 +597,7 @@
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.minTarget}} - {{=definition.maxTarget}} {{=definition.activityItemType.unit.name}})</span></div>
 <div class="span7">
-	<input type="text" value="{{=reportedValue}}" />
+	<input type="text" value="{{=reportedValue}}" class="decimalNumber" />
 	<span style="display: inline;">{{=definition.activityItemType.unit.name}}</span>
 </div>
 </div>

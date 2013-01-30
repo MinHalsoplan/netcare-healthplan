@@ -944,7 +944,7 @@ var NC_MODULE = {
 			
 			field.on('keyup', function() {
 				var val = field.val();
-				if(new NC.Util().isDecimalNumber(val)) {
+				if(NC.GLOBAL.isDecimalNumber(val)) {
 					_data.goalValues[idx].target = val;
 					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
 					$(this).css('background', '#EDEDED');
@@ -980,7 +980,7 @@ var NC_MODULE = {
 			
 			$(min).on('change blur keyup', function() {
 				var val = min.val();
-				if(new NC.Util().isDecimalNumber(val)) {
+				if(NC.GLOBAL.isDecimalNumber(val)) {
 					updateIntervalValues(activityItem);
 					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
 					$(this).css('background', '#EDEDED');
@@ -993,7 +993,7 @@ var NC_MODULE = {
 			
 			$(max).on('change blur keyup', function() {
 				var val = max.val();
-				if(new NC.Util().isDecimalNumber(val)) {
+				if(NC.GLOBAL.isDecimalNumber(val)) {
 					updateIntervalValues(activityItem);
 					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
 					$(this).css('background', '#EDEDED');
@@ -2539,7 +2539,7 @@ var NC_MODULE = {
 				}
 				
 				if (activity.reportingPossible == true) {
-					my.initActivityItemListener(my, activityIndex, idx, actItem.id);
+					my.initActivityItemListener(my, activity.id, activityIndex, idx, actItem.id);
 				}
 				
 				// FIX FOR YES NO INITIAL VALUE CHECKED
@@ -2579,7 +2579,7 @@ var NC_MODULE = {
 			}
 		};
 		
-		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
+		my.initActivityItemListener = function(my, activityId, activityIndex, itemIndex, id) {
 
 			var inputs = $('#sa-row-' + id).find('input');
 			
@@ -2603,8 +2603,22 @@ var NC_MODULE = {
 			if (inputs.length == 1) {
 				
 				inputs.bind('change blur keyup', function() {
-					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
-					NC.log('Setting value to: ' + $(this).val());
+					var value = $(this).val();
+					if($(this).hasClass('decimalNumber')) {
+						if(NC.GLOBAL.isDecimalNumber(value)) {
+							$(this).css('background', '#EDEDED');
+							_data[activityIndex].activityItemValues[itemIndex][reportedField] = value;
+							$('#sa-report-' + activityId).attr('disabled', false);
+							NC.log('Setting value to: ' + value);
+						} else {
+							$(this).css('background', '#F2DEDE');
+							$('#sa-report-' + activityId).attr('disabled', true);
+							NC.log('Invalid value: ' + value);
+						}
+					} else {
+						_data[activityIndex].activityItemValues[itemIndex][reportedField] = value;
+						NC.log('Setting value to: ' + value);
+					}
 				});
 				
 				if (type === "estimation") {
