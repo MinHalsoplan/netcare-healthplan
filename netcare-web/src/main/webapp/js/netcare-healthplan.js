@@ -296,7 +296,7 @@ var NC_MODULE = {
 			$('#modal-from-dom').modal('hide');
 			
 			// Redirect to new health plan
-			window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans?showForm=true';
+			window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
 		};
 		
 		var my = {};
@@ -2463,20 +2463,11 @@ var NC_MODULE = {
 				if (activity.reportingPossible == false) {
 					$('#sa-details-' + activity.id).find('input').prop('disabled', true);
 					$('#sa-details-' + activity.id).find('textarea').prop('disabled', true);
-					$('#sa-details-' + activity.id).find('button').prop('disabled', true);
-					
-					$('#sa-details-' + activity.id).prepend(
-						$('<div>')
-						.css('margin-bottom', '20px')
-						.addClass('alert alert-info')
-						.html('<i>Aktiviteten är inte öppen för rapportering ännu.</i>')
-					);
-					
-					return;
 				}
 				
-				
-				my.initActivityItemListener(my, activityIndex, idx, actItem.id);
+				if (activity.reportingPossible == true) {
+					my.initActivityItemListener(my, activityIndex, idx, actItem.id);
+				}
 				
 				// FIX FOR YES NO INITIAL VALUE CHECKED
 				if (actItem.valueType == "yesno") {

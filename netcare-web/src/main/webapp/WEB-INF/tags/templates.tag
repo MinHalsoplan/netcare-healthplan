@@ -520,6 +520,16 @@
 <%--Scheduled Activity details --%>
 <script id="scheduledActivityDetails" type="text/template">
 <div id="sa-details-{{=id}}" class="item-with-form" style="display: none; margin-right: 15px;">
+	{{ if (reportedDate && !reportingPossible) { }}
+	<div class="alert alert-info">
+		<i>Den här aktiviteten är stängd för rapportering eftersom du redan har rapporterat den.</i>
+	</div>
+	{{ } if (!reportedDate && !reportingPossible) { }}
+	<div class="alert alert-info">
+		<i>Den här aktiviteten är inte öppen för rapportering ännu.</i>
+	</div>
+	{{ } }}
+
 	<div class="row-fluid">
 		<div class="span12 sa-details">
 		</div>
@@ -541,10 +551,12 @@
 			<textarea id="{{=id}}-report-note" class="span11">{{=note}}</textarea>
 		</div>
 	</div>
+	{{ if (reportingPossible) { }}
 	<div class="form-actions" style="margin: 0">
 		<button id="sa-report-{{=id}}" type="button" class="btn btn-primary btn-info">Rapportera</button>
 		<button id="sa-noreport-{{=id}}" type="button" class="btn btn-danger">Rapportera som ej utförd</button>
 	</div>
+	{{ } }}
 </div>
 </script>
 
