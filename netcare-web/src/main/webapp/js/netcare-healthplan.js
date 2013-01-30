@@ -2504,6 +2504,7 @@ var NC_MODULE = {
 				if (activity.actTime) {
 					$('#' + activity.id + '-report-time').val(activity.actTime);
 				} else {
+					var d = new Date();
 					var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
 					var timeString = d.getHours() + ':' + min;
 					$('#' + activity.id + '-report-time').val(timeString);
