@@ -939,11 +939,20 @@ var NC_MODULE = {
 			
 			var idx = initGoalValue(activityItem.id, 'measurement');
 			
-			$('#field-' + activityItem.id).val(_data.goalValues[idx].target);
+			var field = $('#field-' + activityItem.id); 
+			field.val(_data.goalValues[idx].target);
 			
-			$('#field-' + activityItem.id).on('change blur keyup', function() {
-				_data.goalValues[idx].target = $(this).val();
-				NC.log('Target set to: ' + $(this).val() + ' for ' + activityItem.name);
+			field.on('keyup', function() {
+				var val = field.val();
+				if(new NC.Util().isDecimalNumber(val)) {
+					_data.goalValues[idx].target = val;
+					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
+					$(this).css('background', '#EDEDED');
+					$('#savePlanBtn').attr('disabled', false);
+				} else {
+					$(this).css('background', '#F2DEDE');
+					$('#savePlanBtn').attr('disabled', true);
+				}
 			});
 		};
 		
@@ -970,11 +979,29 @@ var NC_MODULE = {
 			};
 			
 			$(min).on('change blur keyup', function() {
-				updateIntervalValues(activityItem);
+				var val = min.val();
+				if(new NC.Util().isDecimalNumber(val)) {
+					updateIntervalValues(activityItem);
+					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
+					$(this).css('background', '#EDEDED');
+					$('#savePlanBtn').attr('disabled', false);
+				} else {
+					$(this).css('background', '#F2DEDE');
+					$('#savePlanBtn').attr('disabled', true);
+				}
 			});
 			
 			$(max).on('change blur keyup', function() {
-				updateIntervalValues(activityItem);
+				var val = max.val();
+				if(new NC.Util().isDecimalNumber(val)) {
+					updateIntervalValues(activityItem);
+					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
+					$(this).css('background', '#EDEDED');
+					$('#savePlanBtn').attr('disabled', false);
+				} else {
+					$(this).css('background', '#F2DEDE');
+					$('#savePlanBtn').attr('disabled', true);
+				}
 			});
 		};
 		

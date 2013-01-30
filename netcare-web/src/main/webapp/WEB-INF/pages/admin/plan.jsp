@@ -147,7 +147,7 @@
 				
 				<form id="saveForm">
 					<div class="form-actions">
-						<button type="submit" class="btn info"><spring:message code="activity.form.submit" /></button>
+						<button type="submit" class="btn info" id="savePlanBtn"><spring:message code="activity.form.submit" /></button>
 						<button type="reset" class="btn"><spring:message code="clear" /></button>
 					</div>
 				</form>

@@ -209,7 +209,7 @@
 <div id="item-value-{{=id}}-container">
 	<div class="row-fluid">
 		<div class="span10">
-			<h4>{{=name}} ({{=minScaleValue}} = {{=minScaleText}}, {{=maxScaleValue}} = {{=maxScaleText}})
+			<h4>{{=name}} ({{=minScaleValue}} = {{=minScaleText}}, {{=maxScaleValue}} = {{=maxScaleText}})</h4>
 		</div>
 		<div class="span2" style="padding-top: 10px; text-align: right;">
 			<a href="#" id="field-{{=id}}-exclude">Exkludera</a>
