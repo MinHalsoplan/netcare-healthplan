@@ -50,7 +50,7 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Mina resultat" plain="true">
+	<hp:viewBody title="Resultat" plain="true">
 		
 		<div id="healthplans"></div>
 		

@@ -341,7 +341,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	protected ActivityItemTypeEntity findEntityItem(Long id, List<ActivityItemTypeEntity> activityItemTypes) {
 		for (ActivityItemTypeEntity entity : activityItemTypes) {
-			if (entity.getId() == id) {
+			if (entity.getId().equals(id)) {
 				return entity;
 			}
 		}
