@@ -98,22 +98,10 @@
 	</div>
 	<div class="healthplan-actions">
 		<div class="row-fluid">
-			<div class="span12">
+			<div class="span6">
 				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
 			</div>
-		</div>
-		<div class="row-fluid extend">
-			<div class="span6">
-				<a id="hp-extend-plan-{{=id}}" href="#">Förläng hälsoplan</a>
-				<div id="hp-extend-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-					<div class="modal-body">Förläng hälsoplanen?</div>
-					<div class="modal-footer">
-						<a href="#" data-dismiss="modal">Avbryt</a>
-						<a href="#" class="btn" data-dismiss="modal">Förläng</a>
-					</div>
-				</div>
-			</div>
-			<div class="span5 inactivate" style="text-align: right">
+			<div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
 				<a id="hp-inactivate-{{=id}}" href="#">Ta bort hälsoplan</a>
 				<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
 					<div class="modal-body">Är du säker att hälsoplan {{=name}} ska tas bort. Inga data från hälsoplanen kommer då gå att nås genom applikationen.</div>
@@ -124,6 +112,20 @@
 				</div>
 			</div>
 		</div>
+		{{ if (!autoRenewal) { }}
+		<div class="row-fluid extend">
+			<div class="span12">			
+				<a id="hp-extend-plan-{{=id}}" href="#">Förläng hälsoplan</a>
+				<div id="hp-extend-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+					<div class="modal-body">Förläng hälsoplanen?</div>
+					<div class="modal-footer">
+						<a href="#" data-dismiss="modal">Avbryt</a>
+						<a href="#" class="btn" data-dismiss="modal">Förläng</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{ } }}
 	</div>
 </div>
 </script>
