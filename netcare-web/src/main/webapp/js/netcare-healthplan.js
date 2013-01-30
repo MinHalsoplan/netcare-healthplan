@@ -1703,6 +1703,7 @@ var NC_MODULE = {
 			} else if (item.activityItemTypeName == 'estimation') {
 				template = _.template($('#activityItemEstimationForm').html());
 				$('#activityItemFormContainer').append(template(item));
+				addValidationHandlersForEstimation();
 				collectAndValidateFunction = handleEstimationForm;
 			} else if (item.activityItemTypeName == 'yesno') {
 				template = _.template($('#activityItemYesNoForm').html());
@@ -1736,6 +1737,33 @@ var NC_MODULE = {
 						}
 					});
 
+		}
+		
+		var addValidationHandlersForEstimation = function() {
+			var minScaleValueItem = $('#minScaleValue');
+			var maxScaleValueItem = $('#maxScaleValue');
+
+			$('.estvalue').on('keyup', function() {
+				var minval = minScaleValueItem.val();
+				var maxval = maxScaleValueItem.val();
+				var minok = !isNaN(parseFloat(minval)) && isFinite(minval);
+				var maxok = !isNaN(parseFloat(maxval)) && isFinite(maxval);			
+				if(minok) {
+					minScaleValueItem.css('background', '#EDEDED');
+				} else {
+					minScaleValueItem.css('background', '#F2DEDE');
+				}
+				if(maxok) {
+					maxScaleValueItem.css('background', '#EDEDED');
+				} else {
+					maxScaleValueItem.css('background', '#F2DEDE');
+				}
+				if(minok && maxok) {
+					$('#backButtonForm').attr('disabled', false);
+				} else {
+					$('#backButtonForm').attr('disabled', true);
+				}
+			});
 		}
 
 		var renderMeasurementForm = function(item) {

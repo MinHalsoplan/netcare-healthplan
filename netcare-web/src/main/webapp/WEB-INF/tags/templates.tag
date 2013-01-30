@@ -315,9 +315,9 @@
 </div>
 <div class="controls controls-row">
 	<spring:message code="estimation.lowValue.label" />
-	<input type="text" name="minScaleValue" id="minScaleValue" class="span1" value="{{=minScaleValue}}"></input>
+	<input type="text" name="minScaleValue" id="minScaleValue" class="span1 estvalue" value="{{=minScaleValue}}"></input>
 	<span style="padding-left:20px;"><spring:message code="estimation.highValue.label" /></span>
-	<input type="text" name="maxScaleValue" id="maxScaleValue" class="span1" value="{{=maxScaleValue}}"></input>
+	<input type="text" name="maxScaleValue" id="maxScaleValue" class="span1 estvalue" value="{{=maxScaleValue}}"></input>
 </div>
 <div class="controls">
 	<label for="minScaleText"><spring:message code="estimation.lowText.label" /></label>
