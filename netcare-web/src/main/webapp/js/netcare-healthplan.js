@@ -2477,11 +2477,28 @@ var NC_MODULE = {
 						type += 'Interval';
 					}
 				}
+				
 				var activityValuesTemplate = '#scheduled-' + type + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				
 				$('#sa-details-' + activity.id).find('.sa-details').append(dom);
+				
+				if (type==='estimation') {
+					var initial;
+					if (actItem.perceivedSense) {
+						initial = actItem.perceivedSense;
+					} else {
+						initial = Math.floor((actItem.definition.activityItemType.maxScaleValue - actItem.definition.activityItemType.minScaleValue) / 2); 
+					}
+					
+					$('#sa-row-slider-' + actItem.id).slider({
+						range : 'max',
+						min : actItem.definition.activityItemType.minScaleValue,
+						max : actItem.definition.activityItemType.maxScaleValue,
+						value : initial
+					});
+				}
 				
 				/*
 				 * If reporting isn't possible due to scheduled time is more
@@ -2490,6 +2507,7 @@ var NC_MODULE = {
 				if (activity.reportingPossible == false) {
 					$('#sa-details-' + activity.id).find('input').prop('disabled', true);
 					$('#sa-details-' + activity.id).find('textarea').prop('disabled', true);
+					$('#sa-row-slider-' + actItem.id).slider( "disable" );
 				}
 				
 				if (activity.reportingPossible == true) {
@@ -2538,7 +2556,8 @@ var NC_MODULE = {
 			var inputs = $('#sa-row-' + id).find('input');
 			
 			// Determine type
-			var type = _data[activityIndex].activityItemValues[itemIndex].valueType;
+			var actItem = _data[activityIndex].activityItemValues[itemIndex];
+			var type = actItem.valueType;
 			var reportedField;
 			if (type == "measurement") {
 				reportedField = "reportedValue";
@@ -2559,6 +2578,13 @@ var NC_MODULE = {
 					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
 					NC.log('Setting value to: ' + $(this).val());
 				});
+				
+				if (type === "estimation") {
+					$('#sa-row-slider-' + actItem.id).on('slide', function(e, ui) {
+						inputs.val(ui.value);
+						inputs.change();
+					});
+				}
 				
 			} else if (inputs.length == 2) {
 				

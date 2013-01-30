@@ -28,6 +28,7 @@
 <c:set var="resourcePath" value="/netcare/resources" />
 <mvk:header title="Min hälsoplan" resourcePath="${resourcePath}" contextPath="${contextPath}">
 	<netcare:css resourcePath="${resourcePath}" />
+	
 	<link rel="stylesheet" href="<c:url value='/css/netcare-healthplan.css' />" type="text/css" />
 	<!--[if lte IE 8]> <link rel="stylesheet" type="text/css" href="<c:url value='/css/netcare-ie8.css' />" /> <![endif]-->
 

@@ -567,10 +567,19 @@
 <script id="scheduled-estimationValues" type="text/template">
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}}</span></div>
-<div class="span7">
-	<span style="display: inline;">{{=definition.activityItemType.minScaleText}}</span>
-	<input type="range" min="{{=definition.activityItemType.minScaleValue}}" max="{{=definition.activityItemType.maxScaleValue}}" step="1" value="{{=perceivedSense}}" />
-	<span style="display: inline;">{{=definition.activityItemType.maxScaleText}}</span>
+<div class="span5">
+	<netcare:row>
+		<netcare:col span="2" style="text-align: right;">
+			<span style="display: inline;">{{=definition.activityItemType.minScaleText}} </span>
+		</netcare:col>
+		<netcare:col span="8">
+			<input type="hidden" value="{{=perceivedSense}}" />
+			<div id="sa-row-slider-{{=id}}"></div>
+		</netcare:col>
+		<netcare:col span="2" style="text-align: left;">
+			<span style="display: inline;"> {{=definition.activityItemType.maxScaleText}}</span>
+		</netcare:col>
+	</netcare:row>
 </div>
 </div>
 </script>
