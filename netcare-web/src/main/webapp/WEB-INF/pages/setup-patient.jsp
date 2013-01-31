@@ -27,8 +27,11 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="resourcePath" value="/netcare/resources" />
+
 <mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+	<mvk:header title="Netcare 2.0" resourcePath="${resourcePath}" contextPath="${pageContext.request.contextPath}">
 		<netcare:css resourcePath="${resourcePath}" />
 		<netcare:js resourcePath="${resourcePath}"/>
 		<hp:healthplan-js />
