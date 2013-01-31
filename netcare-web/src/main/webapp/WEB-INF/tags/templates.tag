@@ -607,8 +607,8 @@
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}} {{=definition.activityItemType.question}}</span></div>
 <div class="span7">
-	<input type="radio" name="answer" value="true" /> Ja
-	<input type="radio" name="answer" value="false" /> Nej 
+	<input type="radio" name="answer{{=id}}" value="true" checked="{{=answer}}" /> Ja
+	<input type="radio" name="answer{{=id}}" value="false" checked="{{=answer}}" /> Nej 
 </div>
 </div>
 </script>

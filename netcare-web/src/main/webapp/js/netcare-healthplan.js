@@ -2551,7 +2551,9 @@ var NC_MODULE = {
 				
 				// FIX FOR YES NO INITIAL VALUE CHECKED
 				if (actItem.valueType == "yesno") {
-					if (actItem.answer == true) {
+					if(actItem.answer == null) {
+						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
+					} else if (actItem.answer == true) {
 						$('#sa-row-' + actItem.id).find('input[value="true"]').prop('checked', true);
 					} else {
 						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
@@ -2638,11 +2640,12 @@ var NC_MODULE = {
 			} else if (inputs.length == 2) {
 				
 				// yes no input
-				inputs.bind('click change', function() {
+				$(inputs[0]).bind('change', function() {
 					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
+					NC.log('Setting value to: ' + $(this).val());
 				});
 				
-				inputs.bind('click change', function() {
+				$(inputs[1]).bind('change', function() {
 					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
 					NC.log('Setting value to: ' + $(this).val());
 				});
