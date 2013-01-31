@@ -39,7 +39,8 @@
 			pattern="/mobile/**"
 			use-expressions="true"
 			create-session="never"
-			entry-point-ref="httpBasicAuthEntryPoint">
+			entry-point-ref="httpBasicAuthEntryPoint"
+			authentication-manager-ref="mobileAuthenticationManager">
 			<security:intercept-url pattern="/mobile/**" access="hasRole('PATIENT')"/>
 			<security:custom-filter ref="mobileLoginFilter" position="BASIC_AUTH_FILTER"/>
 		</security:http>

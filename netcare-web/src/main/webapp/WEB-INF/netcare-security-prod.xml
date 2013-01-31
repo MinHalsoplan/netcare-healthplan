@@ -32,11 +32,19 @@
 	<beans profile="qa,prod">
 		<import resource="classpath*:/netcare-mvk-integration-security-config.xml"/>
 	
-		<security:http pattern="/netcare/setup*" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/security/denied">
+		<security:http 
+		    pattern="/netcare/setup*" 
+		    entry-point-ref="mvkEntryPoint" 
+		    access-denied-page="/netcare/security/denied"
+		    authentication-manager-ref="mvkAuthenticationManager">
 			<security:custom-filter position="PRE_AUTH_FILTER" ref="mvkPreAuthFilter"/>
 		</security:http>
 	
-		<security:http use-expressions="true" entry-point-ref="mvkEntryPoint" access-denied-page="/netcare/security/denied">
+		<security:http 
+		    use-expressions="true" 
+		    entry-point-ref="mvkEntryPoint" 
+		    access-denied-page="/netcare/security/denied"
+		    authentication-manager-ref="mvkAuthenticationManager">
 			<security:intercept-url pattern="/api/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 			<security:intercept-url pattern="/netcare/home*" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 			<security:intercept-url pattern="/netcare/user/results*" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>

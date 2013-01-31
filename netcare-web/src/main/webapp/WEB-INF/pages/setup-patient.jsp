@@ -40,6 +40,11 @@
 					var firstName = $('input[name="firstName"]').val();
 					var surName = $('input[name="surName"]').val();
 					
+					if (firstName == "" || surName == "") {
+						alert('Vänligen fyll i både för- och efternamn!');
+						return false;
+					}
+					
 					var ajax = new NC.Ajax();
 					ajax.postWithParams('/user/saveUserData', { firstName : firstName, surName : surName }, function(data) {
 						window.location = NC.getContextPath() + '/netcare/home';
@@ -80,10 +85,10 @@
 						</div>
 						
 					</fieldset>
-					</form>
 				</div>
 				<div class="modal-footer">
 					<input class="btn btn-info" type="submit" value="<spring:message code="setup.proceed" />" />
+					</form>
 				</div>
 		</div>
 	</body>
