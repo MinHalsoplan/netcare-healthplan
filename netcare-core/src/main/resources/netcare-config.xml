@@ -25,11 +25,11 @@
 
 	<beans profile="prod">
 		<context:property-placeholder location="
-			file:${user.home}/.netcare-prod/database.properties, 
-			file:${user.home}/.netcare-prod/email.properties,
-			file:${user.home}/.netcare-prod/push.properties,
-			file:${user.home}/.netcare-prod/mvk.properties,
-			file:${user.home}/.netcare-prod/application.properties"/>
+			file:${user.home}/netcare-healthplan-prod/database.properties, 
+			file:${user.home}/netcare-healthplan-prod/email.properties,
+			file:${user.home}/netcare-healthplan-prod/push.properties,
+			file:${user.home}/netcare-healthplan-prod/mvk.properties,
+			file:${user.home}/netcare-healthplan-prod/application.properties"/>
 		
 		<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
