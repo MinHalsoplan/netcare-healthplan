@@ -1290,7 +1290,9 @@ var NC_MODULE = {
 		my.copyTemplate = function(my, template) {
 			NC.log('Copy template');
 			template.name = template.name + ' (Kopia)';
-
+			template.accessLevel.code = "CAREUNIT";
+			template.accessLevel.value = "Vårdenhetsnivå";
+			
 			new NC.Ajax().post('/templates/', template, function(data) {
 				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
 				my.buildTemplateItem(my, data.data, '#item-' + template.id);
