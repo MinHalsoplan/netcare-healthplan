@@ -384,7 +384,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	protected boolean entityInDtoList(Long id, ActivityItemType[] activityItems) {
 		for (ActivityItemType item : activityItems) {
-			if (item.getId() == id) {
+			if (item.getId().equals(id)) {
 				return true;
 			}
 		}
