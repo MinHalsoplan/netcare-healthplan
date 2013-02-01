@@ -18,6 +18,15 @@
 
 -->
 <configuration>
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/healthplan.log</file>
+        <fileNamePattern>healthplan.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <maxHistory>30</maxHistory>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
 	
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
@@ -32,14 +41,14 @@
 	<logger name="org.springframework" level="WARN" />
 	<logger name="org.springframework.security" level="WARN" />
 	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN" />
-	<logger name="org.springframework.web" level="DEBUG" />
-	<logger name="org.springframework.http" level="DEBUG" />
+	<logger name="org.springframework.web" level="WARN" />
+	<logger name="org.springframework.http" level="WARN" />
 	
 	<logger name="org.callistasoftware.netcare" level="DEBUG" />
 	<logger name="org.callistasoftware.netcare.core.job" level="DEBUG" />
 	
 	<root level="DEBUG">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</root>
 	
 </configuration>
