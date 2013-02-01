@@ -66,7 +66,7 @@
 	<li>
 		<a href="<spring:url value="/netcare/home" />">
 			<span class="icon start"></span>
-			<span class="iconLabel">Startsida</span>
+			<span class="iconLabel">Min hälsoplan</span>
 		</a>
 	</li>
 	<li>

@@ -32,13 +32,13 @@ public class CountyCouncilEntity {
 	private Long id;
 
 	@Column(name="meta")
-	private CountyCouncil meta;
+	private Integer meta;
 
 	public CountyCouncilEntity() {
 	}
 
 	public CountyCouncilEntity(CountyCouncil metaData) {
-		this.meta = metaData;
+		this.meta = metaData.getCode();
 	}
 
 	public Long getId() {
@@ -46,7 +46,7 @@ public class CountyCouncilEntity {
 	}
 
 	public CountyCouncil getMeta() {
-		return meta;
+		return CountyCouncil.fromCode(this.meta);
 	}
 
 	public void setId(Long id) {

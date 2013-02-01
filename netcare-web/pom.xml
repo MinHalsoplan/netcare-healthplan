@@ -43,7 +43,11 @@
   		<artifactId>netcare-rest-api</artifactId>
   		<version>${project.version}</version>
   	</dependency>
-  	
+  	<dependency>
+  		<groupId>org.callistasoftware.netcare.commons</groupId>
+  		<artifactId>mvk-integration</artifactId>
+  		<version>1.1</version>
+  	</dependency>  	
   	<dependency>
   		<groupId>javax.servlet</groupId>
   		<artifactId>servlet-api</artifactId>
@@ -148,7 +152,7 @@
           <id>prod</id>
           <properties>
               <system.mode>prod</system.mode>
-              <database.mode>db-psql</database.mode>
+              <database.mode>db-embedded</database.mode>
           </properties>
       </profile>
       <profile>

@@ -52,7 +52,7 @@ public class CareUnitServiceImpl extends ServiceSupport implements CareUnitServi
 		boolean isNew = false;
 		
 		final int ccCode = Integer.valueOf(careUnit.getCountyCouncil().getCode());
-		CountyCouncilEntity cce = ccRepo.findByMeta(CountyCouncil.fromCode(ccCode));
+		CountyCouncilEntity cce = ccRepo.findByMeta(ccCode);
 		
 		if (cce == null) {	
 			cce = CountyCouncilEntity.newEntity(CountyCouncil.fromCode(ccCode));

@@ -296,7 +296,7 @@ var NC_MODULE = {
 			$('#modal-from-dom').modal('hide');
 			
 			// Redirect to new health plan
-			window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans?showForm=true';
+			window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
 		};
 		
 		var my = {};
@@ -347,6 +347,15 @@ var NC_MODULE = {
 		
 		var my = {};
 		
+		my.emptyPlan = function(patientId) {
+			_data = new Object();
+			_data.duration = 1
+			_data.durationUnit = new Object();
+			_data.durationUnit.code = $('#createHealthPlanForm select').val();
+			_data.patient = new Object();
+			_data.patient.id = patientId;
+		}
+		
 		my.init = function(params) {
 			var that = this;
 			this.params = params;
@@ -356,12 +365,7 @@ var NC_MODULE = {
 			if (params.id > 1) {
 				my.loadHealthPlan(that);
 			} else {
-				_data = new Object();
-				_data.duration = 1
-				_data.durationUnit = new Object();
-				_data.durationUnit.code = $('#createHealthPlanForm select').val();
-				_data.patient = new Object();
-				_data.patient.id = params.patientId;
+				my.emptyPlan(params.patientId);
 			}
 			
 			my.initValidate();
@@ -392,7 +396,6 @@ var NC_MODULE = {
 			});
 			
 			$('input[name="startDate"]').on('keyup blur change', function() {
-				NC.log($(this).val());
 				_data.startDate = $(this).val();
 				NC.log('Updated start date to: ' + _data.startDate);
 			});
@@ -404,7 +407,6 @@ var NC_MODULE = {
 			});
 			
 			$('select[name="type"]').on('focus change', function() {
-				_data.durationUnit = new Object();
 				_data.durationUnit.code = $(this).val();
 				NC.log('Updated duration unit to: ' + _data.durationUnit.code);
 			});
@@ -424,14 +426,14 @@ var NC_MODULE = {
 				e.preventDefault();
 				my.validate();
 				if (my.validate()) {
-					my.save();
+					my.save(my);
 				}
 			})
 		};
 		
 		my.loadHealthPlan = function(my) {
 			new NC.Ajax().get('/healthplans/' + my.params.id, function(data) {
-				_data = data.data;
+				my.initPlan(data.data);
 				my.renderForm();
 			}, false);
 		};
@@ -456,7 +458,6 @@ var NC_MODULE = {
 			var t = _.template($('#healthPlanItem').html());
 			var dom = t(hp);
 			$('#healthPlanContainer').append($(dom));
-			
 			
 			var liElem = $('#healthPlanItem' + hp.id);
 			if (hp.autoRenewal) {
@@ -616,11 +617,23 @@ var NC_MODULE = {
 			return validator.numberOfInvalids()==0;
 		};
 		
-		my.save = function() {
+		my.initPlan = function(data) {
+			_data = {
+				duration : data.duration,
+				durationUnit : {
+					code : data.durationUnit.code,
+				},
+				patient : {
+					id : data.patient.id
+				}
+			};
+		}
+		
+		my.save = function(my) {
 			NC.log('Saving health plan. Data is: ' + _data);
 			new NC.Ajax().post('/healthplans', _data, function(data) {
 				
-				_data = data.data;
+				my.emptyPlan(my.params.patientId);
 				
 				/*
 				 * Add new item in list and hide form
@@ -628,7 +641,7 @@ var NC_MODULE = {
 				$('#createHealthPlanSheet').hide();
 				
 				NC.log('New healthplan created with id: ' + data.data.id);
-				my.buildHealthPlanItem(my, _data);
+				my.buildHealthPlanItem(my, data.data);
 			}, true);
 		};
 		
@@ -926,11 +939,20 @@ var NC_MODULE = {
 			
 			var idx = initGoalValue(activityItem.id, 'measurement');
 			
-			$('#field-' + activityItem.id).val(_data.goalValues[idx].target);
+			var field = $('#field-' + activityItem.id); 
+			field.val(_data.goalValues[idx].target);
 			
-			$('#field-' + activityItem.id).on('change blur keyup', function() {
-				_data.goalValues[idx].target = $(this).val();
-				NC.log('Target set to: ' + $(this).val() + ' for ' + activityItem.name);
+			field.on('keyup', function() {
+				var val = field.val();
+				if(NC.GLOBAL.isDecimalNumber(val)) {
+					_data.goalValues[idx].target = val;
+					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
+					$(this).css('background', '#EDEDED');
+					$('#savePlanBtn').attr('disabled', false);
+				} else {
+					$(this).css('background', '#F2DEDE');
+					$('#savePlanBtn').attr('disabled', true);
+				}
 			});
 		};
 		
@@ -957,11 +979,29 @@ var NC_MODULE = {
 			};
 			
 			$(min).on('change blur keyup', function() {
-				updateIntervalValues(activityItem);
+				var val = min.val();
+				if(NC.GLOBAL.isDecimalNumber(val)) {
+					updateIntervalValues(activityItem);
+					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
+					$(this).css('background', '#EDEDED');
+					$('#savePlanBtn').attr('disabled', false);
+				} else {
+					$(this).css('background', '#F2DEDE');
+					$('#savePlanBtn').attr('disabled', true);
+				}
 			});
 			
 			$(max).on('change blur keyup', function() {
-				updateIntervalValues(activityItem);
+				var val = max.val();
+				if(NC.GLOBAL.isDecimalNumber(val)) {
+					updateIntervalValues(activityItem);
+					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
+					$(this).css('background', '#EDEDED');
+					$('#savePlanBtn').attr('disabled', false);
+				} else {
+					$(this).css('background', '#F2DEDE');
+					$('#savePlanBtn').attr('disabled', true);
+				}
 			});
 		};
 		
@@ -1250,7 +1290,9 @@ var NC_MODULE = {
 		my.copyTemplate = function(my, template) {
 			NC.log('Copy template');
 			template.name = template.name + ' (Kopia)';
-
+			template.accessLevel.code = "CAREUNIT";
+			template.accessLevel.value = "Vårdenhetsnivå";
+			
 			new NC.Ajax().post('/templates/', template, function(data) {
 				NC.log('Copied ' + template.id + ' new id is: ' + data.data.id);
 				my.buildTemplateItem(my, data.data, '#item-' + template.id);
@@ -1291,6 +1333,8 @@ var NC_MODULE = {
 					activityTemplate = data.data;
 					renderItems(my, activityTemplate);
 					NC.log(activityTemplate);
+					
+					$('#templateTitle').html(activityTemplate.name);
 				});
 			} else {
 				activityTemplate = {
@@ -1308,6 +1352,7 @@ var NC_MODULE = {
 					"activityItems" : []
 				}
 
+				$('#templateTitle').html('Skapa ny mall')
 			}
 
 			my.loadCategories();
@@ -1323,6 +1368,7 @@ var NC_MODULE = {
 			$('#activityTypeCategory').on('change', function(event) {
 				activityTemplate.category.id = this.value;
 			});
+			
 			$('#addMeasurementButton').on('click', function(event) {
 				createItem('measurement');
 				return true;
@@ -1448,6 +1494,11 @@ var NC_MODULE = {
 				
 				$('#selectAccessLevel').css('margin-bottom', '10px');
 				
+				var $radios = $('input[name="accessLevel"]');
+			    if($radios.is(':checked') === false) {
+			        $radios.filter('[value=CAREUNIT]').attr('checked', true);
+			    }
+			    
 				/*
 				 * Role check, remove items that we do not have access to
 				 */
@@ -1464,6 +1515,12 @@ var NC_MODULE = {
 				if (my.params.isNationActor == "true" && my.params.isCountyActor == "false") {
 					$('#access-level-COUNTY_COUNCIL').prop('disabled', true);
 				}
+				
+				$('input[name="accessLevel"]').click(function(e) {
+					if ($(this).prop('checked')) {
+						activityTemplate.accessLevel.code = $(this).val();
+					}
+				});
 				
 			});
 		};
@@ -1653,6 +1710,7 @@ var NC_MODULE = {
 			} else if (item.activityItemTypeName == 'estimation') {
 				template = _.template($('#activityItemEstimationForm').html());
 				$('#activityItemFormContainer').append(template(item));
+				addValidationHandlersForEstimation();
 				collectAndValidateFunction = handleEstimationForm;
 			} else if (item.activityItemTypeName == 'yesno') {
 				template = _.template($('#activityItemYesNoForm').html());
@@ -1686,6 +1744,33 @@ var NC_MODULE = {
 						}
 					});
 
+		}
+		
+		var addValidationHandlersForEstimation = function() {
+			var minScaleValueItem = $('#minScaleValue');
+			var maxScaleValueItem = $('#maxScaleValue');
+
+			$('.estvalue').on('keyup', function() {
+				var minval = minScaleValueItem.val();
+				var maxval = maxScaleValueItem.val();
+				var minok = !isNaN(parseFloat(minval)) && isFinite(minval);
+				var maxok = !isNaN(parseFloat(maxval)) && isFinite(maxval);			
+				if(minok) {
+					minScaleValueItem.css('background', '#EDEDED');
+				} else {
+					minScaleValueItem.css('background', '#F2DEDE');
+				}
+				if(maxok) {
+					maxScaleValueItem.css('background', '#EDEDED');
+				} else {
+					maxScaleValueItem.css('background', '#F2DEDE');
+				}
+				if(minok && maxok) {
+					$('#backButtonForm').attr('disabled', false);
+				} else {
+					$('#backButtonForm').attr('disabled', true);
+				}
+			});
 		}
 
 		var renderMeasurementForm = function(item) {
@@ -2082,15 +2167,6 @@ var NC_MODULE = {
 			$('#userprofile input[name="crn"]').val(NC.GLOBAL.formatCrn(_data.civicRegistrationNumber));
 			$('#userprofile input[name="email"]').val(_data.email);
 			$('#userprofile input[name="phone"]').val(_data.phoneNumber);
-
-			var mobile = _data.mobile;
-			if (mobile) {
-				$('#userprofile input[name="mobile"]').prop('checked', true);
-				$('#userprofile input[name="password"]').val('');
-				$('#userprofile input[name="password2"]').val('');
-			} else {
-				$('#userprofile input[type="password"]').prop('disabled', true);
-			}
 		};
 		
 		my.initListeners = function(my) {
@@ -2110,38 +2186,10 @@ var NC_MODULE = {
 				_data.phoneNumber = $(this).val();
 			});
 			
-			$('#userprofile input[name="mobile"]').click(function() {
-				if ($(this).attr('checked') == 'checked') {
-					$('#userprofile input[type="password"]')
-							.removeAttr('disabled');
-					_data.mobile = true;
-				} else {
-					$('#userprofile input[type="password"]').attr(
-							'disabled', 'disabled');
-					_data.mobile = false;
-				}
-			});
-			
-			$('#userprofile input[name="password"]').on('keyup change blur', function() {
-				_data.password1 = $(this).val();
-			});
-			
-			$('#userprofile input[name="password2"]').on('keyup change blur', function() {
-				_data.password2 = $(this).val();
-			});
-			
 			$('#userprofile').submit(function(e) {
 				e.preventDefault();
 				
 				if (validate()) {
-					if (_data.mobile == "true") {
-						if (_data.password !== _data.password2) {
-							$('#userprofile input[name="password"]').css('background','#F2DEDE');
-							$('#userprofile input[name="password2"]').css('background','#F2DEDE');
-							return;
-						}
-					}
-	
 					new NC.Ajax().post('/user/' + my.params.patientId + '/update', _data, function(data) {
 						_data = data.data;
 						my.render();
@@ -2375,11 +2423,7 @@ var NC_MODULE = {
 				$(this).toggleClass('toggle').toggleClass('toggle-open');
 			});
 			
-			if (liElem.find('.mvk-icon.toggle').size() > 0) {
-				liElem.find('.mvk-icon.toggle').replaceWith(expander);
-			} else {
-				liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px').append(expander);
-			}
+			liElem.find('.actionBody').empty().css('text-align', 'right').css('padding-right', '40px').append(expander);
 			
 			var detailsDom = _.template($('#scheduledActivityDetails').html())(scheduledActivity);
 			liElem.find('.row-fluid').after($(detailsDom));
@@ -2399,6 +2443,8 @@ var NC_MODULE = {
 			var report = $('#sa-report-' + id);
 			var noreport = $('#sa-noreport-' + id);
 			var note = $('#' + id + '-report-note');
+			
+			NC.GLOBAL.validateTimeField(time);
 			
 			// First time init fix.
 			_data[idx].actualTime = date.val() + ' ' + time.val();
@@ -2466,11 +2512,28 @@ var NC_MODULE = {
 						type += 'Interval';
 					}
 				}
+				
 				var activityValuesTemplate = '#scheduled-' + type + 'Values';
 				var t = _.template($(activityValuesTemplate).html());
 				var dom = t(actItem);
 				
 				$('#sa-details-' + activity.id).find('.sa-details').append(dom);
+				
+				if (type==='estimation') {
+					var initial;
+					if (actItem.perceivedSense) {
+						initial = actItem.perceivedSense;
+					} else {
+						initial = Math.floor((actItem.definition.activityItemType.maxScaleValue - actItem.definition.activityItemType.minScaleValue) / 2); 
+					}
+					
+					$('#sa-row-slider-' + actItem.id).slider({
+						range : 'max',
+						min : actItem.definition.activityItemType.minScaleValue,
+						max : actItem.definition.activityItemType.maxScaleValue,
+						value : initial
+					});
+				}
 				
 				/*
 				 * If reporting isn't possible due to scheduled time is more
@@ -2479,24 +2542,18 @@ var NC_MODULE = {
 				if (activity.reportingPossible == false) {
 					$('#sa-details-' + activity.id).find('input').prop('disabled', true);
 					$('#sa-details-' + activity.id).find('textarea').prop('disabled', true);
-					$('#sa-details-' + activity.id).find('button').prop('disabled', true);
-					
-					$('#sa-details-' + activity.id).prepend(
-						$('<div>')
-						.css('margin-bottom', '20px')
-						.addClass('alert alert-info')
-						.html('<i>Aktiviteten är inte öppen för rapportering ännu.</i>')
-					);
-					
-					return;
+					$('#sa-row-slider-' + actItem.id).slider( "disable" );
 				}
 				
-				
-				my.initActivityItemListener(my, activityIndex, idx, actItem.id);
+				if (activity.reportingPossible == true) {
+					my.initActivityItemListener(my, activity.id, activityIndex, idx, actItem.id);
+				}
 				
 				// FIX FOR YES NO INITIAL VALUE CHECKED
 				if (actItem.valueType == "yesno") {
-					if (actItem.answer == true) {
+					if(actItem.answer == null) {
+						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
+					} else if (actItem.answer == true) {
 						$('#sa-row-' + actItem.id).find('input[value="true"]').prop('checked', true);
 					} else {
 						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
@@ -2510,24 +2567,34 @@ var NC_MODULE = {
 					minDate : +0
 				});
 				
-				dp.datepicker('setDate', new Date());
-				var d = new Date();
+				if (activity.actDate) {
+					dp.datepicker('setDate', activity.actDate);
+				} else {
+					dp.datepicker('setDate', new Date());
+				}
 				
-				var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-				var timeString = d.getHours() + ':' + min;
-				$('#' + activity.id + '-report-time').val(timeString);
+				
+				if (activity.actTime) {
+					$('#' + activity.id + '-report-time').val(activity.actTime);
+				} else {
+					var d = new Date();
+					var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+					var timeString = d.getHours() + ':' + min;
+					$('#' + activity.id + '-report-time').val(timeString);
+				}
 
 				// Needed for correct deserialization
 				actItem.valueType = actItem.definition.valueType; 
 			}
 		};
 		
-		my.initActivityItemListener = function(my, activityIndex, itemIndex, id) {
+		my.initActivityItemListener = function(my, activityId, activityIndex, itemIndex, id) {
 
 			var inputs = $('#sa-row-' + id).find('input');
 			
 			// Determine type
-			var type = _data[activityIndex].activityItemValues[itemIndex].valueType;
+			var actItem = _data[activityIndex].activityItemValues[itemIndex];
+			var type = actItem.valueType;
 			var reportedField;
 			if (type == "measurement") {
 				reportedField = "reportedValue";
@@ -2545,18 +2612,40 @@ var NC_MODULE = {
 			if (inputs.length == 1) {
 				
 				inputs.bind('change blur keyup', function() {
-					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
-					NC.log('Setting value to: ' + $(this).val());
+					var value = $(this).val();
+					if($(this).hasClass('decimalNumber')) {
+						if(NC.GLOBAL.isDecimalNumber(value)) {
+							$(this).css('background', '#EDEDED');
+							_data[activityIndex].activityItemValues[itemIndex][reportedField] = value;
+							$('#sa-report-' + activityId).attr('disabled', false);
+							NC.log('Setting value to: ' + value);
+						} else {
+							$(this).css('background', '#F2DEDE');
+							$('#sa-report-' + activityId).attr('disabled', true);
+							NC.log('Invalid value: ' + value);
+						}
+					} else {
+						_data[activityIndex].activityItemValues[itemIndex][reportedField] = value;
+						NC.log('Setting value to: ' + value);
+					}
 				});
+				
+				if (type === "estimation") {
+					$('#sa-row-slider-' + actItem.id).on('slide', function(e, ui) {
+						inputs.val(ui.value);
+						inputs.change();
+					});
+				}
 				
 			} else if (inputs.length == 2) {
 				
 				// yes no input
-				inputs.bind('click change', function() {
+				$(inputs[0]).bind('change', function() {
 					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
+					NC.log('Setting value to: ' + $(this).val());
 				});
 				
-				inputs.bind('click change', function() {
+				$(inputs[1]).bind('change', function() {
 					_data[activityIndex].activityItemValues[itemIndex][reportedField] = $(this).val();
 					NC.log('Setting value to: ' + $(this).val());
 				});

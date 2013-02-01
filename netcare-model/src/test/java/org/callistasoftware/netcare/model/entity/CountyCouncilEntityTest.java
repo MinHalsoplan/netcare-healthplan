@@ -14,25 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.callistasoftware.netcare.core.api;
+package org.callistasoftware.netcare.model.entity;
 
-import java.io.Serializable;
+import static org.junit.Assert.assertEquals;
 
-import org.callistasoftware.netcare.core.api.impl.CountyCouncilImpl;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.junit.Test;
 
-@JsonDeserialize(as=CountyCouncilImpl.class)
-public interface CountyCouncil extends Serializable {
+public class CountyCouncilEntityTest {
 
-	/**
-	 * Get the code for this county council
-	 * @return
-	 */
-	String getCode();
-	
-	/**
-	 * Get the name for this county council
-	 * @return
-	 */
-	String getName();
+	@Test
+	public void testMeta() {
+		CountyCouncilEntity cc = new CountyCouncilEntity(CountyCouncil.VASTRA_GOTALAND);
+		assertEquals(CountyCouncil.VASTRA_GOTALAND, cc.getMeta());
+	}
+
 }

@@ -38,6 +38,7 @@ public class CareUnitImpl implements CareUnit {
 		this.setId(id);
 		this.setHsaId(hsaId);
 		this.setName(name);
+		
 		this.setCountyCouncil(cc);
 	}
 	

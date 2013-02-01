@@ -25,6 +25,7 @@ import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Role;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.RoleEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -32,8 +33,9 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActorBaseView {
-
+	
 	/**
 	 * 
 	 */
@@ -57,10 +59,11 @@ public class CareActorBaseViewImpl extends UserBaseViewImpl implements CareActor
 	
 	public static CareActorBaseView newFromEntity(final CareActorEntity entity) {
 		final CareActorBaseViewImpl ca = new CareActorBaseViewImpl(entity.getId(), entity.getFirstName(), entity.getSurName());
+		
 		ca.setHsaId(entity.getHsaId());
 		ca.setCareUnit(CareUnitImpl.newFromEntity(entity.getCareUnit()));
 
-		for (final RoleEntity r : entity.getRoles()) {
+		for (final RoleEntity r : entity.getRoles()) {			
 			ca.getRoles().add(RoleImpl.newFromEntity(r));
 		}
 		

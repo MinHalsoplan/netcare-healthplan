@@ -25,7 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public abstract class UserBaseViewImpl implements UserBaseView {
-
+	
 	/**
 	 * 
 	 */

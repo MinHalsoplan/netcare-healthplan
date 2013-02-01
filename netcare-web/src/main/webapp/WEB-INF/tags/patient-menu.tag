@@ -29,7 +29,7 @@
 	<li>
 		<a href="<spring:url value="/netcare/home" />">
 			<span class="icon start"></span>
-			<span class="iconLabel">Startsida</span>
+			<span class="iconLabel">Min hälsoplan</span>
 		</a>
 	</li>
 	<li>
@@ -42,12 +42,6 @@
 		<a href="<spring:url value="/netcare/user/report" />">
 			<span class="icon report"></span>
 			<span class="iconLabel"><spring:message code="patient.menu.report" /></span>
-		</a>
-	</li>
-	<li>
-		<a href="<spring:url value="/netcare/user/extra-report" />">
-			<span class="icon extra-report"></span>
-			<span class="iconLabel"><spring:message code="patient.menu.extra-report" /></span>
 		</a>
 	</li>
 	<li>

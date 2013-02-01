@@ -46,21 +46,23 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Mitt schema" plain="true">
+	<hp:viewBody title="Rapportera resultat" plain="true">
+	
+		<a href="<spring:url value="/netcare/user/extra-report" />" class="btn">Extrarapportering</a>
 	
 		<mvk:sheet>
 			<div id="filter">
 				<form id="filterForm">
 					<fieldset>
-						<legend>Välj vad som skall visas</legend>
+						<legend>Välj vilka aktiviteter som ska visas</legend>
 						<netcare:row>
 							<netcare:col span="4">
-								<netcare:field name="start" label="Startdatum">
+								<netcare:field name="start" label="Från">
 									<input id="start" type="text" name="start" class="dateInput allow-previous span12">
 								</netcare:field>	
 							</netcare:col>
 							<netcare:col span="4">
-								<netcare:field name="end" label="Slutdatum">
+								<netcare:field name="end" label="Till">
 									<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
 								</netcare:field>	
 							</netcare:col>
@@ -68,12 +70,12 @@
 						<netcare:row>
 							<netcare:col span="3">
 								<netcare:field name="reported">
-									<input id="reported" type="checkbox" name="reported" /><label style="display: inline;" for="reported"> Visa rapporterade</label>
+									<input id="reported" type="checkbox" name="reported" /><label style="display: inline;" for="reported"> Visa rapporterade aktiviteter</label>
 								</netcare:field>	
 							</netcare:col>
 							<netcare:col span="3">
 								<netcare:field name="due">
-									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa försenade</label>
+									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa aktiviteter som inte är utförda</label>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>

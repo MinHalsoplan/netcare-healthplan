@@ -104,4 +104,14 @@ public class CareActorEntity extends UserEntity {
 	public String getUsername() {
 		return this.getHsaId();
 	}
+	
+	public boolean hasRole(final String role) {
+		for (final RoleEntity r : getRoles()) {
+			if (r.getDn().equals(role)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

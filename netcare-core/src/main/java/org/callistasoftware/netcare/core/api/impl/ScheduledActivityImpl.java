@@ -130,7 +130,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		final Date oneWeek = new DateTime(System.currentTimeMillis()).plusWeeks(1).toDate();
 		final Date scheduled = entity.getScheduledTime();
 		
-		if (scheduled.before(oneWeek)) {
+		if (scheduled.before(oneWeek) && entity.getReportedTime() == null) {
 			scheduledActivity.setReportingPossible(true);
 		} else {
 			scheduledActivity.setReportingPossible(false);

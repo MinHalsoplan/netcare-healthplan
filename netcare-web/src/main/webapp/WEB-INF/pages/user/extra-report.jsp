@@ -46,12 +46,15 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Extra rapportering" plain="true">
+	<hp:viewBody title="" plain="true">
+		<mvk:heading title="Extrarapportering">
+			Du kan här rapportera utförda tillfällen utanför schemaläggningen på någon av de aktiviteter som finns i dina hälsoplaner. 
+		</mvk:heading>
 		<div id="extraReport">
 			<form>
 				<mvk:sheet>
 					<fieldset>
-						<legend>1. Välj aktivitet</legend>
+						<legend>1. Välj vilken aktivitet du vill göra en extra rapportering på.</legend>
 						<select id="activityDefinitions"></select>
 					</fieldset>
 				</mvk:sheet>

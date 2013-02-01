@@ -44,7 +44,7 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<hp:viewBody title="Startsida" plain="true">
+	<hp:viewBody title="Min hälsoplan" plain="true">
 		<div id="alarms">
 			<spring:message code="alarm.title" var="alarms" />
 			<mvk:heading title="${alarms}">

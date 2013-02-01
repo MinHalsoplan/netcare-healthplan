@@ -75,13 +75,13 @@
 	    		<div class="controls">
 	      			<input type="text" id="personnummer">
 	    		</div>
-	    		<label class="control-label" for="personnummer">Datumperiod</label>
+	    		<label class="control-label" for="personnummer">Tidsperiod</label>
 	    		<div class="controls">
 	      			<input type="text" id="dateFrom" class="span3 dateInput allow-previous"> -
 	      			<input type="text" id="dateTo" class="span3 dateInput allow-previous">
 	    		</div>
 	    		<div class="form-actions">
-	    			<button class="btn btn-info">Sök</button>
+	    			<button class="btn btn-info">Visa aktiviteter</button>
 	    		</div>
 	  		</div>
   		</mvk:sheet>

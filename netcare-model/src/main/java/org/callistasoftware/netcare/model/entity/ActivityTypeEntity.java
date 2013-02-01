@@ -135,8 +135,6 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 	}
 
 	public List<ActivityItemTypeEntity> getActivityItemTypes() {
-//		Collections.sort(activityItemTypes);
-//		return Collections.unmodifiableList(activityItemTypes);
 		return this.activityItemTypes;
 	}
 
@@ -205,17 +203,18 @@ public class ActivityTypeEntity implements PermissionRestrictedEntity {
 		
 		if (getAccessLevel().equals(AccessLevel.COUNTY_COUNCIL)) {
 			
-			/*
-			 * FIXME Extend check
-			 */
+			if (ca.hasRole(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR) 
+					&& getCountyCouncil().getId().equals(ca.getCareUnit().getCountyCouncil().getId())) {
+				return true;
+			}
 			
 		}
 		
 		if (getAccessLevel().equals(AccessLevel.NATIONAL)) {
 			
-			/*
-			 * FIXME Extend check
-			 */
+			if (ca.hasRole(RoleEntity.NATION_ADMINISTRATOR)) {
+				return true;
+			}
 		}
 
 		return false;

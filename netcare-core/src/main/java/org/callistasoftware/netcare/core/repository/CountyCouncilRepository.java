@@ -16,11 +16,10 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
-import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CountyCouncilRepository extends JpaRepository<CountyCouncilEntity, Long> {
 
-	CountyCouncilEntity findByMeta(final CountyCouncil name);
+	CountyCouncilEntity findByMeta(final Integer code);
 }

@@ -27,8 +27,11 @@
 
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="resourcePath" value="/netcare/resources" />
+
 <mvk:page>
-	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+	<mvk:header title="Netcare 2.0" resourcePath="${resourcePath}" contextPath="${pageContext.request.contextPath}">
 		<netcare:css resourcePath="${resourcePath}" />
 		<netcare:js resourcePath="${resourcePath}"/>
 		<hp:healthplan-js />
@@ -39,6 +42,11 @@
 					
 					var firstName = $('input[name="firstName"]').val();
 					var surName = $('input[name="surName"]').val();
+					
+					if (firstName == "" || surName == "") {
+						alert('Vänligen fyll i både för- och efternamn!');
+						return false;
+					}
 					
 					var ajax = new NC.Ajax();
 					ajax.postWithParams('/user/saveUserData', { firstName : firstName, surName : surName }, function(data) {
@@ -80,10 +88,10 @@
 						</div>
 						
 					</fieldset>
-					</form>
 				</div>
 				<div class="modal-footer">
 					<input class="btn btn-info" type="submit" value="<spring:message code="setup.proceed" />" />
+					</form>
 				</div>
 		</div>
 	</body>

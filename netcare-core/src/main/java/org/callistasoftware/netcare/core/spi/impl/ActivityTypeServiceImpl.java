@@ -234,7 +234,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		final CareUnitEntity careUnit = this.cuRepo.findByHsaId(getCareActor().getCareUnit().getHsaId());
 
 		ActivityTypeEntity activityTypeEntity = ActivityTypeEntity.newEntity(dto.getName(), category, careUnit,
-				AccessLevel.CAREUNIT);
+				AccessLevel.valueOf(dto.getAccessLevel().getCode()));
 
 		for (final ActivityItemType type : dto.getActivityItems()) {
 			activityTypeEntity.addActivityItemType(createNewItemEntity(type, activityTypeEntity));
@@ -341,7 +341,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	protected ActivityItemTypeEntity findEntityItem(Long id, List<ActivityItemTypeEntity> activityItemTypes) {
 		for (ActivityItemTypeEntity entity : activityItemTypes) {
-			if (entity.getId() == id) {
+			if (entity.getId().equals(id)) {
 				return entity;
 			}
 		}
@@ -384,7 +384,7 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 
 	protected boolean entityInDtoList(Long id, ActivityItemType[] activityItems) {
 		for (ActivityItemType item : activityItems) {
-			if (item.getId() == id) {
+			if (item.getId().equals(id)) {
 				return true;
 			}
 		}

@@ -35,7 +35,7 @@
 		<div class="mainBody actionBody span6"></div>
 	</div>
 </div>
-<a href="#" class="itemNavigation assistiveText"></a>
+<a href="<c:url value="/netcare/admin/template/{{=id}}" />" class="itemNavigation assistiveText"></a>
 </mvk:touch-item>
 </li>
 </script>
@@ -98,12 +98,23 @@
 	</div>
 	<div class="healthplan-actions">
 		<div class="row-fluid">
-			<div class="span12">
-				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Planera ny aktivitet från mall</a>
+			<div class="span6">
+				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
+			</div>
+			<div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
+				<a id="hp-inactivate-{{=id}}" href="#">Ta bort hälsoplan</a>
+				<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+					<div class="modal-body">Är du säker att hälsoplan {{=name}} ska tas bort. Inga data från hälsoplanen kommer då gå att nås genom applikationen.</div>
+					<div class="modal-footer">
+						<a href="#" data-dismiss="modal">Avbryt</a>
+						<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
+					</div>
+				</div>
 			</div>
 		</div>
+		{{ if (!autoRenewal) { }}
 		<div class="row-fluid extend">
-			<div class="span6">
+			<div class="span12">			
 				<a id="hp-extend-plan-{{=id}}" href="#">Förläng hälsoplan</a>
 				<div id="hp-extend-confirmation-{{=id}}" class="modal fade" style="display: none; ">
 					<div class="modal-body">Förläng hälsoplanen?</div>
@@ -113,17 +124,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="span5 inactivate" style="text-align: right">
-				<a id="hp-inactivate-{{=id}}" href="#">Ta bort hälsoplan</a>
-				<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-					<div class="modal-body">Ta bort hälsoplanen?</div>
-					<div class="modal-footer">
-						<a href="#" data-dismiss="modal">Avbryt</a>
-						<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
-					</div>
-				</div>
-			</div>
 		</div>
+		{{ } }}
 	</div>
 </div>
 </script>
@@ -207,7 +209,7 @@
 <div id="item-value-{{=id}}-container">
 	<div class="row-fluid">
 		<div class="span10">
-			<h4>{{=name}} ({{=minScaleValue}} = {{=minScaleText}}, {{=maxScaleValue}} = {{=maxScaleText}})
+			<h4>{{=name}} ({{=minScaleValue}} = {{=minScaleText}}, {{=maxScaleValue}} = {{=maxScaleText}})</h4>
 		</div>
 		<div class="span2" style="padding-top: 10px; text-align: right;">
 			<a href="#" id="field-{{=id}}-exclude">Exkludera</a>
@@ -289,7 +291,7 @@
 	&nbsp;<spring:message code="measureValue.alarm.text" />
 </div>
 <div class="form-actions" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </script>
 
@@ -313,9 +315,9 @@
 </div>
 <div class="controls controls-row">
 	<spring:message code="estimation.lowValue.label" />
-	<input type="text" name="minScaleValue" id="minScaleValue" class="span1" value="{{=minScaleValue}}"></input>
+	<input type="text" name="minScaleValue" id="minScaleValue" class="span1 estvalue" value="{{=minScaleValue}}"></input>
 	<span style="padding-left:20px;"><spring:message code="estimation.highValue.label" /></span>
-	<input type="text" name="maxScaleValue" id="maxScaleValue" class="span1" value="{{=maxScaleValue}}"></input>
+	<input type="text" name="maxScaleValue" id="maxScaleValue" class="span1 estvalue" value="{{=maxScaleValue}}"></input>
 </div>
 <div class="controls">
 	<label for="minScaleText"><spring:message code="estimation.lowText.label" /></label>
@@ -326,7 +328,7 @@
 	<input type="text" class="span6" name="maxScaleText" id="maxScaleText" value="{{=maxScaleText}}"></input>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </div>
 </script>
@@ -351,7 +353,7 @@
 	<textarea id="yesNoQuestion" rows="2" class="span6">{{=question}}</textarea>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </div>
 </script>
@@ -376,7 +378,7 @@
 	<textarea id="textLabel" rows="2" class="span6">{{=label}}</textarea>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">&lt;&lt; Tillbaka</button>
+	<button id="backButtonForm" class="btn btn-info">Spara</button>
 </div>
 </div>
 </script>
@@ -520,6 +522,16 @@
 <%--Scheduled Activity details --%>
 <script id="scheduledActivityDetails" type="text/template">
 <div id="sa-details-{{=id}}" class="item-with-form" style="display: none; margin-right: 15px;">
+	{{ if (reportedDate && !reportingPossible) { }}
+	<div class="alert alert-info">
+		<i>Den här aktiviteten är stängd för rapportering eftersom du redan har rapporterat den.</i>
+	</div>
+	{{ } if (!reportedDate && !reportingPossible) { }}
+	<div class="alert alert-info">
+		<i>Den här aktiviteten är inte öppen för rapportering ännu.</i>
+	</div>
+	{{ } }}
+
 	<div class="row-fluid">
 		<div class="span12 sa-details">
 		</div>
@@ -530,7 +542,7 @@
 		</div>
 		<div class="span7">
 			<input id="{{=id}}-report-date" type="text" style="display: inline;" class="span5 dateInput allow-previous"/>
-			<input id="{{=id}}-report-time" type="text" style="display: inline;" class="span3"/>
+			<input id="{{=id}}-report-time" type="text" style="display: inline;" class="span3 timeInput" placeholder="TT:MM"/>
 		</div>
 	</div>
 	<div class="row-fluid external">
@@ -541,10 +553,12 @@
 			<textarea id="{{=id}}-report-note" class="span11">{{=note}}</textarea>
 		</div>
 	</div>
+	{{ if (reportingPossible) { }}
 	<div class="form-actions" style="margin: 0">
 		<button id="sa-report-{{=id}}" type="button" class="btn btn-primary btn-info">Rapportera</button>
 		<button id="sa-noreport-{{=id}}" type="button" class="btn btn-danger">Rapportera som ej utförd</button>
 	</div>
+	{{ } }}
 </div>
 </script>
 
@@ -553,10 +567,19 @@
 <script id="scheduled-estimationValues" type="text/template">
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}}</span></div>
-<div class="span7">
-	<span style="display: inline;">{{=definition.activityItemType.minScaleText}}</span>
-	<input type="range" min="{{=definition.activityItemType.minScaleValue}}" max="{{=definition.activityItemType.maxScaleValue}}" step="1" value="{{=perceivedSense}}" />
-	<span style="display: inline;">{{=definition.activityItemType.maxScaleText}}</span>
+<div class="span5">
+	<netcare:row>
+		<netcare:col span="2" style="text-align: right;">
+			<span style="display: inline;">{{=definition.activityItemType.minScaleText}} </span>
+		</netcare:col>
+		<netcare:col span="8">
+			<input type="hidden" value="{{=perceivedSense}}" />
+			<div id="sa-row-slider-{{=id}}"></div>
+		</netcare:col>
+		<netcare:col span="2" style="text-align: left;">
+			<span style="display: inline;"> {{=definition.activityItemType.maxScaleText}}</span>
+		</netcare:col>
+	</netcare:row>
 </div>
 </div>
 </script>
@@ -565,7 +588,7 @@
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.target}} {{=definition.activityItemType.unit.name}})</span></div>
 <div class="span7">
-	<input type="text" value="{{=reportedValue}}" />
+	<input type="text" value="{{=reportedValue}}" class="decimalNumber"/>
 	<span style="display: inline;">{{=definition.activityItemType.unit.name}}</span>
 </div>
 </div>
@@ -574,7 +597,7 @@
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.minTarget}} - {{=definition.maxTarget}} {{=definition.activityItemType.unit.name}})</span></div>
 <div class="span7">
-	<input type="text" value="{{=reportedValue}}" />
+	<input type="text" value="{{=reportedValue}}" class="decimalNumber" />
 	<span style="display: inline;">{{=definition.activityItemType.unit.name}}</span>
 </div>
 </div>
@@ -584,8 +607,8 @@
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.name}} {{=definition.activityItemType.question}}</span></div>
 <div class="span7">
-	<input type="radio" name="answer" value="true" /> Ja
-	<input type="radio" name="answer" value="false" /> Nej 
+	<input type="radio" name="answer{{=id}}" value="true" checked="{{=answer}}" /> Ja
+	<input type="radio" name="answer{{=id}}" value="false" checked="{{=answer}}" /> Nej 
 </div>
 </div>
 </script>
@@ -734,7 +757,7 @@
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="span12">
-			<h4>Planerade tider</h4>
+			<h4>Schema</h4>
 			<span id="schedule-{{=id}}-repeat"><i><small></small></i></span>
 			<div style="margin-right: 15px;">
 				<table id="planned-times-{{=id}}" class="table table-striped table-condensed">
@@ -754,17 +777,17 @@
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="span12">
-			<h4>Progress</h4>
+			<h4>Andel genomförda aktiviteter</h4>
 			{{ if(numExtra > 0) { }}
-				<small>Du har genomfört <strong>{{=numDone}}</strong> (+ <strong>{{=numExtra}}</strong> extra) av <strong>{{=numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
+				<small>Du har genomfört <strong>{{=numDone}}</strong> (+ <strong>{{=numExtra}}</strong> extra) av <strong>{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
 			{{ } else { }}
-				<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTarget}}</strong> <i><strong>fram tills idag</strong></i> schemalagda aktiviteter.</small>
+				<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
 			{{ } }}
 			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{=targetDone}}%">{{=targetDone}}%</div>
 			</div>
 
-			<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTotal}}</strong> schemalagda aktiviteter för <i><strong>hela planen</strong></i>.</small>
+			<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong><i>hela hälsoplanens</i></strong> <strong>{{=numTotal}}</strong> aktiviteter.</small>
 			<div class="progress progress-info" style="margin-right: 15px;">
 				<div class="bar" style="width: {{=totalDone}}%">{{=totalDone}}%</div>
 			</div>
