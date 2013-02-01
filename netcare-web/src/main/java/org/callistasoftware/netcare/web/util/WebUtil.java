@@ -92,6 +92,55 @@ public final class WebUtil {
 
 		return false;
 	}
+	
+	public static final void setProdData(final ServletContext sc) {
+		final WebApplicationContext wc = getWebRequest(sc);
+		
+		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
+		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
+		final RoleRepository rRepo = wc.getBean(RoleRepository.class);
+		
+		log.debug("Check whether to setup initial data...");
+		final long ccCount = ccRepo.count();
+		final long roleCount = rRepo.count();
+		final long cuCount = cuRepo.count();
+		
+		log.debug("System currently have {} county councils, {} roles and {} care units.", new Object[] { ccCount, roleCount, cuCount });
+		
+		if (ccCount != 0 || roleCount != 0 || cuCount != 0) {
+			log.debug("Initial data already setup. Returning...");
+			return;
+		}
+		
+		log.debug("Setting up county councils...");
+		for (final CountyCouncil cc : CountyCouncil.values()) {
+			log.debug("Setting up: {}", cc.getName());
+			ccRepo.save(new CountyCouncilEntity(cc));
+			ccRepo.flush();
+		}
+		log.debug("done setting up county councils.");
+		
+		log.debug("Setting up initial care unit...");
+		cuRepo.save(CareUnitEntity.newEntity("se2321000057-63d9", ccRepo.findByMeta(CountyCouncil.JONKOPING)));
+		cuRepo.flush();
+		
+		log.debug("Setting up roles...");
+		rRepo.save(RoleEntity.newRole(RoleEntity.CARE_ACTOR));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.NATION_ADMINISTRATOR));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.PATIENT));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.SYSTEM_ADMINISTRATOR));
+		rRepo.flush();
+		log.debug("done setting up roles");
+	}
 
 	/**
 	 * Creates test data for app.store tests (app. approval process).

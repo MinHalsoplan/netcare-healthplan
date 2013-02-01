@@ -17,12 +17,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<configuration>
+<configuration debug="true">
     
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/healthplan.log</file>
-        <fileNamePattern>healthplan.%d{yyyy-MM-dd}.log</fileNamePattern>
-        <maxHistory>30</maxHistory>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>healthplan.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
         <encoder>
             <pattern>%date{ISO8601} %-5level %logger{35} - %msg%n</pattern>
         </encoder>
@@ -38,11 +40,11 @@
 	
 	<logger name="org.codehaus.jackson" level="WARN" />
 	
-	<logger name="org.springframework" level="WARN" />
-	<logger name="org.springframework.security" level="WARN" />
+	<logger name="org.springframework" level="DEBUG" />
+	<logger name="org.springframework.security" level="DEBUG" />
 	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN" />
-	<logger name="org.springframework.web" level="WARN" />
-	<logger name="org.springframework.http" level="WARN" />
+	<logger name="org.springframework.web" level="DEBUG" />
+	<logger name="org.springframework.http" level="DEBUG" />
 	
 	<logger name="org.callistasoftware.netcare" level="DEBUG" />
 	<logger name="org.callistasoftware.netcare.core.job" level="DEBUG" />

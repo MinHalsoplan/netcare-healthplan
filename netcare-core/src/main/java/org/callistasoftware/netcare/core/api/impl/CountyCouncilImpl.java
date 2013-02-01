@@ -20,7 +20,7 @@ import org.callistasoftware.netcare.core.api.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 
 public class CountyCouncilImpl implements CountyCouncil {
-
+	
 	private String code;
 	private String name;
 

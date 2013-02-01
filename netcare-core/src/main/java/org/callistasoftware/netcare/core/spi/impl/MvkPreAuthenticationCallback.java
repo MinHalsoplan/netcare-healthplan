@@ -59,7 +59,7 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 		
 		if (preAuthenticated.isCareActor()) {
 			
-			getLog().debug("The user is a care giver...");
+			getLog().debug("The user is a care actor...");
 			
 			final String careUnit = preAuthenticated.getCareUnitHsaId();
 			CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit);
@@ -68,15 +68,22 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 				cu = this.createCareUnit(careUnit, preAuthenticated.getCareUnitName());
 			}
 			
+			getLog().debug("Care unit found. Hsa id: {}", cu.getHsaId());
+			
 			getLog().debug("Lookup care actor role...");
 			final RoleEntity caRole = roleRepo.findByDn("CARE_ACTOR");
 			
-			final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("system-generated-name", "system-generated-name", preAuthenticated.getUsername(), cu));
-			ca.addRole(caRole);
+			final CareActorEntity ca = CareActorEntity.newEntity("system-generated-name", "system-generated-name", preAuthenticated.getUsername(), cu);
+			ca.addRole(caRole);	
 			
-			getLog().debug("Created care giver {} {}", ca.getFirstName(), ca.getSurName());
+			final CareActorEntity savedCa = this.careActorRepo.save(ca);
+			getLog().debug("Care actor saved. Belongs to care unit: {}", savedCa.getCareUnit().getHsaId());
 			
-			return CareActorBaseViewImpl.newFromEntity(ca);
+			final CareActorBaseView dto = CareActorBaseViewImpl.newFromEntity(savedCa);
+			getLog().debug("Constructed dto for care actor: {}", savedCa.getId());
+			
+			return dto;
+			
 		} else {
 			
 			getLog().info("The user is a patient...");

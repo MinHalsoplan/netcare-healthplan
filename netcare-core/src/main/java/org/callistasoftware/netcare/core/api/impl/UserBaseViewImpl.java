@@ -23,7 +23,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 public abstract class UserBaseViewImpl implements UserBaseView {
-
+	
 	/**
 	 * 
 	 */
