@@ -121,7 +121,7 @@ public final class WebUtil {
 		log.debug("done setting up county councils.");
 		
 		log.debug("Setting up initial care unit...");
-		cuRepo.save(CareUnitEntity.newEntity("se2321000057-63d9", ccRepo.findByMeta(CountyCouncil.JONKOPING)));
+		cuRepo.save(CareUnitEntity.newEntity("se2321000057-63d9", ccRepo.findByMeta(CountyCouncil.JONKOPING.getCode())));
 		cuRepo.flush();
 		
 		log.debug("Setting up roles...");

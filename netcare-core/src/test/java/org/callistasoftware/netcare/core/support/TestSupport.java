@@ -67,7 +67,7 @@ public abstract class TestSupport {
 			, final CountyCouncil countyCouncil
 			, final RoleEntity... roles) {
 		
-		CountyCouncilEntity councilEntity = getCountyCouncilRepository().findByMeta(countyCouncil);
+		CountyCouncilEntity councilEntity = getCountyCouncilRepository().findByMeta(countyCouncil.getCode());
 		if (councilEntity == null) {
 			councilEntity = ccRepo.saveAndFlush(CountyCouncilEntity.newEntity(countyCouncil));
 		}
@@ -100,7 +100,7 @@ public abstract class TestSupport {
 	}
 	
 	protected final CountyCouncilEntity newCountyCouncil(final CountyCouncil name) {
-		CountyCouncilEntity cc = getCountyCouncilRepository().findByMeta(name);
+		CountyCouncilEntity cc = getCountyCouncilRepository().findByMeta(name.getCode());
 		if (cc == null) {
 			cc = getCountyCouncilRepository().saveAndFlush(CountyCouncilEntity.newEntity(name));
 		}

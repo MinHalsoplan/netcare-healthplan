@@ -20,6 +20,11 @@ import org.callistasoftware.netcare.core.api.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 
 public class CountyCouncilImpl implements CountyCouncil {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private String code;
 	private String name;
@@ -28,6 +33,7 @@ public class CountyCouncilImpl implements CountyCouncil {
 	}
 	
 	public static CountyCouncil newFromEntity(final CountyCouncilEntity cc) {
+		
 		final CountyCouncilImpl impl = new CountyCouncilImpl();
 		impl.setCode(String.valueOf(cc.getMeta().getCode()));
 		impl.setName(cc.getMeta().getName());

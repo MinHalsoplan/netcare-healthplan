@@ -16,11 +16,13 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import java.io.Serializable;
+
 import org.callistasoftware.netcare.core.api.impl.CountyCouncilImpl;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 @JsonDeserialize(as=CountyCouncilImpl.class)
-public interface CountyCouncil {
+public interface CountyCouncil extends Serializable {
 
 	/**
 	 * Get the code for this county council
