@@ -16,45 +16,16 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import static org.junit.Assert.assertEquals;
 
-@Entity
-@Table(name = "nc_county_council")
-public class CountyCouncilEntity {
+import org.junit.Test;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+public class CountyCouncilEntityTest {
 
-	@Column(name="meta")
-	private Integer meta;
-
-	public CountyCouncilEntity() {
-	}
-
-	public CountyCouncilEntity(CountyCouncil metaData) {
-		this.meta = metaData.getCode();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public CountyCouncil getMeta() {
-		return CountyCouncil.fromCode(this.meta);
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public static CountyCouncilEntity newEntity(CountyCouncil meta) {
-		return new CountyCouncilEntity(meta);
+	@Test
+	public void testMeta() {
+		CountyCouncilEntity cc = new CountyCouncilEntity(CountyCouncil.VASTRA_GOTALAND);
+		assertEquals(CountyCouncil.VASTRA_GOTALAND, cc.getMeta());
 	}
 
 }
