@@ -20,7 +20,7 @@
 <configuration debug="true">
     
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/healthplan.log</file>
+        <file>/home/callista/netcare-healthplan-prod/logs/healthplan.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>healthplan.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
@@ -40,11 +40,11 @@
 	
 	<logger name="org.codehaus.jackson" level="WARN" />
 	
-	<logger name="org.springframework" level="DEBUG" />
-	<logger name="org.springframework.security" level="DEBUG" />
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.security" level="WARN" />
 	<logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN" />
-	<logger name="org.springframework.web" level="DEBUG" />
-	<logger name="org.springframework.http" level="DEBUG" />
+	<logger name="org.springframework.web" level="WARN" />
+	<logger name="org.springframework.http" level="WARN" />
 	
 	<logger name="org.callistasoftware.netcare" level="DEBUG" />
 	<logger name="org.callistasoftware.netcare.core.job" level="DEBUG" />
