@@ -3,7 +3,7 @@ DECLARE
        cc integer;
        rec RECORD;
 BEGIN
-	FOR rec in select u.id, u.hsa_id, u.name from nc_care_unit u
+	FOR rec in select id, hsa_id, name from dblink('hplink', 'select id, hsa_id, name from nc_care_unit') as t(id bigint, hsa_id text, name text)
 	LOOP
 		select count(*) into cc from nc_video_care_unit u where u.hsa_id = rec.hsa_id;
 		IF cc = 0 THEN
