@@ -30,7 +30,8 @@
 			file://${user.home}/netcare-healthplan-prod/push.properties,
 			file://${user.home}/netcare-healthplan-prod/mvk.properties,
 			file://${user.home}/netcare-healthplan-prod/application.properties,
-			file://${user.home}/netcare-healthplan-prod/bankid.properties" "/>
+			file://${user.home}/netcare-healthplan-prod/bankid.properties"
+			ignore-unresolvable="true"/>
 		
 		<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
