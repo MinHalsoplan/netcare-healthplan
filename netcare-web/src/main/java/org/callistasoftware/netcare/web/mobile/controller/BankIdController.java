@@ -22,10 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.callistasoftware.netcare.commons.bankid.CivicRegistrationNumber;
 import org.callistasoftware.netcare.commons.bankid.service.BankIdService;
+import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -45,10 +46,10 @@ public class BankIdController {
 	private static final Logger log = LoggerFactory.getLogger(BankIdController.class);
 	
 	@Autowired
-	private BankIdService service;
+	private PatientRepository repo;
 	
-	@Value("${bankid.redirectUrl}")
-	private String redirectUrl;
+	@Autowired
+	private BankIdService service;
 	
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -56,16 +57,20 @@ public class BankIdController {
 		
 		log.info("Authenticating user {}", crn);
 		
-        try {
-            return service.authenticate(new CivicRegistrationNumber(crn));
-        } catch (Exception e) {
-        	
-        	e.printStackTrace();
-        	
-        	log.error("Exception caught in bank id controller", e);
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        }
-        return "";
+		final PatientEntity ent = repo.findByCivicRegistrationNumber(crn.trim());
+		if (ent != null) {
+			try {
+				return service.authenticate(new CivicRegistrationNumber(crn));
+			} catch (final Exception e) {
+				log.error("Error in bank id service. Message: {}", e.getMessage());
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+				return null;
+			}
+		}
+		
+		log.info("User {} does not have an account in the system", crn);
+		response.sendError(HttpServletResponse.SC_NOT_FOUND, "The user does not have an account...");
+		return null;
     }
 
     @RequestMapping(value = "/complete", method = RequestMethod.GET, produces="application/json")

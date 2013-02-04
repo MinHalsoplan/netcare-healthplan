@@ -62,11 +62,10 @@ public class StartActivity extends Activity {
 					
 					@Override
 					public void onFailure(String reason) {
-						Log.e(TAG, "Error when doing authenticate(). Reason: " + reason);
-						Toast.makeText(StartActivity.this, "Anslutning misslyckades. Försök igen senare...", Toast.LENGTH_LONG).show();
-						
 						crn.setEnabled(true);
 						login.setEnabled(true);
+						
+						Toast.makeText(StartActivity.this, reason, Toast.LENGTH_LONG).show();
 					}
 					
 				}).execute(crn.getText().toString());

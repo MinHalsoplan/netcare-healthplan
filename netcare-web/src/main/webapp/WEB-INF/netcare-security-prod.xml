@@ -50,10 +50,7 @@
 			<security:intercept-url pattern="/netcare/shared/**" access="hasRole('PATIENT') or hasRole('CARE_ACTOR')"/>
 			<security:intercept-url pattern="/netcare/user/**" access="hasRole('PATIENT')"/>
 			<security:intercept-url pattern="/netcare/admin/**" access="hasRole('CARE_ACTOR')"/>
-			
 			<security:intercept-url pattern="/netcare/nation-admin/**" access="hasRole('NATION_ADMINISTRATOR')"/>
-			
-			<security:intercept-url pattern="/**" access="hasRole('PATIENT')"/>
 			<security:logout logout-url="/netcare/security/logout"/>
 		</security:http>
 	</beans>
