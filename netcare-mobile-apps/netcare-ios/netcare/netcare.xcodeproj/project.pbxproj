@@ -10,7 +10,7 @@
 		8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69A81509525D00209FE0 /* Default@2x.png */; };
 		8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63616B016F400549577 /* MobiltBankIdService.m */; };
 		8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */; };
-		8D3CD64116B149A700549577 /* HTTPCollect.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD64016B149A700549577 /* HTTPCollect.m */; };
+		8D3CD64116B149A700549577 /* HTTPComplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD64016B149A700549577 /* HTTPComplete.m */; };
 		D0599165150B691D00EB3F6D /* 57px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599164150B691D00EB3F6D /* 57px.png */; };
 		D0599168150B69BD00EB3F6D /* 114px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599167150B69BD00EB3F6D /* 114px.png */; };
 		D05D409514FA4B3D00335899 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05D409414FA4B3D00335899 /* UIKit.framework */; };
@@ -35,8 +35,8 @@
 		8D3CD63616B016F400549577 /* MobiltBankIdService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobiltBankIdService.m; sourceTree = "<group>"; };
 		8D3CD63916B0170900549577 /* HTTPAuthenticate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPAuthenticate.h; sourceTree = "<group>"; };
 		8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPAuthenticate.m; sourceTree = "<group>"; };
-		8D3CD63F16B149A700549577 /* HTTPCollect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPCollect.h; sourceTree = "<group>"; };
-		8D3CD64016B149A700549577 /* HTTPCollect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPCollect.m; sourceTree = "<group>"; };
+		8D3CD63F16B149A700549577 /* HTTPComplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPComplete.h; sourceTree = "<group>"; };
+		8D3CD64016B149A700549577 /* HTTPComplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPComplete.m; sourceTree = "<group>"; };
 		D0599164150B691D00EB3F6D /* 57px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 57px.png; sourceTree = "<group>"; };
 		D0599167150B69BD00EB3F6D /* 114px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 114px.png; sourceTree = "<group>"; };
 		D05D409014FA4B3D00335899 /* netcare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = netcare.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,8 +127,8 @@
 				8D3CD63616B016F400549577 /* MobiltBankIdService.m */,
 				8D3CD63916B0170900549577 /* HTTPAuthenticate.h */,
 				8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */,
-				8D3CD63F16B149A700549577 /* HTTPCollect.h */,
-				8D3CD64016B149A700549577 /* HTTPCollect.m */,
+				8D3CD63F16B149A700549577 /* HTTPComplete.h */,
+				8D3CD64016B149A700549577 /* HTTPComplete.m */,
 				D05D40BB14FC22BC00335899 /* HTTPConnection.h */,
 				D05D40BC14FC22BD00335899 /* HTTPConnection.m */,
 				D05D40BE14FD059B00335899 /* HTTPAuthentication.h */,
@@ -177,7 +177,7 @@
 		D05D408714FA4B3D00335899 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = D05D408A14FA4B3D00335899 /* Build configuration list for PBXProject "netcare" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -228,7 +228,7 @@
 				D05D40C314FD08D200335899 /* Util.m in Sources */,
 				8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */,
 				8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */,
-				8D3CD64116B149A700549577 /* HTTPCollect.m in Sources */,
+				8D3CD64116B149A700549577 /* HTTPComplete.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +260,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -273,6 +277,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
@@ -285,6 +290,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Peter Larsson";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
@@ -292,6 +301,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -340,6 +350,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Peter Larsson";
 				COPY_PHASE_STRIP = YES;
@@ -347,6 +361,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";

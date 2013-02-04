@@ -24,6 +24,7 @@
 #import "Util.h"
 
 @implementation MainViewController
+
 @synthesize personNumberTextEdit;
 @synthesize nextPageButton;
 @synthesize loginButton;
@@ -35,7 +36,7 @@
     [loginButton setEnabled:NO];
     NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
     [self savePersonalNumber];
-    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:@"192011189228"];
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:[personNumberTextEdit text] andDelegate:self];
     [bankIdService authenticate];
     
 }
@@ -232,5 +233,15 @@
 - (NSString*)orderrefToken {
     NSLog(@"get orderRefToken");
     return self.orderrefToken;
+}
+
+- (void)displayAlert {
+    NSString* msg = [NSString stringWithFormat:@"Det finns ingen patient med hälsoplan som har personnummer %@", [personNumberTextEdit text]];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ingen patient registrerad."
+                                                    message:msg
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 @end

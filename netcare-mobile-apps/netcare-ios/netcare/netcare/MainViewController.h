@@ -39,5 +39,6 @@
 - (void)switchToWebView:(NSString*)token;
 - (NSString*)orderrefToken;
 - (void)setOrderrefToken:(NSString*)newToken;
+- (void)displayAlert;
 
 @end

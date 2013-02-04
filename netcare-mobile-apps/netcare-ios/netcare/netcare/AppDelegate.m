@@ -53,10 +53,8 @@
     NSString *token = [urlString substringFromIndex: 10];
     NSLog (@"token = %@", token);
 
-    [((MainViewController*)self.window.rootViewController) switchToWebView:token];
-
-//    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] init];
-//    [bankIdService collect:ref];
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:nil andDelegate:((MainViewController*)self.window.rootViewController)];
+    [bankIdService complete:token];
     
     return YES;
 }

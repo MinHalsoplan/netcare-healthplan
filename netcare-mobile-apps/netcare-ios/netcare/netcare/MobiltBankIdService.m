@@ -10,9 +10,10 @@
 
 @implementation MobiltBankIdService
 
-- (MobiltBankIdService*) initWithCrn:(NSString*)theCrn {
+- (MobiltBankIdService*) initWithCrn:(NSString*)theCrn andDelegate:(MainViewController *)theDelegate;{
     NSLog(@"MobiltBankIdService.initWithCrn:  %@", theCrn);
     crn = theCrn;
+    delegate = theDelegate;
     return self;
 }
 
@@ -20,15 +21,17 @@
     NSLog(@"MobiltBankIdService.authenticate");
     
     HTTPAuthenticate* httpAuthenticate = [[HTTPAuthenticate alloc] initWithCrn:crn];
+    [httpAuthenticate setMainViewController:delegate];
     [httpAuthenticate sendRequest];
     
 }
 
-- (void) collect:(NSString*)ref {
-    NSLog(@"MobiltBankIdService.collect");
+- (void) complete:(NSString*)ref {
+    NSLog(@"MobiltBankIdService.complete");
 
-    HTTPCollect* httpCollect = [[HTTPCollect alloc] init];
-    [httpCollect sendRequest:ref];
+    HTTPComplete* httpComplete = [[HTTPComplete alloc] init];
+    [httpComplete setMainViewController:delegate];
+    [httpComplete sendRequest:ref];
     
 }
 

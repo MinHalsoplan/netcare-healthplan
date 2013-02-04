@@ -12,6 +12,8 @@
 
 @implementation HTTPAuthenticate
 
+@synthesize mainViewController;
+
 - (HTTPAuthenticate*)initWithCrn:(NSString*)theCrn {
     httpResponse = [[NSMutableData alloc] init];
     crn = theCrn;
@@ -34,6 +36,16 @@
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     [httpResponse setLength:0];
+    NSHTTPURLResponse* resp = (NSHTTPURLResponse*)response;
+    int responseCode = [resp statusCode];
+    NSLog(@"HTTP: Response code: %d\n", responseCode);
+    if (responseCode != 200) {
+        if (connection) {
+            [connection cancel];
+        }
+        [mainViewController displayAlert];
+    }
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data

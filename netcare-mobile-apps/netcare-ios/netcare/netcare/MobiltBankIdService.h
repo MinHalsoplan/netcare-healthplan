@@ -9,15 +9,19 @@
 #import <Foundation/Foundation.h>
 
 #import "HTTPAuthenticate.h"
-#import "HTTPCollect.h"
+#import "HTTPComplete.h"
+#import "MainViewController.h"
+
+@class MainViewController;
 
 @interface MobiltBankIdService : NSObject {
     NSString* crn;
+    MainViewController* delegate;
 }
 
-- (MobiltBankIdService*) initWithCrn:(NSString*)crn;
+- (MobiltBankIdService*) initWithCrn:(NSString*)crn andDelegate:(MainViewController *)delegate;
 
 - (void) authenticate;
-- (void) collect:(NSString*)ref;
+- (void) complete:(NSString*)ref;
 
 @end
