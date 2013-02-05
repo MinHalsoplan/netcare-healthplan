@@ -31,14 +31,12 @@
 	<mobile:templates />
 	<script type="text/javascript">
 
-		var reportedLabel = '<spring:message code="mobile.activity.reported" />';
-	
 		$(document).bind('mobileinit', function() {
 			$.mobile.defaultPageTransition = 'none';
 		})
 		
 		$(document).bind('pageinit', function() {
-			NC_MOBILE.ACTIVITIES.init(reportedLabel);
+			NC_MOBILE.ACTIVITIES.init();
 		});
 
 	</script>

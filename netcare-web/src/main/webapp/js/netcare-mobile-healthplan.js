@@ -22,16 +22,13 @@ var NC_MOBILE = {
 		my.templateNames = ['measurementSingleItemTemplate', 'measurementIntervalItemTemplate', 
 		                     'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 
 		                     'commonActivityItemTemplate'];
-		var templates;
-		
+		var templates;		
 		var due;
 		var actual;
 		var reported;
 
-		
-		my.init = function(reportedLabel) {
+		my.init = function() {
 			var that = this;
-			this.reportedLabel = reportedLabel;
 			this.templates = {};
 
 			my.pageInit(that);
@@ -88,17 +85,10 @@ var NC_MOBILE = {
 			});
 		};
 		
-		my.resetGUI = function(my) {
-			$('#schema').empty();
-			due = null;
-			actual = null;
-			reported = null;
-		};
-
 		var setupGUI = function(my) {
 			
 			$('#refresh').tap(function(e) {
-				my.resetGUI(my);
+				$('#schema').empty();
 				my.load(my, function() {
 					my.buildFromArray(my, actual);
 					$('#actual').click();
@@ -143,15 +133,92 @@ var NC_MOBILE = {
 		};
 
 		my.buildListView = function(my, activity, shouldBuildHeader) {
+			var schemaUlTag = $('#schema');
 			if (shouldBuildHeader) {
 				var day = activity.reported != null ? activity.actDay.value : activity.day.value;
 				var date = activity.reported != null ? activity.actDate : activity.date;
 				
-				my.createListHeader($('#schema'), day + ' ' + date);
+				my.createListHeader(schemaUlTag, day + ' ' + date);
 			}
-			my.createListRow(my, $('#schema'), '#report', activity, my.loadActivity, reportedLabel);
+			my.createListRow(my, schemaUlTag, '#report', activity, my.loadActivity);
+		};
+
+		my.createListHeader = function(parent, title) {
+			if (parent === undefined) {
+				throw new Error("Parent element is not defined");
+			}
+			
+			var header = $('<li>').attr('data-role', 'list-divider')
+			.attr('role', 'heading')
+			.addClass('ui-li')
+			.addClass('ui-li-divider')
+			.addClass('ui-btn')
+			.addClass('ui-bar-b')
+			.addClass('ui-li-has-count')
+			.addClass('ui-btn-up-undefined')
+			.html(title);
+			
+			parent.append(header);
 		};
 		
+		my.createListRow = function(my, parent, href, activity, clickCallback) {
+			if (!activity.activityDefinition.active) {
+				return false;
+			}
+			
+			var activityContainer = $('<li>').attr('data-theme', 'c')
+			.addClass('ui-btn')
+			.addClass('ui-btn-icon-right')
+			.addClass('ui-li-has-arrow')
+			.addClass('ui-li')
+			.addClass('ui-btn-up-c');
+			
+			var activityContentDiv = $('<div>').attr('area-hidden', 'true')
+			.addClass('ui-btn-inner')
+			.addClass('ui-li');
+		
+			activityContentDiv.append(
+				$('<span>').addClass('ui-icon').addClass('ui-icon-arrow-r').addClass('ui-icon-shadow')
+			);
+			
+			activityContainer.append(activityContentDiv);
+			
+			var link = $('<a>').attr('href', '#report').attr('data-transition', 'none').addClass('ui-link-inherit');
+			activityContentDiv.append(link);
+			
+			var activityText = $('<div>').addClass('ui-btn-text');
+			var time = activity.reported != null ? activity.actTime : activity.time;
+			activityText.append(
+				$('<h3>' + time + ' ' + activity.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
+			);
+			
+			var desc = '';
+			$.each(activity.activityItemValues, function(i, activityItem) {
+				var next = activityItem.definition.activityItemType.name;
+				if((desc.length + next.length)>32) {
+					desc += "...";
+				} else {
+					if(desc.length==0) {
+						desc = next;
+					} else {
+						desc += ', ' + next;
+					}
+				}
+			});
+			
+			activityText.append(
+				$('<p>').addClass('ui-li-desc').html(desc)
+			);
+						
+			link.append(activityText);
+			
+			parent.append(activityContainer);
+			
+			link.click(function(e) {
+				clickCallback(my, activity.id);
+			});
+		};
+
 		my.loadScheduledActivity = function(activityId, callback) {
 			var activity = findActivityById(activityId);
 			if(activity!=null) {
@@ -304,82 +371,6 @@ var NC_MOBILE = {
 			parent.prepend(div);
 		};
 			
-		my.createListHeader = function(parent, title) {
-			if (parent === undefined) {
-				throw new Error("Parent element is not defined");
-			}
-			
-			var header = $('<li>').attr('data-role', 'list-divider')
-			.attr('role', 'heading')
-			.addClass('ui-li')
-			.addClass('ui-li-divider')
-			.addClass('ui-btn')
-			.addClass('ui-bar-b')
-			.addClass('ui-li-has-count')
-			.addClass('ui-btn-up-undefined')
-			.html(title);
-			
-			parent.append(header);
-		};
-		
-		my.createListRow = function(my, parent, href, value, clickCallback, reportedLabel) {
-			if (!value.activityDefinition.active) {
-				return false;
-			}
-			
-			var activityContainer = $('<li>').attr('data-theme', 'c')
-			.addClass('ui-btn')
-			.addClass('ui-btn-icon-right')
-			.addClass('ui-li-has-arrow')
-			.addClass('ui-li')
-			.addClass('ui-btn-up-c');
-			
-			var activityContentDiv = $('<div>').attr('area-hidden', 'true')
-			.addClass('ui-btn-inner')
-			.addClass('ui-li');
-		
-			activityContentDiv.append(
-				$('<span>').addClass('ui-icon').addClass('ui-icon-arrow-r').addClass('ui-icon-shadow')
-			);
-			
-			activityContainer.append(activityContentDiv);
-			
-			var link = $('<a>').attr('href', '#report').attr('data-transition', 'none').addClass('ui-link-inherit');
-			activityContentDiv.append(link);
-			
-			var activityText = $('<div>').addClass('ui-btn-text');
-			var time = value.reported != null ? value.actTime : value.time;
-			activityText.append(
-				$('<h3>' + time + ' ' + value.activityDefinition.type.name + '</h3>').addClass('ui-li-heading')
-			);
-			
-			var desc = '';
-			$.each(value.activityItemValues, function(i, activityItem) {
-				var next = activityItem.definition.activityItemType.name;
-				if((desc.length + next.length)>32) {
-					desc += "...";
-				} else {
-					if(desc.length==0) {
-						desc = next;
-					} else {
-						desc += ', ' + next;
-					}
-				}
-			});
-			
-			activityText.append(
-				$('<p>').addClass('ui-li-desc').html(desc)
-			);
-						
-			link.append(activityText);
-			
-			parent.append(activityContainer);
-			
-			link.click(function(e) {
-				clickCallback(my, value.id);
-			});
-		};
-		
 		return my;
 	})()
 	
