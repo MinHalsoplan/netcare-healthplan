@@ -30,6 +30,7 @@
 @synthesize loginButton;
 @synthesize shadowedLabel;
 
+@synthesize orderrefToken;
 
 - (IBAction)authenticate:(id)sender {
     NSLog(@"autenthicate() called");
@@ -103,7 +104,8 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    //return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return NO;
 }
 
 
@@ -142,7 +144,7 @@
 }
 
 - (void)switchToWebView:(NSString*)ref {
-    NSLog(@"Switch to web view");
+    NSLog(@"MainViewController.switchToWebView %@", ref);
     [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
     [self setOrderrefToken:ref];
 }
@@ -209,7 +211,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"prepareForSegue %@\n", [segue identifier]);
+    NSLog(@"MainViewController.prepareForSegue: %@\n", [segue identifier]);
     
     if ([[segue identifier] isEqualToString:@"webView"]) {
         [[segue destinationViewController] setDelegate:self];
@@ -220,19 +222,9 @@
 - (NSURL*)startURL
 {
     NSString *urlString = [Util  baseURLString];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCCollect"]];
-    NSLog(@"Start URL --> %@\n", urlString);
-    
+    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCStartPage"]];
+    NSLog(@"MainViewController.startURL --> %@\n", urlString);
     return [[NSURL alloc] initWithString:urlString];
-}
-
-- (void)setOrderrefToken:(NSString*)newToken {
-    self.orderrefToken = newToken;
-}
-
-- (NSString*)orderrefToken {
-    NSLog(@"get orderRefToken");
-    return self.orderrefToken;
 }
 
 - (void)displayAlert {

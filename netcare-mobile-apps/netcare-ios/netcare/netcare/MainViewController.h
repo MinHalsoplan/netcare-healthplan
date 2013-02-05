@@ -21,9 +21,7 @@
 #import "HTTPAuthentication.h"
 #import "MobiltBankIdService.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate, HTTPAuthenticationDelegate> {
-    NSString *orderrefToken;
-}
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate, HTTPAuthenticationDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
 @property (weak, nonatomic) IBOutlet UILabel *shadowedLabel;
@@ -33,12 +31,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *nextPageButton;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 
+@property (nonatomic, assign) NSString *orderrefToken;
+
 - (IBAction)login:(id)sender;
 - (IBAction)textFieldReturn:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
 - (void)switchToWebView:(NSString*)token;
-- (NSString*)orderrefToken;
-- (void)setOrderrefToken:(NSString*)newToken;
+//- (NSString*)orderrefToken;
+//- (void)setOrderrefToken:(NSString*)newToken;
 - (void)displayAlert;
 
 @end

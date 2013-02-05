@@ -58,23 +58,23 @@
 	<key>NCAuthenticate</key>
 	<string>/mobile/bankid/authenticate</string>
 	<key>NCCheckCredentialsPage</key>
-	<string>/v2/mobile/checkcredentials</string>
+	<string>/mobile/checkcredentials</string>
 	<key>NCCollect</key>
 	<string>/mobile/bankid/complete</string>
 	<key>NCHost</key>
 	<string>192.168.0.101</string>
 	<key>NCLogoutPage</key>
-	<string>/v2/netcare/security/logout</string>
+	<string>/netcare/security/logout</string>
 	<key>NCPort</key>
 	<string>8080</string>
 	<key>NCProtocol</key>
 	<string>http</string>
 	<key>NCPushRegistrationPage</key>
-	<string>/v2/mobile/push/register/apns</string>
+	<string>/mobile/push/register/apns</string>
 	<key>NCSecurityRealm</key>
 	<string>netcare-mobile</string>
 	<key>NCStartPage</key>
-	<string>/v2/mobile/start</string>
+	<string>/mobile/start</string>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
 	<key>UIPrerenderedIcon</key>

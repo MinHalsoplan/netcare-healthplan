@@ -57,7 +57,7 @@
     {
         urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
     }
-    NSLog(@"BaseURL --> %@\n", urlString);
+    NSLog(@"Util.baseURLString --> %@\n", urlString);
     return urlString;
 }
 
