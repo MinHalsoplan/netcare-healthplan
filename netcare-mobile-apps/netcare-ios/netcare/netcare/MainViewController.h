@@ -18,10 +18,10 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #import "FlipsideViewController.h"
-#import "HTTPAuthentication.h"
 #import "MobiltBankIdService.h"
+#import "HTTPConnection.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate, HTTPAuthenticationDelegate>
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
 @property (weak, nonatomic) IBOutlet UILabel *shadowedLabel;
@@ -33,12 +33,9 @@
 
 @property (nonatomic, assign) NSString *orderrefToken;
 
-- (IBAction)login:(id)sender;
 - (IBAction)textFieldReturn:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
 - (void)switchToWebView:(NSString*)token;
-//- (NSString*)orderrefToken;
-//- (void)setOrderrefToken:(NSString*)newToken;
 - (void)displayAlert;
 
 @end

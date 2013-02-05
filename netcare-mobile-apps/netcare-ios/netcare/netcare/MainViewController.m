@@ -112,35 +112,12 @@
 #pragma mark - Basic Auth Stuff
 
 //
-- (NSURL*)logoutURL
-{
-    NSString *urlString = [Util  baseURLString];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCLogoutPage"]]; 
-    NSLog(@"Logout:  URL --> %@\n", urlString);
-    return [NSURL URLWithString:urlString];         
-}
-
-//
 - (NSURL*)pushRegistrationURL
 {
     NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCPushRegistrationPage"]]; 
     NSLog(@"Push Registration:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
-}
-
-- (void)showAuthError:(int)responseCode
-{
-    NSString *msg = [NSString stringWithFormat:(responseCode == -1012) ? @"Felaktig personlig kod, eller så saknas inställningar för denna tjänst (%d)" : @"Tekniskt fel, försök igen lite senare (%d)", responseCode];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Åtkomst nekad"
-                                                    message:msg 
-                                                   delegate:self
-                                          cancelButtonTitle:@"Ok" 
-                                          otherButtonTitles:nil];
-    
-    [alert show];
-    
 }
 
 - (void)switchToWebView:(NSString*)ref {
@@ -160,15 +137,6 @@
         [personNumberTextEdit resignFirstResponder];
 }
 
-// clean up stuff
-// to prepare for a new session
-- (void)cleanSession
-{
-    [HTTPAuthentication cleanSession];
-    NSURL *url = [self logoutURL];
-    HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:nil];
-    [conn get];
-}
 
 - (void)pushKeeping
 {
@@ -204,9 +172,7 @@
 // back to logon screen
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self cleanSession];
-    
+    [self dismissViewControllerAnimated:YES completion:nil];    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

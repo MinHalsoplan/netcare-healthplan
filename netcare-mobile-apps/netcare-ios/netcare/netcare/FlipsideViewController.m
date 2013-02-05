@@ -79,7 +79,7 @@
  
     NSString *requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
-    NSLog(@"FlipsideViewController.webView - %@\n", requestString);
+    NSLog(@"FlipsideViewController - %@\n", requestString);
     
     if ([requestString hasPrefix:@"ios-log:"]) {
         NSString* logString = [[requestString componentsSeparatedByString:@":#iOS#"] objectAtIndex:1];

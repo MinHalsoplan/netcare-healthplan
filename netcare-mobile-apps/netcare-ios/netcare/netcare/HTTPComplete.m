@@ -31,7 +31,7 @@
     [request setTimeoutInterval:15];
     [request setValue:ref forHTTPHeaderField:@"X-netcare-order"];
     
-    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response

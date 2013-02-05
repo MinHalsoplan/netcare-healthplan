@@ -30,7 +30,7 @@
     [request setHTTPMethod: @"POST"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
     
-    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+   (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
