@@ -19,7 +19,9 @@ var NC_MOBILE = {
 	ACTIVITIES : (function() {
 		var my = {};
 		
-		var templateNames;
+		my.templateNames = ['measurementSingleItemTemplate', 'measurementIntervalItemTemplate', 
+		                     'estimationItemTemplate', 'yesnoItemTemplate', 'textItemTemplate', 
+		                     'commonActivityItemTemplate'];
 		var templates;
 		
 		var due;
@@ -27,12 +29,11 @@ var NC_MOBILE = {
 		var reported;
 
 		
-		my.init = function(templateNames, reportedLabel) {
+		my.init = function(reportedLabel) {
 			var that = this;
-			this.templateNames = templateNames;
 			this.reportedLabel = reportedLabel;
 			this.templates = {};
-			
+
 			my.pageInit(that);
 		};
 		
@@ -45,6 +46,7 @@ var NC_MOBILE = {
 				});
 				
 				my.precompileTemplates(my);
+				
 				my.load(my, function() {
 					setupGUI(my);
 					$.mobile.loading('hide');
@@ -53,7 +55,7 @@ var NC_MOBILE = {
 		};
 
 		my.precompileTemplates = function(my) {
-			$.each(this.templateNames, function(index, name) {
+			$.each(my.templateNames, function(index, name) {
 				my.templates[name] =  _.template($('#'+name).html());
 			});
 		};
@@ -95,7 +97,7 @@ var NC_MOBILE = {
 
 		var setupGUI = function(my) {
 			
-			$('#refresh').click(function(e) {
+			$('#refresh').tap(function(e) {
 				my.resetGUI(my);
 				my.load(my, function() {
 					my.buildFromArray(my, actual);
@@ -103,19 +105,23 @@ var NC_MOBILE = {
 				});
 			});
 
-			$('#actual').click(function(e) {
+			$('#refresh').taphold(function(e) {
+				window.location.href='start';
+			});
+
+			$('#actual').tap(function(e) {
 				my.buildFromArray(my, actual);
 			});
 
-			$('#due').click(function(e) {
+			$('#due').tap(function(e) {
 				my.buildFromArray(my, due);
 			});
 
-			$('#reported').click(function(e) {
+			$('#reported').tap(function(e) {
 				my.buildFromArray(my, reported);
 			});
 
-			$('#actual').click();
+			$('#actual').tap();
 		};
 		
 		my.buildFromArray = function(my, ListOfActivities) {
@@ -136,8 +142,8 @@ var NC_MOBILE = {
 			});
 		};
 
-		my.buildListView = function(my, activity, buildHeader) {
-			if (buildHeader) {
+		my.buildListView = function(my, activity, shouldBuildHeader) {
+			if (shouldBuildHeader) {
 				var day = activity.reported != null ? activity.actDay.value : activity.day.value;
 				var date = activity.reported != null ? activity.actDate : activity.date;
 				
@@ -202,71 +208,72 @@ var NC_MOBILE = {
 					$('#reportForm').append(myTemplate(item));
 				}
 				
+				/*
+				 * Report value
+				 */
+				if(activity.reported != null) {
+					$('#sendReport').hide();
+				} else {
+					$('#sendReport').show();
+					$('#sendReport').click(function(e) {
+						e.preventDefault();
+						
+						$.mobile.loading('show', {
+							text : 'Skickar rapportering...',
+							textVisible : true
+						});
+	
+						var activityId = $('#activityId').val();
+						var activity = findActivityById(activityId);
+	
+						var activityData = new Object();
+						activityData.id = activity.id;
+						activityData.due = activity.due;
+						activityData.reported = activity.reported;
+						activityData.date = activity.date;
+						activityData.time = activity.time;
+						activityData.actualTime = $('#date').val() + ' ' + $('#time').val();
+						activityData.note = $('#note').val();
+						activityData.rejected = false;
+						activityData.activityItemValues = new Array();
+						$.each(activity.activityItemValues,function(index, item) {
+							var activityDataItem = new Object();
+							activityDataItem.id = item.id;
+							activityDataItem.valueType = item.valueType;
+							activityDataItem.definition = item.definition;
+							if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
+								activityDataItem.reportedValue = $('#measurement' + item.id).val();
+								activityDataItem.target = item.target;
+								activityDataItem.minTarget = item.minTarget;
+								activityDataItem.maxTarget = item.maxTarget;
+							} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
+								activityDataItem.perceivedSense = $('#slider' + item.id).val();
+							} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
+								activityDataItem.answer = $('#slider' + item.id).val();
+							} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
+								activityDataItem.textComment = $('#text' + item.id).val();
+							}
+							activityData.activityItemValues.push(activityDataItem);
+						});
+						new NC.Ajax().post('/scheduledActivities/' + activityId, activityData, function(data) {
+							if (data.success) {
+								my.load(my, setupGUI);
+								var msg = $('<div>').addClass('ui-bar ui-bar-e pageMessage').append($('<h3>' + activity.activityDefinition.type.name + ' rapporterades</h3>'));
+								$('#schema').before(msg);
+								$.mobile.loading('hide');
+								setTimeout(function() {msg.slideUp('slow');}, 5000);
+							}
+						});
+						$('#sendReport').unbind('click');
+					});
+				}
+				
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
 				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
 				
 				$.mobile.loading('hide');
 			});
 
-			/*
-			 * Report value
-			 */
-			$('#sendReport').bind('click', function(e, ui) {
-				e.preventDefault();
-				NC.log('Report click!');
-			});
-			
-			$('#sendReport').click(function(e) {
-				e.preventDefault();
-				
-				$.mobile.loading('show', {
-					text : 'Skickar rapportering...',
-					textVisible : true
-				});
-
-				var activityId = $('#activityId').val();
-				var activity = findActivityById(activityId);
-
-				var activityData = new Object();
-				activityData.id = activity.id;
-				activityData.due = activity.due;
-				activityData.reported = activity.reported;
-				activityData.date = activity.date;
-				activityData.time = activity.time;
-				activityData.actualTime = $('#date').val() + ' ' + $('#time').val();
-				activityData.note = $('#note').val();
-				activityData.rejected = false;
-				activityData.activityItemValues = new Array();
-				$.each(activity.activityItemValues,function(index, item) {
-					var activityDataItem = new Object();
-					activityDataItem.id = item.id;
-					activityDataItem.valueType = item.valueType;
-					activityDataItem.definition = item.definition;
-					if(item.definition.activityItemType.activityItemTypeName == 'measurement') {
-						activityDataItem.reportedValue = $('#measurement' + item.id).val();
-						activityDataItem.target = item.target;
-						activityDataItem.minTarget = item.minTarget;
-						activityDataItem.maxTarget = item.maxTarget;
-					} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
-						activityDataItem.perceivedSense = $('#slider' + item.id).val();
-					} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
-						activityDataItem.answer = $('#slider' + item.id).val();
-					} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
-						activityDataItem.textComment = $('#text' + item.id).val();
-					}
-					activityData.activityItemValues.push(activityDataItem);
-				});
-				new NC.Ajax().post('/scheduledActivities/' + activityId, activityData, function(data) {
-					if (data.success) {
-						my.load(my, setupGUI);
-						var msg = $('<div>').addClass('ui-bar ui-bar-e pageMessage').append($('<h3>' + activity.activityDefinition.type.name + ' rapporterades</h3>'));
-						$('#schema').before(msg);
-						$.mobile.loading('hide');
-						setTimeout(function() {msg.slideUp('slow');}, 5000);
-					}
-				});
-				$('#sendReport').unbind('click');
-			});
 		};		
 		
 		my.validateNumericField = function(numericField, maxLen) {

@@ -32,15 +32,16 @@
 			color: white;
 			text-shadow: none;
 			background-color: #2DA1AE;
-			background-image: -webkit-gradient(linear,left top,left bottom,from( #33B4C3 ),to( #2DA1AE ));
+			background-image: -webkit-gradient(linear,left top,left bottom,from( #5DD1DE ),to( #2DA1AE ));
 		}
 
 		.ui-btn-active {
-	        background: #008391;
+	        background: #333;
 		}
 		
 		.ui-li-has-count {
 	        background: #aaa;
+	        background-image: -webkit-gradient(linear,left top,left bottom,from( #ccc ),to( #aaa ));
 		}
 			
 		.ui-btn-c {
