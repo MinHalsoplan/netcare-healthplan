@@ -8,21 +8,23 @@
     android:padding="40dip"
     android:gravity="center_vertical">
 	    
+    <TextView 
+        android:id="@+id/title"
+       	android:layout_width="match_parent"
+       	android:layout_height="wrap_content"
+       	android:gravity="center_horizontal"
+       	android:text="@string/app_name"
+       	style="@style/header"
+       	android:paddingBottom="10dp"
+       	/>
+    
     <LinearLayout 
         android:id="@+id/login_screen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        
-        <TextView 
-	        android:id="@+id/title"
-	       	android:layout_width="match_parent"
-	       	android:layout_height="wrap_content"
-	       	android:gravity="center_horizontal"
-	       	android:text="@string/app_name"
-	       	style="@style/header"
-	       	android:paddingBottom="10dp"
-	       	/>
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:padding="20dip">
 	    
 	    <TextView 
 	        android:id="@+id/crnLabel"
@@ -41,15 +43,15 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@string/login"/>
-	    
-	    <TextView
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center_horizontal"
-	        android:layout_marginTop="10dip"
-	        android:textColor="#000000"
-	        android:text="@string/bankid" />
         
     </LinearLayout>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dip"
+        android:textColor="#000000"
+        android:text="@string/bankid" />
 	
 </LinearLayout>
