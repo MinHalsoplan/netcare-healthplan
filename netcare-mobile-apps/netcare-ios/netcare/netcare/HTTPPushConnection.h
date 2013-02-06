@@ -20,21 +20,22 @@
 
 #import <Foundation/Foundation.h>
 
-@class HTTPConnection;
+@class HTTPPushConnection;
 
-@protocol HTTPConnectionDelegate
+@protocol HTTPPushConnectionDelegate
 - (void)connReady:(NSInteger)code;
 @end
 
-@interface HTTPConnection : NSObject <NSURLConnectionDataDelegate>
+@interface HTTPPushConnection : NSObject <NSURLConnectionDataDelegate>
 
 @property (weak, atomic, readonly) NSURL *url;
 @property (weak, atomic, readonly) id connDelegate;
 @property (retain, readonly) NSURLConnection *conn;
 
-- (HTTPConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate;
+- (HTTPPushConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate;
 - (void)get;
 - (void)synchronizedPost:(NSString*)data;
+- (void)synchronizedDelete;
 - (void)ready:(NSInteger)code connection:(NSURLConnection*)connection;
 
 @end

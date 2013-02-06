@@ -28,6 +28,20 @@
 
 @synthesize window = _window;
 
+// Coming back from Mobilt bankid
+- (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL*) url{
+    if (!url) return NO;
+    NSString* urlString=[url absoluteString];
+    NSLog(@"Received URL %@",urlString);
+    
+    NSString *token = [urlString substringFromIndex: 10];
+    NSLog (@"token = %@", token);
+    
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:nil andDelegate:((MainViewController*)self.window.rootViewController)];
+    [bankIdService complete:token];
+    
+    return YES;
+}
 
 // push registration
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
@@ -43,20 +57,6 @@
         [prefs setBool:YES forKey:@"isDeviceTokenUpdated"];
         [prefs synchronize];
     }
-}
-
-- (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL*) url{
-    if (!url) return NO;
-    NSString* urlString=[url absoluteString];
-    NSLog(@"Received URL %@",urlString);
-
-    NSString *token = [urlString substringFromIndex: 10];
-    NSLog (@"token = %@", token);
-
-    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:nil andDelegate:((MainViewController*)self.window.rootViewController)];
-    [bankIdService complete:token];
-    
-    return YES;
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error

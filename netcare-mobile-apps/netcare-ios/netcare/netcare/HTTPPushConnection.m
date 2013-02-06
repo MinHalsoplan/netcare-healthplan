@@ -18,15 +18,15 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-#import "HTTPConnection.h"
+#import "HTTPPushConnection.h"
 
-@implementation HTTPConnection
+@implementation HTTPPushConnection
 
 @synthesize url;
 @synthesize connDelegate;
 @synthesize conn;
 
-- (HTTPConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate
+- (HTTPPushConnection*)init:(NSURL*)theUrl withDelegate:(id)theDelegate
 {
     url = theUrl;
     connDelegate = theDelegate;
@@ -88,6 +88,31 @@
     response = nil;
 }
 
+- (void)synchronizedDelete {
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+    [urlRequest setTimeoutInterval:15];
+    [urlRequest setHTTPMethod:@"DELETE"];
+    NSLog(@"synchronizedDelete");
+    
+    NSError* error;
+    NSHTTPURLResponse* response;
+    [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
+    int code = (error) ? [error code] : [response statusCode];
+    if (code != 200)
+    {
+        NSLog(@"Error synchronizedDelete: %d (%@)\n", code, error);
+        [self ready:code connection:nil];
+    }
+    else
+    {
+        [self ready:code connection:nil];
+    }
+    error = nil;
+    response = nil;
+}
 
 #pragma mark -
 #pragma mark NSURLConnectionDataDelegate

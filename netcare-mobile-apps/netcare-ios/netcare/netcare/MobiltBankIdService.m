@@ -21,7 +21,6 @@
     NSLog(@"MobiltBankIdService.authenticate");
     
     HTTPAuthenticate* httpAuthenticate = [[HTTPAuthenticate alloc] initWithCrn:crn];
-    [httpAuthenticate setMainViewController:delegate];
     [httpAuthenticate sendRequest];
     
 }
@@ -29,8 +28,7 @@
 - (void) complete:(NSString*)ref {
     NSLog(@"MobiltBankIdService.complete");
 
-    HTTPComplete* httpComplete = [[HTTPComplete alloc] init];
-    [httpComplete setMainViewController:delegate];
+    HTTPComplete* httpComplete = [[HTTPComplete alloc] initWithDelegate:delegate];
     [httpComplete sendRequest:ref];
     
 }

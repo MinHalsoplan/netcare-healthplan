@@ -19,9 +19,10 @@
 
 #import "FlipsideViewController.h"
 #import "MobiltBankIdService.h"
-#import "HTTPConnection.h"
+#import "HTTPComplete.h"
+#import "HTTPPushConnection.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate>
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPCompleteDelegate, HTTPPushConnectionDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
 @property (weak, nonatomic) IBOutlet UILabel *shadowedLabel;
@@ -36,6 +37,5 @@
 - (IBAction)textFieldReturn:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
 - (void)switchToWebView:(NSString*)token;
-- (void)displayAlert:(NSString*) title withMessage:(NSString *) msg;
 
 @end

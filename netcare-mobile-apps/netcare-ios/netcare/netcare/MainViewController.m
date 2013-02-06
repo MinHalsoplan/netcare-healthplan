@@ -120,6 +120,14 @@
     return [NSURL URLWithString:urlString];         
 }
 
+
+// Authentication finished
+
+// From HTTPCompleteDelegate:
+- (void)authenticationCompleted:(NSString *)token {
+    [self switchToWebView:token];
+}
+
 - (void)switchToWebView:(NSString*)ref {
     NSLog(@"MainViewController.switchToWebView %@", ref);
     [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
@@ -138,19 +146,26 @@
 }
 
 
-- (void)pushKeeping
+- (void)handlePushNotifications
 {
     // Clear Badge
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    if ([prefs boolForKey:@"isDeviceTokenUpdated"])
-    {
-        NSString* token = [prefs stringForKey:@"deviceToken"];
-        // Start registration
+    
+    if ([prefs boolForKey:@"nc_use_notifications"]) {
+        if ([prefs boolForKey:@"isDeviceTokenUpdated"])
+        {
+            NSString* token = [prefs stringForKey:@"deviceToken"];
+            // Start registration
+            NSURL *url = [self pushRegistrationURL];
+            HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
+            [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
+        }
+    } else {
         NSURL *url = [self pushRegistrationURL];
-        HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:self];
-        [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
+        HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
+        [conn synchronizedDelete];
     }
 }
 
@@ -181,24 +196,16 @@
     
     if ([[segue identifier] isEqualToString:@"webView"]) {
         [[segue destinationViewController] setDelegate:self];
-        [self pushKeeping];
+        [self handlePushNotifications];
     }
 }
 
 - (NSURL*)startURL
 {
-    NSString *urlString = [Util  baseURLString];
+    NSString *urlString = [Util baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCStartPage"]];
     NSLog(@"MainViewController.startURL --> %@\n", urlString);
     return [[NSURL alloc] initWithString:urlString];
 }
 
-- (void)displayAlert:(NSString*) title withMessage:(NSString *) msg{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:msg
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-}
 @end
