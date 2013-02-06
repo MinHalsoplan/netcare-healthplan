@@ -77,7 +77,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	@JoinColumn(name = "created_by_id")
 	private UserEntity createdBy;
 
-	@OneToMany(mappedBy = "activityDefinition", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "activityDefinition", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ScheduledActivityEntity> scheduledActivities;
 
 	@OneToMany(mappedBy = "activityDefinition", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
