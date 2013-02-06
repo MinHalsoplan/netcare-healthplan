@@ -35,18 +35,32 @@ public class PushApi extends ApiSupport {
 	@Autowired
 	private UserDetailsService service;
 	
-    @RequestMapping(value="/register/c2dm", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/gcm", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public void c2dmRegistration(@RequestBody final Map<String, String> data) {
-		this.logAccess("register", "c2dm");
-		service.registerForC2dmPush(data.get("c2dmRegistrationId"));
+		this.logAccess("register", "gcm");
+		service.registerForGcm(data.get("c2dmRegistrationId"));
 	}
 
-    @RequestMapping(value="/register/apns", method=RequestMethod.POST, produces="application/json")
+    @RequestMapping(value="/apns", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public void apnsRegistration(@RequestParam(value="apnsRegistrationId") final String apnsRegistrationId) {
 		this.logAccess("register", "apns");
 		service.registerForApnsPush(apnsRegistrationId);
 	}
+    
+    @RequestMapping(value="/gcm", method=RequestMethod.DELETE)
+    @ResponseBody
+    public void gcmUnregistration() {
+    	this.logAccess("unregister", "gcm");
+    	service.unregisterGcm();
+    }
+    
+    @RequestMapping(value="/apns", method=RequestMethod.DELETE)
+    @ResponseBody
+    public void apnsUnregistration() {
+    	this.logAccess("unregister", "apns");
+    	service.unregisterApns();
+    }
 
 }

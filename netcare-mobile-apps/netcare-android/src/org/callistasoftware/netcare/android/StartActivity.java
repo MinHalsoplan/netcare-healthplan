@@ -1,6 +1,13 @@
 package org.callistasoftware.netcare.android;
 
+import org.callistasoftware.netcare.android.task.AuthenticateTask;
+import org.callistasoftware.netcare.android.task.CollectTask;
+import org.callistasoftware.netcare.android.task.UnRegisterGcmTask;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +16,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
 
@@ -65,7 +71,7 @@ public class StartActivity extends Activity {
 						crn.setEnabled(true);
 						login.setEnabled(true);
 						
-						Toast.makeText(StartActivity.this, reason, Toast.LENGTH_LONG).show();
+						showDialog(reason);
 					}
 					
 				}).execute(crn.getText().toString());
@@ -101,10 +107,17 @@ public class StartActivity extends Activity {
 						GCMRegistrar.checkDevice(StartActivity.this);
 						GCMRegistrar.checkManifest(StartActivity.this);
 						GCMRegistrar.register(StartActivity.this, "1072676211966");
+					} else {
+						GCMRegistrar.checkDevice(StartActivity.this);
+						GCMRegistrar.unregister(StartActivity.this);
+						
+						unregisterPush();
 					}
 					
+					finish();
+					
 				} else {
-					Toast.makeText(StartActivity.this, "Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...", Toast.LENGTH_LONG).show();
+					showDialog(getResources().getString(R.string.generic_error));
 				}
 			}
 			
@@ -113,11 +126,42 @@ public class StartActivity extends Activity {
 				Log.e(TAG, "Failed to collect. Error is: " + reason);
 				
 				Log.e(TAG, "Error when doing collect(). Reason: " + reason);
-				Toast.makeText(StartActivity.this, "Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...", Toast.LENGTH_LONG).show();
+				showDialog(reason);
 				
 				crn.setEnabled(true);
 				login.setEnabled(true);
 			}
 		}).execute(orderRef);
+    }
+    
+    private void showDialog(final String message) {
+    	final AlertDialog.Builder d = new AlertDialog.Builder(this);
+    	d.setTitle("Information");
+    	d.setIcon(android.R.drawable.ic_dialog_alert);
+    	d.setMessage(message);
+    	d.setNeutralButton("OK", new Dialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+    	
+    	d.create().show();
+    }
+    
+    private void unregisterPush() {
+    	new UnRegisterGcmTask(this, new ServiceCallback<String>() {
+			
+			@Override
+			public void onSuccess(String response) {
+				Log.d(TAG, "Successfully unregistered push");
+			}
+			
+			@Override
+			public void onFailure(String reason) {
+				Log.e(TAG, "Could not unregister push");
+			}
+		});
     }
 }

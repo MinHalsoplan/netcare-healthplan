@@ -20,20 +20,14 @@
         android:icon="@drawable/mhp_icon"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        <activity
-            android:name=".StartActivity"
-            android:label="@string/app_name" >
+        <activity android:name=".SplashActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WebViewActivity" android:configChanges="orientation|keyboardHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+        <activity android:name=".StartActivity" />
+        <activity android:name=".WebViewActivity" android:configChanges="orientation|keyboardHidden" />
         <activity android:name=".PreferenceActivity" />
         
         <receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND" >

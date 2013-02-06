@@ -128,7 +128,7 @@ public class PushNotificationServiceImpl extends ServiceSupport implements
 		}
 
 		getLog().error(
-				"Unable to find mobile push registration id för user {}",
+				"Unable to find mobile push registration id for user {}",
 				user.getId());
 	}
 

@@ -128,12 +128,11 @@ public class SystemAlarmJob {
 			
 			log.debug("==== PUSH CHECKS ====");
 			log.debug("Already reminded: {}", sae.isReminderDone());
-			log.debug("Is patient mobile enabled: {}", patient.isMobile());
 			log.debug("Is activity already reported: {}", sae.getReportedTime() != null);
 			log.debug("Is patient push enabled: {}", patient.isPushEnbaled());
 			log.debug("=====================");
 			
-			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null && patient.isPushEnbaled()) {
+			if (!sae.isReminderDone() && sae.getReportedTime() == null && patient.isPushEnbaled()) {
 				Integer i = patients.get(patient);
 				log.debug("Reminder: for patient {} -- add to send list", patient.getFirstName());
 				patients.put(patient, (i == null) ? 1 : i.intValue()+1);

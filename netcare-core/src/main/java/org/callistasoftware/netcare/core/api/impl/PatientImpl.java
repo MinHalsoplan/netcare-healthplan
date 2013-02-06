@@ -41,7 +41,6 @@ public class PatientImpl extends PatientBaseViewImpl implements Patient {
 		super(entity);
 		
 		this.setPhoneNumber(entity.getPhoneNumber());
-		this.setMobile(entity.isMobile());
 		this.setEmail(entity.getEmail());
 	}
 	

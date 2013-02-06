@@ -35,9 +35,6 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="civic_reg_number", length=16, nullable=false, unique=true)
 	private String civicRegistrationNumber;
 	
-	@Column(name="is_mobile")
-	private boolean isMobile;
-	
 	@Column(name="password")
 	private String password;
 	
@@ -72,14 +69,6 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 		String crn = EntityUtil.notNull(civicRegistrationNumber);
 		// clean dash from number (if any).
 		this.civicRegistrationNumber = EntityUtil.formatCrn(crn);
-	}
-
-	public boolean isMobile() {
-		return isMobile;
-	}
-
-	public void setMobile(boolean isMobile) {
-		this.isMobile = isMobile;
 	}
 	
 	public String getPassword() {

@@ -17,7 +17,6 @@
 package org.callistasoftware.netcare.core.repository;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
@@ -70,7 +69,6 @@ public class PatientRepositoryTest extends TestSupport {
 		assertNotNull(all);
 		assertEquals(1, all.size());
 		assertEquals(all.get(0).getCivicRegistrationNumber(), "191212121212");
-		assertFalse(all.get(0).isMobile());
 	}
 
 	@Test

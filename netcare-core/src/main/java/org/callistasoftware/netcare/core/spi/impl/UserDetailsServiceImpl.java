@@ -75,10 +75,7 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 				return CareActorBaseViewImpl.newFromEntity(ca);
 			}
 		} else {
-			
 			getLog().debug("Patient found.");
-			getLog().debug("Mobile user: " + patient.isMobile());
-			
 			return PatientBaseViewImpl.newFromEntity(patient);
 		}
 		
@@ -87,11 +84,16 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 	}
 
 	@Override
-	public void registerForC2dmPush(String c2dmRegistrationId) {
+	public void registerForGcm(String c2dmRegistrationId) {
 		final UserEntity user = this.getCurrentUser();
 		
 		getLog().info("User: {} registers for c2dm push using reg id: {}", user.getFirstName(), c2dmRegistrationId);
 		user.getProperties().put("c2dmRegistrationId", c2dmRegistrationId);
+	}
+	
+	@Override
+	public void unregisterGcm() {
+		this.getCurrentUser().getProperties().remove("c2dmRegistrationId");
 	}
 
 	@Override
@@ -100,6 +102,11 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		
 		getLog().info("User: {} registers for apns push using reg id: {}", user.getFirstName(), apnsRegistrationId);
 		user.getProperties().put("apnsRegistrationId", apnsRegistrationId);
+	}
+	
+	@Override
+	public void unregisterApns() {
+		getCurrentUser().getProperties().remove("apnsRegistrationId");
 	}
 
 	@Override

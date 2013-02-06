@@ -33,11 +33,4 @@ public interface PatientBaseView extends UserBaseView {
 	 * @return
 	 */
 	String getCivicRegistrationNumber();
-	
-	/**
-	 * Whether the user is allowed to use the mobile
-	 * channel
-	 * @return
-	 */
-	boolean isMobile();
 }

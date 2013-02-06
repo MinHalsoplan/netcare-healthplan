@@ -1,7 +1,13 @@
-package org.callistasoftware.netcare.android;
+package org.callistasoftware.netcare.android.task;
 
 import java.util.Map;
 
+import org.callistasoftware.netcare.android.ApplicationUtil;
+import org.callistasoftware.netcare.android.R;
+import org.callistasoftware.netcare.android.ServiceCallback;
+import org.callistasoftware.netcare.android.ServiceResult;
+import org.callistasoftware.netcare.android.ServiceResultImpl;
+import org.callistasoftware.netcare.android.R.string;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,8 +18,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 public class CollectTask extends AsyncTask<String, String, ServiceResult<String>> {
-
-	private static final String TAG = CollectTask.class.getSimpleName();
 	
 	private Context ctx;
 	private ServiceCallback<String> cb;
@@ -50,7 +54,7 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<String>
 			
 		} catch (final Exception e) {
 			e.printStackTrace();
-			return new ServiceResultImpl<String>(null, false, e.getMessage());
+			return new ServiceResultImpl<String>(null, false, ctx.getResources().getString(R.string.generic_error));
 		}
 	}
 	

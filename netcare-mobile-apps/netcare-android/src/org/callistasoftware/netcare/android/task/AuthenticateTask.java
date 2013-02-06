@@ -1,7 +1,14 @@
-package org.callistasoftware.netcare.android;
+package org.callistasoftware.netcare.android.task;
 
 import java.io.IOException;
 
+import org.callistasoftware.netcare.android.ApplicationUtil;
+import org.callistasoftware.netcare.android.NetcareApp;
+import org.callistasoftware.netcare.android.R;
+import org.callistasoftware.netcare.android.ServiceCallback;
+import org.callistasoftware.netcare.android.ServiceResult;
+import org.callistasoftware.netcare.android.ServiceResultImpl;
+import org.callistasoftware.netcare.android.R.string;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.LinkedMultiValueMap;
@@ -57,11 +64,11 @@ public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<St
 					Log.d(TAG, "handleError() - " + response.getRawStatusCode());
 					
 					if (response.getRawStatusCode() == 404) {
-						throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Du saknar ett konto");
+						throw new HttpClientErrorException(HttpStatus.NOT_FOUND, ctx.getResources().getString(R.string.no_account));
 					}
 					
 					if (response.getRawStatusCode() >= 400 && response.getRawStatusCode() < 600) {
-						throw new HttpClientErrorException(response.getStatusCode(), "Det gick inte att logga in just nu");
+						throw new HttpClientErrorException(response.getStatusCode(), ctx.getResources().getString(R.string.generic_error));
 					}
 				}
 			});

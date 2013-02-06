@@ -39,7 +39,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private boolean mobile;
 	private String password;
 	private String civicRegistrationNumber;
 
@@ -54,7 +53,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	
 	PatientBaseViewImpl(final PatientEntity entity) {
 		super(entity.getId(), entity.getFirstName(), entity.getSurName());
-		this.mobile = entity.isMobile();
 		this.setCivicRegistrationNumber(entity.getCivicRegistrationNumber());
 		this.setPassword(entity.getPassword());
 	}
@@ -103,21 +101,12 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	}
 
 	@Override
-	public boolean isMobile() {
-		return this.mobile;
-	}
-
-	@Override
 	public String getPassword() {
 		return this.password;
 	}
 	
 	public void setPassword(final String password) {
 		this.password = password;
-	}
-
-	public void setMobile(boolean mobile) {
-		this.mobile = mobile;
 	}
 
 	@Override
