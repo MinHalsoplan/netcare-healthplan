@@ -48,11 +48,28 @@
 
 + (NSString*)baseURLString
 {
-    NSString *urlString = [Util infoValueForKey:@"NCProtocol"];
-    urlString = [urlString stringByAppendingString:@"://"];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCHost"]];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *protocol;
+    NSString *server;
+    int port;
     
-    int port = [[Util infoValueForKey:@"NCPort"] intValue];
+    if ([prefs boolForKey:@"nc_use_alt_protocol"]) {
+        protocol = @"http";
+    } else {
+        protocol = @"https";
+    }
+    if ([prefs boolForKey:@"nc_use_server"]) {
+        server = [prefs stringForKey:@"nc_host"];
+        port = [prefs integerForKey:@"nc_port"];
+    } else {
+        server = [Util infoValueForKey:@"NCHost"];
+        port = [[Util infoValueForKey:@"NCPort"] intValue];
+    }
+
+    NSString *urlString = protocol;
+    urlString = [urlString stringByAppendingString:@"://"];
+    urlString = [urlString stringByAppendingString:server];
+    
     if (port > 0)
     {
         urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];

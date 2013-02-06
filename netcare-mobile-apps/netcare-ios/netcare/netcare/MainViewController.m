@@ -193,9 +193,8 @@
     return [[NSURL alloc] initWithString:urlString];
 }
 
-- (void)displayAlert {
-    NSString* msg = [NSString stringWithFormat:@"Det finns ingen patient med hälsoplan som har personnummer %@", [personNumberTextEdit text]];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ingen patient registrerad."
+- (void)displayAlert:(NSString*) title withMessage:(NSString *) msg{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:msg
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"

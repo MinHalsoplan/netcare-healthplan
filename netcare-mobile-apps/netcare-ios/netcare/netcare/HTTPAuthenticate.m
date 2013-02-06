@@ -43,7 +43,9 @@
         if (connection) {
             [connection cancel];
         }
-        [mainViewController displayAlert];
+        NSString* title = @"Ingen patient registrerad";
+        NSString* msg = [NSString stringWithFormat:@"Det finns ingen patient med hälsoplan som har personnummer %@",                          [[mainViewController personNumberTextEdit] text]];
+        [mainViewController displayAlert:title withMessage:msg];
     }
     
 }
@@ -71,6 +73,10 @@
     NSLog(@"Connection failed! Error - %@ %@",
           [error localizedDescription],
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+    
+    NSString* title = @"Serverfel";
+    NSString* msg = @"Det går ej att få kontakt med servern";
+    [mainViewController displayAlert:title withMessage:msg];
 }
 
 - (NSString*)authenticateUrl{

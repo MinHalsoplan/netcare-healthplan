@@ -57,22 +57,16 @@
 	<true/>
 	<key>NCAuthenticate</key>
 	<string>/mobile/bankid/authenticate</string>
-	<key>NCCheckCredentialsPage</key>
-	<string>/mobile/checkcredentials</string>
 	<key>NCCollect</key>
 	<string>/mobile/bankid/complete</string>
 	<key>NCHost</key>
-	<string>192.168.0.101</string>
-	<key>NCLogoutPage</key>
-	<string>/netcare/security/logout</string>
+	<string>netcare.callistasoftware.org</string>
 	<key>NCPort</key>
-	<string>8080</string>
+	<string>0</string>
 	<key>NCProtocol</key>
-	<string>http</string>
+	<string>https</string>
 	<key>NCPushRegistrationPage</key>
 	<string>/mobile/push/register/apns</string>
-	<key>NCSecurityRealm</key>
-	<string>netcare-mobile</string>
 	<key>NCStartPage</key>
 	<string>/mobile/start</string>
 	<key>UIMainStoryboardFile</key>

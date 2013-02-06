@@ -36,6 +36,6 @@
 - (IBAction)textFieldReturn:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
 - (void)switchToWebView:(NSString*)token;
-- (void)displayAlert;
+- (void)displayAlert:(NSString*) title withMessage:(NSString *) msg;
 
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69A81509525D00209FE0 /* Default@2x.png */; };
+		8D1AE4AF16C2328C003220D6 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8D1AE4AE16C2328C003220D6 /* Settings.bundle */; };
 		8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63616B016F400549577 /* MobiltBankIdService.m */; };
 		8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */; };
 		8D3CD64116B149A700549577 /* HTTPComplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD64016B149A700549577 /* HTTPComplete.m */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8D1AE4AE16C2328C003220D6 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		8D3CD63516B016F400549577 /* MobiltBankIdService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobiltBankIdService.h; sourceTree = "<group>"; };
 		8D3CD63616B016F400549577 /* MobiltBankIdService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobiltBankIdService.m; sourceTree = "<group>"; };
 		8D3CD63916B0170900549577 /* HTTPAuthenticate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPAuthenticate.h; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				D05D40BC14FC22BD00335899 /* HTTPConnection.m */,
 				D05D40C114FD08D200335899 /* Util.h */,
 				D05D40C214FD08D200335899 /* Util.m */,
+				8D1AE4AE16C2328C003220D6 /* Settings.bundle */,
 			);
 			path = netcare;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				D0599168150B69BD00EB3F6D /* 114px.png in Resources */,
 				D0E630561670D0D700452408 /* Default-568h@2x.png in Resources */,
 				8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */,
+				8D1AE4AF16C2328C003220D6 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
