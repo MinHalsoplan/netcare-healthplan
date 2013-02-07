@@ -8,18 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-#import "MainViewController.h"
+@class HTTPComplete;
 
-@class MainViewController;
+@protocol HTTPCompleteDelegate
+- (void)authenticationCompleted:(NSString *)token;
+@end
 
 @interface HTTPComplete : NSObject {
     NSMutableData* httpResponse;
     NSString* token;
 }
 
-@property (nonatomic, assign) MainViewController *mainViewController;
+@property (weak, atomic, readonly) id mainViewController;
 
-- (HTTPComplete*)init;
+- (HTTPComplete*)initWithDelegate:(id)theDelegate;
 - (void)sendRequest:(NSString*)ref;
 
 @end

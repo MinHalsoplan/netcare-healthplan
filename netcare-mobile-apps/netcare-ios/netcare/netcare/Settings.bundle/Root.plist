@@ -6,6 +6,22 @@
 	<array>
 		<dict>
 			<key>Title</key>
+			<string>Notifieringar</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>nc_use_notifications</string>
+			<key>Title</key>
+			<string>Notifieringar</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Alternativ server</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -58,17 +74,17 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Protokoll</string>
+			<string>Anslutning</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>Key</key>
-			<string>nc_use_alt_protocol</string>
+			<string>nc_use_secure_connection</string>
 			<key>Title</key>
-			<string>Använd alt. protokoll</string>
+			<string>Säker anslutning</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>

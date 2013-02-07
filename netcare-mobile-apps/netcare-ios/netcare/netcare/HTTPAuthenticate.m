@@ -12,8 +12,6 @@
 
 @implementation HTTPAuthenticate
 
-@synthesize mainViewController;
-
 - (HTTPAuthenticate*)initWithCrn:(NSString*)theCrn {
     httpResponse = [[NSMutableData alloc] init];
     crn = theCrn;
@@ -43,9 +41,9 @@
         if (connection) {
             [connection cancel];
         }
-        NSString* title = @"Ingen patient registrerad";
-        NSString* msg = [NSString stringWithFormat:@"Det finns ingen patient med hälsoplan som har personnummer %@",                          [[mainViewController personNumberTextEdit] text]];
-        [mainViewController displayAlert:title withMessage:msg];
+        NSString* title = [Util infoValueForKey:@"NCNoAccountTitle"];
+        NSString* msg = [Util infoValueForKey:@"NCNoAccount"];
+        [Util displayAlert:title withMessage:msg];
     }
     
 }
@@ -74,9 +72,10 @@
           [error localizedDescription],
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
     
-    NSString* title = @"Serverfel";
-    NSString* msg = @"Det går ej att få kontakt med servern";
-    [mainViewController displayAlert:title withMessage:msg];
+    NSString* title = [Util infoValueForKey:@"NCGenericErrorTitle"];
+    NSString* msg = [Util infoValueForKey:@"NCGenericError"];
+
+    [Util displayAlert:title withMessage:msg];
 }
 
 - (NSString*)authenticateUrl{

@@ -53,10 +53,10 @@
     NSString *server;
     int port;
     
-    if ([prefs boolForKey:@"nc_use_alt_protocol"]) {
-        protocol = @"http";
-    } else {
+    if ([prefs boolForKey:@"nc_use_secure_connection"]) {
         protocol = @"https";
+    } else {
+        protocol = @"http";
     }
     if ([prefs boolForKey:@"nc_use_server"]) {
         server = [prefs stringForKey:@"nc_host"];
@@ -76,6 +76,15 @@
     }
     NSLog(@"Util.baseURLString --> %@\n", urlString);
     return urlString;
+}
+
++ (void)displayAlert:(NSString*) title withMessage:(NSString *) msg{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:msg
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

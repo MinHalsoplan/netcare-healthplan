@@ -14,8 +14,9 @@
 
 @synthesize mainViewController;
 
-- (HTTPComplete*)init {
+- (HTTPComplete*)initWithDelegate:(id)theDelegate {
     httpResponse = [[NSMutableData alloc] init];
+    mainViewController = theDelegate;
     return self;
 }
 
@@ -50,7 +51,7 @@
     
     NSString *result= [[NSString alloc] initWithData:httpResponse encoding:NSUTF8StringEncoding];
     NSLog(@"Data: %@", result);
-    [mainViewController switchToWebView:token];
+    [mainViewController authenticationCompleted:token];
 }
 
 - (void)connection:(NSURLConnection *)connection

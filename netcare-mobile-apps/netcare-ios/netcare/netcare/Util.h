@@ -25,4 +25,6 @@
 + (NSString*)infoValueForKey:(NSString*)key;
 + (NSString*)toHexString:(NSData*) data;
 + (NSString*)baseURLString;
++ (void)displayAlert:(NSString*) title withMessage:(NSString *) msg;
+
 @end
