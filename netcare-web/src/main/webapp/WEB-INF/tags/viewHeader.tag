@@ -45,12 +45,13 @@
 
 		if (value.indexOf('-') == -1) {
 			if (value.length === 10) {
-				value = value.slice(0, 6) + "-"
-						+ value.slice(6);
+				return false;
 			} else {
 				value = value.slice(0, 8) + "-"
 						+ value.slice(8);
 			}
+		} else {
+			return false;
 		}
 		if (!value
 				.match(/^(\d{2})(\d{2})(\d{2})\-(\d{4})|(\d{4})(\d{2})(\d{2})\-(\d{4})$/))
