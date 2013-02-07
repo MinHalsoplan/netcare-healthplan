@@ -194,14 +194,16 @@ var NC_MOBILE = {
 			
 			var desc = '';
 			$.each(activity.activityItemValues, function(i, activityItem) {
-				var next = activityItem.definition.activityItemType.name;
-				if((desc.length + next.length)>32) {
-					desc += "...";
-				} else {
-					if(desc.length==0) {
-						desc = next;
+				if (activityItem.definition.active) {
+					var next = activityItem.definition.activityItemType.name;
+					if((desc.length + next.length)>32) {
+						desc += "...";
 					} else {
-						desc += ', ' + next;
+						if(desc.length==0) {
+							desc = next;
+						} else {
+							desc += ', ' + next;
+						}
 					}
 				}
 			});
