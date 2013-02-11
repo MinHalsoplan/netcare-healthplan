@@ -119,7 +119,7 @@ public class SystemAlarmJob {
 			 * Don't send reminder unless the patient
 			 * wants it
 			 */
-			if (!sae.getActivityDefinitionEntity().isReminder()) {
+			if (!sae.getActivityDefinitionEntity().isReminder() || !sae.getActivityDefinitionEntity().getHealthPlan().isActive()) {
 				continue;
 			}
 			
