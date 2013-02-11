@@ -28,7 +28,7 @@
   	
   	<!-- Default profile -->
   	<system.mode>test</system.mode>
-  	<mobile.mode>mobile-test</mobile.mode>
+  	<mobile.mode>mobile-qa</mobile.mode>
   	<database.mode>db-embedded</database.mode>
   	
   	<!-- Versions -->

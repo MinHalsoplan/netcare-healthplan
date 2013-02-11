@@ -284,7 +284,7 @@ var NC_MOBILE = {
 					$('#sendReport').hide();
 				} else {
 					$('#sendReport').show();
-					$('#sendReport').click(function(e) {
+					$('#sendReport').on('tap', function(e) {
 						e.preventDefault();
 						
 						$.mobile.loading('show', {
@@ -324,6 +324,7 @@ var NC_MOBILE = {
 							}
 							activityData.activityItemValues.push(activityDataItem);
 						});
+						
 						new NC.Ajax().post('/scheduledActivities/' + activityId, activityData, function(data) {
 							if (data.success) {
 								my.load(my, setupGUI);
