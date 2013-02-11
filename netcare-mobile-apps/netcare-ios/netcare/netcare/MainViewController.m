@@ -101,6 +101,11 @@
 	[super viewDidDisappear:animated];
 }
 
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -109,9 +114,30 @@
 }
 
 
-#pragma mark - Basic Auth Stuff
+#pragma mark - Push notifications stuff
 
-//
+- (void)handlePushNotifications
+{
+    // Clear Badge
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    if ([prefs boolForKey:@"nc_use_notifications"]) {
+//        if ([prefs boolForKey:@"isDeviceTokenUpdated"])
+//        {
+            NSString* token = [prefs stringForKey:@"deviceToken"];
+            // Start registration
+            NSURL *url = [self pushRegistrationURL];
+            HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
+            [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
+//        }
+    } else {
+        NSURL *url = [self pushRegistrationURL];
+        HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
+        [conn synchronizedDelete];
+    }
+}
 - (NSURL*)pushRegistrationURL
 {
     NSString *urlString = [Util  baseURLString];
@@ -145,32 +171,9 @@
         [personNumberTextEdit resignFirstResponder];
 }
 
-
-- (void)handlePushNotifications
-{
-    // Clear Badge
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    
-    if ([prefs boolForKey:@"nc_use_notifications"]) {
-        if ([prefs boolForKey:@"isDeviceTokenUpdated"])
-        {
-            NSString* token = [prefs stringForKey:@"deviceToken"];
-            // Start registration
-            NSURL *url = [self pushRegistrationURL];
-            HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
-            [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
-        }
-    } else {
-        NSURL *url = [self pushRegistrationURL];
-        HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
-        [conn synchronizedDelete];
-    }
-}
-
 #pragma mark - URLHandler
 
+// From HTTPPushConnectionDelegate:
 - (void)connReady:(NSInteger)code
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -200,6 +203,7 @@
     }
 }
 
+// Other stuff
 - (NSURL*)startURL
 {
     NSString *urlString = [Util baseURLString];

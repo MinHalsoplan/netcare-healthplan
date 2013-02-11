@@ -23,16 +23,18 @@ import org.callistasoftware.netcare.core.spi.PushNotificationService;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsServiceBuilder;
-import com.notnoop.apns.EnhancedApnsNotification;
-import com.notnoop.apns.PayloadBuilder;
 
 /**
  * Implementation of service interface
@@ -40,8 +42,7 @@ import com.notnoop.apns.PayloadBuilder;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  */
 @Service
-public class PushNotificationServiceImpl extends ServiceSupport implements
-		PushNotificationService {
+public class PushNotificationServiceImpl extends ServiceSupport implements PushNotificationService {
 
 	@Autowired
 	private UserRepository repo;
@@ -57,10 +58,12 @@ public class PushNotificationServiceImpl extends ServiceSupport implements
 	private String apnsCertPassword;
 	@Value("${apns.production}")
 	private boolean apnsProduction;
+	@Value("${apns.service.url}")
+	private String apnsServiceUrl;
+	
 	private int apnsCount = 1;
 
-	void sendGcmNotification(final PatientEntity p, final String title,
-			final String msg) {
+	void sendGcmNotification(final PatientEntity p, final String title, final String msg) {
 		if (!p.isGcmUser()) {
 			throw new IllegalStateException(
 					"User is not an Android user. We should never attempt to send a GCM message if we don't have a valid GCM registration id");
@@ -70,11 +73,8 @@ public class PushNotificationServiceImpl extends ServiceSupport implements
 
 		try {
 			Sender sender = new Sender(this.gcmAuthKey);
-			Message message = new Message.Builder()
-					.addData("title", title)
-					.addData("message", msg)
-					.addData("timestamp",
-							String.valueOf(System.currentTimeMillis())).build();
+			Message message = new Message.Builder().addData("title", title).addData("message", msg)
+					.addData("timestamp", String.valueOf(System.currentTimeMillis())).build();
 
 			Result result = sender.send(message, regId, 5);
 
@@ -100,59 +100,50 @@ public class PushNotificationServiceImpl extends ServiceSupport implements
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
-			getLog().warn(
-					"Could not send push through the GCM network. Error was: "
-							+ e.getMessage());
+			getLog().warn("Could not send push through the GCM network. Error was: " + e.getMessage());
 		}
 	}
 
 	@Override
-	public void sendPushNotification(String subject, String message,
-			PatientEntity user) {
+	public void sendPushNotification(String subject, String message, PatientEntity user) {
 
 		// Check which provider to use
-		final boolean c2dm = user.getProperties().containsKey(
-				"c2dmRegistrationId");
+		final boolean c2dm = user.getProperties().containsKey("c2dmRegistrationId");
 		if (c2dm) {
 			this.sendGcmNotification(user, subject, message);
 			return;
 		}
 
-		final boolean apns = user.getProperties().containsKey(
-				"apnsRegistrationId");
+		final boolean apns = user.getProperties().containsKey("apnsRegistrationId");
 		if (apns) {
-			final String registrationId = user.getProperties().get(
-					"apnsRegistrationId");
+			final String registrationId = user.getProperties().get("apnsRegistrationId");
 			this.sendApnsNotification(registrationId, message);
 			return;
 		}
 
-		getLog().error(
-				"Unable to find mobile push registration id for user {}",
-				user.getId());
+		getLog().error("Unable to find mobile push registration id for user {}", user.getId());
 	}
 
 	//
 	void sendApnsNotification(final String registrationId, final String message) {
 		getLog().info("Preparing to send APNS message: {}", apnsCount);
-		ApnsServiceBuilder sb = APNS.newService();
 
-		sb.withCert(apnsCertFile, apnsCertPassword);
-		if (apnsProduction) {
-			sb.withProductionDestination();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("token", registrationId);
+		params.add("message", message);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String,String>>(params,headers);
+
+		String result = new RestTemplate().postForObject(apnsServiceUrl, request, String.class);
+
+		if(result.equals("success")) {
+			getLog().debug("Push notification " + apnsCount + " sent. Result: " + result);
+			apnsCount++;
 		} else {
-			sb.withSandboxDestination();
+			getLog().error("Push notification could not be sent. Server result:\n" + result);
 		}
-
-		PayloadBuilder pb = APNS.newPayload();
-		pb.alertBody(message);
-		pb.sound("default");
-		pb.badge(1);
-
-		sb.build().push(
-				new EnhancedApnsNotification(apnsCount, 900, registrationId, pb
-						.build()));
-		getLog().info("APNS Message {} successfully delivered", apnsCount);
-		apnsCount++;
 	}
 }

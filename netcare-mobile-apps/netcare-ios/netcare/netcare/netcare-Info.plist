@@ -27,7 +27,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>org.callistasoftware.netcare.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>org.callistasoftware.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -59,22 +59,22 @@
 	<string>/mobile/bankid/authenticate</string>
 	<key>NCCollect</key>
 	<string>/mobile/bankid/complete</string>
+	<key>NCGenericError</key>
+	<string>Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...</string>
+	<key>NCGenericErrorTitle</key>
+	<string>Inloggningsfel</string>
 	<key>NCHost</key>
 	<string>netcare.callistasoftware.org</string>
+	<key>NCNoAccount</key>
+	<string>Du har för nuvarande ingen hälsoplan och kan därför inte använda tjänsten. En hälsoplan får du av någon personal i vården. Tjänsten används i dagsläget av ett fåtal mottagningar i Jönköpings, Hallands och Västerbottens län.</string>
+	<key>NCNoAccountTitle</key>
+	<string>Ej registrerad</string>
 	<key>NCPort</key>
 	<string>0</string>
 	<key>NCPushRegistrationPage</key>
 	<string>/mobile/push/apns</string>
 	<key>NCStartPage</key>
 	<string>/mobile/start</string>
-	<key>NCGenericError</key>
-	<string>Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...</string>
-	<key>NCGenericErrorTitle</key>
-	<string>Inloggningsfel</string>
-	<key>NCNoAccount</key>
-	<string>Du har för nuvarande ingen hälsoplan och kan därför inte använda tjänsten. En hälsoplan får du av någon personal i vården. Tjänsten används i dagsläget av ett fåtal mottagningar i Jönköpings, Hallands och Västerbottens län.</string>
-	<key>NCNoAccountTitle</key>
-	<string>Ej registrerad</string>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard</string>
 	<key>UIPrerenderedIcon</key>
@@ -88,6 +88,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 </dict>
 </plist>

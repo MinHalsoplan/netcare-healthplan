@@ -153,8 +153,10 @@ public class SystemAlarmJob {
 	
 	private void sendReminder(PatientEntity to, int n) {
 		final String title = messageBundle.getMessage("system.name", new Object[0], LocaleContextHolder.getLocale());
-		final String message = messageBundle.getMessage("system.push", new Object[]{new Integer(n)}, LocaleContextHolder.getLocale());
-		
+		String message = messageBundle.getMessage("system.push.single", new Object[]{}, LocaleContextHolder.getLocale());
+		if(n>1) {
+			message = messageBundle.getMessage("system.push", new Object[]{new Integer(n)}, LocaleContextHolder.getLocale());
+		}
 		this.notificationService.sendPushNotification(title, message, to);
 	}
 	
