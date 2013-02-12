@@ -26,53 +26,61 @@
 <!-- Activity items templates -->
 <script id="measurementSingleItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
-    	<label for="measurement{{id}}">{{definition.activityItemType.name}} ({{definition.target}} {{definition.activityItemType.unit.name}})</label>
-    	<input type="text" name="measurement{{id}}" id="measurement{{id}}" value="{{reportedValue}}" data-mini="true" />
+    	<label for="measurement{{=id}}">{{=definition.activityItemType.name}} ({{=definition.target}} {{=definition.activityItemType.unit.name}})</label>
+    	<input type="text" name="measurement{{=id}}" id="measurement{{=id}}" value="{{=reportedValue}}" data-mini="true" />
 	</div>	
 </script>
 <script id="measurementIntervalItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
-    	<label for="measurement{{id}}">{{definition.activityItemType.name}} ({{definition.minTarget}} - {{definition.maxTarget}} {{definition.activityItemType.unit.name}})</label>
-    	<input type="text" name="measurement{{id}}" id="measurement{{id}}" value="{{reportedValue}}" data-mini="true" />
+    	<label for="measurement{{=id}}">{{=definition.activityItemType.name}} ({{=definition.minTarget}} - {{=definition.maxTarget}} {{=definition.activityItemType.unit.name}})</label>
+    	<input type="text" name="measurement{{=id}}" id="measurement{{=id}}" value="{{=reportedValue}}" data-mini="true" />
 	</div>	
 </script>
 <script id="estimationItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
-		<label for="slider{{id}}">{{definition.activityItemType.name}} ({{definition.activityItemType.minScaleText}} - {{definition.activityItemType.maxScaleText}})</label>
-		<input type="number" data-type="range" name="slider{{id}}" id="slider{{id}}" data-mini="true"
-			value="{{perceivedSense}}" min="{{definition.activityItemType.minScaleValue}}" max="{{definition.activityItemType.maxScaleValue}}" />
+		<label for="slider{{=id}}">{{=definition.activityItemType.name}} ({{=definition.activityItemType.minScaleText}} - {{=definition.activityItemType.maxScaleText}})</label>
+		<input type="number" data-type="range" name="slider{{=id}}" id="slider{{=id}}" data-mini="true"
+			value="{{=perceivedSense}}" min="{{=definition.activityItemType.minScaleValue}}" max="{{=definition.activityItemType.maxScaleValue}}" />
 	</div>
 </script>
 <script id="yesnoItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
 		<fieldset data-role="controlgroup">
-			<legend>{{definition.activityItemType.name}}</legend>
-			<input type="radio" name="radio{{id}}" id="radioyes{{id}}" data-mini="true" />
-			<label for="radioyes{{id}}">Ja</label>
-			<input type="radio" name="radio{{id}}" id="radiono{{id}}" data-mini="true" />
-			<label for="radiono{{id}}">Nej</label>
+			<legend>{{=definition.activityItemType.name}}</legend>
+			<input type="radio" name="radio{{=id}}" id="radioyes{{=id}}" data-mini="true" />
+			<label for="radioyes{{=id}}">Ja</label>
+			<input type="radio" name="radio{{=id}}" id="radiono{{=id}}" data-mini="true" />
+			<label for="radiono{{=id}}">Nej</label>
 		</fieldset>
 	</div>
 </script>
 <script id="textItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
-		<label for="text{{id}}">{{definition.activityItemType.name}}</label>
-		<textarea name="text{{id}}" id="text{{id}}" data-mini="true">{{textComment}}</textarea>
+		<label for="text{{=id}}">{{=definition.activityItemType.name}}</label>
+		<textarea name="text{{=id}}" id="text{{=id}}" data-mini="true">{{=textComment}}</textarea>
 	</div>
 </script>
 <script id="commonActivityItemTemplate" type="text/template">
-	<input type="hidden" id="activityId" value="{{id}}" />
+	<input type="hidden" id="activityId" value="{{=id}}" />
 	<div data-role="fieldcontain">
 		<label for="date"><spring:message code="mobile.report.form.date" /></label>
-		<input type="date" id="date" name="date" data-mini="true" value="{{date}}" />
+		{{ if (reported) { }}
+			<input type="date" id="date" name="date" data-mini="true" value="{{=actDate}}" />
+		{{ } else { }}
+			<input type="date" id="date" name="date" data-mini="true" value="{{=date}}" />
+		{{ } }}
 	</div>
 	<div data-role="fieldcontain">
 		<label for="time"><spring:message code="mobile.report.form.time" /></label>
-		<input type="time" id="time" name="time" data-mini="true" value="{{time}}" />
+		{{ if (reported) { }}
+			<input type="time" id="time" name="time" data-mini="true" value="{{=actTime}}" />
+		{{ } else { }}
+			<input type="time" id="time" name="time" data-mini="true" value="{{=time}}" />
+		{{ } }}
 	</div>
 	<div data-role="fieldcontain">
 		<label for="note" class="ui-input-text"><spring:message code="mobile.report.form.note" /></label>
-		<textarea name="note" id="note" data-mini="true">{{note}}</textarea>
+		<textarea name="note" id="note" data-mini="true">{{=note}}</textarea>
 	</div>
 </script>
 <!-- mobile:templates / -->
