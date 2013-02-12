@@ -24,6 +24,7 @@
 
 @interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPCompleteDelegate, HTTPPushConnectionDelegate>
 
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
 @property (weak, nonatomic) IBOutlet UILabel *shadowedLabel;
 // nextpage button is not really used, just keeps

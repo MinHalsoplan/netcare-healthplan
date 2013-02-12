@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D08E69A81509525D00209FE0 /* Default@2x.png */; };
 		8D1AE4AF16C2328C003220D6 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8D1AE4AE16C2328C003220D6 /* Settings.bundle */; };
+		8D3B65B916CA1E0E004A6692 /* Default-568h.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D3B65B816CA1E0E004A6692 /* Default-568h.png */; };
 		8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63616B016F400549577 /* MobiltBankIdService.m */; };
 		8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */; };
 		8D3CD64116B149A700549577 /* HTTPComplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD64016B149A700549577 /* HTTPComplete.m */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		8D1AE4AE16C2328C003220D6 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		8D3B65B816CA1E0E004A6692 /* Default-568h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h.png"; sourceTree = "<group>"; };
 		8D3CD63516B016F400549577 /* MobiltBankIdService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobiltBankIdService.h; sourceTree = "<group>"; };
 		8D3CD63616B016F400549577 /* MobiltBankIdService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobiltBankIdService.m; sourceTree = "<group>"; };
 		8D3CD63916B0170900549577 /* HTTPAuthenticate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPAuthenticate.h; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 		D05D408514FA4B3D00335899 = {
 			isa = PBXGroup;
 			children = (
+				8D3B65B816CA1E0E004A6692 /* Default-568h.png */,
 				D0E630551670D0D700452408 /* Default-568h@2x.png */,
 				D0599167150B69BD00EB3F6D /* 114px.png */,
 				D0599164150B691D00EB3F6D /* 57px.png */,
@@ -208,6 +211,7 @@
 				D0E630561670D0D700452408 /* Default-568h@2x.png in Resources */,
 				8D01D59D16B2B7A50090D4ED /* Default@2x.png in Resources */,
 				8D1AE4AF16C2328C003220D6 /* Settings.bundle in Resources */,
+				8D3B65B916CA1E0E004A6692 /* Default-568h.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,8 +266,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: CAllista Enterprise AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -279,7 +283,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				PROVISIONING_PROFILE = "CD7A8ECC-4B6B-4F74-9DE7-963FA6D97A50";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -294,8 +299,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: CAllista Enterprise AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -305,8 +310,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				PROVISIONING_PROFILE = "CD7A8ECC-4B6B-4F74-9DE7-963FA6D97A50";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -315,12 +320,14 @@
 		D05D40B214FA4B3E00335899 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -330,16 +337,16 @@
 		D05D40B314FA4B3E00335899 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -356,8 +363,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: CAllista Enterprise AB";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -367,8 +374,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				PROVISIONING_PROFILE = "CD7A8ECC-4B6B-4F74-9DE7-963FA6D97A50";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -377,16 +384,16 @@
 		D08E69A615094E7200209FE0 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

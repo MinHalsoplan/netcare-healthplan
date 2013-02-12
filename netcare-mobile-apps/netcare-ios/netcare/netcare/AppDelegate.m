@@ -37,6 +37,8 @@
     NSString *token = [urlString substringFromIndex: 10];
     NSLog (@"token = %@", token);
     
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
     MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:nil andDelegate:((MainViewController*)self.window.rootViewController)];
     [bankIdService complete:token];
     

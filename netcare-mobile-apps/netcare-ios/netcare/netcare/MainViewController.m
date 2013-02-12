@@ -25,6 +25,7 @@
 
 @implementation MainViewController
 
+@synthesize backgroundImageView;
 @synthesize personNumberTextEdit;
 @synthesize nextPageButton;
 @synthesize loginButton;
@@ -37,6 +38,9 @@
     [loginButton setEnabled:NO];
     NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
     [self savePersonalNumber];
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
     MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:[personNumberTextEdit text] andDelegate:self];
     [bankIdService authenticate];
     
@@ -68,7 +72,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+        
     shadowedLabel.layer.cornerRadius=10;
     
     [nextPageButton setHidden:YES];
@@ -155,6 +159,9 @@
 }
 
 - (void)switchToWebView:(NSString*)ref {
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
     NSLog(@"MainViewController.switchToWebView %@", ref);
     [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
     [self setOrderrefToken:ref];
@@ -176,6 +183,8 @@
 // From HTTPPushConnectionDelegate:
 - (void)connReady:(NSInteger)code
 {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     if (code == 200) 
     {

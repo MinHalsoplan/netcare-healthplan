@@ -47,6 +47,8 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
     NSLog(@"HTTPComplete.connectionDidFinishLoading");
     
     NSString *result= [[NSString alloc] initWithData:httpResponse encoding:NSUTF8StringEncoding];
@@ -57,6 +59,8 @@
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
     // inform the user
     NSLog(@"Connection failed! Error - %@ %@",
           [error localizedDescription],
