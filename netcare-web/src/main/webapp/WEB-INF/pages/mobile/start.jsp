@@ -35,7 +35,7 @@
 			$.mobile.defaultPageTransition = 'none';
 		})
 		
-		$(document).bind('pageinit', function() {
+		$(document).bind('ready', function() {
 			NC_MOBILE.ACTIVITIES.init();
 		});
 

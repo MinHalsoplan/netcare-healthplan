@@ -28,14 +28,14 @@ var NC_MOBILE = {
 		var reported;
 
 		my.init = function() {
-			var that = this;
+			console.log('my.init()');
+			var self = this;
 			this.templates = {};
 
-			my.pageInit(that);
+			my.pageInit(self);
 		};
 		
 		my.pageInit = function(my) {
-			//$('#start').live('pageinit', function(e) {
 				
 				$.mobile.loading('show', {
 					text : 'Laddar aktiviteter',
@@ -47,8 +47,11 @@ var NC_MOBILE = {
 				my.load(my, function() {
 					setupGUI(my);
 					$.mobile.loading('hide');
+					my.buildFromArray(my, actual, function() {
+						console.log('complete-after-init');
+					});
 				});
-			//});
+
 		};
 
 		my.precompileTemplates = function(my) {
@@ -90,8 +93,13 @@ var NC_MOBILE = {
 			$('#refresh').tap(function(e) {
 				$('#schema').empty();
 				my.load(my, function() {
-					my.buildFromArray(my, actual);
-					$('#actual').click();
+					console.log('refresh');
+					my.buildFromArray(my, actual, function() {
+						console.log('complete-after-refresh');
+					});
+					$('#actual').addClass('ui-btn-active');
+					$('#due').removeClass('ui-btn-active');
+					$('#reported').removeClass('ui-btn-active');
 				});
 			});
 
@@ -100,7 +108,9 @@ var NC_MOBILE = {
 			});
 
 			$('#actual').tap(function(e) {
-				my.buildFromArray(my, actual);
+				my.buildFromArray(my, actual, function() {
+					console.log('complete');
+				});
 			});
 
 			$('#due').tap(function(e) {
@@ -111,15 +121,14 @@ var NC_MOBILE = {
 				my.buildFromArray(my, reported);
 			});
 
-			$('#actual').tap();
 		};
 		
-		my.buildFromArray = function(my, ListOfActivities) {
+		my.buildFromArray = function(my, listOfActivities, onComplete) {
 			var currentDay = '';
 
 			$('#schema').empty();
 
-			$.each(ListOfActivities, function(index, activity) {
+			$.each(listOfActivities, function(index, activity) {
 				
 				var date = activity.reported != null ? activity.actDate : activity.date;
 				
@@ -130,6 +139,9 @@ var NC_MOBILE = {
 					my.buildListView(my, activity, false);
 				}
 			});
+			if(typeof onComplete !== 'undefined') {
+				onComplete();
+			}
 		};
 
 		my.buildListView = function(my, activity, shouldBuildHeader) {
