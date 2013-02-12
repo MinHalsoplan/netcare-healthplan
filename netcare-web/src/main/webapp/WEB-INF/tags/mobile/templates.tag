@@ -47,9 +47,18 @@
 	<div data-role="fieldcontain">
 		<fieldset data-role="controlgroup">
 			<legend>{{=definition.activityItemType.name}}</legend>
-			<input type="radio" name="radio{{=id}}" id="radioyes{{=id}}" data-mini="true" />
+			{{ if (answer == true) { }}
+				<input type="radio" name="radio{{=id}}" id="radioyes{{=id}}" data-mini="true" checked="checked"/>
+			{{ } else { }}
+				<input type="radio" name="radio{{=id}}" id="radioyes{{=id}}" data-mini="true" />
+			{{ } }}
 			<label for="radioyes{{=id}}">Ja</label>
-			<input type="radio" name="radio{{=id}}" id="radiono{{=id}}" data-mini="true" />
+
+			{{ if (answer == false || answer == null) { }}
+				<input type="radio" name="radio{{=id}}" id="radiono{{=id}}" data-mini="true" checked="true"/>
+			{{ } else { }}
+				<input type="radio" name="radio{{=id}}" id="radiono{{=id}}" data-mini="true"/>
+			{{ } }}
 			<label for="radiono{{=id}}">Nej</label>
 		</fieldset>
 	</div>

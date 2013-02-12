@@ -230,7 +230,6 @@ var NC_MOBILE = {
 			
 			link.click(function(e) {
 				clickCallback(my, activity.id);
-				link.unbind('click');
 			});
 		};
 
