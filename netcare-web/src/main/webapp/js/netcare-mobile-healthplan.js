@@ -127,6 +127,14 @@ var NC_MOBILE = {
 			var currentDay = '';
 
 			$('#schema').empty();
+			
+			if(listOfActivities[0].reported != null) {
+				listOfActivities.sort(function(a1,a2) {
+					a1 = new Date(a1.actDate);
+					a2 = new Date(a2.actDate);
+					return (a1 < a2 ? -1 : a1>a2 ? 1 : 0);
+				});
+			}
 
 			$.each(listOfActivities, function(index, activity) {
 				
