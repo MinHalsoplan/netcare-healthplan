@@ -90,7 +90,7 @@ var NC_MOBILE = {
 		
 		var setupGUI = function(my) {
 			
-			$('#refresh').tap(function(e) {
+			$('#refresh').on('tap', function(e) {
 				$('#schema').empty();
 				my.load(my, function() {
 					console.log('refresh');
@@ -103,21 +103,21 @@ var NC_MOBILE = {
 				});
 			});
 
-			$('#refresh').taphold(function(e) {
+			$('#refresh').on('taphold', function(e) {
 				window.location.href='start';
 			});
 
-			$('#actual').tap(function(e) {
+			$('#actual').on('tap', function(e) {
 				my.buildFromArray(my, actual, function() {
 					console.log('complete');
 				});
 			});
 
-			$('#due').tap(function(e) {
+			$('#due').on('tap', function(e) {
 				my.buildFromArray(my, due);
 			});
 
-			$('#reported').tap(function(e) {
+			$('#reported').on('tap', function(e) {
 				my.buildFromArray(my, reported);
 			});
 
@@ -230,6 +230,7 @@ var NC_MOBILE = {
 			
 			link.click(function(e) {
 				clickCallback(my, activity.id);
+				link.unbind('click');
 			});
 		};
 
@@ -297,6 +298,8 @@ var NC_MOBILE = {
 				} else {
 					$('#sendReport').show();
 					$('#sendReport').on('tap', function(e) {
+						$('#sendReport').unbind('tap');
+
 						e.preventDefault();
 						
 						$.mobile.loading('show', {
@@ -339,14 +342,16 @@ var NC_MOBILE = {
 						
 						new NC.Ajax().post('/scheduledActivities/' + activityId, activityData, function(data) {
 							if (data.success) {
-								my.load(my, setupGUI);
+								my.load(my, function() {
+									console.log('load-after-post');
+									$('#actual').tap();
+								});
 								var msg = $('<div>').addClass('ui-bar ui-bar-e pageMessage').append($('<h3>' + activity.activityDefinition.type.name + ' rapporterades</h3>'));
 								$('#schema').before(msg);
 								$.mobile.loading('hide');
 								setTimeout(function() {msg.slideUp('slow');}, 5000);
 							}
 						});
-						$('#sendReport').unbind('click');
 					});
 				}
 				
