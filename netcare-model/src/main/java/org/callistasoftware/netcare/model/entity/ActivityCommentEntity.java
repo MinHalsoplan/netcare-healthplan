@@ -39,11 +39,23 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	@Column(nullable=false)
 	private String comment;
 	
+	@Column(name="is_liked")
+	private boolean like;
+	
+	@Column(name="is_marked_as_read")
+	private boolean markedAsRead;
+
+	@Column(name="is_hidden_by_admin")
+	private boolean hiddenByAdmin;
+	
+	@Column(name="is_hidden_by_patient")
+	private boolean hiddenByPatient;
+
 	@Column
 	private String reply;
 	
 	@ManyToOne
-	private CareGiverEntity commentedBy;
+	private CareActorEntity commentedBy;
 	
 	@Column
 	@Temporal(TemporalType.DATE)
@@ -60,13 +72,12 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		
 	}
 	
-	public static ActivityCommentEntity newEntity(final String comment, final CareGiverEntity commentedBy, final ScheduledActivityEntity activity) {
+	public static ActivityCommentEntity newEntity(final String comment, final CareActorEntity commentedBy, final ScheduledActivityEntity activity) {
 		final ActivityCommentEntity ent = new ActivityCommentEntity();
 		ent.setActivity(activity);
 		ent.setComment(comment);
 		ent.setCommentedBy(commentedBy);
 		ent.setCommentedAt(new Date());
-		
 		return ent;
 	}
 	
@@ -82,7 +93,7 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		return comment;
 	}
 
-	void setComment(String comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
@@ -94,11 +105,11 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 		this.reply = reply;
 	}
 
-	public CareGiverEntity getCommentedBy() {
+	public CareActorEntity getCommentedBy() {
 		return commentedBy;
 	}
 
-	void setCommentedBy(CareGiverEntity commentedBy) {
+	void setCommentedBy(CareActorEntity commentedBy) {
 		this.commentedBy = commentedBy;
 	}
 
@@ -125,15 +136,47 @@ public class ActivityCommentEntity implements PermissionRestrictedEntity {
 	void setActivity(ScheduledActivityEntity activity) {
 		this.activity = activity;
 	}
+	
+	public boolean isLike() {
+		return like;
+	}
+	
+	public void setLike(boolean like) {
+		this.like = like;
+	}
 
+	public boolean isMarkedAsRead() {
+		return markedAsRead;
+	}
+	
+	public void setMarkedAsRead(boolean markedAsRead) {
+		this.markedAsRead = markedAsRead;
+	}
+	
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
 		return this.isWriteAllowed(user);
 	}
 
+	public boolean isHiddenByAdmin() {
+		return hiddenByAdmin;
+	}
+	
+	public void setHiddenByAdmin(boolean hiddenByAdmin) {
+		this.hiddenByAdmin = hiddenByAdmin;
+	}
+	
+	public boolean isHiddenByPatient() {
+		return hiddenByPatient;
+	}
+	
+	public void setHiddenByPatient(boolean hiddenByPatient) {
+		this.hiddenByPatient = hiddenByPatient;
+	}
+	
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
-		if (user.isCareGiver()) {
+		if (user.isCareActor()) {
 			return user.getId().equals(this.getCommentedBy().getId());
 		}
 		

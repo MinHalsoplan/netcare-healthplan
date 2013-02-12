@@ -42,6 +42,10 @@ public class ApplicationListener extends ContextLoaderListener {
 			log.debug("Test data setup completed.");
 		}
 		
+		if (WebUtil.isProfileActive(sc, "prod")) {
+			WebUtil.setProdData(sc);
+		}
+		
 		log.info("======== NETCARE STARTED ========");
 	}
 	

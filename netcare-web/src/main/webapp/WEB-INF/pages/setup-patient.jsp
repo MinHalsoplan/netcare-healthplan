@@ -22,10 +22,19 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
 
-<netcare:page>
-	<netcare:header>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
+
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="resourcePath" value="/netcare/resources" />
+
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="${resourcePath}" contextPath="${pageContext.request.contextPath}">
+		<netcare:css resourcePath="${resourcePath}" />
+		<netcare:js resourcePath="${resourcePath}"/>
+		<hp:healthplan-js />
 		<script type="text/javascript">
 			$(function() {
 				$('#userForm').submit(function(e) {
@@ -33,6 +42,11 @@
 					
 					var firstName = $('input[name="firstName"]').val();
 					var surName = $('input[name="surName"]').val();
+					
+					if (firstName == "" || surName == "") {
+						alert('Vänligen fyll i både för- och efternamn!');
+						return false;
+					}
 					
 					var ajax = new NC.Ajax();
 					ajax.postWithParams('/user/saveUserData', { firstName : firstName, surName : surName }, function(data) {
@@ -42,7 +56,7 @@
 				});
 			});
 		</script>
-	</netcare:header>
+	</mvk:header>
 	<body>
 		<div class="modal-backdrop fade in"></div>
 		<div id="modal-from-dom" class="modal hide fade in" style="display: block;">
@@ -76,9 +90,9 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
-					<input class="btn btn-primary" type="submit" value="<spring:message code="setup.proceed" />" />
+					<input class="btn btn-info" type="submit" value="<spring:message code="setup.proceed" />" />
+					</form>
 				</div>
-			</form>	
 		</div>
 	</body>
-</netcare:page>
+</mvk:page>

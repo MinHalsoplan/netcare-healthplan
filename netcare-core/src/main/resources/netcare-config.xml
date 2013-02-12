@@ -25,11 +25,12 @@
 
 	<beans profile="prod">
 		<context:property-placeholder location="
-			file:${user.home}/.netcare-prod/database.properties, 
-			file:${user.home}/.netcare-prod/email.properties,
-			file:${user.home}/.netcare-prod/push.properties,
-			file:${user.home}/.netcare-prod/mvk.properties,
-			file:${user.home}/.netcare-prod/application.properties"/>
+			file://${user.home}/netcare-healthplan-prod/database.properties, 
+			file://${user.home}/netcare-healthplan-prod/email.properties,
+			file://${user.home}/netcare-healthplan-prod/push.properties,
+			file://${user.home}/netcare-healthplan-prod/mvk.properties,
+			file://${user.home}/netcare-healthplan-prod/application.properties"
+			ignore-unresolvable="true"/>
 		
 		<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
@@ -41,24 +42,57 @@
  			file://${user.home}/.netcare-qa/email.properties,
  			file://${user.home}/.netcare-qa/push.properties,
  			file://${user.home}/.netcare-qa/mvk.properties,
- 			file://${user.home}/.netcare-qa/application.properties"/>
+ 			file://${user.home}/.netcare-qa/application.properties" 
+ 			ignore-unresolvable="true"/>
 		
 		<context:component-scan base-package="org.callistasoftware.netcare.mvk.authentication.service.impl" />
 		<import resource="classpath*:/netcare-mvk-integration-config.xml"/>
 	</beans>
 
   	<beans profile="test">
+  	    <context:property-placeholder location="
+  		    classpath:/application.properties,
+  		    classpath:/email.properties,
+  		    classpath:/push.properties,
+  		    classpath*:/mvk.properties" 
+  		    ignore-unresolvable="true"/>
   	</beans>
+  	
+  	<beans profile="mobile-qa">
+	    <context:property-placeholder location="
+	        classpath*:/bankid.properties" 
+	        ignore-unresolvable="true"/>
+	    
+	    <import resource="classpath*:/bankid-config.xml"/>
+	</beans>
+	
+  	<beans profile="mobile-prod">
+	    <context:property-placeholder location="
+	        file://${user.home}/netcare-healthplan-prod/bankid.properties" 
+	        ignore-unresolvable="true"/>
+	    
+	    <import resource="classpath*:/bankid-config.xml"/>
+	</beans>
 
   	<beans profile="ios-testdata">
   	</beans>
 
   	<beans profile="db-embedded">
-  		<context:property-placeholder location="classpath:/db-embedded.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
+  		<context:property-placeholder location="classpath:/db-embedded.properties" ignore-unresolvable="true"/>
+
+     	<bean  
+         	id="org.h2.tools.Server-WebServer"  
+         	class="org.h2.tools.Server" 
+     		factory-method="createWebServer"  
+     		init-method="start"> 
+     		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" /> 
+     	</bean> 
+  		
   	</beans>
 
   	<beans profile="db-psql">
-  		<context:property-placeholder location="classpath:/db-psql.properties,classpath:/application.properties,classpath:/email.properties,classpath:/push.properties,classpath*:/mvk.properties" />
+  		<context:property-placeholder location="
+  		    classpath:/db-psql.properties" ignore-unresolvable="true" />
   	</beans>
   	
   	<beans>

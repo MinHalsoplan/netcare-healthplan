@@ -17,83 +17,38 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.PatientProfile;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-public class PatientProfileImpl implements PatientProfile {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class PatientProfileImpl extends PatientImpl implements PatientProfile {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String firstname;
-	private String surname;
-	private String email;
-	private String phone;
-	private boolean mobile;
-	private String password;
+	private String password1;
 	private String password2;
 	
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	PatientProfileImpl() {
+		super();
 	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public void setMobile(boolean mobile) {
-		this.mobile = mobile;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setPassword2(String password2) {
-		this.password2 = password2;
-	}
-
+	
 	@Override
-	public String getFirstname() {
-		return this.firstname;
+	public String getPassword1() {
+		return this.password1;
 	}
-
-	@Override
-	public String getSurname() {
-		return this.surname;
-	}
-
-	@Override
-	public String getEmail() {
-		return this.email;
-	}
-
-	@Override
-	public String getPhone() {
-		return this.phone;
-	}
-
-	@Override
-	public boolean isMobile() {
-		return this.mobile;
-	}
-
-	@Override
-	public String getPassword() {
-		return this.password;
+	
+	public void setPassword1(final String password1) {
+		this.password1 = password1;
 	}
 
 	@Override
 	public String getPassword2() {
 		return this.password2;
 	}
-
+	
+	public void setPassword2(final String password2) {
+		this.password2 = password2;
+	}
 }

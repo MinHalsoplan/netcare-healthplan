@@ -18,13 +18,12 @@ package org.callistasoftware.netcare.api.rest;
 
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
+import org.callistasoftware.netcare.core.api.PatientProfile;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.impl.PatientImpl;
-import org.callistasoftware.netcare.core.api.impl.PatientProfileImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.spi.PatientService;
@@ -65,9 +64,9 @@ public class UserApi extends ApiSupport {
 		this.logAccess("load", "patients");
 		
 		final UserBaseView user = this.getUser();
-		if (user.isCareGiver()) {
-			final CareGiverBaseView cg = (CareGiverBaseView) user;
-			return this.patientService.loadPatientsOnCareUnit(cg.getCareUnit());
+		if (user.isCareActor()) {
+			final CareActorBaseView ca = (CareActorBaseView) user;
+			return this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
 		} else {
 			throw new IllegalAccessException();
 		}
@@ -82,18 +81,18 @@ public class UserApi extends ApiSupport {
 	
     @RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
-	public ServiceResult<Patient> updatePatient(@PathVariable(value="patient") final Long patient, @RequestBody final PatientProfileImpl patientData) {
+	public ServiceResult<Patient> updatePatient(@PathVariable(value="patient") final Long patient, @RequestBody final PatientProfile patientData) {
 		this.logAccess("update", "patient");
 		return this.patientService.updatePatient(patient, patientData);
 	}
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
 	@ResponseBody
-	public ServiceResult<Patient> createNewPatient(@RequestBody final PatientImpl patient) throws IllegalAccessException {
+	public ServiceResult<Patient> createNewPatient(@RequestBody final Patient patient) throws IllegalAccessException {
 		this.logAccess("create", "patient");
 		
 		final UserBaseView user = this.getUser();
-		if (user.isCareGiver()) {
+		if (user.isCareActor()) {
 			return this.patientService.createPatient(patient);
 		} else {
 			throw new IllegalAccessException();

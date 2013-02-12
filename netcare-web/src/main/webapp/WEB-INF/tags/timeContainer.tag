@@ -21,8 +21,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
+<spring:message code="pattern.time" var="timePattern" scope="page" />
 <netcare:row id="${name}Container">
 	<netcare:col span="1">
 		<spring:message code="${name}" var="label" scope="page" />
@@ -30,14 +31,14 @@
 			<input type="checkbox" name="day" value="${name}"/>
 		</netcare:field>
 	</netcare:col>
-	<netcare:col span="2">
+	<netcare:col span="3">
 		<spring:message code="activity.form.time" var="addTime" scope="page" />
 		<netcare:field name="${name}TimeField" label="${addTime}">
-			<netcare:timeInput name="${name}TimeField" classes="span1"/>
+			<netcare:timeInput name="${name}TimeField" timePattern="${timePattern}" classes="input-mini"/>
 			<netcare:image name="add" icon="true"/>
 		</netcare:field>
 	</netcare:col>
-	<netcare:col id="${name}AddedTimes" span="5" style="display: none;">
+	<netcare:col id="${name}AddedTimes" span="6" style="display: none;">
 		<p><strong><spring:message code="activity.form.times" /></strong></p>
 	</netcare:col>
 </netcare:row>

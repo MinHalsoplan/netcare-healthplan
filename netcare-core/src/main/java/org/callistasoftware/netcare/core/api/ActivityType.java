@@ -18,18 +18,34 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Definition of an activity type
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonDeserialize(as=ActivityTypeImpl.class)
 public interface ActivityType extends Serializable {
 
 	/**
 	 * Get the id of this activity type
 	 */
 	Long getId();
+	
+	/**
+	 * Wether the activity is used somewhere
+	 * @return
+	 */
+	boolean isInUse();
+	
+	/**
+	 * The access level of this template
+	 * @return
+	 */
+	Option getAccessLevel();
 	
 	/**
 	 * Get the name of this activity type
@@ -42,24 +58,8 @@ public interface ActivityType extends Serializable {
 	ActivityCategory getCategory();
 	
 	/**
-	 * Returns if sense shall be measured.
-	 */
-	boolean isMeasuringSense();
-	
-	/**
-	 * Returns the minimum scale description.
-	 */
-	String getMinScaleText();
-	
-	/**
-	 * Returns the maximum scale description
-	 * @return
-	 */
-	String getMaxScaleText();
-	
-	/**
 	 * The measure values bound to this activity type
 	 * @return
 	 */
-	MeasurementType[] getMeasureValues();
+	ActivityItemType[] getActivityItems();
 }

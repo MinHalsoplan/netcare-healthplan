@@ -46,4 +46,45 @@
     return str;
 }
 
++ (NSString*)baseURLString
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *protocol;
+    NSString *server;
+    int port;
+    
+    if ([prefs boolForKey:@"nc_use_secure_connection"]) {
+        protocol = @"https";
+    } else {
+        protocol = @"http";
+    }
+    if ([prefs boolForKey:@"nc_use_server"]) {
+        server = [prefs stringForKey:@"nc_host"];
+        port = [prefs integerForKey:@"nc_port"];
+    } else {
+        server = [Util infoValueForKey:@"NCHost"];
+        port = [[Util infoValueForKey:@"NCPort"] intValue];
+    }
+
+    NSString *urlString = protocol;
+    urlString = [urlString stringByAppendingString:@"://"];
+    urlString = [urlString stringByAppendingString:server];
+    
+    if (port > 0)
+    {
+        urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
+    }
+    NSLog(@"Util.baseURLString --> %@\n", urlString);
+    return urlString;
+}
+
++ (void)displayAlert:(NSString*) title withMessage:(NSString *) msg{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:msg
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 @end

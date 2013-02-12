@@ -18,14 +18,14 @@ package org.callistasoftware.netcare.core.spi.impl;
 
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
 import org.callistasoftware.netcare.core.spi.UserDetailsService;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 	private PatientRepository patientRepository;
 	
 	@Autowired
-	private CareGiverRepository careGiverRepository;
+	private CareActorRepository careActorRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username)
@@ -65,17 +65,17 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		if (patient == null) {
 			getLog().debug("Could not find any patients matching {}. Trying with care givers...", username);
 			
-			final CareGiverEntity cg = this.careGiverRepository.findByHsaId(username);
-			if (cg == null) {
+			final CareActorEntity ca = this.careActorRepository.findByHsaId(username);
+			if (ca == null) {
 				getLog().debug("Could not find any care giver matching {}", username);
 			} else {
-				return CareGiverBaseViewImpl.newFromEntity(cg);
+				
+				getLog().debug("Found care actor with {} roles", ca.getRoles().size());
+				
+				return CareActorBaseViewImpl.newFromEntity(ca);
 			}
 		} else {
-			
 			getLog().debug("Patient found.");
-			getLog().debug("Mobile user: " + patient.isMobile());
-			
 			return PatientBaseViewImpl.newFromEntity(patient);
 		}
 		
@@ -84,11 +84,16 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 	}
 
 	@Override
-	public void registerForC2dmPush(String c2dmRegistrationId) {
+	public void registerForGcm(String c2dmRegistrationId) {
 		final UserEntity user = this.getCurrentUser();
 		
 		getLog().info("User: {} registers for c2dm push using reg id: {}", user.getFirstName(), c2dmRegistrationId);
 		user.getProperties().put("c2dmRegistrationId", c2dmRegistrationId);
+	}
+	
+	@Override
+	public void unregisterGcm() {
+		this.getCurrentUser().getProperties().remove("c2dmRegistrationId");
 	}
 
 	@Override
@@ -97,6 +102,11 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		
 		getLog().info("User: {} registers for apns push using reg id: {}", user.getFirstName(), apnsRegistrationId);
 		user.getProperties().put("apnsRegistrationId", apnsRegistrationId);
+	}
+	
+	@Override
+	public void unregisterApns() {
+		getCurrentUser().getProperties().remove("apnsRegistrationId");
 	}
 
 	@Override
@@ -109,8 +119,8 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		user.setSurName(surName);
 		
 		final UserBaseView ubv;
-		if (user.isCareGiver()) {
-			ubv = CareGiverBaseViewImpl.newFromEntity((CareGiverEntity) user);
+		if (user.isCareActor()) {
+			ubv = CareActorBaseViewImpl.newFromEntity((CareActorEntity) user);
 		} else {
 			ubv = PatientBaseViewImpl.newFromEntity((PatientEntity) user);
 		}

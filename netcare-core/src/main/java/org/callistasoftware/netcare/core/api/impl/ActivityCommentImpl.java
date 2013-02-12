@@ -34,11 +34,22 @@ public class ActivityCommentImpl implements ActivityComment {
 	private String comment;
 	private String reply;
 	private String commentedBy;
+	private String commentedByCareUnit;
 	private String commentedAt;
 	private String repliedAt;
 	private String repliedBy;
 	private String activityName;
 	private String activityReportedAt;
+	
+	private boolean markedAsRead;
+	private boolean like;
+	
+	private boolean hiddenByAdmin;
+	private boolean hiddenByPatient;
+	
+	ActivityCommentImpl() {
+	
+	}
 	
 	ActivityCommentImpl(final ActivityCommentEntity entity) {
 		this.id = entity.getId();
@@ -46,7 +57,14 @@ public class ActivityCommentImpl implements ActivityComment {
 		this.activityName = entity.getActivity().getActivityDefinitionEntity().getActivityType().getName();
 		this.activityReportedAt = DateUtil.toDateTime(entity.getActivity().getReportedTime());
 		this.commentedAt = DateUtil.toDateTime(entity.getCommentedAt());
-		this.commentedBy = entity.getCommentedBy().getFirstName();
+		this.commentedBy = entity.getCommentedBy().getFirstName() + " " + entity.getCommentedBy().getSurName();
+		this.commentedByCareUnit = entity.getCommentedBy().getCareUnit().getName();
+		
+		this.like = entity.isLike();
+		this.markedAsRead = entity.isMarkedAsRead();
+		
+		this.hiddenByAdmin = entity.isHiddenByAdmin();
+		this.hiddenByPatient = entity.isHiddenByPatient();
 		
 		if (entity.getRepliedAt() != null) {
 			this.reply = entity.getReply();
@@ -119,4 +137,28 @@ public class ActivityCommentImpl implements ActivityComment {
 		return this.repliedBy;
 	}
 
+	@Override
+	public String getCommentedByCareUnit() {
+		return this.commentedByCareUnit;
+	}
+
+	@Override
+	public boolean isMarkedAsRead() {
+		return markedAsRead;
+	}
+
+	@Override
+	public boolean isLike() {
+		return like;
+	}
+
+	@Override
+	public boolean isHiddenByAdmin() {
+		return hiddenByAdmin;
+	}
+	
+	@Override
+	public boolean isHiddenByPatient() {
+		return hiddenByPatient;
+	}
 }

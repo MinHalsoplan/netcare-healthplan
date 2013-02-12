@@ -25,9 +25,9 @@ import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.ActivityReport;
+import org.callistasoftware.netcare.core.api.ActivityItemValuesDefinition;
 import org.callistasoftware.netcare.core.api.ApiUtil;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.DayTime;
 import org.callistasoftware.netcare.core.api.HealthPlan;
@@ -38,10 +38,10 @@ import org.callistasoftware.netcare.core.api.PatientEvent;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
-import org.callistasoftware.netcare.core.api.Value;
 import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
-import org.callistasoftware.netcare.core.api.impl.ActivityDefintionImpl;
+import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
+import org.callistasoftware.netcare.core.api.impl.MeasureUnitImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
@@ -59,8 +59,7 @@ import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.core.repository.ActivityCommentRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.AlarmRepository;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
@@ -69,10 +68,10 @@ import org.callistasoftware.netcare.core.repository.UserRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.AlarmCause;
-import org.callistasoftware.netcare.model.entity.AlarmEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
@@ -86,7 +85,6 @@ import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
-import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,17 +93,18 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * Implementation of service definition
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
 @Service
 @Transactional
 public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanService {
-	
+
 	/**
 	 * Days back when fetching patient plan (schema).
 	 */
@@ -113,34 +112,35 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	/**
 	 * Days forward when fetching patient plan (schema).
 	 */
-	public static int SCHEMA_FUTURE_DAYS  = (2*SCHEMA_HISTORY_DAYS);
+	public static int SCHEMA_FUTURE_DAYS = (2 * SCHEMA_HISTORY_DAYS);
 	/**
-	 * Always get full weeks when fetching patient plan (schema), and weeks starts on Mondays.
+	 * Always get full weeks when fetching patient plan (schema), and weeks
+	 * starts on Mondays.
 	 */
 	public static int SCHEMA_DAY_ALIGN = Calendar.MONDAY;
-		
+
 	/**
 	 * CSV End of Line
 	 */
 	public static String CSV_EOL = "\r\n";
-	
+
 	@org.springframework.beans.factory.annotation.Value("${csv.delimiter}")
 	private String CSV_SEP;
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanServiceImpl.class);
-	
+
 	@Autowired
 	private HealthPlanRepository repo;
-	
+
 	@Autowired
 	private ActivityTypeRepository activityTypeRepository;
-	
+
 	@Autowired
-	private CareGiverRepository careGiverRepository;
-	
+	private CareActorRepository careActorRepository;
+
 	@Autowired
 	private CareUnitRepository careUnitRepository;
-	
+
 	@Autowired
 	private PatientRepository patientRepository;
 
@@ -149,22 +149,18 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 	@Autowired
 	private ActivityDefinitionRepository activityDefintionRepository;
-	
+
 	@Autowired
 	private ScheduledActivityRepository scheduledActivityRepository;
-	
+
 	@Autowired
 	private ActivityCommentRepository commentRepository;
-	
-	@Autowired
-	private AlarmRepository alarmRepo;
 
-	
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
-		
+		final List<HealthPlanEntity> entities = this.repo.findByForPatientAndArchivedFalse(forPatient);
+
 		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
 			if (ent.isReadAllowed(this.getCurrentUser())) {
@@ -172,45 +168,48 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				plans.add(dto);
 			}
 		}
-		
-		return ServiceResultImpl.createSuccessResult(plans.toArray(new HealthPlan[plans.size()]), new ListEntitiesMessage(HealthPlanEntity.class, plans.size()));
+
+		return ServiceResultImpl.createSuccessResult(plans.toArray(new HealthPlan[plans.size()]),
+				new ListEntitiesMessage(HealthPlanEntity.class, plans.size()));
 	}
-	
-	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient(PatientBaseView patient) {
+
+	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient() {
 		Calendar c = Calendar.getInstance();
 		c.setFirstDayOfWeek(1);
-		
+
 		c.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
 		c.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
-		
+
 		Date startDate = ApiUtil.dayBegin(c).getTime();
 
 		c.add(Calendar.DATE, SCHEMA_HISTORY_DAYS + SCHEMA_FUTURE_DAYS);
 		Date endDate = ApiUtil.dayEnd(c).getTime();
 
-		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-		List<ScheduledActivityEntity> entities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(forPatient, startDate, endDate);
+		List<ScheduledActivityEntity> entities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(
+				getPatient(), startDate, endDate);
 		Collections.sort(entities);
-		
+
 		ScheduledActivity[] arr = ScheduledActivityImpl.newFromEntities(entities);
-		
+
 		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareGiverBaseView careGiver, final Long patientId) {		
+	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareActorBaseView careActor,
+			final Long patientId) {
 		log.info("Creating new ordination {}", o.getName());
 
 		final Date start = ApiUtil.parseDate(o.getStartDate());
 		final DurationUnit du = DurationUnit.valueOf(o.getDurationUnit().getCode());
 
-		final CareGiverEntity cg = this.careGiverRepository.findByHsaId(careGiver.getHsaId());
+		final CareActorEntity ca = this.careActorRepository.findByHsaId(careActor.getHsaId());
 
 		final PatientEntity patient = this.patientRepository.findOne(patientId);
 
-		final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(cg, patient, o.getName(), start, o.getDuration(), du);
+		final HealthPlanEntity newEntity = HealthPlanEntity.newEntity(ca, patient, o.getName(), start, o.getDuration(),
+				du);
 		newEntity.setAutoRenewal(o.isAutoRenewal());
-		
+
 		final HealthPlanEntity saved = this.repo.save(newEntity);
 		final HealthPlan dto = HealthPlanImpl.newFromEntity(saved, null);
 
@@ -222,108 +221,89 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		log.info("Deleting health plan {}", healthPlanId);
 		final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
 		if (hp == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
-		
+
 		this.verifyWriteAccess(hp);
-		
-		this.repo.delete(healthPlanId);
-		
+
+		hp.setArchived(true);
+		this.repo.save(hp);
+
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
 
 	@Override
 	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
-		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
+		final HealthPlanEntity entity = this.repo.findByIdAndArchivedFalse(healthPlanId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
-		
+
 		this.verifyReadAccess(entity);
-		
+
 		final HealthPlan dto = HealthPlanImpl.newFromEntity(entity, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<HealthPlan> addActvitiyToHealthPlan(
-			final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user) {
-		log.info("Adding activity defintion to existing ordination with id {}", healthPlanId);
-		
-		
-		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
+	public ServiceResult<ActivityDefinition> addActvitiyToHealthPlan(final ActivityDefinition dto) {
+		log.info("Adding activity defintion to existing ordination with id {}", dto.getHealthPlanId());
+
+		final HealthPlanEntity entity = this.repo.findOne(dto.getHealthPlanId());
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, dto.getHealthPlanId()));
 		}
-		
+
 		this.verifyWriteAccess(entity);
-		
+
 		log.debug("Health plan entity found and resolved. Id is {}", entity.getId());
 
 		final ActivityTypeEntity typeEntity = this.activityTypeRepository.findOne(dto.getType().getId());
 		if (typeEntity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, dto.getType().getId()));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, dto
+					.getType().getId()));
 		}
-		
-		log.debug("Activity type entity found and resolved. Id is {}", typeEntity.getId());
-		
-		/*
-		 * Create the day frequency based on what the user
-		 * selected.
-		 */
-		log.debug("Processing the day and time frequence...");
-		
-		final Frequency frequency = new Frequency();
-		frequency.setWeekFrequency(dto.getActivityRepeat());
-		for (final DayTime dt : dto.getDayTimes()) {
-			FrequencyDay fd = FrequencyDay.newFrequencyDay(ApiUtil.toIntDay(dt.getDay()));
-			for (String time : dt.getTimes()) {
-				fd.addTime(FrequencyTime.unmarshal(time));
-			}
-			frequency.addDay(fd);
-		}
-		log.debug("Frequency: {}", Frequency.marshal(frequency));
 
-		final UserEntity userEntity = user.isCareGiver() ? careGiverRepository.findOne(user.getId()) : patientRepository.findOne(user.getId());
-		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, frequency, userEntity);
-		
-		log.debug("Setting public definition to {}", dto.isPublicDefinition());
-		newEntity.setPublicDefinition(dto.isPublicDefinition());
-		
+		log.debug("Activity type entity found and resolved. Id is {}", typeEntity.getId());
+		final ActivityDefinitionEntity newEntity = ActivityDefinitionEntity.newEntity(entity, typeEntity, createFrequency(dto), getCareActor());
+
 		/*
 		 * Process measurement definitions
 		 */
-		this.updateMeasureValues(newEntity, dto);
-		
+		this.updateActivityItems(newEntity, dto);
+
 		if (dto.getStartDate() != null) {
-			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));		
+			newEntity.setStartDate(ApiUtil.parseDate(dto.getStartDate()));
 		}
-		
+
 		ActivityDefinitionEntity savedEntity = activityDefintionRepository.save(newEntity);
-		
+
 		log.debug("Activity defintion saved.");
-		
+
 		scheduleActivities(savedEntity);
-		
-		final HealthPlanEntity savedOrdination = this.repo.save(entity);
+
+		this.repo.save(entity);
 		log.debug("Health plan saved");
-		
+
 		log.debug("Creating result. Success!");
-		final HealthPlan result = HealthPlanImpl.newFromEntity(savedOrdination, LocaleContextHolder.getLocale());
-		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
+		final ActivityDefinition def = ActivityDefinitionImpl.newFromEntity(savedEntity);
+		return ServiceResultImpl.createSuccessResult(def, new GenericSuccessMessage());
 	}
-	
-	
+
 	@Override
 	public ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop) {
 		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
-		
+
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 
 		List<ScheduledActivityEntity> list = null;
-		
+
 		if (stop) {
 			log.debug("Health plan {} renewal terminated", entity.getName());
 			entity.setAutoRenewal(false);
@@ -332,89 +312,52 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			log.debug("Health plan {} perform renewal, iteration {}", entity.getName(), entity.getIteration());
 		}
 		HealthPlanEntity savedEntity = this.repo.save(entity);
-		
+
 		if (list != null) {
 			this.scheduledActivityRepository.save(list);
 		}
-		
+
 		final HealthPlan result = HealthPlanImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale());
 		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
 	}
-	
-	
+
 	@Override
 	public void scheduleActivities(ActivityDefinitionEntity activityDefinition) {
-		scheduledActivityRepository.save(activityDefinition.scheduleActivities());
+		List<ScheduledActivityEntity> scheduleActivities = activityDefinition.scheduleActivities();
+		getLog().debug("Scheduled {} activities.", scheduleActivities.size());
+		scheduledActivityRepository.save(scheduleActivities);
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition[]> loadActivitiesForHealthPlan(
-			Long healthPlanId) {
+	public ServiceResult<ActivityDefinition[]> loadActivitiesForHealthPlan(Long healthPlanId) {
 		log.info("Loading health plan activities for health plan {}", healthPlanId);
 		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
-		
+
 		this.verifyReadAccess(entity);
-		
-		log.debug("Found {} health plan activities for health plan {}", entity.getActivityDefinitions().size(), healthPlanId);
-		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntities(entity.getActivityDefinitions()), new ListEntitiesMessage(ActivityDefinitionEntity.class, entity.getActivityDefinitions().size()));
+
+		log.debug("Found {} health plan activities for health plan {}", entity.getActivityDefinitions().size(),
+				healthPlanId);
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(entity
+				.getActivityDefinitions()), new ListEntitiesMessage(ActivityDefinitionEntity.class, entity
+				.getActivityDefinitions().size()));
 	}
 
 	@Override
-	public ServiceResult<ScheduledActivity> reportReady(
-			Long scheduledActivityId, ActivityReport report) {
-		log.info("Report done for scheduled activity {}", scheduledActivityId);
-		ScheduledActivityEntity entity = scheduledActivityRepository.findOne(scheduledActivityId);
-		entity.setReportedTime(new Date());
-		entity.setStatus(report.isRejected() ? ScheduledActivityStatus.REJECTED : ScheduledActivityStatus.OPEN);
-		entity.setNote(report.getNote());
-		entity.setPerceivedSense(report.getSense());
-		for (Value value : report.getValues()) {
-			MeasurementEntity me = entity.lookupMeasurement(value.getSeqno()); 
-			me.setReportedValue(value.getValue());
-			
-			switch (me.getMeasurementDefinition().getMeasurementType().getValueType()) {
-			case INTERVAL:
-				me.setMaxTarget(me.getMeasurementDefinition().getMaxTarget());
-				me.setMinTarget(me.getMeasurementDefinition().getMinTarget());
-				break;
-			case SINGLE_VALUE:
-				me.setTarget(me.getMeasurementDefinition().getTarget());
-				break;
-			};
-			
-			log.debug("Alarm status: enabled {} raised {}", me.getMeasurementDefinition().getMeasurementType().isAlarmEnabled(), me.isAlarm());
-			if (!report.isRejected() && me.isAlarm()) {
-				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, 
-						entity.getActivityDefinitionEntity().getHealthPlan().getForPatient(), 
-						entity.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
-					Option o = new Option(me.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale());
-					ae.setInfo(me.getMeasurementDefinition().getMeasurementType().getName() + ": " + me.getReportedValue() + " " + o.getValue());
-				alarmRepo.save(ae);
-			}
-		}
-		Date d = ApiUtil.parseDateTime(report.getActualDate(), report.getActualTime());
-		entity.setActualTime(d);
-		entity = scheduledActivityRepository.save(entity);
-		
-		log.debug("Reported time for activity is: {}", entity.getReportedTime());
-		
-		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(entity), new GenericSuccessMessage());
-	}
-
-	@Override
-	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit, final Date start, final Date end) {
+	public ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit,
+			final Date start, final Date end) {
 		log.info("Loading latest reported activities for all patients belonging to care unit {}", careUnit.getHsaId());
-		
+
 		final CareUnitEntity entity = this.careUnitRepository.findByHsaId(careUnit.getHsaId());
 		if (entity == null) {
 			ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, -1L));
 		}
-		
+
 		this.verifyReadAccess(entity);
-		
+
 		log.info("latest reports: start: {}, end: {}, unit: \"{}\"", new Object[] { start, end, entity.getHsaId() });
 
 		final List<ScheduledActivityEntity> activities;
@@ -425,18 +368,75 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 
 		log.info("latest reports: found {} activities", activities.size());
-		
-		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities), new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
+
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities),
+				new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(
-			PatientBaseView patient) {
-		PatientEntity forPatient = patientRepository.findOne(patient.getId());
-		Date now = new Date();
-		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
-		ActivityDefinition[] arr = ActivityDefintionImpl.newFromEntities(defs);
-		return ServiceResultImpl.createSuccessResult(arr,new GenericSuccessMessage());
+	public ServiceResult<ScheduledActivity[]> filterReportedActivities(final CareUnit careUnit, final String personnummer,
+			final Date start, final Date end) {
+		log.info("Loading a filtered out list of reported activities belonging to care unit {}", careUnit.getHsaId());
+
+		final CareUnitEntity entity = this.careUnitRepository.findByHsaId(careUnit.getHsaId());
+		if (entity == null) {
+			ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, -1L));
+		}
+		final PatientEntity patient = patientRepository.findByCivicRegistrationNumber(personnummer);
+		this.verifyReadAccess(entity);
+
+		log.info("filtered reports: pnr: {}, start: {}, end: {}, unit: \"{}\"", new Object[] { personnummer, start, end, entity.getHsaId() });
+
+		final List<ScheduledActivityEntity> activities;
+		if (StringUtils.hasText(personnummer)) {
+			activities = this.scheduledActivityRepository.findByCareUnitPatientBetween(entity.getHsaId(), patient, start, end);
+		} else {
+			activities = this.scheduledActivityRepository.findByCareUnitBetween(entity.getHsaId(), start, end);
+		}
+
+		log.info("filter reports: found {} activities", activities.size());
+
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(activities),
+				new ListEntitiesMessage(ScheduledActivityEntity.class, activities.size()));
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId) {
+		
+		final UserEntity currentUser = getCurrentUser();
+		if (patientId == null && currentUser.isCareActor()) {
+			throw new IllegalStateException("Don't know which patient to load...");
+		}
+		
+		final PatientEntity patient;
+		if (currentUser.isCareActor()) {
+			patient = patientRepository.findOne(patientId);
+		} else {
+			patient = patientRepository.findOne(getPatient().getId());
+		}
+		
+		final Date now = new Date();
+		final List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(patient, now);
+		
+		if (currentUser.isCareActor()) {
+			getLog().debug("Filter definitions and include only definitions that the care actor are allowed to see.");
+			final Long careUnit = getCareActor().getCareUnit().getId();
+			final List<ActivityDefinitionEntity> filter = new ArrayList<ActivityDefinitionEntity>();
+			
+			for (final ActivityDefinitionEntity ent : defs) {
+				if (ent.getHealthPlan().getCareUnit().getId().equals(careUnit)) {
+					filter.add(ent);
+				}
+			}
+			
+			return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(filter), new GenericSuccessMessage());
+		}
+		
+		if (defs.size() > 0) {
+			this.verifyReadAccess(defs.get(0));
+		}
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(defs), new GenericSuccessMessage());
 	}
 
 	@Override
@@ -449,7 +449,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		Date start = ApiUtil.dayBegin(cal).getTime();
 		cal.setTime(today);
 		Date end = ApiUtil.dayEnd(cal).getTime();
-		final List<ScheduledActivityEntity> activities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(patient, start, end);
+		final List<ScheduledActivityEntity> activities = scheduledActivityRepository
+				.findByPatientAndScheduledTimeBetween(patient, start, end);
 		int num = 0;
 		int due = 0;
 		for (ScheduledActivityEntity sc : activities) {
@@ -466,191 +467,171 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		sr = ServiceResultImpl.createSuccessResult(event, new GenericSuccessMessage());
 		return sr;
 	}
-	
-	public ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(
-			Long healthPlanId) {
+
+	public ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(Long healthPlanId) {
 		log.info("Get scheduled activities for health plan {}", healthPlanId);
 		final HealthPlanEntity ad = this.repo.findOne(healthPlanId);
 		if (ad == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
-		
+
 		this.verifyReadAccess(ad);
-		
-		final List<ScheduledActivityEntity> entities = this.scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
+
+		final List<ScheduledActivityEntity> entities = this.scheduledActivityRepository
+				.findScheduledActivitiesForHealthPlan(healthPlanId);
 		log.debug("Found {} scheduled activities", entities.size());
-		
-		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(entities), new ListEntitiesMessage(ScheduledActivityEntity.class, entities.size()));
+
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntities(entities),
+				new ListEntitiesMessage(ScheduledActivityEntity.class, entities.size()));
 	}
 
 	@Override
-	public ServiceResult<HealthPlanStatistics> getStatisticsForHealthPlan(
-			Long healthPlanId) {
+	public ServiceResult<HealthPlanStatistics> getStatisticsForHealthPlan(Long healthPlanId) {
 		log.info("Getting statistics for health plans...");
-		
+
 		final HealthPlanStatistics stats = new HealthPlanStatistics();
-		
+
 		final HealthPlanEntity healthPlan = this.repo.findOne(healthPlanId);
 		if (healthPlan == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
-		
+
 		this.verifyReadAccess(healthPlan);
-		
+
 		log.debug("Calculating health plan overview...");
 		final ScheduledActivity[] activities = this.getScheduledActivitiesForHealthPlan(healthPlanId).getData();
 		final List<ActivityCount> activityCount = new ArrayList<ActivityCount>();
-		
-		actLoop: for(final ScheduledActivity ac : activities) {
-			
-			if (!ac.getDefinition().isPublicDefinition() && this.getCurrentUser().isCareGiver()) {
-				log.debug("Skip activity because the care giver was not allowed to see it.");
-				continue actLoop;
-			}
-			
-			final String name = ac.getDefinition().getType().getName();
+
+		for (final ScheduledActivity ac : activities) {
+			final String name = ac.getActivityDefinition().getType().getName();
 			final ActivityCount act = new ActivityCount(name);
 			final ActivityCount existing = this.findActivityCount(name, activityCount);
-			
+
 			if (existing == null) {
 				log.debug("Activity count not in list. Adding {}", act.getName());
 				activityCount.add(act);
 			}
-			
+
 			this.findActivityCount(name, activityCount).increaseCount();
 		}
 		stats.setActivities(activityCount);
 		log.debug("Health plan overview calculated.");
-		
-		
+
 		/*
 		 * Get all reported activities
 		 */
 		log.debug("Calculating reported activities...");
-		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository.findReportedActivitiesForHealthPlan(
-				healthPlanId
-				, healthPlan.getStartDate()
-				, new Date()
-				, new Sort(Sort.Direction.ASC, "scheduledTime"));
-		
+		final List<ScheduledActivityEntity> ents = this.scheduledActivityRepository
+				.findReportedActivitiesForHealthPlan(healthPlanId, healthPlan.getStartDate(), new Date(), new Sort(
+						Sort.Direction.ASC, "scheduledTime"));
+
 		final List<MeasuredValue> measuredValues = new ArrayList<MeasuredValue>();
-		for (final ScheduledActivityEntity e : ents) {
-			
-			if (!e.getActivityDefinitionEntity().isPublicDefinition() && this.getCurrentUser().isCareGiver()) {
-				log.debug("Skip activity because the care giver was not allowed to see it.");
-				continue;
-			}
-			
+		for (final ScheduledActivityEntity schedActivityEntity : ents) {
 			final ReportedActivity ra = new ReportedActivity();
-			ra.setName(e.getActivityDefinitionEntity().getActivityType().getName());
-			ra.setNote(e.getNote());
-			ra.setReportedAt(DateUtil.toDateTime(e.getReportedTime()));
-			ra.setLabel(DateUtil.toDateTime(e.getScheduledTime()));
-			
-			final List<MeasurementEntity> measurements = e.getMeasurements();
-			for (final MeasurementEntity m : measurements) {	
-				final String measurementName = m.getMeasurementDefinition().getMeasurementType().getName(); 
-				MeasuredValue mv = this.findMeasuredValue(measurementName, measuredValues);
-				if (mv == null) {
-					mv = new MeasuredValue();
-					mv.setName(e.getActivityDefinitionEntity().getActivityType().getName());
-					mv.setDefinitionId(e.getActivityDefinitionEntity().getId());
-					mv.setValueType(new Option(measurementName, null));
-					mv.setUnit(new Option(m.getMeasurementDefinition().getMeasurementType().getUnit().name(), LocaleContextHolder.getLocale()));
-					mv.setInterval(m.getMeasurementDefinition().getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL));
-					measuredValues.add(mv);
+			ra.setName(schedActivityEntity.getActivityDefinitionEntity().getActivityType().getName());
+			ra.setNote(schedActivityEntity.getNote());
+			ra.setReportedAt(DateUtil.toDateTime(schedActivityEntity.getReportedTime()));
+			ra.setLabel(DateUtil.toDateTime(schedActivityEntity.getScheduledTime()));
+
+			final List<ActivityItemValuesEntity> activityItemValues = schedActivityEntity.getActivities();
+			for (final ActivityItemValuesEntity valueEntity : activityItemValues) {
+				if (valueEntity instanceof MeasurementEntity) {
+					MeasurementEntity m = (MeasurementEntity) valueEntity;
+					MeasurementTypeEntity type = (MeasurementTypeEntity) m.getActivityItemDefinitionEntity()
+							.getActivityItemType();
+					final String measurementName = type.getName();
+					MeasuredValue mv = this.findMeasuredValue(measurementName, measuredValues);
+					if (mv == null) {
+						mv = new MeasuredValue();
+						mv.setName(schedActivityEntity.getActivityDefinitionEntity().getActivityType().getName());
+						mv.setDefinitionId(schedActivityEntity.getActivityDefinitionEntity().getId());
+						mv.setValueType(new Option(measurementName, null));
+						mv.setUnit(MeasureUnitImpl.newFromEntity(type.getUnit()));
+						mv.setInterval(type.equals(MeasurementValueType.INTERVAL));
+						measuredValues.add(mv);
+					}
+
+					final ReportedValue rv = new ReportedValue();
+					switch (type.getValueType()) {
+					case INTERVAL:
+						rv.setMaxTargetValue((float) m.getMaxTarget());
+						rv.setMinTargetValue((float) m.getMinTarget());
+						break;
+					case SINGLE_VALUE:
+						rv.setTargetValue((float) m.getTarget());
+						break;
+					}
+
+					rv.setReportedValue((float) m.getReportedValue());
+					rv.setReportedAt(DateUtil.toDateTime(schedActivityEntity.getScheduledTime()));
+
+					mv.getReportedValues().add(rv);
 				}
-				
-				final ReportedValue rv = new ReportedValue();
-				switch (m.getMeasurementDefinition().getMeasurementType().getValueType()) {
-				case INTERVAL:
-					rv.setMaxTargetValue((float) m.getMaxTarget());
-					rv.setMinTargetValue((float) m.getMinTarget());
-					break;
-				case SINGLE_VALUE:
-					rv.setTargetValue((float) m.getTarget());
-					break;
-				}
-				
-				rv.setReportedValue((float) m.getReportedValue());
-				rv.setReportedAt(DateUtil.toDateTime(e.getScheduledTime()));
-				
-				mv.getReportedValues().add(rv);
 			}
 			ra.setMeasures(measuredValues);
 		}
-		
+
 		stats.setMeasuredValues(measuredValues);
-		
+
 		return ServiceResultImpl.createSuccessResult(stats, new GenericSuccessMessage());
 	}
-	
+
 	private MeasuredValue findMeasuredValue(final String measurementName, final List<MeasuredValue> list) {
 		for (final MeasuredValue mv : list) {
 			if (mv.getValueType().getCode().equals(measurementName)) {
 				return mv;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private ActivityCount findActivityCount(final String name, final List<ActivityCount> list) {
 		for (final ActivityCount a : list) {
 			if (a.getName().equals(name)) {
 				return a;
 			}
 		}
-		
+
 		return null;
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition> deleteActivity(
-			Long activityDefinitionId) {
-		
+	public ServiceResult<ActivityDefinition> deleteActivity(Long activityDefinitionId) {
+
 		log.info("Deleteing activity definition {}", activityDefinitionId);
 		final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
 		if (ent == null) {
 			log.warn("The activity definition {} could not be found.", activityDefinitionId);
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, activityDefinitionId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class,
+					activityDefinitionId));
 		}
-		
+
 		this.verifyWriteAccess(ent);
-		
+
 		ent.setRemovedFlag(true);
-		
+
 		log.debug("Activity definition with id {} marked as rmeoved", activityDefinitionId);
 		this.activityDefintionRepository.save(ent);
-		
-		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(ent), new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId)); 
+
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(ent),
+				new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId));
 	}
-	
+
 	@Override
 	public String getICalendarEvents(PatientBaseView patient) {
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
 		Date now = new Date();
 		List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(forPatient, now);
-		final String calPattern =
-			"BEGIN:VCALENDAR\r\n"
-			+ "VERSION:2.0\r\n"
-			+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n"
-			+ "%s"
-			+ "END:VCALENDAR\r\n";
-		
-		final String eventPattern = 
-			"BEGIN:VEVENT\r\n"
-			+ "UID:%s@%s.%d\r\n"
-			+ "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
-			+ "DTSTART;TZID=Europe/Stockholm:%s\r\n"
-			+ "DURATION:%s\r\n"
-			+ "SUMMARY:%s\r\n"
-			+ "TRANSP:OPAQUE\r\n"
-			+ "CLASS:CONFIDENTIAL\r\n"
-			+ "CATEGORIES:PERSONLIGT,PLAN,HÄLSA\r\n"
-			+ "%s"
-			+ "END:VEVENT\r\n";
-		
+		final String calPattern = "BEGIN:VCALENDAR\r\n" + "VERSION:2.0\r\n"
+				+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n" + "%s" + "END:VCALENDAR\r\n";
+
+		final String eventPattern = "BEGIN:VEVENT\r\n" + "UID:%s@%s.%d\r\n" + "DTSTAMP;TZID=Europe/Stockholm:%s\r\n"
+				+ "DTSTART;TZID=Europe/Stockholm:%s\r\n" + "DURATION:%s\r\n" + "SUMMARY:%s\r\n" + "TRANSP:OPAQUE\r\n"
+				+ "CLASS:CONFIDENTIAL\r\n" + "CATEGORIES:PERSONLIGT,PLAN,HÄLSA\r\n" + "%s" + "END:VEVENT\r\n";
+
 		StringBuffer events = new StringBuffer();
 		for (ActivityDefinitionEntity ad : defs) {
 			String stamp = EntityUtil.formatCalTime(ad.getCreatedTime());
@@ -668,7 +649,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 					rrule.append(";UNTIL=").append(EntityUtil.formatCalTime(ad.getHealthPlan().getEndDate()));
 					rrule.append("\r\n");
 				}
-				
+
 				int timeIndex = 0;
 				for (FrequencyTime time : day.getTimes()) {
 					Calendar cal = Calendar.getInstance();
@@ -676,7 +657,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 					cal.set(Calendar.HOUR, time.getHour());
 					cal.set(Calendar.MINUTE, time.getMinute());
 					String start = EntityUtil.formatCalTime(cal.getTime());
-					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration, summary, rrule.toString()));
+					events.append(String.format(eventPattern, ad.getUUID(), wday, timeIndex++, stamp, start, duration,
+							summary, rrule.toString()));
 				}
 			}
 		}
@@ -684,37 +666,43 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		return r;
 
 	}
-	
-	
+
 	/**
-	 * Converts amount and units into minutes. <p>
+	 * Converts amount and units into minutes.
+	 * <p>
 	 * 
-	 * Steps are converted into slow walking, and meter into slow jog. <p>
+	 * Steps are converted into slow walking, and meter into slow jog.
+	 * <p>
 	 * 
 	 * Minutes are rounded to half-hour precision.
 	 * 
-	 * @param the activity deftinion. 
+	 * @param the
+	 *            activity deftinion.
 	 * @return the ical duration.
 	 */
-	private static String toICalDuration(ActivityDefinitionEntity ad) {	
+	private static String toICalDuration(ActivityDefinitionEntity ad) {
 		int minutes = 30;
-		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
-			float t = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md.getMaxTarget() : md.getTarget();
-			int target = Math.round(t);
-			
-			switch (md.getMeasurementType().getUnit()) {
-			case STEP:
-				minutes = Math.max(target / 50, minutes);
-				break;
-			case METER:
-				minutes = Math.max(target / 80, minutes);
-				break;
-			case MINUTE:
-				minutes = Math.max(target, minutes);				
-				break;
+		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
+			if (aid instanceof MeasurementDefinitionEntity) {
+				MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
+				float t = md.getMeasurementType().getValueType().equals(MeasurementValueType.INTERVAL) ? md
+						.getMaxTarget() : md.getTarget();
+				//int target = Math.round(t);
+
+//				switch (md.getMeasurementType().getUnit()) {
+//				case STEP:
+//					minutes = Math.max(target / 50, minutes);
+//					break;
+//				case METER:
+//					minutes = Math.max(target / 80, minutes);
+//					break;
+//				case MINUTE:
+//					minutes = Math.max(target, minutes);
+//					break;
+//				}
 			}
 		}
-		
+
 		String dur = "PT";
 		if (minutes > 60) {
 			int hours = minutes / 60;
@@ -727,7 +715,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		return dur;
 	}
-	
+
 	//
 	private static String toICalDay(FrequencyDay day) {
 		switch (day.getDay()) {
@@ -750,71 +738,130 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ScheduledActivity> commentOnPerformedActivity(
-			Long activityId, String comment) {
+	public ServiceResult<ScheduledActivity> commentOnPerformedActivity(Long activityId, String comment) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, comment, null, null);
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> likePerformedActivity(Long activityId, boolean like) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, null, like, null);
+	}
+
+	@Override
+	public ServiceResult<ScheduledActivity> markPerformedActivityAsRead(Long activityId, boolean hasBeenRead) {
+		return createOrUpdateCommentOnPerformedActivity(activityId, null, null, hasBeenRead);
+	}
+
+	protected ServiceResult<ScheduledActivity> createOrUpdateCommentOnPerformedActivity(Long activityId, String comment, Boolean like, Boolean hasBeenRead) {
 		final ScheduledActivityEntity ent = this.scheduledActivityRepository.findOne(activityId);
 		if (ent == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class, activityId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class,
+					activityId));
 		}
-		
+
 		this.verifyWriteAccess(ent);
-		
+
 		final UserEntity user = this.getCurrentUser();
-		if (user.isCareGiver()) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
-			ent.getComments().add(ActivityCommentEntity.newEntity(comment, cg, ent));
+		if (user.isCareActor()) {
+			final CareActorEntity ca = (CareActorEntity) user;
 			
-			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent), new GenericSuccessMessage());
+			ActivityCommentEntity commentEntity = null; 
+			if(ent.getComments().size()>0) {
+				commentEntity = ent.getComments().get(0);
+			} else {
+				commentEntity = ActivityCommentEntity.newEntity("", ca, ent);
+				ent.getComments().add(commentEntity);
+			}
+			
+			if(StringUtils.hasText(comment)) {
+				commentEntity.setComment(comment);
+			} else if(like!=null) {
+				commentEntity.setLike(like);
+			} else if(hasBeenRead!=null) {
+				commentEntity.setMarkedAsRead(hasBeenRead);
+			}
+
+			return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(ent),
+					new GenericSuccessMessage());
 		} else {
 			throw new SecurityException("A patient is not allow to comment his own activity");
 		}
 	}
 
+	
 	@Override
 	public ServiceResult<ActivityComment[]> loadCommentsForPatient() {
 		final PatientEntity patient = this.getPatient();
-		final List<ActivityCommentEntity> entities = this.commentRepository.findCommentsForPatient(patient);
 		
-		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(entities), new ListEntitiesMessage(ActivityCommentEntity.class, entities.size()));
+		final List<ActivityCommentEntity> entities = this.commentRepository.findCommentsForPatient(patient);
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(entities),
+				new ListEntitiesMessage(ActivityCommentEntity.class, entities.size()));
 	}
 
 	@Override
 	public ServiceResult<ActivityComment> replyToComment(Long comment, final String reply) {
 		final ActivityCommentEntity ent = this.commentRepository.findOne(comment);
 		if (ent == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class, comment));
+			return ServiceResultImpl
+					.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class, comment));
 		}
-		
+
 		this.verifyWriteAccess(getPatient());
-		
+
 		ent.setReply(reply);
 		ent.setRepliedAt(new Date());
-		
-		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntity(ent), new GenericSuccessMessage());
+
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntity(ent),
+				new GenericSuccessMessage());
 	}
 
 	@Override
-	public ServiceResult<ActivityComment[]> loadRepliesForCareGiver() {
-		final CareGiverEntity cg = this.getCareGiver();
-		log.info("Loading replies for care giver {}", cg.getFirstName());
-		
-		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareGiver(cg, cg.getCareUnit());
-		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments), new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));
+	public ServiceResult<ActivityComment[]> loadRepliesForCareActor() {
+		final CareActorEntity ca = this.getCareActor();
+		log.info("Loading replies for care giver {}", ca.getFirstName());
+
+		final List<ActivityCommentEntity> comments = this.commentRepository.findRepliesForCareActor(ca,
+				ca.getCareUnit());
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntities(comments),
+				new ListEntitiesMessage(ActivityCommentEntity.class, comments.size()));
 	}
 
 	@Override
 	public ServiceResult<ActivityComment> deleteComment(Long commentId) {
 		final UserEntity user = this.getCurrentUser();
 		log.info("Care giver {} is deleting comment {}", user.getId(), commentId);
-		
+
 		final ActivityCommentEntity ent = this.commentRepository.findOne(commentId);
 		if (ent == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class, commentId));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class,
+					commentId));
 		}
-		
+
 		this.verifyWriteAccess(ent);
 		this.commentRepository.delete(ent);
-		
+
+		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<ActivityComment> hideComment(Long commentId, boolean isAdmin) {
+		final UserEntity user = this.getCurrentUser();
+		log.info("User {} is hiding comment {}", user.getId(), commentId);
+
+		final ActivityCommentEntity ent = this.commentRepository.findOne(commentId);
+		if (ent == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityCommentEntity.class,
+					commentId));
+		}
+
+		this.verifyWriteAccess(ent);
+		if(isAdmin) {
+			ent.setHiddenByAdmin(true);
+		} else {
+			ent.setHiddenByPatient(true);
+		}
+		this.commentRepository.save(ent);
+
 		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
 	}
 
@@ -822,18 +869,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	public ServiceResult<ScheduledActivity> loadScheduledActivity(Long activity) {
 		final ScheduledActivityEntity sae = this.scheduledActivityRepository.findOne(activity);
 		if (sae == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class, activity));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ScheduledActivityEntity.class,
+					activity));
 		}
-		
+
 		this.verifyReadAccess(sae);
-		
-		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(sae), new GenericSuccessMessage());
+
+		return ServiceResultImpl.createSuccessResult(ScheduledActivityImpl.newFromEntity(sae),
+				new GenericSuccessMessage());
 	}
 
 	private static String quotedString(String s) {
 		return String.format("\"%s\"", s);
 	}
-	
+
 	// FIXME: Requires single activity definitions
 	@Override
 	public String getPlanReports(UserBaseView user, Long activityDeifntionId) {
@@ -851,7 +900,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		hb.append(CSV_SEP).append("Utförd tid");
 		hb.append(CSV_SEP).append("Känsla");
 		hb.append(CSV_SEP).append("Kommentar");
-		
+
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		for (ScheduledActivityEntity sc : list) {
@@ -863,80 +912,172 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			sb.append(CSV_SEP).append(ApiUtil.formatTime(sc.getScheduledTime()));
 			sb.append(CSV_SEP).append(sc.getActualTime() != null ? ApiUtil.formatDate(sc.getActualTime()) : "");
 			sb.append(CSV_SEP).append(sc.getActualTime() != null ? ApiUtil.formatTime(sc.getActualTime()) : "");
-			sb.append(CSV_SEP).append(sc.getPerceivedSense());
 			sb.append(CSV_SEP).append(quotedString(sc.getNote()));
-			for (MeasurementEntity me : sc.getMeasurements()) {
-				MeasurementTypeEntity type = me.getMeasurementDefinition().getMeasurementType();
-				String name = type.getName();
-				if (first) {
-					Option unit = new Option(type.getUnit().name(), LocaleContextHolder.getLocale());
-					hb.append(CSV_SEP).append(quotedString(name + " [" + unit.getValue() + "]"));
-					if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
-						hb.append(CSV_SEP).append(quotedString(name + " - min"));
-						hb.append(CSV_SEP).append(quotedString(name + " - max"));
-					} else {
-						hb.append(CSV_SEP).append(quotedString(name + " - mål"));						
+			for (ActivityItemValuesEntity valueEntity : sc.getActivities()) {
+				if (valueEntity instanceof MeasurementEntity) {
+					MeasurementEntity me = (MeasurementEntity) valueEntity;
+					MeasurementTypeEntity type = (MeasurementTypeEntity) me.getActivityItemDefinitionEntity()
+							.getActivityItemType();
+					String name = type.getName();
+					if (first) {
+						hb.append(CSV_SEP).append(quotedString(name + " [" + type.getUnit().getName() + "]"));
+						if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
+							hb.append(CSV_SEP).append(quotedString(name + " - min"));
+							hb.append(CSV_SEP).append(quotedString(name + " - max"));
+						} else {
+							hb.append(CSV_SEP).append(quotedString(name + " - mål"));
+						}
 					}
-				}
-				sb.append(CSV_SEP).append(me.getReportedValue());
-				if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
-					sb.append(CSV_SEP).append(me.getMinTarget());
-					sb.append(CSV_SEP).append(me.getMaxTarget());
-				} else {
-					sb.append(CSV_SEP).append(me.getTarget());
+					sb.append(CSV_SEP).append(me.getReportedValue());
+					if (type.getValueType().equals(MeasurementValueType.INTERVAL)) {
+						sb.append(CSV_SEP).append(me.getMinTarget());
+						sb.append(CSV_SEP).append(me.getMaxTarget());
+					} else {
+						sb.append(CSV_SEP).append(me.getTarget());
+					}
 				}
 			}
 			sb.append(CSV_EOL);
 			first = false;
 		}
 		hb.append(CSV_EOL);
-		
+
 		return hb.append(sb).toString();
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition> updateActivity(
-			ActivityDefinition dto) {
+	public ServiceResult<ActivityDefinition> updateActivity(ActivityDefinition dto) {
 		this.getLog().info("Updating activity definition {}", dto.getId());
-		
+
 		final ActivityDefinitionEntity entity = this.activityDefintionRepository.findOne(dto.getId());
 		if (entity == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, dto.getId()));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, dto
+					.getId()));
 		}
-		
+
 		this.verifyWriteAccess(entity);
-		
+
 		/*
 		 * Update measure values
 		 */
-		this.updateMeasureValues(entity, dto);
+		this.updateActivityItems(entity, dto);
 		
-		return ServiceResultImpl.createSuccessResult(ActivityDefintionImpl.newFromEntity(entity), new GenericSuccessMessage());
+		/*
+		 * Update frequency
+		 */
+		entity.setFrequency(createFrequency(dto));
+		
+		/*
+		 * Update reminder
+		 */
+		entity.setReminder(dto.isReminder());
+		
+		/*
+		 * Remove all future scheduled activties and add
+		 * new ones
+		 */
+		getLog().debug("Rescheduling activities... Before: {}", entity.getScheduledActivities().size());
+		entity.reschedule();
+		getLog().debug("After rescheduling {}", entity.getScheduledActivities().size());
+
+		
+		final ActivityDefinitionEntity one = activityDefintionRepository.findOne(entity.getId());
+		getLog().debug("After loaded: {} activities.", one.getScheduledActivities().size());
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(entity),
+				new GenericSuccessMessage());
 	}
-	
-	private void updateMeasureValues(final ActivityDefinitionEntity entity, final ActivityDefinition dto) {
+
+	private void updateActivityItems(final ActivityDefinitionEntity entity, final ActivityDefinition dto) {
 		/*
 		 * Process measurement defintions
 		 */
-		for (final MeasurementDefinitionEntity mde : entity.getMeasurementDefinitions()) {
-			for (final MeasurementDefinition md : dto.getGoalValues()) {
-				if (mde.getMeasurementType().getId().equals(md.getMeasurementType().getId())) {	
+		getLog().debug("Updating activity items...");
+		entLoop: for (final ActivityItemDefinitionEntity aid : entity.getActivityItemDefinitions()) {
+			
+			for (final ActivityItemValuesDefinition aivDefinition : dto.getGoalValues()) {
+				if (aid.getActivityItemType().getId().equals(aivDefinition.getActivityItemType().getId())) {
 					
-					log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType().getName(), mde.getMeasurementType().getActivityType().getName());
+					log.debug((aivDefinition.isActive() ? "Including " : "Excluding") + " measure value {}", aid.getActivityItemType().getName());
+					aid.setActive(aivDefinition.isActive());
 					
-					switch (mde.getMeasurementType().getValueType()) {
-					case INTERVAL:
-						log.debug("Setting values for measure defintion: {}-{}", md.getMinTarget(), md.getMaxTarget());
-						mde.setMaxTarget(md.getMaxTarget());
-						mde.setMinTarget(md.getMinTarget());
-						break;
-					case SINGLE_VALUE:
-						log.debug("Setting values for measure defintion: {}", md.getTarget());
-						mde.setTarget(md.getTarget());
-						break;
+					// Check types
+					if (aid instanceof MeasurementDefinitionEntity) {
+						final MeasurementDefinitionEntity mde = (MeasurementDefinitionEntity) aid;
+						
+						log.debug("Processing measure value {} for activity type {}", mde.getMeasurementType()
+								.getName(), mde.getMeasurementType().getActivityType().getName());
+
+						MeasurementDefinition md = (MeasurementDefinition) aivDefinition;
+						switch (mde.getMeasurementType().getValueType()) {
+						case INTERVAL:
+							log.debug("Setting values for measure defintion: {}-{}", md.getMinTarget(),
+									md.getMaxTarget());
+							mde.setMaxTarget(md.getMaxTarget());
+							mde.setMinTarget(md.getMinTarget());
+							break;
+						case SINGLE_VALUE:
+							log.debug("Setting values for measure defintion: {}", md.getTarget());
+							mde.setTarget(md.getTarget());
+							break;
+						}
 					}
+					
+					continue entLoop;
 				}
 			}
 		}
+	}
+	
+	private Frequency createFrequency(final ActivityDefinition dto) {
+		/*
+		 * Create the day frequency based on what the user selected.
+		 */
+		log.debug("Processing the day and time frequence...");
+
+		final Frequency frequency = new Frequency();
+		frequency.setWeekFrequency(dto.getActivityRepeat());
+		
+		log.debug("Week frequency is: {}", dto.getActivityRepeat());
+		
+		for (final DayTime dt : dto.getDayTimes()) {
+			FrequencyDay fd = FrequencyDay.newFrequencyDay(ApiUtil.toIntDay(dt.getDay()));
+			for (String time : dt.getTimes()) {
+				fd.addTime(FrequencyTime.unmarshal(time));
+			}
+			
+			log.debug("ADDING TIME {}", fd);
+			frequency.addDay(fd);
+		}
+		
+		log.debug("Frequency: {}", Frequency.marshal(frequency));
+		return frequency;
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> loadDefinition(Long definitionId) {
+		final ActivityDefinitionEntity one = activityDefintionRepository.findOne(definitionId);
+		if (one == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, definitionId));
+		}
+		
+		one.isReadAllowed(getCurrentUser());
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(one), new GenericSuccessMessage());
+	}
+
+	@Override
+	public ServiceResult<ActivityDefinition> updateReminder(final Long id, final boolean reminderOn) {
+		final ActivityDefinitionEntity def = this.activityDefintionRepository.findOne(id);
+		if (def == null) {
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class, id));
+		}
+		
+		verifyWriteAccess(getPatient());
+		
+		log.debug("Setting reminder for {} to {}", def.getActivityType().getName(), reminderOn);
+		def.setReminder(reminderOn);
+		
+		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(def), new GenericSuccessMessage());
 	}
 }

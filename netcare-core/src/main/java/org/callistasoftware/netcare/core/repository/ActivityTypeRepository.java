@@ -16,27 +16,35 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long> {
+public interface ActivityTypeRepository extends JpaRepository<ActivityTypeEntity, Long>, JpaSpecificationExecutor<ActivityTypeEntity> {
 	
 	/**
-	 * Find activity types by name
-	 * @param name
+	 * Find all activity templates that is available to the certain care unit
+	 * @param careUnit
+	 * @param countyCouncil
 	 * @return
 	 */
-	List<ActivityTypeEntity> findByNameLike(final String name);
+	@Query("select e from ActivityTypeEntity as e where " +
+			"(e.accessLevel = 'CAREUNIT' and e.careUnit = :careUnit) " +
+			"or (e.accessLevel = 'NATIONAL') " +
+			"or (e.accessLevel = 'COUNTY_COUNCIL' and e.careUnit.countyCouncil = :countyCouncil) " +
+			"order by e.name asc")
+	List<ActivityTypeEntity> findByCareUnit(@Param("careUnit") final CareUnitEntity careUnit
+			, @Param("countyCouncil") final CountyCouncilEntity countyCouncil);
 	
-	/**
-	 * Find activity types created on the given care unit
-	 * @param hsaId
-	 * @return
-	 */
-	@Query("select e from ActivityTypeEntity as e where e.careUnit.hsaId = :hsaId order by e.name asc")
-	List<ActivityTypeEntity> findByCareUnit(@Param("hsaId") final String hsaId);
+	@Query("select at from ActivityDefinitionEntity as ade inner join " +
+			"ade.activityType as at where " +
+			"at.id in (:ids)")
+	List<ActivityTypeEntity> findInUse(@Param("ids") final Collection<Long> ids);
 }

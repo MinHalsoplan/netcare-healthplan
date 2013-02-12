@@ -20,89 +20,157 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
+import org.callistasoftware.netcare.core.api.ActivityItemValues;
 import org.callistasoftware.netcare.core.api.ApiUtil;
-import org.callistasoftware.netcare.core.api.Measurement;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
+import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
+import org.callistasoftware.netcare.model.entity.EstimationEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.joda.time.DateTime;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ScheduledActivityImpl implements ScheduledActivity {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private long id;
 	private boolean due;
 	private String reported;
 	private String date;
+	private String reportedDate;
 	private String time;
+	private String reportedTime;
 	private Option day;
+	private Option reportedDay;
 	private ActivityDefinition activityDefinition;
 	private PatientBaseView patient;
 	private String actualTime;
-	private int sense;
-	private String note;
-	private Measurement[] measurements;
-	private boolean rejected;
 	
+	private String actTime;
+	private String actDate;
+	private Option actDay;
+	
+	private String note;
+	private ActivityItemValues[] activityItemValues;
+	private boolean rejected;
+	private ActivityComment[] comments;
+	
+	private boolean reportingPossible;
+	private boolean extra;
+
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
 			dtos[i] = ScheduledActivityImpl.newFromEntity(entities.get(i));
 		}
-		
+
 		return dtos;
 	}
-	
+
 	public static ScheduledActivity newFromEntity(ScheduledActivityEntity entity) {
-		ScheduledActivityImpl a = new ScheduledActivityImpl();
-		
-		a.id = entity.getId();
-		a.activityDefinition = ActivityDefintionImpl.newFromEntity(entity.getActivityDefinitionEntity());
-		
+		ScheduledActivityImpl scheduledActivity = new ScheduledActivityImpl();
+
+		scheduledActivity.id = entity.getId();
+		scheduledActivity.activityDefinition = ActivityDefinitionImpl.newFromEntity(entity
+				.getActivityDefinitionEntity());
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(entity.getScheduledTime());
 		int day = cal.get(Calendar.DAY_OF_WEEK);
-		a.day = new Option("weekday." + day, LocaleContextHolder.getLocale());		
+		scheduledActivity.day = new Option("weekday." + day, LocaleContextHolder.getLocale());
 
 		cal.setTime(new Date());
 		ApiUtil.dayBegin(cal);
 		Date time = entity.getScheduledTime();
-		a.due = (time.compareTo(cal.getTime()) < 0);
-		a.date = ApiUtil.formatDate(time);
-		a.time = ApiUtil.formatTime(time);
+		
+		
+		scheduledActivity.due = (time.compareTo(cal.getTime()) < 0);
+		scheduledActivity.date = ApiUtil.formatDate(time);
+		
+		scheduledActivity.time = ApiUtil.formatTime(time);
+		
+		
 		if (entity.getReportedTime() != null) {
-			a.reported = ApiUtil.formatDate(entity.getReportedTime()) + " " + ApiUtil.formatTime(entity.getReportedTime());
+			
+			Calendar reportedCal = Calendar.getInstance();
+			reportedCal.setTime(entity.getReportedTime());
+			
+			int repDay = reportedCal.get(Calendar.DAY_OF_WEEK);
+			
+			Date reportedTime = entity.getReportedTime();
+			scheduledActivity.reportedDay = new Option("weekday." + repDay, LocaleContextHolder.getLocale());
+			scheduledActivity.reportedDate = ApiUtil.formatDate(reportedTime);
+			scheduledActivity.reportedTime = ApiUtil.formatTime(reportedTime);
+			scheduledActivity.reported = new StringBuilder(scheduledActivity.reportedDate).append(" ").append(scheduledActivity.reportedTime).toString();
+			
+			final Calendar act = Calendar.getInstance();
+			act.setTime(entity.getActualTime());
+			
+			int actWeekday = act.get(Calendar.DAY_OF_WEEK);
+			scheduledActivity.actDay = new Option("weekday." + actWeekday, LocaleContextHolder.getLocale());
+			scheduledActivity.actDate = ApiUtil.formatDate(entity.getActualTime());
+			scheduledActivity.actTime = ApiUtil.formatTime(entity.getActualTime());
+			
 		}
 		if (entity.getActualTime() != null) {
-			a.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " " + ApiUtil.formatTime(entity.getActualTime());
+			scheduledActivity.actualTime = ApiUtil.formatDate(entity.getActualTime()) + " "
+					+ ApiUtil.formatTime(entity.getActualTime());
 		}
 		
-		List<MeasurementEntity> mList = entity.getMeasurements();
-		a.measurements = new Measurement[mList.size()];
-		for (int i = 0; i < a.measurements.length; i++) {
-			MeasurementEntity me = mList.get(i);
-			a.measurements[i] = MeasurementImpl.newFromEntity(me);
-		}
-		a.rejected = entity.isRejected();
-		a.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity().getHealthPlan().getForPatient());
-		a.sense = entity.getPerceivedSense();
-		a.note = entity.getNote();
+		// Scheduled time within one week?
+		final Date oneWeek = new DateTime(System.currentTimeMillis()).plusWeeks(1).toDate();
+		final Date scheduled = entity.getScheduledTime();
 		
-		return a;
+		if (scheduled.before(oneWeek) && entity.getReportedTime() == null) {
+			scheduledActivity.setReportingPossible(true);
+		} else {
+			scheduledActivity.setReportingPossible(false);
+		}
+		
+		scheduledActivity.setExtra(entity.isExtra());
+
+		List<ActivityItemValuesEntity> activityEntities = entity.getActivities();
+		scheduledActivity.activityItemValues = new ActivityItemValues[activityEntities.size()];
+		for (int i = 0; i < scheduledActivity.activityItemValues.length; i++) {
+			ActivityItemValuesEntity activityItemValuesEntity = activityEntities.get(i);
+			if (activityItemValuesEntity instanceof MeasurementEntity) {
+				scheduledActivity.activityItemValues[i] = MeasurementImpl
+						.newFromEntity((MeasurementEntity) activityItemValuesEntity);
+			} else if (activityItemValuesEntity instanceof EstimationEntity) {
+				scheduledActivity.activityItemValues[i] = EstimationImpl
+						.newFromEntity((EstimationEntity) activityItemValuesEntity);
+			} else if (activityItemValuesEntity instanceof YesNoEntity) {
+				scheduledActivity.activityItemValues[i] = YesNoImpl
+						.newFromEntity((YesNoEntity) activityItemValuesEntity);
+			} else if (activityItemValuesEntity instanceof TextEntity) {
+				scheduledActivity.activityItemValues[i] = TextImpl.newFromEntity((TextEntity) activityItemValuesEntity);
+			}
+		}
+		scheduledActivity.rejected = entity.isRejected();
+		scheduledActivity.patient = PatientBaseViewImpl.newFromEntity(entity.getActivityDefinitionEntity()
+				.getHealthPlan().getForPatient());
+		scheduledActivity.note = entity.getNote();
+		
+		scheduledActivity.comments = new ActivityComment[entity.getComments().size()];
+		for(int i=0; i < entity.getComments().size(); i++) {
+			scheduledActivity.comments[i] = ActivityCommentImpl.newFromEntity(entity.getComments().get(i));
+		}
+		
+		return scheduledActivity;
 	}
-		
-	
+
 	@Override
 	public long getId() {
 		return id;
-	}
-	
-	public ActivityDefinition getActivityDefinition() {
-		return activityDefinition;
 	}
 
 	public void setId(long id) {
@@ -141,16 +209,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		this.actualTime = actualTime;
 	}
 
-	public void setSense(int sense) {
-		this.sense = sense;
-	}
-
 	public void setNote(String note) {
 		this.note = note;
-	}
-
-	public void setMeasurements(Measurement[] measurements) {
-		this.measurements = measurements;
 	}
 
 	public void setRejected(boolean rejected) {
@@ -162,14 +222,13 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 		return time;
 	}
 
-	
 	@Override
 	public boolean isDue() {
 		return due;
 	}
 
 	@Override
-	public ActivityDefinition getDefinition() {
+	public ActivityDefinition getActivityDefinition() {
 		return activityDefinition;
 	}
 
@@ -199,11 +258,6 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public int getSense() {
-		return sense;
-	}
-
-	@Override
 	public String getNote() {
 		return note;
 	}
@@ -214,7 +268,64 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	}
 
 	@Override
-	public Measurement[] getMeasurements() {
-		return measurements;
+	public ActivityItemValues[] getActivityItemValues() {
+		return activityItemValues;
+	}
+
+	public void setActivityItemValues(ActivityItemValues[] activityItemValues) {
+		this.activityItemValues = activityItemValues;
+	}
+	
+	@Override
+	public ActivityComment[] getComments() {
+		return comments;
+	}
+
+	@Override
+	public boolean isReportingPossible() {
+		return this.reportingPossible;
+	}
+	
+	public void setReportingPossible(final boolean reportingPossible) {
+		this.reportingPossible = reportingPossible;
+	}
+
+	@Override
+	public boolean isExtra() {
+		return this.extra;
+	}
+	
+	public void setExtra(final boolean extra) {
+		this.extra = extra;
+	}
+
+	@Override
+	public Option getReportedDay() {
+		return this.reportedDay;
+	}
+
+	@Override
+	public String getReportedTime() {
+		return this.reportedTime;
+	}
+
+	@Override
+	public String getReportedDate() {
+		return this.reportedDate;
+	}
+
+	@Override
+	public Option getActDay() {
+		return this.actDay;
+	}
+
+	@Override
+	public String getActTime() {
+		return this.actTime;
+	}
+
+	@Override
+	public String getActDate() {
+		return this.actDate;
 	}
 }

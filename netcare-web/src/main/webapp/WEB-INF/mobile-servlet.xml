@@ -26,24 +26,29 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 	
-	<context:annotation-config />
-	<context:component-scan base-package="org.callistasoftware.netcare.web.mobile.controller" />
-
-	<mvc:annotation-driven />
-	
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-    	<property name="prefix" value="/WEB-INF/pages/mobile/"/>
-    	<property name="suffix" value=".jsp"/>
-	</bean>
-	
-	<bean id="exceptionResolver" class="org.callistasoftware.netcare.web.ExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="java.lang.RuntimeException">error</prop>
-				<prop key="java.lang.Exception">error</prop>
-			</props>
-		</property>
-		<property name="defaultErrorView" value="error" />
-	</bean>
+    <beans>
+        <context:annotation-config />
+    </beans>
+    
+    <beans>
+		<context:component-scan base-package="org.callistasoftware.netcare.web.mobile.controller" />
+		
+		<mvc:annotation-driven />
+		
+		<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	    	<property name="prefix" value="/WEB-INF/pages/mobile/"/>
+	    	<property name="suffix" value=".jsp"/>
+		</bean>
+		
+		<bean id="exceptionResolver" class="org.callistasoftware.netcare.web.ExceptionResolver">
+			<property name="exceptionMappings">
+				<props>
+					<prop key="java.lang.RuntimeException">error</prop>
+					<prop key="java.lang.Exception">error</prop>
+				</props>
+			</property>
+			<property name="defaultErrorView" value="error" />
+		</bean>
+	</beans>
 </beans>

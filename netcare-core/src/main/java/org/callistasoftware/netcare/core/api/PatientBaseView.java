@@ -16,12 +16,16 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Defines a base view of a patient
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonDeserialize(as=PatientBaseViewImpl.class)
 public interface PatientBaseView extends UserBaseView {
 
 	/**
@@ -29,11 +33,4 @@ public interface PatientBaseView extends UserBaseView {
 	 * @return
 	 */
 	String getCivicRegistrationNumber();
-	
-	/**
-	 * Whether the user is allowed to use the mobile
-	 * channel
-	 * @return
-	 */
-	boolean isMobile();
 }

@@ -18,7 +18,7 @@ package org.callistasoftware.netcare.api.rest;
 
 import javax.servlet.http.HttpSession;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public abstract class ApiSupport {
 	
-	private static final Logger log = LoggerFactory.getLogger(ApiSupport.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	protected UserBaseView getUser() {
 		return (UserBaseView) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -43,25 +43,29 @@ public abstract class ApiSupport {
 		return patient;
 	}
 	
-	protected boolean isCareGiver() {
-		return this.getUser().isCareGiver();
+	protected boolean isCareActor() {
+		return this.getUser().isCareActor();
 	}
 	
 	protected boolean isPatient() {
-		return !this.getUser().isCareGiver();
+		return !this.getUser().isCareActor();
 	}
 	
 	protected void logAccess(final String action, final String what) {
-		log.info("User {}, Action: {}->{}", new Object[] {this.getUser().getUsername(), action, what});
+		getLog().info("User {}, Action: {}->{}", new Object[] {this.getUser().getUsername(), action, what});
 	}
 	
-	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareGiverBaseView careGiver) {
-		log.info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
-				, new Object[] {careGiver.getFirstName()
-						, careGiver.getHsaId()
+	protected void logAccess(final String action, final String what, final PatientBaseView target, final CareActorBaseView careActor) {
+		getLog().info("User {} (hsa-id: {}) [{} -> {}]. Patient: {} (cnr: {})"
+				, new Object[] {careActor.getFirstName()
+						, careActor.getHsaId()
 						, action
 						, what
 						, target.getFirstName()
 						, target.getCivicRegistrationNumber()});
+	}
+	
+	protected final Logger getLog() {
+		return this.log;
 	}
 }

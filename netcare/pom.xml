@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.callistasoftware.netcare</groupId>
   <artifactId>netcare</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Netcare</name>
   <description>
@@ -21,24 +21,37 @@
   	<module>../netcare-core</module>
   	<module>../netcare-rest-api</module>
   	<module>../netcare-web</module>
+  	<module>../netcare-apns-service</module>
   </modules>
   
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	
+  	<!-- Default profile -->
+  	<system.mode>test</system.mode>
+  	<mobile.mode>mobile-qa</mobile.mode>
+  	<database.mode>db-embedded</database.mode>
+  	
   	<!-- Versions -->
-  	<spring.version>3.1.1.RELEASE</spring.version>
-  	<spring.data.version>1.0.1.RELEASE</spring.data.version>
-  	<spring.security.version>3.1.0.RELEASE</spring.security.version>
+  	<spring.version>3.1.2.RELEASE</spring.version>
+  	<spring.data.version>1.1.0.RELEASE</spring.data.version>
+  	<spring.security.version>3.1.3.RELEASE</spring.security.version>
   	<hibernate.version>3.6.7.Final</hibernate.version>
   	<hsqldb.version>1.8.0.10</hsqldb.version>
-  	<cxf.version>2.5.2</cxf.version>
-  	<slf4j.version>1.6.4</slf4j.version>
+  	<cxf.version>2.6.2</cxf.version>
+  	<slf4j.version>1.6.6</slf4j.version>
   </properties>
   
   
   <dependencyManagement>
   	<dependencies>
+  	    
+  	    <dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+  	    
   		<dependency>
   			<groupId>javax.servlet</groupId>
   			<artifactId>servlet-api</artifactId>
@@ -101,6 +114,11 @@
   		<dependency>
   			<groupId>org.springframework</groupId>
   			<artifactId>spring-core</artifactId>
+  			<version>${spring.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.springframework</groupId>
+  			<artifactId>spring-tx</artifactId>
   			<version>${spring.version}</version>
   		</dependency>
   		
@@ -168,6 +186,12 @@
   			<groupId>org.springframework.data</groupId>
   			<artifactId>spring-data-jpa</artifactId>
   			<version>${spring.data.version}</version>
+  			<exclusions>
+  			    <exclusion>
+  					<groupId>org.springframework</groupId>
+  					<artifactId>spring-tx</artifactId>
+  				</exclusion>
+  			</exclusions>
   		</dependency>
   		
   		<dependency>
@@ -212,7 +236,7 @@
     	<dependency>
       		<groupId>ch.qos.logback</groupId>
       		<artifactId>logback-classic</artifactId>
-      		<version>1.0.0</version>
+      		<version>1.0.6</version>
     	</dependency>
     	
     	<dependency>
@@ -232,10 +256,17 @@
   		</dependency>
   		
   		<dependency>
-  			<groupId>hsqldb</groupId>
-  			<artifactId>hsqldb</artifactId>
-  			<version>${hsqldb.version}</version>
+  	    	<groupId>joda-time</groupId>
+  	    	<artifactId>joda-time</artifactId>
+  	    	<version>2.1</version>
   		</dependency>
+  		
+  		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.3.168</version>
+		</dependency>
+            
   		
   		<dependency>
   			<groupId>junit</groupId>
@@ -292,12 +323,18 @@
 	  					<include>src/test/**</include>
 	  				</includes>
 	  				<excludes>
+						<!-- Exclude HighCharts files -->
+						<exclude>**/highcharts*/**/*.js</exclude>
+						<exclude>**/highstock*/**/*.js</exclude>
+						
 	  					<!-- Exclude JQuery files -->
 	  					<exclude>**/*jquery*</exclude>
 	  					<exclude>**/*bootstrap*</exclude>
 	  					<exclude>**/*json2*</exclude>
 	  					<exclude>**/*.xsd</exclude>
 	  					<exclude>**/scripts/*</exclude>
+						<!-- Exclude underscorejs -->
+	  					<exclude>**/*underscore*</exclude>
 	  				</excludes>
 	  				<mapping>
 	  					<tag>DYNASCRIPT_STYLE</tag>
@@ -326,6 +363,11 @@
   				<groupId>org.apache.cxf</groupId>
   				<artifactId>cxf-codegen-plugin</artifactId>
   				<version>2.5.2</version>
+  			</plugin>
+  			<plugin>
+  			    <groupId>org.apache.maven.plugins</groupId>
+  			    <artifactId>maven-install-plugin</artifactId>
+  			    <version>2.3.1</version>
   			</plugin>
   			<plugin>
 	  			<groupId>org.eclipse.m2e</groupId>
@@ -399,13 +441,57 @@
   			<artifactId>maven-compiler-plugin</artifactId>
   		</plugin>
   		<plugin>
-  			<groupId>com.mycila.maven-license-plugin</groupId>
-  			<artifactId>maven-license-plugin</artifactId>
-  		</plugin>
-  		<plugin>
   			<groupId>org.apache.maven.plugins</groupId>
   			<artifactId>maven-release-plugin</artifactId>
   			<version>2.2</version>
+  		</plugin>
+  		<plugin>
+  		    <groupId>org.apache.maven.plugins</groupId>
+  		    <artifactId>maven-install-plugin</artifactId>
+  		    <executions>
+  		        <execution>
+  		            <id>copy-javapns-file</id>
+  		            <phase>package</phase>
+  		            <goals>
+  		                <goal>install-file</goal>
+  		            </goals>
+  		            <configuration>
+  		        		<file>../lib/javapns-2.2.jar</file>
+		 		        <groupId>javapns</groupId>
+		 		        <artifactId>javapns</artifactId>
+		 		        <version>2.2</version>
+		 		        <packaging>jar</packaging>
+  		            </configuration>
+  		        </execution>
+  		        <execution>
+  		            <id>copy-gcm-server</id>
+  		            <phase>package</phase>
+  		            <goals>
+  		                <goal>install-file</goal>
+  		            </goals>
+  		            <configuration>
+  		        		<file>../lib/gcm-server.jar</file>
+		 		        <groupId>com.google.android.gcm</groupId>
+		 		        <artifactId>gcm-server</artifactId>
+		 		        <version>1.0</version>
+		 		        <packaging>jar</packaging>
+  		            </configuration>
+  		        </execution>
+  		        <execution>
+  		            <id>copy-gcm-client</id>
+  		            <phase>package</phase>
+  		            <goals>
+  		                <goal>install-file</goal>
+  		            </goals>
+  		            <configuration>
+  		                <file>../lib/gcm-client.jar</file>
+		 		        <groupId>com.google.android.gcm</groupId>
+		 		        <artifactId>gcm-client</artifactId>
+		 		        <version>1.0</version>
+		 		        <packaging>jar</packaging>
+  		            </configuration>
+  		        </execution>
+  		    </executions>
   		</plugin>
   	</plugins>
   </build>

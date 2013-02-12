@@ -21,17 +21,26 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
 
-<netcare:page>
-	<netcare:header>
+<%@ taglib prefix="healthplan" tagdir="/WEB-INF/tags" %>
+
+<mvk:page>
+	<mvk:header title="Netcare 2.0" resourcePath="/netcare/resources" contextPath="${pageContext.request.contextPath}">
+		<netcare:css resourcePath="/netcare/resources" />
+		<netcare:js resourcePath="/netcare/resources"/>
+		<healthplan:healthplan-js />
+		
+		<script type="text/javascript" src="<c:url value="/js/netcare-healthplan.js" />"></script>
+		
 		<script type="text/javascript">
 			$(function() {
 				$('#modal-from-dom').modal('show');
 				$('input[name="j_username"]').focus();
 			});
 		</script>
-	</netcare:header>
+	</mvk:header>
 	<body>
 		<form method="post" action="<spring:url value="/j_spring_security_check" />">
 			<netcare:modal confirmCode="login" titleCode="login" id="modal-from-dom">
@@ -44,4 +53,4 @@
 			</netcare:modal>
 		</form>
 	</body>
-</netcare:page>
+</mvk:page>

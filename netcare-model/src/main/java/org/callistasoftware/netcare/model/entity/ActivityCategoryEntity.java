@@ -16,21 +16,16 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="nc_activity_category")
-public class ActivityCategoryEntity {
+public class ActivityCategoryEntity implements PermissionRestrictedEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -38,12 +33,8 @@ public class ActivityCategoryEntity {
 	
 	@Column(length=64, nullable=false, unique=true)
 	private String name;
-
-	@OneToMany(mappedBy="category", fetch=FetchType.LAZY)
-	private List<ActivityTypeEntity> activityTypes;
 	
 	ActivityCategoryEntity() {
-		this.setActivityTypes(new ArrayList<ActivityTypeEntity>());
 	}
 	
 	ActivityCategoryEntity(final String name) {
@@ -74,11 +65,22 @@ public class ActivityCategoryEntity {
 		this.name = name;
 	}
 
-	public List<ActivityTypeEntity> getActivityTypes() {
-		return activityTypes;
+	@Override
+	public boolean isReadAllowed(UserEntity user) {
+		return true;
 	}
 
-	void setActivityTypes(List<ActivityTypeEntity> activityTypes) {
-		this.activityTypes = activityTypes;
+	@Override
+	public boolean isWriteAllowed(UserEntity user) {
+		if (user.isCareActor()) {
+			final CareActorEntity ca = (CareActorEntity) user;
+			for (final RoleEntity r : ca.getRoles()) {
+				if (r.getDn().equals(RoleEntity.NATION_ADMINISTRATOR)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }

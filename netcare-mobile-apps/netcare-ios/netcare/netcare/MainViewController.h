@@ -18,19 +18,24 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #import "FlipsideViewController.h"
-#import "HTTPAuthentication.h"
+#import "MobiltBankIdService.h"
+#import "HTTPComplete.h"
+#import "HTTPPushConnection.h"
 
-@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPConnectionDelegate, HTTPAuthenticationDelegate>
+@interface MainViewController : UIViewController <FlipsideViewControllerDelegate, HTTPCompleteDelegate, HTTPPushConnectionDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *personNumberTextEdit;
-@property (weak, nonatomic) IBOutlet UITextField *pinCodeTextEdit;
-// nextpage button is not really used, just keeps 
+@property (weak, nonatomic) IBOutlet UILabel *shadowedLabel;
+// nextpage button is not really used, just keeps
 // a point to maintain a storyboard sequence, which really is invoked
 // upon a proper authenitcation
 @property (weak, nonatomic) IBOutlet UIButton *nextPageButton;
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
 
-- (IBAction)login:(id)sender;
+@property (nonatomic, assign) NSString *orderrefToken;
+
 - (IBAction)textFieldReturn:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
+- (void)switchToWebView:(NSString*)token;
 
 @end

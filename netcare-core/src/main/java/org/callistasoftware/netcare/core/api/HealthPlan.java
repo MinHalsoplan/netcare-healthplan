@@ -42,11 +42,11 @@ public interface HealthPlan extends Serializable {
 	
 	CareUnit getCareUnit();
 	
-	CareGiverBaseView getIssuedBy();
+	CareActorBaseView getIssuedBy();
 	
 	PatientBaseView getPatient();
 	
-	ActivityDefinition[] getActivityDefintions();
+	ActivityDefinition[] getActivityDefinitions();
 
 	int getIteration();
 

@@ -18,52 +18,70 @@ package org.callistasoftware.netcare.web.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 
 import org.callistasoftware.netcare.core.repository.ActivityCategoryRepository;
 import org.callistasoftware.netcare.core.repository.ActivityDefinitionRepository;
+import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepository;
 import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.AlarmRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
+import org.callistasoftware.netcare.core.repository.CountyCouncilRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
-import org.callistasoftware.netcare.core.repository.MeasurementRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
+import org.callistasoftware.netcare.core.repository.RoleRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.AlarmCause;
+import org.callistasoftware.netcare.model.entity.AlarmEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.EstimationEntity;
+import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
 import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
+import org.callistasoftware.netcare.model.entity.TextEntity;
+import org.callistasoftware.netcare.model.entity.TextTypeEntity;
+import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public final class WebUtil {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(WebUtil.class);
 
 	public static final WebApplicationContext getWebRequest(final ServletContext sc) {
 		return WebApplicationContextUtils.getWebApplicationContext(sc);
 	}
-	
+
 	public static final String[] getActiveProfiles(final ServletContext sc) {
 		return WebUtil.getWebRequest(sc).getEnvironment().getActiveProfiles();
 	}
-	
+
 	public static final boolean isProfileActive(final ServletContext sc, final String name) {
 		final String[] profiles = WebUtil.getActiveProfiles(sc);
 		for (final String s : profiles) {
@@ -71,80 +89,137 @@ public final class WebUtil {
 				return true;
 			}
 		}
-		
+
 		return false;
+	}
+	
+	public static final void setProdData(final ServletContext sc) {
+		final WebApplicationContext wc = getWebRequest(sc);
+		
+		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
+		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
+		final RoleRepository rRepo = wc.getBean(RoleRepository.class);
+		
+		log.debug("Check whether to setup initial data...");
+		final long ccCount = ccRepo.count();
+		final long roleCount = rRepo.count();
+		final long cuCount = cuRepo.count();
+		
+		log.debug("System currently have {} county councils, {} roles and {} care units.", new Object[] { ccCount, roleCount, cuCount });
+		
+		if (ccCount != 0 || roleCount != 0 || cuCount != 0) {
+			log.debug("Initial data already setup. Returning...");
+			return;
+		}
+		
+		log.debug("Setting up county councils...");
+		for (final CountyCouncil cc : CountyCouncil.values()) {
+			log.debug("Setting up: {}", cc.getName());
+			ccRepo.save(new CountyCouncilEntity(cc));
+			ccRepo.flush();
+		}
+		log.debug("done setting up county councils.");
+		
+		log.debug("Setting up initial care unit...");
+		cuRepo.save(CareUnitEntity.newEntity("se2321000057-63d9", ccRepo.findByMeta(CountyCouncil.JONKOPING.getCode())));
+		cuRepo.flush();
+		
+		log.debug("Setting up roles...");
+		rRepo.save(RoleEntity.newRole(RoleEntity.CARE_ACTOR));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.COUNTY_COUNCIL_ADMINISTRATOR));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.NATION_ADMINISTRATOR));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.PATIENT));
+		rRepo.flush();
+		
+		rRepo.save(RoleEntity.newRole(RoleEntity.SYSTEM_ADMINISTRATOR));
+		rRepo.flush();
+		log.debug("done setting up roles");
 	}
 
 	/**
 	 * Creates test data for app.store tests (app. approval process).
 	 * 
-	 * @param sc the servlet context.
+	 * @param sc
+	 *            the servlet context.
 	 */
 	public static final void setupIosTestData(final ServletContext sc) {
 		final WebApplicationContext wc = getWebRequest(sc);
+
+		final String careActorHsa = "app-test-giver";
 		
-		final String careGiverHsa = "app-test-giver";
-		
+		final TestDataHelper td = new TestDataHelper(sc);
+
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
-		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		final CareActorRepository careActorRepo = wc.getBean(CareActorRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
 		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
 		final ActivityDefinitionRepository adRepo = wc.getBean(ActivityDefinitionRepository.class);
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
-
-		if (cgRepo.findByHsaId(careGiverHsa) != null) {
+		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
+		final RoleRepository roleRepo = wc.getBean(RoleRepository.class);
+		
+		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 		
+		final RoleEntity careActorRole = td.newCareActorRole();
+		final CountyCouncilEntity jkpg = td.newCountyCouncil(CountyCouncil.JONKOPING);
+		final MeasureUnitEntity mue = td.newMeasureUnit("m", "Meter");
+
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit");
+		final CareUnitEntity cu = CareUnitEntity.newEntity("ap-test-unit", jkpg);
 		cu.setName("Jönköpings vårdcentral");
 		cuRepo.save(cu);
 		cuRepo.flush();
 
-		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		ate.setMeasuringSense(true);
-		ate.setSenseLabelLow("Lätt");
-		ate.setSenseLabelHigh("Tufft");
+		ActivityTypeEntity ate = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
+		MeasurementTypeEntity.newEntity(ate, "Distans", MeasurementValueType.SINGLE_VALUE, mue, false, 0);
+		EstimationTypeEntity.newEntity(ate, "Känsla", "Lätt", "Tufft", 0, 10, 1);
 		atRepo.save(ate);
 		atRepo.flush();
-		
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Test", "Läkare", careGiverHsa, cu);
-		cgRepo.save(cg1);		
-		cgRepo.flush();
-				
+
+		final CareActorEntity ca1 = CareActorEntity.newEntity("Test", "Läkare", careActorHsa, cu);
+		ca1.addRole(careActorRole);
+		careActorRepo.save(ca1);
+		careActorRepo.flush();
+
 		final PatientEntity p2 = PatientEntity.newEntity("AppDemo", "Patient", "191112121212");
 		p2.setPhoneNumber("0700000000");
 		bean.save(p2);
-		
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -30);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg1, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(ca1, p2, "Auto", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
-		
+
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, cg1);
-		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, ate, frequency, ca1);
+		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
+			MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
 			if (md.getMeasurementType().getName().equals("Distans")) {
 				md.setTarget(1200);
 			}
 		}
 		adRepo.save(ad);
-		hps.scheduleActivities(ad);		
+		hps.scheduleActivities(ad);
 	}
-	
+
 	public static final void setupTestData(final ServletContext sc) {
 		final WebApplicationContext wc = getWebRequest(sc);
-		
-		final String careGiverHsa = "hsa-cg-1";
-		
+
+		final String careActorHsa = "hsa-cg-1";
+
 		final PatientRepository bean = wc.getBean(PatientRepository.class);
-		final CareGiverRepository cgRepo = wc.getBean(CareGiverRepository.class);
+		final CareActorRepository careActorRepo = wc.getBean(CareActorRepository.class);
 		final CareUnitRepository cuRepo = wc.getBean(CareUnitRepository.class);
 		final ActivityCategoryRepository catRepo = wc.getBean(ActivityCategoryRepository.class);
 		final ActivityTypeRepository atRepo = wc.getBean(ActivityTypeRepository.class);
@@ -152,89 +227,137 @@ public final class WebUtil {
 		final HealthPlanRepository hpRepo = wc.getBean(HealthPlanRepository.class);
 		final HealthPlanService hps = wc.getBean(HealthPlanService.class);
 		final ScheduledActivityRepository sar = wc.getBean(ScheduledActivityRepository.class);
-		final MeasurementRepository mRepo = wc.getBean(MeasurementRepository.class);
+		final ActivityItemValuesEntityRepository actRepo = wc.getBean(ActivityItemValuesEntityRepository.class);
+		final CountyCouncilRepository ccRepo = wc.getBean(CountyCouncilRepository.class);
+		final AlarmRepository alarmRepo = wc.getBean(AlarmRepository.class);
 
-		if (cgRepo.findByHsaId(careGiverHsa) != null) {
+		if (careActorRepo.findByHsaId(careActorHsa) != null) {
 			log.info("Test data already setup. Aborting...");
 			return;
 		}
 		
+		final TestDataHelper td = new TestDataHelper(sc);
+		
+		/*
+		 * County councils
+		 */
+		final CountyCouncilEntity jkpg = td.newCountyCouncil(CountyCouncil.JONKOPING);
+		final CountyCouncilEntity hall = td.newCountyCouncil(CountyCouncil.HALLAND);
+		final CountyCouncilEntity vbott = td.newCountyCouncil(CountyCouncil.VASTERBOTTEN);
+
+		/*
+		 * Care units
+		 */
+		final CareUnitEntity jkpg_cu_1 = td.newCareUnit("hsa-cu-1", "Rosenhälsan i Huskvarna", jkpg);
+		final CareUnitEntity jkpg_cu_2 = td.newCareUnit("hsa-cu-2", "Dialysmottagningen Ryhov", jkpg);
+		final CareUnitEntity hall_cu_1 = td.newCareUnit("hall-cu-1", "Vårdcentralen Getinge", hall);
+		final CareUnitEntity hall_cu_2 = td.newCareUnit("hall-cu-2", "Tudorkliniken Allmänläkarmottagning", hall);
+		final CareUnitEntity vbott_cu_1 = td.newCareUnit("vbott-cu-1", "Hudläkaren i Umeå AB", vbott);
+		final CareUnitEntity vbott_cu_2 = td.newCareUnit("vbott-cu-2", "Norsjö Rehab Center", vbott);
+		
+		/*
+		 * System categories
+		 */
 		final ActivityCategoryEntity cat = catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
 		final ActivityCategoryEntity cat2 = catRepo.save(ActivityCategoryEntity.newEntity("Mental träning"));
 		final ActivityCategoryEntity cat3 = catRepo.save(ActivityCategoryEntity.newEntity("Provtagning"));
 		
-		final CareUnitEntity cu = CareUnitEntity.newEntity("hsa-cu-1");
-		cu.setName("Rosenhälsan i Huskvarna");
-		cuRepo.save(cu);
-		cuRepo.flush();
+		/*
+		 * Rosenhälsan
+		 */
+		final MeasureUnitEntity meter = td.newMeasureUnit("meter", "Meter");
+		final MeasureUnitEntity kilogram = td.newMeasureUnit("kg", "Kilogram");
+		final MeasureUnitEntity minute = td.newMeasureUnit("m", "Minuter");
+		final MeasureUnitEntity pressure = td.newMeasureUnit("mmHg", "Tryck");
 		
-		final CareUnitEntity cu2 = CareUnitEntity.newEntity("hsa-cu-2");
-		cu2.setName("Primärvårdsrehab Gibraltar");
-		cuRepo.save(cu2);
-		cuRepo.flush();
+		
+		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, jkpg_cu_1, AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, meter, false, 1);
+		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
+				kilogram, true, 2);
+		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 3);
+		TextTypeEntity.newEntity(t1, "Kommentar", "Kommentar", 4);
+		YesNoTypeEntity.newEntity(t1, "Utrustning", "Pulsmätare på?", 5);
+		atRepo.saveAndFlush(t1);
 
-		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, cu2);
-		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
-		me.setAlarmEnabled(true);
-		t1.setMeasuringSense(true);
-		t1.setSenseLabelLow("Lätt");
-		t1.setSenseLabelHigh("Tufft");
-		atRepo.save(t1);
-		atRepo.flush();
-		
-		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, cu2);
-		MeasurementTypeEntity.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
-		
-		t2.setMeasuringSense(true);
-		t2.setSenseLabelLow("Lätt");
-		t2.setSenseLabelHigh("Jobbigt");
 
-		atRepo.save(t2);
-		atRepo.flush();
-		
-		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, cu2);
-		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
-		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, MeasureUnit.PRESSURE_MMHG, true);
-		
-		t3.setMeasuringSense(false);
-		
-		atRepo.save(t3);
-		atRepo.flush();
-		
-		final CareGiverEntity cg1 = CareGiverEntity.newEntity("Peter", "Abrahamsson", careGiverHsa, cu);
-		cgRepo.save(cg1);
+		final ActivityTypeEntity t2 = ActivityTypeEntity.newEntity("Promenad (skattning)", cat2, jkpg_cu_1,
+				AccessLevel.NATIONAL);
 
-		final CareGiverEntity cg = CareGiverEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", cu2);
-		cgRepo.save(cg);
+		MeasurementTypeEntity
+				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 1);
+		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5, 2);
+
+		atRepo.saveAndFlush(t2);
+
+		/*
+		 * Dialys Ryhov
+		 */
+		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, jkpg_cu_2,
+				AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, pressure, true, 1);
+		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, pressure, true, 2);
+
+		atRepo.saveAndFlush(t3);
 		
-		cgRepo.flush();
+		/*
+		 * Norsjö Rehab Center
+		 */
+		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
+		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 1);
+
+		atRepo.saveAndFlush(t4);
+
 		
+		final CareActorEntity ca1 = CareActorEntity.newEntity("Peter", "Abrahamsson", careActorHsa, vbott_cu_2);
+		ca1.addRole(td.newCareActorRole());
+		careActorRepo.saveAndFlush(ca1);
+
+		final CareActorEntity ca = CareActorEntity.newEntity("Marcus", "Hansson", "hsa-cg-2", jkpg_cu_1);
+		ca.addRole(td.newCareActorRole());
+		careActorRepo.saveAndFlush(ca);
+		
+		final CareActorEntity ca3 = CareActorEntity.newEntity("Mikael", "Andersson", "hsa-lj-admin", jkpg_cu_2);
+		ca3.addRole(td.newCareActorRole());
+		ca3.addRole(td.newCountyAdminRole());
+		careActorRepo.saveAndFlush(ca3);
+		
+		
+		final CareActorEntity ca4 = CareActorEntity.newEntity("Johanna", "Niklasson", "hsa-swe-admin", hall_cu_1);
+		ca4.addRole(td.newCareActorRole());
+		ca4.addRole(td.newCountyAdminRole());
+		ca4.addRole(td.newNationAdminRole());
+		careActorRepo.saveAndFlush(ca4);
+
 		final PatientEntity p2 = PatientEntity.newEntity("Tolvan", "Tolvansson", "191212121212");
 		p2.setPhoneNumber("0733 - 39 87 45");
 		bean.save(p2);
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -90);
-		HealthPlanEntity hp = HealthPlanEntity.newEntity(cg, p2, "Viktprogram", cal.getTime(), 6, DurationUnit.MONTH);
+		HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p2, "Viktprogram", cal.getTime(), 6, DurationUnit.MONTH);
 		hpRepo.save(hp);
-		
+
 		Frequency frequency = Frequency.unmarshal("1;1;2,18:15;6,07:00,19:00");
-		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, t1, frequency, cg);
+		ActivityDefinitionEntity ad = ActivityDefinitionEntity.newEntity(hp, t1, frequency, ca);
 		// FIXME: multi-values
-		for (MeasurementDefinitionEntity md : ad.getMeasurementDefinitions()) {
-			if (md.getMeasurementType().getName().equals("Vikt")) {
-				md.setMinTarget(80);
-				md.setMaxTarget(120);
-			} 
-			if (md.getMeasurementType().getName().equals("Distans")) {
-				md.setTarget(1200);
+		for (ActivityItemDefinitionEntity aid : ad.getActivityItemDefinitions()) {
+			if (aid instanceof MeasurementDefinitionEntity) {
+				MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) aid;
+				if (md.getMeasurementType().getName().equals("Vikt")) {
+					md.setMinTarget(80);
+					md.setMaxTarget(120);
+				}
+				if (md.getMeasurementType().getName().equals("Distans")) {
+					md.setTarget(1200);
+				}
 			}
 		}
 		ad.setStartDate(hp.getStartDate());
 		adRepo.save(ad);
-		hps.scheduleActivities(ad);
 		
+		hps.scheduleActivities(ad);
+
 		Date now = new Date();
 		log.debug("Create history reports for scheduled activities: " + ad.getScheduledActivities().size());
 		int currentWeight = 0;
@@ -243,53 +366,86 @@ public final class WebUtil {
 		int modulo = 5;
 		for (ScheduledActivityEntity sce : ad.getScheduledActivities()) {
 			if (sce.getScheduledTime().compareTo(now) < 0) {
+				
+				log.debug("Creating report for {}", sce.getScheduledTime());
+				
 				sce.setNote("Anteckning");
-				int sense = (int)Math.round(Math.random() * 10);
-				sce.setPerceivedSense(sense == 0 ? 1 : sense);
 				Calendar c = Calendar.getInstance();
 				c.setTime(sce.getScheduledTime());
-				int offset = (int)Math.round(Math.random() * 240) + 30;
+				int offset = (int) Math.round(Math.random() * 240) + 30;
 				c.add(Calendar.MINUTE, offset);
 				sce.setReportedTime(c.getTime());
 				sce.setStatus(ScheduledActivityStatus.OPEN);
 				sce.setActualTime(sce.getScheduledTime());
-				for (MeasurementEntity m : sce.getMeasurements()) {
-					MeasurementDefinitionEntity md = m.getMeasurementDefinition();
-					int target;
-					int diff = 0;
-					if (md.getMeasurementType().getName().equals("Distans")) {
-						target = distance;
-						runNumber++;
-						if ((runNumber % modulo) == 0) {
-							distance += 100;
+				for (ActivityItemValuesEntity aiv : sce.getActivities()) {
+					
+					log.debug("Processing value {}", aiv.getActivityItemDefinitionEntity().getActivityItemType().getName());
+					
+					if (aiv instanceof MeasurementEntity) {
+						MeasurementEntity m = (MeasurementEntity) aiv;
+						MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) m
+								.getActivityItemDefinitionEntity();
+						int target;
+						int diff = 0;
+						if (md.getMeasurementType().getName().equals("Distans")) {
+							target = distance;
+							runNumber++;
+							if ((runNumber % modulo) == 0) {
+								distance += 100;
+							}
+							m.setTarget(md.getTarget());
+							if (target > 1400) {
+								md.setTarget(1600);
+							}
+						} else {
+							currentWeight = (int) ((currentWeight == 0) ? ((MeasurementDefinitionEntity) m
+									.getActivityItemDefinitionEntity()).getMaxTarget() + 2 : currentWeight - 1);
+							target = currentWeight;
+							diff = (Math.random() < 0.3) ? -1 : 1;
 						}
-						m.setTarget(md.getTarget());
-						if (target > 1400) {
-							md.setTarget(1600);
-						}
-					} else {
-						currentWeight = (int) ((currentWeight == 0) ? m.getMeasurementDefinition().getMaxTarget() + 2 : currentWeight - 1);
-						target = currentWeight;
-						diff = (Math.random() < 0.3) ? -1 : 1;
+						m.setReportedValue(target + diff);
+						log.debug("Reported value: " + m.getReportedValue());
+					} else if (aiv instanceof EstimationEntity) {
+						EstimationEntity est = (EstimationEntity) aiv;
+						int sense = (int) Math.round(Math.random() * 10);
+						est.setPerceivedSense(sense == 0 ? 1 : sense);
+					} else if (aiv instanceof TextEntity) {
+						TextEntity text = (TextEntity) aiv;
+						text.setTextComment(getRandomComment());
+					} else if (aiv instanceof YesNoEntity) {
+						YesNoEntity yesno = (YesNoEntity) aiv;
+						yesno.setAnswer(new Random().nextInt(2)==1);
 					}
-					m.setReportedValue(target + diff);
-					log.debug("Reported value: " + m.getReportedValue());
 				}
-				mRepo.save(sce.getMeasurements());
+				actRepo.save(sce.getActivities());
 				sar.save(sce);
 			}
 		}
 		sar.flush();
 		adRepo.flush();
-		
-		ActivityTypeEntity at2 = ActivityTypeEntity.newEntity("Yoga", cat, cu2);
-		MeasurementTypeEntity.newEntity(at2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, MeasureUnit.MINUTE, false);
-		atRepo.save(at2);
+
 		Frequency frequency2 = Frequency.unmarshal("1;2;3,16:30");
-		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, at2, frequency2, cg);
-		ad2.getMeasurementDefinitions().get(0).setTarget(60);
+		ActivityDefinitionEntity ad2 = ActivityDefinitionEntity.newEntity(hp, t3, frequency2, ca);
+		
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setMinTarget(90.0f);
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setMaxTarget(140.0f);
+
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(0)).setMinTarget(70.0f);
+		((MeasurementDefinitionEntity) ad2.getActivityItemDefinitions().get(1)).setMaxTarget(90.0f);
 		
 		adRepo.save(ad2);
 		hps.scheduleActivities(ad2);
+		
+		AlarmEntity alarm1 = AlarmEntity.newEntity(AlarmCause.UNREPORTED_ACTIVITY, p2, "hsa-cu-1", 1L );
+		alarmRepo.save(alarm1);
+		
+	}
+
+	protected static final String[] comments = { "Trevlig promenad, fint väder", "Skoskav",
+			"Tog det lugnt. Misstanke om virus", "Känns som om det går bättre och bättre", "Tungt idag",
+			"Nya skor. De var bekväma", "Varför orkar jag inte. Frustrerande!" };
+
+	protected static String getRandomComment() {
+		return comments[new Random().nextInt(comments.length)];
 	}
 }

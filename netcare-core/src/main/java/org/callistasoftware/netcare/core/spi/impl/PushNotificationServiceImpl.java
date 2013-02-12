@@ -16,28 +16,25 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 
 import org.callistasoftware.netcare.core.repository.UserRepository;
 import org.callistasoftware.netcare.core.spi.PushNotificationService;
-import org.callistasoftware.netcare.model.entity.UserEntity;
+import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsServiceBuilder;
-import com.notnoop.apns.EnhancedApnsNotification;
-import com.notnoop.apns.PayloadBuilder;
+import com.google.android.gcm.server.Constants;
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
+import com.google.android.gcm.server.Sender;
 
 /**
  * Implementation of service interface
@@ -46,197 +43,107 @@ import com.notnoop.apns.PayloadBuilder;
  */
 @Service
 public class PushNotificationServiceImpl extends ServiceSupport implements PushNotificationService {
-	
+
 	@Autowired
 	private UserRepository repo;
-	
+
 	// C2DM
-	@Value("${c2dm.username}") private String c2dmUsername;
-	@Value("${c2dm.password}") private String c2dmPassword;
-	@Value("${c2dm.auth-url}") private String c2dmAuthUrl;
-	@Value("${c2dm.url}") private String c2dmUrl;
-	@Value("${c2dm.client-app}") private String c2dmClientApp;
-	
+	@Value("${gcm.authKey}")
+	private String gcmAuthKey;
+
 	// APNS
-	@Value("${apns.cert-file}") private String apnsCertFile;
-	@Value("${apns.cert-password}") private String apnsCertPassword;
-	@Value("${apns.production}") private boolean apnsProduction;
-	private int apnsCount = 1;
+	@Value("${apns.cert-file}")
+	private String apnsCertFile;
+	@Value("${apns.cert-password}")
+	private String apnsCertPassword;
+	@Value("${apns.production}")
+	private boolean apnsProduction;
+	@Value("${apns.service.url}")
+	private String apnsServiceUrl;
 	
-	@Override
-	public void sendPushNotification(String subject, String message,
-			Long toUserId) {
-		
-		final UserEntity user = this.repo.findOne(toUserId);
-		if (user == null) {
-			throw new UsernameNotFoundException("The user could not be found.");
+	private int apnsCount = 1;
+
+	void sendGcmNotification(final PatientEntity p, final String title, final String msg) {
+		if (!p.isGcmUser()) {
+			throw new IllegalStateException(
+					"User is not an Android user. We should never attempt to send a GCM message if we don't have a valid GCM registration id");
 		}
-		
+
+		final String regId = p.getProperties().get("c2dmRegistrationId");
+
+		try {
+			Sender sender = new Sender(this.gcmAuthKey);
+			Message message = new Message.Builder().addData("title", title).addData("message", msg)
+					.addData("timestamp", String.valueOf(System.currentTimeMillis())).build();
+
+			Result result = sender.send(message, regId, 5);
+
+			if (result.getMessageId() != null) {
+				String canonicalRegId = result.getCanonicalRegistrationId();
+				if (canonicalRegId != null) {
+					// same device has more than on registration ID: update
+					// database
+					getLog().debug(
+							"Google indicates that the device has more than one registration id. Update to the correct one");
+					p.getProperties().put("c2dmRegistrationId", canonicalRegId);
+				}
+			} else {
+				String error = result.getErrorCodeName();
+
+				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+					// application has been removed from device - unregister
+					// database
+					getLog().debug(
+							"Google indicates that the registration id has been removed from the device. Remove from our database.");
+					p.getProperties().remove("c2dmRegistrationId");
+				}
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+			getLog().warn("Could not send push through the GCM network. Error was: " + e.getMessage());
+		}
+	}
+
+	@Override
+	public void sendPushNotification(String subject, String message, PatientEntity user) {
+
 		// Check which provider to use
 		final boolean c2dm = user.getProperties().containsKey("c2dmRegistrationId");
 		if (c2dm) {
-			final String registrationId = user.getProperties().get("c2dmRegistrationId");
-			this.sendGooglePushNotification(this.fetchGoogleAuthToken(), registrationId, subject, message, null, null);
+			this.sendGcmNotification(user, subject, message);
 			return;
 		}
-		
+
 		final boolean apns = user.getProperties().containsKey("apnsRegistrationId");
 		if (apns) {
 			final String registrationId = user.getProperties().get("apnsRegistrationId");
 			this.sendApnsNotification(registrationId, message);
 			return;
 		}
-		
-		getLog().error("Unable to find mobile push registration id för user {}", user.getId());
+
+		getLog().error("Unable to find mobile push registration id for user {}", user.getId());
 	}
 
-	String fetchGoogleAuthToken() {
-		
-		try {
-			final URL url = new URL(this.c2dmAuthUrl);
-			final HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-			
-			final StringBuilder builder = new StringBuilder();
-			builder.append("accountType").append("=").append("HOSTED_OR_GOOGLE").append("&");
-			builder.append("Email").append("=").append(this.c2dmUsername).append("&");
-			builder.append("Passwd").append("=").append(this.c2dmPassword).append("&");
-			builder.append("service").append("=").append("ac2dm").append("&");
-			builder.append("source").append("=").append(this.c2dmClientApp);
-			
-			con.setDoOutput(true);
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			
-			final byte[] data = builder.toString().getBytes("UTF-8");
-			final OutputStream out = con.getOutputStream();
-			
-			out.write(data);
-			out.close();
-			
-			final int response = con.getResponseCode();
-			if (response == 403) {
-				throw new RuntimeException("Could not login with specified Google account. Please verify the credentials");
-			}
-			
-			if (response == 200) {
-				getLog().debug("Call was successful");
-			
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				String authToken = null;
-				String line = "";
-				
-				getLog().debug("Parsing input stream");
-				while ((line = reader.readLine()) != null) {
-					
-					final String[] split = line.split("=");
-					if (split[0].equals("Auth")) {
-						authToken = split[1];
-						break;
-					}
-				}
-				
-				if (authToken != null) {
-					getLog().debug("Found auth token");
-					return authToken;
-				} else {
-					throw new IOException("Could not find any auth token in the response");
-				}
-			}
-			
-		} catch (IOException e) {
-			getLog().warn("Caught exception when trying to fetch auth token from Google", e);
-			throw new RuntimeException("Caught exception when trying to fetch auth token from Google", e);
-		}
-		
-		return null;
-	}
-	
 	//
 	void sendApnsNotification(final String registrationId, final String message) {
-		 getLog().info("Preparing to send APNS message: {}", apnsCount);
-		 ApnsServiceBuilder sb = APNS.newService();
-		 
-		 sb.withCert(apnsCertFile, apnsCertPassword);
-		 if (apnsProduction) {
-			 sb.withProductionDestination();
-		 } else {
-			 sb.withSandboxDestination();
-		 }
-		 
-		 PayloadBuilder pb = APNS.newPayload();
-		 pb.alertBody(message);
-		 pb.sound("default");
-		 pb.badge(1);
-		 		 
-		 sb.build().push(new EnhancedApnsNotification(apnsCount, 900, registrationId, pb.build()));
-		 getLog().info("APNS Message {} successfully delivered", apnsCount);
-		 apnsCount++;
-	}
-	
-	//
-	void sendGooglePushNotification(
-			final String authToken
-			, final String registrationId
-			, final String title
-			, final String message
-			, final String refType
-			, final String refValue) {
+		getLog().info("Preparing to send APNS message: {}", apnsCount);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		
-		try {
-			
-			final StringBuilder builder = new StringBuilder();
-			builder.append("registration_id").append("=").append(registrationId).append("&");
-			builder.append("collapse_key").append("=").append("netcare").append("&");
-			builder.append("data.ref").append("=").append(refType + "," + refValue).append("&");
-			builder.append("data.title").append("=").append(title).append("&");
-			builder.append("data.message").append("=").append(message).append("&");
-			builder.append("data.timestamp").append("=").append(new Long(System.currentTimeMillis())).append("&");
-			builder.append("delay_while_idle").append("=").append("true");
-			
-			/*
-			 * Need this because we cannot verify google's host
-			 */
-			final HostnameVerifier verifier = new HostnameVerifier() {
-				@Override
-				public boolean verify(String hostname, SSLSession session) {
-					return true;
-				}
-			};
-			
-			final URL url = new URL(this.c2dmUrl);
-			final HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-			con.setHostnameVerifier(verifier);
-			
-			final byte[] data = builder.toString().getBytes("UTF-8");
-			
-			con.setDoOutput(true);
-			con.setRequestMethod("POST");
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset='UTF-8");
-			con.setRequestProperty("Content-Length", null);
-			con.setRequestProperty("Authorization", "GoogleLogin auth=" + authToken);
-			
-			final OutputStream out = con.getOutputStream();
-			out.write(data);
-			out.close();
-			
-			int response = con.getResponseCode();
-			if (response == 200) {
-				getLog().debug("Got OK from Google server. Extracting information from the response...");
-				
-				final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				String line = null;
-				
-				while ((line = reader.readLine()) != null) {
-					final String[] split = line.split("=");
-					if (split[0].equals("Error")) {
-						throw new IOException("There was an error in the response from Google. Description: " + split[1]);
-					}
-				}
-				
-				getLog().info("C2DM push message successfully sent.");
-			}
-		} catch (IOException e) {
-			getLog().warn("Could not send push notification to Google server.", e);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("token", registrationId);
+		params.add("message", message);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String,String>>(params,headers);
+
+		String result = new RestTemplate().postForObject(apnsServiceUrl, request, String.class);
+
+		if(result.equals("success")) {
+			getLog().debug("Push notification " + apnsCount + " sent. Result: " + result);
+			apnsCount++;
+		} else {
+			getLog().error("Push notification could not be sent. Server result:\n" + result);
 		}
 	}
 }

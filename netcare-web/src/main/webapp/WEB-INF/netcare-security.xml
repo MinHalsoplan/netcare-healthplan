@@ -26,7 +26,26 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<beans>
-		<import resource="netcare-security-common.xml"/>
+		<security:http security="none" pattern="/js/**" />
+		<security:http security="none" pattern="/css/**" />
+		<security:http security="none" pattern="/img/**" />
+		<security:http security="none" pattern="/netcare/resources/**" />
+		<security:http security="none" pattern="/favicon.ico" />
+		<security:http security="none" pattern="/netcare/error/**" />
+		<security:http security="none" pattern="/netcare/security/**" />
+		<security:http security="none" pattern="/index*" />
+	</beans>
+	
+	<beans profile="mobile-test">
+	    <import resource="netcare-security-mobile-test.xml"/>
+	</beans>
+	
+	<beans profile="mobile-qa">
+	    <import resource="netcare-security-mobile-qa.xml"/>
+	</beans>
+	
+	<beans profile="mobile-prod">
+	    <import resource="netcare-security-mobile-prod.xml"/>
 	</beans>
 	
 	<beans profile="test">

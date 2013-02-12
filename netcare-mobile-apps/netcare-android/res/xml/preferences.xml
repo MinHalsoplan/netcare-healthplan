@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:background="#000000">
     
     <PreferenceCategory android:title="@string/user_settings">
 	    <CheckBoxPreference android:title="@string/push" android:key="push" android:persistent="true" android:defaultValue="true"/>

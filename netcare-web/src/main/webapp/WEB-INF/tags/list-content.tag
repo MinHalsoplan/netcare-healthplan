@@ -21,22 +21,23 @@
 <%@ attribute name="descriptionCode" required="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
 
-<section id="list-header">
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
+
+<div id="list-header">
 	<h2><spring:message code="${titleCode}" /></h2>
 	<p>
 		<span class="label label-info"><spring:message code="label.information" /></span>
 		<spring:message code="${descriptionCode}" />
 	</p>
-</section>
+</div>
 
-<section id="list-content">
+<div id="list-content">
 	<div id="list-status">
 		<netcare:block-message id="list-info" type="info" style="display:none;"></netcare:block-message>
 		<netcare:block-message id="list-empty" type="info" style="display:none;"></netcare:block-message>
 	</div>
 	<jsp:doBody />
-</section>
+</div>
 
 

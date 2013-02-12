@@ -18,37 +18,45 @@ package org.callistasoftware.netcare.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="nc_care_unit")
+@Table(name = "nc_care_unit")
 public class CareUnitEntity implements PermissionRestrictedEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@Column(name="hsa_id", length=64, unique=true, nullable=false)
+
+	@Column(name = "hsa_id", length = 64, unique = true, nullable = false)
 	private String hsaId;
-	
-	@Column(length=64)
+
+	@Column(length = 64)
 	private String name;
-	
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "county_council_id")
+	private CountyCouncilEntity countyCouncil;
+
 	CareUnitEntity() {
 	}
-	
-	CareUnitEntity(final String hsaId) {
+
+	CareUnitEntity(final String hsaId, CountyCouncilEntity countyCouncil) {
 		this();
 		this.setHsaId(hsaId);
+		this.setCountyCouncil(countyCouncil);
 	}
 
-	public static CareUnitEntity newEntity(final String hsaId) {
-		return new CareUnitEntity(hsaId);
+	public static CareUnitEntity newEntity(final String hsaId, CountyCouncilEntity countyCouncil) {
+		return new CareUnitEntity(hsaId, countyCouncil);
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -61,7 +69,7 @@ public class CareUnitEntity implements PermissionRestrictedEntity {
 		return hsaId;
 	}
 
-	void setHsaId(String hsaId) {
+	public void setHsaId(String hsaId) {
 		this.hsaId = hsaId;
 	}
 
@@ -73,15 +81,23 @@ public class CareUnitEntity implements PermissionRestrictedEntity {
 		this.name = name;
 	}
 
+	public CountyCouncilEntity getCountyCouncil() {
+		return countyCouncil;
+	}
+
+	public void setCountyCouncil(CountyCouncilEntity countyCouncil) {
+		this.countyCouncil = countyCouncil;
+	}
+
 	@Override
 	public boolean isReadAllowed(UserEntity user) {
-		if (user instanceof CareGiverEntity) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
-			if (cg.getCareUnit().getId().equals(this.getId())) {
+		if (user instanceof CareActorEntity) {
+			final CareActorEntity ca = (CareActorEntity) user;
+			if (ca.getCareUnit().getId().equals(this.getId())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 

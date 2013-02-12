@@ -30,5 +30,5 @@ public interface ActivityCategoryRepository extends JpaRepository<ActivityCatego
 	 * Find an activity category by name
 	 * @param name
 	 */
-	ActivityCategoryEntity findByName(final String name);
+	ActivityCategoryEntity findByNameOrderByNameAsc(final String name);
 }

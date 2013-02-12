@@ -28,7 +28,6 @@ import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
 import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
-import org.callistasoftware.netcare.core.api.messages.EntityNotUniqueMessage;
 import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
@@ -41,8 +40,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -139,29 +136,10 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		
 		this.verifyWriteAccess(p);
 		
-		p.setFirstName(patient.getFirstname());
-		p.setSurName(patient.getSurname());
+		p.setFirstName(patient.getFirstName());
+		p.setSurName(patient.getSurName());
 		p.setEmail(patient.getEmail());
-		p.setMobile(patient.isMobile());
-		p.setPhoneNumber(patient.getPhone());
-		
-		final Object salt = this.saltSource.getSalt((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-		
-		if (patient.isMobile()) {
-			
-			if (patient.getPassword() == null || patient.getPassword2() == null) {
-				throw new NullPointerException("User password must not be null");
-			}
-			
-			if (!patient.getPassword().equals(patient.getPassword2())) {
-				throw new IllegalArgumentException("User password must not be null and the two entered values must match.");
-			}
-			
-			String pw = this.passwordEncoder.encodePassword(patient.getPassword2(), salt);
-			
-			log.debug("Encrypted password is {}", pw);
-			p.setPassword(pw);
-		}
+		p.setPhoneNumber(patient.getPhoneNumber());
 		
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
 	}

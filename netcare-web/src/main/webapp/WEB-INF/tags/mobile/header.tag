@@ -21,37 +21,44 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code="system.name" /></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	
-	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.0.1.min.css" />" />
+	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.2.0.min.css" />" />
 
 	<style>
-		.ui-body {
-	        background: #eee;
+		.ui-bar-c {
+			color: white;
+			text-shadow: none;
+			background-color: #2DA1AE;
+			background-image: -webkit-gradient(linear,left top,left bottom,from( #5DD1DE ),to( #2DA1AE ));
+		}
+
+		.ui-btn-active {
+	        background: #333;
 		}
 		
 		.ui-li-has-count {
-	        background: #8d0017;
+	        background: #aaa;
+	        background-image: -webkit-gradient(linear,left top,left bottom,from( #ccc ),to( #aaa ));
 		}
-		
+			
 		.ui-btn-c {
 			background: #8d0017;
-		}
-		
-		.ui-bar-b {
-        	border: 1px solid #8d0017  /*{a-bar-border}*/;
-        	background: #8d0017 /*{a-bar-background-color}*/;
 		}		
-		.ui-btn-active {
-	        background: #8d0017;
-		}
-				
 	</style>
 			
-	<script type="text/javascript" src="<spring:url value="/js/jquery-1.6.4.min.js" />"></script>
-	<script type="text/javascript" src="<spring:url value="/js/jquery.mobile-1.0.1.min.js" />"></script>
-	
+	<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+	<c:set var="resourcePath" value="/netcare/resources" />
+	<script type="text/javascript" src="${contextPath}${resourcePath}/js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="${contextPath}${resourcePath}/js/underscore-1.4.2-min.js"></script>
+	<script type="text/javascript">
+		_.templateSettings.variable = "us";
+		_.templateSettings = {
+			interpolate : /\{\{(.+?)\}\}/g // use mustache style delimiters for underscorejs template  
+		};
+	</script>
 	<script type="text/javascript">
 	
 		var GLOB_CTX_PATH = '<c:out value="${pageContext.request.contextPath}" />';
@@ -71,14 +78,11 @@
 			}
 		};
 	</script>
-	
-	<!-- Include NETCARE javascripts  -->
-	<script type="text/javascript" src="<c:url value='/js/netcare/PageMessages.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Mobile.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Util.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Ajax.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Patient.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/Support.js' />"></script>
-	<script type="text/javascript" src="<c:url value='/js/netcare/HealthPlan.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/Util.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/PageMessages.js' />"></script>
+	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/Ajax.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/js/netcare-mobile-healthplan.js' />"></script>
+	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>	
 	<jsp:doBody />
+	
 </head>

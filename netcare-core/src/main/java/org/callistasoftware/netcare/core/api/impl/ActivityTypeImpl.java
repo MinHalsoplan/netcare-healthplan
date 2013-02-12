@@ -20,69 +20,75 @@ import java.util.List;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
+import org.callistasoftware.netcare.core.api.ActivityItemType;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.MeasurementType;
+import org.callistasoftware.netcare.core.api.Option;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
+import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * Implementation of an activity type
+ * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ActivityTypeImpl implements ActivityType {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 	private String name;
+	private boolean inUse;
+	private Option accessLevel;
 	private ActivityCategoryImpl category;
-	private boolean measuringSense;
-	private String minScaleText;
-	private String maxScaleText;
-	
-	private MeasurementType[] measureValues;
-	
+
+	private ActivityItemType[] activityItems;
+
 	//
 	public ActivityTypeImpl() {
-		this.measureValues = new MeasurementTypeImpl[0];
+		this.accessLevel = new Option(AccessLevel.CAREUNIT.name(), LocaleContextHolder.getLocale());
+		this.activityItems = new ActivityItemTypeImpl[0];
 	}
-	
-	public static ActivityTypeImpl newFromEntity(final ActivityTypeEntity entity, final Locale l) {
+
+	public static ActivityType newFromEntity(final ActivityTypeEntity entity, final Locale l) {
 		final ActivityTypeImpl dto = new ActivityTypeImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
+		dto.setInUse(entity.getInUse() == null ? false : entity.getInUse());
+		dto.setAccessLevel(new Option(entity.getAccessLevel().name(), l));
 		dto.setCategory((ActivityCategoryImpl) ActivityCategoryImpl.newFromEntity(entity.getCategory()));
-		dto.measuringSense = entity.isMeasuringSense();
-		dto.setMinScaleText(entity.getSenseLabelLow());
-		dto.setMaxScaleText(entity.getSenseLabelHigh());
-		
-		final MeasurementType[] values = new MeasurementTypeImpl[entity.getMeasurementTypes().size()];
+		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
-			values[i] = MeasurementTypeImpl.newFromEntity(entity.getMeasurementTypes().get(i));
+			ActivityItemTypeEntity activityItemTypeEntity = entity.getActivityItemTypes().get(i);
+			values[i] = ActivityItemTypeImpl.newFromEntity(activityItemTypeEntity);
 		}
-		
-		dto.measureValues = values;
-		
+
+		dto.activityItems = values;
+
 		return dto;
 	}
-	
+
 	public static ActivityType[] newFromEntities(final List<ActivityTypeEntity> entities, final Locale l) {
 		final ActivityType[] dtos = new ActivityTypeImpl[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
 			dtos[i] = ActivityTypeImpl.newFromEntity(entities.get(i), l);
 		}
-		
+
 		return dtos;
 	}
-	
+
 	@Override
 	public Long getId() {
 		return this.id;
 	}
-	
+
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -91,7 +97,7 @@ public class ActivityTypeImpl implements ActivityType {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public void setName(final String name) {
 		this.name = name;
 	}
@@ -100,67 +106,54 @@ public class ActivityTypeImpl implements ActivityType {
 	public ActivityCategory getCategory() {
 		return this.category;
 	}
-	
+
 	public void setCategory(final ActivityCategoryImpl category) {
 		this.category = category;
 	}
 
 	@Override
-	public boolean isMeasuringSense() {
-		return measuringSense;
+	public ActivityItemType[] getActivityItems() {
+		return this.activityItems;
 	}
 
-	@Override
-	public String getMinScaleText() {
-		return this.minScaleText;
-	}
-	
-	public void setMinScaleText(final String minScaleText) {
-		this.minScaleText = minScaleText;
+	public void setActivityItems(final ActivityItemTypeImpl[] activityItems) {
+		this.activityItems = activityItems;
 	}
 
-	@Override
-	public String getMaxScaleText() {
-		return this.maxScaleText;
-	}
-	
-	public void setMaxScaleText(final String maxScaleText) {
-		this.maxScaleText = maxScaleText;
+	public void setActivityItems(ActivityItemType[] activityItems) {
+		this.activityItems = activityItems;
 	}
 
-	@Override
-	public MeasurementType[] getMeasureValues() {
-		return this.measureValues;
-	}
-	
-	public void setMeasureValues(final MeasurementTypeImpl[] measureValues) {
-		this.measureValues = measureValues;
-	}
-	
-	public void setMeasuringSense(boolean measuringSense) {
-		this.measuringSense = measuringSense;
-	}
-
-	public void setMeasureValues(MeasurementType[] measureValues) {
-		this.measureValues = measureValues;
-	}
-	
 	@Override
 	public String toString() {
 		final StringBuffer buf = new StringBuffer();
 		buf.append("==== Activity Type ====\n");
 		buf.append("Id: ").append(this.getId()).append("\n");
 		buf.append("Name: ").append(this.getName()).append("\n");
-		buf.append("Measuring sense: ").append(this.isMeasuringSense()).append("\n");
-		buf.append("Sense min: ").append(this.getMinScaleText()).append("\n");
-		buf.append("Sense max: ").append(this.getMaxScaleText()).append("\n");
-		
 		buf.append(this.getCategory());
-		
-		for (final MeasurementType t : this.getMeasureValues()) {
+
+		for (final ActivityItemType t : this.getActivityItems()) {
 			buf.append(t);
 		}
-		
+
 		return buf.toString();
+	}
+
+	@Override
+	public Option getAccessLevel() {
+		return this.accessLevel;
+	}
+	
+	public void setAccessLevel(Option option) {
+		this.accessLevel = option;
+	}
+
+	@Override
+	public boolean isInUse() {
+		return inUse;
+	}
+	
+	public void setInUse(final boolean inUse) {
+		this.inUse = inUse;
 	}
 }

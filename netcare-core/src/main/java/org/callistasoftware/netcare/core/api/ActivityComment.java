@@ -18,6 +18,10 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityCommentImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+@JsonDeserialize(as=ActivityCommentImpl.class)
 public interface ActivityComment extends Serializable {
 
 	/**
@@ -33,6 +37,29 @@ public interface ActivityComment extends Serializable {
 	String getComment();
 	
 	/**
+	 * If the comment has been read
+	 */
+	boolean isMarkedAsRead();
+	
+	/**
+	 * If the comment is decorated with a "like"
+	 * @return
+	 */
+	boolean isLike();
+	
+	/**
+	 * Is the comment hidden by admin?
+	 * @return
+	 */
+	boolean isHiddenByAdmin();
+	
+	/**
+	 * Is the comment hidden by the patient?
+	 * @return
+	 */
+	boolean isHiddenByPatient();
+	
+	/**
 	 * Get the reply
 	 * @return
 	 */
@@ -43,6 +70,12 @@ public interface ActivityComment extends Serializable {
 	 * @return
 	 */
 	String getCommentedBy();
+	
+	/**
+	 * The care actor's care unit
+	 * @return
+	 */
+	String getCommentedByCareUnit();
 	
 	/**
 	 * Get timestamp for the comment

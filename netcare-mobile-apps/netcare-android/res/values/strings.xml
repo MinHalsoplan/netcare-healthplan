@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Min hälsoplan</string>
-    <string name="cnr">Personnummer</string>
-    <string name="error">Fel</string>
+    <string name="crn">Personnummer</string>
+    <string name="bankid">OBS! Du behöver Mobilt BankID installerat för att använda denna tjänst samt en hälsoplan skapad av din vårdgivare.</string>
     <string name="host">Host</string>
     <string name="port">Port</string>
-    <string name="pin">Pin-kod</string>
     <string name="login">Logga in</string>
-    <string name="loginProgress">Loggar in...</string>
     <string name="loadingActivities">Laddar dina aktiviteter...</string>
     <string name="loading">Vänligen vänta</string>
-    
-    <string name="credentialsError">Användarnamn och/eller lösenord är felaktiga. Vänligen försök igen</string>
-    <string name="provideCredentials">Du måste ange ditt personnummer samt pin-kod för att logga in</string>
-    
     <string name="push">Push-notifieringar</string>
-    
     <string name="user_settings">Inställningar</string>
     <string name="secure">Säker anslutning</string>
-    <string name="server_settings">Server inställningar</string>
-    
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="darkGrey">#EEEEEE</color>
+    <string name="server_settings">Serverinställningar</string>
+    <string name="generic_error">Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...</string>
+    <string name="no_account">Du har för nuvarande ingen hälsoplan och kan därför inte använda tjänsten. En hälsoplan får du av någon personal i vården. Tjänsten används i dagsläget av ett fåtal mottagningar i Jönköpings, Hallands och Västerbottens län.</string>
     
     <style name="header" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">#000000</item>

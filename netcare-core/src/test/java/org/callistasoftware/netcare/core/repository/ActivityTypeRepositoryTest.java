@@ -20,10 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
 import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
 import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnit;
+import org.callistasoftware.netcare.model.entity.CountyCouncil;
+import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementValueType;
 import org.junit.Test;
@@ -32,34 +34,50 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 public class ActivityTypeRepositoryTest extends TestSupport {
-	
+
 	@Autowired
 	private CareUnitRepository cuRepo;
-	
+
+	@Autowired
+	private CountyCouncilRepository ccRepo;
+
 	@Autowired
 	private ActivityCategoryRepository catRepo;
-	
+
 	@Autowired
 	private ActivityTypeRepository repo;
 	
+	@Autowired
+	private MeasureUnitRepository measureRepo;
+
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testInsertFind() throws Exception {
-		
-		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id"));
-		
+
+		final CountyCouncilEntity cc = newCountyCouncil(CountyCouncil.STOCKHOLM);
+		final CareUnitEntity cu = cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
+
 		final ActivityCategoryEntity cat = this.catRepo.save(ActivityCategoryEntity.newEntity("Fysisk aktivitet"));
-		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, cu);
-		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, MeasureUnit.METER, false);
-		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, MeasureUnit.KILOGRAM, true);
+		final ActivityTypeEntity ent = ActivityTypeEntity.newEntity("Löpning", cat, cu, AccessLevel.CAREUNIT);
+		MeasurementTypeEntity.newEntity(ent, "Distans", MeasurementValueType.SINGLE_VALUE, newMeasureUnit("m", "Meter", cc), false, 0);
+		MeasurementTypeEntity.newEntity(ent, "Vikt", MeasurementValueType.INTERVAL, newMeasureUnit("kg", "Kilogram", cc), true, 1);
 		final ActivityTypeEntity savedEnt = this.repo.save(ent);
-		
+
 		assertNotNull(savedEnt);
 		assertNotNull(savedEnt.getId());
 		assertEquals(ent.getName(), savedEnt.getName());
-		assertEquals(ent.getMeasurementTypes().size(), savedEnt.getMeasurementTypes().size());		
-		assertNotNull(savedEnt.getMeasurementTypes());
-		assertEquals("Vikt", ent.getMeasurementTypes().get(1).getName());
+		assertEquals(ent.getActivityItemTypes().size(), savedEnt.getActivityItemTypes().size());
+		assertNotNull(savedEnt.getActivityItemTypes());
+		assertEquals("Vikt", ent.getActivityItemTypes().get(1).getName());
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testInsertFindCountyCouncil() throws Exception {
+		CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
+		CountyCouncilEntity ccFind = ccRepo.findOne(cc.getId());
+		assertEquals(CountyCouncil.STOCKHOLM, ccFind.getMeta());
 	}
 }

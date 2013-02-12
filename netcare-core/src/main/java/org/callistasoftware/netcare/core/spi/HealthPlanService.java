@@ -20,8 +20,7 @@ import java.util.Date;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.ActivityReport;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -41,6 +40,13 @@ import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
  *
  */
 public interface HealthPlanService {
+	
+	/**
+	 * Update the reminder on this activity definition
+	 * @param reminderOn True, reminder is on. False otherwise
+	 * @return
+	 */
+	ServiceResult<ActivityDefinition> updateReminder(final Long id, final boolean reminderOn);
 	
 	/**
 	 * Load a scheduled activity
@@ -64,7 +70,7 @@ public interface HealthPlanService {
 	 * @param patientId
 	 * @return
 	 */
-	ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan ordination, final CareGiverBaseView creator, final Long patientId);
+	ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan ordination, final CareActorBaseView creator, final Long patientId);
 	
 	/**
 	 * Delete the ordination with the specified id
@@ -89,7 +95,14 @@ public interface HealthPlanService {
 	 * 
 	 * @return the result.
 	 */
-	ServiceResult<HealthPlan> addActvitiyToHealthPlan(final Long healthPlanId, final ActivityDefinition dto, final UserBaseView user);
+	ServiceResult<ActivityDefinition> addActvitiyToHealthPlan(final ActivityDefinition dto);
+	
+	/**
+	 * Load an activity definition
+	 * @param definitionId
+	 * @return
+	 */
+	ServiceResult<ActivityDefinition> loadDefinition(final Long definitionId);
 	
 	/**
 	 * Updates an existing activity definition
@@ -116,10 +129,12 @@ public interface HealthPlanService {
 	/**
 	 * Returns scheduled activities for a patient.
 	 * 
-	 * @param patient the patient.
+	 * @param active whether or not to only include active or not
 	 * @return the result.
+	 * @deprecated Use methods in {@link ScheduleService} instead
 	 */
-	ServiceResult<ScheduledActivity[]> getActivitiesForPatient(final PatientBaseView patient);
+	@Deprecated
+	ServiceResult<ScheduledActivity[]> getActivitiesForPatient();
 	
 	/**
 	 * Comment a performed activity
@@ -129,6 +144,22 @@ public interface HealthPlanService {
 	 */
 	ServiceResult<ScheduledActivity> commentOnPerformedActivity(final Long activityId, final String comment);
 	
+	/**
+	 * Like an activity.
+	 * @param activityId
+	 * @param like
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> likePerformedActivity(final Long activityId, boolean like);
+
+	/**
+	 * Mark an activity as read.
+	 * @param activityId
+	 * @param hasBeenRead
+	 * @return
+	 */
+	ServiceResult<ScheduledActivity> markPerformedActivityAsRead(final Long activityId, boolean hasBeenRead);
+
 	/**
 	 * Reply to a comment
 	 * @param comment
@@ -146,7 +177,7 @@ public interface HealthPlanService {
 	 * Load replies for the currently logged in care giver
 	 * @return
 	 */
-	ServiceResult<ActivityComment[]> loadRepliesForCareGiver();
+	ServiceResult<ActivityComment[]> loadRepliesForCareActor();
 	
 	/**
 	 * Delete a comment with the specified id
@@ -154,16 +185,14 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<ActivityComment> deleteComment(final Long commentId);
-	
+
 	/**
-	 * Reports on an activity and returns the update.
 	 * 
-	 * @param scheduledActivityId the id.
-	 * @param value the value.
-	 * @return an updated {@link ScheduledActivity}
+	 * @param commentId
+	 * @return
 	 */
-	ServiceResult<ScheduledActivity> reportReady(final Long scheduledActivityId, final ActivityReport report);
-	
+	ServiceResult<ActivityComment> hideComment(final Long commentId, boolean isAdmin);
+
 	/**
 	 * Load the latest reported activities for all patients that
 	 * has health plans belonging to the caller's care unit
@@ -172,11 +201,22 @@ public interface HealthPlanService {
 	ServiceResult<ScheduledActivity[]> loadLatestReportedForAllPatients(final CareUnit careUnit, final Date start, final Date end);
 	
 	/**
+	 * Filter out a list of reported activities with supplied params.
+	 * @param careUnit the actual care unit
+	 * @param personnummer what person
+	 * @param start date from
+	 * @param end date to
+	 * @return the list of reported activities
+	 */
+	ServiceResult<ScheduledActivity[]> filterReportedActivities(CareUnit careUnit, String personnummer, Date start,
+			Date end);
+
+	/**
 	 * Returns actual activity definitions.
 	 * 
 	 * @return the result with actual activity definitions.
 	 */
-	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final PatientBaseView patient);
+	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId);
 	
 	/**
 	 * Returns events for a patient.
@@ -237,4 +277,5 @@ public interface HealthPlanService {
 	 * 
 	 */
 	ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop);
+
 }

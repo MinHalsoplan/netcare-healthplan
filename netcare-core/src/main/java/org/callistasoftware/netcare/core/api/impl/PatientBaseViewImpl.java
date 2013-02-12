@@ -17,10 +17,12 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -29,6 +31,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBaseView {
 
 	/**
@@ -36,7 +39,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private boolean mobile;
 	private String password;
 	private String civicRegistrationNumber;
 
@@ -51,7 +53,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	
 	PatientBaseViewImpl(final PatientEntity entity) {
 		super(entity.getId(), entity.getFirstName(), entity.getSurName());
-		this.mobile = entity.isMobile();
 		this.setCivicRegistrationNumber(entity.getCivicRegistrationNumber());
 		this.setPassword(entity.getPassword());
 	}
@@ -70,7 +71,7 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	}
 	
 	@Override
-	public boolean isCareGiver() {
+	public boolean isCareActor() {
 		return false;
 	}
 
@@ -85,12 +86,18 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Role.getPatientRoleSet();
-	}
+		return Collections.singletonList(new GrantedAuthority() {
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-	@Override
-	public boolean isMobile() {
-		return this.mobile;
+			@Override
+			public String getAuthority() {
+				return "PATIENT";
+			}
+		});
 	}
 
 	@Override
@@ -100,10 +107,6 @@ public class PatientBaseViewImpl extends UserBaseViewImpl implements PatientBase
 	
 	public void setPassword(final String password) {
 		this.password = password;
-	}
-
-	public void setMobile(boolean mobile) {
-		this.mobile = mobile;
 	}
 
 	@Override

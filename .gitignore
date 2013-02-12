@@ -3,7 +3,6 @@
 .settings
 target
 *.class
-*.jar
 *.war
 *.ear
 .DS_Store
@@ -16,3 +15,5 @@ doc
 **/bin
 *~
 **/xcuserdata/**
+UserInterfaceState.xcuserstate
+Breakpoints.xcbkptlist

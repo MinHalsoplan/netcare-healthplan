@@ -38,6 +38,7 @@
     [super viewDidLoad];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[_delegate startURL]];
+    //[request addValue:@"X-netcare-order" forHTTPHeaderField:[_delegate orderrefToken]];
     [webView loadRequest:request];
  }
 
@@ -74,13 +75,11 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (BOOL)webView:(UIWebView *)webView
-shouldStartLoadWithRequest:(NSURLRequest *)request
- navigationType:(UIWebViewNavigationType)navigationType {
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
  
     NSString *requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
-    NSLog(@"%@\n", requestString);
+    NSLog(@"FlipsideViewController - %@\n", requestString);
     
     if ([requestString hasPrefix:@"ios-log:"]) {
         NSString* logString = [[requestString componentsSeparatedByString:@":#iOS#"] objectAtIndex:1];

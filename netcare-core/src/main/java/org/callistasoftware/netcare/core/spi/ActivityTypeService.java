@@ -18,50 +18,74 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ActivityCategory;
 import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 
 /**
- * Interface defining service methods for
- * managing activity types
+ * Interface defining service methods for managing activity types
  * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
 public interface ActivityTypeService {
-	
+
 	/**
 	 * Create a new activity type
+	 * 
 	 * @param dto
-	 * @param careGiver the user creating this type.
+	 * @param careActor
+	 *            the user creating this type.
 	 * @return
 	 */
-	ServiceResult<ActivityType> createActivityType(final ActivityType dto, final CareGiverBaseView careGiver);
-	
+	ServiceResult<ActivityType> createActivityType(final ActivityType dto);
+
 	/**
 	 * Searches for activity types
+	 * 
 	 * @param searchString
 	 * @return
 	 */
-	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString);
-	
+	ServiceResult<ActivityType[]> searchForActivityTypes(final String searchString, final String category,
+			final String level);
+
 	/**
 	 * Load all activity categories
+	 * 
 	 * @return
 	 */
 	ServiceResult<ActivityCategory[]> loadAllActivityCategories();
-	
+
 	/**
 	 * Creates a new activity category
+	 * 
 	 * @param dto
 	 * @return
 	 */
 	ServiceResult<ActivityCategory> createActivityCategory(final ActivityCategory dto);
+
+	/**
+	 * Get an activityType by its id.
+	 * 
+	 * @param id
+	 *            The activity type id.
+	 * @return An activity type.
+	 */
+	ServiceResult<ActivityType> getActivityType(final String id);
+
+	/**
+	 * Updates an activity type.
+	 * 
+	 * @param activityType
+	 *            The activity type to be saved.
+	 * @param careActor
+	 * @return the saved activity.
+	 */
+	ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl activityType);
 	
 	/**
-	 * Load all activity types that exist in
-	 * the system
+	 * Deletes the activity template with the specified id
+	 * @param id
 	 * @return
 	 */
-	ServiceResult<ActivityType[]> loadAllActivityTypes(final String hsaId);
+	ServiceResult<ActivityType> deleteActivityTemplate(final Long id);
 }

@@ -21,74 +21,83 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
-<netcare:page>
-	<netcare:header>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
+
+<hp:view>
+	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 				
-				var _support = new NC.Support();
+				var msgs = {
+						like : '<spring:message code="activity.reported.like" />',
+						liked : '<spring:message code="activity.reported.liked" />',
+						markasread : '<spring:message code="activity.reported.markasread" />',
+						markedasread : '<spring:message code="activity.reported.markedasread" />'
+				};
 				
-				var _ra
-				var msgs;
-				_support.loadMessages('report.reject,healthplan.icons.result,healthplan.icons.edit,activity.reported.none,comments.sendComment', function(messages) {
-					msgs = messages;
-					_ra = new NC.ReportedActivities(msgs);
+				var module = NC_MODULE.REPORTED_ACTIVITIES;
+
+				function filter() {
+					var personnummer = $('#personnummer').val();
+					var dateFrom = $('#dateFrom').val();
+					var dateTo = $('#dateTo').val();
+					module.doFilter(personnummer, dateFrom, dateTo, msgs);
+				}
+				
+				var now = new Date();
+				var start = new Date();
+				start.setDate(now.getDate()-3);
+				
+				$('#dateFrom').datepicker('setDate', start);
+				$('#dateTo').datepicker('setDate', now);
+
+				$('.btn').click(function() {
+					filter();
 				});
-				
-				_ra.loadData('latest', function(data) {
-					
-					_ra.loadUI(data, function(row) {
-						NC.log('Appending row');
-						$('#activity-table tbody').append(row);	
-					},
-					function(data) {
-						$('#commentActivity').modal('show');
-						$('#commentActivity a.btn-primary').click(function(e) {
-							e.preventDefault();
-							
-							var val = $('#commentActivity input[name="comment"]').val();
-							
-							_ra.sendComment(data.id, val, function() {
-								$('#commentActivity input[name="comment"]').val('');
-								$('#commentActivity').modal('hide');
-								
-								$('#commentActivity a.btn-primary').unbind('click');
-							});
-						});
-					});
-				}, 
-				function() {
-					$('#activity-table').hide();
-					$('#list-empty').html(msgs['activity.reported.none']).show();
-				});
-				
+
+				filter();
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
-			<netcare:list-content descriptionCode="activity.reported.desc2" titleCode="activity.reported.title">
-				<netcare:table id="activity-table">
-					<thead>
-						<tr>
-							<th><spring:message code="activity.reported.patient" /></th>
-							<th><spring:message code="activity.reported.type" /></th>
-							<th><spring:message code="activity.reported.healthplan" /></th>
-							<th><spring:message code="activity.reported.value" /></th>
-							<th><spring:message code="activity.reported.when" /></th>
-							<th>&nbsp;</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</netcare:table>
-				
-				<netcare:modal confirmCode="comments.sendComment" titleCode="comments.comment" id="commentActivity">
-					<input type="text" name="comment" class="xlarge" />
-				</netcare:modal>
-			</netcare:list-content>
-		</netcare:content>
+	</hp:viewHeader>
+	
+	<spring:message code="activity.reported.title" var="reported"/>
+	<hp:viewBody title="${reported}" plain="true">
+		<mvk:heading title="${reported}">
+			<spring:message code="activity.reported.desc2" />
+		</mvk:heading>
+		<mvk:sheet>
+			<div class="controls">
+	    		<label class="control-label" for="personnummer">Personnummer</label>
+	    		<div class="controls">
+	      			<input type="text" id="personnummer">
+	    		</div>
+	    		<label class="control-label" for="personnummer">Tidsperiod</label>
+	    		<div class="controls">
+	      			<input type="text" id="dateFrom" class="span3 dateInput allow-previous"> -
+	      			<input type="text" id="dateTo" class="span3 dateInput allow-previous">
+	    		</div>
+	    		<div class="form-actions">
+	    			<button class="btn btn-info">Visa aktiviteter</button>
+	    		</div>
+	  		</div>
+  		</mvk:sheet>
+  		
+  		<div id="report">
+  			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="reportContainer" style="display: none;">
+  				<mvk:touch-list id="latestActivitiesContainer"></mvk:touch-list>
+				<div id="riPagination" class="pagination pagination-centered">
+					<ul></ul>
+				</div>
+			</div>
+  		</div>
 		
-	</netcare:body>	
-</netcare:page>
+	</hp:viewBody>
+</hp:view>

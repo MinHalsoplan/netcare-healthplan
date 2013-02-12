@@ -35,9 +35,6 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	@Column(name="civic_reg_number", length=16, nullable=false, unique=true)
 	private String civicRegistrationNumber;
 	
-	@Column(name="is_mobile")
-	private boolean isMobile;
-	
 	@Column(name="password")
 	private String password;
 	
@@ -72,14 +69,6 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 		String crn = EntityUtil.notNull(civicRegistrationNumber);
 		// clean dash from number (if any).
 		this.civicRegistrationNumber = EntityUtil.formatCrn(crn);
-	}
-
-	public boolean isMobile() {
-		return isMobile;
-	}
-
-	public void setMobile(boolean isMobile) {
-		this.isMobile = isMobile;
 	}
 	
 	public String getPassword() {
@@ -117,9 +106,17 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 	public boolean isPushEnbaled() {
 		return this.getProperties().containsKey("apnsRegistrationId") || this.getProperties().containsKey("c2dmRegistrationId");
 	}
+	
+	public boolean isGcmUser() {
+		return this.getProperties().containsKey("c2dmRegistrationId");
+	}
+	
+	public boolean isApnsUser() {
+		return this.getProperties().containsKey("apnsRegistrationId");
+	}
 
 	@Override
-	public boolean isCareGiver() {
+	public boolean isCareActor() {
 		return false;
 	}
 
@@ -130,12 +127,12 @@ public class PatientEntity extends UserEntity implements PermissionRestrictedEnt
 
 	@Override
 	public boolean isWriteAllowed(UserEntity user) {
-		if (user.isCareGiver()) {
-			final CareGiverEntity cg = (CareGiverEntity) user;
+		if (user.isCareActor()) {
+			final CareActorEntity ca = (CareActorEntity) user;
 			final List<HealthPlanEntity> hps = this.getHealthPlans();
 			
 			for (final HealthPlanEntity ent : hps) {
-				if (ent.getCareUnit().getId().equals(cg.getCareUnit().getId())) {
+				if (ent.getCareUnit().getId().equals(ca.getCareUnit().getId())) {
 					return true;
 				}
 			}

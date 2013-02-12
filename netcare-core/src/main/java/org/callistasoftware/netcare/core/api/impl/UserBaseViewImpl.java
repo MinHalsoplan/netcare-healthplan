@@ -20,10 +20,12 @@ import java.util.Collection;
 
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public abstract class UserBaseViewImpl implements UserBaseView {
-
+	
 	/**
 	 * 
 	 */
@@ -110,6 +112,6 @@ public abstract class UserBaseViewImpl implements UserBaseView {
 	}
 
 	@Override
-	public abstract boolean isCareGiver();
+	public abstract boolean isCareActor();
 
 }

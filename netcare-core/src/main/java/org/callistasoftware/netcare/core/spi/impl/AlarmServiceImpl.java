@@ -31,7 +31,7 @@ import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.spi.AlarmService;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -81,7 +81,7 @@ public class AlarmServiceImpl extends ServiceSupport implements AlarmService {
 		
 		this.verifyWriteAccess(ent);
 		
-		ent.setResolvedBy((CareGiverEntity) this.getCurrentUser());
+		ent.setResolvedBy((CareActorEntity) this.getCurrentUser());
 		ent.setResolvedTime(new Date());
 		
 		return ServiceResultImpl.createSuccessResult(AlarmImpl.newFromEntity(ent, LocaleContextHolder.getLocale()), new GenericSuccessMessage());

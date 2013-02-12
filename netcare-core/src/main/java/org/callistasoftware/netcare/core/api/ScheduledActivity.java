@@ -18,11 +18,15 @@ package org.callistasoftware.netcare.core.api;
 
 import java.io.Serializable;
 
+import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Keeps scheduled activity information, used to display a list of activities.
  * 
  * @author Peter
  */
+@JsonDeserialize(as=ScheduledActivityImpl.class)
 public interface ScheduledActivity extends Serializable {
 	/**
 	 * Returns the id.
@@ -37,6 +41,19 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the day as an option.
 	 */
 	Option getDay();
+	
+	/**
+	 * Return the day in week when activity was reported in system
+	 * @return
+	 */
+	Option getReportedDay();
+	
+	/**
+	 * Get the actual day of reporting. This is when the patient claims that the activity was performed
+	 * performed the activity
+	 * @return
+	 */
+	Option getActDay();
 
 	/**
 	 * Returns if this activity has been rejected by the user.
@@ -51,6 +68,18 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the time.
 	 */
 	String getTime();
+	
+	/**
+	 * Returns the reported time
+	 * @return
+	 */
+	String getReportedTime();
+	
+	/**
+	 * Return the time when the patient claims that the activity was performed
+	 * @return
+	 */
+	String getActTime();
 
 	/**
 	 * Returns the scheduled date (yyyy-mm-dd)
@@ -58,13 +87,25 @@ public interface ScheduledActivity extends Serializable {
 	 * @return the date.
 	 */
 	String getDate();
+	
+	/**
+	 * Returns the reported date
+	 * @return
+	 */
+	String getReportedDate();
+	
+	/**
+	 * Return the date when patient claims that the activity was performed
+	 * @return
+	 */
+	String getActDate();
 
 	/**
 	 * Returns the associated {@link ActivityDefinition}
 	 * 
 	 * @return the definition.
 	 */
-	ActivityDefinition getDefinition();
+	ActivityDefinition getActivityDefinition();
 
 	/**
 	 * Returns if this activity is due.
@@ -99,21 +140,32 @@ public interface ScheduledActivity extends Serializable {
 	PatientBaseView getPatient();
 
 	/**
-	 * Returns the perceived sense.
-	 * 
-	 * @return the sense.
-	 */
-	int getSense();
-
-	/**
 	 * Returns the associated patient notice.
 	 * 
 	 * @return the patient note.
 	 */
 	String getNote();
+
+	/**
+	 * Returns activityItemValues.
+	 */
+	ActivityItemValues[] getActivityItemValues();
 	
 	/**
-	 * Returns measurements.
+	 * Returns the comments for this activity.
+	 * @return
 	 */
-	Measurement[] getMeasurements();
+	ActivityComment[] getComments();
+	
+	/**
+	 * Whether reporting is possible or not for this activity
+	 * @return
+	 */
+	boolean isReportingPossible();
+	
+	/**
+	 * Whether this activity was created by the patient.
+	 * @return
+	 */
+	boolean isExtra();
 }

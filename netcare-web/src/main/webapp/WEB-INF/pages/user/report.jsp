@@ -1,4 +1,5 @@
-	<%--
+
+<%--
 
     Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
 
@@ -16,32 +17,95 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
-<netcare:page>
-	<netcare:header>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
+
+<hp:view>
+	<hp:viewHeader>
+		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
-				var report = new NC.PatientReport('schemaTable', false);
-				report.init();
+				var params = {
+					patientId : '<sec:authentication property="principal.id" />',
+					showAll : true,
+					due : true,
+					reported : true,
+					start : new Date().getTime(),
+					end : new Date().getTime()
+				};
+				
+				NC_MODULE.PATIENT_SCHEDULE.init(params);
 			});
 		</script>
-	</netcare:header>
-	<netcare:body>
-		<netcare:content>
-			<h2><spring:message code="report.header" /></h2>
-			<p>
-				<span class="label label-info"><spring:message code="information" /></span>
-				<spring:message code="report.desc" />
-			</p>
-			
-			<netcare:report />	
-		</netcare:content>
-	</netcare:body>
-</netcare:page>
+	</hp:viewHeader>
+	<hp:viewBody title="Rapportera resultat" plain="true">
+	
+		<a href="<spring:url value="/netcare/user/extra-report" />" class="btn">Extrarapportering</a>
+	
+		<mvk:sheet>
+			<div id="filter">
+				<form id="filterForm">
+					<fieldset>
+						<legend>Välj vilka aktiviteter som ska visas</legend>
+						<netcare:row>
+							<netcare:col span="4">
+								<netcare:field name="start" label="Från">
+									<input id="start" type="text" name="start" class="dateInput allow-previous span12">
+								</netcare:field>	
+							</netcare:col>
+							<netcare:col span="4">
+								<netcare:field name="end" label="Till">
+									<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
+								</netcare:field>	
+							</netcare:col>
+						</netcare:row>
+						<netcare:row>
+							<netcare:col span="3">
+								<netcare:field name="reported">
+									<input id="reported" type="checkbox" name="reported" /><label style="display: inline;" for="reported"> Visa rapporterade aktiviteter</label>
+								</netcare:field>	
+							</netcare:col>
+							<netcare:col span="3">
+								<netcare:field name="due">
+									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa aktiviteter som inte är utförda</label>
+								</netcare:field>
+							</netcare:col>
+						</netcare:row>
+						
+						<div class="form-actions">
+							<button id="filter-submit" type="submit" class="btn btn-primary btn-info">Visa</button>
+						</div>
+					
+					</fieldset>
+				</form>
+			</div>
+		</mvk:sheet>
+	
+		<div id="report">
+			<div class="sectionLoader" style="display: none;">
+				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
+				<span class="loaderMessage"></span>
+			</div>
+			<div id="reportContainer" style="display: none;">
+				<h3 class="title">Aktiviteter</h3>
+				<mvk:touch-list id="reportList"></mvk:touch-list>
+				
+				
+				<div id="siPagination" class="pagination pagination-centered">
+					<ul>
+					</ul>
+				</div>
+				
+			</div>
+		</div>
+		
+	</hp:viewBody>
+</hp:view>

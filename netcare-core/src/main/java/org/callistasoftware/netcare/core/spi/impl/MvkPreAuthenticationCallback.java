@@ -16,17 +16,19 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
-import org.callistasoftware.netcare.core.api.impl.CareGiverBaseViewImpl;
+import org.callistasoftware.netcare.core.api.impl.CareActorBaseViewImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientBaseViewImpl;
-import org.callistasoftware.netcare.core.repository.CareGiverRepository;
+import org.callistasoftware.netcare.core.repository.CareActorRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.PatientRepository;
-import org.callistasoftware.netcare.model.entity.CareGiverEntity;
+import org.callistasoftware.netcare.core.repository.RoleRepository;
+import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.EntityUtil;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.RoleEntity;
 import org.callistasoftware.netcare.mvk.authentication.service.api.AuthenticationResult;
 import org.callistasoftware.netcare.mvk.authentication.service.api.PreAuthenticationCallback;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +45,21 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 	private CareUnitRepository cuRepo;
 	
 	@Autowired
-	private CareGiverRepository cgRepo;
+	private CareActorRepository careActorRepo;
 	
 	@Autowired
 	private PatientRepository pRepo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
 	
 	@Override
 	public UserDetails createMissingUser(AuthenticationResult preAuthenticated) {
 		getLog().info("User {} has not been here before, create the user...", preAuthenticated.getUsername());
 		
-		if (preAuthenticated.isCareGiver()) {
+		if (preAuthenticated.isCareActor()) {
 			
-			getLog().debug("The user is a care giver...");
+			getLog().debug("The user is a care actor...");
 			
 			final String careUnit = preAuthenticated.getCareUnitHsaId();
 			CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit);
@@ -63,10 +68,22 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 				cu = this.createCareUnit(careUnit, preAuthenticated.getCareUnitName());
 			}
 			
-			final CareGiverEntity cg = this.cgRepo.save(CareGiverEntity.newEntity("system-generated-name", "system-generated-name", preAuthenticated.getUsername(), cu));
-			getLog().debug("Created care giver {}", cg.getFirstName());
+			getLog().debug("Care unit found. Hsa id: {}", cu.getHsaId());
 			
-			return CareGiverBaseViewImpl.newFromEntity(cg);
+			getLog().debug("Lookup care actor role...");
+			final RoleEntity caRole = roleRepo.findByDn("CARE_ACTOR");
+			
+			final CareActorEntity ca = CareActorEntity.newEntity("system-generated-name", "system-generated-name", preAuthenticated.getUsername(), cu);
+			ca.addRole(caRole);	
+			
+			final CareActorEntity savedCa = this.careActorRepo.save(ca);
+			getLog().debug("Care actor saved. Belongs to care unit: {}", savedCa.getCareUnit().getHsaId());
+			
+			final CareActorBaseView dto = CareActorBaseViewImpl.newFromEntity(savedCa);
+			getLog().debug("Constructed dto for care actor: {}", savedCa.getId());
+			
+			return dto;
+			
 		} else {
 			
 			getLog().info("The user is a patient...");
@@ -80,7 +97,8 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 	private CareUnitEntity createCareUnit(final String hsaId, final String name) {
 		getLog().debug("Creating new care unit {} - {}", hsaId, name);
 		
-		CareUnitEntity cu = CareUnitEntity.newEntity(hsaId);
+		//TODO What should CountyCouncil be here?
+		CareUnitEntity cu = CareUnitEntity.newEntity(hsaId,null);
 		
 		if (name == null) {
 			cu.setName("Vårdenhetsnamn saknas");
@@ -96,9 +114,9 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 
 	@Override
 	public UserDetails verifyPrincipal(Object principal) {
-		if (principal instanceof CareGiverBaseViewImpl) {
+		if (principal instanceof CareActorBaseViewImpl) {
 			getLog().debug("Already authenticated as a care giver. Return principal object.");
-			return (CareGiverBaseView) principal;
+			return (CareActorBaseView) principal;
 		} else if (principal instanceof PatientBaseViewImpl) {
 			getLog().debug("Already authenticated as a patient. Return principal object.");
 			return (PatientBaseView) principal;
@@ -109,10 +127,10 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 
 	@Override
 	public UserDetails lookupPrincipal(AuthenticationResult auth) throws UsernameNotFoundException {
-		if (auth.isCareGiver()) {
+		if (auth.isCareActor()) {
 			getLog().debug("The authentication result indicates that the user is a care giver. Check for the user in care giver repository");
-			final CareGiverEntity cg = this.cgRepo.findByHsaId(auth.getUsername());
-			if (cg == null) {
+			final CareActorEntity ca = this.careActorRepo.findByHsaId(auth.getUsername());
+			if (ca == null) {
 				getLog().debug("Could not find any care giver matching {}", auth.getUsername());
 			} else {
 				
@@ -120,7 +138,7 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 				 * If the user logged in on a different care unit than last time, we
 				 * must handle this here
 				 */
-				if (!cg.getCareUnit().getHsaId().equals(auth.getCareUnitHsaId())) {
+				if (!ca.getCareUnit().getHsaId().equals(auth.getCareUnitHsaId())) {
 					
 					CareUnitEntity newCareUnit = this.cuRepo.findByHsaId(auth.getCareUnitHsaId());
 					if (newCareUnit == null) {
@@ -130,10 +148,10 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 						newCareUnit = this.createCareUnit(auth.getCareUnitHsaId(), auth.getCareUnitName());
 					}
 					
-					cg.setCareUnit(newCareUnit);
+					ca.setCareUnit(newCareUnit);
 				}
 				
-				return CareGiverBaseViewImpl.newFromEntity(cg);
+				return CareActorBaseViewImpl.newFromEntity(ca);
 			}
 			
 		} else {

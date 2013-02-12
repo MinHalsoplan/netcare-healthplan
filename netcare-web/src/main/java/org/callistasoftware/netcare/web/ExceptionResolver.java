@@ -43,6 +43,7 @@ public class ExceptionResolver extends SimpleMappingExceptionResolver {
 		log.info("Resolving exception. Deliver mail to support about the exception.");
 		final StringWriter sw = new StringWriter();
 		ex.printStackTrace(new PrintWriter(sw));
+		log.error("=== END OF ERROR ===");
 		
 		log.error("Internal error", ex);
 		this.emailService.sendSupportEmail(sw.toString());

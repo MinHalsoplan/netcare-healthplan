@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<configuration debug="true">
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/netcare-apns-service/logs/apns.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>apns.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_MESSAGE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/netcare-apns-service/logs/messages.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>messages.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+	</appender>
+	
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.security" level="WARN" />
+	<logger name="org.springframework.web" level="WARN" />
+	<logger name="org.springframework.http" level="WARN" />
+	
+	<logger name="org.callistasoftware.netcare" level="DEBUG" />
+
+	<logger name="MESSAGE" level="INFO">
+		<appender-ref ref="FILE_MESSAGE" />
+	</logger>
+	
+	<root level="DEBUG">
+		<!-- <appender-ref ref="STDOUT" />  -->
+		<appender-ref ref="FILE" />
+	</root>
+	
+</configuration>

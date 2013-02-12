@@ -16,7 +16,10 @@
  */
 package org.callistasoftware.netcare.core.api;
 
+import org.callistasoftware.netcare.core.api.impl.PatientImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonDeserialize(as=PatientImpl.class)
 public interface Patient extends PatientBaseView {
 
 	/**
@@ -24,13 +27,6 @@ public interface Patient extends PatientBaseView {
 	 * @return
 	 */
 	String getPhoneNumber();
-	
-	/**
-	 * Whether the user is signed up for mobile usage 
-	 * or not
-	 * @return
-	 */
-	boolean isMobile();
 	
 	/**
 	 * Get the email address of the user

@@ -16,13 +16,10 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.PatientEvent;
-import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
-import org.callistasoftware.netcare.core.api.impl.ActivityReportImpl;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,38 +49,6 @@ public class PatientApi extends ApiSupport {
 		final ServiceResult<HealthPlan[]> plans = planService.loadHealthPlansForPatient(patientId);
 		log.debug("Found # plans {} for patient {}", plans.getData().length, patientId);
 		return plans;
-	}
-	
-	@RequestMapping(value="/activities", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<ActivityDefinition[]> listActivities(final Authentication auth) {
-		logAccess("lista", "aktiviteter");
-		log.info("User {} list activities", auth);
-		ServiceResult<ActivityDefinition[]> sr = planService.getPlannedActivitiesForPatient((PatientBaseView)auth.getPrincipal());
-		log.debug("Found # activities {} for patient {}", sr.getData().length, auth);
-		return sr;
-	}
-	
-	@RequestMapping(value="/schema", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public ServiceResult<ScheduledActivity[]> getSchema(final Authentication auth) {
-		logAccess("lista", "schema");
-		PatientBaseView pv = (PatientBaseView)auth.getPrincipal();
-		ServiceResult<ScheduledActivity[]> activitiesForPatient = planService.getActivitiesForPatient(pv);
-		
-		for (final ScheduledActivity a : activitiesForPatient.getData()) {
-			log.debug("Returning {} reported {} due {}", new Object[] {a.getId(), a.getReported(), a.isDue()});
-		}
-		
-		return activitiesForPatient;
-	}
-	
-    @RequestMapping(value="/schema/{id}/accept", method=RequestMethod.POST, produces="application/json", consumes="application/json")
-	@ResponseBody
-	public ServiceResult<ScheduledActivity> report(@PathVariable(value="id") final Long id,
-			@RequestBody final ActivityReportImpl dto, final Authentication auth) {
-		logAccess("rapportera", "händelse");
-		return planService.reportReady(id, dto);
 	}
 	
 	@RequestMapping(value="/event", method=RequestMethod.GET, produces="application/json")

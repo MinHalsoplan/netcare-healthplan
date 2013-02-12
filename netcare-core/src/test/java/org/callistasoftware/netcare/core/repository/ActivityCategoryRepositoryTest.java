@@ -16,6 +16,9 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 
 import org.callistasoftware.netcare.core.support.TestSupport;
@@ -24,8 +27,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.Assert.*;
 
 public class ActivityCategoryRepositoryTest extends TestSupport {
 

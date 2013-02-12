@@ -21,9 +21,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
 <div id="historyOptions">
 	<input id="historyBoxId" type="checkbox" />
@@ -47,6 +47,11 @@
 				<input type="text" name="date" class="input-small" />&nbsp;-
 				<input type="text" name="time" class="input-mini" />				
 			</div>
+			
+			<!--  Space for measurement input -->
+			<table id="measurementTableId" class="table-condensed">
+				<tbody></tbody>
+			</table>
 
 			<div id="inputFields">
 				<!--  Space for measurement input -->
@@ -101,10 +106,9 @@
 				<input type="text" name="note" class="input-xlarge" />
 			</netcare:field>
 		<div class="modal-footer">
-			<input type="submit" name="save"
-				value="<spring:message code="report.save" />" class="btn btn-primary" />
+			<input type="submit" name="save" value="<spring:message code="report.save" />" class="btn btn-info" />
+			</form>
 		</div>
-	</form>
 	</div>
 </div>
 

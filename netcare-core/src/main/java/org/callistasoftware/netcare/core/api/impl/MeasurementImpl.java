@@ -17,38 +17,29 @@
 package org.callistasoftware.netcare.core.api.impl;
 
 import org.callistasoftware.netcare.core.api.Measurement;
-import org.callistasoftware.netcare.core.api.MeasurementDefinition;
+import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
 import org.callistasoftware.netcare.model.entity.MeasurementEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-public class MeasurementImpl implements Measurement {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MeasurementImpl extends ActivityItemValuesImpl implements Measurement {
 
-	private Long id;
-	private MeasurementDefinition measurementDefinition;
 	private float target;
 	private float maxTarget;
 	private float minTarget;
 	private float reportedValue;
-	
+
 	public static Measurement newFromEntity(MeasurementEntity entity) {
 		MeasurementImpl m = new MeasurementImpl();
-	
-		m.id = entity.getId();
-		m.measurementDefinition = MeasurementDefinitionImpl.newFromEntity(entity.getMeasurementDefinition());
+		m.setId(entity.getId());
+		m.setDefinition(MeasurementDefinitionImpl.newFromEntity((MeasurementDefinitionEntity) entity
+				.getActivityItemDefinitionEntity()));
+
 		m.target = entity.getTarget();
 		m.maxTarget = entity.getMaxTarget();
 		m.minTarget = entity.getMinTarget();
 		m.reportedValue = entity.getReportedValue();
-		
 		return m;
-	}
-	
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	public void setMeasurementDefinition(MeasurementDefinition measurementDefinition) {
-		this.measurementDefinition = measurementDefinition;
 	}
 
 	public void setTarget(float target) {
@@ -65,11 +56,6 @@ public class MeasurementImpl implements Measurement {
 
 	public void setReportedValue(float reportedValue) {
 		this.reportedValue = reportedValue;
-	}
-
-	@Override
-	public MeasurementDefinition getMeasurementDefinition() {
-		return measurementDefinition;
 	}
 
 	@Override

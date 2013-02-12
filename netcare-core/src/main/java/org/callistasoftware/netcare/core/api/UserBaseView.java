@@ -55,5 +55,5 @@ public interface UserBaseView extends UserDetails, Serializable {
 	 * Whether the user is a care giver or not
 	 * @return
 	 */
-	boolean isCareGiver();
+	boolean isCareActor();
 }

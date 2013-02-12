@@ -20,64 +20,34 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="netcare" tagdir="/WEB-INF/tags" %>
+
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
 
 <c:url value="/netcare/user/home" var="userHome" scope="page" />
 
-<script type="text/javascript">
-	$(function() {
-		var patientId = "<sec:authentication property='principal.id' />";
-		var crn = "<sec:authentication property="principal.civicRegistrationNumber" />";
-		
-		var format = new NC.Util().formatCnr(crn);
-		
-		$('#crn').html(format);
-		
-		var hps = new NC.HealthPlan();
-		hps.list(patientId, function(data) {
-			var util = new NC.Util();
-			$.each(data.data, function(i, v) {
-				
-				var li = $('<li>');
-				li.append(
-					util.createIcon('add', 16)
-				);
-				
-				var link = $('<a>').html(v.name);
-				link.click(function(e) {
-					window.location = NC.getContextPath() + '/netcare/user/healthplan/' + v.id + '/view';
-				});
-				
-				li.append(link);
-				
-				$('#menuHealthplans').append(li);
-			});
-			
-		}, false);
-	});
-</script>
-
-<div class="span3 menu">
-	<h3 class="menuHeader"><netcare:image name="auth" size="16"/><spring:message code="loggedInAs" /></h3>
-	<p>
-		<sec:authentication property="principal.name" /> | <a href="<spring:url value="/netcare/security/logout" htmlEscape="true"/>"><spring:message code="logout" /></a>
-	</p>
-	<p>
-		<strong><spring:message code="cnr" />:</strong> <span id="crn"></span>
-	</p>
-	
-	<ul class="menuList">
-		<li><netcare:image name="user" size="16" /><a href="<spring:url value="/netcare/user/profile" />"><spring:message code="phome.profile" /></a>
-	</ul>
-	
-	<h3 class="menuHeader"><spring:message code="patient.menu.healthplans" /></h3>
-	<ul class="menuList">
-		<li><netcare:image name="edit" size="16" /><a id="reportLink" href="<spring:url value="/netcare/user/report" />"><spring:message code="patient.menu.report" /></a></li>
-		<li><netcare:image name="result-overview" size="16" /><a id="resultLink" href="<spring:url value="/netcare/user/results" />"><spring:message code="patient.menu.results" /></a></li>
-	</ul>
-	
-	<h3 class="menuList"><spring:message code="patient.menu.addActivities" /></h3>
-	<ul id="menuHealthplans" class="menuList"></ul>
-</div>
-	
-</body>
+<ul id="permanent">
+	<li>
+		<a href="<spring:url value="/netcare/home" />">
+			<span class="icon start"></span>
+			<span class="iconLabel">Min hälsoplan</span>
+		</a>
+	</li>
+	<li>
+		<a class="profile" href="<spring:url value="/netcare/user/profile" />">
+			<span class="icon profile"></span>
+			<span class="iconLabel"><spring:message code="phome.profile" /></span>
+		</a>
+	</li>
+	<li>
+		<a href="<spring:url value="/netcare/user/report" />">
+			<span class="icon report"></span>
+			<span class="iconLabel"><spring:message code="patient.menu.report" /></span>
+		</a>
+	</li>
+	<li>
+		<a href="<spring:url value="/netcare/shared/select-results" />">
+			<span class="icon results"></span>
+			<span class="iconLabel"><spring:message code="patient.menu.results" /></span>
+		</a>
+	</li>
+</ul>

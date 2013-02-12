@@ -19,7 +19,7 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.util.Locale;
 
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
-import org.callistasoftware.netcare.core.api.CareGiverBaseView;
+import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.api.Option;
@@ -44,9 +44,9 @@ public class HealthPlanImpl implements HealthPlan {
 	private Option durationUnit;
 	
 	private CareUnit careUnit;
-	private CareGiverBaseView issuedBy;
+	private CareActorBaseView issuedBy;
 	private PatientBaseView patient;
-	private ActivityDefinition[] activityDefintions;
+	private ActivityDefinition[] activityDefinitions;
 
 	private boolean autoRenewal;
 	private int iteration;
@@ -64,17 +64,19 @@ public class HealthPlanImpl implements HealthPlan {
 		final CareUnit cu = CareUnitImpl.newFromEntity(entity.getCareUnit());
 		dto.setCareUnit(cu);
 		
-		final CareGiverBaseViewImpl cg = new CareGiverBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getFirstName(), entity.getIssuedBy().getSurName());
-		cg.setHsaId(entity.getIssuedBy().getHsaId());
+		final CareActorBaseViewImpl ca = new CareActorBaseViewImpl(entity.getIssuedBy().getId(), entity.getIssuedBy().getFirstName(), entity.getIssuedBy().getSurName());
+		ca.setHsaId(entity.getIssuedBy().getHsaId());
 		
-		dto.setIssuedBy(cg);
+		dto.setIssuedBy(ca);
 		dto.setPatient(PatientBaseViewImpl.newFromEntity(entity.getForPatient()));
 		dto.setIteration(entity.getIteration());
 		dto.setAutoRenewal(entity.isAutoRenewal());
 		dto.setActive(entity.isActive());
 		/*
 		 * Process defintions
-		 */		
+		 */
+		dto.setActivityDefinitions(ActivityDefinitionImpl.newFromEntities(entity.getActivityDefinitions()));
+		
 		
 		return dto;
 	}
@@ -116,12 +118,12 @@ public class HealthPlanImpl implements HealthPlan {
 	}
 
 	@Override
-	public CareGiverBaseView getIssuedBy() {
+	public CareActorBaseView getIssuedBy() {
 		return this.issuedBy;
 	}
 	
-	public void setIssuedBy(final CareGiverBaseView careGiver) {
-		this.issuedBy = careGiver;
+	public void setIssuedBy(final CareActorBaseView careActor) {
+		this.issuedBy = careActor;
 	}
 
 	@Override
@@ -143,8 +145,12 @@ public class HealthPlanImpl implements HealthPlan {
 	}
 
 	@Override
-	public ActivityDefinition[] getActivityDefintions() {
-		return this.activityDefintions;
+	public ActivityDefinition[] getActivityDefinitions() {
+		return this.activityDefinitions;
+	}
+	
+	public void setActivityDefinitions(final ActivityDefinition[] definitions) {
+		this.activityDefinitions = definitions;
 	}
 
 	@Override

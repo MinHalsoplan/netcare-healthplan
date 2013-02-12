@@ -109,19 +109,38 @@ public class SystemAlarmJob {
 		cal.add(Calendar.MINUTE, reminderTime);
 		
 		Date start = cal.getTime();
+		log.debug("Find all scheduled activity with scheduled time less than: {} and that is not already reported.");
 		
 		List<ScheduledActivityEntity> list = saRepo.findByScheduledTimeLessThanAndReportedTimeIsNull(start);
 		log.debug("Reminder: {} candidates found", list.size());
 		for (ScheduledActivityEntity sae : list) {
+			
+			/*
+			 * Don't send reminder unless the patient
+			 * wants it
+			 */
+			if (!sae.getActivityDefinitionEntity().isReminder() || !sae.getActivityDefinitionEntity().getHealthPlan().isActive()) {
+				continue;
+			}
+			
 			PatientEntity patient = sae.getActivityDefinitionEntity().getHealthPlan().getForPatient();
 			log.debug("Reminder: for patient {}, activity {}", patient.getFirstName(), sae.getActivityDefinitionEntity().getActivityType().getName());
-			if (!sae.isReminderDone() && patient.isMobile() && sae.getReportedTime() == null && patient.isPushEnbaled()) {
+			
+			log.debug("==== PUSH CHECKS ====");
+			log.debug("Already reminded: {}", sae.isReminderDone());
+			log.debug("Is activity already reported: {}", sae.getReportedTime() != null);
+			log.debug("Is patient push enabled: {}", patient.isPushEnbaled());
+			log.debug("=====================");
+			
+			if (!sae.isReminderDone() && sae.getReportedTime() == null && patient.isPushEnbaled()) {
 				Integer i = patients.get(patient);
 				log.debug("Reminder: for patient {} -- add to send list", patient.getFirstName());
 				patients.put(patient, (i == null) ? 1 : i.intValue()+1);
+				
+				sae.setReminderDone(true);
+				saRepo.save(sae);
 			}
-			sae.setReminderDone(true);
-			saRepo.save(sae);
+			
 		}
 		log.debug("Reminder: {} to send", patients.size());
 		for (Map.Entry<PatientEntity, Integer> p : patients.entrySet()) {
@@ -134,9 +153,11 @@ public class SystemAlarmJob {
 	
 	private void sendReminder(PatientEntity to, int n) {
 		final String title = messageBundle.getMessage("system.name", new Object[0], LocaleContextHolder.getLocale());
-		final String message = messageBundle.getMessage("system.push", new Object[]{new Integer(n)}, LocaleContextHolder.getLocale());
-		
-		this.notificationService.sendPushNotification(title, message, to.getId());
+		String message = messageBundle.getMessage("system.push.single", new Object[]{}, LocaleContextHolder.getLocale());
+		if(n>1) {
+			message = messageBundle.getMessage("system.push", new Object[]{new Integer(n)}, LocaleContextHolder.getLocale());
+		}
+		this.notificationService.sendPushNotification(title, message, to);
 	}
 	
 	private void activities(Date endDate) {
@@ -172,7 +193,7 @@ public class SystemAlarmJob {
 	
 	//
 	private void plans(Date endDate) {
-		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThan(endDate);
+		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalse(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
 			if (hpe.isAutoRenewal()) {

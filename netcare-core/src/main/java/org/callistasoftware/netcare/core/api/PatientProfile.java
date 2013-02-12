@@ -16,21 +16,13 @@
  */
 package org.callistasoftware.netcare.core.api;
 
-import java.io.Serializable;
+import org.callistasoftware.netcare.core.api.impl.PatientProfileImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
-public interface PatientProfile extends Serializable {
-
-	String getFirstname();
+@JsonDeserialize(as=PatientProfileImpl.class)
+public interface PatientProfile extends Patient {
 	
-	String getSurname();
-	
-	String getEmail();
-	
-	String getPhone();
-	
-	boolean isMobile();
-	
-	String getPassword();
+	String getPassword1();
 	
 	String getPassword2();
 }

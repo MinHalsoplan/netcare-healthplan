@@ -93,6 +93,14 @@ public class ApiUtil {
 		}
 	}
 	
+	public static Date parseDateTime(final String dateTime) {
+		try {
+			return dateTime == null ? null : dateTimeFormat.parse(dateTime);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Could not construct date from: " + dateTime);
+		}
+	}
+	
 	/**
 	 * Returns a date from a string date in the format yyyy-MM-dd
 	 * 

@@ -19,6 +19,9 @@ package org.callistasoftware.netcare.core.api;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 /**
  * Defines an activity definition how it is represented
  * in the UI.
@@ -26,6 +29,7 @@ import java.util.Date;
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
  *
  */
+@JsonDeserialize(as=ActivityDefinitionImpl.class)
 public interface ActivityDefinition extends Serializable {
 	/**
 	 * The id of this activity definition
@@ -36,7 +40,7 @@ public interface ActivityDefinition extends Serializable {
 	/**
 	 * The desired goal values of this definition
 	 */
-	MeasurementDefinition[] getGoalValues();
+	ActivityItemValuesDefinition[] getGoalValues();
 	
 	/**
 	 * The activity's type
@@ -98,20 +102,13 @@ public interface ActivityDefinition extends Serializable {
 	/**
 	 * Returns issued by.
 	 */
-	CareGiverBaseView getIssuedBy();
+	CareActorBaseView getIssuedBy();
 	
 	/**
-	 * True if the patient issued this definition
+	 * returns the health plans care unit
 	 * @return
 	 */
-	boolean isIssuedByPatient();
-	
-	/**
-	 * If this is definition is issued by a patient, he may set this flag
-	 * to allow/deny the care viewer to see this definition.
-	 * @return
-	 */
-	boolean isPublicDefinition();
+	CareUnit getHealthPlanCareUnit();
 	
 	/**
 	 * Returns number of times an activity should have been carried out.
@@ -128,9 +125,18 @@ public interface ActivityDefinition extends Serializable {
 	 */
 	int getNumDone();
 	
+	int getNumExtra();
+	
 	/**
 	 * Whether the activity is active or not
 	 * @return
 	 */
 	boolean isActive();
+	
+	/**
+	 * Whether a reminder for the definition is
+	 * enabled or not
+	 * @return
+	 */
+	boolean isReminder();
 }

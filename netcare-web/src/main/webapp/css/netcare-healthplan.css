@@ -1,0 +1,372 @@
+/**
+ * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+@CHARSET "UTF-8";
+
+/*
+ * MAIN MENU
+ */
+
+#leftMenu #permanent li .icon.profile {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: 0 0;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.report {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: 0 -330px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.extra-report {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: 0 -495px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.results {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: 0 -220px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.patients {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: 0 -110px;
+	width: 50px;
+	height: 50px;
+}
+
+#leftMenu #permanent li .icon.templates {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: 0 -165px;
+	width: 50px;
+	height: 50px;
+}
+
+/*
+1. 0px;
+2. -55px;
+3. -110px;
+4. -165px;
+5. -220px;
+6. -275px;
+7. -330px;
+8. -385px;
+9. -440px;
+10. -495px;
+11. -550px*/
+
+
+#leftMenu #permanent li.active .icon.profile,
+#leftMenu #permanent a:hover .icon.profile {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: -70px 0;
+}
+
+#leftMenu #permanent li.active .icon.report,
+#leftMenu #permanent a:hover .icon.report {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: -70px -330px;
+}
+
+#leftMenu #permanent li.active .icon.extra-report,
+#leftMenu #permanent a:hover .icon.extra-report {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: -70px -495px;
+}
+
+#leftMenu #permanent li.active .icon.results,
+#leftMenu #permanent a:hover .icon.results {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: -70px -220px;
+}
+
+#leftMenu #permanent li.active .icon.patients,
+#leftMenu #permanent a:hover .icon.patients {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: -70px -110px;
+}
+
+#leftMenu #permanent li.active .icon.templates,
+#leftMenu #permanent a:hover .icon.templates {
+	background-image: url('../img/icons/menu_icons_v2.png');
+	background-position: -70px -165px;
+}
+
+#workWith {
+	border: 1px solid #eee;
+	margin-bottom: 10px;
+	background-color: #FDF5D9;
+}
+
+/*** Choose bars ***/
+#activityTypeContainer h4 {
+	font-weight: normal;
+}
+
+#template > div {
+	border-top: 1px #cccccc dotted;
+	padding-left: 5px;
+	width: 94%;
+}
+
+#chooseSave h4 {
+	margin-bottom: 0;
+	padding-bottom: 20px;
+}
+
+#chooseName {
+	border-top: none;
+}
+
+#nextChooseNameWrapper,#nextchooseActivitiesWrapper {
+	padding-bottom: 10px;
+}
+
+#nextchooseActivitiesWrapper {
+	padding-top: 20px;
+}
+#chooseSaveWrapper {
+	
+}
+
+div[id*=hp-ad].row-fluid { 
+	border-bottom: 1px #cccccc dotted;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+div[id*=ra-row].row-fluid,
+div[id*=sa-row].row-fluid { 
+	border-bottom: 1px #cccccc dotted;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-left: 0;
+}
+
+div[id*=ra-details], div[id*=sa-details], div[id*=sa-details-] div.external { 
+	background-color: #FDF9D5 !important;
+}
+
+#actcomment {
+	margin-bottom: 15px;
+	margin-left: 5px;
+}
+
+ul.itemList {
+	list-style: none;
+	margin: 0 0 0 0;
+	margin-left: 0px;
+	padding: 0;
+}
+
+#addActivityButtons {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+/*** Move list item up, down, delete it or add one ***/
+.listItemBody .listItemMoveUp {
+	background-image: url(../css/images/listNavigationUpBgBlue.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: 158px;
+	top: 0px;
+	display: block;
+	height: 100%;
+	width: 40px;
+}
+
+.listItemBody .listItemMoveDown {
+	background-image: url(../css/images/listNavigationDownBgBlue.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: 120px;
+	top: 0px;
+	display: block;
+	height: 100%;
+	width: 40px;
+}
+
+.listItemBody .listItemDelete {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -105px 0px;
+	background-repeat: no-repeat;
+	position: absolute;
+	right: 90px;
+	top: 16px;
+	display: block;
+	height: 50px;
+	width: 30px;
+}
+
+#addListItemWrapper .addListItem {
+	background-image: url(../css/images/togglerClosed.png);
+	background-repeat: no-repeat;
+	display: inline;
+	padding-left: 25px;
+	padding-top: 3px;
+	padding-bottom: 4px;
+	padding-right: 15px;
+}
+
+#addListItemWrapper .addListItem:hover {
+	background-image: url(../css/images/togglerClosedBlue.png);
+	text-decoration: none;
+}
+
+table[id*=planned-times] {
+	table-layout: fixed;
+}
+
+table[id*=planned-times] thead tr th {
+	width: 14%;
+}
+
+table[id*=planned-times] thead tr th,
+table[id*=planned-times] tbody tr td {
+	font-size: small;
+}
+
+.actionBody .mvk-icon {
+	background-position: center center;
+	background-repeat: no-repeat;
+	margin-top: 10px;
+	margin-bottom: -10px;
+	height: 50px;
+	width: 30px;
+	display: inline-block;
+	
+}
+
+.mvk-icon.copy {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -250px 0px;
+}
+
+.mvk-icon.delete {
+	background-image: url(../css/images/toolbarIconsBlue.png);
+	background-position: -105px 0px;
+}
+
+.mvk-icon.toggle {
+	background-image: url('../css/images/togglerClosed.png');
+}
+
+.mvk-icon.toggle:hover {
+	background-image: url('../css/images/togglerClosedBlue.png');
+}
+
+.mvk-icon.toggle-open {
+	background-image: url('../css/images/togglerOpen.png');
+}
+
+.likeReported {
+	background-image: url(../img/icons/little-like.png);
+	background-repeat: no-repeat;
+	background-position: 10px 0px;
+	text-indent: 30px;
+	margin-top: 5px;
+}
+
+.markReported {
+	background-image: url(../img/icons/little-read.png);
+	background-repeat: no-repeat;
+	text-indent: 20px;
+	margin-top: 5px;
+}
+
+.commentReported {
+	padding-left: 15px;
+	border-bottom: 1px #CCC dotted;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 0;	
+}
+
+/*
+ * INPUT TEXT
+ */
+input[type="text"] {
+	margin: none;
+	display: inline;
+}
+
+input[type="number"], input[type="password"], select {
+	padding:8px 10px;
+	background-color:#ededed;
+	border:1px solid #e0dfdd;
+	margin:10px 0 20px;
+	display:block;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.help-block {
+	font-size: 0.75em;
+}
+
+div.subRow table {
+	font-size: 0.75em;
+}
+
+div.item-with-form {
+	font-size: 0.75em;
+}
+
+div[id*="sa-row-"] > div.span5,
+div.row-fluid.external > div.span5 {
+	margin-top: 20px;
+}
+
+div[id*="sa-row-"] > div.span5 > span,
+div.row-fluid.external > div.span5 > span {
+	margin-left: 15px;
+}
+
+div[id*="ra-row-"] > div.span5 > span {
+	margin-left: 15px;
+}
+
+.reportdiagram {
+	padding-bottom: 40px;
+}
+
+.scheduledDetails {
+	background-color: yellow;
+}
+
+.popover {width: 300px;}
+
+.field-error {
+	background-color: #eacdce;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.sa-details {}
+.spectime {}

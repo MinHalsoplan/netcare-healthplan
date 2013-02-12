@@ -19,13 +19,29 @@
 
 
 #import "MainViewController.h"
+
+#import "QuartzCore/QuartzCore.h"
 #import "Util.h"
 
 @implementation MainViewController
 
 @synthesize personNumberTextEdit;
-@synthesize pinCodeTextEdit;
 @synthesize nextPageButton;
+@synthesize loginButton;
+@synthesize shadowedLabel;
+
+@synthesize orderrefToken;
+
+- (IBAction)authenticate:(id)sender {
+    NSLog(@"autenthicate() called");
+    [loginButton setEnabled:NO];
+    NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
+    [self savePersonalNumber];
+    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:[personNumberTextEdit text] andDelegate:self];
+    [bankIdService authenticate];
+    
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -44,10 +60,6 @@
 - (NSString*)retrievePersonalNumber {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *s = [prefs stringForKey:@"personalNumber"];
-    if (s != nil) 
-    {
-        [pinCodeTextEdit becomeFirstResponder];
-    }
     return (s == nil) ? @"" : s;
 }
 
@@ -57,8 +69,11 @@
 {
     [super viewDidLoad];
     
+    shadowedLabel.layer.cornerRadius=10;
+    
     [nextPageButton setHidden:YES];
     [personNumberTextEdit setText:[self retrievePersonalNumber]];
+    
 }
 
 - (void)viewDidUnload
@@ -86,99 +101,63 @@
 	[super viewDidDisappear:animated];
 }
 
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    //return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return NO;
 }
 
 
-#pragma mark - Basic Auth Stuff
+#pragma mark - Push notifications stuff
 
-//
-- (NSString*)baseURLString
+- (void)handlePushNotifications
 {
-    NSString *urlString = [Util infoValueForKey:@"NCProtocol"];
-    urlString = [urlString stringByAppendingString:@"://"];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCHost"]];
+    // Clear Badge
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
-    int port = [[Util infoValueForKey:@"NCPort"] intValue];
-    if (port > 0) 
-    {
-        urlString = [urlString stringByAppendingString:[NSString stringWithFormat:@":%d",port]];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    if ([prefs boolForKey:@"nc_use_notifications"]) {
+//        if ([prefs boolForKey:@"isDeviceTokenUpdated"])
+//        {
+            NSString* token = [prefs stringForKey:@"deviceToken"];
+            // Start registration
+            NSURL *url = [self pushRegistrationURL];
+            HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
+            [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
+//        }
+    } else {
+        NSURL *url = [self pushRegistrationURL];
+        HTTPPushConnection *conn = [[HTTPPushConnection alloc] init:url withDelegate:self];
+        [conn synchronizedDelete];
     }
-    NSLog(@"BaseURL --> %@\n", urlString);
-    return urlString;
 }
-
-//
-- (NSURL*)checkCredentialURL 
-{
-    
-    NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCCheckCredentialsPage"]];    
-    NSLog(@"Authenticate: Check Auth URL --> %@\n", urlString);
-    return [NSURL URLWithString:urlString];     
-}
-
-//
-- (NSURL*)logoutURL
-{
-    NSString *urlString = [self  baseURLString];
-    urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCLogoutPage"]]; 
-    NSLog(@"Logout:  URL --> %@\n", urlString);
-    return [NSURL URLWithString:urlString];         
-}
-
-//
 - (NSURL*)pushRegistrationURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util  baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCPushRegistrationPage"]]; 
     NSLog(@"Push Registration:  URL --> %@\n", urlString);
     return [NSURL URLWithString:urlString];         
 }
 
-- (void)showAuthError:(int)responseCode
-{
-    NSString *msg = [NSString stringWithFormat:(responseCode == -1012) ? @"Felaktig personlig kod, eller så saknas inställningar för denna tjänst (%d)" : @"Tekniskt fel, försök igen lite senare (%d)", responseCode];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Åtkomst nekad"
-                                                    message:msg 
-                                                   delegate:self
-                                          cancelButtonTitle:@"Ok" 
-                                          otherButtonTitles:nil];
-    
-    [alert show];
-    
+
+// Authentication finished
+
+// From HTTPCompleteDelegate:
+- (void)authenticationCompleted:(NSString *)token {
+    [self switchToWebView:token];
 }
 
-// starts a request
-- (void)startAuthentication
-{
-    HTTPAuthentication *auth = [[HTTPAuthentication alloc] init:[self checkCredentialURL] withDelegate:self withUser:[personNumberTextEdit text] withPassword:[pinCodeTextEdit text]];
-  
-    [auth get];
-}
-
-- (void)authReady:(NSInteger)code
-{
-    if (code == 200)
-    {
-        [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
-    }
-    else
-    {
-        [self showAuthError:code];
-    }
-}
-
-
-//
-- (IBAction)login:(id)sender {
-    NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
-    [self savePersonalNumber];
-    [self startAuthentication];
+- (void)switchToWebView:(NSString*)ref {
+    NSLog(@"MainViewController.switchToWebView %@", ref);
+    [self performSegueWithIdentifier:@"webView" sender:nextPageButton];
+    [self setOrderrefToken:ref];
 }
 
 // hide keyboard
@@ -190,40 +169,11 @@
 - (IBAction)backgroundTouched:(id)sender {
     if ([personNumberTextEdit isFirstResponder])
         [personNumberTextEdit resignFirstResponder];
-    if ([pinCodeTextEdit isFirstResponder]) 
-        [pinCodeTextEdit resignFirstResponder];
-}
-
-// clean up stuff
-// to prepare for a new session
-- (void)cleanSession
-{
-    [HTTPAuthentication cleanSession];
-    NSURL *url = [self logoutURL];
-    HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:nil];
-    [conn get];
-    // reset pinCode
-    [pinCodeTextEdit setText:@""];
-}
-
-- (void)pushKeeping
-{
-    // Clear Badge
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    if ([prefs boolForKey:@"isDeviceTokenUpdated"])
-    {
-        NSString* token = [prefs stringForKey:@"deviceToken"];
-        // Start registration
-        NSURL *url = [self pushRegistrationURL];
-        HTTPConnection *conn = [[HTTPConnection alloc] init:url withDelegate:self];
-        [conn synchronizedPost:[NSString stringWithFormat:@"apnsRegistrationId=%@", token]];
-    }
 }
 
 #pragma mark - URLHandler
 
+// From HTTPPushConnectionDelegate:
 - (void)connReady:(NSInteger)code
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -240,27 +190,25 @@
 // back to logon screen
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller
 {
-    [self dismissModalViewControllerAnimated:YES];
-    [self cleanSession];
-    
+    [self dismissViewControllerAnimated:YES completion:nil];    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"%@\n", [segue identifier]);
+    NSLog(@"MainViewController.prepareForSegue: %@\n", [segue identifier]);
     
     if ([[segue identifier] isEqualToString:@"webView"]) {
         [[segue destinationViewController] setDelegate:self];
-        [self pushKeeping];
+        [self handlePushNotifications];
     }
 }
 
+// Other stuff
 - (NSURL*)startURL
 {
-    NSString *urlString = [self  baseURLString];
+    NSString *urlString = [Util baseURLString];
     urlString = [urlString stringByAppendingString:[Util infoValueForKey:@"NCStartPage"]];
-    NSLog(@"Start URL --> %@\n", urlString);
-    
+    NSLog(@"MainViewController.startURL --> %@\n", urlString);
     return [[NSURL alloc] initWithString:urlString];
 }
 

@@ -40,13 +40,44 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
+			"hp.archived = 'false' and " +
 			"ad.removedFlag = 'false' and " +
-			"e.scheduledTime between :start and :end and e.status != 1")
+			"e.scheduledTime between :start and :end " +
+			"order by e.scheduledTime asc")
 	List<ScheduledActivityEntity> findByPatientAndScheduledTimeBetween(
 			@Param("patient") final PatientEntity patient,
 			@Param("start") final Date start,
 			@Param("end") final Date end);
+	
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp " +
+			"where hp.forPatient = :patient and ad.removedFlag = 'false' " +
+			"and (e.scheduledTime < :expires and e.reportedTime is null and e.status = 0) " +
+			"order by e.scheduledTime asc")
+	List<ScheduledActivityEntity> findDueExpiresAt(@Param("patient") final PatientEntity patient
+			, @Param("expires") final Date expires);
 		
+	/**
+	 * Get a list of all reported activities for a specific patient within a time interval.
+	 * 
+	 * @param hsaId
+	 * @param patient
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp inner join " +
+			"hp.careUnit as c where c.hsaId = :careUnit " +
+			"and hp.forPatient = :patient " +
+			"and hp.archived = 'false' " +
+			"and ad.removedFlag = 'false' " +
+			"and e.reportedTime is not null and e.status != 1 and (e.reportedTime between :start and :end)")
+	List<ScheduledActivityEntity> findByCareUnitPatientBetween(@Param("careUnit") final String careUnit,
+			@Param("patient") PatientEntity patient, @Param("start") final Date start, @Param("end") final Date end);
+
 	/**
 	 * Used to display activity reports for a care giver within a time interval.
 	 * 
@@ -57,6 +88,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp inner join " +
 			"hp.careUnit as c where c.hsaId = :careUnit " +
+			"and hp.archived = 'false' " +
 			"and ad.removedFlag = 'false' " +
 			"and e.reportedTime is not null and e.status != 1 and (e.reportedTime between :start and :end)")
 	List<ScheduledActivityEntity> findByCareUnitBetween(@Param("careUnit") final String careUnit
@@ -73,6 +105,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp inner join " +
 			"hp.careUnit as c where c.hsaId = :careUnit " +
+			"and hp.archived = 'false' " +
 			"and ad.removedFlag = 'false' " +
 			"and e.reportedTime is not null and e.status != 1")
 	List<ScheduledActivityEntity> findByCareUnit(@Param("careUnit") final String careUnit);
@@ -113,4 +146,12 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 			"ad.removedFlag = 'false' and " +
 			"hp.id = :healthPlanId")
 	List<ScheduledActivityEntity> findScheduledActivitiesForHealthPlan(@Param("healthPlanId") final Long healthPlanId);
+	
+	@Query("select e from ScheduledActivityEntity as e inner join " +
+			"e.activityDefinition as ad inner join " +
+			"ad.healthPlan as hp where " +
+			"ad.removedFlag = 'false' and hp.archived = 'false' " +
+			"and ad.id = :definitionId and e.extra = 'false' order by e.scheduledTime desc limit 1")
+	List<ScheduledActivityEntity> findLatestScheduledActivityForActivity(@Param("definitionId") final Long definitionId);
+
 }
