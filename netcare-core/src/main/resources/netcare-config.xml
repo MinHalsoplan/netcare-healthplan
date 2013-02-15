@@ -61,10 +61,10 @@
   	<beans profile="mobile-qa">
 	    <context:property-placeholder location="
 	        classpath*:/bankid.properties" 
-	        ignore-unresolvable="true" order="0"/>
+	        ignore-resource-not-found="false" ignore-unresolvable="true" order="0"/>
 	    <context:property-placeholder location="
 	        file://${user.home}/netcare-healthplan-prod/bankid.properties" 
-	        ignore-unresolvable="true" order="-1"/>
+	        ignore-resource-not-found="true"  ignore-unresolvable="true" order="-1"/>
 	    
 	    <import resource="classpath*:/bankid-config.xml"/>
 	</beans>
