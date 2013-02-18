@@ -49,7 +49,7 @@
 	<logger name="org.callistasoftware.netcare.core.job" level="DEBUG" />
 	
 	<root level="DEBUG">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</root>
 	
 </configuration>
