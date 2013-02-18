@@ -53,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Received push registration message. Registration id is: " + registrationId);
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient();
+			final RestTemplate rest = NetcareApp.getRestClient(context);
 			
 			final HttpHeaders headers = new HttpHeaders();
 			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));
@@ -84,7 +84,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onUnregistered(Context context, String regId) {
 		Log.d(TAG, "Push unregistration!!!");
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient();
+			final RestTemplate rest = NetcareApp.getRestClient(context);
 			
 			final HttpHeaders headers = new HttpHeaders();
 			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));

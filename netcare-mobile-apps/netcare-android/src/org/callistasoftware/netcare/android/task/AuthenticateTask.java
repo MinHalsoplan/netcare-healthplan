@@ -8,7 +8,6 @@ import org.callistasoftware.netcare.android.R;
 import org.callistasoftware.netcare.android.ServiceCallback;
 import org.callistasoftware.netcare.android.ServiceResult;
 import org.callistasoftware.netcare.android.ServiceResultImpl;
-import org.callistasoftware.netcare.android.R.string;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.LinkedMultiValueMap;
@@ -45,7 +44,7 @@ public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<St
 		data.add("crn", params[0]);
 		
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient();
+			final RestTemplate rest = NetcareApp.getRestClient(ctx);
 			rest.setErrorHandler(new ResponseErrorHandler() {
 				
 				@Override

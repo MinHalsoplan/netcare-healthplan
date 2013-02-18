@@ -35,6 +35,8 @@ public class ApplicationUtil {
 		}
 		
 		builder.append(host).append(":").append(port);
+		
+		Log.d(TAG, "Url now resolved to: " + builder.toString());
 		return builder.toString();
 	}
 	

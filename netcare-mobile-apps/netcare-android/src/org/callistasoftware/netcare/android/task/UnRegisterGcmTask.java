@@ -36,7 +36,7 @@ public class UnRegisterGcmTask extends AsyncTask<String, String, ServiceResult<S
 	@Override
 	protected ServiceResult<String> doInBackground(String... params) {
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient();
+			final RestTemplate rest = NetcareApp.getRestClient(ctx);
 			
 			final HttpHeaders headers = new HttpHeaders();
 			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));
