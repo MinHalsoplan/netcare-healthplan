@@ -6,26 +6,20 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-
-import com.google.android.gcm.GCMRegistrar;
+import android.webkit.WebViewClient;
 
 public class WebViewActivity extends Activity {
 
 	private final static String TAG = WebViewActivity.class.getSimpleName();
 	
 	private ProgressDialog p;
-	
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// TODO Auto-generated method stub
-		//super.onConfigurationChanged(newConfig);
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +34,14 @@ public class WebViewActivity extends Activity {
 		wv.clearFormData();
 		wv.clearHistory();
 		wv.clearCache(true);
+		
+		wv.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onReceivedSslError(WebView view,
+					SslErrorHandler handler, SslError error) {
+				handler.proceed();
+			}
+		});
 		
 		wv.setWebChromeClient(new WebChromeClient() {
 			@Override
@@ -60,7 +62,6 @@ public class WebViewActivity extends Activity {
 		
 		final Map<String, String> headers = new HashMap<String, String>();
 		headers.put("X-netcare-order", NetcareApp.getCurrentSession());
-		
 		wv.loadUrl(url, headers);
 	}
 	

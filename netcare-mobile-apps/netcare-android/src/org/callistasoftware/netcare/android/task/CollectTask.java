@@ -3,11 +3,11 @@ package org.callistasoftware.netcare.android.task;
 import java.util.Map;
 
 import org.callistasoftware.netcare.android.ApplicationUtil;
+import org.callistasoftware.netcare.android.NetcareApp;
 import org.callistasoftware.netcare.android.R;
 import org.callistasoftware.netcare.android.ServiceCallback;
 import org.callistasoftware.netcare.android.ServiceResult;
 import org.callistasoftware.netcare.android.ServiceResultImpl;
-import org.callistasoftware.netcare.android.R.string;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -39,7 +39,7 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<String>
 		params.add("X-netcare-order", args[0]);
 		
 		try {
-			final RestTemplate rest = new RestTemplate(true);
+			final RestTemplate rest = NetcareApp.getRestClient(ctx);
 			final org.springframework.http.HttpEntity<Map<String, String>> ent = new org.springframework.http.HttpEntity<Map<String,String>>(params);
 			
 			
