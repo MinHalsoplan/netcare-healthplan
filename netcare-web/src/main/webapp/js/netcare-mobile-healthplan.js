@@ -107,17 +107,26 @@ var NC_MOBILE = {
 				window.location.href='start';
 			});
 
-			$('#actual').on('tap', function(e) {
+			$('#actual').on('tap click', function(e) {
+				$('#actual').addClass('ui-btn-active');
+				$('#due').removeClass('ui-btn-active');
+				$('#reported').removeClass('ui-btn-active');
 				my.buildFromArray(my, actual, function() {
 					console.log('complete');
 				});
 			});
 
 			$('#due').on('tap', function(e) {
+				$('#actual').removeClass('ui-btn-active');
+				$('#due').addClass('ui-btn-active');
+				$('#reported').removeClass('ui-btn-active');
 				my.buildFromArray(my, due);
 			});
 
 			$('#reported').on('tap', function(e) {
+				$('#actual').removeClass('ui-btn-active');
+				$('#due').removeClass('ui-btn-active');
+				$('#reported').addClass('ui-btn-active');
 				my.buildFromArray(my, reported);
 			});
 
@@ -128,25 +137,29 @@ var NC_MOBILE = {
 
 			$('#schema').empty();
 			
-			if(listOfActivities[0].reported != null) {
-				listOfActivities.sort(function(a1,a2) {
-					a1 = new Date(a1.actDate);
-					a2 = new Date(a2.actDate);
-					return (a1 < a2 ? -1 : a1>a2 ? 1 : 0);
-				});
-			}
-
-			$.each(listOfActivities, function(index, activity) {
+			if(listOfActivities.length > 0) {
 				
-				var date = activity.reported != null ? activity.actDate : activity.date;
-				
-				if (currentDay != date) {
-					currentDay = date;
-					my.buildListView(my, activity, true);
-				} else {
-					my.buildListView(my, activity, false);
+				if(listOfActivities[0].reported != null) {
+					listOfActivities.sort(function(a1,a2) {
+						a1 = new Date(a1.actDate);
+						a2 = new Date(a2.actDate);
+						return (a1 < a2 ? -1 : a1>a2 ? 1 : 0);
+					});
 				}
-			});
+	
+				$.each(listOfActivities, function(index, activity) {
+					
+					var date = activity.reported != null ? activity.actDate : activity.date;
+					
+					if (currentDay != date) {
+						currentDay = date;
+						my.buildListView(my, activity, true);
+					} else {
+						my.buildListView(my, activity, false);
+					}
+				});
+
+			}
 			if(typeof onComplete !== 'undefined') {
 				onComplete();
 			}
@@ -287,6 +300,9 @@ var NC_MOBILE = {
 							templateName = 'measurementSingleItemTemplate';					
 						}
 					} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
+						if(item.perceivedSense === null) {
+							item.perceivedSense = item.definition.activityItemType.minScaleValue;
+						}
 						templateName = 'estimationItemTemplate';					
 					} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
 						templateName = 'yesnoItemTemplate';					
@@ -351,17 +367,20 @@ var NC_MOBILE = {
 							if (data.success) {
 								my.load(my, function() {
 									console.log('load-after-post');
-									$('#actual').tap();
+									$('#actual').click();
+									$.mobile.changePage($("#start"), "slide");
 								});
 								var msg = $('<div>').addClass('ui-bar ui-bar-e pageMessage').append($('<h3>' + activity.activityDefinition.type.name + ' rapporterades</h3>'));
 								$('#schema').before(msg);
 								$.mobile.loading('hide');
-								setTimeout(function() {msg.slideUp('slow');}, 5000);
+								setTimeout(function() {msg.slideUp('fast');}, 3000);
 							}
 						});
 					});
 				}
-				
+				$('#goBack').on('tap', function(e) {
+					$('#sendReport').unbind('tap');
+				});
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
 				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
 				

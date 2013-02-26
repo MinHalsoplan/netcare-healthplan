@@ -67,7 +67,7 @@
 	</div>
 	<div data-role="page" id="report" data-external-page="true" data-add-back-btn="true">
 		<div id="report-header" data-role="header" data-theme="c" data-position="fixed">
-			<a href="#" data-rel="back" data-icon="arrow-l">Tillbaka</a>
+			<a href="#" data-rel="back" id="goBack" data-icon="arrow-l">Tillbaka</a>
 			<h1></h1>
 			<a href="#" data-rel="back" id="sendReport"><spring:message code="mobile.report.title" /></a>
 		</div>
