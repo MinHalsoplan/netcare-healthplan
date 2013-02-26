@@ -61,7 +61,7 @@ public class MvkPreAuthenticationCallback extends ServiceSupport implements PreA
 			
 			getLog().debug("The user is a care actor...");
 			
-			final String careUnit = preAuthenticated.getCareUnitHsaId();
+			final String careUnit = preAuthenticated.getCareUnitHsaId().toLowerCase();
 			CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit);
 			if (cu == null) {
 				getLog().debug("Could not find care unit {}, create it.", careUnit);

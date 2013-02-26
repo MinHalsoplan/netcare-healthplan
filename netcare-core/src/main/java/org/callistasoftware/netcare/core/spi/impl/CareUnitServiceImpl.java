@@ -62,10 +62,10 @@ public class CareUnitServiceImpl extends ServiceSupport implements CareUnitServi
 		CareUnitEntity cu = repo.findOne(careUnit.getId());
 		if (cu == null) {
 			isNew = true;
-			cu = CareUnitEntity.newEntity(careUnit.getHsaId(), cce);
+			cu = CareUnitEntity.newEntity(careUnit.getHsaId().toLowerCase().trim(), cce);
 		}
 		
-		cu.setHsaId(careUnit.getHsaId());
+		cu.setHsaId(careUnit.getHsaId().toLowerCase().trim());
 		cu.setName(careUnit.getName());
 		cu.setCountyCouncil(cce);
 		
