@@ -67,7 +67,8 @@ public class ActivityTypeImpl implements ActivityType {
 		final ActivityItemType[] values = new ActivityItemTypeImpl[entity.getActivityItemTypes().size()];
 		for (int i = 0; i < values.length; i++) {
 			ActivityItemTypeEntity activityItemTypeEntity = entity.getActivityItemTypes().get(i);
-			values[i] = ActivityItemTypeImpl.newFromEntity(activityItemTypeEntity);
+			int seqno = activityItemTypeEntity.getSeqno();
+			values[seqno] = ActivityItemTypeImpl.newFromEntity(activityItemTypeEntity);
 		}
 
 		dto.activityItems = values;

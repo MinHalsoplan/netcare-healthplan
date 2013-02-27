@@ -264,7 +264,6 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	@Override
 	public ServiceResult<ActivityType> updateActivityType(ActivityTypeImpl dto) {
 		Long id = dto.getId();
-		System.out.println("update of activity with id " + id);
 		ActivityTypeEntity repoItem = this.repo.findOne(id);
 		if (repoItem == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityTypeEntity.class, id));
@@ -301,23 +300,25 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 	}
 
 	protected void updateItemsInType(ActivityTypeEntity repoItem, ActivityItemType[] dtoItems) {
-		for (ActivityItemType dtoItem : dtoItems) {
-			updateOrCreateItem(repoItem, dtoItem);
+		ActivityItemType dtoItem = null;
+		for(int i=0;i<dtoItems.length;i++) {
+			dtoItem = dtoItems[i];
+			updateOrCreateItem(repoItem, dtoItem, i);
 		}
 	}
 
-	protected void updateOrCreateItem(ActivityTypeEntity repoItem, ActivityItemType dtoItem) {
+	protected void updateOrCreateItem(ActivityTypeEntity repoItem, ActivityItemType dtoItem, int newSeqNo) {
 		if (dtoItem.getId() >= 0) {
-			updateItemWithDtoValues(findEntityItem(dtoItem.getId(), repoItem.getActivityItemTypes()), dtoItem);
+			updateItemWithDtoValues(findEntityItem(dtoItem.getId(), repoItem.getActivityItemTypes()), dtoItem, newSeqNo);
 		} else {
 			createNewItemEntity(dtoItem, repoItem);
 		}
 	}
 
-	protected void updateItemWithDtoValues(ActivityItemTypeEntity itemEntity, ActivityItemType dtoItem) {
+	protected void updateItemWithDtoValues(ActivityItemTypeEntity itemEntity, ActivityItemType dtoItem, int newSeqNo) {
 		
 		itemEntity.setName(dtoItem.getName());
-		itemEntity.setSeqno(dtoItem.getSeqno());
+		itemEntity.setSeqno(newSeqNo);
 		if (itemEntity instanceof MeasurementTypeEntity) {
 			final MeasureUnitEntity mue = this.resolveMeasureUnit(dtoItem.getUnit().getId(), false);
 			MeasurementTypeEntity entity = (MeasurementTypeEntity) itemEntity;
