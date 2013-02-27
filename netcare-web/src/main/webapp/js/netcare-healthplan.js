@@ -2533,6 +2533,7 @@ var NC_MODULE = {
 						max : actItem.definition.activityItemType.maxScaleValue,
 						value : initial
 					});
+					$('#sa-row-slider-' + actItem.id).draggable();
 				}
 				
 				/*
@@ -2635,6 +2636,7 @@ var NC_MODULE = {
 						inputs.val(ui.value);
 						inputs.change();
 					});
+					$('#sa-row-slider-' + actItem.id).draggable();
 				}
 				
 			} else if (inputs.length == 2) {
