@@ -52,8 +52,11 @@
     NSString *protocol;
     NSString *server;
     int port;
-    
-    if ([prefs boolForKey:@"nc_use_secure_connection"]) {
+    BOOL secure = YES;
+    if([prefs objectForKey:@"nc_use_secure_connection"] != nil) {
+        secure = [prefs boolForKey:@"nc_use_secure_connection"];
+    }
+    if (secure) {
         protocol = @"https";
     } else {
         protocol = @"http";
