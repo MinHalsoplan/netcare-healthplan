@@ -2553,6 +2553,7 @@ var NC_MODULE = {
 				// FIX FOR YES NO INITIAL VALUE CHECKED
 				if (actItem.valueType == "yesno") {
 					if(actItem.answer == null) {
+						actItem.answer = false;
 						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
 					} else if (actItem.answer == true) {
 						$('#sa-row-' + actItem.id).find('input[value="true"]').prop('checked', true);

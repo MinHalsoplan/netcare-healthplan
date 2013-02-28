@@ -356,7 +356,8 @@ var NC_MOBILE = {
 							} else if(item.definition.activityItemType.activityItemTypeName == 'estimation') {
 								activityDataItem.perceivedSense = $('#slider' + item.id).val();
 							} else if(item.definition.activityItemType.activityItemTypeName == 'yesno') {
-								activityDataItem.answer = $('#slider' + item.id).val();
+								var yesno = $('[name="radio' + item.id + '"]').val();
+								activityDataItem.answer = yesno !== undefined && yesno==='on';
 							} else if(item.definition.activityItemType.activityItemTypeName == 'text') {
 								activityDataItem.textComment = $('#text' + item.id).val();
 							}
