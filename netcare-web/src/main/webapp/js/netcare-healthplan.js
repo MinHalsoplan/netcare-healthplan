@@ -3008,13 +3008,12 @@ var NC_MODULE = {
 		my.createSchemaTable = function(my) {
 			NC.GLOBAL.showLoader('#my-schedule', 'Laddar ditt schema...');
 			my.load(function(data) {
+                NC.GLOBAL.suspendLoader('#my-schedule');
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						my.createSchemaRow(my, v);
 					});
 				}
-				
-				NC.GLOBAL.suspendLoader('#my-schedule');
 			});
 		};
 		
