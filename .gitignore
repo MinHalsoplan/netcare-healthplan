@@ -17,3 +17,6 @@ doc
 **/xcuserdata/**
 UserInterfaceState.xcuserstate
 Breakpoints.xcbkptlist
+
+*.iml
+.idea
