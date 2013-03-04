@@ -112,7 +112,7 @@ public class ReportingValuesImpl implements ReportingValues {
 	}
 
 	public void addMeasurementItem(MeasurementEntity itemValue) {
-		long date = itemValue.getScheduledActivity().getActualTime().getTime();
+		long date = itemValue.getScheduledActivity().getScheduledTime().getTime();
 		Long schedId = itemValue.getScheduledActivity().getId();
 
 		Object[] triple = { date, itemValue.getReportedValue(), schedId };
