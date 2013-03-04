@@ -38,17 +38,7 @@ import org.callistasoftware.netcare.core.repository.ActivityItemValuesEntityRepo
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.ScheduleService;
-import org.callistasoftware.netcare.model.entity.ActivityItemValuesEntity;
-import org.callistasoftware.netcare.model.entity.AlarmCause;
-import org.callistasoftware.netcare.model.entity.AlarmEntity;
-import org.callistasoftware.netcare.model.entity.EstimationEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementDefinitionEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementValueType;
-import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
-import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
-import org.callistasoftware.netcare.model.entity.TextEntity;
-import org.callistasoftware.netcare.model.entity.YesNoEntity;
+import org.callistasoftware.netcare.model.entity.*;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -202,8 +192,23 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 				
 				final Estimation e = (Estimation) value;
 				final EstimationEntity ee = (EstimationEntity) valueEntity;
-				
-				ee.setPerceivedSense(e.getPerceivedSense());
+
+                if (e.getPerceivedSense() == null && valueEntity.getActivityItemDefinitionEntity().isActive()) {
+                    throw new IllegalArgumentException("Perceived sense must not be null");
+                }
+
+                if (e.getPerceivedSense() == null) {
+
+                    /*
+                     * Just put an average sense value here if perceived sense is null and
+                     * and the item is excluded
+                     */
+                    final EstimationTypeEntity ed = (EstimationTypeEntity) ee.getActivityItemDefinitionEntity().getActivityItemType();
+                    final int val = (int) (ed.getSenseValueHigh() + ed.getSenseValueLow()) / 2;
+                    ee.setPerceivedSense(val);
+                } else {
+                    ee.setPerceivedSense(e.getPerceivedSense());
+                }
 				
 			} else if (valueEntity instanceof YesNoEntity) {
 				

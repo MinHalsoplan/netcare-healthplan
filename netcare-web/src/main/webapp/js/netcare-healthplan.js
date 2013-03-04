@@ -2524,7 +2524,7 @@ var NC_MODULE = {
 					if (actItem.perceivedSense) {
 						initial = actItem.perceivedSense;
 					} else {
-						initial = Math.floor((actItem.definition.activityItemType.maxScaleValue - actItem.definition.activityItemType.minScaleValue) / 2); 
+						initial = Math.floor((actItem.definition.activityItemType.maxScaleValue + actItem.definition.activityItemType.minScaleValue) / 2);
 					}
 					
 					$('#sa-row-slider-' + actItem.id).slider({
@@ -2633,6 +2633,16 @@ var NC_MODULE = {
 				});
 				
 				if (type === "estimation") {
+
+                    // Default slider in case the user doesn't touch
+                    // the slider
+                    if (actItem.perceivedSense == null) {
+                        var initialVal = Math.floor((actItem.definition.activityItemType.maxScaleValue + actItem.definition.activityItemType.minScaleValue) / 2);
+                        inputs.val(initialVal);
+                    } else {
+                        inputs.val(actItem.perceivedSense);
+                    }
+
 					$('#sa-row-slider-' + actItem.id).on('slide', function(e, ui) {
 						inputs.val(ui.value);
 						inputs.change();
@@ -3361,7 +3371,7 @@ var NC_MODULE = {
 						var divId = 'report' + report.id;
 						var header = _.template($('#reportHead').html())(report);
 						if(report.type!=null) {
-							if(report.type=='measurement' || report.type=="estimation") {
+							if(report.type=='measurement' || report.type=='estimation') {
 							 my.renderDiagram(my, report);
 							} else if(report.type=='yesno') {
 								my.renderYesNo(my, report, divId);

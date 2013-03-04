@@ -149,7 +149,8 @@
       <profile>
           <id>qa</id>
           <properties>
-          	<system.mode>qa</system.mode>
+          	  <system.mode>test</system.mode>
+              <database.mode>db-psql</database.mode>
           </properties>
       </profile>
       <profile>
@@ -160,14 +161,10 @@
           </properties>
       </profile>
       <profile>
-          <id>db-embedded</id>
-          <properties>
-              <database.mode>db-embedded</database.mode>
-          </properties>
-      </profile>
-      <profile>
           <id>db-psql</id>
           <properties>
+              <system.mode>test</system.mode>
+              <mobile.mode>bankid</mobile.mode>
               <database.mode>db-psql</database.mode>
           </properties>
       </profile>
