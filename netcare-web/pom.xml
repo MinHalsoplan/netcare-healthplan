@@ -127,6 +127,10 @@
   			            <name>spring.profiles.active</name>
   			            <value>${system.mode},${mobile.mode},${database.mode}</value>
   			        </systemProperty>
+                    <systemProperty>
+                        <name>logback.configurationFile</name>
+                        <value>src/main/resources/logback-dev.xml</value>
+                    </systemProperty>
   			    </systemProperties>
   			</configuration>
   		</plugin>
