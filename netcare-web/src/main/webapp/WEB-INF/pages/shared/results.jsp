@@ -29,7 +29,7 @@
 
 <hp:view>
 	<hp:viewHeader>
-		<script src="<c:url value="/js/highstock-1.2.4/highstock.js" />" type="text/javascript"></script>
+		<script src="<c:url value="/js/highstock-1.2.5/highstock.js" />" type="text/javascript"></script>
 		
 		<hp:templates />
 		<script type="text/javascript">
