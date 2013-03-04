@@ -210,7 +210,7 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 				final YesNo yn = (YesNo) value;
 				final YesNoEntity yne = (YesNoEntity) valueEntity;
 				
-				if(yn.getAnswer()==null && yn.getDefinition().isActive()) {
+				if(yn.getAnswer()==null && valueEntity.getActivityItemDefinitionEntity().isActive()) {
 					throw new IllegalArgumentException("Answer to yes/no question cannot be null");
 				}
 

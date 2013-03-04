@@ -3337,7 +3337,13 @@ var NC_MODULE = {
 						thousandsSep: ' '
 					}
 				});
+
 				for(var i = 0; i < activity.goalValues.length; i++) {
+                    var included = activity.goalValues[i].active;
+                    if (!included) {
+                        continue;
+                    }
+
 					var id = activity.goalValues[i].id;
 					var divId = 'report' + id;
 					var popoverDiv = $('<div>').attr('id', divId+'Popover');
@@ -3348,7 +3354,7 @@ var NC_MODULE = {
 					
 					var detailsDiv = $('<div>').attr('id', 'details' + id).addClass('scheduledDetails');
 					$('#activities').append(detailsDiv);
-					
+
 					new NC.Ajax().get('/healthplans/activity/item/' + id + '/statistics', function(data) {
 						NC.log(data.data);
 						var report = data.data;
