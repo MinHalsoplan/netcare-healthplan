@@ -621,13 +621,13 @@ var NC_MODULE = {
 			_data = {
 				duration : data.duration,
 				durationUnit : {
-					code : data.durationUnit.code,
+					code : data.durationUnit.code
 				},
 				patient : {
 					id : data.patient.id
 				}
 			};
-		}
+		};
 		
 		my.save = function(my) {
 			NC.log('Saving health plan. Data is: ' + _data);
@@ -3435,7 +3435,7 @@ var NC_MODULE = {
 		         yAxis: {
 		            title: {
 		               text: report.unit
-		            },
+		            }
 		         },
 		         series: reportSeries
 		      });
@@ -3485,7 +3485,7 @@ var NC_MODULE = {
 				}
 			}
 			return result;
-		}
+		};
 		
 		my.renderYesNo = function(my, report, divId) {
 			var dom = _.template($('#yesNoReportRow').html())(report);
