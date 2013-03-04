@@ -210,10 +210,20 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 				final YesNo yn = (YesNo) value;
 				final YesNoEntity yne = (YesNoEntity) valueEntity;
 				
-				if(yn.getAnswer()==null) {
+				if(yn.getAnswer()==null && yn.getDefinition().isActive()) {
 					throw new IllegalArgumentException("Answer to yes/no question cannot be null");
 				}
-				yne.setAnswer(yn.getAnswer());
+
+                if (yn.getAnswer() == null) {
+                    /*
+                     * This case doesn't really matter at the moment. Since the yes/no item has been
+                     * excluded we can safely set this to false in order to not pollute the database
+                     * with invalid null values.
+                     */
+                    yne.setAnswer(false);
+                } else {
+                    yne.setAnswer(yn.getAnswer());
+                }
 				
 			} else if (valueEntity instanceof TextEntity) {
 				
