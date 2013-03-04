@@ -52,6 +52,9 @@ public class PushServiceImpl implements PushService {
 					if (theErrorResponse != null) {
 						log.warn("Apple error", theErrorResponse.getMessage());
 					}
+					
+					throw new RuntimeException("Could not send notification with token " + pushMessage.getDeviceToken());
+					
 				}
 			}
 

@@ -27,6 +27,7 @@ public interface ActivityItemValuesEntityRepository extends JpaRepository<Activi
 
 	@Query("select values from ActivityItemValuesEntity as values "
 			+ "where values.scheduledActivity.reportedTime is not null "
+            + "and values.scheduledActivity.status = 0 "
 			+ "and activityItemDefinitionEntity.id = :itemId "
 			+ "order by values.scheduledActivity.actualTime")
 	List<ActivityItemValuesEntity> findValuesByActivityItemId(@Param("itemId") final Long itemId);

@@ -272,12 +272,12 @@ public final class WebUtil {
 		
 		
 		final ActivityTypeEntity t1 = ActivityTypeEntity.newEntity("Löpning", cat, jkpg_cu_1, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, meter, false, 1);
+		MeasurementTypeEntity.newEntity(t1, "Distans", MeasurementValueType.SINGLE_VALUE, meter, false, 0);
 		MeasurementTypeEntity me = MeasurementTypeEntity.newEntity(t1, "Vikt", MeasurementValueType.INTERVAL,
-				kilogram, true, 2);
-		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 3);
-		TextTypeEntity.newEntity(t1, "Kommentar", "Kommentar", 4);
-		YesNoTypeEntity.newEntity(t1, "Utrustning", "Pulsmätare på?", 5);
+				kilogram, true, 1);
+		EstimationTypeEntity.newEntity(t1, "Känsla", "Lätt", "Tufft", 1, 5, 2);
+		TextTypeEntity.newEntity(t1, "Kommentar", "Kommentar", 3);
+		YesNoTypeEntity.newEntity(t1, "Utrustning", "Pulsmätare på?", 4);
 		atRepo.saveAndFlush(t1);
 
 
@@ -285,8 +285,8 @@ public final class WebUtil {
 				AccessLevel.NATIONAL);
 
 		MeasurementTypeEntity
-				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 1);
-		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5, 2);
+				.newEntity(t2, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 0);
+		EstimationTypeEntity.newEntity(t2, "Känsla", "Lätt", "Tufft", 1, 5, 1);
 
 		atRepo.saveAndFlush(t2);
 
@@ -295,8 +295,8 @@ public final class WebUtil {
 		 */
 		final ActivityTypeEntity t3 = ActivityTypeEntity.newEntity("Blodtryck (enkelt)", cat3, jkpg_cu_2,
 				AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, pressure, true, 1);
-		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, pressure, true, 2);
+		MeasurementTypeEntity.newEntity(t3, "Övertryck", MeasurementValueType.INTERVAL, pressure, true, 0);
+		MeasurementTypeEntity.newEntity(t3, "Undertryck", MeasurementValueType.INTERVAL, pressure, true, 1);
 
 		atRepo.saveAndFlush(t3);
 		
@@ -304,7 +304,7 @@ public final class WebUtil {
 		 * Norsjö Rehab Center
 		 */
 		final ActivityTypeEntity t4 = ActivityTypeEntity.newEntity("Yoga", cat, vbott_cu_2, AccessLevel.COUNTY_COUNCIL);
-		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 1);
+		MeasurementTypeEntity.newEntity(t4, "Varaktighet", MeasurementValueType.SINGLE_VALUE, minute, false, 0);
 
 		atRepo.saveAndFlush(t4);
 

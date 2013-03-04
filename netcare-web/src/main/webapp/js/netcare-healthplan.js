@@ -2533,6 +2533,7 @@ var NC_MODULE = {
 						max : actItem.definition.activityItemType.maxScaleValue,
 						value : initial
 					});
+					$('#sa-row-slider-' + actItem.id).draggable();
 				}
 				
 				/*
@@ -2552,6 +2553,7 @@ var NC_MODULE = {
 				// FIX FOR YES NO INITIAL VALUE CHECKED
 				if (actItem.valueType == "yesno") {
 					if(actItem.answer == null) {
+						actItem.answer = false;
 						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
 					} else if (actItem.answer == true) {
 						$('#sa-row-' + actItem.id).find('input[value="true"]').prop('checked', true);
@@ -2635,6 +2637,7 @@ var NC_MODULE = {
 						inputs.val(ui.value);
 						inputs.change();
 					});
+					$('#sa-row-slider-' + actItem.id).draggable();
 				}
 				
 			} else if (inputs.length == 2) {
@@ -3005,13 +3008,12 @@ var NC_MODULE = {
 		my.createSchemaTable = function(my) {
 			NC.GLOBAL.showLoader('#my-schedule', 'Laddar ditt schema...');
 			my.load(function(data) {
+                NC.GLOBAL.suspendLoader('#my-schedule');
 				if (data.data.length > 0) {
 					$.each(data.data, function(i, v) {
 						my.createSchemaRow(my, v);
 					});
 				}
-				
-				NC.GLOBAL.suspendLoader('#my-schedule');
 			});
 		};
 		

@@ -41,7 +41,7 @@ public class ActivityItemTypeEntity implements Comparable<ActivityItemTypeEntity
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "name", length = 32, nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@Column(name = "seqno")
