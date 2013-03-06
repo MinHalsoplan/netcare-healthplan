@@ -46,7 +46,7 @@
 	</hp:viewHeader>
 	<c:url value="/netcare/admin/healthplans" var="backToUrl" />
 	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Hälsoplaner">
-	
+
 		<div id="plan">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
@@ -71,21 +71,25 @@
 				</fieldset>
 				
 				<fieldset id="scheduleFieldset">
+                    <form id="startdateRepeatForm">
 					<netcare:row>
 						<netcare:col span="5">
 							<spring:message code="startDate" var="start" scope="page" />
 							<netcare:field containerId="startDateContainer" name="startDate" label="${start}">
 								<netcare:dateInput id="startDate" name="startDate" />
+                                <label id="startDateMsg" class="control-label"></label>
 							</netcare:field>
 						</netcare:col>
 						<netcare:col span="7">
 							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
-							<netcare:field name="activityRepeat" label="${repeat}">
+							<netcare:field containerId="activityRepeatContainer" name="activityRepeat" label="${repeat}">
 								<input name="activityRepeat" type="number" value="1"/>
-								<span class="help help-inline"><spring:message code="week" /></span>
+                                <label id="activityRepeatMsg" class="control-label"></label>
+								<label class="help help-inline"><spring:message code="week" /></label>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>
+                    </form>
 				</fieldset>
 				
 				

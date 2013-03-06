@@ -695,7 +695,7 @@ var NC_MODULE = {
 					my.renderGoals(that);
 					my.renderAllTimes(that);
 					my.renderForm(that);
-					
+
 					NC.GLOBAL.suspendLoader('#plan');
 					$('#planContainer').show();
 				});
@@ -722,7 +722,7 @@ var NC_MODULE = {
 				});
 			}
 		};
-		
+
 		my.renderForm = function(my) {
 			$('input[name="startDate"]').val(_data.startDate);
 			$('input[name="activityRepeat"]').val(_data.activityRepeat);
@@ -760,13 +760,29 @@ var NC_MODULE = {
 			})
 			
 			$('input[name="startDate"]').on('blur keyup change', function() {
-				_data.startDate = $(this).val();
-				NC.log('Setting start date to: ' + _data.startDate);
+                var value = $(this).val();
+                if (NC.GLOBAL.isValidISODate(value)) {
+                    $("#startDateContainer").removeClass('field-error');
+                    $("#startDateMsg").empty();
+                    _data.startDate = value;
+                    NC.log('Setting start date to: ' + _data.startDate);
+                } else {
+                    $("#startDateContainer").addClass('field-error');
+                    $("#startDateMsg").text("Måste vara ett datum från idag och framåt enligt följande exempel: 2013-03-06");
+                }
 			});
 			
 			$('input[name="activityRepeat"]').on('blur change keyup', function() {
-				_data.activityRepeat = $(this).val();
-				NC.log('Setting duration to: ' + _data.activityRepeat);
+                var value = $(this).val();
+                if(!isNaN(parseFloat(value)) && isFinite(value) && value >=0) {
+                    $("#activityRepeatContainer").removeClass('field-error');
+                    $("#activityRepeatMsg").empty();
+                    _data.activityRepeat = value;
+                    NC.log('Setting duration to: ' + _data.activityRepeat);
+                } else {
+                    $("#activityRepeatContainer").addClass('field-error');
+                    $("#activityRepeatMsg").text("Måste vara ett tal större eller lika med 0");
+                }
 			});
 		};
 		
