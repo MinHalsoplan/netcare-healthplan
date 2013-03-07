@@ -674,6 +674,7 @@ var NC_MODULE = {
 					
 					_data.id = data.data.id;
 					_data.healthPlanId = params.healthPlanId;
+                    _data.healthPlanStartDate = data.data.healthPlanStartDate;
 					_data.goalValues = data.data.goalValues;
 					
 					$.each(data.data.dayTimes, function(i,v) {
@@ -700,17 +701,21 @@ var NC_MODULE = {
 					$('#planContainer').show();
 				});
 			} else {
+                new NC.Ajax().get('/healthplans/' + params.healthPlanId, function(data) {
+                    _data.healthPlanId = params.healthPlanId;
+                    _data.healthPlanStartDate = data.data.startDate;
+                });
+
 				NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
 					
 					_isNew = true;
 					
 					_templateData = data.data;
 					
-					_data.healthPlanId = params.healthPlanId;
 					_data.type = new Object();
 					_data.type.id = _templateData.id;
 					_data.activityRepeat = 1;
-					
+
 					my.initListeners(that);
 					
 					my.renderGoals(that);
@@ -724,7 +729,7 @@ var NC_MODULE = {
 		};
 
 		my.renderForm = function(my) {
-			$('input[name="startDate"]').val(_data.startDate);
+            $('input[name="startDate"]').val(_data.startDate);
 			$('input[name="activityRepeat"]').val(_data.activityRepeat);
 		};
 		
@@ -775,7 +780,10 @@ var NC_MODULE = {
 			
 			$('input[name="startDate"]').on('blur keyup change', function() {
                 var value = $(this).val();
-                if (NC.GLOBAL.isValidISODate(value)) {
+                var dateValue = NC.GLOBAL.getDateFromISOString(value);
+                var hpStartDate = NC.GLOBAL.getDateFromISOString(_data.healthPlanStartDate);
+                if (NC.GLOBAL.isValidISODate(value) &&
+                    (NC.GLOBAL.isSameDay(dateValue, hpStartDate) || dateValue > hpStartDate)) {
                     $("#startDateContainer").removeClass('field-error');
                     $("#startDateMsg").empty();
                     _data.startDate = value;

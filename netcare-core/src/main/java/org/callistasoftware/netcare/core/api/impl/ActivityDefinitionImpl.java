@@ -95,6 +95,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
 		dto.setHealthPlanId(entity.getHealthPlan().getId());
+        dto.setHealthPlanStartDate(entity.getHealthPlan().getStartDate());
 		dto.setActive(!entity.isRemovedFlag());
 		dto.setReminder(entity.isReminder());
 		dto.setHealthPlanCareUnit(CareUnitImpl.newFromEntity(entity.getHealthPlan().getCareUnit()));
@@ -333,6 +334,10 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	public boolean isReminder() {
 		return reminder;
 	}
+
+    public void setHealthPlanStartDate(Date healthPlanStartDate) {
+        this.healthPlanStartDate = healthPlanStartDate;
+    }
 	
 	public void setReminder(boolean reminder) {
 		this.reminder = reminder;
@@ -342,4 +347,6 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	public int getNumExtra() {
 		return numExtra;
 	}
+
+
 }
