@@ -733,10 +733,24 @@ var NC_MODULE = {
 				e.preventDefault();
 				my.save(my);
 			});
-			
+
+            var specifyTime = $('#specifyTime');
+
+            specifyTime.on('focus', function() {
+                specifyTime.data('data-original-value', specifyTime.val());
+                specifyTime.val('');
+            });
+            specifyTime.on('blur', function() {
+                var text = specifyTime.val();
+                var originalText = specifyTime.data('data-original-value');
+                if(text.length===0 && originalText.length>0) {
+                    specifyTime.val(originalText);
+                }
+            });
+
 			$('#addTimesForm').submit(function(e) {
 				e.preventDefault();
-				
+
 				if ($('#addTimesForm input:checkbox:checked').length == 0) {
 					NC.log('No days specified');
 				} else {
