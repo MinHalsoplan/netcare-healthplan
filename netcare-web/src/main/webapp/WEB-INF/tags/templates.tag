@@ -620,7 +620,7 @@
 <script id="scheduled-textValues" type="text/template">
 <div id="sa-row-{{=id}}" class="row-fluid">
 <div class="span5"><span>{{=definition.activityItemType.label}}</span></div>
-<div class="span7"><input type="text" value="{{=textComment}}" /></div>
+<div class="span7"><textarea class="span11">{{=textComment}}</textarea></div>
 </div>
 </script>
 

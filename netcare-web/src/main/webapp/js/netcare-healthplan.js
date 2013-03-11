@@ -2607,7 +2607,7 @@ var NC_MODULE = {
 				 */
 				if (activity.reportingPossible == false) {
 					$('#sa-details-' + activity.id).find('input').prop('disabled', true);
-					$('#sa-details-' + activity.id).find('textarea').prop('disabled', true);
+					$('#sa-details-' + activity.id).find('textarea').prop('readonly', true);
 					$('#sa-row-slider-' + actItem.id).slider( "disable" );
 				}
 				
@@ -2674,11 +2674,23 @@ var NC_MODULE = {
 			} else {
 				throw new Error('Unsupported value type: ' + type);
 			}
-			
-			
-			if (inputs.length == 1) {
-				
-				inputs.bind('change blur keyup', function() {
+
+
+            if (inputs.length == 0) {
+                // We probably have a text area
+                var textarea = $('#sa-row-' + id).find('textarea');
+                if(textarea.length != 0) {
+                    textarea.bind('blur', function() {
+                        var value = $(this).val();
+                        _data[activityIndex].activityItemValues[itemIndex][reportedField] = value;
+                        NC.log('Setting value to: ' + value);
+                    });
+                } else {
+                    throw new Error('Expected a text area.');
+                }
+            } else if (inputs.length == 1) {
+
+                    inputs.bind('change blur keyup', function() {
 					var value = $(this).val();
 					if($(this).hasClass('decimalNumber')) {
 						if(NC.GLOBAL.isDecimalNumber(value)) {
