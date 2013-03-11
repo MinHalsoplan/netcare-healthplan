@@ -3580,7 +3580,11 @@ var NC_MODULE = {
 				} else if(item.valueType=='yesno') {
 					result += label + (item.answer?'Ja':'Nej') + '<br/>'; 
 				} else if(item.valueType=='text') {
-					result += label + item.textComment + '<br/>'; 
+                    if(item.textComment != undefined && item.textComment != null) {
+                        result += label + item.textComment + '<br/>';
+                    } else {
+                        result += label + ' <br/>';
+                    }
 				}
 			}
 			return result;
