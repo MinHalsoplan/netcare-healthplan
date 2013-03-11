@@ -3422,7 +3422,13 @@ var NC_MODULE = {
 						shortMonths : ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
 						weekdays: ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'],
 						thousandsSep: ' '
-					}
+					},
+                    global: {
+                        useUTC: false
+                    },
+                    credits: {
+                        enabled: false
+                    }
 				});
 
 				for(var i = 0; i < activity.goalValues.length; i++) {
