@@ -291,7 +291,8 @@
 	&nbsp;<spring:message code="measureValue.alarm.text" />
 </div>
 <div class="form-actions" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">Spara</button>
+    <button id="backButtonForm" class="btn btn-info"><spring:message code="template.save" /></button>
+    <button id="cancelButtonForm" class="btn btn-info"><spring:message code="template.cancel" /></button>
 </div>
 </script>
 
@@ -328,7 +329,8 @@
 	<input type="text" class="span6" name="maxScaleText" id="maxScaleText" value="{{=maxScaleText}}"></input>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">Spara</button>
+	<button id="backButtonForm" class="btn btn-info"><spring:message code="template.save" /></button>
+    <button id="cancelButtonForm" class="btn btn-info"><spring:message code="template.cancel" /></button>
 </div>
 </div>
 </script>
@@ -353,7 +355,8 @@
 	<textarea id="yesNoQuestion" rows="2" class="span6">{{=question}}</textarea>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">Spara</button>
+	<button id="backButtonForm" class="btn btn-info"><spring:message code="template.save" /></button>
+    <button id="cancelButtonForm" class="btn btn-info"><spring:message code="template.cancel" /></button>
 </div>
 </div>
 </script>
@@ -378,7 +381,8 @@
 	<textarea id="textLabel" rows="2" class="span6">{{=label}}</textarea>
 </div>
 <div class="span12" style="padding-top:20px;">
-	<button id="backButtonForm" class="btn btn-info">Spara</button>
+	<button id="backButtonForm" class="btn btn-info"><spring:message code="template.save" /></button>
+    <button id="cancelButtonForm" class="btn btn-info"><spring:message code="template.cancel" /></button>
 </div>
 </div>
 </script>

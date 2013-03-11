@@ -1449,47 +1449,48 @@ var NC_MODULE = {
 				activityTemplate.activityItems.push(item);
 				renderItems(my, activityTemplate);
 				$('#item' + item.id + 'showDetails').click();
-			}
+			};
 			
-			$('#activitySaveButton')
-			.on(
-					'click',
-					function() {
-						NC.log('Save button clicked');
-						
-						activityTemplate.name = $('#activityTypeName').val();
-						if(my.validate(activityTemplate.name)) {
-							NC.log('validated');
-							
-							activityTemplate.accessLevel = new Object();
-							activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
-							
-							activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
-							
-							for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
-								delete activityTemplate.activityItems[i].details;
-							}
-							if (activityTemplate.id == -1) {
-								new NC.Ajax().post('/templates/', activityTemplate, function(data) {
-									activityTemplate = data.data;
-									renderItems(my, activityTemplate);
-									NC.log(activityTemplate);
-									
-									window.location = NC.getContextPath() + '/netcare/admin/templates';
-								}, true);
-							} else {
-								new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
-											activityTemplate = data.data;
-											renderItems(my,
-													activityTemplate);
-											NC.log(activityTemplate);
-											
-											window.location = NC.getContextPath() + '/netcare/admin/templates';
-											
-										}, true);
-							}
-						}
-					});
+			$('#activitySaveButton').on('click', function() {
+                NC.log('Save button clicked');
+
+                activityTemplate.name = $('#activityTypeName').val();
+                if(my.validate(activityTemplate.name)) {
+                    NC.log('validated');
+
+                    activityTemplate.accessLevel = new Object();
+                    activityTemplate.accessLevel.code = $('input[name="accessLevel"]:radio:checked').val();
+
+                    activityTemplate.category.id = $('#activityTypeCategory > option:selected').val();
+
+                    for ( var i = 0; i < activityTemplate.activityItems.length; i++) {
+                        delete activityTemplate.activityItems[i].details;
+                        delete activityTemplate.activityItems[i].isDirty;
+                    }
+                    if (activityTemplate.id == -1) {
+                        new NC.Ajax().post('/templates/', activityTemplate, function(data) {
+                            activityTemplate = data.data;
+                            renderItems(my, activityTemplate);
+                            NC.log(activityTemplate);
+
+                            window.location = NC.getContextPath() + '/netcare/admin/templates';
+                        }, true);
+                    } else {
+                        new NC.Ajax().post('/templates/' + params.templateId, activityTemplate, function(data) {
+                                    activityTemplate = data.data;
+                                    renderItems(my,
+                                            activityTemplate);
+                                    NC.log(activityTemplate);
+
+                                    window.location = NC.getContextPath() + '/netcare/admin/templates';
+
+                                }, true);
+                    }
+                }
+			});
+            $('#activityCancelButton').on('click', function() {
+                window.location.href = '/netcare/admin/templates';
+            });
 		};
 		
 		my.validate = function(name) {
@@ -1670,7 +1671,14 @@ var NC_MODULE = {
 		};
 
 		var renderItems = function(my, activityTemplate) {
-			var aLevel = activityTemplate.accessLevel.code;
+
+            // Did we press cancel on a new item? Remove it!
+            var lastItem = activityTemplate.activityItems[activityTemplate.activityItems.length-1];
+            if(lastItem.removeme != undefined) {
+                activityTemplate.activityItems.splice(activityTemplate.activityItems.length-1,1);
+            }
+
+            var aLevel = activityTemplate.accessLevel.code;
 			
 			if (!canModify(my, aLevel)) {
 				$('#activitySaveButton').prop('disabled', true);
@@ -1765,22 +1773,33 @@ var NC_MODULE = {
 			$('#activityItemFormContainer').show('slide', {
 				direction : 'left'
 			}, 500);
-			$('#backButtonForm').on(
-					'click',
-					function() {
-						if (validateFormAndUpdateModel(
-								collectAndValidateFunction, item)) {
-							$('#activityItemFormContainer').hide('slide', {
-								direction : 'left'
-							}, 400);
-							$('#activityTypeContainer').show('slide', {
-								direction : 'left'
-							}, 400);
-							renderItems(my, activityTemplate);
-							NC.log('scrooll');
-							window.scrollTo(0,520);
-						}
-					});
+            $('#backButtonForm').on('click', function() {
+                if (validateFormAndUpdateModel(
+                    collectAndValidateFunction, item)) {
+                    item.isDirty = true;
+                    $('#activityItemFormContainer').hide('slide', {
+                        direction : 'left'
+                    }, 400);
+                    $('#activityTypeContainer').show('slide', {
+                        direction : 'left'
+                    }, 400);
+                    renderItems(my, activityTemplate);
+                    window.scrollTo(0,520);
+                }
+            });
+            $('#cancelButtonForm').on('click', function() {
+                if(item.id<0 && (item.isDirty == undefined || !item.isDirty)) {
+                    item.removeme = true;
+                }
+                $('#activityItemFormContainer').hide('slide', {
+                    direction : 'left'
+                }, 400);
+                $('#activityTypeContainer').show('slide', {
+                    direction : 'left'
+                }, 400);
+                renderItems(my, activityTemplate);
+                window.scrollTo(0,520);
+            });
 
 		}
 		

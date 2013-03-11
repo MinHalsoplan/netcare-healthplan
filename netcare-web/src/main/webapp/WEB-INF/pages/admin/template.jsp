@@ -50,7 +50,7 @@
 		</script>
 	</hp:viewHeader>
 	<c:url value="/netcare/admin/templates" var="backToUrl" />
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Aktivitetsmallar">
+	<hp:viewBody title="Ny aktivitetsmall">
 			<div id="activityTypeContainer">
 			
 				<h3 id="templateTitle"></h3>
@@ -97,7 +97,8 @@
 					<div id="chooseSave">
 						<h4><spring:message code="template.step3.title" /></h4>
 						<div id="chooseSaveWrapper" style="background-color: white; padding: 3px;">
-							<button id="activitySaveButton" class="btn btn-info" type="button"><spring:message code="template.save" /></button>
+                            <button id="activitySaveButton" class="btn btn-info" type="button"><spring:message code="template.save" /></button>
+                            <button id="activityCancelButton" class="btn" type="button"><spring:message code="template.cancel" /></button>
 						</div>
 					</div>
 					</form>
