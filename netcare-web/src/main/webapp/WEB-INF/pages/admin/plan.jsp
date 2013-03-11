@@ -54,7 +54,10 @@
 			</div>
 			<div id="planContainer" style="display: none;">
 				<h2>Schemaläggning</h2>
-				<fieldset id="activityFieldset" style="display: none;">
+                <div>Hälsoplan: <span id="healthplanTitle"></span></div>
+                <div style="margin-bottom: 25px;">Aktivitetsmall: <span id="templateTitle"></span></div>
+
+                <fieldset id="activityFieldset" style="display: none;">
 					<legend><h3><spring:message code="activity.form.goals" /></h3></legend>
 				</fieldset>
 				

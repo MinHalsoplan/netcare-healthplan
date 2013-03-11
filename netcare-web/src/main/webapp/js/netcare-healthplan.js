@@ -674,6 +674,7 @@ var NC_MODULE = {
 					
 					_data.id = data.data.id;
 					_data.healthPlanId = params.healthPlanId;
+                    _data.healthPlanName = data.data.healthPlanName;
                     _data.healthPlanStartDate = data.data.healthPlanStartDate;
 					_data.goalValues = data.data.goalValues;
 					
@@ -697,13 +698,18 @@ var NC_MODULE = {
 					my.renderAllTimes(that);
 					my.renderForm(that);
 
-					NC.GLOBAL.suspendLoader('#plan');
+                    $('#healthplanTitle').text(_data.healthPlanName);
+                    $('#templateTitle').text(_templateData.name);
+
+                    NC.GLOBAL.suspendLoader('#plan');
 					$('#planContainer').show();
 				});
 			} else {
                 new NC.Ajax().get('/healthplans/' + params.healthPlanId, function(data) {
                     _data.healthPlanId = params.healthPlanId;
+                    _data.healthPlanName = data.data.name;
                     _data.healthPlanStartDate = data.data.startDate;
+                    $('#healthplanTitle').text(_data.healthPlanName);
                 });
 
 				NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
@@ -717,7 +723,9 @@ var NC_MODULE = {
 					_data.activityRepeat = 1;
 
 					my.initListeners(that);
-					
+
+                    $('#templateTitle').text(_templateData.name);
+
 					my.renderGoals(that);
 					
 					NC.GLOBAL.suspendLoader('#plan');
@@ -809,7 +817,7 @@ var NC_MODULE = {
 		};
 		
 		my.renderGoals = function(my) {
-			NC.log('Render goals');
+            NC.log('Render goals');
 			for (var i = 0; i < _templateData.activityItems.length; i++) {
 				
 				var v = _templateData.activityItems[i];
