@@ -2571,7 +2571,8 @@ var NC_MODULE = {
 			
 				var type = actItem.definition.activityItemType.activityItemTypeName;
 				if(type==='measurement') {
-					if(actItem.definition.target && actItem.definition.target!=='') {
+					if(actItem.definition.activityItemType.valueType.code
+                        && actItem.definition.activityItemType.valueType.code==='SINGLE_VALUE') {
 						type += 'Single';
 					} else {
 						type += 'Interval';
@@ -2948,7 +2949,8 @@ var NC_MODULE = {
 				$.each(act.activityItemValues, function(idx, actItem) {
 					var type = actItem.definition.activityItemType.activityItemTypeName;
 					if(type==='measurement') {
-						if(actItem.definition.target && actItem.definition.target!=='') {
+                        if(actItem.definition.activityItemType.valueType.code
+                            && actItem.definition.activityItemType.valueType.code==='SINGLE_VALUE') {
 							type += 'Single';
 						} else {
 							type += 'Interval';
@@ -3570,11 +3572,11 @@ var NC_MODULE = {
 				label = '<span style="font-weight: bold;">' + item.definition.activityItemType.name + ": </span>";
 				if(item.valueType=='measurement') {
 					unit = item.definition.activityItemType.unit.name;
-					if(item.target==0) {
-						result += label + item.reportedValue + ' ' + unit + ' (Min:' + item.minTarget + ', Max: ' + item.maxTarget + ')<br/>'; 
+					if(item.definition.activityItemType.valueType.code==='SINGLE_VALUE') {
+                        result += label + item.reportedValue + ' ' + unit + ' (Mål:' + item.target + ')<br/>';
 					} else {
-						result += label + item.reportedValue + ' ' + unit + ' (Mål:' + item.target + ')<br/>'; 
-					}
+                        result += label + item.reportedValue + ' ' + unit + ' (Min:' + item.minTarget + ', Max: ' + item.maxTarget + ')<br/>';
+                    }
 				} else if(item.valueType=='estimation') {
 					result += label + item.perceivedSense + ' (1=Lätt - 10=Mycket besvärligt)<br/>'; 
 				} else if(item.valueType=='yesno') {
