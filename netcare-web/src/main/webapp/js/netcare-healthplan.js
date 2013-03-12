@@ -2720,6 +2720,7 @@ var NC_MODULE = {
                     } else {
                         inputs.val(actItem.perceivedSense);
                     }
+                    inputs.change();
 
 					$('#sa-row-slider-' + actItem.id).on('slide', function(e, ui) {
 						inputs.val(ui.value);
