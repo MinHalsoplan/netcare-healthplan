@@ -22,10 +22,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
-
-<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
 <%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
-
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <hp:view>
@@ -44,8 +41,10 @@
 			});
 		</script>
 	</hp:viewHeader>
-	<c:url value="/netcare/admin/healthplans" var="backToUrl" />
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Hälsoplaner">
+	<c:url value="/netcare/admin/templates" var="backToUrl">
+        <c:param name="healthPlan" value="${requestScope.healthPlanId}" />
+	</c:url>
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till val av aktivitetsmall">
 
 		<div id="plan">
 			<div class="sectionLoader" style="display: none;">
