@@ -57,19 +57,19 @@
                 <div style="margin-bottom: 25px;">Aktivitetsmall: <span id="templateTitle"></span></div>
 
                 <fieldset id="activityFieldset" style="display: none;">
-					<legend><h3><spring:message code="activity.form.goals" /></h3></legend>
+					<h3><spring:message code="activity.form.goals" /></h3>
 				</fieldset>
 				
 				<fieldset id="yesNoItemsFieldset" style="display: none;">
-					<legend><h3><spring:message code="activity.form.yesnoItems" /></h3></legend>
+					<h3><spring:message code="activity.form.yesnoItems" /></h3>
 				</fieldset>
 				
 				<fieldset id="estimationItemsFieldset" style="display: none;">
-					<legend><h3><spring:message code="activity.form.estimationItems" /></h3></legend>
+					<h3><spring:message code="activity.form.estimationItems" /></h3>
 				</fieldset>
 				
 				<fieldset id="textItemsFieldset" style="display: none;">
-					<legend><h3><spring:message code="activity.form.textItems" /></h3></legend>
+					<h3><spring:message code="activity.form.textItems" /></h3>
 				</fieldset>
 				
 				<fieldset id="scheduleFieldset">
@@ -96,22 +96,27 @@
 				
 				
 				<spring:message code="activity.form.time" var="addTime" scope="page" />
-				
+                <spring:message code="activity.form.days" var="addDays" scope="page" />
+
 				<fieldset>
+                    <h3><spring:message code="activity.form.schema" /></h3>
 					<form id="addTimesForm" class="form-inline">
 						<netcare:field name="specifyTime" label="${addTime}">
 							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2 spectime timeInput"/>
-							<button type="submit" class="btn btn-info">Lägg till</button>
-							<button type="reset" class="btn btn-danger">Rensa</button>
 						</netcare:field>
-						
-						<input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>
-						<input type="checkbox" name="tuesday"> <label for="tuesday" style="padding-right: 10px;">Ti</label>
-						<input type="checkbox" name="wednesday"> <label for="wednesday" style="padding-right: 10px;">On</label>
-						<input type="checkbox" name="thursday"> <label for="thursday" style="padding-right: 10px;">To</label>
-						<input type="checkbox" name="friday"> <label for="friday" style="padding-right: 10px;">Fr</label>
-						<input type="checkbox" name="saturday"> <label for="saturday" style="padding-right: 10px;">Lö</label>
-						<input type="checkbox" name="sunday"> <label for="sunday" style="padding-right: 10px;">Sö</label>
+                        <netcare:field name="specifyTime" label="${addDays}">
+                            <input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>
+                            <input type="checkbox" name="tuesday"> <label for="tuesday" style="padding-right: 10px;">Ti</label>
+                            <input type="checkbox" name="wednesday"> <label for="wednesday" style="padding-right: 10px;">On</label>
+                            <input type="checkbox" name="thursday"> <label for="thursday" style="padding-right: 10px;">To</label>
+                            <input type="checkbox" name="friday"> <label for="friday" style="padding-right: 10px;">Fr</label>
+                            <input type="checkbox" name="saturday"> <label for="saturday" style="padding-right: 10px;">Lö</label>
+                            <input type="checkbox" name="sunday"> <label for="sunday" style="padding-right: 10px;">Sö</label>
+                        </netcare:field>
+                        <div class="control-group">
+                            <button type="submit" class="btn btn-info">Lägg till</button>
+                            <button type="reset" class="btn btn-danger">Ta bort alla tider</button>
+                        </div>
 					</form>
 					
 					<div id="monday-container" style="display: none;">
@@ -154,7 +159,6 @@
 				<form id="saveForm">
 					<div class="form-actions">
 						<button type="submit" class="btn info" id="savePlanBtn"><spring:message code="activity.form.submit" /></button>
-						<button type="reset" class="btn"><spring:message code="clear" /></button>
 					</div>
 				</form>
 			</div>
