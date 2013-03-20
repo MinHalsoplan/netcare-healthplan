@@ -367,7 +367,7 @@ public final class WebUtil {
 		for (ScheduledActivityEntity sce : ad.getScheduledActivities()) {
 			if (sce.getScheduledTime().compareTo(now) < 0) {
 				
-				log.debug("Creating report for {}", sce.getScheduledTime());
+				//log.debug("Creating report for {}", sce.getScheduledTime());
 				
 				sce.setNote("Anteckning");
 				Calendar c = Calendar.getInstance();
@@ -379,8 +379,8 @@ public final class WebUtil {
 				sce.setActualTime(sce.getScheduledTime());
 				for (ActivityItemValuesEntity aiv : sce.getActivities()) {
 					
-					log.debug("Processing value {}", aiv.getActivityItemDefinitionEntity().getActivityItemType().getName());
-					
+					//log.debug("Processing value {}", aiv.getActivityItemDefinitionEntity().getActivityItemType().getName());
+
 					if (aiv instanceof MeasurementEntity) {
 						MeasurementEntity m = (MeasurementEntity) aiv;
 						MeasurementDefinitionEntity md = (MeasurementDefinitionEntity) m
@@ -404,7 +404,7 @@ public final class WebUtil {
 							diff = (Math.random() < 0.3) ? -1 : 1;
 						}
 						m.setReportedValue(target + diff);
-						log.debug("Reported value: " + m.getReportedValue());
+						//log.debug("Reported value: " + m.getReportedValue());
 					} else if (aiv instanceof EstimationEntity) {
 						EstimationEntity est = (EstimationEntity) aiv;
 						int sense = (int) Math.round(Math.random() * 10);
