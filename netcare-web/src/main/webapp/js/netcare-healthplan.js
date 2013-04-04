@@ -521,16 +521,11 @@ var NC_MODULE = {
 				
 				var added = 0;
 				
-				defLoop:for (var i = 0; i < hp.activityDefinitions.length; i++) {
+				for (var i = 0; i < hp.activityDefinitions.length; i++) {
 					var ad = hp.activityDefinitions[i];
 					
-					NC.log('Processing ' + ad.type.name + '(' + ad.id + ')');
-					
-					if (!ad.active) {
-						ad = null;
-						continue defLoop;
-					}
-					
+					//NC.log('Processing ' + ad.type.name + '(' + ad.id + ')');
+
 					var t = _.template($('#healthPlanDefinitions').html());
 					var dom = t(ad);
 					
@@ -562,15 +557,40 @@ var NC_MODULE = {
 				e.preventDefault();
 				ancestor.find('#hp-ad-remove-confirmation-' + id).modal('show');
 			});
-			item.find('.modal-footer').find('.btn').click(function(e) {
+			item.find('#inactivatebtn-'+id).click(function(e) {
 				e.preventDefault();
-				NC.log('Removing activity.');
+				NC.log('Inactivating activity.');
 				new NC.Ajax().http_delete('/activityPlans/' + id, function(data) {
-					$('#hp-ad-' + id).fadeOut('fast');
+                    replaceActivity(id, data.data);
+                    my.addEventHandlersForDefinition(id, ancestor);
 				});
 			});
 
-		};
+            item.find('#hp-ad-' + id + '-activate').click(function(e) {
+                e.preventDefault();
+                ancestor.find('#hp-ad-activate-confirmation-' + id).modal('show');
+            });
+
+            item.find('#activatebtn-' + id).click(function(e) {
+                e.preventDefault();
+                NC.log('Re-activating activity.');
+                var url = '/activityPlans/' + id + '/activate';
+                NC.log(url);
+                new NC.Ajax().post(url, null, function(data) {
+                    replaceActivity(id, data.data);
+                    my.addEventHandlersForDefinition(id, ancestor);
+                });
+            });
+            var replaceActivity = function(id, activitydef) {
+                $('#hp-ad-' + id).fadeOut('fast');
+                var existing = $('#hp-ad-' + id);
+                var t = _.template($('#healthPlanDefinitions').html());
+                var dom = $(t(activitydef));
+                existing.after(dom.hide());
+                existing.remove();
+                dom.fadeIn('slow');
+            };
+        };
 		
 		my.inactivate = function(my, healthPlan) {
 			var id = healthPlan.id;

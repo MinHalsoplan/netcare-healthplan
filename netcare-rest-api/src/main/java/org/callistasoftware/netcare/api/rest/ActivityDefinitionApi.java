@@ -83,8 +83,15 @@ public class ActivityDefinitionApi extends ApiSupport {
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition> deleteDefinition(@PathVariable(value="id") final Long definitionId) {
-		this.logAccess("delete", "activity definition");
-		return this.service.deleteActivity(definitionId);
+	public ServiceResult<ActivityDefinition> inactivateDefinition(@PathVariable(value = "id") final Long definitionId) {
+		this.logAccess("inactivate", "activity definition");
+		return this.service.inactivateActivity(definitionId);
 	}
+
+    @RequestMapping(value="/{id}/activate", method=RequestMethod.POST)
+    @ResponseBody
+    public ServiceResult<ActivityDefinition> activateDefinition(@PathVariable("id") final Long id) {
+        logAccess("activate", "activity definition");
+        return service.activateActivity(id);
+    }
 }

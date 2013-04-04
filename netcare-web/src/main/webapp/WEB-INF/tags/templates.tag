@@ -102,12 +102,12 @@
 				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
 			</div>
 			<div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
-				<a id="hp-inactivate-{{=id}}" href="#">Ta bort hälsoplan</a>
+				<button class="btn" id="hp-inactivate-{{=id}}" href="#">Inaktivera hälsoplan</button>
 				<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-					<div class="modal-body">Är du säker att hälsoplan {{=name}} ska tas bort. Inga data från hälsoplanen kommer då gå att nås genom applikationen.</div>
+					<div class="modal-body">Är du säker att hälsoplan {{=name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att hälsoplanen aktiveras.</div>
 					<div class="modal-footer">
 						<a href="#" data-dismiss="modal">Avbryt</a>
-						<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
+						<button href="#" class="btn" data-dismiss="modal">Inaktivera</button>
 					</div>
 				</div>
 			</div>
@@ -120,7 +120,7 @@
 					<div class="modal-body">Förläng hälsoplanen?</div>
 					<div class="modal-footer">
 						<a href="#" data-dismiss="modal">Avbryt</a>
-						<a href="#" class="btn" data-dismiss="modal">Förläng</a>
+						<button href="#" class="btn" data-dismiss="modal">Förläng</button>
 					</div>
 				</div>
 			</div>
@@ -134,14 +134,25 @@
 <script id="healthPlanDefinitions" type="text/template">
 <div id="hp-ad-{{=id}}" class="row-fluid">
 	<div class="span6">{{=type.name}}</div>
-	<div class="span4"><a id="hp-ad-{{=id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{=id}}-remove" href="3">Avsluta</a></div>
-	<div id="hp-ad-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-		<div class="modal-body">Ta bort aktivitet?</div>
-		<div class="modal-footer">
-			<a href="#" data-dismiss="modal">Avbryt</a>
-			<a href="#" class="btn" data-dismiss="modal">Ta bort</a>
-		</div>
-	</div>
+    {{ if (active) { }}
+	<div class="span4"><a id="hp-ad-{{=id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{=id}}-remove" href="#">Inaktivera</a></div>
+    {{ } else { }}
+    <div class="span4"><a id="hp-ad-{{=id}}-activate" href="#">Aktivera</a></div>
+    {{ } }}
+    <div id="hp-ad-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+        <div class="modal-body">Är du säker på att aktivitet {{=type.name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att aktiviteten aktiveras.</div>
+        <div class="modal-footer remove">
+            <a href="#" data-dismiss="modal">Avbryt</a>
+            <button id="inactivatebtn-{{=id}}" class="btn" data-dismiss="modal">Inaktivera</button>
+        </div>
+    </div>
+    <div id="hp-ad-activate-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+        <div class="modal-body">Är du säker på att aktivitet {{=type.name}} skall aktiveras? Ursprungsplaneringen för aktiviteten kommer aktiveras och den går att rapportera på.</div>
+        <div class="modal-footer activate">
+            <a href="#" data-dismiss="modal">Avbryt</a>
+            <button id="activatebtn-{{=id}}" class="btn" data-dismiss="modal">Aktivera</button>
+        </div>
+    </div>
 </div>
 </script>
 

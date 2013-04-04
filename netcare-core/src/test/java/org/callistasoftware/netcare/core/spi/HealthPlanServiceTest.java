@@ -420,7 +420,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		final ActivityDefinitionEntity saved = this.defRepo.save(ad);
 		this.schedRepo.save(saved.scheduleActivities());
 
-		this.service.deleteActivity(saved.getId());
+		this.service.inactivateActivity(saved.getId());
 	}
 
 	@Test
@@ -443,7 +443,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		this.schedRepo.save(saved.scheduleActivities());
 
 		try {
-			this.service.deleteActivity(saved.getId());
+			this.service.inactivateActivity(saved.getId());
 			fail("Should not be possible to delete as another patient.");
 		} catch (Exception e) {
 			assertTrue(e instanceof SecurityException);

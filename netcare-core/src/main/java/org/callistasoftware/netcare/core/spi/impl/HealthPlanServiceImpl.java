@@ -45,11 +45,7 @@ import org.callistasoftware.netcare.core.api.impl.MeasureUnitImpl;
 import org.callistasoftware.netcare.core.api.impl.PatientEventImpl;
 import org.callistasoftware.netcare.core.api.impl.ScheduledActivityImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
-import org.callistasoftware.netcare.core.api.messages.EntityDeletedMessage;
-import org.callistasoftware.netcare.core.api.messages.EntityNotFoundMessage;
-import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
-import org.callistasoftware.netcare.core.api.messages.ListEntitiesMessage;
-import org.callistasoftware.netcare.core.api.messages.NoAccessMessage;
+import org.callistasoftware.netcare.core.api.messages.*;
 import org.callistasoftware.netcare.core.api.statistics.ActivityCount;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.statistics.MeasuredValue;
@@ -598,29 +594,51 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		return null;
 	}
 
-	@Override
-	public ServiceResult<ActivityDefinition> deleteActivity(Long activityDefinitionId) {
+    @Override
+    public ServiceResult<ActivityDefinition> inactivateActivity(Long activityDefinitionId) {
 
-		log.info("Deleteing activity definition {}", activityDefinitionId);
-		final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
-		if (ent == null) {
-			log.warn("The activity definition {} could not be found.", activityDefinitionId);
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class,
-					activityDefinitionId));
-		}
+        log.info("Inactivating activity definition {}", activityDefinitionId);
+        final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
+        if (ent == null) {
+            log.warn("The activity definition {} could not be found.", activityDefinitionId);
+            return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class,
+                    activityDefinitionId));
+        }
 
-		this.verifyWriteAccess(ent);
+        this.verifyWriteAccess(ent);
 
-		ent.setRemovedFlag(true);
+        ent.setRemovedFlag(true);
 
-		log.debug("Activity definition with id {} marked as rmeoved", activityDefinitionId);
-		this.activityDefintionRepository.save(ent);
+        log.debug("Activity definition with id {} marked as inactivated", activityDefinitionId);
+        this.activityDefintionRepository.save(ent);
 
-		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(ent),
-				new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId));
-	}
+        return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(ent),
+                new ActivityActivatedMessage(ActivityDefinitionEntity.class, activityDefinitionId));
+    }
 
-	@Override
+    @Override
+    public ServiceResult<ActivityDefinition> activateActivity(Long activityDefinitionId) {
+
+        log.info("Re-activating activity definition {}", activityDefinitionId);
+        final ActivityDefinitionEntity ent = this.activityDefintionRepository.findOne(activityDefinitionId);
+        if (ent == null) {
+            log.warn("The activity definition {} could not be found.", activityDefinitionId);
+            return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(ActivityDefinitionEntity.class,
+                    activityDefinitionId));
+        }
+
+        this.verifyWriteAccess(ent);
+
+        ent.setRemovedFlag(false);
+
+        log.debug("Activity definition with id {} marked as activated", activityDefinitionId);
+        this.activityDefintionRepository.save(ent);
+
+        return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(ent),
+                new EntityDeletedMessage(ActivityDefinitionEntity.class, activityDefinitionId));
+    }
+
+    @Override
 	public String getICalendarEvents(PatientBaseView patient) {
 		PatientEntity forPatient = patientRepository.findOne(patient.getId());
 		Date now = new Date();
