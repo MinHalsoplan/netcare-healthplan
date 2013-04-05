@@ -85,17 +85,31 @@ public class HealthPlanApi extends ApiSupport {
     @RequestMapping(value="/{healthPlan}", method=RequestMethod.DELETE, produces="application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
-		this.logAccess("delete", "health plan");
-		return this.service.deleteHealthPlan(healthPlan);
+		this.logAccess("archive", "health plan");
+		return this.service.archiveHealthPlan(healthPlan);
 	}
-    
+
+    @RequestMapping(value="/{healthPlan}/inactivate", method=RequestMethod.POST, produces="application/json")
+    @ResponseBody
+    public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
+        this.logAccess("inactivate", "health plan");
+        return this.service.inactivateHealthPlan(healthPlan);
+    }
+
+    @RequestMapping(value="/{healthPlan}/activate", method=RequestMethod.POST, produces="application/json")
+    @ResponseBody
+    public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
+        this.logAccess("activate", "health plan");
+        return this.service.activateHealthPlan(healthPlan);
+    }
+
     @RequestMapping(value="/{healthPlan}/renew", method=RequestMethod.POST, produces="application/json")
- 	@ResponseBody
- 	public ServiceResult<HealthPlan> healthPlanRenewal(@PathVariable(value="healthPlan") final Long healthPlan) {
- 		this.logAccess("renewal", "health plan");
- 		return this.service.healthPlanRenewal(healthPlan, false);
- 	}
-    
+    @ResponseBody
+    public ServiceResult<HealthPlan> healthPlanRenewal(@PathVariable(value="healthPlan") final Long healthPlan) {
+        this.logAccess("renewal", "health plan");
+        return this.service.healthPlanRenewal(healthPlan, false);
+    }
+
     @RequestMapping(value="/{healthPlan}/stopAutoRenewal", method=RequestMethod.POST, produces="application/json")
  	@ResponseBody
  	public ServiceResult<HealthPlan> stopHealthPlanAutoRenewal(@PathVariable(value="healthPlan") final Long healthPlan) {

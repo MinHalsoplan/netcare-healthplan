@@ -73,12 +73,27 @@ public interface HealthPlanService {
 	ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan ordination, final CareActorBaseView creator, final Long patientId);
 	
 	/**
-	 * Delete the ordination with the specified id
+	 * Archives a healthplan with the specified id
 	 * @param ordinationId
 	 * @return
 	 */
-	ServiceResult<HealthPlan> deleteHealthPlan(final Long ordinationId);
-	
+	ServiceResult<HealthPlan> archiveHealthPlan(final Long ordinationId);
+
+    /**
+     * Inactivates a health plan.
+     * @param healthPlan
+     * @return
+     */
+    ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlan);
+
+    /**
+     * Activates a health plan.
+     * @param healthPlan
+     * @return
+     */
+    ServiceResult<HealthPlan> activateHealthPlan(Long healthPlan);
+
+
 	/**
 	 * Load a specific ordination
 	 * @param ordinationId

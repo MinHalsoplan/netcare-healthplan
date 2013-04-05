@@ -468,7 +468,7 @@ public class HealthPlanServiceTest extends TestSupport {
 
 		this.runAs(CareActorBaseViewImpl.newFromEntity(ca));
 
-		this.service.deleteHealthPlan(saved.getId());
+		this.service.archiveHealthPlan(saved.getId());
 
 		assertTrue(this.ordinationRepo.findOne(saved.getId()).isArchived());
 	}
@@ -492,7 +492,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		this.runAs(PatientBaseViewImpl.newFromEntity(p2));
 
 		try {
-			this.service.deleteHealthPlan(saved.getId());
+			this.service.archiveHealthPlan(saved.getId());
 			fail("Patients' must not be able to delete each others health plans.");
 		} catch (Exception e) {
 			assertTrue(e instanceof SecurityException);
@@ -504,7 +504,7 @@ public class HealthPlanServiceTest extends TestSupport {
 		this.runAs(CareActorBaseViewImpl.newFromEntity(ca2));
 
 		try {
-			this.service.deleteHealthPlan(saved.getId());
+			this.service.archiveHealthPlan(saved.getId());
 			fail("Patients' must not be able to delete each others health plans.");
 		} catch (Exception e) {
 			assertTrue(e instanceof SecurityException);

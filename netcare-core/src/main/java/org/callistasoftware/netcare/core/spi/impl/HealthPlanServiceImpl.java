@@ -155,7 +155,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<HealthPlanEntity> entities = this.repo.findByForPatientAndArchivedFalse(forPatient);
+		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 
 		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
@@ -212,24 +212,52 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		return ServiceResultImpl.createSuccessResult(dto, new GenericSuccessMessage());
 	}
 
-	@Override
-	public ServiceResult<HealthPlan> deleteHealthPlan(Long healthPlanId) {
-		log.info("Deleting health plan {}", healthPlanId);
-		final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
-		if (hp == null) {
-			return ServiceResultImpl
-					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
-		}
+    @Override
+    public ServiceResult<HealthPlan> archiveHealthPlan(Long healthPlanId) {
+        log.info("Deleting health plan {}", healthPlanId);
+        final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
+        if (hp == null) {
+            return ServiceResultImpl
+                    .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+        }
 
-		this.verifyWriteAccess(hp);
+        this.verifyWriteAccess(hp);
 
-		hp.setArchived(true);
-		this.repo.save(hp);
+        hp.setArchived(true);
+        this.repo.save(hp);
 
-		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
-	}
+        return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+    }
 
-	@Override
+    @Override
+    public ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlanId) {
+        log.info("Inactivating health plan {}", healthPlanId);
+        return this.setActiveFlagOnHealthPlan(healthPlanId, false);
+    }
+
+    @Override
+    public ServiceResult<HealthPlan> activateHealthPlan(Long healthPlanId) {
+        log.info("Activating health plan {}", healthPlanId);
+        return this.setActiveFlagOnHealthPlan(healthPlanId, true);
+    }
+
+    protected ServiceResult<HealthPlan> setActiveFlagOnHealthPlan(Long healthPlanId, boolean active) {
+        final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
+        if (hp == null) {
+            return ServiceResultImpl
+                    .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
+        }
+
+        this.verifyWriteAccess(hp);
+
+        hp.setActive(active);
+
+        this.repo.save(hp);
+
+        return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+    }
+
+    @Override
 	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
 		final HealthPlanEntity entity = this.repo.findByIdAndArchivedFalse(healthPlanId);
 		if (entity == null) {
@@ -694,8 +722,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	 * 
 	 * Minutes are rounded to half-hour precision.
 	 * 
-	 * @param the
-	 *            activity deftinion.
+	 * @param ad
+	 *           the activity deftinion.
 	 * @return the ical duration.
 	 */
 	private static String toICalDuration(ActivityDefinitionEntity ad) {

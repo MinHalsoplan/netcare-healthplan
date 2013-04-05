@@ -441,7 +441,8 @@ var NC_MODULE = {
 		my.loadHealthPlans = function(my) {
 			my.list(my.params.patientId, function(data) {
 				$('#healthPlanContainer').empty();
-				
+                $('#inactiveHealthPlanContainer').empty();
+
 				$.each(data.data, function(i, v) {
 					my.buildHealthPlanItem(my, v);
 				});
@@ -457,8 +458,12 @@ var NC_MODULE = {
 		my.buildHealthPlanItem = function(my, hp) {
 			var t = _.template($('#healthPlanItem').html());
 			var dom = t(hp);
-			$('#healthPlanContainer').append($(dom));
-			
+            if(hp.active) {
+                $('#healthPlanContainer').append($(dom));
+            } else {
+                $('#inactiveHealthPlanContainer').append($(dom));
+            }
+
 			var liElem = $('#healthPlanItem' + hp.id);
 			if (hp.autoRenewal) {
 				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
@@ -591,16 +596,26 @@ var NC_MODULE = {
                 dom.fadeIn('slow');
             };
         };
-		
-		my.inactivate = function(my, healthPlan) {
-			var id = healthPlan.id;
-			new NC.Ajax().http_delete('/healthplans/' + id, function() {
-				$('#healthPlanItem' + id).fadeOut('fast');
-				$('#healthPlanItem' + id).remove();
-			});
-		};
 
-		my.extendPlan = function(my, id, ancestor) {
+        my.inactivate = function(my, healthPlan) {
+            var id = healthPlan.id;
+            new NC.Ajax().post('/healthplans/' + id + '/inactivate', {}, function() {
+                $('#healthPlanItem' + id).fadeOut('fast');
+                $('#healthPlanItem' + id).remove();
+                // Reload inactivated!!! Alla?
+            });
+        };
+
+        my.activate = function(my, healthPlan) {
+            var id = healthPlan.id;
+            new NC.Ajax().post('/healthplans/' + id + '/activate', {}, function() {
+                $('#healthPlanItem' + id).fadeOut('fast');
+                $('#healthPlanItem' + id).remove();
+                // Reload activated!!! Alla?
+            });
+        };
+
+        my.extendPlan = function(my, id, ancestor) {
 			console.log('Extending...')
 			new NC.Ajax().post('/healthplans/' + id + '/renew', {}, function(data) {
 				var endDate = data.data.endDate;

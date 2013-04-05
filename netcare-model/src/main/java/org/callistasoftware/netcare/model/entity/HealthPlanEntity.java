@@ -70,9 +70,12 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="reminder_done")
 	private boolean reminderDone;
 
-	@Column(name="archived")
-	private boolean archived;
-	
+    @Column(name="active")
+    private boolean active = true;
+
+    @Column(name="archived")
+    private boolean archived;
+
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
 	private CareActorEntity issuedBy;
@@ -188,14 +191,20 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	}
 
 	/**
-	 * Returns if this health-plan is active expired.
+	 * Returns if this health-plan is active.
 	 * @return true if active, otherwise false.
 	 */
 	public boolean isActive() {
-		Date today = EntityUtil.dayEnd(Calendar.getInstance()).getTime();
-		return (today.compareTo(getEndDate()) <= 0);
+        return active;
+//		Date today = EntityUtil.dayEnd(Calendar.getInstance()).getTime();
+//		return (today.compareTo(getEndDate()) <= 0);
 	}
-	
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
 	public DurationUnit getDurationUnit() {
 		return durationUnit;
 	}
