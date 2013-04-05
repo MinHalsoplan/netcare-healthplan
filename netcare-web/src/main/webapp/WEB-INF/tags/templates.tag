@@ -101,17 +101,30 @@
 			<div class="span6">
 				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
 			</div>
-			<div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
-				<button class="btn" id="hp-inactivate-{{=id}}" href="#">Inaktivera hälsoplan</button>
-				<div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-					<div class="modal-body">Är du säker att hälsoplan {{=name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att hälsoplanen aktiveras.</div>
-					<div class="modal-footer">
-						<a href="#" data-dismiss="modal">Avbryt</a>
-						<button href="#" class="btn" data-dismiss="modal">Inaktivera</button>
-					</div>
-				</div>
-			</div>
-		</div>
+            {{ if (active) { }}
+                <div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
+                    <button class="btn" id="hp-inactivate-{{=id}}" href="#">Inaktivera hälsoplan</button>
+                    <div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+                        <div class="modal-body">Är du säker att hälsoplan {{=name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att hälsoplanen aktiveras.</div>
+                        <div class="modal-footer">
+                            <a href="#" data-dismiss="modal">Avbryt</a>
+                            <button id="inactivate-hp-btn-{{=id}}"class="btn" data-dismiss="modal">Inaktivera</button>
+                        </div>
+                    </div>
+                </div>
+            {{ } else { }}
+            <div class="span6 activate" style="text-align: right; padding-right: 20px;">
+                <button class="btn" id="hp-activate-{{=id}}" href="#">Aktivera hälsoplan</button>
+                <div id="hp-activate-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+                    <div class="modal-body">Är du säker att hälsoplan {{=name}} skall aktiveras? Ursprungsplaneringen för alla aktiviteter kommer aktiveras och de går att rapportera på.</div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal">Avbryt</a>
+                        <button id="activate-hp-btn-{{=id}}" class="btn" data-dismiss="modal">Aktivera</button>
+                    </div>
+                </div>
+            </div>
+            {{ } }}
+        </div>
 		{{ if (!autoRenewal) { }}
 		<div class="row-fluid extend">
 			<div class="span12">			
@@ -120,7 +133,7 @@
 					<div class="modal-body">Förläng hälsoplanen?</div>
 					<div class="modal-footer">
 						<a href="#" data-dismiss="modal">Avbryt</a>
-						<button href="#" class="btn" data-dismiss="modal">Förläng</button>
+						<button class="btn" data-dismiss="modal">Förläng</button>
 					</div>
 				</div>
 			</div>
@@ -134,11 +147,17 @@
 <script id="healthPlanDefinitions" type="text/template">
 <div id="hp-ad-{{=id}}" class="row-fluid">
 	<div class="span6">{{=type.name}}</div>
-    {{ if (active) { }}
-	<div class="span4"><a id="hp-ad-{{=id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{=id}}-remove" href="#">Inaktivera</a></div>
+
+    {{ if (hpActive) { }}
+        {{ if (active) { }}
+        <div class="span4"><a id="hp-ad-{{=id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{=id}}-remove" href="#">Inaktivera</a></div>
+        {{ } else { }}
+        <div class="span4"><a id="hp-ad-{{=id}}-activate" href="#">Aktivera</a></div>
+        {{ } }}
     {{ } else { }}
-    <div class="span4"><a id="hp-ad-{{=id}}-activate" href="#">Aktivera</a></div>
+        <div class="span4"><a id="hp-ad-{{=id}}-view" href="#">Se planering</a></div>
     {{ } }}
+
     <div id="hp-ad-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
         <div class="modal-body">Är du säker på att aktivitet {{=type.name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att aktiviteten aktiveras.</div>
         <div class="modal-footer remove">

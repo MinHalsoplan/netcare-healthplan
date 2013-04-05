@@ -155,7 +155,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
+		final List<HealthPlanEntity> entities = this.repo.findByForPatientAndArchivedFalse(forPatient);
 
 		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
@@ -251,6 +251,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
         this.verifyWriteAccess(hp);
 
         hp.setActive(active);
+        if(active) {
+            hp.setEndDate(new Date());
+        }
 
         this.repo.save(hp);
 

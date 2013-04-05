@@ -461,16 +461,21 @@ var NC_MODULE = {
             if(hp.active) {
                 $('#healthPlanContainer').append($(dom));
             } else {
+                $('#inactiveHeader').show();
                 $('#inactiveHealthPlanContainer').append($(dom));
             }
 
 			var liElem = $('#healthPlanItem' + hp.id);
-			if (hp.autoRenewal) {
-				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
-			} else {
-				liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' <span id="endDate">' + hp.endDate + '</span>');
-			}
-			
+            if(hp.active) {
+                if (hp.autoRenewal) {
+                    liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
+                } else {
+                    liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' <span id="endDate">' + hp.endDate + '</span>');
+                }
+            } else {
+                liElem.find('.subRow').html(my.params.lang.inactive + ' | ' + my.params.lang.ended + ' <span id="endDate">' + hp.endDate + '</span>');
+            }
+
 			var detailsTemplate = _.template($('#healthPlanDetails').html());
 			var detailsDom = detailsTemplate(hp);
 			
@@ -532,6 +537,7 @@ var NC_MODULE = {
 					//NC.log('Processing ' + ad.type.name + '(' + ad.id + ')');
 
 					var t = _.template($('#healthPlanDefinitions').html());
+                    ad.hpActive = hp.active;
 					var dom = t(ad);
 					
 					hpDetails.find('.healthplan-activity-definitions').append($(dom));
@@ -600,18 +606,14 @@ var NC_MODULE = {
         my.inactivate = function(my, healthPlan) {
             var id = healthPlan.id;
             new NC.Ajax().post('/healthplans/' + id + '/inactivate', {}, function() {
-                $('#healthPlanItem' + id).fadeOut('fast');
-                $('#healthPlanItem' + id).remove();
-                // Reload inactivated!!! Alla?
+                my.loadHealthPlans(my);
             });
         };
 
         my.activate = function(my, healthPlan) {
             var id = healthPlan.id;
             new NC.Ajax().post('/healthplans/' + id + '/activate', {}, function() {
-                $('#healthPlanItem' + id).fadeOut('fast');
-                $('#healthPlanItem' + id).remove();
-                // Reload activated!!! Alla?
+                my.loadHealthPlans(my);
             });
         };
 

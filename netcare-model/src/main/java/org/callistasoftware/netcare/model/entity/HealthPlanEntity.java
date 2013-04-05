@@ -343,4 +343,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		setReminderDone(true);
 	}
 
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 }

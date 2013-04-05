@@ -37,8 +37,10 @@
 				
 				var lang = {
 					active : '<spring:message code="healthplan.active" />',
+                    inactive : '<spring:message code="healthplan.inactive" />',
 					autoRenew : '<spring:message code="healthplan.autoRenew" />',
 					ends : '<spring:message code="healthplan.ends" />',
+                    ended : '<spring:message code="healthplan.ended" />',
 					noActivities : '<spring:message code="healthplan.noActivities" />'
 				}
 				
@@ -112,7 +114,7 @@
 		<h3 class="title"><spring:message code="healthplan.title" /></h3>
 		<mvk:touch-list id="healthPlanContainer">
 		</mvk:touch-list>
-        <h3 class="title"><spring:message code="healthplan.inactive.title" /></h3>
+        <h3 class="title" id="inactiveHeader" style="display: none;"><spring:message code="healthplan.inactive.title" /></h3>
         <mvk:touch-list id="inactiveHealthPlanContainer">
         </mvk:touch-list>
 	</hp:viewBody>

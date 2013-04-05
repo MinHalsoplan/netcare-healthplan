@@ -44,15 +44,15 @@
 	<c:url value="/netcare/admin/templates" var="backToUrl">
         <c:param name="healthPlan" value="${requestScope.healthPlanId}" />
 	</c:url>
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till val av aktivitetsmall">
+	<hp:viewBody title="Schemaläggning" plain="true">
 
 		<div id="plan">
 			<div class="sectionLoader" style="display: none;">
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
 			</div>
+            <mvk:sheet>
 			<div id="planContainer" style="display: none;">
-				<h2>Schemaläggning</h2>
                 <div>Hälsoplan: <span id="healthplanTitle"></span></div>
                 <div style="margin-bottom: 25px;">Aktivitetsmall: <span id="templateTitle"></span></div>
 
@@ -162,6 +162,7 @@
 					</div>
 				</form>
 			</div>
+            </mvk:sheet>
 		</div>
 	</hp:viewBody>
 </hp:view>
