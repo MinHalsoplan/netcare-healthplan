@@ -51,10 +51,15 @@
 				<img src="<c:url value="/netcare/resources/images/loaders/ajax-loader-medium.gif" />" />
 				<span class="loaderMessage"></span>
 			</div>
+
             <mvk:sheet>
 			<div id="planContainer" style="display: none;">
                 <div>Hälsoplan: <span id="healthplanTitle"></span></div>
                 <div style="margin-bottom: 25px;">Aktivitetsmall: <span id="templateTitle"></span></div>
+
+                <div id="inactiveNote" class="alert alert-info" style="display: none">
+                    <i>Hälsoplanen är inaktiv. Du kommer inte kunna göra några ändringar i schemaläggningen.</i>
+                </div>
 
                 <fieldset id="activityFieldset" style="display: none;">
 					<h3><spring:message code="activity.form.goals" /></h3>

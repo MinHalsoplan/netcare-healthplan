@@ -581,6 +581,13 @@ var NC_MODULE = {
 				
 				window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + id + '/plan/' + id;
 			});
+
+            item.find('#hp-ad-' + id + '-view').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                window.location = NC.getContextPath() + '/netcare/admin/healthplans/' + id + '/plan/' + id;
+            });
 			
 			item.find('#hp-ad-' + id + '-remove').click(function(e) {
 				e.preventDefault();
@@ -797,6 +804,12 @@ var NC_MODULE = {
 		};
 		
 		my.initListeners = function(my) {
+
+            if (!_data.active) {
+                $('#inactiveNote').show();
+                $('#saveForm').find(':submit').prop('disabled', 'disabled');
+            }
+
 			$('#saveForm').submit(function(e) {
 				e.preventDefault();
 				my.save(my);
