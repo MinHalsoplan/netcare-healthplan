@@ -777,14 +777,22 @@
 			</div>
 		</div>
 		<div class="span6" style="text-align:right; margin-top: 15px; padding-right: 20px;">
+      {{ if (active) { }}
 			<small>Pågår till och med: <strong>{{=period}}</strong></small>
+      {{ } else { }}
+      <small>Inaktiv</small>
+      {{ } }}
 		</div>
 	</div>
 	<div class="row-fluid" style="border-top: 1px dotted #eee; padding-top: 15px;">
 		<div class="mainBody span12">
 			<h4>Inställningar</h4>
 			<div class="subRow">
-				<input id="activityItem{{=id}}-reminder" type="checkbox" /> 
+        {{ if (active) { }}
+				<input id="activityItem{{=id}}-reminder" type="checkbox" />
+        {{ } else { }}
+        <input id="activityItem{{=id}}-reminder" type="checkbox" disabled="disabled"/>
+        {{ } }}
 				<label for="activityItem{{=id}}-reminder" style="display: inline;"><small>Skicka en påminnelse till min mobiltelefon när denna aktivitet skall utföras.</small></label>
 			</div>
 		</div>

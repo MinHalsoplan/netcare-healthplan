@@ -57,18 +57,4 @@ public class PatientApi extends ApiSupport {
 		logAccess("lista", "händelser");
 		return planService.getActualEventsForPatient((PatientBaseView)auth.getPrincipal());
 	}
-	
-	@RequestMapping(value="/schema/min-halso-plan", method=RequestMethod.GET, produces="text/calendar")
-	@ResponseBody
-	public String getCalendar(final Authentication auth) {
-		logAccess("exportera", "kalender");
-		return planService.getICalendarEvents((PatientBaseView)auth.getPrincipal());
-	}
-	
-	@RequestMapping(value="/result/{id}/resultat.csv",method=RequestMethod.GET, produces="application/vnd.ms-excel")
-	@ResponseBody
-	public String getPlanReports(@PathVariable(value="id") final Long activityDefId) {
-		logAccess("exportera", "resultat");
-		return planService.getPlanReports(getUser(), activityDefId);
-	}
 }

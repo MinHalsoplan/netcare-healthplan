@@ -323,40 +323,6 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Test
 	@Transactional
 	@Rollback(true)
-	public void iCalendar() {
-		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
-		String cal = service.getICalendarEvents(PatientBaseViewImpl.newFromEntity(ad.getHealthPlan().getForPatient()));
-		final String expect = "BEGIN:VCALENDAR\r\n" + "VERSION:2.0\r\n"
-				+ "PRODID:-//Callista Enterprise//NONSGML NetCare//EN\r\n" + "BEGIN:VEVENT\r\n"
-				+ "UID:cae745bc-1278-4828-96f5-86b221af99db@MO.0\r\n"
-				+ "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
-				+ "DTSTART;TZID=Europe/Stockholm:20111206T181500\r\n" + "DURATION:PT30M\r\n"
-				+ "SUMMARY:Löpning 1200 METER\r\n" + "TRANSP:TRANSPARENT\r\n" + "CLASS:CONFIDENTIAL\r\n"
-				+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-				+ "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=MO;UNTIL=20120606T235959\r\n" + "END:VEVENT\r\n"
-				+ "BEGIN:VEVENT\r\n" + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.0\r\n"
-				+ "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
-				+ "DTSTART;TZID=Europe/Stockholm:20111206T070000\r\n" + "DURATION:PT30M\r\n"
-				+ "SUMMARY:Löpning 1200 METER\r\n" + "TRANSP:TRANSPARENT\r\n" + "CLASS:CONFIDENTIAL\r\n"
-				+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-				+ "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n" + "END:VEVENT\r\n"
-				+ "BEGIN:VEVENT\r\n" + "UID:cae745bc-1278-4828-96f5-86b221af99db@TH.1\r\n"
-				+ "DTSTAMP;TZID=Europe/Stockholm:20120105T175109\r\n"
-				+ "DTSTART;TZID=Europe/Stockholm:20111206T190000\r\n" + "DURATION:PT30M\r\n"
-				+ "SUMMARY:Löpning 1200 METER\r\n" + "TRANSP:OPAQUE\r\n" + "CLASS:CONFIDENTIAL\r\n"
-				+ "CATEGORIES:FYSIK,PERSONLIGT,PLAN,HÄLSA\r\n"
-				+ "RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=TH;UNTIL=20120606T235959\r\n" + "END:VEVENT\r\n"
-				+ "END:VCALENDAR\r\n";
-
-		// FIXME: better test needed! The generated UID makes it impossible to
-		// make a straight comparison.
-		assertEquals(expect.split("\r\n").length, cal.split("\r\n").length);
-
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
 	public void events() {
 		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
 		ServiceResult<PatientEvent> sr = service.getActualEventsForPatient(PatientBaseViewImpl.newFromEntity(ad

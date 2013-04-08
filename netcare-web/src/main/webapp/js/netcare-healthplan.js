@@ -272,7 +272,7 @@ var NC_MODULE = {
 		
 		my.render = function() {
 			$('input[name="firstName"]').val(_data.firstName);
-			$('input[name="lastName"]').val(_data.lastName);
+			$('input[name="lastName"]').val(_data.surName);
 			$('input[name="civicRegistrationNumber"]').val(_data.civicRegistrationNumber);
 			$('input[name="phoneNumber"]').val(_data.phoneNumber);
 		};
@@ -492,11 +492,37 @@ var NC_MODULE = {
 			
 			liElem.find('.actionBody').css('text-align', 'right').css('padding-right', '40px')
 			.append(expander);
+
+            // Handle activation / inactivation
+            NC.log('Active: ' + hp.active);
+            if (!hp.active) {
+                // Show modal
+                $('#hp-activate-' + hp.id).click(function(e) {
+                    e.preventDefault();
+                    $('#hp-activate-confirmation-' + hp.id).modal('show');
+                });
+
+                // Act on button click
+                $('#hp-activate-confirmation-' + hp.id).find('.modal-footer .btn').click(function (e) {
+                    e.preventDefault();
+                    my.activate(my, hp);
+                });
+            } else {
+
+                $('#hp-inactivate-' + hp.id).click(function(e) {
+                    e.preventDefault();
+                    $('#hp-remove-confirmation-' + hp.id).modal('show');
+                });
+
+                $('#hp-remove-confirmation-' + hp.id).find('.modal-footer .btn').click(function (e) {
+                    e.preventDefault();
+                    my.inactivate(my, hp);
+                });
+            }
 	
 			var actions = liElem.find('.healthplan-actions');
 			
 			var extend = actions.find('.extend');
-			var inactivate = actions.find('.inactivate');
 			
 			extend.find('#hp-extend-plan-' + hp.id).click(function(e) {
 				extend.find('#hp-extend-confirmation-' + hp.id).modal('show');
@@ -505,14 +531,6 @@ var NC_MODULE = {
 				e.preventDefault();
 				NC.log('Extend health plan ' + hp.id);
 				my.extendPlan(my, hp.id, liElem);
-			});
-			inactivate.find('#hp-inactivate-' + hp.id).click(function(e) {
-				inactivate.find('#hp-remove-confirmation-' + hp.id).modal('show');
-			});
-			inactivate.find('.modal-footer').find('.btn').click(function(e) {
-				e.preventDefault();
-				NC.log('Inactivate health plan ' + hp.id);
-				my.inactivate(my, hp);
 			});
 		};
 		
@@ -2465,19 +2483,25 @@ var NC_MODULE = {
 			my.load(_due, _reported, _start, _end, function(data) {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
+                    var numOfActive = 0;
 					$.each(data.data, function(i, v) {
-						my.createScheduleItem(my, i, v);
-					});
-					
-					NC.PAGINATION.init({
-						'itemIdPrefix' : 'scheduledActivityItem',
-						'paginationId' : '#siPagination',
-						'data' : data.data,
-						'previousLabel' : '<<',
-						'nextLabel' : '>>'
+                        if (v.activityDefinition.active == true) {
+                            numOfActive++;
+						    my.createScheduleItem(my, i, v);
+                        }
 					});
 
-					$('#reportContainer').show();
+                    if (numOfActive > 0) {
+                        NC.PAGINATION.init({
+                            'itemIdPrefix' : 'scheduledActivityItem',
+                            'paginationId' : '#siPagination',
+                            'data' : data.data,
+                            'previousLabel' : '<<',
+                            'nextLabel' : '>>'
+                        });
+
+                        $('#reportContainer').show();
+                    }
 				}
 				
 				NC.GLOBAL.suspendLoader('#report');
@@ -3263,11 +3287,14 @@ var NC_MODULE = {
 		};
 		
 		my.load = function(callback, patientId) {
-			if (patientId != undefined) {
-				new NC.Ajax().get('/activityPlans?patient=' + patientId, callback);
-			} else {
-				new NC.Ajax().get('/activityPlans', callback);
-			}
+            if (patientId != undefined) {
+                var qs = '?patient=' + patientId + '&';
+                new NC.Ajax().get('/activityPlans' + qs, callback);
+            } else {
+                new NC.Ajax().get('/activityPlans', callback);
+            }
+
+
 		};
 		
 		return my;
@@ -3402,10 +3429,15 @@ var NC_MODULE = {
 		
 		my.render = function(my) {
 			for (var i = 0; i < _hps.length; i++) {
+
+                var hpName = _hps[i].healthPlanName;
+                if (_hps[i].active) {
+                    hpName += ' | Inaktiv'
+                }
 				
-				if ( $('#healthplans h3').html() != _hps[i].healthPlanName ) {
+				if ( $('#healthplans h3').html() != hpName) {
 					$('#healthplans').append(
-						$('<h3>').addClass('title').html(_hps[i].healthPlanName)
+						$('<h3>').addClass('title').html(hpName)
 					);
 					
 					$('#healthplans').append(

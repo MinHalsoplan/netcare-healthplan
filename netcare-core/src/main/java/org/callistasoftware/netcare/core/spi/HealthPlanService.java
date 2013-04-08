@@ -96,17 +96,14 @@ public interface HealthPlanService {
 
 	/**
 	 * Load a specific ordination
-	 * @param ordinationId
-	 * @param patient
+	 * @param healthPlanId
 	 * @return
 	 */
 	ServiceResult<HealthPlan> loadHealthPlan(final Long healthPlanId);
 	
 	/**
 	 * Adds an activity definition to an existing ordination specified by its id
-	 * @param healthPlanId
 	 * @param dto the activity definition.
-	 * @param user the user.
 	 * 
 	 * @return the result.
 	 */
@@ -150,8 +147,7 @@ public interface HealthPlanService {
 	
 	/**
 	 * Returns scheduled activities for a patient.
-	 * 
-	 * @param active whether or not to only include active or not
+	 *
 	 * @return the result.
 	 * @deprecated Use methods in {@link ScheduleService} instead
 	 */
@@ -249,9 +245,7 @@ public interface HealthPlanService {
 
 	/**
 	 * Get reported activities for a certain activity definition within a specific time interval
-	 * @param activityDefintionId
-	 * @param start
-	 * @param end
+	 * @param healthPlanId
 	 * @return
 	 */
 	ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(final Long healthPlanId);
@@ -268,26 +262,7 @@ public interface HealthPlanService {
 	 * 
 	 * @param activityDefinition the activity defintion.
 	 */
-	void scheduleActivities(ActivityDefinitionEntity activityDefinition) ;
-	
-	/**
-	 * Returns the iCalendar definition. <p>
-	 * 
-	 * @see <a href="linkplain http://tools.ietf.org/html/rfc5545>RFC-5545"</a>
-	 * 
-	 * @param patient the patient.
-	 * @return the iCalendar object as a string.
-	 */
-	String getICalendarEvents(PatientBaseView patient);
-	
-	/**
-	 * Returns a comma separated text for export of reports to excel. <p>
-	 * 
-	 * @param user the user.
-	 * @param activityDefinitionId the id.
-	 * @return the results as a comma separated text (text/csv).
-	 */
-	String getPlanReports(UserBaseView user, Long activityDefinitionId);
+	void scheduleActivities(ActivityDefinitionEntity activityDefinition);
 
 	/**
 	 * Performs a renewal, adding another iteration.

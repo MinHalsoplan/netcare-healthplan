@@ -83,13 +83,14 @@
   	<beans profile="db-embedded">
   		<context:property-placeholder location="classpath:/db-embedded.properties" ignore-unresolvable="true"/>
 
-     	<bean  
+     	<bean
          	id="org.h2.tools.Server-WebServer"  
          	class="org.h2.tools.Server" 
-     		factory-method="createWebServer"  
-     		init-method="start"> 
+     		  factory-method="createWebServer"
+     		  init-method="start"
+          destroy-method="shutdown">
      		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" /> 
-     	</bean> 
+     	</bean>
   		
   	</beans>
 
