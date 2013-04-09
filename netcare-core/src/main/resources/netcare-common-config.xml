@@ -30,75 +30,96 @@
 	http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
-	<context:annotation-config />
-	<context:component-scan base-package="org.callistasoftware.netcare.core.spi.impl, org.callistasoftware.netcare.core.job" />
-	
-	<jpa:repositories base-package="org.callistasoftware.netcare.core.repository" />
-	
-	<tx:annotation-driven />
+  <beans profile="prod,qa">
+    <bean id="jpaProperties" class="org.springframework.beans.factory.config.MapFactoryBean">
+      <property name="sourceMap">
+        <map>
+          <entry key="hibernate.dialect" value="${database.dialect}" />
+          <entry key="hibernate.connection.pool_size" value="10" />
+          <entry key="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
+        </map>
+      </property>
+    </bean>
+  </beans>
 
-	<tx:advice id="txAdvice" transaction-manager="transactionManager"/>
-	
-	<task:annotation-driven />
-	
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${database.driver}" />
-		<property name="url" value="${database.url}" />
-		<property name="username" value="${database.username}" />
-		<property name="password" value="${database.password}" />
-	</bean>
-	
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceUnitName" value="netcare-pu" />
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="database" value="${database.vendor}" />
-				<property name="showSql" value="${database.show-sql}" />
-				<property name="generateDdl" value="true" />
-			</bean>
-		</property>
-		<property name="jpaPropertyMap">
-			<map>
-<!-- 				<entry key="hibernate.default_schema" value="${database.schema}" /> -->
-				<entry key="hibernate.dialect" value="${database.dialect}" />
-				<entry key="hibernate.show_sql" value="${database.show-sql}" />
-				<entry key="hibernate.format_sql" value="${database.format-sql}" />
-				<entry key="hibernate.connection.pool_size" value="1" />
-				<entry key="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
-				<entry key="hibernate.hbm2ddl.auto" value="${database.updateStrategy}" />
-			</map>
-		</property>
-	</bean>
-	
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
-	
-	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
-		<constructor-arg value="512" />
-	</bean>
-	
-	<bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
-		<property name="userPropertyToUse" value="username" />
-	</bean>
-	
-	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basename" value="classpath:messages" />
-        <property name="defaultEncoding" value="UTF-8"/>
-	</bean>
-	
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${email.host}" />
-		<property name="username" value="${email.username}" />
-		<property name="password" value="${email.password}" />
-		
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-			</props>
-		</property>
-	</bean>
+  <beans profile="test">
+    <bean id="jpaProperties" class="org.springframework.beans.factory.config.MapFactoryBean">
+      <property name="sourceMap">
+        <map>
+          <entry key="hibernate.dialect" value="${database.dialect}" />
+          <entry key="hibernate.show_sql" value="${database.show-sql}" />
+          <entry key="hibernate.format_sql" value="${database.format-sql}" />
+          <entry key="hibernate.connection.pool_size" value="1" />
+          <entry key="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
+          <entry key="hibernate.hbm2ddl.auto" value="${database.updateStrategy}" />
+        </map>
+      </property>
+    </bean>
+  </beans>
+
+  <beans>
+
+    <context:annotation-config />
+    <context:component-scan base-package="org.callistasoftware.netcare.core.spi.impl, org.callistasoftware.netcare.core.job" />
+
+    <jpa:repositories base-package="org.callistasoftware.netcare.core.repository" />
+
+    <tx:annotation-driven />
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager"/>
+
+    <task:annotation-driven />
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+      <property name="driverClassName" value="${database.driver}" />
+      <property name="url" value="${database.url}" />
+      <property name="username" value="${database.username}" />
+      <property name="password" value="${database.password}" />
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="persistenceUnitName" value="netcare-pu" />
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+          <property name="database" value="${database.vendor}" />
+          <property name="showSql" value="${database.show-sql}" />
+          <property name="generateDdl" value="true" />
+        </bean>
+      </property>
+      <property name="jpaPropertyMap" ref="jpaProperties" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+      <constructor-arg value="512" />
+    </bean>
+
+    <bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+      <property name="userPropertyToUse" value="username" />
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+      <property name="basename" value="classpath:messages" />
+          <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+      <property name="host" value="${email.host}" />
+      <property name="username" value="${email.username}" />
+      <property name="password" value="${email.password}" />
+
+      <property name="javaMailProperties">
+        <props>
+          <prop key="mail.smtp.auth">true</prop>
+          <prop key="mail.smtp.starttls.enable">true</prop>
+        </props>
+      </property>
+    </bean>
+
+  </beans>
 
 </beans>

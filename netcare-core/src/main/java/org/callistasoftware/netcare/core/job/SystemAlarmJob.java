@@ -95,7 +95,7 @@ public class SystemAlarmJob {
         log.info("======== HEALTH PLAN EXPIRATION JOB COMPLETED =========");
     }
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 3600000)
     public void autoRenewHealthPlans() {
         log.info("========= HEALTH PLAN AUTO RENEW JOB STARTED =========");
         final List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndActiveTrueAndAutoRenewalTrue(new Date());
@@ -133,7 +133,7 @@ public class SystemAlarmJob {
 	/**
 	 * Notifies mobile users about it's time to perform an activity.
 	 */
-	@Scheduled(fixedDelay=300000)
+	@Scheduled(fixedDelay=3600000)
 	public void reminderJob() {
 		log.info("======== REMINDER JOB STARTED =========");
 		HashMap<PatientEntity, Integer> patients = new HashMap<PatientEntity, Integer>();
