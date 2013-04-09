@@ -84,14 +84,14 @@ public interface HealthPlanService {
      * @param healthPlan
      * @return
      */
-    ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlan);
+    ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlan, boolean sysUser);
 
     /**
      * Activates a health plan.
      * @param healthPlan
      * @return
      */
-    ServiceResult<HealthPlan> activateHealthPlan(Long healthPlan);
+    ServiceResult<HealthPlan> activateHealthPlan(Long healthPlan, boolean sysUser);
 
 
 	/**
@@ -144,15 +144,6 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<ActivityDefinition[]> loadActivitiesForHealthPlan(final Long healthPlanId);
-	
-	/**
-	 * Returns scheduled activities for a patient.
-	 *
-	 * @return the result.
-	 * @deprecated Use methods in {@link ScheduleService} instead
-	 */
-	@Deprecated
-	ServiceResult<ScheduledActivity[]> getActivitiesForPatient();
 	
 	/**
 	 * Comment a performed activity
@@ -235,13 +226,6 @@ public interface HealthPlanService {
 	 * @return the result with actual activity definitions.
 	 */
 	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId);
-	
-	/**
-	 * Returns events for a patient.
-	 * 
-	 * @return the events for the patient.
-	 */
-	ServiceResult<PatientEvent> getActualEventsForPatient(final PatientBaseView patient);
 
 	/**
 	 * Get reported activities for a certain activity definition within a specific time interval

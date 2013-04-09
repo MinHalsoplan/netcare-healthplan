@@ -28,6 +28,7 @@ import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
+import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.core.spi.PushNotificationService;
 import org.callistasoftware.netcare.core.spi.impl.HealthPlanServiceImpl;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
@@ -76,10 +77,23 @@ public class SystemAlarmJob {
 	@Autowired
 	private MessageSource messageBundle;
 
+    @Autowired
+    private HealthPlanService service;
+
 	public void init() {
 		alarmJob();
 		reminderJob();
 	}
+
+    @Scheduled(fixedRate = 3600000)
+    public void inactiveExpiredHealthPlans() {
+        log.info("======== HEALTH PLAN EXPIRATION JOB STARTED =========");
+        final List<HealthPlanEntity> entities = hpRepo.findByEndDateLessThanAndActiveTrueAndAutoRenewalFalse(new Date());
+        for (final HealthPlanEntity ent : entities) {
+            service.inactivateHealthPlan(ent.getId(), true);
+        }
+        log.info("======== HEALTH PLAN EXPIRATION JOB COMPLETED =========");
+    }
 	
 	@Scheduled(fixedRate=3600000)
 	public void alarmJob() {
@@ -193,7 +207,7 @@ public class SystemAlarmJob {
 	
 	//
 	private void plans(Date endDate) {
-		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalse(endDate);
+		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalseAndActiveTrue(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
 			if (hpe.isAutoRenewal()) {

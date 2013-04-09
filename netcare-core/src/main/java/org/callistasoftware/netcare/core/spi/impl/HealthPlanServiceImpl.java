@@ -141,27 +141,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 				new ListEntitiesMessage(HealthPlanEntity.class, plans.size()));
 	}
 
-	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient() {
-		Calendar c = Calendar.getInstance();
-		c.setFirstDayOfWeek(1);
-
-		c.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
-		c.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
-
-		Date startDate = ApiUtil.dayBegin(c).getTime();
-
-		c.add(Calendar.DATE, SCHEMA_HISTORY_DAYS + SCHEMA_FUTURE_DAYS);
-		Date endDate = ApiUtil.dayEnd(c).getTime();
-
-		List<ScheduledActivityEntity> entities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(
-				getPatient(), startDate, endDate);
-		Collections.sort(entities);
-
-		ScheduledActivity[] arr = ScheduledActivityImpl.newFromEntities(entities);
-
-		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
-	}
-
 	@Override
 	public ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan o, final CareActorBaseView careActor,
 			final Long patientId) {
@@ -202,25 +181,27 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
     }
 
     @Override
-    public ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlanId) {
+    public ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlanId, boolean sysUser) {
         getLog().info("Inactivating health plan {}", healthPlanId);
-        return this.setActiveFlagOnHealthPlan(healthPlanId, false);
+        return this.setActiveFlagOnHealthPlan(healthPlanId, false, sysUser);
     }
 
     @Override
-    public ServiceResult<HealthPlan> activateHealthPlan(Long healthPlanId) {
+    public ServiceResult<HealthPlan> activateHealthPlan(Long healthPlanId, boolean sysUser) {
         getLog().info("Activating health plan {}", healthPlanId);
-        return this.setActiveFlagOnHealthPlan(healthPlanId, true);
+        return this.setActiveFlagOnHealthPlan(healthPlanId, true, sysUser);
     }
 
-    protected ServiceResult<HealthPlan> setActiveFlagOnHealthPlan(Long healthPlanId, boolean active) {
+    protected ServiceResult<HealthPlan> setActiveFlagOnHealthPlan(Long healthPlanId, boolean active, boolean sysUser) {
         final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
         if (hp == null) {
             return ServiceResultImpl
                     .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
         }
 
-        this.verifyWriteAccess(hp);
+        if (!sysUser) {
+            this.verifyWriteAccess(hp);
+        }
 
         hp.setActive(active);
         if (active) {
@@ -475,35 +456,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 		
 		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(defs), new GenericSuccessMessage());
-	}
-
-	@Override
-	public ServiceResult<PatientEvent> getActualEventsForPatient(PatientBaseView patientView) {
-		PatientEntity patient = patientRepository.findOne(patientView.getId());
-		Calendar cal = Calendar.getInstance();
-		Date today = ApiUtil.dayBegin(cal).getTime();
-		cal.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
-		cal.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
-		Date start = ApiUtil.dayBegin(cal).getTime();
-		cal.setTime(today);
-		Date end = ApiUtil.dayEnd(cal).getTime();
-		final List<ScheduledActivityEntity> activities = scheduledActivityRepository
-				.findByPatientAndScheduledTimeBetween(patient, start, end);
-		int num = 0;
-		int due = 0;
-		for (ScheduledActivityEntity sc : activities) {
-			if (sc.getReportedTime() == null) {
-				if (sc.getScheduledTime().compareTo(today) < 0) {
-					due++;
-				} else {
-					num++;
-				}
-			}
-		}
-		PatientEvent event = PatientEventImpl.newPatientEvent(num, due);
-		ServiceResult<PatientEvent> sr;
-		sr = ServiceResultImpl.createSuccessResult(event, new GenericSuccessMessage());
-		return sr;
 	}
 
 	public ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(Long healthPlanId) {

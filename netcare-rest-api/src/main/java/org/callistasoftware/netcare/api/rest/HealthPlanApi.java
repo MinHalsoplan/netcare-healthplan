@@ -93,14 +93,14 @@ public class HealthPlanApi extends ApiSupport {
     @ResponseBody
     public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
         this.logAccess("inactivate", "health plan");
-        return this.service.inactivateHealthPlan(healthPlan);
+        return this.service.inactivateHealthPlan(healthPlan, false);
     }
 
     @RequestMapping(value="/{healthPlan}/activate", method=RequestMethod.POST, produces="application/json")
     @ResponseBody
     public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
         this.logAccess("activate", "health plan");
-        return this.service.activateHealthPlan(healthPlan);
+        return this.service.activateHealthPlan(healthPlan, false);
     }
 
     @RequestMapping(value="/{healthPlan}/renew", method=RequestMethod.POST, produces="application/json")

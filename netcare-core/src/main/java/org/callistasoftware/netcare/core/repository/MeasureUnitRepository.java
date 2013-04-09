@@ -23,8 +23,7 @@ public interface MeasureUnitRepository extends JpaRepository<MeasureUnitEntity, 
 
 	/**
 	 * Find a measure unit by name and county council
-	 * @param name
-	 * @param cce
+	 * @param dn
 	 * @return
 	 */
 	MeasureUnitEntity findByDnOrderByDnAsc(final String dn);

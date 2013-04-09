@@ -30,7 +30,7 @@ public interface PushNotificationService {
 	 * Send push notification to a specified user
 	 * @param subject - Subject of the message
 	 * @param message - The message
-	 * @param toUserId - The id of the receiving user
+	 * @param user - The receiving user
 	 */
 	void sendPushNotification(final String subject, final String message, final PatientEntity user);
 }
