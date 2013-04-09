@@ -137,6 +137,10 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 		getLog().info("Report done for scheduled activity {}", report.getId());
 		
 		ScheduledActivityEntity entity = repo.findOne(report.getId());
+        if (!entity.getActivityDefinitionEntity().getHealthPlan().isActive()) {
+            throw new IllegalStateException("Cannot report when health plan is inactive. Scheduled activity: " + entity.getId());
+        }
+
 		if (report.isExtra()) {
 			
 			getLog().debug("Creating extra report for activity");

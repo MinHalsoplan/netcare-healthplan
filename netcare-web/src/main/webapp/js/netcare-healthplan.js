@@ -3342,6 +3342,15 @@ var NC_MODULE = {
 		
 		my.initListeners = function() {
 			$('#activityDefinitions').bind('change select', function() {
+
+                if (_data.length == 0) {
+                    // Inform user
+                    $('#inactiveNote').show();
+                    $('#activityDefinitions').prop('disabled', 'disabled');
+                    return;
+                }
+
+
 				var idx = findIndexForDefinition($(this).find('option:selected').prop('value'));
 				var def = _data[idx];
 				
@@ -3395,12 +3404,16 @@ var NC_MODULE = {
 		my.loadActivities = function() {
 			NC_MODULE.PATIENT_ACTIVITIES.load(function(data) {
 				$.each(data.data, function(i, v) {
-					
-					_data[i] = v;
-					
-					$('#activityDefinitions').append(
-						$('<option>').prop('value', v.id).html(v.type.name)
-					);
+
+                    // Prevent patient from creating an extra report on an inactive
+                    // definition.
+                    if (v.active) {
+                        _data.push(v);
+
+                        $('#activityDefinitions').append(
+                            $('<option>').prop('value', v.id).html(v.type.name)
+                        );
+                    }
 				});
 				
 				$('#activityDefinitions').select();
