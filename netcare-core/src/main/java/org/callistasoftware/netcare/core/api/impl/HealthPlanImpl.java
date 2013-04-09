@@ -49,7 +49,6 @@ public class HealthPlanImpl implements HealthPlan {
 	private ActivityDefinition[] activityDefinitions;
 
 	private boolean autoRenewal;
-	private int iteration;
 	private boolean active;
 	
 	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
@@ -69,7 +68,6 @@ public class HealthPlanImpl implements HealthPlan {
 		
 		dto.setIssuedBy(ca);
 		dto.setPatient(PatientBaseViewImpl.newFromEntity(entity.getForPatient()));
-		dto.setIteration(entity.getIteration());
 		dto.setAutoRenewal(entity.isAutoRenewal());
 		dto.setActive(entity.isActive());
 		/*
@@ -130,7 +128,7 @@ public class HealthPlanImpl implements HealthPlan {
 	public int getDuration() {
 		return this.duration;
 	}
-	
+
 	public void setDuration(final int duration) {
 		this.duration = duration;
 	}
@@ -178,15 +176,6 @@ public class HealthPlanImpl implements HealthPlan {
 	
 	public void setAutoRenewal(boolean autoRenewal) {
 		this.autoRenewal = autoRenewal;
-	}
-
-	@Override
-	public int getIteration() {
-		return iteration;
-	}
-
-	public void setIteration(int iteration) {
-		this.iteration = iteration;
 	}
 
 	@Override

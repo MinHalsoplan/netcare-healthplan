@@ -71,13 +71,6 @@ public interface HealthPlanService {
 	 * @return
 	 */
 	ServiceResult<HealthPlan> createNewHealthPlan(final HealthPlan ordination, final CareActorBaseView creator, final Long patientId);
-	
-	/**
-	 * Archives a healthplan with the specified id
-	 * @param ordinationId
-	 * @return
-	 */
-	ServiceResult<HealthPlan> archiveHealthPlan(final Long ordinationId);
 
     /**
      * Inactivates a health plan.

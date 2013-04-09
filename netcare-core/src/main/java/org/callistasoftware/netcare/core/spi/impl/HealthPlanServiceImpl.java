@@ -127,7 +127,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<HealthPlanEntity> entities = this.repo.findByForPatientAndArchivedFalse(forPatient);
+		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 
 		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
@@ -164,23 +164,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
     @Override
-    public ServiceResult<HealthPlan> archiveHealthPlan(Long healthPlanId) {
-        getLog().info("Deleting health plan {}", healthPlanId);
-        final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
-        if (hp == null) {
-            return ServiceResultImpl
-                    .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
-        }
-
-        this.verifyWriteAccess(hp);
-
-        hp.setArchived(true);
-        this.repo.save(hp);
-
-        return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
-    }
-
-    @Override
     public ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlanId, boolean sysUser) {
         getLog().info("Inactivating health plan {}", healthPlanId);
         return this.setActiveFlagOnHealthPlan(healthPlanId, false, sysUser);
@@ -208,15 +191,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
             getLog().debug("Healthplan {} is being activated by {}", hp.getId(), sysUser ? "system job" : getCareActor().getHsaId());
 
-            // Calculate new start and end date
-            final DateTime dt = new DateTime();
-            hp.setStartDate(dt.toDate());
-            if (hp.getDurationUnit().equals(DurationUnit.MONTH)) {
-                hp.setEndDate(dt.plusMonths(hp.getDuration()).toDate());
-            } else {
-                hp.setEndDate(dt.plusWeeks(hp.getDuration()).toDate());
-            }
-
+            hp.setStartDate(new DateTime().toDate());
             getLog().debug("Start and end date have been recalculated. New date span is {} - {}", hp.getStartDate(), hp.getEndDate());
 
             // Reset alarm status
@@ -250,7 +225,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
     @Override
 	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
-		final HealthPlanEntity entity = this.repo.findByIdAndArchivedFalse(healthPlanId);
+		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
 			return ServiceResultImpl
 					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));

@@ -98,7 +98,7 @@ public class SystemAlarmJob {
     @Scheduled(fixedRate = 30000)
     public void autoRenewHealthPlans() {
         log.info("========= HEALTH PLAN AUTO RENEW JOB STARTED =========");
-        final List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalseAndActiveTrueAndAutoRenewalTrue(new Date());
+        final List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndActiveTrueAndAutoRenewalTrue(new Date());
 
         log.debug("Found {} expired health plans that needs to be auto renewed.", hpl.size());
         for (HealthPlanEntity hpe : hpl) {
@@ -226,10 +226,10 @@ public class SystemAlarmJob {
 	
 	//
 	private void plans(Date endDate) {
-		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalseAndActiveTrue(endDate);
+		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndActiveTrue(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
-			if (!hpe.isReminderDone()) {
+			if (!hpe.isReminderDone() && !hpe.isAutoRenewal()) {
 				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId());
 				ae.setInfo(hpe.getName());
 				al.add(ae);

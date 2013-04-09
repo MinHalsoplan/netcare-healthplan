@@ -72,9 +72,6 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
     @Column(name="active")
     private boolean active = true;
 
-    @Column(name="archived")
-    private boolean archived;
-
 	@ManyToOne
 	@JoinColumn(name="issued_by_care_giver_id")
 	private CareActorEntity issuedBy;
@@ -183,6 +180,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		this.durationUnit = EntityUtil.notNull(durationUnit);
 		calculateEnd();
 	}
+
 	public boolean isActive() {
         return active;
 	}
@@ -201,15 +199,14 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 
             final DateTime dt = new DateTime(getStartDate());
             if (getDurationUnit().equals(DurationUnit.MONTH)) {
-                setEndDate(dt.plusMonths(getDuration()).toDate());
+                setEndDate(dt.plusMonths(getDuration()).withTime(23, 59, 59, 999).toDate());
             } else {
-                setEndDate(dt.plusWeeks(getDuration()).toDate());
+                setEndDate(dt.plusWeeks(getDuration()).withTime(23, 59, 59, 999).toDate());
             }
 		} else {
 			endDate = null;
 		}
 	}
-
 
 	protected void setForPatient(PatientEntity forPatient) {
 		this.forPatient = EntityUtil.notNull(forPatient);
@@ -227,7 +224,6 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	public boolean isAutoRenewal() {
 		return autoRenewal;
 	}
-
 
 	/**
 	 * Sets the auto renewal property.
@@ -247,7 +243,6 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		return this.isWriteAllowed(userId);
 	}
 
-
 	@Override
 	public boolean isWriteAllowed(UserEntity userId) {
 		final boolean careActor = userId.isCareActor();
@@ -258,36 +253,15 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		return this.getForPatient().getId().equals(userId.getId());
 	}
 
-	/**
-	 * Returns if a reminder has been sent for this plan (one per plan period only).
-	 * 
-	 * @return true if a reminder has been raised, otherwise false.
-	 */
 	public boolean isReminderDone() {
 		return reminderDone;
 	}
 
-	//
 	public void setReminderDone(boolean reminderDone) {
 		this.reminderDone = reminderDone;
 	}
 
-	/**
-	 * Whether the health plan has been archived or not. If this is
-	 * set to true, the health plan must no be visible to users
-	 * @return
-	 */
-	public boolean isArchived() {
-		return archived;
-	}
-
-	public void setArchived(boolean archived) {
-		this.archived = archived;
-		setAutoRenewal(false);
-		setReminderDone(true);
-	}
-
-    public void setEndDate(Date endDate) {
+    void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 }

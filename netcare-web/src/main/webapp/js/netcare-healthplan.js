@@ -741,6 +741,7 @@ var NC_MODULE = {
 					_data.healthPlanId = params.healthPlanId;
                     _data.healthPlanName = data.data.healthPlanName;
                     _data.healthPlanStartDate = data.data.healthPlanStartDate;
+                    _data.healthPlanActive = data.data.healthPlanActive;
 					_data.goalValues = data.data.goalValues;
 					
 					$.each(data.data.dayTimes, function(i,v) {
