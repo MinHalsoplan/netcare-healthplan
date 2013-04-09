@@ -3306,7 +3306,7 @@ var NC_MODULE = {
 		
 		my.load = function(callback, patientId) {
             if (patientId != undefined) {
-                var qs = '?patient=' + patientId + '&';
+                var qs = '?patient=' + patientId;
                 new NC.Ajax().get('/activityPlans' + qs, callback);
             } else {
                 new NC.Ajax().get('/activityPlans', callback);
