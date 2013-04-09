@@ -32,4 +32,6 @@ public interface HealthPlanRepository extends JpaRepository<HealthPlanEntity, Lo
 	List<HealthPlanEntity> findByEndDateLessThanAndArchivedFalseAndActiveTrue(final Date endDate);
 
     List<HealthPlanEntity> findByEndDateLessThanAndActiveTrueAndAutoRenewalFalse(final Date endDate);
+
+    List<HealthPlanEntity> findByEndDateLessThanAndArchivedFalseAndActiveTrueAndAutoRenewalTrue(final Date endDate);
 }

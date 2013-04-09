@@ -206,7 +206,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
         hp.setActive(active);
         if (active) {
 
-            getLog().debug("Healthplan {} is being activated by {}", hp.getId(), getCareActor().getHsaId());
+            getLog().debug("Healthplan {} is being activated by {}", hp.getId(), sysUser ? "system job" : getCareActor().getHsaId());
 
             // Calculate new start and end date
             final DateTime dt = new DateTime();
@@ -218,6 +218,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
             }
 
             getLog().debug("Start and end date have been recalculated. New date span is {} - {}", hp.getStartDate(), hp.getEndDate());
+
+            // Reset alarm status
+            hp.setReminderDone(false);
 
             int count = 0;
             final List<ScheduledActivityEntity> scheduledActivityRepositoryScheduledActivitiesForHealthPlan = scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
@@ -233,19 +236,12 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
             for (final ActivityDefinitionEntity ad : hp.getActivityDefinitions()) {
                 ad.setStartDate(hp.getStartDate());
-                ad.setRemovedFlag(false);
 
                 final List<ScheduledActivityEntity> schedule = ad.scheduleActivities();
 
                 this.scheduledActivityRepository.save(schedule);
                 getLog().debug("Scheduled {} activities for definition {}", schedule.size(), ad.getActivityType().getName());
             }
-        } else {
-            for (final ActivityDefinitionEntity ade : hp.getActivityDefinitions()) {
-                ade.setRemovedFlag(true);
-            }
-
-            getLog().debug("Marked {} activity definitions as inactive.", hp.getActivityDefinitions());
         }
 
         this.repo.save(hp);
@@ -315,29 +311,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop) {
 		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
-
 		if (entity == null) {
 			return ServiceResultImpl
 					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 
-		List<ScheduledActivityEntity> list = null;
+        verifyWriteAccess(entity);
 
-		if (stop) {
-			getLog().debug("Health plan {} renewal terminated", entity.getName());
-			entity.setAutoRenewal(false);
-		} else {
-			list = entity.performRenewal();
-			getLog().debug("Health plan {} perform renewal, iteration {}", entity.getName(), entity.getIteration());
-		}
-		HealthPlanEntity savedEntity = this.repo.save(entity);
+        if (!entity.isActive()) {
+            throw new IllegalStateException("User: " + getCurrentUser().getId() + " tried to renew inactive health plan with id: " + entity.getId());
+        }
 
-		if (list != null) {
-			this.scheduledActivityRepository.save(list);
-		}
+        entity.setAutoRenewal(!stop);
 
-		final HealthPlan result = HealthPlanImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale());
-		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult((HealthPlan) HealthPlanImpl.newFromEntity(entity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class HealthPlanImpl implements HealthPlan {
 	private int iteration;
 	private boolean active;
 	
-	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {		
+	public static HealthPlanImpl newFromEntity(final HealthPlanEntity entity, final Locale l) {
 		final HealthPlanImpl dto = new HealthPlanImpl();
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());

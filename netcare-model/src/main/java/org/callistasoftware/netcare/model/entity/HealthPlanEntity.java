@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -64,9 +66,6 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	@Column(name="auto_renewal")
 	private boolean autoRenewal;
 	
-	@Column(name="iteration")
-	private int iteration;
-	
 	@Column(name="reminder_done")
 	private boolean reminderDone;
 
@@ -90,14 +89,11 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	
 	@OneToMany(mappedBy="healthPlan", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private List<ActivityDefinitionEntity> activityDefinitions;
-	
-	
+
 	HealthPlanEntity() {
 		activityDefinitions = new LinkedList<ActivityDefinitionEntity>();
-		iteration = 0;
 		reminderDone = false;
 	}
-	
 
 	public static HealthPlanEntity newEntity(CareActorEntity issuedBy, PatientEntity forPatient, String name, Date startDate, int duration, DurationUnit unit) {
 		HealthPlanEntity entity = new HealthPlanEntity();
@@ -124,9 +120,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	}
 
 	public void setStartDate(Date startDate) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(EntityUtil.notNull(startDate));
-		this.startDate = EntityUtil.dayBegin(c).getTime();
+		this.startDate = new DateTime(startDate).withTimeAtStartOfDay().toDate();
 		calculateEnd();
 	}
 
@@ -189,15 +183,8 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		this.durationUnit = EntityUtil.notNull(durationUnit);
 		calculateEnd();
 	}
-
-	/**
-	 * Returns if this health-plan is active.
-	 * @return true if active, otherwise false.
-	 */
 	public boolean isActive() {
         return active;
-//		Date today = EntityUtil.dayEnd(Calendar.getInstance()).getTime();
-//		return (today.compareTo(getEndDate()) <= 0);
 	}
 
     public void setActive(boolean active) {
@@ -208,13 +195,16 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	public DurationUnit getDurationUnit() {
 		return durationUnit;
 	}
-	
+
 	protected void calculateEnd() {
 		if (durationUnit != null && startDate != null) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(startDate);
-			c.add(durationUnit == DurationUnit.MONTH ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, duration * (1 + getIteration()));
-			endDate = EntityUtil.dayEnd(c).getTime();
+
+            final DateTime dt = new DateTime(getStartDate());
+            if (getDurationUnit().equals(DurationUnit.MONTH)) {
+                setEndDate(dt.plusMonths(getDuration()).toDate());
+            } else {
+                setEndDate(dt.plusWeeks(getDuration()).toDate());
+            }
 		} else {
 			endDate = null;
 		}
@@ -223,39 +213,6 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 
 	protected void setForPatient(PatientEntity forPatient) {
 		this.forPatient = EntityUtil.notNull(forPatient);
-	}
-
-	/**
-	 * Extends the health plan with another period.
-	 * 
-	 * @return the list of added activities.
-	 */
-	public List<ScheduledActivityEntity> performRenewal() {
-		Calendar c = Calendar.getInstance();
-		c.setTime(getEndDate());
-		c.add(Calendar.DATE, 1);
-		
-		Date newStartDate =  EntityUtil.dayBegin(c).getTime();
-		Date today = EntityUtil.dayBegin(Calendar.getInstance()).getTime();
-		
-		// wind time to now, if start date is in the past
-		if (today.compareTo(newStartDate) > 0) {
-			newStartDate = today;
-		}
-		
-		// set iteration & new end date.
-		setIteration(getIteration() + 1);
-
-		List<ScheduledActivityEntity> list = new LinkedList<ScheduledActivityEntity>();
-		for (ActivityDefinitionEntity ad : getActivityDefinitions()) {
-			if (!ad.isRemovedFlag()) {
-				list.addAll(ad.scheduleActivities0(newStartDate, false));
-			}
-		}
-		
-		setReminderDone(false);
-		
-		return list;
 	}
 
 	public PatientEntity getForPatient() {
@@ -278,6 +235,10 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	 * @param autoRenewal true if automatically renewal is enabled, otherwise false.
 	 */
 	public void setAutoRenewal(boolean autoRenewal) {
+        if (!isActive()) {
+            throw new IllegalStateException("Cannot enable auto renewal since the health plan " + getId() + " is not active");
+        }
+
 		this.autoRenewal = autoRenewal;
 	}
 
@@ -297,23 +258,6 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 		return this.getForPatient().getId().equals(userId.getId());
 	}
 
-
-	/**
-	 * Returns the iteration starting with zero (0).
-	 * 
-	 * @return the iteration starting with zero (0).
-	 */
-	public int getIteration() {
-		return iteration;
-	}
-
-
-	private void setIteration(int iteration) {
-		this.iteration = iteration;
-		calculateEnd();
-	}
-
-
 	/**
 	 * Returns if a reminder has been sent for this plan (one per plan period only).
 	 * 
@@ -327,7 +271,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	public void setReminderDone(boolean reminderDone) {
 		this.reminderDone = reminderDone;
 	}
-	
+
 	/**
 	 * Whether the health plan has been archived or not. If this is
 	 * set to true, the health plan must no be visible to users
@@ -336,7 +280,7 @@ public class HealthPlanEntity implements PermissionRestrictedEntity {
 	public boolean isArchived() {
 		return archived;
 	}
-	
+
 	public void setArchived(boolean archived) {
 		this.archived = archived;
 		setAutoRenewal(false);

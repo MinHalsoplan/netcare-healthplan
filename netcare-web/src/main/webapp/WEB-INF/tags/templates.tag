@@ -101,45 +101,56 @@
 			<div class="span6">
 				<a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
 			</div>
-            {{ if (active) { }}
-                <div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
-                    <button class="btn" id="hp-inactivate-{{=id}}" href="#">Inaktivera hälsoplan</button>
-                    <div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-                        <div class="modal-body">Är du säker att hälsoplan {{=name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att hälsoplanen aktiveras.</div>
-                        <div class="modal-footer">
-                            <a href="#" data-dismiss="modal">Avbryt</a>
-                            <button id="inactivate-hp-btn-{{=id}}"class="btn" data-dismiss="modal">Inaktivera</button>
-                        </div>
-                    </div>
-                </div>
-            {{ } else { }}
-            <div class="span6 activate" style="text-align: right; padding-right: 20px;">
-                <button class="btn" id="hp-activate-{{=id}}" href="#">Aktivera hälsoplan</button>
-                <div id="hp-activate-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-                    <div class="modal-body">Är du säker att hälsoplan {{=name}} skall aktiveras? Ursprungsplaneringen för alla aktiviteter kommer aktiveras och de går att rapportera på.</div>
-                    <div class="modal-footer">
-                        <a href="#" data-dismiss="modal">Avbryt</a>
-                        <button id="activate-hp-btn-{{=id}}" class="btn" data-dismiss="modal">Aktivera</button>
-                    </div>
-                </div>
-            </div>
-            {{ } }}
+  </div>
+  <div class="row-fluid extend">
+    <div class="span6" style="margin-top: 15px;">
+      {{ if (autoRenewal && active) { }}
+        <input id="hp-extend-plan-{{=id}}" type="checkbox" checked="checked"/>
+      {{ } else if (autoRenewal && !active) { }}
+        <input id="hp-extend-plan-{{=id}}" type="checkbox" checked="checked" disabled="disabled"/>
+      {{ } else if (!autoRenewal && !active) { }}
+        <input id="hp-extend-plan-{{=id}}" type="checkbox" disabled="disabled"/>
+      {{ } else { }}
+        <input id="hp-extend-plan-{{=id}}" type="checkbox" />
+      {{ } }}
+      <small>Förläng automatiskt vid periodens slut</small>
+    </div>
+    {{ if (active && !autoRenewal) { }}
+    <div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
+      <button class="btn" id="hp-inactivate-{{=id}}" href="#">Inaktivera hälsoplan</button>
+      <div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+        <div class="modal-body">Är du säker att hälsoplan {{=name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att hälsoplanen aktiveras.</div>
+        <div class="modal-footer">
+          <a href="#" data-dismiss="modal">Avbryt</a>
+          <button id="inactivate-hp-btn-{{=id}}"class="btn" data-dismiss="modal">Inaktivera</button>
         </div>
-		{{ if (!autoRenewal) { }}
-		<div class="row-fluid extend">
-			<div class="span12">			
-				<a id="hp-extend-plan-{{=id}}" href="#">Förläng hälsoplan</a>
-				<div id="hp-extend-confirmation-{{=id}}" class="modal fade" style="display: none; ">
-					<div class="modal-body">Förläng hälsoplanen?</div>
-					<div class="modal-footer">
-						<a href="#" data-dismiss="modal">Avbryt</a>
-						<button class="btn" data-dismiss="modal">Förläng</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		{{ } }}
-	</div>
+      </div>
+    </div>
+    {{ } else if (!active) { }}
+    <div class="span6 activate" style="text-align: right; padding-right: 20px;">
+      <button class="btn" id="hp-activate-{{=id}}" href="#">Aktivera hälsoplan</button>
+      <div id="hp-activate-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+        <div class="modal-body">Är du säker att hälsoplan {{=name}} skall aktiveras? Ursprungsplaneringen för alla aktiviteter kommer aktiveras och de går att rapportera på.</div>
+        <div class="modal-footer">
+          <a href="#" data-dismiss="modal">Avbryt</a>
+          <button id="activate-hp-btn-{{=id}}" class="btn" data-dismiss="modal">Aktivera</button>
+        </div>
+      </div>
+    </div>
+    {{ } else if (active && autoRenewal) { }}
+    <div class="span6 inactivate" style="text-align: right; padding-right: 20px;">
+      <button class="btn" id="hp-inactivate-{{=id}}" href="#" style="display:none;">Inaktivera hälsoplan</button>
+      <div id="hp-remove-confirmation-{{=id}}" class="modal fade" style="display: none; ">
+        <div class="modal-body">Är du säker att hälsoplan {{=name}} skall inaktiveras? All planering för kommande tidpunkter kommer tas bort och det går inte att rapportera tills dess att hälsoplanen aktiveras.</div>
+        <div class="modal-footer">
+          <a href="#" data-dismiss="modal">Avbryt</a>
+          <button id="inactivate-hp-btn-{{=id}}"class="btn" data-dismiss="modal">Inaktivera</button>
+        </div>
+      </div>
+    </div>
+    {{ } }}
+  </div>
+    </div>
 </div>
 </script>
 
@@ -148,7 +159,7 @@
 <div id="hp-ad-{{=id}}" class="row-fluid">
 	<div class="span6">{{=type.name}}</div>
 
-    {{ if (hpActive) { }}
+    {{ if (healthPlanActive) { }}
         {{ if (active) { }}
         <div class="span4"><a id="hp-ad-{{=id}}-edit" href="#">Redigera</a> | <a id="hp-ad-{{=id}}-remove" href="#">Inaktivera</a></div>
         {{ } else { }}
@@ -777,7 +788,7 @@
 			</div>
 		</div>
 		<div class="span6" style="text-align:right; margin-top: 15px; padding-right: 20px;">
-      {{ if (active) { }}
+      {{ if (healthPlanActive) { }}
 			<small>Pågår till och med: <strong>{{=period}}</strong></small>
       {{ } else { }}
       <small>Inaktiv</small>
@@ -788,7 +799,7 @@
 		<div class="mainBody span12">
 			<h4>Inställningar</h4>
 			<div class="subRow">
-        {{ if (active) { }}
+        {{ if (healthPlanActive) { }}
 				<input id="activityItem{{=id}}-reminder" type="checkbox" />
         {{ } else { }}
         <input id="activityItem{{=id}}-reminder" type="checkbox" disabled="disabled"/>
