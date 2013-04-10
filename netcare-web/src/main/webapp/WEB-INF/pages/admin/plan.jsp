@@ -80,19 +80,19 @@
 				<fieldset id="scheduleFieldset">
                     <form id="startdateRepeatForm">
 					<netcare:row>
-						<netcare:col span="5">
+						<netcare:col span="6">
 							<spring:message code="startDate" var="start" scope="page" />
 							<netcare:field containerId="startDateContainer" name="startDate" label="${start}">
 								<netcare:dateInput id="startDate" name="startDate" />
                                 <label id="startDateMsg" class="control-label"></label>
 							</netcare:field>
 						</netcare:col>
-						<netcare:col span="7">
+						<netcare:col span="6">
 							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
 							<netcare:field containerId="activityRepeatContainer" name="activityRepeat" label="${repeat}">
-								<input name="activityRepeat" type="number" value="1"/>
                                 <label id="activityRepeatMsg" class="control-label"></label>
-								<label class="help help-inline"><spring:message code="week" /></label>
+								<input name="activityRepeat" type="number" value="1" class="input-medium"/>
+								<span class="help-inline"><small><spring:message code="week" /></small></span>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>

@@ -775,31 +775,32 @@ var NC_MODULE = {
                     _data.healthPlanId = params.healthPlanId;
                     _data.healthPlanName = data.data.name;
                     _data.healthPlanStartDate = data.data.startDate;
-                    _data.healthPlanActive = data.data.healthPlanActive;
+                    _data.healthPlanActive = data.data.active;
                     $('#healthplanTitle').text(_data.healthPlanName);
+
+                    // Load template
+                    NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
+
+                        _isNew = true;
+
+                        _templateData = data.data;
+
+                        _data.type = new Object();
+                        _data.type.id = _templateData.id;
+                        _data.activityRepeat = 1;
+
+                        my.initListeners(that);
+
+                        $('#templateTitle').text(_templateData.name);
+
+                        my.renderGoals(that);
+
+                        NC.GLOBAL.suspendLoader('#plan');
+                        $('#planContainer').show();
+
+
+                    });
                 });
-
-				NC_MODULE.ACTIVITY_TEMPLATE.loadTemplate(params.templateId, function(data) {
-					
-					_isNew = true;
-					
-					_templateData = data.data;
-					
-					_data.type = new Object();
-					_data.type.id = _templateData.id;
-					_data.activityRepeat = 1;
-
-					my.initListeners(that);
-
-                    $('#templateTitle').text(_templateData.name);
-
-					my.renderGoals(that);
-					
-					NC.GLOBAL.suspendLoader('#plan');
-					$('#planContainer').show();
-					
-					
-				});
 			}
 		};
 
@@ -810,6 +811,7 @@ var NC_MODULE = {
 		
 		my.initListeners = function(my) {
 
+            NC.log('Health plan active? ' + _data.healthPlanActive);
             if (!_data.healthPlanActive) {
                 $('#inactiveNote').show();
                 $('#saveForm').find(':submit').prop('disabled', 'disabled');

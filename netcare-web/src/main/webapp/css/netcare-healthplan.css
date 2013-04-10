@@ -305,14 +305,6 @@ table[id*=planned-times] tbody tr td {
 	margin-left: 0;	
 }
 
-/*
- * INPUT TEXT
- */
-input[type="text"] {
-	margin: none;
-	display: inline;
-}
-
 input[type="number"], input[type="password"], select {
 	padding:8px 10px;
 	background-color:#ededed;
@@ -322,6 +314,14 @@ input[type="number"], input[type="password"], select {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+}
+
+/*
+ * INPUT TEXT
+ */
+input[type="text"], input[type="number"] {
+    margin: 0;
+    display: inline;
 }
 
 .help-block {
