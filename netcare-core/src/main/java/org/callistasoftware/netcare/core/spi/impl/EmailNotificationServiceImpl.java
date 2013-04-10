@@ -36,11 +36,6 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
 	
 	@Autowired
 	private JavaMailSender mailSender;
-	
-	@Override
-	public void sendEmail(String message, String subject, String toAddress) {
-		this.doSendEmail(message, subject, toAddress);
-	}
 
 	@Override
 	public void sendSupportEmail(String message) {

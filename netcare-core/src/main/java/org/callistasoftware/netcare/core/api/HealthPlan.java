@@ -48,7 +48,5 @@ public interface HealthPlan extends Serializable {
 	
 	ActivityDefinition[] getActivityDefinitions();
 
-	int getIteration();
-
 	boolean isActive();
 }

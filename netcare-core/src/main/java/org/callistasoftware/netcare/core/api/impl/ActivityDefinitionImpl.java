@@ -61,6 +61,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	private String endDate;
 	private Long healthPlanId;
 	private String healthPlanName;
+    private boolean healthPlanActive;
 
 	@JsonSerialize(using = JsonDateSerializer.class)
 	private Date healthPlanStartDate;
@@ -94,6 +95,7 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		dto.setStartDate(ApiUtil.formatDate(entity.getStartDate()));
 		dto.setEndDate(ApiUtil.formatDate(entity.getHealthPlan().getEndDate()));
 		dto.setHealthPlanName(entity.getHealthPlan().getName());
+        dto.setHealthPlanActive(entity.getHealthPlan().isActive());
 		dto.setHealthPlanId(entity.getHealthPlan().getId());
         dto.setHealthPlanStartDate(entity.getHealthPlan().getStartDate());
 		dto.setActive(!entity.isRemovedFlag());
@@ -288,7 +290,16 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 		return this.healthPlanId;
 	}
 
-	public void setHealthPlanId(final Long healthPlanId) {
+    @Override
+    public boolean isHealthPlanActive() {
+        return this.healthPlanActive;
+    }
+
+    public void setHealthPlanActive(final boolean active) {
+        this.healthPlanActive = active;
+    }
+
+    public void setHealthPlanId(final Long healthPlanId) {
 		this.healthPlanId = healthPlanId;
 	}
 
@@ -347,6 +358,4 @@ public class ActivityDefinitionImpl implements ActivityDefinition {
 	public int getNumExtra() {
 		return numExtra;
 	}
-
-
 }

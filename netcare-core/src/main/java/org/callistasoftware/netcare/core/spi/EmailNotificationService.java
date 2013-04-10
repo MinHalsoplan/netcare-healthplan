@@ -17,14 +17,6 @@
 package org.callistasoftware.netcare.core.spi;
 
 public interface EmailNotificationService {
-
-	/**
-	 * Sends an email
-	 * @param message
-	 * @param subject
-	 * @param toAddress
-	 */
-	void sendEmail(final String message, final String subject, final String toAddress);
 	
 	/**
 	 * Sends an email to support

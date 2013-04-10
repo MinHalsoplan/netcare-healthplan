@@ -1,0 +1,53 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+  <property name="mk" value="krantz.marcus@gmail.com" />
+  <property name="jc" value="johannescarlen@gmail.com" />
+
+  <property name="hpt" value="nc_health_plan" />
+
+  <changeSet id="1" author="${mk}">
+    <addColumn tableName="${hpt}">
+      <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+    <rollback changeSetId="1" changeSetAuthor="${mk}" />
+  </changeSet>
+
+  <changeSet id="2" author="${mk}">
+    <sql>
+      UPDATE nc_health_plan SET active = false where archived = true;
+      UPDATE nc_health_plan SET active = true where archived = false;
+    </sql>
+    <rollback>
+      UPDATE nc_health_plan SET archived = true where active = false;
+      UPDATE nc_health_plan SET archived = false where active = true;
+    </rollback>
+  </changeSet>
+
+  <changeSet id="3" author="${mk}">
+    <dropColumn tableName="${hpt}" columnName="archived" />
+    <rollback>
+      <addColumn tableName="${hpt}">
+        <column name="archived" type="boolean" defaultValueBoolean="false">
+          <constraints nullable="false" />
+        </column>
+      </addColumn>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="4" author="${mk}">
+    <dropColumn tableName="${hpt}" columnName="iteration" />
+    <rollback>
+      <addColumn tableName="${hpt}">
+        <column name="iteration" type="NUMERIC" defaultValueNumeric="1" />
+      </addColumn>
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>

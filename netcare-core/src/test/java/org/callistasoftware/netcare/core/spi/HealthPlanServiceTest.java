@@ -189,7 +189,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		assertEquals(o.getDuration(), saved.getData().getDuration());
 		assertEquals(o.getDurationUnit().getCode(), saved.getData().getDurationUnit().getCode());
 		assertEquals(o.isAutoRenewal(), saved.getData().isAutoRenewal());
-		assertEquals(o.getIteration(), saved.getData().getIteration());
 	}
 
 	@Test
@@ -323,50 +322,6 @@ public class HealthPlanServiceTest extends TestSupport {
 	@Test
 	@Transactional
 	@Rollback(true)
-	public void events() {
-		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
-		ServiceResult<PatientEvent> sr = service.getActualEventsForPatient(PatientBaseViewImpl.newFromEntity(ad
-				.getHealthPlan().getForPatient()));
-		PatientEvent event = sr.getData();
-		assertEquals(true, event.getDueReports() > 0);
-		Calendar cal = Calendar.getInstance();
-		int day = cal.get(Calendar.DAY_OF_WEEK);
-		assertEquals(true, (event.getNumReports() > 0 && (day == 2 || day == 5)) || event.getNumReports() == 0);
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testHealthPlanRenewal() {
-		ActivityDefinitionEntity ad = createActivityDefinitionEntity();
-		HealthPlanEntity hp = ad.getHealthPlan();
-		assertEquals(true, hp.isAutoRenewal());
-		assertEquals(0, hp.getIteration());
-
-		Date startDate = hp.getStartDate();
-		Date endDate = hp.getEndDate();
-		List<ScheduledActivityEntity> scheduledActivities = schedRepo.findByPatientAndScheduledTimeBetween(
-				hp.getForPatient(), startDate, endDate);
-		int n = scheduledActivities.size();
-		assertTrue(n > 75 && n < 82);
-
-		List<ScheduledActivityEntity> list = hp.performRenewal();
-		schedRepo.save(list);
-
-		endDate = hp.getEndDate();
-		List<ScheduledActivityEntity> scheduledActivities2 = schedRepo.findByPatientAndScheduledTimeBetween(
-				hp.getForPatient(), startDate, endDate);
-		int newActivities = scheduledActivities2.size();
-
-		// number of days should be approx. 2 times more after renewal, but ...
-		// 5 is good enough during a 6 month period
-		assertTrue(newActivities > ((n * 2) - 5));
-		assertEquals(1, hp.getIteration());
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
 	public void deleteActivityDefintion() throws Exception {
 
 		final PatientEntity p = this.createPatient(null);
@@ -411,67 +366,6 @@ public class HealthPlanServiceTest extends TestSupport {
 		try {
 			this.service.inactivateActivity(saved.getId());
 			fail("Should not be possible to delete as another patient.");
-		} catch (Exception e) {
-			assertTrue(e instanceof SecurityException);
-		}
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testDeleteHealthPlan() throws Exception {
-
-		final CareActorEntity ca = this.createCareActor(null, null);
-		final PatientEntity p = this.createPatient("123");
-
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p, "Test", new Date(), 12, DurationUnit.MONTH);
-		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
-
-		final ActivityTypeEntity at = this.createActivityType();
-		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
-		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
-
-		this.runAs(CareActorBaseViewImpl.newFromEntity(ca));
-
-		this.service.archiveHealthPlan(saved.getId());
-
-		assertTrue(this.ordinationRepo.findOne(saved.getId()).isArchived());
-	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testDeleteHealthPlanAsUnathorized() throws Exception {
-		final CareActorEntity ca = this.createCareActor("hsa", null);
-		final PatientEntity p = this.createPatient("123");
-		final PatientEntity p2 = this.createPatient("345");
-
-		final HealthPlanEntity hp = HealthPlanEntity.newEntity(ca, p, "Test", new Date(), 12, DurationUnit.MONTH);
-		final HealthPlanEntity saved = this.ordinationRepo.save(hp);
-
-		final ActivityTypeEntity at = this.createActivityType();
-		final Frequency frequency = Frequency.unmarshal("1;1;2,18:15;5,07:00,19:00");
-		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
-		this.defRepo.save(ActivityDefinitionEntity.newEntity(hp, at, frequency, hp.getIssuedBy()));
-
-		this.runAs(PatientBaseViewImpl.newFromEntity(p2));
-
-		try {
-			this.service.archiveHealthPlan(saved.getId());
-			fail("Patients' must not be able to delete each others health plans.");
-		} catch (Exception e) {
-			assertTrue(e instanceof SecurityException);
-		}
-
-		final CareUnitEntity cu = this.createCareUnit("another-hsa");
-		final CareActorEntity ca2 = this.createCareActor("another-hsa-2", cu);
-
-		this.runAs(CareActorBaseViewImpl.newFromEntity(ca2));
-
-		try {
-			this.service.archiveHealthPlan(saved.getId());
-			fail("Patients' must not be able to delete each others health plans.");
 		} catch (Exception e) {
 			assertTrue(e instanceof SecurityException);
 		}

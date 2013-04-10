@@ -36,8 +36,7 @@ public interface ScheduleService {
 	/**
 	 * Reports on an activity and returns the update.
 	 * 
-	 * @param scheduledActivityId the id.
-	 * @param value the value.
+	 * @param report The schedule activity dto.
 	 * @return an updated {@link ScheduledActivity}
 	 */
 	ServiceResult<ScheduledActivity> reportReady(final ScheduledActivity report);

@@ -85,6 +85,12 @@ public interface ActivityDefinition extends Serializable {
 	 * @return
 	 */
 	Long getHealthPlanId();
+
+    /**
+     * Whether the health plan is active or not
+     * @return
+     */
+    boolean isHealthPlanActive();
 	
 	/**
 	 * Returns health plan name.

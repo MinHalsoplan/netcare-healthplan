@@ -28,6 +28,7 @@ import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
+import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.core.spi.PushNotificationService;
 import org.callistasoftware.netcare.core.spi.impl.HealthPlanServiceImpl;
 import org.callistasoftware.netcare.model.entity.AlarmCause;
@@ -76,10 +77,36 @@ public class SystemAlarmJob {
 	@Autowired
 	private MessageSource messageBundle;
 
+    @Autowired
+    private HealthPlanService service;
+
 	public void init() {
 		alarmJob();
 		reminderJob();
 	}
+
+    @Scheduled(fixedRate = 3600000)
+    public void inactiveExpiredHealthPlans() {
+        log.info("======== HEALTH PLAN EXPIRATION JOB STARTED =========");
+        final List<HealthPlanEntity> entities = hpRepo.findByEndDateLessThanAndActiveTrueAndAutoRenewalFalse(new Date());
+        for (final HealthPlanEntity ent : entities) {
+            service.inactivateHealthPlan(ent.getId(), true);
+        }
+        log.info("======== HEALTH PLAN EXPIRATION JOB COMPLETED =========");
+    }
+
+    @Scheduled(fixedRate = 3600000)
+    public void autoRenewHealthPlans() {
+        log.info("========= HEALTH PLAN AUTO RENEW JOB STARTED =========");
+        final List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndActiveTrueAndAutoRenewalTrue(new Date());
+
+        log.debug("Found {} expired health plans that needs to be auto renewed.", hpl.size());
+        for (HealthPlanEntity hpe : hpl) {
+            log.debug("Perform auto-renewal: health-plan {} for patient {}", hpe.getName(), hpe.getForPatient().getFirstName() + " " + hpe.getForPatient().getSurName());
+            service.activateHealthPlan(hpe.getId(), true);
+        }
+        log.info("========= HEALTH PLAN AUTO RENEW JOB COMPLETED =========");
+    }
 	
 	@Scheduled(fixedRate=3600000)
 	public void alarmJob() {
@@ -89,9 +116,15 @@ public class SystemAlarmJob {
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		cal.add(Calendar.DATE, -1);
 		ApiUtil.dayEnd(cal);
-		
+
+        /*
+         * Create alarm for health plans that is about to expire
+         */
 		plans(cal.getTime());
-		
+
+        /*
+         * Create alarm for activities that is about to expire
+         */
 		activities(cal.getTime());
 		
 		log.info("======== ALARM JOB COMPLETED =========");
@@ -100,7 +133,7 @@ public class SystemAlarmJob {
 	/**
 	 * Notifies mobile users about it's time to perform an activity.
 	 */
-	@Scheduled(fixedDelay=300000)
+	@Scheduled(fixedDelay=3600000)
 	public void reminderJob() {
 		log.info("======== REMINDER JOB STARTED =========");
 		HashMap<PatientEntity, Integer> patients = new HashMap<PatientEntity, Integer>();
@@ -193,15 +226,10 @@ public class SystemAlarmJob {
 	
 	//
 	private void plans(Date endDate) {
-		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndArchivedFalse(endDate);
+		List<HealthPlanEntity> hpl = hpRepo.findByEndDateLessThanAndActiveTrue(endDate);
 		List<AlarmEntity> al = new LinkedList<AlarmEntity>();
 		for (HealthPlanEntity hpe : hpl) {
-			if (hpe.isAutoRenewal()) {
-				log.info("Perform auto-renewal: health-plan {} for patient {}", hpe.getName(), hpe.getForPatient().getFirstName() + " " + hpe.getForPatient().getSurName());
-				List<ScheduledActivityEntity> sal = hpe.performRenewal();
-				hpRepo.save(hpe);
-				saRepo.save(sal);
-			} else if (!hpe.isReminderDone()) {
+			if (!hpe.isReminderDone() && !hpe.isAutoRenewal()) {
 				AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.PLAN_EXPIRES, hpe.getForPatient(), hpe.getCareUnit().getHsaId(), hpe.getId());
 				ae.setInfo(hpe.getName());
 				al.add(ae);

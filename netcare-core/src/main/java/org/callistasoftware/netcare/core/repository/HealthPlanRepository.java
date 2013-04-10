@@ -24,12 +24,12 @@ import org.callistasoftware.netcare.model.entity.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HealthPlanRepository extends JpaRepository<HealthPlanEntity, Long> {
-	
-	HealthPlanEntity findByIdAndArchivedFalse(final Long id);
-	
-	List<HealthPlanEntity> findByForPatientAndArchivedFalse(PatientEntity forPatient);
-	
-	List<HealthPlanEntity> findByEndDateLessThanAndArchivedFalse(final Date endDate);
 
-    List<HealthPlanEntity> findByForPatient(PatientEntity forPatient);
+	List<HealthPlanEntity> findByForPatient(PatientEntity forPatient);
+	
+	List<HealthPlanEntity> findByEndDateLessThanAndActiveTrue(final Date endDate);
+
+    List<HealthPlanEntity> findByEndDateLessThanAndActiveTrueAndAutoRenewalFalse(final Date endDate);
+
+    List<HealthPlanEntity> findByEndDateLessThanAndActiveTrueAndAutoRenewalTrue(final Date endDate);
 }

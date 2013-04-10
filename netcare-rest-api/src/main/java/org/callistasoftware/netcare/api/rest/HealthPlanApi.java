@@ -81,26 +81,19 @@ public class HealthPlanApi extends ApiSupport {
 		this.logAccess("load", "health plan");
 		return this.service.loadHealthPlan(healthPlan);
 	}
-	
-    @RequestMapping(value="/{healthPlan}", method=RequestMethod.DELETE, produces="application/json")
-	@ResponseBody
-	public ServiceResult<HealthPlan> deleteHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
-		this.logAccess("archive", "health plan");
-		return this.service.archiveHealthPlan(healthPlan);
-	}
 
     @RequestMapping(value="/{healthPlan}/inactivate", method=RequestMethod.POST, produces="application/json")
     @ResponseBody
     public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
         this.logAccess("inactivate", "health plan");
-        return this.service.inactivateHealthPlan(healthPlan);
+        return this.service.inactivateHealthPlan(healthPlan, false);
     }
 
     @RequestMapping(value="/{healthPlan}/activate", method=RequestMethod.POST, produces="application/json")
     @ResponseBody
     public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
         this.logAccess("activate", "health plan");
-        return this.service.activateHealthPlan(healthPlan);
+        return this.service.activateHealthPlan(healthPlan, false);
     }
 
     @RequestMapping(value="/{healthPlan}/renew", method=RequestMethod.POST, produces="application/json")

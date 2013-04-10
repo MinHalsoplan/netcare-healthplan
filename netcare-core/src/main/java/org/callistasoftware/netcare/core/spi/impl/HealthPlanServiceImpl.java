@@ -127,7 +127,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan[]> loadHealthPlansForPatient(Long patientId) {
 		final PatientEntity forPatient = patientRepository.findOne(patientId);
-		final List<HealthPlanEntity> entities = this.repo.findByForPatientAndArchivedFalse(forPatient);
+		final List<HealthPlanEntity> entities = this.repo.findByForPatient(forPatient);
 
 		List<HealthPlan> plans = new LinkedList<HealthPlan>();
 		for (final HealthPlanEntity ent : entities) {
@@ -139,27 +139,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
 		return ServiceResultImpl.createSuccessResult(plans.toArray(new HealthPlan[plans.size()]),
 				new ListEntitiesMessage(HealthPlanEntity.class, plans.size()));
-	}
-
-	public ServiceResult<ScheduledActivity[]> getActivitiesForPatient() {
-		Calendar c = Calendar.getInstance();
-		c.setFirstDayOfWeek(1);
-
-		c.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
-		c.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
-
-		Date startDate = ApiUtil.dayBegin(c).getTime();
-
-		c.add(Calendar.DATE, SCHEMA_HISTORY_DAYS + SCHEMA_FUTURE_DAYS);
-		Date endDate = ApiUtil.dayEnd(c).getTime();
-
-		List<ScheduledActivityEntity> entities = scheduledActivityRepository.findByPatientAndScheduledTimeBetween(
-				getPatient(), startDate, endDate);
-		Collections.sort(entities);
-
-		ScheduledActivity[] arr = ScheduledActivityImpl.newFromEntities(entities);
-
-		return ServiceResultImpl.createSuccessResult(arr, new GenericSuccessMessage());
 	}
 
 	@Override
@@ -185,58 +164,38 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
     @Override
-    public ServiceResult<HealthPlan> archiveHealthPlan(Long healthPlanId) {
-        getLog().info("Deleting health plan {}", healthPlanId);
-        final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
-        if (hp == null) {
-            return ServiceResultImpl
-                    .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
-        }
-
-        this.verifyWriteAccess(hp);
-
-        hp.setArchived(true);
-        this.repo.save(hp);
-
-        return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
-    }
-
-    @Override
-    public ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlanId) {
+    public ServiceResult<HealthPlan> inactivateHealthPlan(Long healthPlanId, boolean sysUser) {
         getLog().info("Inactivating health plan {}", healthPlanId);
-        return this.setActiveFlagOnHealthPlan(healthPlanId, false);
+        return this.setActiveFlagOnHealthPlan(healthPlanId, false, sysUser);
     }
 
     @Override
-    public ServiceResult<HealthPlan> activateHealthPlan(Long healthPlanId) {
+    public ServiceResult<HealthPlan> activateHealthPlan(Long healthPlanId, boolean sysUser) {
         getLog().info("Activating health plan {}", healthPlanId);
-        return this.setActiveFlagOnHealthPlan(healthPlanId, true);
+        return this.setActiveFlagOnHealthPlan(healthPlanId, true, sysUser);
     }
 
-    protected ServiceResult<HealthPlan> setActiveFlagOnHealthPlan(Long healthPlanId, boolean active) {
+    protected ServiceResult<HealthPlan> setActiveFlagOnHealthPlan(Long healthPlanId, boolean active, boolean sysUser) {
         final HealthPlanEntity hp = this.repo.findOne(healthPlanId);
         if (hp == null) {
             return ServiceResultImpl
                     .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
         }
 
-        this.verifyWriteAccess(hp);
+        if (!sysUser) {
+            this.verifyWriteAccess(hp);
+        }
 
         hp.setActive(active);
         if (active) {
 
-            getLog().debug("Healthplan {} is being activated by {}", hp.getId(), getCareActor().getHsaId());
+            getLog().debug("Healthplan {} is being activated by {}", hp.getId(), sysUser ? "system job" : getCareActor().getHsaId());
 
-            // Calculate new start and end date
-            final DateTime dt = new DateTime();
-            hp.setStartDate(dt.toDate());
-            if (hp.getDurationUnit().equals(DurationUnit.MONTH)) {
-                hp.setEndDate(dt.plusMonths(hp.getDuration()).toDate());
-            } else {
-                hp.setEndDate(dt.plusWeeks(hp.getDuration()).toDate());
-            }
-
+            hp.setStartDate(new DateTime().toDate());
             getLog().debug("Start and end date have been recalculated. New date span is {} - {}", hp.getStartDate(), hp.getEndDate());
+
+            // Reset alarm status
+            hp.setReminderDone(false);
 
             int count = 0;
             final List<ScheduledActivityEntity> scheduledActivityRepositoryScheduledActivitiesForHealthPlan = scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
@@ -252,19 +211,12 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
             for (final ActivityDefinitionEntity ad : hp.getActivityDefinitions()) {
                 ad.setStartDate(hp.getStartDate());
-                ad.setRemovedFlag(false);
 
                 final List<ScheduledActivityEntity> schedule = ad.scheduleActivities();
 
                 this.scheduledActivityRepository.save(schedule);
                 getLog().debug("Scheduled {} activities for definition {}", schedule.size(), ad.getActivityType().getName());
             }
-        } else {
-            for (final ActivityDefinitionEntity ade : hp.getActivityDefinitions()) {
-                ade.setRemovedFlag(true);
-            }
-
-            getLog().debug("Marked {} activity definitions as inactive.", hp.getActivityDefinitions());
         }
 
         this.repo.save(hp);
@@ -273,7 +225,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
     @Override
 	public ServiceResult<HealthPlan> loadHealthPlan(Long healthPlanId) {
-		final HealthPlanEntity entity = this.repo.findByIdAndArchivedFalse(healthPlanId);
+		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
 		if (entity == null) {
 			return ServiceResultImpl
 					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
@@ -334,29 +286,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	@Override
 	public ServiceResult<HealthPlan> healthPlanRenewal(Long healthPlanId, boolean stop) {
 		final HealthPlanEntity entity = this.repo.findOne(healthPlanId);
-
 		if (entity == null) {
 			return ServiceResultImpl
 					.createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
 		}
 
-		List<ScheduledActivityEntity> list = null;
+        verifyWriteAccess(entity);
 
-		if (stop) {
-			getLog().debug("Health plan {} renewal terminated", entity.getName());
-			entity.setAutoRenewal(false);
-		} else {
-			list = entity.performRenewal();
-			getLog().debug("Health plan {} perform renewal, iteration {}", entity.getName(), entity.getIteration());
-		}
-		HealthPlanEntity savedEntity = this.repo.save(entity);
+        if (!entity.isActive()) {
+            throw new IllegalStateException("User: " + getCurrentUser().getId() + " tried to renew inactive health plan with id: " + entity.getId());
+        }
 
-		if (list != null) {
-			this.scheduledActivityRepository.save(list);
-		}
+        entity.setAutoRenewal(!stop);
 
-		final HealthPlan result = HealthPlanImpl.newFromEntity(savedEntity, LocaleContextHolder.getLocale());
-		return ServiceResultImpl.createSuccessResult(result, new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult((HealthPlan) HealthPlanImpl.newFromEntity(entity, LocaleContextHolder.getLocale()), new GenericSuccessMessage());
 	}
 
 	@Override
@@ -475,35 +418,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 		
 		return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntities(defs), new GenericSuccessMessage());
-	}
-
-	@Override
-	public ServiceResult<PatientEvent> getActualEventsForPatient(PatientBaseView patientView) {
-		PatientEntity patient = patientRepository.findOne(patientView.getId());
-		Calendar cal = Calendar.getInstance();
-		Date today = ApiUtil.dayBegin(cal).getTime();
-		cal.add(Calendar.DATE, -(SCHEMA_HISTORY_DAYS));
-		cal.set(Calendar.DAY_OF_WEEK, SCHEMA_DAY_ALIGN);
-		Date start = ApiUtil.dayBegin(cal).getTime();
-		cal.setTime(today);
-		Date end = ApiUtil.dayEnd(cal).getTime();
-		final List<ScheduledActivityEntity> activities = scheduledActivityRepository
-				.findByPatientAndScheduledTimeBetween(patient, start, end);
-		int num = 0;
-		int due = 0;
-		for (ScheduledActivityEntity sc : activities) {
-			if (sc.getReportedTime() == null) {
-				if (sc.getScheduledTime().compareTo(today) < 0) {
-					due++;
-				} else {
-					num++;
-				}
-			}
-		}
-		PatientEvent event = PatientEventImpl.newPatientEvent(num, due);
-		ServiceResult<PatientEvent> sr;
-		sr = ServiceResultImpl.createSuccessResult(event, new GenericSuccessMessage());
-		return sr;
 	}
 
 	public ServiceResult<ScheduledActivity[]> getScheduledActivitiesForHealthPlan(Long healthPlanId) {
