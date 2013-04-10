@@ -57,7 +57,7 @@
                 <div>Hälsoplan: <span id="healthplanTitle"></span></div>
                 <div style="margin-bottom: 25px;">Aktivitetsmall: <span id="templateTitle"></span></div>
 
-                <div id="inactiveNote" class="alert alert-info" style="display: none">
+                <div id="inactiveNote" class="alert alert-error" style="display: none">
                     <i>Hälsoplanen är inaktiv. Du kommer inte kunna göra några ändringar i schemaläggningen.</i>
                 </div>
 

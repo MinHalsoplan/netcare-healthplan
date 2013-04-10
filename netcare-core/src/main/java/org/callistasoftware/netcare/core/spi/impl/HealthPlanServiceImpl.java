@@ -651,6 +651,11 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
         ent.setRemovedFlag(true);
 
+        /*
+         * TODO: Skall vi göra en hard delete här på alla icke-rapporterade aktiviteter
+         * för denna schemaläggningen?
+         */
+
         getLog().debug("Activity definition with id {} marked as inactivated", activityDefinitionId);
         this.activityDefintionRepository.save(ent);
 
@@ -672,6 +677,11 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
         this.verifyWriteAccess(ent);
 
         ent.setRemovedFlag(false);
+
+        /*
+         * TODO: Ska vi re-schedule aktiviteter här från nu till hälsoplanens slut? Förutsatt att
+         * vi gör en hard delete när vi inaktiverar schemaläggningen.
+         */
 
         getLog().debug("Activity definition with id {} marked as activated", activityDefinitionId);
         this.activityDefintionRepository.save(ent);
