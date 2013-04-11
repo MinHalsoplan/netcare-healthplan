@@ -296,7 +296,7 @@ var NC_MODULE = {
 			$('#modal-from-dom').modal('hide');
 			
 			// Redirect to new health plan
-			window.location = GLOB_CTX_PATH + '/netcare/admin/healthplans';
+			window.location = NC.getContextPath() + '/netcare/admin/healthplans';
 		};
 		
 		var my = {};
@@ -1572,7 +1572,7 @@ var NC_MODULE = {
                 }
 			});
             $('#activityCancelButton').on('click', function() {
-                window.location.href = '/netcare/admin/templates';
+                window.location = NC.getContextPath() + '/netcare/admin/templates';
             });
 		};
 		
