@@ -2503,25 +2503,25 @@ var NC_MODULE = {
 			my.load(_due, _reported, _start, _end, function(data) {
 				NC.log('Scheduled activities loaded: ' + data.data.length);
 				if (data.data.length > 0) {
-                    var numOfActive = 0;
+          var numOfActive = 0;
 					$.each(data.data, function(i, v) {
-                        if (v.activityDefinition.healthPlanActive == true) {
-                            numOfActive++;
-						    my.createScheduleItem(my, i, v);
-                        }
+            if (v.activityDefinition.healthPlanActive == true) {
+              numOfActive++;
+              my.createScheduleItem(my, i, v);
+            }
 					});
 
-                    if (numOfActive > 0) {
-                        NC.PAGINATION.init({
-                            'itemIdPrefix' : 'scheduledActivityItem',
-                            'paginationId' : '#siPagination',
-                            'data' : data.data,
-                            'previousLabel' : '<<',
-                            'nextLabel' : '>>'
-                        });
+          if (numOfActive > 0) {
+              NC.PAGINATION.init({
+                  'itemIdPrefix' : 'scheduledActivityItem',
+                  'paginationId' : '#siPagination',
+                  'data' : data.data,
+                  'previousLabel' : '<<',
+                  'nextLabel' : '>>'
+              });
 
-                        $('#reportContainer').show();
-                    }
+              $('#reportContainer').show();
+          }
 				}
 				
 				NC.GLOBAL.suspendLoader('#report');
@@ -2638,6 +2638,10 @@ var NC_MODULE = {
 					// Rerender
 					my.updateScheduleItem(my, idx, _data[idx]);
 					NC.GLOBAL.flash($('#scheduledActivityItem' + _data[idx].id));
+
+          // Update number of done if we're on the start page
+          NC.log('Trying to update start page...');
+          NC_MODULE.PATIENT_ACTIVITIES.updateProgress(_data[idx].activityDefinition);
 				}
 			});
 		};
@@ -3222,6 +3226,25 @@ var NC_MODULE = {
 			my.initReminderListener(my, activity);
 			my.buildSchemaTable(my, activity);
 		};
+
+    my.updateProgress = function(adef) {
+
+      // Just check if we're on right page before we do anything
+      if ($('#numDone1-'+adef.id) === undefined) {
+        return;
+      }
+
+      $('#numDone1-' + adef.id).html(adef.numDone);
+      $('#numDone2-' + adef.id).html(adef.numDone);
+      $('#numExtra-' + adef.id).html(adef.numExtra);
+      $('#numTarget-' + adef.id).html(adef.numTarget);
+
+      var totalDone = Math.ceil((adef.numDone / adef.numTotal) * 100);
+      var targetDone = Math.ceil((adef.numDone / adef.numTarget) * 100);
+
+      $('#totalDone-' + adef.id).css('width', totalDone + '%').html(totalDone + '%');
+      $('#targetDone-' + adef.id).css('width', targetDone + '%').html(targetDone + '%');
+    };
 		
 		my.initReminderListener = function(my, activity) {
 			

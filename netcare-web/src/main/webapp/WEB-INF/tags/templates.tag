@@ -834,17 +834,17 @@
 		<div class="span12">
 			<h4>Andel genomförda aktiviteter</h4>
 			{{ if(numExtra > 0) { }}
-				<small>Du har genomfört <strong>{{=numDone}}</strong> (+ <strong>{{=numExtra}}</strong> extra) av <strong>{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
+				<small>Du har genomfört <strong id="numDone1-{{=id}}">{{=numDone}}</strong> (+ <strong id="numExtra-{{=id}}">{{=numExtra}}</strong> extra) av <strong id="numTarget-{{=id}}">{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
 			{{ } else { }}
-				<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong>{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
+				<small>Du har genomfört <strong id="numDone1-{{=id}}">{{=numDone}}</strong> av <strong id="numTarget-{{=id}}">{{=numTarget}}</strong> <i><strong>fram till idag</strong></i>.</small>
 			{{ } }}
 			<div class="progress progress-info" style="margin-right: 15px;">
-				<div class="bar" style="width: {{=targetDone}}%">{{=targetDone}}%</div>
+				<div id="targetDone-{{=id}}" class="bar" style="width: {{=targetDone}}%">{{=targetDone}}%</div>
 			</div>
 
-			<small>Du har genomfört <strong>{{=numDone}}</strong> av <strong><i>hela hälsoplanens</i></strong> <strong>{{=numTotal}}</strong> aktiviteter.</small>
+			<small>Du har genomfört <strong id="numDone2-{{=id}}">{{=numDone}}</strong> av <strong><i>hela hälsoplanens</i></strong> <strong id="numTotal-{{=id}}">{{=numTotal}}</strong> aktiviteter.</small>
 			<div class="progress progress-info" style="margin-right: 15px;">
-				<div class="bar" style="width: {{=totalDone}}%">{{=totalDone}}%</div>
+				<div id="totalDone-{{=id}}" class="bar" style="width: {{=totalDone}}%">{{=totalDone}}%</div>
 			</div>
 		</div>
 	</div>
