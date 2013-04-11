@@ -97,12 +97,13 @@
 		</div>
 	</div>
   {{ if (active) { }}
-    <div class="healthplan-actions">
-      <div class="row-fluid">
-        <div class="span6">
-          <a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
-        </div>
+  <div class="healthplan-actions">
+    <div class="row-fluid">
+      <div class="span6">
+        <a href="<c:url value='/netcare/admin/templates?healthPlan={{=id}}' />">Lägg till aktivitet från aktivitetsmall</a>
+      </div>
     </div>
+  </div>
   {{ } }}
   <div class="row-fluid extend">
     <div class="span6" style="margin-top: 15px;">
@@ -152,7 +153,6 @@
     </div>
     {{ } }}
   </div>
-    </div>
 </div>
 </script>
 

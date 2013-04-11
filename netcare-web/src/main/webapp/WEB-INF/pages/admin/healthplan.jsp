@@ -112,10 +112,10 @@
 		</mvk:sheet>
 		
 		<h3 class="title"><spring:message code="healthplan.title" /></h3>
-		<mvk:touch-list id="healthPlanContainer">
-		</mvk:touch-list>
-        <h3 class="title" id="inactiveHeader" style="display: none;"><spring:message code="healthplan.inactive.title" /></h3>
-        <mvk:touch-list id="inactiveHealthPlanContainer">
-        </mvk:touch-list>
+		<mvk:touch-list id="healthPlanContainer"></mvk:touch-list>
+
+    <h3 class="title" id="inactiveHeader" style="display: none;"><spring:message code="healthplan.inactive.title" /></h3>
+    <mvk:touch-list id="inactiveHealthPlanContainer"></mvk:touch-list>
+
 	</hp:viewBody>
 </hp:view>

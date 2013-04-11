@@ -458,23 +458,23 @@ var NC_MODULE = {
 		my.buildHealthPlanItem = function(my, hp) {
 			var t = _.template($('#healthPlanItem').html());
 			var dom = t(hp);
-            if(hp.active) {
-                $('#healthPlanContainer').append($(dom));
-            } else {
-                $('#inactiveHeader').show();
-                $('#inactiveHealthPlanContainer').append($(dom));
-            }
+      if(hp.active) {
+          $('#healthPlanContainer').append($(dom));
+      } else {
+          $('#inactiveHeader').show();
+          $('#inactiveHealthPlanContainer').append($(dom));
+      }
 
 			var liElem = $('#healthPlanItem' + hp.id);
-            if(hp.active) {
-                if (hp.autoRenewal) {
-                    liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
-                } else {
-                    liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' <span id="endDate">' + hp.endDate + '</span>');
-                }
-            } else {
-                liElem.find('.subRow').html(my.params.lang.inactive + ' | ' + my.params.lang.ended + ' <span id="endDate">' + hp.endDate + '</span>');
-            }
+      if(hp.active) {
+          if (hp.autoRenewal) {
+              liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.autoRenew);
+          } else {
+              liElem.find('.subRow').html(my.params.lang.active + ' | ' + my.params.lang.ends + ' <span id="endDate">' + hp.endDate + '</span>');
+          }
+      } else {
+          liElem.find('.subRow').html(my.params.lang.inactive + ' | ' + my.params.lang.ended + ' <span id="endDate">' + hp.endDate + '</span>');
+      }
 
 			var detailsTemplate = _.template($('#healthPlanDetails').html());
 			var detailsDom = detailsTemplate(hp);
