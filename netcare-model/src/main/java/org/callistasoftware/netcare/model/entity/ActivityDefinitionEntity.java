@@ -85,7 +85,7 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 	private List<ActivityItemDefinitionEntity> activityItemDefinitions;
 
 	ActivityDefinitionEntity() {
-		scheduledActivities = new LinkedList<ScheduledActivityEntity>();
+        scheduledActivities = new LinkedList<ScheduledActivityEntity>();
 		activityItemDefinitions = new LinkedList<ActivityItemDefinitionEntity>();
 		uuid = UUID.randomUUID().toString();
 		createdTime = new Date();
@@ -226,6 +226,14 @@ public class ActivityDefinitionEntity implements PermissionRestrictedEntity {
 		Collections.sort(scheduledActivities);
 		return Collections.unmodifiableList(scheduledActivities);
 	}
+
+    /**
+     * Removes all the scheduled activities in the supplied list
+     * @param toBeRemoved
+     */
+    public void removeScheduledActivities(List<ScheduledActivityEntity> toBeRemoved) {
+        scheduledActivities.removeAll(toBeRemoved);
+    }
 
 	/**
 	 * Returns the list of {@link ActivityItemDefinitionEntity}
