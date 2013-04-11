@@ -56,7 +56,7 @@ public class ActivityCommentImpl implements ActivityComment {
 		this.comment = entity.getComment();
 		this.activityName = entity.getActivity().getActivityDefinitionEntity().getActivityType().getName();
 		this.activityReportedAt = DateUtil.toDateTime(entity.getActivity().getReportedTime());
-		this.commentedAt = DateUtil.toDateTime(entity.getCommentedAt());
+		this.commentedAt = DateUtil.toDate(entity.getCommentedAt());
 		this.commentedBy = entity.getCommentedBy().getFirstName() + " " + entity.getCommentedBy().getSurName();
 		this.commentedByCareUnit = entity.getCommentedBy().getCareUnit().getName();
 		
