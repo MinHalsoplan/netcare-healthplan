@@ -16,12 +16,7 @@
  */
 package org.callistasoftware.netcare.core.spi.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
@@ -565,10 +560,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
         ent.setRemovedFlag(true);
 
-        /*
-         * TODO: Skall vi göra en hard delete här på alla icke-rapporterade aktiviteter
-         * för denna schemaläggningen?
-         */
+        this.removeScheduledActivities(ent);
 
         getLog().debug("Activity definition with id {} marked as inactivated", activityDefinitionId);
         this.activityDefintionRepository.save(ent);
@@ -576,6 +568,18 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
         return ServiceResultImpl.createSuccessResult(ActivityDefinitionImpl.newFromEntity(ent),
                 new ActivityActivatedMessage(ActivityDefinitionEntity.class, activityDefinitionId));
     }
+
+    protected void removeScheduledActivities(ActivityDefinitionEntity activityDefinition) {
+        Iterator<ScheduledActivityEntity> iter = activityDefinition.getScheduledActivities().iterator();
+        List<ScheduledActivityEntity> tbr = new ArrayList<ScheduledActivityEntity>();
+        for(ScheduledActivityEntity scheduledActivity : activityDefinition.getScheduledActivities()) {
+            if (scheduledActivity.getStatus().equals(ScheduledActivityStatus.OPEN) && scheduledActivity.getReportedTime() == null) {
+                tbr.add(scheduledActivity);
+            }
+        }
+        activityDefinition.removeScheduledActivities(tbr);
+    }
+
 
     @Override
     public ServiceResult<ActivityDefinition> activateActivity(Long activityDefinitionId) {
@@ -591,6 +595,9 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
         this.verifyWriteAccess(ent);
 
         ent.setRemovedFlag(false);
+        ent.setStartDate(new Date());
+        List<ScheduledActivityEntity> scheduledActivityEntities = ent.scheduleActivities();
+        scheduledActivityRepository.save(scheduledActivityEntities);
 
         /*
          * TODO: Ska vi re-schedule aktiviteter här från nu till hälsoplanens slut? Förutsatt att
