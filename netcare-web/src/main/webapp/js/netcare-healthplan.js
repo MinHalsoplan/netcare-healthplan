@@ -1341,6 +1341,14 @@ var NC_MODULE = {
 		};
 		
 		my.buildTemplateItem = function(my, template, insertAfter) {
+
+      if (my.params.healthPlanId !== '') {
+        template.planningMode = true;
+        template.planForHealthplanId = my.params.healthPlanId;
+      } else {
+        template.planningMode = false;
+      }
+
 			var t = _.template($('#activityTemplate').html());
 			var dom = t(template);
 

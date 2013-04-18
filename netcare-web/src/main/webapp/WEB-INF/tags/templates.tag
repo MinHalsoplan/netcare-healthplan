@@ -35,7 +35,11 @@
 		<div class="mainBody actionBody span6"></div>
 	</div>
 </div>
-<a href="<c:url value="/netcare/admin/template/{{=id}}" />" class="itemNavigation assistiveText"></a>
+{{ if (planningMode) { }}
+    <a href="<c:url value="/netcare/admin/healthplans/{{=planForHealthplanId}}/plan/new?template={{=id}}" />" class="itemNavigation assistiveText"></a>
+{{ } else { }}
+    <a href="<c:url value="/netcare/admin/template/{{=id}}" />" class="itemNavigation assistiveText"></a>
+{{ } }}
 </mvk:touch-item>
 </li>
 </script>
