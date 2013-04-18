@@ -591,10 +591,10 @@
 		<div class="span5">
 			<span>Ange tidpunkt då aktiviteten utfördes</span>
 		</div>
-		<div class="span7">
-			<input id="{{=id}}-report-date" type="text" style="display: inline;" class="span5 dateInput allow-previous"/>
-			<input id="{{=id}}-report-time" type="text" style="display: inline;" class="span3 timeInput" placeholder="TT:MM"/>
-		</div>
+        <div class="span7">
+            <input id="{{=id}}-report-date" type="text" style="display: inline;" class="input-small dateInput allow-previous"/>
+            <input id="{{=id}}-report-time" type="text" style="display: inline;" class="input-mini timeInput" placeholder="TT:MM"/>
+        </div>
 	</div>
 	<div class="row-fluid external">
 		<div class="span5">
@@ -885,12 +885,10 @@
 
 <script id="yesNoReportRow" type="text/template">
 	<h4>{{=question}}</h4>
-	<div class="span10">
-		<div class="progress">
-  			<div class="bar bar-info" style="width: {{=percentYes}}%;">Ja {{=percentYes}}%</div>
-  			<div class="bar bar-warning" style="width: {{=percentNo}}%;">Nej {{=percentNo}}%</div>
-		</div>
-	</div>
+    <div class="progress">
+        <div class="bar bar-info" style="width: {{=percentYes}}%;">Ja {{=percentYes}}%</div>
+        <div class="bar bar-warning" style="width: {{=percentNo}}%;">Nej {{=percentNo}}%</div>
+    </div>
 </script>
 
 <script id="textReportRow" type="text/template">

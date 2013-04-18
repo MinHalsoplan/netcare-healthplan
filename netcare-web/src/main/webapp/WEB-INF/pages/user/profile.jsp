@@ -56,7 +56,7 @@
 						<netcare:col span="12">
 							<spring:message code="profile.crn" var="crn" scope="page" />
 							<netcare:field name="crn" label="${crn}">
-								<input type="text" name="crn" disabled class="span4" />
+								<input type="text" name="crn" disabled="disabled"/>
 							</netcare:field>
 						</netcare:col>
 					</netcare:row>

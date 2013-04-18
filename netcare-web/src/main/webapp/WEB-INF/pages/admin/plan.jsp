@@ -77,37 +77,35 @@
 					<h3><spring:message code="activity.form.textItems" /></h3>
 				</fieldset>
 				
-				<fieldset id="scheduleFieldset">
-                    <form id="startdateRepeatForm">
-					<netcare:row>
-						<netcare:col span="6">
-							<spring:message code="startDate" var="start" scope="page" />
-							<netcare:field containerId="startDateContainer" name="startDate" label="${start}">
-								<netcare:dateInput id="startDate" name="startDate" />
-                                <label id="startDateMsg" class="control-label"></label>
-							</netcare:field>
-						</netcare:col>
-						<netcare:col span="6">
-							<spring:message code="repeatSchedule" var="repeat" scope="page"/>
-							<netcare:field containerId="activityRepeatContainer" name="activityRepeat" label="${repeat}">
-                                <label id="activityRepeatMsg" class="control-label"></label>
-								<input name="activityRepeat" type="number" value="1" class="input-medium"/>
-								<span class="help-inline"><small><spring:message code="week" /></small></span>
-							</netcare:field>
-						</netcare:col>
-					</netcare:row>
-                    </form>
-				</fieldset>
-				
-				
 				<spring:message code="activity.form.time" var="addTime" scope="page" />
                 <spring:message code="activity.form.days" var="addDays" scope="page" />
 
 				<fieldset>
                     <h3><spring:message code="activity.form.schema" /></h3>
+
+                    <form id="startdateRepeatForm" style="margin-bottom: 0px;">
+                        <netcare:row>
+                            <netcare:col span="6">
+                                <spring:message code="startDate" var="start" scope="page" />
+                                <netcare:field containerId="startDateContainer" name="startDate" label="${start}">
+                                    <netcare:dateInput id="startDate" name="startDate" />
+                                    <label id="startDateMsg" class="control-label"></label>
+                                </netcare:field>
+                            </netcare:col>
+                            <netcare:col span="6">
+                                <spring:message code="repeatSchedule" var="repeat" scope="page"/>
+                                <netcare:field containerId="activityRepeatContainer" name="activityRepeat" label="${repeat}">
+                                    <label id="activityRepeatMsg" class="control-label"></label>
+                                    <input name="activityRepeat" type="number" value="1" class="input-medium"/>
+                                    <span class="help-inline"><small><spring:message code="week" /></small></span>
+                                </netcare:field>
+                            </netcare:col>
+                        </netcare:row>
+                    </form>
+
 					<form id="addTimesForm" class="form-inline">
 						<netcare:field name="specifyTime" label="${addTime}">
-							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="span2 spectime timeInput"/>
+							<input id="specifyTime" name="specifyTime" type="text" placeholder="<spring:message code="pattern.time" />" class="input-mini spectime timeInput" style="margin-bottom: 0px;"/>
 						</netcare:field>
                         <netcare:field name="specifyTime" label="${addDays}">
                             <input type="checkbox" name="monday"> <label for="monday" style="padding-right: 10px;">Må</label>

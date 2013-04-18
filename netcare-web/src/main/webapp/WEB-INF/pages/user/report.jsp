@@ -58,12 +58,12 @@
 						<netcare:row>
 							<netcare:col span="4">
 								<netcare:field name="start" label="Från">
-									<input id="start" type="text" name="start" class="dateInput allow-previous span12">
+									<input id="start" type="text" name="start" class="dateInput allow-previous input-small">
 								</netcare:field>	
 							</netcare:col>
 							<netcare:col span="4">
 								<netcare:field name="end" label="Till">
-									<input id="end" type="text" name="end" class="dateInput allow-previous span12"/>
+									<input id="end" type="text" name="end" class="dateInput allow-previous input-small"/>
 								</netcare:field>	
 							</netcare:col>
 						</netcare:row>
