@@ -24,10 +24,7 @@ import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.callistasoftware.netcare.core.api.ActivityCategory;
-import org.callistasoftware.netcare.core.api.ActivityItemType;
-import org.callistasoftware.netcare.core.api.ActivityType;
-import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.*;
 import org.callistasoftware.netcare.core.api.impl.ActivityCategoryImpl;
 import org.callistasoftware.netcare.core.api.impl.ActivityTypeImpl;
 import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
@@ -41,18 +38,7 @@ import org.callistasoftware.netcare.core.repository.ActivityTypeRepository;
 import org.callistasoftware.netcare.core.repository.CareUnitRepository;
 import org.callistasoftware.netcare.core.repository.MeasureUnitRepository;
 import org.callistasoftware.netcare.core.spi.ActivityTypeService;
-import org.callistasoftware.netcare.model.entity.AccessLevel;
-import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
-import org.callistasoftware.netcare.model.entity.ActivityItemTypeEntity;
-import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
-import org.callistasoftware.netcare.model.entity.CareUnitEntity;
-import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
-import org.callistasoftware.netcare.model.entity.EstimationTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasureUnitEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementTypeEntity;
-import org.callistasoftware.netcare.model.entity.MeasurementValueType;
-import org.callistasoftware.netcare.model.entity.TextTypeEntity;
-import org.callistasoftware.netcare.model.entity.YesNoTypeEntity;
+import org.callistasoftware.netcare.model.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -277,7 +263,16 @@ public class ActivityTypeServiceImpl extends ServiceSupport implements ActivityT
 		repoItem.setName(dto.getName());
 		
 		if (dto.getAccessLevel().getCode().equals(AccessLevel.CAREUNIT.name())) {
-			getLog().debug("Access level set to care unit on activity. Setting current user's care unit on entity");
+            CareActorEntity careActor = getCareActor();
+			if(!repoItem.getCountyCouncil().getId().equals(careActor.getCareUnit().getCountyCouncil().getId())) {
+                throw new IllegalStateException("Care actor " + careActor.getHsaId() + " (county council: "
+                        + careActor.getCareUnit().getCountyCouncil().getId()
+                        + ") tried to change activity type with id "
+                        + repoItem.getId()
+                        + ". County council must be the same for activity type and care unit. Current county council: "
+                        + repoItem.getCountyCouncil().getId());
+            }
+            getLog().debug("Access level set to care unit on activity. Setting current user's care unit on entity");
 			repoItem.setCareUnit(getCareActor().getCareUnit());
 		}
 		
