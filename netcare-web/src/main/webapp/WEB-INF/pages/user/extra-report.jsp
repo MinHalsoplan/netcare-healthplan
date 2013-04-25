@@ -58,7 +58,7 @@
 
             <div id="inactiveNote" class="alert alert-error" style="display: none">
               <i><small>
-                Du har för närvarande ingen aktiva hälsoplaner att rapportera på. Om du misstänker att detta är
+                Du har för närvarande inga aktiva hälsoplaner att rapportera på. Om du misstänker att detta är
                 fel, vänligen kontakta din vårdgivare för hjälp.
               </small></i>
             </div>
