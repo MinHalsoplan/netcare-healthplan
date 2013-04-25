@@ -3493,11 +3493,10 @@ var NC_MODULE = {
 		
 		my.render = function(my) {
 			for (var i = 0; i < _hps.length; i++) {
-
-                var hpName = _hps[i].healthPlanName;
-                if (_hps[i].active) {
-                    hpName += ' | Inaktiv'
-                }
+        var hpName = _hps[i].healthPlanName;
+        if (!_hps[i].healthPlanActive) {
+            hpName += ' | Inaktiv'
+        }
 				
 				if ( $('#healthplans h3').html() != hpName) {
 					$('#healthplans').append(
