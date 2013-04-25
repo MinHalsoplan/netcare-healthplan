@@ -177,6 +177,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
                     .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
         }
 
+        Date now = new Date();
+
         if (!sysUser) {
             this.verifyWriteAccess(hp);
         }
@@ -192,18 +194,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
             // Reset alarm status
             hp.setReminderDone(false);
 
-            int count = 0;
-            final List<ScheduledActivityEntity> scheduledActivityRepositoryScheduledActivitiesForHealthPlan = scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
-            for (final ScheduledActivityEntity sae : scheduledActivityRepositoryScheduledActivitiesForHealthPlan) {
-                if (sae.getScheduledTime().after(hp.getStartDate()) && sae.getReportedTime() == null) {
-                    sae.setStatus(ScheduledActivityStatus.CLOSED);
-                    sae.setNote("Closed when health plan was re-activated.");
-                    count++;
-                }
-            }
-
-            getLog().debug("Closed {} scheduled activities due to re-activation.", count);
-
             for (final ActivityDefinitionEntity ad : hp.getActivityDefinitions()) {
                 ad.setStartDate(hp.getStartDate());
 
@@ -211,6 +201,28 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
                 this.scheduledActivityRepository.save(schedule);
                 getLog().debug("Scheduled {} activities for definition {}", schedule.size(), ad.getActivityType().getName());
+            }
+        } else {
+            final List<ScheduledActivityEntity> scheduledActivitiesForHealthPlan = scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
+            if(hp.getEndDate().before(now)) {
+                // activities set to CLOSED because now is later than end date
+                int count = 0;
+                for (final ScheduledActivityEntity sae : scheduledActivitiesForHealthPlan) {
+                    if (sae.getScheduledTime().after(hp.getStartDate()) && sae.getReportedTime() == null) {
+                        sae.setStatus(ScheduledActivityStatus.CLOSED);
+                        sae.setNote("Closed when health plan was re-activated.");
+                        count++;
+                    }
+                }
+                getLog().debug("Closed {} scheduled activities due to re-activation.", count);
+            } else {
+                // Removes all activities that are still open
+                List<ScheduledActivityEntity> tbr = new ArrayList<ScheduledActivityEntity>();
+                for (final ScheduledActivityEntity scheduledActivity : scheduledActivitiesForHealthPlan ) {
+                    if (scheduledActivity.getStatus().equals(ScheduledActivityStatus.OPEN) && scheduledActivity.getReportedTime() == null) {
+                        scheduledActivityRepository.delete(scheduledActivity);
+                    }
+                }
             }
         }
 
@@ -583,7 +595,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
     }
 
     protected void removeScheduledActivities(ActivityDefinitionEntity activityDefinition) {
-        Iterator<ScheduledActivityEntity> iter = activityDefinition.getScheduledActivities().iterator();
         List<ScheduledActivityEntity> tbr = new ArrayList<ScheduledActivityEntity>();
         for(ScheduledActivityEntity scheduledActivity : activityDefinition.getScheduledActivities()) {
             if (scheduledActivity.getStatus().equals(ScheduledActivityStatus.OPEN) && scheduledActivity.getReportedTime() == null) {
