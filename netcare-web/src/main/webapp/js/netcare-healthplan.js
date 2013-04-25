@@ -3338,14 +3338,12 @@ var NC_MODULE = {
 		};
 		
 		my.load = function(callback, patientId) {
-            if (patientId != undefined) {
-                var qs = '?patient=' + patientId;
-                new NC.Ajax().get('/activityPlans' + qs, callback);
-            } else {
-                new NC.Ajax().get('/activityPlans', callback);
-            }
-
-
+      if (patientId != undefined) {
+          var qs = '?patient=' + patientId + '&onlyOngoing=false';
+          new NC.Ajax().get('/activityPlans' + qs, callback);
+      } else {
+          new NC.Ajax().get('/activityPlans?onlyOngoing=false', callback);
+      }
 		};
 		
 		return my;

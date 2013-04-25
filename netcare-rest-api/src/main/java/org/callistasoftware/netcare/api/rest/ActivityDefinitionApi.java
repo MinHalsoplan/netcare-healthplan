@@ -38,9 +38,10 @@ public class ActivityDefinitionApi extends ApiSupport {
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition[]> listActivities(@RequestParam(value="patient", required=false) final Long patientId) {
+	public ServiceResult<ActivityDefinition[]> listActivities(@RequestParam(value="patient", required=false) final Long patientId,
+        @RequestParam(value = "onlyOngoing") final boolean onlyOngoing) {
 		logAccess("lista", "aktiviteter");
-		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient(patientId);
+		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient(patientId, onlyOngoing);
 		return sr;
 	}
 	

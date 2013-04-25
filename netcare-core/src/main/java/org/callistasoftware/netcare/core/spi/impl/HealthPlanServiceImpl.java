@@ -377,7 +377,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId) {
+	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId, final boolean onlyOngoing) {
 		
 		final UserEntity currentUser = getCurrentUser();
 		if (patientId == null && currentUser.isCareActor()) {
@@ -391,8 +391,21 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			patient = patientRepository.findOne(getPatient().getId());
 		}
 		
-		final Date now = new Date();
-		final List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(patient, now);
+		final Date hpEndDateLargerThan;
+        if (onlyOngoing) {
+            hpEndDateLargerThan = new Date();
+        } else {
+
+            /*
+             * If we not only want to include ongoing ones, we include all past activities
+             * from the last 30 years
+             */
+
+            hpEndDateLargerThan = DateTime.now().minusYears(30).toDate();
+        }
+
+        getLog().debug("Finding activities belonging to an healthplan that has an end date larger than {}", hpEndDateLargerThan);
+		final List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(patient, hpEndDateLargerThan);
 		
 		if (currentUser.isCareActor()) {
 			getLog().debug("Filter definitions and include only definitions that the care actor are allowed to see.");
