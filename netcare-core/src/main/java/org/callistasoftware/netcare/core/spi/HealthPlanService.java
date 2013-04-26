@@ -218,7 +218,7 @@ public interface HealthPlanService {
 	 * 
 	 * @return the result with actual activity definitions.
 	 */
-	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId);
+	ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId, final boolean onlyOngoing);
 
 	/**
 	 * Get reported activities for a certain activity definition within a specific time interval
