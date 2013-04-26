@@ -3338,14 +3338,12 @@ var NC_MODULE = {
 		};
 		
 		my.load = function(callback, patientId) {
-            if (patientId != undefined) {
-                var qs = '?patient=' + patientId;
-                new NC.Ajax().get('/activityPlans' + qs, callback);
-            } else {
-                new NC.Ajax().get('/activityPlans', callback);
-            }
-
-
+      if (patientId != undefined) {
+          var qs = '?patient=' + patientId + '&onlyOngoing=false';
+          new NC.Ajax().get('/activityPlans' + qs, callback);
+      } else {
+          new NC.Ajax().get('/activityPlans?onlyOngoing=false', callback);
+      }
 		};
 		
 		return my;
@@ -3493,11 +3491,10 @@ var NC_MODULE = {
 		
 		my.render = function(my) {
 			for (var i = 0; i < _hps.length; i++) {
-
-                var hpName = _hps[i].healthPlanName;
-                if (_hps[i].active) {
-                    hpName += ' | Inaktiv'
-                }
+        var hpName = _hps[i].healthPlanName;
+        if (!_hps[i].healthPlanActive) {
+            hpName += ' | Inaktiv'
+        }
 				
 				if ( $('#healthplans h3').html() != hpName) {
 					$('#healthplans').append(

@@ -177,6 +177,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
                     .createFailedResult(new EntityNotFoundMessage(HealthPlanEntity.class, healthPlanId));
         }
 
+        Date now = new Date();
+
         if (!sysUser) {
             this.verifyWriteAccess(hp);
         }
@@ -192,18 +194,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
             // Reset alarm status
             hp.setReminderDone(false);
 
-            int count = 0;
-            final List<ScheduledActivityEntity> scheduledActivityRepositoryScheduledActivitiesForHealthPlan = scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
-            for (final ScheduledActivityEntity sae : scheduledActivityRepositoryScheduledActivitiesForHealthPlan) {
-                if (sae.getScheduledTime().after(hp.getStartDate()) && sae.getReportedTime() == null) {
-                    sae.setStatus(ScheduledActivityStatus.CLOSED);
-                    sae.setNote("Closed when health plan was re-activated.");
-                    count++;
-                }
-            }
-
-            getLog().debug("Closed {} scheduled activities due to re-activation.", count);
-
             for (final ActivityDefinitionEntity ad : hp.getActivityDefinitions()) {
                 ad.setStartDate(hp.getStartDate());
 
@@ -211,6 +201,28 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 
                 this.scheduledActivityRepository.save(schedule);
                 getLog().debug("Scheduled {} activities for definition {}", schedule.size(), ad.getActivityType().getName());
+            }
+        } else {
+            final List<ScheduledActivityEntity> scheduledActivitiesForHealthPlan = scheduledActivityRepository.findScheduledActivitiesForHealthPlan(healthPlanId);
+            if(hp.getEndDate().before(now)) {
+                // activities set to CLOSED because now is later than end date
+                int count = 0;
+                for (final ScheduledActivityEntity sae : scheduledActivitiesForHealthPlan) {
+                    if (sae.getScheduledTime().after(hp.getStartDate()) && sae.getReportedTime() == null) {
+                        sae.setStatus(ScheduledActivityStatus.CLOSED);
+                        sae.setNote("Closed when health plan was re-activated.");
+                        count++;
+                    }
+                }
+                getLog().debug("Closed {} scheduled activities due to re-activation.", count);
+            } else {
+                // Removes all activities that are still open
+                List<ScheduledActivityEntity> tbr = new ArrayList<ScheduledActivityEntity>();
+                for (final ScheduledActivityEntity scheduledActivity : scheduledActivitiesForHealthPlan ) {
+                    if (scheduledActivity.getStatus().equals(ScheduledActivityStatus.OPEN) && scheduledActivity.getReportedTime() == null) {
+                        scheduledActivityRepository.delete(scheduledActivity);
+                    }
+                }
             }
         }
 
@@ -377,7 +389,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 	}
 
 	@Override
-	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId) {
+	public ServiceResult<ActivityDefinition[]> getPlannedActivitiesForPatient(final Long patientId, final boolean onlyOngoing) {
 		
 		final UserEntity currentUser = getCurrentUser();
 		if (patientId == null && currentUser.isCareActor()) {
@@ -391,8 +403,21 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 			patient = patientRepository.findOne(getPatient().getId());
 		}
 		
-		final Date now = new Date();
-		final List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(patient, now);
+		final Date hpEndDateLargerThan;
+        if (onlyOngoing) {
+            hpEndDateLargerThan = new Date();
+        } else {
+
+            /*
+             * If we not only want to include ongoing ones, we include all past activities
+             * from the last 30 years
+             */
+
+            hpEndDateLargerThan = DateTime.now().minusYears(30).toDate();
+        }
+
+        getLog().debug("Finding activities belonging to an healthplan that has an end date larger than {}", hpEndDateLargerThan);
+		final List<ActivityDefinitionEntity> defs = activityDefintionRepository.findByPatientAndNow(patient, hpEndDateLargerThan);
 		
 		if (currentUser.isCareActor()) {
 			getLog().debug("Filter definitions and include only definitions that the care actor are allowed to see.");
@@ -570,7 +595,6 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
     }
 
     protected void removeScheduledActivities(ActivityDefinitionEntity activityDefinition) {
-        Iterator<ScheduledActivityEntity> iter = activityDefinition.getScheduledActivities().iterator();
         List<ScheduledActivityEntity> tbr = new ArrayList<ScheduledActivityEntity>();
         for(ScheduledActivityEntity scheduledActivity : activityDefinition.getScheduledActivities()) {
             if (scheduledActivity.getStatus().equals(ScheduledActivityStatus.OPEN) && scheduledActivity.getReportedTime() == null) {
