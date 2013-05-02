@@ -37,7 +37,7 @@
 		loggedInUser="${p.name} (${p.careUnit.name})"
 		loggedInAsText="Inloggad som : "
 		logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
-		logoutText="Logga ut" />
+		logoutText="Stäng" />
 </sec:authorize>
 <sec:authorize access="hasRole('PATIENT')">
 	<mvk:pageHeader title="${title}"
