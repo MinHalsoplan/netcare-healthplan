@@ -1,0 +1,62 @@
+/**
+ * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+@charset "UTF-8";
+
+@media print {
+    #headerContainer {
+        display: none;
+    }
+
+    #menuContainer {
+        display: none;
+    }
+
+    #contentContainer {
+        margin: 0px;
+    }
+
+    .topRow {
+        display: none;
+    }
+
+    .onlyInPrintMode {
+        display: block;
+    }
+
+    .onlyInPrintMode h2 {
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+    }
+
+    .onlyInPrintMode table {
+        margin-bottom: 20px;
+    }
+
+    .onlyInPrintMode table tbody tr {
+        border-bottom: 1px solid #eee;
+    }
+
+    .progress {
+        border: none;
+    }
+
+    div.bar.bar-info, div.bar.bar-warning {
+        border: none;
+        background-color: white;
+        color: #000000;
+    }
+}
