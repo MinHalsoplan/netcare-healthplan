@@ -2724,8 +2724,7 @@ var NC_MODULE = {
 				var datefield = $('#' + activity.id + '-report-date');
 				var dp = datefield.datepicker({
 					dateFormat : 'yy-mm-dd',
-					firstDay : 1,
-					minDate : +0
+					firstDay : 1
 				});
 				
 				if (activity.actDate) {
