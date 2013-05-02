@@ -50,8 +50,8 @@
 
 				var params = {
 					activityId : <c:out value="${param.activity}" />,
-          crn : crn,
-          name : name
+                    crn : crn,
+                    name : name
 				};
 				
 				NC_MODULE.RESULTS.init(params);
@@ -60,7 +60,7 @@
 		</script>
 	</hp:viewHeader>
 	<c:url value="/netcare/shared/select-results" var="backToUrl" />
-	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Resultat">
+	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Resultat" printable="true">
 		<div id="activities">
 		</div>
 	</hp:viewBody>
