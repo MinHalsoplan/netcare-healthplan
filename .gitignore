@@ -19,3 +19,4 @@ UserInterfaceState.xcuserstate
 Breakpoints.xcbkptlist
 .idea
 *.iml
+*pom.xml.versionsBackup
