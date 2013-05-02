@@ -927,4 +927,31 @@
 	</li>
 </script>
 
+<!-- printing header -->
+<script id="printHeader" type="text/template">
+  <div class="onlyInPrintMode">
+    <h2>{{=title}}</h2>
+    <netcare:row>
+      <netcare:col span="12">
+        <netcare:table>
+          <tbody>
+          <tr>
+            <td>Patient:</td>
+            <td>{{=name}}</td>
+          </tr>
+          <tr>
+            <td>Personnummer:</td>
+            <td>{{=crn}}</td>
+          </tr>
+          <tr>
+            <td>Hälsoplan:</td>
+            <td>{{=healthPlanName}}</td>
+          </tr>
+          </tbody>
+        </netcare:table>
+      </netcare:col>
+    </netcare:row>
+  </div>
+</script>
+
 <!-- healthplan:templates / -->

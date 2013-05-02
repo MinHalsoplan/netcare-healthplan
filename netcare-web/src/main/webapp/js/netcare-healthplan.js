@@ -3547,6 +3547,7 @@ var NC_MODULE = {
 		
 		my.loadActivity = function(my, activityId) {
 			new NC.Ajax().get('/activityPlans/' + activityId, function(data) {
+
 				activity = data.data;
 				Highcharts.setOptions({
 					lang: {
@@ -3562,6 +3563,13 @@ var NC_MODULE = {
                         enabled: false
                     }
 				});
+
+        /*
+         * Include print section
+         */
+        var printData = { title : 'Min hälsoplan -  Resultat', name : my.params.name, crn : NC.GLOBAL.formatCrn(my.params.crn), healthPlanName : activity.healthPlanName };
+        var printTemplate = _.template($('#printHeader').html())(printData);
+        $('#activities').append(printTemplate);
 
 				for(var i = 0; i < activity.goalValues.length; i++) {
                     var included = activity.goalValues[i].active;

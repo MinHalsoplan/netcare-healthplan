@@ -30,7 +30,7 @@
 <%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
 
 <mvk:body>
-<sec:authentication property="principal" var="p"/>
+<sec:authentication property="principal" var="p" scope="request"/>
 
 <sec:authorize access="hasRole('CARE_ACTOR')">
 	<mvk:pageHeader title="${title}"

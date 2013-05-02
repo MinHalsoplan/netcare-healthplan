@@ -30,13 +30,28 @@
 <hp:view>
 	<hp:viewHeader>
 		<script src="<c:url value="/js/highstock-1.2.5/highstock.js" />" type="text/javascript"></script>
+
+    <!-- Include printing css -->
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/print-results.css" />" media="print" />
 		
 		<hp:templates />
 		<script type="text/javascript">
 			$(function() {
 
+        <sec:authorize access="hasRole('CARE_ACTOR')">
+            var name = '<c:out value="${sessionScope.currentPatient.name}" />';
+            var crn = '<c:out value="${sessionScope.currentPatient.civicRegistrationNumber}" />';
+        </sec:authorize>
+
+        <sec:authorize access="hasRole('PATIENT')">
+          var name = '<sec:authentication property="principal.name" />';
+          var crn = '<sec:authentication property="principal.civicRegistrationNumber" />';
+        </sec:authorize>
+
 				var params = {
-					activityId : <c:out value="${param.activity}" />
+					activityId : <c:out value="${param.activity}" />,
+          crn : crn,
+          name : name
 				};
 				
 				NC_MODULE.RESULTS.init(params);
@@ -46,6 +61,7 @@
 	</hp:viewHeader>
 	<c:url value="/netcare/shared/select-results" var="backToUrl" />
 	<hp:viewBody backTitle="Tillbaka" backUrl="${backToUrl}" backToWhat="till Resultat">
-		<div id="activities"></div>
+		<div id="activities">
+		</div>
 	</hp:viewBody>
 </hp:view>
