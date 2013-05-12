@@ -14,6 +14,8 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import org.callistasoftware.netcare.android.helper.ApplicationHelper;
+import org.callistasoftware.netcare.android.helper.AuthHelper;
 
 public class WebViewActivity extends Activity {
 
@@ -52,16 +54,16 @@ public class WebViewActivity extends Activity {
 			}
 		});
 		
-		final String url = ApplicationUtil.getServerBaseUrl(getApplicationContext()) + "/mobile/start";
+		final String url = ApplicationHelper.newInstance(getApplicationContext()).getUrl("/mobile/start");
 		Log.d(TAG, "Load url: " + url);
 		
-		final String session = NetcareApp.getCurrentSession();
+		final String session = AuthHelper.newInstance(getApplicationContext()).getSessionId();
 		if (session == null) {
 			throw new IllegalStateException("Order reference is not set.");
 		}
 		
 		final Map<String, String> headers = new HashMap<String, String>();
-		headers.put("X-netcare-order", NetcareApp.getCurrentSession());
+		headers.put(AuthHelper.NETCARE_AUTH_HEADER, session);
 		wv.loadUrl(url, headers);
 	}
 	

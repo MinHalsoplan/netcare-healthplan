@@ -2,12 +2,10 @@ package org.callistasoftware.netcare.android.task;
 
 import java.util.Map;
 
-import org.callistasoftware.netcare.android.ApplicationUtil;
-import org.callistasoftware.netcare.android.NetcareApp;
-import org.callistasoftware.netcare.android.R;
-import org.callistasoftware.netcare.android.ServiceCallback;
-import org.callistasoftware.netcare.android.ServiceResult;
-import org.callistasoftware.netcare.android.ServiceResultImpl;
+import org.callistasoftware.netcare.android.*;
+import org.callistasoftware.netcare.android.helper.ApplicationHelper;
+import org.callistasoftware.netcare.android.helper.AuthHelper;
+import org.callistasoftware.netcare.android.helper.RestHelper;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,16 +34,16 @@ public class CollectTask extends AsyncTask<String, String, ServiceResult<String>
 	protected ServiceResult<String> doInBackground(
 			String... args) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-		params.add("X-netcare-order", args[0]);
+		params.add(AuthHelper.NETCARE_AUTH_HEADER, args[0]);
 		
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient(ctx);
+			final RestTemplate rest = RestHelper.newInstance(ctx.getApplicationContext()).getRestService();
 			final org.springframework.http.HttpEntity<Map<String, String>> ent = new org.springframework.http.HttpEntity<Map<String,String>>(params);
 			
 			
 			@SuppressWarnings("rawtypes")
 			final ResponseEntity<Map> exchange = rest.exchange(
-					ApplicationUtil.getServerBaseUrl(ctx) + "/mobile/bankid/complete", 
+					ApplicationHelper.newInstance(ctx.getApplicationContext()).getUrl("/mobile/bankid/complete"),
 					HttpMethod.GET, 
 					ent, 
 					Map.class);

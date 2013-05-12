@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Min hälsoplan</string>
-    <string name="crn">Personnummer</string>
     <string name="bankid">OBS! Du behöver Mobilt BankID installerat för att använda denna tjänst samt en hälsoplan skapad av din vårdgivare.</string>
-    <string name="host">Host</string>
-    <string name="port">Port</string>
+    <string name="crn">Personnummer</string>
     <string name="login">Logga in</string>
     <string name="loadingActivities">Laddar dina aktiviteter...</string>
     <string name="loading">Vänligen vänta</string>
-    <string name="push">Push-notifieringar</string>
-    <string name="user_settings">Inställningar</string>
-    <string name="secure">Säker anslutning</string>
-    <string name="server_settings">Serverinställningar</string>
     <string name="generic_error">Det gick inte att logga in i Min hälsoplan just nu. Försök igen senare...</string>
     <string name="no_account">Du har för nuvarande ingen hälsoplan och kan därför inte använda tjänsten. En hälsoplan får du av någon personal i vården. Tjänsten används i dagsläget av ett fåtal mottagningar i Jönköpings, Hallands och Västerbottens län.</string>
-    
+
+
+    <string name="pref_advanced_settings">Avancerade inställningar</string>
+    <string name="pref_dev_mode">Utvecklingsläge</string>
+    <string name="pref_host">Host</string>
+    <string name="pref_port">Port</string>
+    <string name="pref_push">Push-notifieringar</string>
+    <string name="pref_push_desc">Gör det möjligt att ta emot notifieringar från Min hälsoplan.</string>
+    <string name="pref_remember_crn">Spara personnummer</string>
+    <string name="pref_remember_crn_desc">Med denna inställning slipper du fylla i ditt personnummer varje gång du skall logga in.</string>
+    <string name="pref_secure_connection">Säker anslutning</string>
+    <string name="pref_user_settings">Inställningar</string>
+
+
     <style name="header" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">#000000</item>
         <item name="android:textStyle">bold</item>

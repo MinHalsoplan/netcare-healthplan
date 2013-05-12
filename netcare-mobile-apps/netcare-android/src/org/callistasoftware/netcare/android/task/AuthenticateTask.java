@@ -1,13 +1,14 @@
 package org.callistasoftware.netcare.android.task;
 
-import java.io.IOException;
-
-import org.callistasoftware.netcare.android.ApplicationUtil;
-import org.callistasoftware.netcare.android.NetcareApp;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import org.callistasoftware.netcare.android.R;
 import org.callistasoftware.netcare.android.ServiceCallback;
 import org.callistasoftware.netcare.android.ServiceResult;
 import org.callistasoftware.netcare.android.ServiceResultImpl;
+import org.callistasoftware.netcare.android.helper.ApplicationHelper;
+import org.callistasoftware.netcare.android.helper.RestHelper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,9 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
+import java.io.IOException;
 
 public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<String>> {
 
@@ -44,7 +43,7 @@ public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<St
 		data.add("crn", params[0]);
 		
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient(ctx);
+			final RestTemplate rest = RestHelper.newInstance(ctx.getApplicationContext()).getRestService();
 			rest.setErrorHandler(new ResponseErrorHandler() {
 				
 				@Override
@@ -72,7 +71,7 @@ public class AuthenticateTask extends AsyncTask<String, String, ServiceResult<St
 				}
 			});
 			
-			String orderRef = rest.postForObject(ApplicationUtil.getServerBaseUrl(ctx) + "/mobile/bankid/authenticate", data, String.class);
+			String orderRef = rest.postForObject(ApplicationHelper.newInstance(ctx.getApplicationContext()).getUrl("/mobile/bankid/authenticate"), data, String.class);
 			return new ServiceResultImpl<String>(orderRef, true, null);
 		} catch (final HttpClientErrorException e) {
 			return new ServiceResultImpl<String>(null, false, e.getStatusText());

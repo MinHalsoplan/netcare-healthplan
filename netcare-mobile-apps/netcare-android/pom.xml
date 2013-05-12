@@ -75,7 +75,6 @@
 						<avd>netcare</avd>
 					</emulator>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
-					<deleteConflictingFiles>true</deleteConflictingFiles>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>

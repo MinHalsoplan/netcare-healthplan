@@ -11,6 +11,4 @@ public class PreferenceActivity extends android.preference.PreferenceActivity {
 		getListView().setBackgroundColor(Color.BLACK);
 		addPreferencesFromResource(R.xml.preferences);
 	}
-	
-	
 }

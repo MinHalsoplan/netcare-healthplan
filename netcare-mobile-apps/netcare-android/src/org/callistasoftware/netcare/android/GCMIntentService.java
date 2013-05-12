@@ -1,25 +1,22 @@
 package org.callistasoftware.netcare.android;
 
-import java.util.Collections;
-import java.util.Map;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import com.google.android.gcm.GCMBaseIntentService;
+import org.callistasoftware.netcare.android.helper.ApplicationHelper;
+import org.callistasoftware.netcare.android.helper.AuthHelper;
+import org.callistasoftware.netcare.android.helper.RestHelper;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
+import java.util.Map;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
@@ -53,10 +50,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Received push registration message. Registration id is: " + registrationId);
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient(context);
+			final RestTemplate rest = RestHelper.newInstance(context.getApplicationContext()).getRestService();
 			
 			final HttpHeaders headers = new HttpHeaders();
-			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));
+			headers.put(AuthHelper.NETCARE_AUTH_HEADER, Collections.singletonList(AuthHelper.newInstance(getApplicationContext()).getSessionId()));
 	
 			final MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
 			body.add("c2dmRegistrationId", registrationId);
@@ -64,7 +61,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(body.toSingleValueMap(), headers);
 	
 			@SuppressWarnings("rawtypes")
-			ResponseEntity<Map> result = rest.exchange(ApplicationUtil.getServerBaseUrl(context) + "/mobile/push/gcm", 
+			ResponseEntity<Map> result = rest.exchange(ApplicationHelper.newInstance(context.getApplicationContext()).getUrl("/mobile/push/gcm"),
 				HttpMethod.POST, 
 				ent, 
 				Map.class);
@@ -84,15 +81,15 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onUnregistered(Context context, String regId) {
 		Log.d(TAG, "Push unregistration!!!");
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient(context);
+			final RestTemplate rest = RestHelper.newInstance(context.getApplicationContext()).getRestService();
 			
 			final HttpHeaders headers = new HttpHeaders();
-			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));
+			headers.put(AuthHelper.NETCARE_AUTH_HEADER, Collections.singletonList(AuthHelper.newInstance(getApplicationContext()).getSessionId()));
 	
 			final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(headers);
 	
 			@SuppressWarnings("rawtypes")
-			ResponseEntity<Map> result = rest.exchange(ApplicationUtil.getServerBaseUrl(context) + "/mobile/push/gcm", 
+			ResponseEntity<Map> result = rest.exchange(ApplicationHelper.newInstance(context.getApplicationContext()).getUrl("/mobile/push/gcm"),
 				HttpMethod.DELETE, 
 				ent, 
 				Map.class);

@@ -1,25 +1,19 @@
 package org.callistasoftware.netcare.android.task;
 
-import java.util.Collections;
-import java.util.Map;
-
-import org.callistasoftware.netcare.android.ApplicationUtil;
-import org.callistasoftware.netcare.android.NetcareApp;
-import org.callistasoftware.netcare.android.ServiceCallback;
-import org.callistasoftware.netcare.android.ServiceResult;
-import org.callistasoftware.netcare.android.ServiceResultImpl;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import org.callistasoftware.netcare.android.*;
+import org.callistasoftware.netcare.android.helper.ApplicationHelper;
+import org.callistasoftware.netcare.android.helper.AuthHelper;
+import org.callistasoftware.netcare.android.helper.RestHelper;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
+import java.util.Collections;
+import java.util.Map;
 
 public class UnRegisterGcmTask extends AsyncTask<String, String, ServiceResult<String>> {
 
@@ -36,16 +30,16 @@ public class UnRegisterGcmTask extends AsyncTask<String, String, ServiceResult<S
 	@Override
 	protected ServiceResult<String> doInBackground(String... params) {
 		try {
-			final RestTemplate rest = NetcareApp.getRestClient(ctx);
+			final RestTemplate rest = RestHelper.newInstance(ctx.getApplicationContext()).getRestService();
 			
 			final HttpHeaders headers = new HttpHeaders();
-			headers.put("X-netcare-order", Collections.singletonList(NetcareApp.getCurrentSession()));
+			headers.put(AuthHelper.NETCARE_AUTH_HEADER, Collections.singletonList(AuthHelper.newInstance(ctx.getApplicationContext()).getSessionId()));
 	
 			final MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
 			final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(body.toSingleValueMap(), headers);
 	
 			@SuppressWarnings("rawtypes")
-			ResponseEntity<Map> result = rest.exchange(ApplicationUtil.getServerBaseUrl(ctx) + "/mobile/push/gcm", 
+			ResponseEntity<Map> result = rest.exchange(ApplicationHelper.newInstance(ctx.getApplicationContext()).getUrl("/mobile/push/gcm"),
 				HttpMethod.DELETE, 
 				ent, 
 				Map.class);

@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:background="#000000">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <PreferenceCategory android:title="@string/user_settings">
-	    <CheckBoxPreference android:title="@string/push" android:key="push" android:persistent="true" android:defaultValue="true"/>
+    <PreferenceCategory android:title="@string/pref_user_settings">
+        <CheckBoxPreference android:title="@string/pref_remember_crn"
+                android:key="rememberCrn"
+                android:persistent="true"
+                android:defaultValue="false"
+                android:summary="@string/pref_remember_crn_desc"/>
+
+	    <CheckBoxPreference android:title="@string/pref_push"
+                android:key="push"
+                android:persistent="true"
+                android:defaultValue="true"
+                android:summary="@string/pref_push_desc"/>
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="@string/server_settings">
-
-	    <EditTextPreference android:title="@string/host" android:key="host" android:persistent="true" android:defaultValue="netcare.callistasoftware.org" />
-	    <EditTextPreference android:title="@string/port" android:key="port" android:persistent="true" android:defaultValue="443" android:inputType="number" />
-	
-	    <CheckBoxPreference android:title="@string/secure" android:key="secure" android:persistent="true" android:defaultValue="true"/>
-	    
+    <PreferenceCategory android:title="@string/pref_advanced_settings">
+        <CheckBoxPreference android:title="@string/pref_dev_mode" android:key="devMode" android:persistent="true" android:defaultValue="false" />
+	    <EditTextPreference android:title="@string/pref_host" android:key="host" android:persistent="true" android:defaultValue="netcare.callistasoftware.org" />
+	    <EditTextPreference android:title="@string/pref_port" android:key="port" android:persistent="true" android:defaultValue="443" android:inputType="number" />
+	    <CheckBoxPreference android:title="@string/pref_secure_connection" android:key="secure" android:persistent="true" android:defaultValue="true"/>
     </PreferenceCategory>
     
 </PreferenceScreen>
