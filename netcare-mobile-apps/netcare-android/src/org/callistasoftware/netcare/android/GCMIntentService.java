@@ -21,10 +21,7 @@ import java.util.Map;
 public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
-	protected void onError(Context arg0, String arg1) {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void onError(Context arg0, String arg1) {}
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
@@ -35,7 +32,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		final String message = intent.getExtras().getString("message");
 		final String when = intent.getExtras().getString("timestamp");
 		
-		final Intent notificationIntent = new Intent(context, WebViewActivity.class);
+		final Intent notificationIntent = new Intent(context, StartActivity.class);
 		final PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, 0);
 		
 		final Notification notification = new Notification(R.drawable.mhp_icon, message, Long.valueOf(when));
