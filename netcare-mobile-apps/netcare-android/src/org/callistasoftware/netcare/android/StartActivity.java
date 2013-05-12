@@ -25,35 +25,27 @@ public class StartActivity extends Activity {
 	private String orderRef;
 
     private SharedPreferences p;
+
+    private boolean devMode;
+    private boolean autoLogin;
+    private String crnFromPreferences;
+
+    private void refreshPreferences() {
+        this.p = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        this.devMode = p.getBoolean("devMode", false);
+        this.autoLogin = p.getBoolean("rememberCrn", false);
+    }
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         this.login = (Button) this.findViewById(R.id.loginButton);
         this.crn = (EditText) this.findViewById(R.id.crn);
 
-        this.p = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        final boolean devMode = p.getBoolean("devMode", false);
-        final boolean autoLogin = p.getBoolean("rememberCrn", false);
-
-        if (autoLogin) {
-            final String crnFromPreferences = ApplicationHelper.newInstance(getApplicationContext()).validateCrn(p.getString("crn", ""));
-            if (crnFromPreferences != null) {
-                Log.i(TAG, "Performing auto-login using: " + crn);
-                crn.setText(crnFromPreferences);
-                doLogin(crnFromPreferences, devMode);
-            } else {
-                Toast.makeText(getApplicationContext(), "Kunde inte logga in automatiskt eftersom personnummret var ogiltigt.", Toast.LENGTH_LONG).show();
-            }
-        }
+        refreshPreferences();
+        doAutoLoginIfPossible();
 
         this.login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,12 +53,12 @@ public class StartActivity extends Activity {
                 final String validated = ApplicationHelper.newInstance(getApplicationContext()).validateCrn(crn.getText().toString().trim());
                 if (validated != null) {
 
-                    if (autoLogin) {
+                    if (StartActivity.this.autoLogin) {
                         Log.i(TAG, "Saving civic registration number to shared preferences");
                         p.edit().putString("crn", validated).commit();
                     }
 
-                    doLogin(validated, devMode);
+                    doLogin(validated);
                 } else {
                     Toast.makeText(getApplicationContext(), "Personnummret är ogiltigt", Toast.LENGTH_LONG).show();
                 }
@@ -74,9 +66,29 @@ public class StartActivity extends Activity {
         });
     }
 
-    void doLogin(final String civicRegistrationNumber, final boolean devMode) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshPreferences();
+    }
 
-        if (devMode) {
+    void doAutoLoginIfPossible() {
+        if (this.autoLogin) {
+            this.crnFromPreferences = ApplicationHelper.newInstance(getApplicationContext()).validateCrn(p.getString("crn", ""));
+            if (this.crnFromPreferences != null) {
+                Log.i(TAG, "Performing auto-login using: " + crn);
+                crn.setText(this.crnFromPreferences);
+                doLogin(this.crnFromPreferences);
+                return;
+            } else {
+                Toast.makeText(getApplicationContext(), "Kunde inte logga in automatiskt eftersom personnummret var ogiltigt.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    void doLogin(final String civicRegistrationNumber) {
+
+        if (this.devMode) {
             startActivity(new Intent(StartActivity.this, WebViewActivity.class));
             finish();
 
