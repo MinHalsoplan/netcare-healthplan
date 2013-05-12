@@ -1065,7 +1065,8 @@ var NC_MODULE = {
 			
 			field.on('keyup', function() {
 				var val = field.val();
-				if(NC.GLOBAL.isDecimalNumber(val)) {
+				if(NC.GLOBAL.isDecimalNumber(val, true)) {
+                    val = val.replace(",", ".");
 					_data.goalValues[idx].target = val;
 					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
 					$(this).css('background', '#EDEDED');
@@ -1076,7 +1077,7 @@ var NC_MODULE = {
 				}
 			});
 		};
-		
+
 		my.renderIntervalGoal = function(activityItem) {
 			NC.log('Render interval goal');
 			var t = _.template( $('#intervalValue').html() );
@@ -1093,17 +1094,18 @@ var NC_MODULE = {
 			max.val(_data.goalValues[idx].maxTarget);
 			
 			var updateIntervalValues = function(activityItem) {
-				_data.goalValues[idx].minTarget = $(min).val();
-				_data.goalValues[idx].maxTarget = $(max).val();
-				NC.log('Min target set to: ' + $(min).val() + ' for ' + activityItem.name);
-				NC.log('Max target set to: ' + $(max).val() + ' for ' + activityItem.name);
+                var minval = $(min).val().replace(",",".");
+                var maxval = $(max).val().replace(",",".")
+				_data.goalValues[idx].minTarget = minval;
+				_data.goalValues[idx].maxTarget = maxval;
+				NC.log('Min target set to: ' + minval + ' for ' + activityItem.name);
+				NC.log('Max target set to: ' + maxval + ' for ' + activityItem.name);
 			};
 			
 			$(min).on('change blur keyup', function() {
 				var val = min.val();
-				if(NC.GLOBAL.isDecimalNumber(val)) {
+				if(NC.GLOBAL.isDecimalNumber(val, true)) {
 					updateIntervalValues(activityItem);
-					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
 					$(this).css('background', '#EDEDED');
 					$('#savePlanBtn').attr('disabled', false);
 				} else {
@@ -1114,9 +1116,8 @@ var NC_MODULE = {
 			
 			$(max).on('change blur keyup', function() {
 				var val = max.val();
-				if(NC.GLOBAL.isDecimalNumber(val)) {
+                if(NC.GLOBAL.isDecimalNumber(val, true)) {
 					updateIntervalValues(activityItem);
-					NC.log('Target set to: ' + val + ' for ' + activityItem.name);
 					$(this).css('background', '#EDEDED');
 					$('#savePlanBtn').attr('disabled', false);
 				} else {
@@ -2786,11 +2787,13 @@ var NC_MODULE = {
                     inputs.bind('change blur keyup', function() {
 					var value = $(this).val();
 					if($(this).hasClass('decimalNumber')) {
-						if(NC.GLOBAL.isDecimalNumber(value)) {
+                        if(NC.GLOBAL.isDecimalNumber(value, true)) {
+                            var storeValue = value.replace(",", ".");
+                            NC.log("HEJ");
 							$(this).css('background', '#EDEDED');
-							_data[activityIndex].activityItemValues[itemIndex][reportedField] = value;
+							_data[activityIndex].activityItemValues[itemIndex][reportedField] = storeValue;
 							$('#sa-report-' + activityId).attr('disabled', false);
-							NC.log('Setting value to: ' + value);
+							NC.log('Setting value to: ' + storeValue);
 						} else {
 							$(this).css('background', '#F2DEDE');
 							$('#sa-report-' + activityId).attr('disabled', true);

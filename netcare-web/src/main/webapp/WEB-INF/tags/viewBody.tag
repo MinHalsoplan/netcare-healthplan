@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ tag language="java" pageEncoding="UTF-8" %>
 <%@ attribute name="title" required="false" %>
 <%@ attribute name="backTitle" required="false" %>
 <%@ attribute name="backUrl" required="false" %>
@@ -24,45 +24,47 @@
 <%@ attribute name="plain" required="false" %>
 <%@ attribute name="printable" required="false" %>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags"%>
-<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags"%>
-<%@ taglib prefix="hp" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="mvk" uri="http://www.callistasoftware.org/mvk/tags" %>
+<%@ taglib prefix="netcare" uri="http://www.callistasoftware.org/netcare/tags" %>
+<%@ taglib prefix="hp" tagdir="/WEB-INF/tags" %>
 
 <mvk:body>
-<sec:authentication property="principal" var="p" scope="request"/>
+  <sec:authentication property="principal" var="p" scope="request"/>
 
-<sec:authorize access="hasRole('CARE_ACTOR')">
-	<mvk:pageHeader title="${title}"
-		loggedInUser="${p.name} (${p.careUnit.name})"
-		loggedInAsText="Inloggad som : "
-		logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
-		logoutText="Stäng" />
-</sec:authorize>
-<sec:authorize access="hasRole('PATIENT')">
-	<mvk:pageHeader title="${title}"
-		loggedInUser="${p.name} (${p.civicRegistrationNumber})"
-		loggedInAsText="Inloggad som : "
-		logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
-		logoutText="Logga ut" />
-</sec:authorize>
+  <sec:authorize access="hasRole('CARE_ACTOR')">
+    <mvk:pageHeader title="${title}"
+                    loggedInUser="${p.name} (${p.careUnit.name})"
+                    loggedInAsText="Inloggad som : "
+                    mvkUrl="https://personal.minavardkontakter.se/vg/vgadmin.nsf/fVAStart?readform"
+                    logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
+                    logoutText="Stäng"/>
+  </sec:authorize>
+  <sec:authorize access="hasRole('PATIENT')">
+    <mvk:pageHeader title="${title}"
+                    loggedInUser="${p.name} (${p.civicRegistrationNumber})"
+                    loggedInAsText="Inloggad som : "
+                    mvkUrl="https://kontakt.minavardkontakter.se/mvk/start.xhtml"
+                    logoutUrl="${pageContext.request.contextPath}/netcare/security/logout"
+                    logoutText="Logga ut"/>
+  </sec:authorize>
 
-<mvk:pageContent>
-	
-	<mvk:leftMenu>
-		<hp:menu />
-	</mvk:leftMenu>
-	
-	<mvk:content title="${title}" 
-		backTitle="${backTitle}" 
-		backUrl="${backUrl}" 
-		backToWhat="${backToWhat}"
-		plain="${plain}"
-        printable="${printable}">
-		<jsp:doBody/>
-	</mvk:content>
-</mvk:pageContent>
+  <mvk:pageContent>
+
+    <mvk:leftMenu>
+      <hp:menu/>
+    </mvk:leftMenu>
+
+    <mvk:content title="${title}"
+                 backTitle="${backTitle}"
+                 backUrl="${backUrl}"
+                 backToWhat="${backToWhat}"
+                 plain="${plain}"
+                 printable="${printable}">
+      <jsp:doBody/>
+    </mvk:content>
+  </mvk:pageContent>
 
 </mvk:body>
