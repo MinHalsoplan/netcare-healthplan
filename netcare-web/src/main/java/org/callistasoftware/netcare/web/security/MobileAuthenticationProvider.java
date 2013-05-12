@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.web.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -35,23 +37,25 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  *
  */
 public class MobileAuthenticationProvider extends DaoAuthenticationProvider {
-	
+
+    private static Logger log = LoggerFactory.getLogger(MobileAuthenticationProvider.class);
+
 	@Autowired
 	@Override
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		super.setUserDetailsService(userDetailsService);
 	}
-	
+
 	@Override
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
-		return super.authenticate(authentication);
-	}
-	
-	@Override
-	protected void additionalAuthenticationChecks(UserDetails userDetails,
-			UsernamePasswordAuthenticationToken authentication)
-			throws AuthenticationException {
-		super.additionalAuthenticationChecks(userDetails, authentication);
+        log.info("==== Mobile Authentication [DEV MODE] ====");
+        log.info("User: {}", authentication.getName());
+
+        final UserDetails details = getUserDetailsService().loadUserByUsername(authentication.getName());
+        log.info("User found: {}", details != null);
+        log.info("==========================================");
+
+        return new UsernamePasswordAuthenticationToken(details, "", details.getAuthorities());
 	}
 }

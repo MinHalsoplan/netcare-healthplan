@@ -29,8 +29,13 @@ public class StartActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.start);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         this.login = (Button) this.findViewById(R.id.loginButton);
         this.crn = (EditText) this.findViewById(R.id.crn);
 
@@ -51,8 +56,8 @@ public class StartActivity extends Activity {
         }
 
         this.login.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 final String validated = ApplicationHelper.newInstance(getApplicationContext()).validateCrn(crn.getText().toString().trim());
                 if (validated != null) {
 
@@ -65,11 +70,20 @@ public class StartActivity extends Activity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Personnummret är ogiltigt", Toast.LENGTH_LONG).show();
                 }
-			}
-		});
+            }
+        });
     }
 
     void doLogin(final String civicRegistrationNumber, final boolean devMode) {
+
+        if (devMode) {
+            startActivity(new Intent(StartActivity.this, WebViewActivity.class));
+            finish();
+
+            return;
+        }
+
+
         AuthHelper.newInstance(getApplicationContext()).startAuthentication(civicRegistrationNumber, new ServiceCallback<Intent>() {
             @Override
             public void onSuccess(Intent response) {
