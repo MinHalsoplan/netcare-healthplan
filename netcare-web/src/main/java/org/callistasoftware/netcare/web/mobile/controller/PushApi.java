@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.web.mobile.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.callistasoftware.netcare.api.rest.ApiSupport;
@@ -39,16 +40,40 @@ public class PushApi extends ApiSupport {
 	@ResponseBody
 	public void c2dmRegistration(@RequestBody final Map<String, String> data) {
 		this.logAccess("register", "gcm");
+        saveEnvironmentProperties("Android", data);
 		service.registerForGcm(data.get("c2dmRegistrationId"));
 	}
 
     @RequestMapping(value="/apns", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
-	public void apnsRegistration(@RequestParam(value="apnsRegistrationId") final String apnsRegistrationId) {
-		this.logAccess("register", "apns");
-		service.registerForApnsPush(apnsRegistrationId);
+    public void apnsRegistration(@RequestBody final Map<String, String> data) {
+        this.logAccess("register", "apns");
+        saveEnvironmentProperties("iOS", data);
+		service.registerForApnsPush(data.get("apnsRegistrationId"));
 	}
-    
+
+    /**
+     * Saves env data from request.
+     * @param data
+     */
+    private void saveEnvironmentProperties(String os, Map<String, String> data) {
+        Map<String, String> props = new HashMap<String, String>();
+
+        props.put("os.name", os);
+
+        String osVersion = data.get("os.version");
+        if (osVersion != null && osVersion != "") {
+            props.put("os.version", osVersion);
+        }
+
+        String appVersion = data.get("app.version");
+        if (appVersion != null && appVersion != "") {
+            props.put("app.version", appVersion);
+        }
+
+        service.addUserProperties(props);
+    }
+
     @RequestMapping(value="/gcm", method=RequestMethod.DELETE)
     @ResponseBody
     public void gcmUnregistration() {

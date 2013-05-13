@@ -36,6 +36,8 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 /**
  * Implementation of a user details service
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
@@ -109,7 +111,14 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 		getCurrentUser().getProperties().remove("apnsRegistrationId");
 	}
 
-	@Override
+    @Override
+    public void addUserProperties(Map<String, String> props) {
+        getLog().info("User: {} adding multiple properties", user.getFirstName());
+        getCurrentUser().getProperties().putAll(props);
+
+    }
+
+    @Override
 	public ServiceResult<Boolean> saveUserData(String firstName, String surName) {
 		final UserEntity user = this.getCurrentUser();
 		

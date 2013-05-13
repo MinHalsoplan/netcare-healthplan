@@ -18,6 +18,8 @@ package org.callistasoftware.netcare.core.spi;
 
 import org.callistasoftware.netcare.core.api.ServiceResult;
 
+import java.util.Map;
+
 
 /**
  * Defines the user details service
@@ -49,6 +51,16 @@ public interface UserDetailsService extends org.springframework.security.core.us
 	 * @param apnsRegistrationId the apns registration id.
 	 */
 	void registerForApnsPush(String apnsRegistrationId);
-	
-	void unregisterApns();
+
+    /**
+     *
+     */
+    void unregisterApns();
+
+    /**
+     *
+     * @param props
+     */
+    void addUserProperties(Map<String, String> props);
+
 }
