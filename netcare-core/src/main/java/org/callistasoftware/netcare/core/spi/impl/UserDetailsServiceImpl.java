@@ -113,8 +113,9 @@ public class UserDetailsServiceImpl extends ServiceSupport implements UserDetail
 
     @Override
     public void addUserProperties(Map<String, String> props) {
+        final UserEntity user = this.getCurrentUser();
         getLog().info("User: {} adding multiple properties", user.getFirstName());
-        getCurrentUser().getProperties().putAll(props);
+        user.getProperties().putAll(props);
 
     }
 
