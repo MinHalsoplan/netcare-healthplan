@@ -44,7 +44,7 @@
 <body>
 	<div data-role="page" id="start" data-external-page="true">
 		<div data-role="header" id="today-header" data-theme="c" data-position="fixed">
-			<a style="display:none;"></a>
+      <a href="#" id="logout">Logga ut</a>
 			<h1>
 				<spring:message code="mobile.activity.title" />
 			</h1>
@@ -82,5 +82,8 @@
 			</div>
 		</div>
 	</div>
+  <div data-role="page" id="blank">
+    <div align="center" style="margin-top: 40px;">Utloggad</div>
+  </div>
 </body>
 </html>

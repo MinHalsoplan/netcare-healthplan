@@ -89,8 +89,12 @@ var NC_MOBILE = {
 		};
 		
 		var setupGUI = function(my) {
-			
-			$('#refresh').on('tap', function(e) {
+
+            $('#logout').on('tap', function(e) {
+                logout();
+            });
+
+            $('#refresh').on('tap', function(e) {
 				$('#schema').empty();
 				my.load(my, function() {
 					console.log('refresh');
@@ -131,7 +135,22 @@ var NC_MOBILE = {
 			});
 
 		};
-		
+
+        var logout = function() {
+            $.ajax({
+                url : "/mobile/logout",
+                cache : false,
+                success : function(data) {
+                    console.log("Logged out");
+                    $.mobile.changePage($("#blank"),"slide");
+                },
+                error : function(jqXHR, status, error) {
+                    console.log(status + ": " + jqXHR.status + " - " + error);
+                    $.mobile.changePage($("#blank"),"slide");
+                }
+            });
+        };
+
 		my.buildFromArray = function(my, listOfActivities, onComplete) {
 			var currentDay = '';
 
