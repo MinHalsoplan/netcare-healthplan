@@ -21,7 +21,7 @@
      <dependency>
          <groupId>org.callistasoftware.commons</groupId>
          <artifactId>netcare-ui</artifactId>
-         <version>1.0.3-SNAPSHOT</version>
+         <version>1.0.3</version>
      </dependency>
     <dependency>
   		<groupId>org.callistasoftware.netcare.commons</groupId>
