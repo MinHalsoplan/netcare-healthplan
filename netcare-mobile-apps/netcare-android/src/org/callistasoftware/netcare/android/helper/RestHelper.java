@@ -42,6 +42,8 @@ public class RestHelper {
 
     public RestTemplate getRestService() {
 
+        refresh();
+
         ClientHttpRequestFactory requestFactory = null;
         if (devMode) {
             final String crn = PreferenceManager.getDefaultSharedPreferences(context).getString("devCrn", "191212121212");
