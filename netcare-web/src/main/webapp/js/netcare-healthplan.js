@@ -56,6 +56,34 @@ var NC_MODULE = {
 			this.params = params;
 		};
 
+    my.addDatePicker = function(elem) {
+      var opts = {
+        dateFormat : 'yy-mm-dd',
+        firstDay : 1
+      };
+
+      // Check which classes we have to determine
+      // max and min dates for the picker
+      var classes = elem.attr('class');
+      var classArray = classes.split(' ');
+
+      $.each(classArray, function (i, val) {
+
+        // Check how many previous days to display
+        if (val.indexOf('previous') == 0) {
+          opts.minDate = -Math.abs(parseInt(val.split('-')[1], 10));
+        }
+
+        if (val.indexOf('upcoming') == 0) {
+          opts.maxDate = val.split('-')[1];
+        }
+
+      });
+
+      elem.datepicker(opts);
+      return elem;
+    };
+
 		my.loadNewPage = function(url, module, moduleParams) {
 
 			// Show spinner
@@ -2721,13 +2749,11 @@ var NC_MODULE = {
 						$('#sa-row-' + actItem.id).find('input[value="false"]').prop('checked', true);
 					}
 				}
-				
-				var datefield = $('#' + activity.id + '-report-date');
-				var dp = datefield.datepicker({
-					dateFormat : 'yy-mm-dd',
-					firstDay : 1
-				});
-				
+
+
+        var datefield = $('#' + activity.id + '-report-date');
+        var dp = NC_MODULE.GLOBAL.addDatePicker(datefield);
+
 				if (activity.actDate) {
 					dp.datepicker('setDate', activity.actDate);
 				} else {

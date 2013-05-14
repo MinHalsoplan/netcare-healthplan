@@ -592,7 +592,7 @@
 			<span>Ange tidpunkt då aktiviteten utfördes</span>
 		</div>
         <div class="span7">
-            <input id="{{=id}}-report-date" type="text" style="display: inline;" class="dateInput allow-previous input-small"/>
+            <input id="{{=id}}-report-date" type="text" style="display: inline;" class="dateInput previous-7 upcoming-0 input-small" readonly="true"/>
             <input id="{{=id}}-report-time" type="text" style="display: inline;" class="input-mini timeInput" placeholder="TT:MM"/>
         </div>
 	</div>
