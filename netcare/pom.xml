@@ -329,6 +329,7 @@
 						
 	  					<!-- Exclude JQuery files -->
 	  					<exclude>**/*jquery*</exclude>
+              <exclude>**/*jqm*</exclude>
 	  					<exclude>**/*bootstrap*</exclude>
 	  					<exclude>**/*json2*</exclude>
 	  					<exclude>**/*.xsd</exclude>

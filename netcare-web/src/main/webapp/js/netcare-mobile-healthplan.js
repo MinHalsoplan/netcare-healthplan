@@ -402,10 +402,20 @@ var NC_MOBILE = {
 					$('#sendReport').unbind('tap');
 				});
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
-				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
+				$('#reportForm').trigger('create');
 
-        $('#date').on('click', function (e) {
-          $(this).val('');
+        $('#date').datebox({ mode : 'calbox',
+          lockInput : false,
+          minDays : 7,
+          beforeToday: true,
+          useAnimation: false,
+          themeHeader : 'c',
+          overrideCalStartDay : 1
+        });
+
+        $('#time').datebox({
+          mode : 'timeflipbox',
+          lockInput: true
         });
 				
 				$.mobile.loading('hide');

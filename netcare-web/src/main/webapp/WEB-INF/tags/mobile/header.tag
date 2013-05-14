@@ -26,6 +26,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	
 	<link rel="stylesheet" href="<spring:url value="/css/jquery.mobile-1.2.0.min.css" />" />
+  <link rel="stylesheet" href="<spring:url value="/css/jqm-datebox-1.2.0.min.css" />" />
 
 	<style>
 		.ui-bar-c {
@@ -83,7 +84,11 @@
 	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/PageMessages.js' />"></script>
 	<script type="text/javascript" src="<c:url value='${resourcePath}/js/netcare-ui/Ajax.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/js/netcare-mobile-healthplan.js' />"></script>
-	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>	
+	<script type="text/javascript" src="<c:url value="/js/jquery.mobile-1.2.0.min.js" />"></script>
+  <script type="text/javascript" src="<c:url value="/js/jqm-datebox-1.2.0.core.min.js" />"></script>
+  <script type="text/javascript" src="<c:url value="/js/jqm-datebox-1.2.0.mode.calbox.min.js" />"></script>
+  <script type="text/javascript" src="<c:url value="/js/jqm-datebox-1.2.0.mode.flipbox.min.js" />"></script>
+  <script type="text/javascript" src="<c:url value="/js/jquery.mobile.datebox.i18n.sv-SE.utf8.js" />"></script>
 	<jsp:doBody />
 	
 </head>

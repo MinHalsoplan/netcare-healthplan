@@ -74,17 +74,17 @@
 	<div data-role="fieldcontain">
 		<label for="date"><spring:message code="mobile.report.form.date" /></label>
 		{{ if (reported) { }}
-			<input type="date" id="date" name="date" data-mini="true" value="{{=actDate}}" />
+			<input type="text" id="date" name="date" data-mini="true" value="{{=actDate}}" />
 		{{ } else { }}
-			<input type="date" id="date" name="date" data-mini="true" value="{{=date}}" />
+			<input type="text" id="date" name="date" data-mini="true" value="{{=date}}" />
 		{{ } }}
 	</div>
 	<div data-role="fieldcontain">
 		<label for="time"><spring:message code="mobile.report.form.time" /></label>
 		{{ if (reported) { }}
-			<input type="time" id="time" name="time" data-mini="true" value="{{=actTime}}" />
+			<input type="text" id="time" name="time" data-mini="true" value="{{=actTime}}" />
 		{{ } else { }}
-			<input type="time" id="time" name="time" data-mini="true" value="{{=time}}" />
+			<input type="text" id="time" name="time" data-mini="true" value="{{=time}}" />
 		{{ } }}
 	</div>
 	<div data-role="fieldcontain">

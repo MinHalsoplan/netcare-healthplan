@@ -33,7 +33,10 @@
 
 		$(document).bind('mobileinit', function() {
 			$.mobile.defaultPageTransition = 'none';
-		})
+      jQuery.extend(jQuery.mobile.datebox.prototype.options, {
+        overrideDateFormat: 'yyyy-mm-dd'
+      });
+		});
 		
 		$(document).bind('ready', function() {
 			NC_MOBILE.ACTIVITIES.init();
