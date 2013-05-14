@@ -138,15 +138,15 @@ var NC_MOBILE = {
 
         var logout = function() {
             $.ajax({
-                url : "/mobile/logout",
+                url : NC.getContextPath() + "/mobile/logout",
                 cache : false,
                 success : function(data) {
                     console.log("Logged out");
-                    $.mobile.changePage($("#blank"),"slide");
+                    document.location.href="start#blank";
                 },
                 error : function(jqXHR, status, error) {
                     console.log(status + ": " + jqXHR.status + " - " + error);
-                    $.mobile.changePage($("#blank"),"slide");
+                    document.location.href="start#blank";
                 }
             });
         };
