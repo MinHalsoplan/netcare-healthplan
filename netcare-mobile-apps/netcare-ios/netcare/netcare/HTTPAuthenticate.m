@@ -44,6 +44,7 @@
         NSString* title = [Util infoValueForKey:@"NCNoAccountTitle"];
         NSString* msg = [Util infoValueForKey:@"NCNoAccount"];
         [Util displayAlert:title withMessage:msg];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     }
     
 }

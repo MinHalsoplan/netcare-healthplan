@@ -80,7 +80,15 @@
     NSString *requestString = [[[request URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
     NSLog(@"FlipsideViewController - %@\n", requestString);
-    
+    if ([requestString rangeOfString:@"#blank"].location != NSNotFound) {
+        NSLog(@"Flipping to login screen");
+        // clean up content
+        [self.webView stringByEvaluatingJavaScriptFromString:@"document.open();document.close();"];
+        // go back to logon screen
+        [self.delegate flipsideViewControllerDidFinish:self];
+        return YES;
+    }
+
     if ([requestString hasPrefix:@"ios-log:"]) {
         NSString* logString = [[requestString componentsSeparatedByString:@":#iOS#"] objectAtIndex:1];
         NSLog(@"UIWebView console: %@", logString);
