@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.callistasoftware.netcare.android.helper.ApplicationHelper;
 import org.callistasoftware.netcare.android.helper.AuthHelper;
+import org.callistasoftware.netcare.android.helper.GCMHelper;
 
 public class StartActivity extends Activity {
 	
@@ -89,7 +90,10 @@ public class StartActivity extends Activity {
     void doLogin(final String civicRegistrationNumber) {
 
         if (this.devMode) {
-            startActivity(new Intent(StartActivity.this, WebViewActivity.class));
+            final Intent i = new Intent(StartActivity.this, WebViewActivity.class);
+            i.putExtra("crn", civicRegistrationNumber);
+
+            startActivity(i);
             finish();
 
             return;

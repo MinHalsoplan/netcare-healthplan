@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
 import org.callistasoftware.netcare.android.helper.ApplicationHelper;
 import org.callistasoftware.netcare.android.helper.AuthHelper;
+import org.callistasoftware.netcare.android.helper.GCMHelper;
 import org.callistasoftware.netcare.android.helper.RestHelper;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -46,37 +47,12 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Received push registration message. Registration id is: " + registrationId);
-		try {
-			final RestTemplate rest = RestHelper.newInstance(context.getApplicationContext()).getRestService();
-			
-			final HttpHeaders headers = new HttpHeaders();
-			headers.put(AuthHelper.NETCARE_AUTH_HEADER, Collections.singletonList(AuthHelper.newInstance(getApplicationContext()).getSessionId()));
-	
-			final MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
-			body.add("c2dmRegistrationId", registrationId);
-			
-			final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(body.toSingleValueMap(), headers);
-	
-			@SuppressWarnings("rawtypes")
-			ResponseEntity<Map> result = rest.exchange(ApplicationHelper.newInstance(context.getApplicationContext()).getUrl("/mobile/push/gcm"),
-				HttpMethod.POST, 
-				ent, 
-				Map.class);
-			
-			if (result.getStatusCode().equals(HttpStatus.OK)) {
-				Log.i(TAG, "Successfully registered for push notifications.");
-			} else {
-				Log.w(TAG, "Could not register for push notifications. Response code: " + result.getStatusCode());
-			}
-	    } catch (final Exception e) {
-	            e.printStackTrace();
-	            Log.d(TAG, "Failed to register for push. Exception is: " + e.getMessage());
-	    }
+        GCMHelper.newInstance(getApplicationContext()).publishRegistrationId(registrationId);
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
-		Log.d(TAG, "Push unregistration!!!");
+		Log.d(TAG, "Push unregistration");
 		try {
 			final RestTemplate rest = RestHelper.newInstance(context.getApplicationContext()).getRestService();
 			

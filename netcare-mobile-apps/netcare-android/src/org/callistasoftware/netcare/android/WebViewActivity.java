@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.webkit.*;
 import org.callistasoftware.netcare.android.helper.ApplicationHelper;
 import org.callistasoftware.netcare.android.helper.AuthHelper;
+import org.callistasoftware.netcare.android.helper.GCMHelper;
 
 public class WebViewActivity extends Activity {
 
@@ -44,7 +45,7 @@ public class WebViewActivity extends Activity {
 				}
 			}
 		});
-		
+
 		final String url = ApplicationHelper.newInstance(getApplicationContext()).getUrl("/mobile/start");
 		Log.d(TAG, "Load url: " + url);
 
@@ -52,7 +53,7 @@ public class WebViewActivity extends Activity {
         if (!devMode) {
             startWebView(wv, url);
         } else {
-            startWebViewInDevMode(wv, url);
+            startWebViewInDevMode(wv, url, getIntent().getExtras().getString("crn"));
         }
 	}
 
@@ -66,6 +67,18 @@ public class WebViewActivity extends Activity {
                                            SslErrorHandler handler, SslError error) {
                 handler.proceed();
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d(TAG, "Override url loading for: " + url);
+                view.loadUrl(url);
+                if (url.endsWith("/logout")) {
+                    startActivity(new Intent(getApplicationContext(), StartActivity.class));
+                    finish();
+                }
+
+                return true;
+            }
         });
 
         final String session = AuthHelper.newInstance(getApplicationContext()).getSessionId();
@@ -78,14 +91,14 @@ public class WebViewActivity extends Activity {
         webview.loadUrl(url, headers);
     }
 
-    void startWebViewInDevMode(final WebView webview, final String url) {
+    void startWebViewInDevMode(final WebView webview, final String url, final String crn) {
 
         Log.i(TAG, "Starting webview in dev mode...");
+        GCMHelper.newInstance(getApplicationContext()).gcmRegister();
 
         final SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         final String host = p.getString("host", "demo.minhalsoplan.se");
-        final String crn = p.getString("crn", "191212121212");
 
         webview.setWebViewClient(new WebViewClient() {
             @Override

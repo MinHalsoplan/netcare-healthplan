@@ -404,14 +404,8 @@ var NC_MOBILE = {
 				$('#reportForm').append(my.templates['commonActivityItemTemplate'](activity));
 				$('#reportForm').trigger('create'); // Init jQuery Mobile controls
 
-        $('#date').on('change paste input', function (e) {
-          NC.log('Date input is: ' + $(this).val());
-          var val = $(this).val();
-          if (val.length > 10) {
-            $(this).val(val.substr(0, 10));
-          }
-
-          $(this).unbind('change paste input');
+        $('#date').on('click', function (e) {
+          $(this).val('');
         });
 				
 				$.mobile.loading('hide');

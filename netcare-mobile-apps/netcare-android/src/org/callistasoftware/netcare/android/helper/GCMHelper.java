@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
 import org.callistasoftware.netcare.android.ServiceCallback;
+import org.callistasoftware.netcare.android.task.RegisterGcmTask;
 import org.callistasoftware.netcare.android.task.UnRegisterGcmTask;
 
 public class GCMHelper {
@@ -55,5 +56,19 @@ public class GCMHelper {
                 Log.e(TAG, "Could not unregister push");
             }
         });
+    }
+
+    public void publishRegistrationId(final String registrationId) {
+        new RegisterGcmTask(context, new ServiceCallback<String>() {
+            @Override
+            public void onSuccess(String response) {
+                Log.d(TAG, "Successfully published registration id to server");
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                Log.d(TAG, "Failed to publish registration id to server");
+            }
+        }).execute(registrationId);
     }
 }
