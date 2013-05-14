@@ -52,30 +52,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
-		Log.d(TAG, "Push unregistration");
-		try {
-			final RestTemplate rest = RestHelper.newInstance(context.getApplicationContext()).getRestService();
-			
-			final HttpHeaders headers = new HttpHeaders();
-			headers.put(AuthHelper.NETCARE_AUTH_HEADER, Collections.singletonList(AuthHelper.newInstance(getApplicationContext()).getSessionId()));
-	
-			final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(headers);
-	
-			@SuppressWarnings("rawtypes")
-			ResponseEntity<Map> result = rest.exchange(ApplicationHelper.newInstance(context.getApplicationContext()).getUrl("/mobile/push/gcm"),
-				HttpMethod.DELETE, 
-				ent, 
-				Map.class);
-			
-			if (result.getStatusCode().equals(HttpStatus.OK)) {
-				Log.i(TAG, "Successfully registered for push notifications.");
-			} else {
-				Log.w(TAG, "Could not register for push notifications. Response code: " + result.getStatusCode());
-			}
-	    } catch (final Exception e) {
-	            e.printStackTrace();
-	            Log.d(TAG, "Failed to register for push. Exception is: " + e.getMessage());
-	    }
+		Log.d(TAG, "Received push unregistration message. Registration id is: " + regId);
+        GCMHelper.newInstance(getApplicationContext()).unpublishRegistrationId(regId);
 	}
 
 }

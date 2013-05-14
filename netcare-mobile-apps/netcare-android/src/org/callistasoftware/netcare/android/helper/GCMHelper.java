@@ -1,6 +1,7 @@
 package org.callistasoftware.netcare.android.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
@@ -70,5 +71,19 @@ public class GCMHelper {
                 Log.d(TAG, "Failed to publish registration id to server");
             }
         }).execute(registrationId);
+    }
+
+    public void unpublishRegistrationId(final String registrationId) {
+        new UnRegisterGcmTask(context, new ServiceCallback<String>() {
+            @Override
+            public void onSuccess(String response) {
+                Log.d(TAG, "Unpublished registration id successfully");
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                Log.d(TAG, "Failed to unpublish registration id");
+            }
+        });
     }
 }

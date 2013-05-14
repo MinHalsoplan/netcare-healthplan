@@ -90,10 +90,11 @@ public class StartActivity extends Activity {
     void doLogin(final String civicRegistrationNumber) {
 
         if (this.devMode) {
-            final Intent i = new Intent(StartActivity.this, WebViewActivity.class);
-            i.putExtra("crn", civicRegistrationNumber);
+            final SharedPreferences.Editor e = p.edit();
+            e.putString("devCrn", civicRegistrationNumber);
+            e.commit();
 
-            startActivity(i);
+            startActivity(new Intent(StartActivity.this, WebViewActivity.class));
             finish();
 
             return;

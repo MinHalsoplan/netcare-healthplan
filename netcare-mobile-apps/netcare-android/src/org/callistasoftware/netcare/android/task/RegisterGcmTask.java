@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import org.callistasoftware.netcare.android.ServiceCallback;
 import org.callistasoftware.netcare.android.ServiceResult;
@@ -19,13 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: marcus
- * Date: 5/13/13
- * Time: 5:51 PM
- * To change this template use File | Settings | File Templates.
- */
 public class RegisterGcmTask extends AsyncTask<String, String, ServiceResult<String>> {
 
     private static final String TAG = RegisterGcmTask.class.getSimpleName();
@@ -33,9 +27,14 @@ public class RegisterGcmTask extends AsyncTask<String, String, ServiceResult<Str
     private Context context;
     private ServiceCallback<String> callback;
 
+    private boolean devMode;
+    private String devCrn;
+
     public RegisterGcmTask(final Context context, final ServiceCallback<String> callback) {
         this.context = context;
         this.callback = callback;
+        this.devMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("devMode", false);
+        this.devCrn = PreferenceManager.getDefaultSharedPreferences(context).getString("devCrn", "191212121212");
     }
 
     @Override

@@ -53,7 +53,7 @@ public class WebViewActivity extends Activity {
         if (!devMode) {
             startWebView(wv, url);
         } else {
-            startWebViewInDevMode(wv, url, getIntent().getExtras().getString("crn"));
+            startWebViewInDevMode(wv, url, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("devCrn", "191212121212"));
         }
 	}
 
