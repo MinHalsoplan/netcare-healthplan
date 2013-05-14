@@ -64,12 +64,17 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
+    NSMutableString* postData = [NSMutableString stringWithString:data];
+    [postData appendString: @"\n"];
+    [postData appendString: [NSString stringWithFormat: @"%@%@\n", @"os.version=", [[UIDevice currentDevice] systemVersion]]];
+    [postData appendString: [NSString stringWithFormat: @"%@%@\n", @"app.version=", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]]];
+    
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
     [urlRequest setTimeoutInterval:15];
     [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    [urlRequest setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
     [urlRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField: @"Content-Type"];
-    NSLog(@"synchronizedPost: %@\n", data);
+    NSLog(@"synchronizedPost: %@\n", postData);
  
     NSError* error;
     NSHTTPURLResponse* response;
