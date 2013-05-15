@@ -26,5 +26,7 @@
 + (NSString*)toHexString:(NSData*) data;
 + (NSString*)baseURLString;
 + (void)displayAlert:(NSString*) title withMessage:(NSString *) msg;
++ (NSString*)formatPersonnummer:(NSString*) personnummer;
++ (bool)validatePersonnummer:(NSString*) personnummer;
 
 @end

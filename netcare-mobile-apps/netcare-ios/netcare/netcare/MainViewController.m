@@ -36,13 +36,19 @@
 - (IBAction)authenticate:(id)sender {
     NSLog(@"autenthicate() called");
     [loginButton setEnabled:NO];
-    NSLog(@"Personnummer: %@\n", [personNumberTextEdit text]);
-    [self savePersonalNumber];
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-
-    MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:[personNumberTextEdit text] andDelegate:self];
-    [bankIdService authenticate];
+    NSString* pnr0 = [personNumberTextEdit text];
+    NSLog(@"Inmatat personnummer: %@\n", pnr0);
+    NSString* pnr = [Util formatPersonnummer: pnr0];
+    [personNumberTextEdit setText: pnr];
+    NSLog(@"Validerar formaterat personnummer: %@\n", pnr);
+    if([Util validatePersonnummer: pnr]) {
+        [self savePersonalNumber: pnr];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+        MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:pnr andDelegate:self];
+        [bankIdService authenticate];
+    } else {
+        [Util displayAlert:@"" withMessage:@"Felaktigt personnumer"];
+    }
     
 }
 
@@ -55,9 +61,9 @@
 
 // Saves personal number.
 
-- (void)savePersonalNumber {
+- (void)savePersonalNumber:(NSString*) pnr {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-	[prefs setValue:[personNumberTextEdit text] forKey:@"personalNumber"];
+	[prefs setValue:pnr forKey:@"personalNumber"];
 	[prefs synchronize];
 }
 
