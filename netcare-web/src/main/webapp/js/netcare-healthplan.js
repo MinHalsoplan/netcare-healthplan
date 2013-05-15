@@ -3596,7 +3596,14 @@ var NC_MODULE = {
         /*
          * Include print section
          */
-        var printData = { title : 'Min hälsoplan -  Resultat', name : my.params.name, crn : NC.GLOBAL.formatCrn(my.params.crn), healthPlanName : activity.healthPlanName };
+        var printData = {
+          title : 'Min hälsoplan -  Resultat',
+          name : my.params.name,
+          crn : NC.GLOBAL.formatCrn(my.params.crn),
+          healthPlanName : activity.healthPlanName,
+          careUnitName : activity.healthPlanCareUnit.name,
+          activityName : activity.type.name
+        };
         var printTemplate = _.template($('#printHeader').html())(printData);
         $('#activities').append(printTemplate);
 

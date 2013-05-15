@@ -947,6 +947,14 @@
             <td>Hälsoplan:</td>
             <td>{{=healthPlanName}}</td>
           </tr>
+          <tr>
+            <td>Aktivitet:</td>
+            <td>{{=activityName}}</td>
+          </tr>
+          <tr>
+            <td>Vårdenhet:</td>
+            <td>{{=careUnitName}}</td>
+          </tr>
           </tbody>
         </netcare:table>
       </netcare:col>
