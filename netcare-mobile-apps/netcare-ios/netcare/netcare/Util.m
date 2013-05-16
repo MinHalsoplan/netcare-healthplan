@@ -91,16 +91,7 @@
 }
 
 + (bool)validatePersonnummer:(NSString*) personnummer {
-    bool result = FALSE;
-    // NSLog(@"Validerar personnummer: %@", personnummer);
-    int stringlength = [personnummer length];
-    if(stringlength == 10) {
-        //NSString* nineteen = @"19";
-//        validatePersonnummer12([nineteen stringByAppendingString:personnummer]);
-    } else if(stringlength == 12) {
-//        validatePersonnummer12(personnummer);
-    }
-    result = TRUE;
+    bool result = TRUE;
     return result;
 }
 
@@ -108,8 +99,7 @@
     NSString* result;
     int stringlength = [personnummer length];
     if(stringlength == 10) {
-        NSString* nineteen = @"19";
-        result = [nineteen stringByAppendingString:personnummer];
+        result = [@"19" stringByAppendingString:personnummer];
     } else {
         result = personnummer;
     }

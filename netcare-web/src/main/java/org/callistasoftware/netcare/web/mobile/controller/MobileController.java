@@ -16,6 +16,9 @@
  */
 package org.callistasoftware.netcare.web.mobile.controller;
 
+import org.callistasoftware.netcare.core.api.ServiceResult;
+import org.callistasoftware.netcare.core.api.impl.ServiceResultImpl;
+import org.callistasoftware.netcare.core.api.messages.GenericSuccessMessage;
 import org.callistasoftware.netcare.web.controller.ControllerSupport;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,6 +60,17 @@ public class MobileController extends ControllerSupport {
         m.addAttribute("activityId", activity);
         return "report";
     }
+
+    /**
+     * Url for initiating authentication
+     * @return
+     */
+    @RequestMapping(value = "/checkcredentials", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public final ServiceResult<Boolean> checkUserCredentials() {
+        return ServiceResultImpl.createSuccessResult(Boolean.TRUE, new GenericSuccessMessage());
+    }
+
 
     /**
      * Logs out the user from the app.

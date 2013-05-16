@@ -44,8 +44,15 @@
     if([Util validatePersonnummer: pnr]) {
         [self savePersonalNumber: pnr];
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:pnr andDelegate:self];
-        [bankIdService authenticate];
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        if ([prefs boolForKey:@"nc_dev_mode"]) {
+            HTTPBasicAuth* basicAuth = [[HTTPBasicAuth alloc] init: self withUser:pnr];
+            [basicAuth pleaseDo];
+        } else {
+            MobiltBankIdService *bankIdService = [[MobiltBankIdService alloc] initWithCrn:pnr andDelegate:self];
+            [bankIdService authenticate];
+        }
     } else {
         [Util displayAlert:@"" withMessage:@"Felaktigt personnumer"];
     }
