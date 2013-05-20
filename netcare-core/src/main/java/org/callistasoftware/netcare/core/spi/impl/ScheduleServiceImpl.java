@@ -186,7 +186,7 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 				getLog().debug("Alarm status: enabled {} raised {}", definition.getMeasurementType().isAlarmEnabled(),
 						me.isAlarm());
 				
-				if (!report.isRejected() && me.isAlarm() && !entity.isExtra()) {
+				if (!report.isRejected() && me.isAlarm() && !entity.isExtra() && value.getDefinition().isActive()) {
 					AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, entity
 							.getActivityDefinitionEntity().getHealthPlan().getForPatient(), entity
 							.getActivityDefinitionEntity().getHealthPlan().getCareUnit().getHsaId(), me.getId());
