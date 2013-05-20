@@ -2815,7 +2815,6 @@ var NC_MODULE = {
 					if($(this).hasClass('decimalNumber')) {
                         if(NC.GLOBAL.isDecimalNumber(value, true)) {
                             var storeValue = value.replace(",", ".");
-                            NC.log("HEJ");
 							$(this).css('background', '#EDEDED');
 							_data[activityIndex].activityItemValues[itemIndex][reportedField] = storeValue;
 							$('#sa-report-' + activityId).attr('disabled', false);
