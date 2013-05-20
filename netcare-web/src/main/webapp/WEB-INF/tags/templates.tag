@@ -515,39 +515,49 @@
 <%--Reported Activity values --%>
 <%--Estimation values --%>
 <script id="estimationValues" type="text/template">
-<div id="ra-row-{{=id}}" class="row-fluid">
-<div class="span5"><span>{{=definition.activityItemType.name}}
-{{=definition.activityItemType.minScaleValue}} ({{=definition.activityItemType.minScaleText}}) - {{=definition.activityItemType.maxScaleValue}} ({{=definition.activityItemType.maxScaleText}})</span></div>
-<div class="span5">{{=perceivedSense}}</div>
-</div>
+  {{ if (definition.active) { }}
+    <div id="ra-row-{{=id}}" class="row-fluid">
+      <div class="span5"><span>{{=definition.activityItemType.name}}
+      {{=definition.activityItemType.minScaleValue}} ({{=definition.activityItemType.minScaleText}}) - {{=definition.activityItemType.maxScaleValue}} ({{=definition.activityItemType.maxScaleText}})</span></div>
+      <div class="span5">{{=perceivedSense}}</div>
+    </div>
+  {{ } }}
 </script>
 <%--Measurement values --%>
 <script id="measurementSingleValues" type="text/template">
-<div id="ra-row-{{=id}}" class="row-fluid">
-<div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.target}} {{=definition.activityItemType.unit.name}})</span></div>
-<div class="span5">{{=reportedValue}} {{=definition.activityItemType.unit.name}}</div>
-</div>
+  {{ if (definition.active) { }}
+    <div id="ra-row-{{=id}}" class="row-fluid">
+      <div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.target}} {{=definition.activityItemType.unit.name}})</span></div>
+      <div class="span5">{{=reportedValue}} {{=definition.activityItemType.unit.name}}</div>
+    </div>
+  {{ } }}
 </script>
 <script id="measurementIntervalValues" type="text/template">
-<div id="ra-row-{{=id}}" class="row-fluid">
-<div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.minTarget}} - {{=definition.maxTarget}} {{=definition.activityItemType.unit.name}})</span></div>
-<div class="span5">{{=reportedValue}} {{=definition.activityItemType.unit.name}}</div>
-</div>
+  {{ if (definition.active) { }}
+    <div id="ra-row-{{=id}}" class="row-fluid">
+      <div class="span5"><span>{{=definition.activityItemType.name}} ({{=definition.minTarget}} - {{=definition.maxTarget}} {{=definition.activityItemType.unit.name}})</span></div>
+      <div class="span5">{{=reportedValue}} {{=definition.activityItemType.unit.name}}</div>
+    </div>
+  {{ } }}
 </script>
 <%--Reported Activity values --%>
 <script id="yesnoValues" type="text/template">
-<div id="ra-row-{{=id}}" class="row-fluid">
-<div class="span5"><span>{{=definition.activityItemType.name}} {{=definition.activityItemType.question}}
-</span></div>
-<div class="span5">{{=answer?'Ja':'Nej'}}</div>
-</div>
+  {{ if (definition.active) { }}
+    <div id="ra-row-{{=id}}" class="row-fluid">
+      <div class="span5"><span>{{=definition.activityItemType.name}} {{=definition.activityItemType.question}}
+      </span></div>
+      <div class="span5">{{=answer?'Ja':'Nej'}}</div>
+    </div>
+  {{ } }}
 </script>
 <%--Reported Activity values --%>
 <script id="textValues" type="text/template">
-<div id="ra-row-{{=id}}" class="row-fluid">
-<div class="span5"><span>{{=definition.activityItemType.label}}</span></div>
-<div class="span5">{{=textComment}}</div>
-</div>
+  {{ if (definition.active) { }}
+    <div id="ra-row-{{=id}}" class="row-fluid">
+      <div class="span5"><span>{{=definition.activityItemType.label}}</span></div>
+      <div class="span5">{{=textComment}}</div>
+    </div>
+  {{ } }}
 </script>
 
 <%-- This template is used to show a scheduled activity --%>
