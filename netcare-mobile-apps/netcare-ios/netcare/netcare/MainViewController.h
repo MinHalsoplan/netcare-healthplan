@@ -19,6 +19,7 @@
 
 #import "FlipsideViewController.h"
 #import "MobiltBankIdService.h"
+#import "HTTPBasicAuth.h"
 #import "HTTPComplete.h"
 #import "HTTPPushConnection.h"
 

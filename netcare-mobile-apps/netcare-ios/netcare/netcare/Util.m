@@ -90,4 +90,21 @@
     [alert show];
 }
 
++ (bool)validatePersonnummer:(NSString*) personnummer {
+    bool result = TRUE;
+    return result;
+}
+
++ (NSString*)formatPersonnummer:(NSString*) personnummer {
+    NSString* result;
+    int stringlength = [personnummer length];
+    if(stringlength == 10) {
+        result = [@"19" stringByAppendingString:personnummer];
+    } else {
+        result = personnummer;
+    }
+    return result;
+}
+
+
 @end

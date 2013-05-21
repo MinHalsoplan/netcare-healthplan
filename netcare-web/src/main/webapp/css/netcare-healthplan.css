@@ -374,3 +374,7 @@ div[id*="ra-row-"] > div.span5 > span {
 .onlyInPrintMode {
     display: none;
 }
+
+input.dateInput {
+    cursor: text;
+}

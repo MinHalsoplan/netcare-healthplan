@@ -13,6 +13,7 @@
 		8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63616B016F400549577 /* MobiltBankIdService.m */; };
 		8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */; };
 		8D3CD64116B149A700549577 /* HTTPComplete.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CD64016B149A700549577 /* HTTPComplete.m */; };
+		8DE4DCDF1743D2A100CC686E /* HTTPBasicAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4DCDE1743D2A100CC686E /* HTTPBasicAuth.m */; };
 		D0599165150B691D00EB3F6D /* 57px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599164150B691D00EB3F6D /* 57px.png */; };
 		D0599168150B69BD00EB3F6D /* 114px.png in Resources */ = {isa = PBXBuildFile; fileRef = D0599167150B69BD00EB3F6D /* 114px.png */; };
 		D05D409514FA4B3D00335899 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05D409414FA4B3D00335899 /* UIKit.framework */; };
@@ -40,6 +41,8 @@
 		8D3CD63A16B0170900549577 /* HTTPAuthenticate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPAuthenticate.m; sourceTree = "<group>"; };
 		8D3CD63F16B149A700549577 /* HTTPComplete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPComplete.h; sourceTree = "<group>"; };
 		8D3CD64016B149A700549577 /* HTTPComplete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPComplete.m; sourceTree = "<group>"; };
+		8DE4DCDD1743D09100CC686E /* HTTPBasicAuth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPBasicAuth.h; sourceTree = "<group>"; };
+		8DE4DCDE1743D2A100CC686E /* HTTPBasicAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPBasicAuth.m; sourceTree = "<group>"; };
 		D0599164150B691D00EB3F6D /* 57px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 57px.png; sourceTree = "<group>"; };
 		D0599167150B69BD00EB3F6D /* 114px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 114px.png; sourceTree = "<group>"; };
 		D05D409014FA4B3D00335899 /* netcare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = netcare.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +136,8 @@
 				8D3CD64016B149A700549577 /* HTTPComplete.m */,
 				D05D40BB14FC22BC00335899 /* HTTPPushConnection.h */,
 				D05D40BC14FC22BD00335899 /* HTTPPushConnection.m */,
+				8DE4DCDD1743D09100CC686E /* HTTPBasicAuth.h */,
+				8DE4DCDE1743D2A100CC686E /* HTTPBasicAuth.m */,
 				D05D40C114FD08D200335899 /* Util.h */,
 				D05D40C214FD08D200335899 /* Util.m */,
 				8D1AE4AE16C2328C003220D6 /* Settings.bundle */,
@@ -231,6 +236,7 @@
 				8D3CD63716B016F400549577 /* MobiltBankIdService.m in Sources */,
 				8D3CD63B16B0170900549577 /* HTTPAuthenticate.m in Sources */,
 				8D3CD64116B149A700549577 /* HTTPComplete.m in Sources */,
+				8DE4DCDF1743D2A100CC686E /* HTTPBasicAuth.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

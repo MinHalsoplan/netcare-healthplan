@@ -2815,7 +2815,6 @@ var NC_MODULE = {
 					if($(this).hasClass('decimalNumber')) {
                         if(NC.GLOBAL.isDecimalNumber(value, true)) {
                             var storeValue = value.replace(",", ".");
-                            NC.log("HEJ");
 							$(this).css('background', '#EDEDED');
 							_data[activityIndex].activityItemValues[itemIndex][reportedField] = storeValue;
 							$('#sa-report-' + activityId).attr('disabled', false);
@@ -3357,7 +3356,7 @@ var NC_MODULE = {
 			case 4: text += my.params.lang.freqs[4]; break;
 			case 5: text += my.params.lang.freqs[5]; break;
 			default:
-				text += my.params.lang.every + activityDefinition.activityRepeat + ' ' + my.params.lang.week;
+				text += my.params.lang.every + activity.activityRepeat + ' ' + my.params.lang.week;
 			break;
 			}
 			

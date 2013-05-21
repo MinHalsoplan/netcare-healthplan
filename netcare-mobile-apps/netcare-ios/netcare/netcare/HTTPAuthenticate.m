@@ -58,7 +58,7 @@
 {
     NSLog(@"HTTPAuthenticate.connectionDidFinishLoading");
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     NSString *result= [[NSString alloc] initWithData:httpResponse encoding:NSUTF8StringEncoding];
     NSLog(@"Ref: %@", result);
@@ -70,7 +70,7 @@
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
     // inform the user
     NSLog(@"Connection failed! Error - %@ %@",
