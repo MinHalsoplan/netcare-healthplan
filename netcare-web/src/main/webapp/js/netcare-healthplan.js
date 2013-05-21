@@ -3356,7 +3356,7 @@ var NC_MODULE = {
 			case 4: text += my.params.lang.freqs[4]; break;
 			case 5: text += my.params.lang.freqs[5]; break;
 			default:
-				text += my.params.lang.every + activityDefinition.activityRepeat + ' ' + my.params.lang.week;
+				text += my.params.lang.every + activity.activityRepeat + ' ' + my.params.lang.week;
 			break;
 			}
 			
