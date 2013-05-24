@@ -1,8 +1,11 @@
 package org.callistasoftware.netcare.android.task;
 
-import java.util.Map;
-
-import org.callistasoftware.netcare.android.*;
+import android.content.Context;
+import android.os.AsyncTask;
+import org.callistasoftware.netcare.android.R;
+import org.callistasoftware.netcare.android.ServiceCallback;
+import org.callistasoftware.netcare.android.ServiceResult;
+import org.callistasoftware.netcare.android.ServiceResultImpl;
 import org.callistasoftware.netcare.android.helper.ApplicationHelper;
 import org.callistasoftware.netcare.android.helper.AuthHelper;
 import org.callistasoftware.netcare.android.helper.RestHelper;
@@ -12,8 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import java.util.Map;
 
 public class CollectTask extends AsyncTask<String, String, ServiceResult<String>> {
 	

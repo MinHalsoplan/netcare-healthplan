@@ -23,7 +23,6 @@ public class StartActivity extends Activity {
 	private static final String TAG = StartActivity.class.getSimpleName();
 	private EditText crn;
 	private Button login;
-	private String orderRef;
 
     private SharedPreferences p;
 
@@ -51,18 +50,18 @@ public class StartActivity extends Activity {
         this.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String validated = ApplicationHelper.newInstance(getApplicationContext()).validateCrn(crn.getText().toString().trim());
-                if (validated != null) {
+            final String validated = ApplicationHelper.newInstance(getApplicationContext()).validateCrn(crn.getText().toString().trim());
+            if (validated != null) {
 
-                    if (StartActivity.this.autoLogin) {
-                        Log.i(TAG, "Saving civic registration number to shared preferences");
-                        p.edit().putString("crn", validated).commit();
-                    }
-
-                    doLogin(validated);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Personnummret är ogiltigt", Toast.LENGTH_LONG).show();
+                if (StartActivity.this.autoLogin) {
+                    Log.i(TAG, "Saving civic registration number to shared preferences");
+                    p.edit().putString("crn", validated).commit();
                 }
+
+                doLogin(validated);
+            } else {
+                Toast.makeText(getApplicationContext(), "Personnummret är ogiltigt", Toast.LENGTH_LONG).show();
+            }
             }
         });
     }
@@ -99,7 +98,6 @@ public class StartActivity extends Activity {
 
             return;
         }
-
 
         AuthHelper.newInstance(getApplicationContext()).startAuthentication(civicRegistrationNumber, new ServiceCallback<Intent>() {
             @Override

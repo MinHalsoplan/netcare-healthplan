@@ -4,7 +4,7 @@
     android:versionCode="8"
     android:versionName="2.0" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="14" />
     
     <permission android:name="org.callistasoftware.netcare.android.permission.C2D_MESSAGE" android:protectionLevel="signature" />
   	<uses-permission android:name="org.callistasoftware.netcare.android.permission.C2D_MESSAGE" />

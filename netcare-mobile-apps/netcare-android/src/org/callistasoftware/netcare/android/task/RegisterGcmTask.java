@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.callistasoftware.netcare.android.ServiceCallback;
 import org.callistasoftware.netcare.android.ServiceResult;
 import org.callistasoftware.netcare.android.ServiceResultImpl;
@@ -13,6 +16,7 @@ import org.callistasoftware.netcare.android.helper.ApplicationHelper;
 import org.callistasoftware.netcare.android.helper.AuthHelper;
 import org.callistasoftware.netcare.android.helper.RestHelper;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -39,9 +43,18 @@ public class RegisterGcmTask extends AsyncTask<String, String, ServiceResult<Str
 
     @Override
     protected ServiceResult<String> doInBackground(String... strings) {
-        try {
-            final RestTemplate rest = RestHelper.newInstance(context).getRestService();
 
+        final RestTemplate rest = RestHelper.newInstance(context).getRestService();
+
+        if (devMode) {
+            final DefaultHttpClient client = new DefaultHttpClient();
+            client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(devCrn, ""));
+
+            final HttpComponentsClientHttpRequestFactory fac = new HttpComponentsClientHttpRequestFactory(client);
+            rest.setRequestFactory(fac);
+        }
+
+        try {
             final HttpHeaders headers = new HttpHeaders();
             headers.put(AuthHelper.NETCARE_AUTH_HEADER, Collections.singletonList(AuthHelper.newInstance(context).getSessionId()));
 
@@ -55,7 +68,9 @@ public class RegisterGcmTask extends AsyncTask<String, String, ServiceResult<Str
             final HttpEntity<Map<String, String>> ent = new HttpEntity<Map<String,String>>(body.toSingleValueMap(), headers);
 
             @SuppressWarnings("rawtypes")
-            ResponseEntity<Map> result = rest.exchange(ApplicationHelper.newInstance(context).getUrl("/mobile/push/gcm"),
+            final String url = ApplicationHelper.newInstance(context).getUrl("/mobile/push/gcm");
+            Log.d(TAG, "Publing registration id to: " + url);
+            ResponseEntity<Map> result = rest.exchange(url,
                     HttpMethod.POST,
                     ent,
                     Map.class);
