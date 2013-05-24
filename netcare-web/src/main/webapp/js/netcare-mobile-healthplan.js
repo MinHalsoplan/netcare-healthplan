@@ -14,6 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+function androidLogout () {
+  console.log('Calling Android native code to logout...');
+  window.Android.logout();
+}
+
 var NC_MOBILE = {
 
 	ACTIVITIES : (function() {
@@ -143,6 +149,12 @@ var NC_MOBILE = {
                 success : function(data) {
                     console.log("Logged out");
                     document.location.href="start#blank";
+
+                  console.log('Checking if android. window.Android: ' + window.Android);
+                  if (window.Android !== undefined) {
+                    androidLogout();
+                  }
+
                 },
                 error : function(jqXHR, status, error) {
                     console.log(status + ": " + jqXHR.status + " - " + error);

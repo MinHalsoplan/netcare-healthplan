@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.http.SslError;
@@ -36,6 +37,7 @@ public class WebViewActivity extends Activity {
 		wv.clearFormData();
 		wv.clearHistory();
 		wv.clearCache(true);
+        wv.addJavascriptInterface(new AndroidJs(), "Android");
 		
 		wv.setWebChromeClient(new WebChromeClient() {
 			@Override
@@ -44,7 +46,14 @@ public class WebViewActivity extends Activity {
 					p.dismiss();
 				}
 			}
-		});
+
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                Log.d(TAG, "Javascript debug: " + consoleMessage.message());
+                return true;
+            }
+
+        });
 
 		final String url = ApplicationHelper.newInstance(getApplicationContext()).getUrl("/mobile/start");
 		Log.d(TAG, "Load url: " + url);
@@ -97,14 +106,18 @@ public class WebViewActivity extends Activity {
         GCMHelper.newInstance(getApplicationContext()).gcmRegister();
 
         final SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        final String host = p.getString("host", "demo.minhalsoplan.se");
-
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+                Log.d(TAG, "Responding to basic auth with crn: " + crn);
                 webview.setHttpAuthUsernamePassword(host, "netcare-mobile", crn, "");
                 handler.proceed(crn, "");
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d(TAG, "Should url overload for url: " + url);
+                return super.shouldOverrideUrlLoading(view, url);    //To change body of overridden methods use File | Settings | File Templates.
             }
         });
 
@@ -115,5 +128,15 @@ public class WebViewActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
     	startActivity(new Intent(getApplicationContext(), PreferenceActivity.class));
     	return true;
+    }
+
+    private class AndroidJs {
+
+        public int logout() {
+            Log.d(TAG, "Logging out. Bring user to login screen...");
+            startActivity(new Intent(WebViewActivity.this, StartActivity.class));
+
+            return 0;
+        }
     }
 }
