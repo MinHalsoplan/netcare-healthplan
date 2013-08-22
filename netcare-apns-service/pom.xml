@@ -72,10 +72,6 @@
 					</webApp>
 					<systemProperties>
 						<systemProperty>
-							<name>JAVA_HOME</name>
-							<value>/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/</value>
-						</systemProperty>
-						<systemProperty>
 							<name>javax.net.debug</name>
 							<value>ssl</value>
 						</systemProperty>
