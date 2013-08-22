@@ -66,7 +66,7 @@
 <script id="textItemTemplate" type="text/template">
 	<div data-role="fieldcontain">
 		<label for="text{{=id}}">{{=definition.activityItemType.name}}</label>
-		<textarea name="text{{=id}}" id="text{{=id}}" data-mini="true">{{=textComment}}</textarea>
+		<textarea name="text{{=id}}" id="text{{=id}}" data-mini="true" maxlength="250">{{=textComment}}</textarea>
 	</div>
 </script>
 <script id="commonActivityItemTemplate" type="text/template">
@@ -89,7 +89,7 @@
 	</div>
 	<div data-role="fieldcontain">
 		<label for="note" class="ui-input-text"><spring:message code="mobile.report.form.note" /></label>
-		<textarea name="note" id="note" data-mini="true">{{=note}}</textarea>
+		<textarea name="note" id="note" data-mini="true" maxlength="500">{{=note}}</textarea>
 	</div>
 </script>
 <!-- mobile:templates / -->

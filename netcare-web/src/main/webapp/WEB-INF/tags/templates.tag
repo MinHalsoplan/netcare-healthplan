@@ -611,7 +611,7 @@
 			<span>Övriga kommentarer</span>
 		</div>
 		<div class="span7">
-			<textarea id="{{=id}}-report-note" class="span11">{{=note}}</textarea>
+			<textarea id="{{=id}}-report-note" class="span11" maxlength="500">{{=note}}</textarea>
 		</div>
 	</div>
 	{{ if (reportingPossible) { }}

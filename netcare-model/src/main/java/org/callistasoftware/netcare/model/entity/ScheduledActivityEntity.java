@@ -58,7 +58,7 @@ public class ScheduledActivityEntity implements Comparable<ScheduledActivityEnti
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date actualTime;
 
-	@Column(name = "note", length = 128)
+	@Column(name = "note", length = 512)
 	private String note;
 
 	@Column(name = "status", nullable = false)
