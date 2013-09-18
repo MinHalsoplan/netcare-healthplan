@@ -24,6 +24,15 @@
 			<Pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>logs/pdl_information.log</file>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{HH:mm:ss.SSS} - %msg%n</Pattern>
+		</layout>
+		<!-- encoder> <pattern>%d{HH:mm:ss.SSS} %level [%thread] %logger{10} [%file:%line] 
+			- %msg%n</pattern> </encoder -->
+	</appender>
 	
 	<logger name="org.hibernate" level="WARN" />
 	<logger name="org.codehaus.jackson" level="WARN" />
@@ -37,6 +46,10 @@
 	<logger name="org.callistasoftware.netcare" level="DEBUG" />
 	<logger name="org.callistasoftware.netcare.core.job" level="INFO" />
 	
+	<logger name="org.callistasoftware.netcare.api.rest.PdlLogger" additivity="false">
+		<appender-ref ref="FILE" />
+	</logger>
+		
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</root>

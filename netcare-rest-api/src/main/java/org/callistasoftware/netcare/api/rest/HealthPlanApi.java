@@ -20,6 +20,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
@@ -47,89 +50,90 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/healthplans")
+@RequestMapping(value = "/healthplans")
 public class HealthPlanApi extends ApiSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(HealthPlanApi.class);
-	
-	@Autowired 
+
+	@Autowired
 	private HealthPlanService service;
-	
+
 	@Autowired
 	private ReportingService reportingService;
-	
-	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public ServiceResult<HealthPlan> createHealthPlan(@RequestBody final HealthPlanImpl dto, final Authentication auth) {
 		this.logAccess("create", "health plan");
 		return this.service.createNewHealthPlan(dto, (CareActorBaseView) auth.getPrincipal(), dto.getPatient().getId());
 	}
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<HealthPlan[]> listHealthPlans(@RequestParam(value="patient") final Long patient, final Authentication auth) {
-		this.logAccess("list", "healthplan");
+	public ServiceResult<HealthPlan[]> listHealthPlans(@RequestParam(value = "patient") final Long patient,
+			final Authentication auth, ServletRequest request) {
+		this.logAccess("list", "healthplan", request);
 		final ServiceResult<HealthPlan[]> ordinations = this.service.loadHealthPlansForPatient(patient);
-		
+
 		log.debug("Found {} for patient {}", ordinations.getData().length, patient);
 		return ordinations;
 	}
-	
-	@RequestMapping(value="/{healthPlan}", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/{healthPlan}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlan> loadHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
+	public ServiceResult<HealthPlan> loadHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan) {
 		this.logAccess("load", "health plan");
 		return this.service.loadHealthPlan(healthPlan);
 	}
 
-    @RequestMapping(value="/{healthPlan}/inactivate", method=RequestMethod.POST, produces="application/json")
-    @ResponseBody
-    public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
-        this.logAccess("inactivate", "health plan");
-        return this.service.inactivateHealthPlan(healthPlan, false);
-    }
-
-    @RequestMapping(value="/{healthPlan}/activate", method=RequestMethod.POST, produces="application/json")
-    @ResponseBody
-    public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value="healthPlan") final Long healthPlan) {
-        this.logAccess("activate", "health plan");
-        return this.service.activateHealthPlan(healthPlan, false);
-    }
-
-    @RequestMapping(value="/{healthPlan}/renew", method=RequestMethod.POST, produces="application/json")
-    @ResponseBody
-    public ServiceResult<HealthPlan> healthPlanRenewal(@PathVariable(value="healthPlan") final Long healthPlan) {
-        this.logAccess("renewal", "health plan");
-        return this.service.healthPlanRenewal(healthPlan, false);
-    }
-
-    @RequestMapping(value="/{healthPlan}/stopAutoRenewal", method=RequestMethod.POST, produces="application/json")
- 	@ResponseBody
- 	public ServiceResult<HealthPlan> stopHealthPlanAutoRenewal(@PathVariable(value="healthPlan") final Long healthPlan) {
- 		this.logAccess("renewal", "health plan");
- 		return this.service.healthPlanRenewal(healthPlan, true);
- 	}
-	
-	@RequestMapping(value="/activity/reported/{patient}/comments", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = "/{healthPlan}/inactivate", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityComment[]> loadCommentsForPatient(@PathVariable(value="patient") final Long patient) {
+	public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan) {
+		this.logAccess("inactivate", "health plan");
+		return this.service.inactivateHealthPlan(healthPlan, false);
+	}
+
+	@RequestMapping(value = "/{healthPlan}/activate", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan) {
+		this.logAccess("activate", "health plan");
+		return this.service.activateHealthPlan(healthPlan, false);
+	}
+
+	@RequestMapping(value = "/{healthPlan}/renew", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<HealthPlan> healthPlanRenewal(@PathVariable(value = "healthPlan") final Long healthPlan) {
+		this.logAccess("renewal", "health plan");
+		return this.service.healthPlanRenewal(healthPlan, false);
+	}
+
+	@RequestMapping(value = "/{healthPlan}/stopAutoRenewal", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<HealthPlan> stopHealthPlanAutoRenewal(@PathVariable(value = "healthPlan") final Long healthPlan) {
+		this.logAccess("renewal", "health plan");
+		return this.service.healthPlanRenewal(healthPlan, true);
+	}
+
+	@RequestMapping(value = "/activity/reported/{patient}/comments", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ServiceResult<ActivityComment[]> loadCommentsForPatient(@PathVariable(value = "patient") final Long patient) {
 		this.logAccess("load", "comments");
 		return this.service.loadCommentsForPatient();
 	}
-	
-	@RequestMapping(value="/activity/reported/latest", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/activity/reported/latest", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> loadLatestReportedActivities() {
 		this.logAccess("load", "reported activities");
-		
+
 		long n = System.currentTimeMillis();
 		// three
-		final Date start = new Date(n - 3* DateUtil.MILLIS_PER_DAY);
+		final Date start = new Date(n - 3 * DateUtil.MILLIS_PER_DAY);
 		final Date end = new Date(n);
-		final CareUnit unit = ((CareActorBaseView)this.getUser()).getCareUnit();
+		final CareUnit unit = ((CareActorBaseView) this.getUser()).getCareUnit();
 		return this.service.loadLatestReportedForAllPatients(unit, start, end);
 	}
-	
+
 	@RequestMapping(value = "/activity/reported/filter", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> filterReportedActivities(
@@ -162,86 +166,93 @@ public class HealthPlanApi extends ApiSupport {
 		final CareUnit unit = ((CareActorBaseView) this.getUser()).getCareUnit();
 		return this.service.filterReportedActivities(unit, personnummer, start, end);
 	}
-	
+
 	protected boolean isPersonnummer(String personnummer) {
-		//TODO Validate personnummer
+		// TODO Validate personnummer
 		return true;
 	}
 
-	@RequestMapping(value="/activity/reported/all", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = "/activity/reported/all", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> loadAllReportedActivities() {
 		this.logAccess("load", "reported activities");
-		return this.service.loadLatestReportedForAllPatients(((CareActorBaseView)this.getUser()).getCareUnit(), null, null);
+		return this.service.loadLatestReportedForAllPatients(((CareActorBaseView) this.getUser()).getCareUnit(), null,
+				null);
 	}
-	
-    @RequestMapping(value="/activity/reported/comment/{comment}/reply", method=RequestMethod.POST, produces="application/json")
+
+	@RequestMapping(value = "/activity/reported/comment/{comment}/reply", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityComment> sendCommentReply(@PathVariable(value="comment") final Long comment, @RequestParam(value="reply") final String reply) {
+	public ServiceResult<ActivityComment> sendCommentReply(@PathVariable(value = "comment") final Long comment,
+			@RequestParam(value = "reply") final String reply) {
 		this.logAccess("reply", "comment");
 		return this.service.replyToComment(comment, reply);
 	}
-	
-	@RequestMapping(value="/activity/{activity}/load", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/activity/{activity}/load", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> loadScheduledActivity(@PathVariable(value="activity") final Long activity) {
+	public ServiceResult<ScheduledActivity> loadScheduledActivity(@PathVariable(value = "activity") final Long activity) {
 		this.logAccess("load", "scheduled activity");
 		return this.service.loadScheduledActivity(activity);
 	}
-	
-    @RequestMapping(value="/activity/{activity}/comment", produces="application/json", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/activity/{activity}/comment", produces = "application/json", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="comment") final String comment) {
+	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value = "activity") final Long activity,
+			@RequestParam(value = "comment") final String comment) {
 		this.logAccess("comment", "activity");
 		log.debug("Comment is: {}", comment);
 		return this.service.commentOnPerformedActivity(activity, comment);
 	}
-	
-    @RequestMapping(value="/activity/{activity}/like", produces="application/json", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/activity/{activity}/like", produces = "application/json", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> likeActivity(@PathVariable(value="activity") final Long activity, @RequestParam(value="like") final boolean like) {
+	public ServiceResult<ScheduledActivity> likeActivity(@PathVariable(value = "activity") final Long activity,
+			@RequestParam(value = "like") final boolean like) {
 		this.logAccess("like", "activity");
 		return this.service.likePerformedActivity(activity, like);
 	}
-	
-    @RequestMapping(value="/activity/{activity}/read", produces="application/json", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/activity/{activity}/read", produces = "application/json", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> markActivityAsRead(@PathVariable(value="activity") final Long activity, @RequestParam(value="read") final boolean hasBeenRead) {
+	public ServiceResult<ScheduledActivity> markActivityAsRead(@PathVariable(value = "activity") final Long activity,
+			@RequestParam(value = "read") final boolean hasBeenRead) {
 		this.logAccess("markAsRead", "activity");
 		return this.service.markPerformedActivityAsRead(activity, hasBeenRead);
 	}
-	
-	@RequestMapping(value="/activity/reported/comments/newreplies", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/activity/reported/comments/newreplies", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityComment[]> loadReplies() {
 		this.logAccess("list", "replies");
 		return this.service.loadRepliesForCareActor();
 	}
-	
-    @RequestMapping(value="/activity/reported/comments/{comment}/delete", method=RequestMethod.POST, produces="application/json")
+
+	@RequestMapping(value = "/activity/reported/comments/{comment}/delete", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityComment> deleteComment(@PathVariable(value="comment") final Long comment) {
+	public ServiceResult<ActivityComment> deleteComment(@PathVariable(value = "comment") final Long comment) {
 		this.logAccess("delete", "comment");
 		return this.service.deleteComment(comment);
 	}
 
-    @RequestMapping(value="/activity/reported/comments/{comment}/hide", method=RequestMethod.POST, produces="application/json")
+	@RequestMapping(value = "/activity/reported/comments/{comment}/hide", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityComment> hideComment(@PathVariable(value="comment") final Long comment) {
+	public ServiceResult<ActivityComment> hideComment(@PathVariable(value = "comment") final Long comment) {
 		this.logAccess("hide", "comment");
 		return this.service.hideComment(comment, true);
 	}
 
-	@RequestMapping(value="/{healthPlanId}/activity/list", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = "/{healthPlanId}/activity/list", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(@PathVariable(value="healthPlanId") final Long healthPlan) {
+	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(
+			@PathVariable(value = "healthPlanId") final Long healthPlan) {
 		this.logAccess("list", "activity definitions");
 		return this.service.loadActivitiesForHealthPlan(healthPlan);
 	}
-	
-	@RequestMapping(value="/{healthPlanId}/statistics", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/{healthPlanId}/statistics", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<HealthPlanStatistics> loadReportedActivitites(@PathVariable(value="healthPlanId") final Long healthPlanId) {
+	public ServiceResult<HealthPlanStatistics> loadReportedActivitites(
+			@PathVariable(value = "healthPlanId") final Long healthPlanId) {
 		this.logAccess("list", "scheduled activities");
 		return this.service.getStatisticsForHealthPlan(healthPlanId);
 	}

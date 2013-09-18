@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import javax.servlet.ServletRequest;
+
 import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -29,28 +31,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/alarm")
+@RequestMapping(value = "/alarm")
 public class AlarmApi extends ApiSupport {
-	
+
 	@Autowired
 	private AlarmService service;
-	
-	@RequestMapping(value="/list", produces="application/json", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/list", produces = "application/json", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Alarm[]> loadAlarmsForCareUnit() {
-		this.logAccess("list", "alarms");
+	public ServiceResult<Alarm[]> loadAlarmsForCareUnit(ServletRequest request) {
+		this.logAccess("list", "alarms", request);
 		final UserBaseView user = this.getUser();
 		if (user != null && user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
 			return this.service.getCareUnitAlarms(ca.getCareUnit().getHsaId());
 		}
-		
-		throw new SecurityException("Illegal to access alarms for care unit. No logged in user or user is not a care giver.");
+
+		throw new SecurityException(
+				"Illegal to access alarms for care unit. No logged in user or user is not a care giver.");
 	}
-	
-	@RequestMapping(value="/{alarm}/resolve", produces="application/json",  method=RequestMethod.POST)
+
+	@RequestMapping(value = "/{alarm}/resolve", produces = "application/json", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<Alarm> resolveAlarm(@PathVariable(value="alarm") final Long alarm) {
+	public ServiceResult<Alarm> resolveAlarm(
+			@PathVariable(value = "alarm") final Long alarm) {
 		this.logAccess("resolve", "alarm");
 		return this.service.resolveAlarm(alarm);
 	}
