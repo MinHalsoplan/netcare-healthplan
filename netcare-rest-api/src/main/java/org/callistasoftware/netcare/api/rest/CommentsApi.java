@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
@@ -28,44 +30,43 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/comments", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/comments", produces = MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize(RoleEntity.PATIENT)
 public class CommentsApi extends ApiSupport {
 
-	@Autowired private HealthPlanService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	@Autowired
+	private HealthPlanService service;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityComment[]> list() {
-		logAccess("list", "comments");
+	public ServiceResult<ActivityComment[]> list(HttpServletRequest request) {
+		logAccess("list", "comments", request);
 		return service.loadCommentsForPatient();
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ServiceResult<ActivityComment> remove(@PathVariable(value="id") final Long id) {
-		logAccess("remove", "comment");
+	public ServiceResult<ActivityComment> remove(@PathVariable(value = "id") final Long id, HttpServletRequest request) {
+		logAccess("remove", "comment", request);
 		return service.deleteComment(id);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityComment> update(@RequestBody final ActivityComment comment) {
-		logAccess("update", "comment");
+	public ServiceResult<ActivityComment> update(@RequestBody final ActivityComment comment, HttpServletRequest request) {
+		logAccess("update", "comment", request);
 		return service.replyToComment(comment.getId(), comment.getReply());
 	}
 
-	@RequestMapping(value="/{id}/hide", method=RequestMethod.POST)
+	@RequestMapping(value = "/{id}/hide", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityComment> hide(@PathVariable(value="id") final Long id) {
-		logAccess("hide", "comment");
+	public ServiceResult<ActivityComment> hide(@PathVariable(value = "id") final Long id, HttpServletRequest request) {
+		logAccess("hide", "comment", request);
 		// Used by patients only right now!
 		return service.hideComment(id, false);
 	}
 
-	
 }

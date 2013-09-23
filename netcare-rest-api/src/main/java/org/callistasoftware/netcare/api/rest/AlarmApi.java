@@ -16,10 +16,11 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.spi.AlarmService;
@@ -39,12 +40,19 @@ public class AlarmApi extends ApiSupport {
 
 	@RequestMapping(value = "/list", produces = "application/json", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Alarm[]> loadAlarmsForCareUnit(ServletRequest request) {
-		this.logAccess("list", "alarms", request);
+	public ServiceResult<Alarm[]> loadAlarmsForCareUnit(HttpServletRequest request) {
 		final UserBaseView user = this.getUser();
 		if (user != null && user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
-			return this.service.getCareUnitAlarms(ca.getCareUnit().getHsaId());
+			ServiceResult<Alarm[]> result = this.service.getCareUnitAlarms(ca.getCareUnit().getHsaId());
+			
+			PatientBaseView[] patients = new PatientBaseView[result.getData().length];
+			for (int i = 0; i < patients.length; i++) {
+				patients[i] = result.getData()[i].getPatient();
+			}
+			this.logAccess("list", "alarms", request, patients);
+			
+			return result;
 		}
 
 		throw new SecurityException(
@@ -53,9 +61,9 @@ public class AlarmApi extends ApiSupport {
 
 	@RequestMapping(value = "/{alarm}/resolve", produces = "application/json", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<Alarm> resolveAlarm(
-			@PathVariable(value = "alarm") final Long alarm) {
-		this.logAccess("resolve", "alarm");
-		return this.service.resolveAlarm(alarm);
+	public ServiceResult<Alarm> resolveAlarm(@PathVariable(value = "alarm") final Long alarm, HttpServletRequest request) {
+		ServiceResult<Alarm> result = this.service.resolveAlarm(alarm);
+		this.logAccess("resolve", "alarm", request, result.getData().getPatient());
+		return result;
 	}
 }

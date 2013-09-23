@@ -43,8 +43,7 @@ public abstract class ApiSupport {
 	}
 
 	protected PatientBaseView getCurrentPatient(final HttpSession session) {
-		final PatientBaseView patient = (PatientBaseView) session.getAttribute("currentPatient");
-		return patient;
+		return (PatientBaseView) session.getAttribute("currentPatient");
 	}
 
 	protected boolean isCareActor() {
@@ -56,36 +55,59 @@ public abstract class ApiSupport {
 	}
 
 	protected void logAccess(final String action, final String what) {
-		pdlLog(null, action, what);
-		getLog().info("User {}, Action: {}->{}", new Object[] { this.getUser().getUsername(), action, what });
+		debugLog(action, what);
+
 	}
 
-	protected void logAccess(final String action, final String what, ServletRequest request) {
-		pdlLog((HttpServletRequest) request, action, what);
-		getLog().info("User {}, Action: {}->{}", new Object[] { this.getUser().getUsername(), action, what });
-	}
+	protected void logAccess(final String action, final String what, HttpServletRequest request) {
+		debugLog(action, what);
 
-	private void pdlLog(HttpServletRequest request, String action, final String what) {
-		UserBaseView user = this.getUser();
-		if (user.isCareActor()) {
-			String patientName = "no session";
-			String patientCivicId = "no session";
-			String path = "no session";
-			CareActorBaseView careActor = (CareActorBaseView) user;
+		if (isCareActor()) {
 			if (request != null) {
-				patientName = "we have a session";
 				PatientBaseView patient = getCurrentPatient(request.getSession());
 				if (patient != null) {
-					patientName = patient.getName();
-					patientCivicId = patient.getCivicRegistrationNumber();
-					path = request.getPathInfo();
+					pdlLog(action, what, patient, (HttpServletRequest) request);
+				} else {
+					getLog().debug(
+							"pdlLogging requested but no patient present Action: {}->{}",
+							new Object[] { action, what });
 				}
 			}
-			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}->{}, URI: {} ",
-					new Object[] { careActor.getHsaId(), careActor.getUsername(), patientCivicId, patientName, action,
-							what, path });
-		} 
+		}
+	}
 
+	protected void logAccess(final String action, final String what, ServletRequest request, PatientBaseView patient) {
+		logAccess(action, what, request, new PatientBaseView[] { patient });
+	}
+
+	protected void logAccess(final String action, final String what, ServletRequest request, PatientBaseView[] patients) {
+		debugLog(action, what);
+
+		for (PatientBaseView patient : patients) {
+			pdlLog(action, what, patient, (HttpServletRequest) request);
+		}
+	}
+
+	private void debugLog(final String action, final String what) {
+		getLog().info("User {}, Action: {}->{}", new Object[] { this.getUser().getUsername(), action, what });
+	}
+
+	/**
+	 * PDL logging is only done if the user is a CareActor if information about
+	 * one ore many patients are concerned In case of many persons, one row is
+	 * written for each person
+	 */
+	private void pdlLog(String action, final String what, PatientBaseView patient, HttpServletRequest request) {
+
+		UserBaseView user = this.getUser();
+		if (user.isCareActor()) {
+			CareActorBaseView careActor = (CareActorBaseView) user;
+			String path = request.getPathInfo();
+
+			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}->{}, URI: {} ",
+					new Object[] { careActor.getHsaId(), careActor.getUsername(), patient.getCivicRegistrationNumber(),
+							patient.getName(), action, what, path });
+		}
 	}
 
 	protected final Logger getLog() {

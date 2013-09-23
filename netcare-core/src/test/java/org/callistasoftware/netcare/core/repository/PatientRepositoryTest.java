@@ -23,14 +23,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
+import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -48,6 +57,19 @@ public class PatientRepositoryTest extends TestSupport {
 	private CareUnitRepository cuRepo;
 	@Autowired
 	private CountyCouncilRepository ccRepo;
+	@Autowired
+	private ScheduledActivityRepository schRepo;
+	@Autowired
+	private ActivityDefinitionRepository adRepo;
+	@Autowired
+	private ActivityCommentRepository acRepo;
+	@Autowired
+	private ActivityTypeRepository atRepo;
+	@Autowired
+	private ActivityCategoryRepository acatRepo;
+	@Autowired
+	private UserRepository userRepo;
+	
 
 	@Test
 	@Transactional
@@ -165,5 +187,31 @@ public class PatientRepositoryTest extends TestSupport {
 		final List<PatientEntity> patients = this.repo.findByCareUnit("hsa-id");
 		assertNotNull(patients);
 		assertEquals(2, patients.size());
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void findPatientsByComment() throws Exception {
+
+		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
+		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
+		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Test", "x", "hsa-2", cu));
+		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus", "x", "123456789004"));
+		final HealthPlanEntity healtPlan = this.hpRepo.save(HealthPlanEntity.newEntity(ca, patient, "Testplan",
+				new Date(), 12, DurationUnit.WEEK));
+		final ActivityCategoryEntity category = acatRepo.save(ActivityCategoryEntity.newEntity("x"));
+		final ActivityTypeEntity activityType = atRepo.save(ActivityTypeEntity.newEntity("x", category , cu, AccessLevel.CAREUNIT));
+		final UserEntity user = userRepo.save(PatientEntity.newEntity("x", "x", "191212121212"));
+		final ActivityDefinitionEntity definition = this.adRepo.save(ActivityDefinitionEntity.newEntity(healtPlan,
+				activityType, new Frequency(), user));
+		final ScheduledActivityEntity sae = this.schRepo.save(ScheduledActivityEntity.newEntity(definition, new Date(0)));
+		final ActivityCommentEntity ace = this.acRepo.save(ActivityCommentEntity.newEntity("", ca, sae));
+
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(ace.getId());
+		final List<PatientEntity> patients = this.repo.findByActivityCommentId(ids);
+		assertNotNull(patients);
+		assertEquals(1, patients.size());
 	}
 }

@@ -28,19 +28,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/careunits", produces="application/json")
+@RequestMapping(value = "/careunits", produces = "application/json")
 public class CareUnitsApi extends ApiSupport {
 
-	@Autowired private CareUnitService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	@Autowired
+	private CareUnitService service;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<CareUnit[]> list() {
 		logAccess("list", "care units");
 		return service.listCareUnits();
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<CareUnit> save(@PathVariable("id") final Long id, @RequestBody final CareUnit careUnit) {
 		logAccess("save", "care unit");

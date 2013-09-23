@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
@@ -40,57 +41,62 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/user")
+@RequestMapping(value = "/user")
 public class UserApi extends ApiSupport {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(UserApi.class);
-	
+
 	@Autowired
 	private PatientService patientService;
-	
+
 	@Autowired
 	private UserDetailsService userService;
-	
-	@RequestMapping(value = "/find", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/find", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<PatientBaseView[]> findUsers(@RequestParam(value="search", required=true) final String search) {
+	public ServiceResult<PatientBaseView[]> findUsers(
+			@RequestParam(value = "search", required = true) final String search) {
 		log.info("Finding patients... Search string is: {}", search);
 		return this.patientService.findPatients(search);
 	}
-	
-	@RequestMapping(value="/load", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/load", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<Patient[]> loadPatients() throws IllegalAccessException {
-		this.logAccess("load", "patients");
-		
+	public ServiceResult<Patient[]> loadPatients(HttpServletRequest request) throws IllegalAccessException {
+
 		final UserBaseView user = this.getUser();
 		if (user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
-			return this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
+			ServiceResult<Patient[]> result=  this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
+			this.logAccess("load", "patients", request, result.getData());
+			return result;
 		} else {
 			throw new IllegalAccessException();
 		}
 	}
-	
-	@RequestMapping(value="/{patient}/load", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/{patient}/load", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<Patient> loadPatient(@PathVariable(value="patient") final Long patient) {
-		this.logAccess("load", "patient");
+	public ServiceResult<Patient> loadPatient(@PathVariable(value = "patient") final Long patient,
+			HttpServletRequest request) {
+		this.logAccess("load", "patient", request);
 		return this.patientService.loadPatient(patient);
 	}
-	
-    @RequestMapping(value="/{patient}/update", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+
+	@RequestMapping(value = "/{patient}/update", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<Patient> updatePatient(@PathVariable(value="patient") final Long patient, @RequestBody final PatientProfile patientData) {
-		this.logAccess("update", "patient");
+	public ServiceResult<Patient> updatePatient(@PathVariable(value = "patient") final Long patient,
+			@RequestBody final PatientProfile patientData, HttpServletRequest request) {
+		this.logAccess("update", "patient", request);
 		return this.patientService.updatePatient(patient, patientData);
 	}
-	
-	@RequestMapping(value="/create", method=RequestMethod.POST, produces="application/json", consumes="application/json")
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<Patient> createNewPatient(@RequestBody final Patient patient) throws IllegalAccessException {
-		this.logAccess("create", "patient");
-		
+	public ServiceResult<Patient> createNewPatient(@RequestBody final Patient patient, HttpServletRequest request)
+			throws IllegalAccessException {
+		this.logAccess("create", "patient", request, patient);
+
 		final UserBaseView user = this.getUser();
 		if (user.isCareActor()) {
 			return this.patientService.createPatient(patient);
@@ -98,45 +104,50 @@ public class UserApi extends ApiSupport {
 			throw new IllegalAccessException();
 		}
 	}
-	
-	@RequestMapping(value="/saveUserData", method=RequestMethod.POST, produces="application/json")
+
+	@RequestMapping(value = "/saveUserData", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<Boolean> saveUserData(@RequestParam(value="firstName") final String firstName, @RequestParam(value="surName") final String surName) {
-		this.logAccess("save", "user data");
+	public ServiceResult<Boolean> saveUserData(@RequestParam(value = "firstName") final String firstName,
+			@RequestParam(value = "surName") final String surName, HttpServletRequest request) {
+		this.logAccess("save", "user data", request);
 		return this.userService.saveUserData(firstName, surName);
 	}
-	
-    @RequestMapping(value="/{patient}/delete", method=RequestMethod.POST, produces="application/json")
+
+	@RequestMapping(value = "/{patient}/delete", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<Patient> deletePatient(@PathVariable(value="patient") final Long patient) {
-		this.logAccess("delete", "patient");
+	public ServiceResult<Patient> deletePatient(@PathVariable(value = "patient") final Long patient,
+			HttpServletRequest request) {
+		this.logAccess("delete", "patient", request);
 		return this.patientService.deletePatient(patient);
 	}
-	
-    @RequestMapping(value="/{patient}/select", method=RequestMethod.POST, produces="application/json")
+
+	@RequestMapping(value = "/{patient}/select", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<? extends PatientBaseView> selectPatient(@PathVariable(value="patient") final Long patientId, final HttpSession session) {
+	public ServiceResult<? extends PatientBaseView> selectPatient(
+			@PathVariable(value = "patient") final Long patientId, final HttpSession session) {
 		log.info("Selecting patient {}", patientId);
-		
+
 		final ServiceResult<Patient> result = this.patientService.loadPatient(patientId);
-		final PatientBaseView currentPatient = (PatientBaseView) session.getAttribute("currentPatient");
-		
+		final PatientBaseView currentPatient = getCurrentPatient(session);
+
 		if (result.isSuccess()) {
 			if (currentPatient == null) {
 				if (result.isSuccess()) {
-					log.debug("Setting new current patient in session scope. New patient is: {}", result.getData().getFirstName());
+					log.debug("Setting new current patient in session scope. New patient is: {}", result.getData()
+							.getFirstName());
 					session.setAttribute("currentPatient", result.getData());
 				}
 			} else {
-				log.debug("Replacing patient {} with {} as current patient in session scope", currentPatient.getFirstName(), result.getData().getFirstName());
+				log.debug("Replacing patient {} with {} as current patient in session scope",
+						currentPatient.getFirstName(), result.getData().getFirstName());
 				session.setAttribute("currentPatient", result.getData());
 			}
 		}
-				
+
 		return result;
 	}
-	
-    @RequestMapping(value="/unselect", method=RequestMethod.POST, produces="application/json")
+
+	@RequestMapping(value = "/unselect", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<PatientBaseView> unselect(final HttpSession session) {
 		session.removeAttribute("currentPatient");

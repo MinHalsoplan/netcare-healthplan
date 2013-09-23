@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.core.spi;
 
+import java.util.List;
+
 import org.callistasoftware.netcare.core.api.CareUnit;
 import org.callistasoftware.netcare.core.api.Patient;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
@@ -30,7 +32,15 @@ public interface PatientService {
 	 * @return A list of patients or an empty list if no patients could be found
 	 */
 	ServiceResult<PatientBaseView[]> findPatients(final String freeTextSearch);
-	
+
+
+	/**
+	 * Find patients for a list of ActivityCommentsIds.
+	 * @param freeTextSearch - Can be either name, email or civic registration number
+	 * @return A list of patients or an empty list if no patients could be found
+	 */
+	ServiceResult<PatientBaseView[]> findPatientsByComments(final List<Long> commentIds);
+
 	/**
 	 * Load all patients
 	 * @return

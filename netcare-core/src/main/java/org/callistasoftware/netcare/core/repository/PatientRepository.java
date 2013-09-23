@@ -43,4 +43,10 @@ public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
 	
 	@Query("select distinct e from PatientEntity as e inner join e.healthPlans as hp inner join hp.careUnit as cu where cu.hsaId = :hsaId")
 	List<PatientEntity> findByCareUnit(@Param("hsaId") final String hsaId);
+
+
+	@Query("select e from PatientEntity as e inner join e.healthPlans as hp inner join hp.activityDefinitions as ad "
+			+ "inner join ad.scheduledActivities sa inner join sa.comments as c where c.id in :acList")
+	List<PatientEntity> findByActivityCommentId(@Param("acList") final List<Long> commentIds);
+
 }

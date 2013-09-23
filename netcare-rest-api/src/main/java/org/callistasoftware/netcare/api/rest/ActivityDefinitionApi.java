@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.ActivityDefinitionImpl;
@@ -39,16 +41,16 @@ public class ActivityDefinitionApi extends ApiSupport {
 	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> listActivities(@RequestParam(value="patient", required=false) final Long patientId,
-        @RequestParam(value = "onlyOngoing") final boolean onlyOngoing) {
-		logAccess("lista", "aktiviteter");
+        @RequestParam(value = "onlyOngoing") final boolean onlyOngoing, HttpServletRequest request) {
+		logAccess("lista", "aktiviteter",request);
 		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient(patientId, onlyOngoing);
 		return sr;
 	}
 	
 	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
-	public ServiceResult<ActivityDefinition> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity) {
-		logAccess("create", "activity definition");
+	public ServiceResult<ActivityDefinition> createActivityDefintion(@RequestBody final ActivityDefinitionImpl activity, HttpServletRequest request) {
+		logAccess("create", "activity definition", request);
 		
 		return this.service.addActvitiyToHealthPlan(activity);
 	}
@@ -56,43 +58,43 @@ public class ActivityDefinitionApi extends ApiSupport {
 	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> updateDefinition(@PathVariable("id") final Long id,
-			@RequestBody final ActivityDefinition data) {
-		logAccess("update", "activity definition");
+			@RequestBody final ActivityDefinition data,HttpServletRequest request) {
+		logAccess("update", "activity definition",request);
 		return this.service.updateActivity(data);
 	}
 	
 	@RequestMapping(value="/{id}/enableReminder", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition> enableReminder(@PathVariable("id") final Long id) {
-		logAccess("enable", "reminder");
+	public ServiceResult<ActivityDefinition> enableReminder(@PathVariable("id") final Long id,HttpServletRequest request) {
+		logAccess("enable", "reminder",request);
 		return service.updateReminder(id, true);
 	}
 	
 	@RequestMapping(value="/{id}/disableReminder", method=RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition> disableReminder(@PathVariable("id") final Long id) {
-		logAccess("disable", "reminder");
+	public ServiceResult<ActivityDefinition> disableReminder(@PathVariable("id") final Long id,HttpServletRequest request) {
+		logAccess("disable", "reminder",request);
 		return service.updateReminder(id, false);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition> loadActivityDefinition(@PathVariable("id") final Long id) {
-		logAccess("load", "activity definition");
+	public ServiceResult<ActivityDefinition> loadActivityDefinition(@PathVariable("id") final Long id,HttpServletRequest request) {
+		logAccess("load", "activity definition",request);
 		return this.service.loadDefinition(id);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	@ResponseBody
-	public ServiceResult<ActivityDefinition> inactivateDefinition(@PathVariable(value = "id") final Long definitionId) {
-		this.logAccess("inactivate", "activity definition");
+	public ServiceResult<ActivityDefinition> inactivateDefinition(@PathVariable(value = "id") final Long definitionId,HttpServletRequest request) {
+		this.logAccess("inactivate", "activity definition",request);
 		return this.service.inactivateActivity(definitionId);
 	}
 
     @RequestMapping(value="/{id}/activate", method=RequestMethod.POST)
     @ResponseBody
-    public ServiceResult<ActivityDefinition> activateDefinition(@PathVariable("id") final Long id) {
-        logAccess("activate", "activity definition");
+    public ServiceResult<ActivityDefinition> activateDefinition(@PathVariable("id") final Long id,HttpServletRequest request) {
+        logAccess("activate", "activity definition",request);
         return service.activateActivity(id);
     }
 }

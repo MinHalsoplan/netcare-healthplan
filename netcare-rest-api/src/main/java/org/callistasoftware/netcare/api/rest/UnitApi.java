@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.callistasoftware.netcare.core.api.MeasureUnit;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.UnitService;
@@ -35,23 +37,23 @@ public class UnitApi extends ApiSupport {
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<MeasureUnit[]> list() {
-		logAccess("list", "measure units");
+	public ServiceResult<MeasureUnit[]> list(HttpServletRequest request) {
+		logAccess("list", "measure units",request);
 		return service.loadUnits();
 	}
 	
 	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
-	public ServiceResult<MeasureUnit> create(@RequestBody final MeasureUnit measureUnit) {
-		logAccess("create", "measure unit");
+	public ServiceResult<MeasureUnit> create(@RequestBody final MeasureUnit measureUnit,HttpServletRequest request) {
+		logAccess("create", "measure unit",request);
 		return service.saveUnit(measureUnit);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
 	@ResponseBody
 	public ServiceResult<MeasureUnit> update(@PathVariable("id") final Long id, 
-			@RequestBody final MeasureUnit measureUnit) {
-		logAccess("update", "measure unit");
+			@RequestBody final MeasureUnit measureUnit,HttpServletRequest request) {
+		logAccess("update", "measure unit",request);
 		return service.saveUnit(measureUnit);
 	}
 }

@@ -19,6 +19,8 @@ package org.callistasoftware.netcare.api.rest;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.callistasoftware.netcare.core.api.MessageFields;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -52,8 +54,8 @@ public class SupportApi extends ApiSupport {
 	
 	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadMeasureValueTypes() {
-		this.logAccess("load", "measure value types");
+	public ServiceResult<Option[]> loadMeasureValueTypes(HttpServletRequest request) {
+		this.logAccess("load", "measure value types",request);
 		final MeasurementValueType[] valueTypes = MeasurementValueType.values();
 		final Option[] opts = new Option[valueTypes.length];
 		for (int i = 0; i < valueTypes.length; i++) {
@@ -65,8 +67,8 @@ public class SupportApi extends ApiSupport {
 	
 	@RequestMapping(value="/accessLevels", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadAccessLevels() {
-		this.logAccess("load", "access levels");
+	public ServiceResult<Option[]> loadAccessLevels(HttpServletRequest request) {
+		this.logAccess("load", "access levels",request);
 		final AccessLevel[] levels = AccessLevel.values();
 		final Option[] opts = new Option[levels.length];
 		for (int i = 0; i < levels.length; i++) {
@@ -78,8 +80,8 @@ public class SupportApi extends ApiSupport {
 	
 	@RequestMapping(value="/countyCouncils", method=RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadCountyCouncils() {
-		this.logAccess("load", "county councils");
+	public ServiceResult<Option[]> loadCountyCouncils(HttpServletRequest request) {
+		this.logAccess("load", "county councils",request);
 		final CountyCouncil[] opts = CountyCouncil.values();
 		final Option[] options = new Option[opts.length];
 		for (int i = 0; i < opts.length; i++) {

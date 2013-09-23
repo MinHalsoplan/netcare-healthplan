@@ -16,6 +16,8 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.ScheduleService;
@@ -31,36 +33,39 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/scheduledActivities", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/scheduledActivities", produces = MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize(RoleEntity.PATIENT)
 public class ScheduleApi extends ApiSupport {
 
-	@Autowired private ScheduleService schedule;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	@Autowired
+	private ScheduleService schedule;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ScheduledActivity[]> getSchema(
-			@RequestParam(value = "reported", required=false) final boolean reported,
-			@RequestParam(value = "due", required=false) final boolean due,
-			@RequestParam(value = "start", required=false) final Long start,
-			@RequestParam(value = "end", required=false) final Long end) {
-		logAccess("lista", "schema");
-		
+			@RequestParam(value = "reported", required = false) final boolean reported,
+			@RequestParam(value = "due", required = false) final boolean due,
+			@RequestParam(value = "start", required = false) final Long start,
+			@RequestParam(value = "end", required = false) final Long end, HttpServletRequest request) {
+		logAccess("lista", "schema", request);
+
 		getLog().debug("Reported: {}, Due: {}, Start: {}, End: {}", new Object[] { reported, due, start, end });
 		return schedule.load(reported, due, start, end);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report) {
-		logAccess("report", "activity");
+	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report,
+			HttpServletRequest request) {
+		logAccess("report", "activity", request);
 		return schedule.reportReady(report);
 	}
-	
-	@RequestMapping(value="/latestForDefinition", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/latestForDefinition", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> loadLatestForDefinition(@RequestParam("definitionId") final Long definition) {
-		logAccess("load latest", "activity");
+	public ServiceResult<ScheduledActivity> loadLatestForDefinition(
+			@RequestParam("definitionId") final Long definition, HttpServletRequest request) {
+		logAccess("load latest", "activity", request);
 		return schedule.loadLatestForDefinition(definition);
 	}
 }
