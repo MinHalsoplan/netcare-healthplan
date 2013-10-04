@@ -19,8 +19,6 @@ package org.callistasoftware.netcare.api.rest;
 import java.util.HashMap;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.callistasoftware.netcare.core.api.MessageFields;
 import org.callistasoftware.netcare.core.api.Option;
 import org.callistasoftware.netcare.core.api.ServiceResult;
@@ -42,60 +40,61 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Api for support operations such as loading units etc.
+ * 
  * @author Marcus Krantz [marcus.krantz@callistaenterprise.se]
- *
+ * 
  */
 @Controller
-@RequestMapping(value="/support", produces="application/json")
+@RequestMapping(value = "/support", produces = "application/json")
 public class SupportApi extends ApiSupport {
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
-	@RequestMapping(value="/measureValueTypes", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/measureValueTypes", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadMeasureValueTypes(HttpServletRequest request) {
-		this.logAccess("load", "measure value types",request);
+	public ServiceResult<Option[]> loadMeasureValueTypes() {
+		this.logAccess("load", "measure value types");
 		final MeasurementValueType[] valueTypes = MeasurementValueType.values();
 		final Option[] opts = new Option[valueTypes.length];
 		for (int i = 0; i < valueTypes.length; i++) {
 			opts[i] = new Option(valueTypes[i].name(), LocaleContextHolder.getLocale());
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
 	}
-	
-	@RequestMapping(value="/accessLevels", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/accessLevels", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadAccessLevels(HttpServletRequest request) {
-		this.logAccess("load", "access levels",request);
+	public ServiceResult<Option[]> loadAccessLevels() {
+		this.logAccess("load", "access levels");
 		final AccessLevel[] levels = AccessLevel.values();
 		final Option[] opts = new Option[levels.length];
 		for (int i = 0; i < levels.length; i++) {
 			opts[i] = new Option(levels[i].name(), LocaleContextHolder.getLocale());
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(opts, new GenericSuccessMessage());
 	}
-	
-	@RequestMapping(value="/countyCouncils", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/countyCouncils", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadCountyCouncils(HttpServletRequest request) {
-		this.logAccess("load", "county councils",request);
+	public ServiceResult<Option[]> loadCountyCouncils() {
+		this.logAccess("load", "county councils");
 		final CountyCouncil[] opts = CountyCouncil.values();
 		final Option[] options = new Option[opts.length];
 		for (int i = 0; i < opts.length; i++) {
-			
+
 			final CountyCouncil cc = opts[i];
 			options[i] = new Option();
 			options[i].setCode(String.valueOf(cc.getCode()));
 			options[i].setValue(cc.getName());
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(options, new GenericSuccessMessage());
 	}
-	
-	@RequestMapping(value="/durations/load", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/durations/load", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadDurations(final Locale locale) {
 		final DurationUnit[] units = DurationUnit.values();
@@ -104,14 +103,14 @@ public class SupportApi extends ApiSupport {
 		for (final DurationUnit du : units) {
 			durationUnits[count++] = new Option(du.name(), locale);
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(durationUnits, new GenericSuccessMessage());
 	}
-	
-	@RequestMapping(value="/months/load", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/months/load", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<String[]> loadMonths(final Locale locale) {
-		
+
 		final String[] months = new String[12];
 		months[0] = this.messageSource.getMessage("january", null, locale);
 		months[1] = this.messageSource.getMessage("february", null, locale);
@@ -125,11 +124,11 @@ public class SupportApi extends ApiSupport {
 		months[9] = this.messageSource.getMessage("october", null, locale);
 		months[10] = this.messageSource.getMessage("november", null, locale);
 		months[11] = this.messageSource.getMessage("december", null, locale);
-		
+
 		return ServiceResultImpl.createSuccessResult(months, new GenericSuccessMessage());
 	}
-	
-	@RequestMapping(value="/weekdays/load", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/weekdays/load", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<String[]> loadWeekdays(final Locale locale) {
 		final String[] weekdays = new String[7];
@@ -140,39 +139,46 @@ public class SupportApi extends ApiSupport {
 		weekdays[4] = this.messageSource.getMessage("thursday", null, locale);
 		weekdays[5] = this.messageSource.getMessage("friday", null, locale);
 		weekdays[6] = this.messageSource.getMessage("saturday", null, locale);
-		
+
 		return ServiceResultImpl.createSuccessResult(weekdays, new GenericSuccessMessage());
 	}
-	
+
 	/**
 	 * Returns localized messages.
 	 * 
-	 * @param record the message record, i.e. for report.title is report the record. null if none.
-	 * @param fields the properties for that record.
-	 * @param locale the locale (set by system).
-	 * @return a JSON pbject as a string representation, with all fields and values.
+	 * @param record
+	 *            the message record, i.e. for report.title is report the
+	 *            record. null if none.
+	 * @param fields
+	 *            the properties for that record.
+	 * @param locale
+	 *            the locale (set by system).
+	 * @return a JSON pbject as a string representation, with all fields and
+	 *         values.
 	 */
-	@RequestMapping(value="/caption", method=RequestMethod.POST, consumes="application/json")
+	@RequestMapping(value = "/caption", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<HashMap<String, String>> getLocalizedMessage(@RequestBody final MessageFields fields, final Locale locale) {
+	public ServiceResult<HashMap<String, String>> getLocalizedMessage(@RequestBody final MessageFields fields,
+			final Locale locale) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		String prefix = (fields.getRecord() == null || fields.getRecord().length() == 0) ? "" : (fields.getRecord() + ".");
+		String prefix = (fields.getRecord() == null || fields.getRecord().length() == 0) ? ""
+				: (fields.getRecord() + ".");
 		for (String field : fields.getFields()) {
 			Option o = new Option(prefix + field, locale);
 			map.put(field, o.getValue());
 		}
-		return ServiceResultImpl.createSuccessResult(map, new GenericSuccessMessage());	
+		return ServiceResultImpl.createSuccessResult(map, new GenericSuccessMessage());
 	}
-	
-	@RequestMapping(value="/message", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/message", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<Option[]> loadMessage(@RequestParam(value="codes") final String codes, final Locale locale) {
+	public ServiceResult<Option[]> loadMessage(@RequestParam(value = "codes") final String codes, final Locale locale) {
 		final String[] sep = codes.split(",");
 		final Option[] resolved = new Option[sep.length];
 		for (int i = 0; i < sep.length; i++) {
 			resolved[i] = new Option(sep[i].trim(), locale);
 		}
-		
+
 		return ServiceResultImpl.createSuccessResult(resolved, new GenericSuccessMessage());
 	}
 }

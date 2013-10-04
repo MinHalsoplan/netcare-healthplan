@@ -36,33 +36,32 @@ public class ActivityTypeApi extends ApiSupport {
 	@Autowired
 	private ActivityTypeService service;
 
-
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityType[]> listTemplates(@RequestParam(value = "name") final String text,
 			@RequestParam("category") final String category, @RequestParam("level") final String level) {
-		this.logAccess("search", "activity template");
+		this.logAccess("search", "activity_template");
 		return this.service.searchForActivityTypes(text, category, level);
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityType> newTemplate(@RequestBody final ActivityTypeImpl activityType) {
-		this.logAccess("create", "activity template");
+		this.logAccess("create", "activity_template");
 		return this.service.createActivityType(activityType);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityType> loadTemplate(@PathVariable(value = "id") final String id) {
-		this.logAccess("get", "activity template");
+		this.logAccess("get", "activity_template");
 		return this.service.getActivityType(id);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<ActivityType> deleteTemplate(@PathVariable(value="id") final Long id) {
-		this.logAccess("delete", "activity template");
+	public ServiceResult<ActivityType> deleteTemplate(@PathVariable(value = "id") final Long id) {
+		this.logAccess("delete", "activity_template");
 		return this.service.deleteActivityTemplate(id);
 	}
 
@@ -70,7 +69,7 @@ public class ActivityTypeApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityType> updateActivityType(@PathVariable("id") final String id,
 			@RequestBody final ActivityTypeImpl activityType) {
-		this.logAccess("update", "activity type");
+		this.logAccess("update", "activity_type");
 		return this.service.updateActivityType(activityType);
 	}
 

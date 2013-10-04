@@ -16,9 +16,6 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import org.joda.time.DateTime;
-
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -37,6 +34,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.joda.time.DateTime;
 
 @Entity
 @Table(name="nc_health_plan")

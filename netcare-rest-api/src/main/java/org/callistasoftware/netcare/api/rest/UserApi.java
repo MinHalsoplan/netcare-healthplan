@@ -67,7 +67,7 @@ public class UserApi extends ApiSupport {
 		final UserBaseView user = this.getUser();
 		if (user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
-			ServiceResult<Patient[]> result=  this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
+			ServiceResult<Patient[]> result = this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
 			this.logAccess("load", "patients", request, result.getData());
 			return result;
 		} else {
@@ -109,7 +109,7 @@ public class UserApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<Boolean> saveUserData(@RequestParam(value = "firstName") final String firstName,
 			@RequestParam(value = "surName") final String surName, HttpServletRequest request) {
-		this.logAccess("save", "user data", request);
+		this.logAccess("save", "user_data", request);
 		return this.userService.saveUserData(firstName, surName);
 	}
 

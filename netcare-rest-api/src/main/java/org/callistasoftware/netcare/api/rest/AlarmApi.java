@@ -45,13 +45,13 @@ public class AlarmApi extends ApiSupport {
 		if (user != null && user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
 			ServiceResult<Alarm[]> result = this.service.getCareUnitAlarms(ca.getCareUnit().getHsaId());
-			
+
 			PatientBaseView[] patients = new PatientBaseView[result.getData().length];
 			for (int i = 0; i < patients.length; i++) {
 				patients[i] = result.getData()[i].getPatient();
 			}
 			this.logAccess("list", "alarms", request, patients);
-			
+
 			return result;
 		}
 

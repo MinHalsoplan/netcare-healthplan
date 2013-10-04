@@ -71,7 +71,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<HealthPlan> createHealthPlan(@RequestBody final HealthPlanImpl dto, final Authentication auth,
 			HttpServletRequest request) {
-		this.logAccess("create", "health plan", request);
+		this.logAccess("create", "health_plan", request);
 		return this.service.createNewHealthPlan(dto, (CareActorBaseView) auth.getPrincipal(), dto.getPatient().getId());
 	}
 
@@ -82,7 +82,7 @@ public class HealthPlanApi extends ApiSupport {
 		final ServiceResult<HealthPlan[]> healthPlans = this.service.loadHealthPlansForPatient(patient);
 		HealthPlan[] plans = healthPlans.getData();
 		if (plans.length > 0) {
-			this.logAccess("list", "healthplan", request, (plans[0].getPatient()));
+			this.logAccess("list", "health_plan", request, (plans[0].getPatient()));
 		}
 
 		log.debug("Found {} for patient {}", healthPlans.getData().length, patient);
@@ -94,7 +94,7 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> loadHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
 		ServiceResult<HealthPlan> result = this.service.loadHealthPlan(healthPlan);
-		this.logAccess("load", "health plan", request, result.getData().getPatient());
+		this.logAccess("load", "health_plan", request, result.getData().getPatient());
 		return result;
 	}
 
@@ -102,7 +102,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
-		this.logAccess("inactivate", "health plan", request);
+		this.logAccess("inactivate", "health_plan", request);
 		return this.service.inactivateHealthPlan(healthPlan, false);
 	}
 
@@ -110,7 +110,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
-		this.logAccess("activate", "health plan", request);
+		this.logAccess("activate", "health_plan", request);
 		return this.service.activateHealthPlan(healthPlan, false);
 	}
 
@@ -118,7 +118,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<HealthPlan> healthPlanRenewal(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
-		this.logAccess("renewal", "health plan", request);
+		this.logAccess("renewal", "health_plan", request);
 		return this.service.healthPlanRenewal(healthPlan, false);
 	}
 
@@ -126,7 +126,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<HealthPlan> stopHealthPlanAutoRenewal(
 			@PathVariable(value = "healthPlan") final Long healthPlan, HttpServletRequest request) {
-		this.logAccess("renewal", "health plan", request);
+		this.logAccess("stop_renewal", "health_plan", request);
 		return this.service.healthPlanRenewal(healthPlan, true);
 	}
 
@@ -150,7 +150,7 @@ public class HealthPlanApi extends ApiSupport {
 
 		ServiceResult<ScheduledActivity[]> result = this.service.loadLatestReportedForAllPatients(unit, start, end);
 
-		this.logAccess("load", "reported activities", request, getPatients(result));
+		this.logAccess("load", "reported_activities", request, getPatients(result));
 
 		return result;
 	}
@@ -196,7 +196,7 @@ public class HealthPlanApi extends ApiSupport {
 		ServiceResult<ScheduledActivity[]> result = this.service.filterReportedActivities(unit, personnummer, start,
 				end);
 
-		this.logAccess("filter", "reported activities", request, getPatients(result));
+		this.logAccess("filter", "reported_activities", request, getPatients(result));
 
 		return result;
 
@@ -213,7 +213,7 @@ public class HealthPlanApi extends ApiSupport {
 		ServiceResult<ScheduledActivity[]> result = this.service.loadLatestReportedForAllPatients(
 				((CareActorBaseView) this.getUser()).getCareUnit(), null, null);
 
-		this.logAccess("load", "reported activities", request, getPatients(result));
+		this.logAccess("load", "reported_activities", request, getPatients(result));
 
 		return result;
 	}
@@ -230,7 +230,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> loadScheduledActivity(
 			@PathVariable(value = "activity") final Long activity, HttpServletRequest request) {
-		this.logAccess("load", "scheduled activity", request);
+		this.logAccess("load", "scheduled_activity", request);
 		return this.service.loadScheduledActivity(activity);
 	}
 
@@ -284,9 +284,10 @@ public class HealthPlanApi extends ApiSupport {
 
 		return patients.getData();
 	}
+
 	private PatientBaseView getPatient(Long activityId) {
 		List<Long> commentIds = new ArrayList<Long>();
-			commentIds.add(activityId);
+		commentIds.add(activityId);
 		ServiceResult<PatientBaseView[]> patients = patientService.findPatientsByComments(commentIds);
 
 		return patients.getData()[0];
@@ -313,7 +314,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ActivityDefinition[]> loadActivityDefinitions(
 			@PathVariable(value = "healthPlanId") final Long healthPlan, HttpServletRequest request) {
-		this.logAccess("list", "activity definitions", request);
+		this.logAccess("list", "activity_definitions", request);
 		return this.service.loadActivitiesForHealthPlan(healthPlan);
 	}
 
@@ -321,7 +322,7 @@ public class HealthPlanApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<HealthPlanStatistics> loadReportedActivitites(
 			@PathVariable(value = "healthPlanId") final Long healthPlanId, HttpServletRequest request) {
-		this.logAccess("list", "scheduled activities", request);
+		this.logAccess("list", "scheduled_activities", request);
 		return this.service.getStatisticsForHealthPlan(healthPlanId);
 	}
 

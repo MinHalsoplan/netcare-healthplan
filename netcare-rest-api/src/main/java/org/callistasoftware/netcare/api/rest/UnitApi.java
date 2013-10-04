@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.callistasoftware.netcare.core.api.MeasureUnit;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.UnitService;
@@ -30,30 +28,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/units", produces="application/json")
+@RequestMapping(value = "/units", produces = "application/json")
 public class UnitApi extends ApiSupport {
 
-	@Autowired private UnitService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	@Autowired
+	private UnitService service;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<MeasureUnit[]> list(HttpServletRequest request) {
-		logAccess("list", "measure units",request);
+	public ServiceResult<MeasureUnit[]> list() {
+		logAccess("list", "measure units");
 		return service.loadUnits();
 	}
-	
-	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json")
+
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<MeasureUnit> create(@RequestBody final MeasureUnit measureUnit,HttpServletRequest request) {
-		logAccess("create", "measure unit",request);
+	public ServiceResult<MeasureUnit> create(@RequestBody final MeasureUnit measureUnit) {
+		logAccess("create", "measure unit");
 		return service.saveUnit(measureUnit);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<MeasureUnit> update(@PathVariable("id") final Long id, 
-			@RequestBody final MeasureUnit measureUnit,HttpServletRequest request) {
-		logAccess("update", "measure unit",request);
+	public ServiceResult<MeasureUnit> update(@PathVariable("id") final Long id,
+			@RequestBody final MeasureUnit measureUnit) {
+		logAccess("update", "measure unit");
 		return service.saveUnit(measureUnit);
 	}
 }

@@ -65,7 +65,7 @@ public class ScheduleApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> loadLatestForDefinition(
 			@RequestParam("definitionId") final Long definition, HttpServletRequest request) {
-		logAccess("load latest", "activity", request);
+		logAccess("load", "latest_activity", request);
 		return schedule.loadLatestForDefinition(definition);
 	}
 }

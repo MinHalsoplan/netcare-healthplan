@@ -16,6 +16,9 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,8 +26,12 @@ import javax.servlet.http.HttpSession;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
 import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.UserBaseView;
+import org.callistasoftware.netcare.core.api.impl.PdlLogImpl;
+import org.callistasoftware.netcare.core.spi.PdlLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -35,8 +42,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public abstract class ApiSupport {
 
+	Properties actionTranslations = null;
+
+	@Value("${support.email}")
+	private String supportEmail;
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final Logger pdlLog = LoggerFactory.getLogger("org.callistasoftware.netcare.api.rest.PdlLogger");
+
+	@Autowired
+	private PdlLogService pdlLogService;
 
 	protected UserBaseView getUser() {
 		return (UserBaseView) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -56,7 +71,6 @@ public abstract class ApiSupport {
 
 	protected void logAccess(final String action, final String what) {
 		debugLog(action, what);
-
 	}
 
 	protected void logAccess(final String action, final String what, HttpServletRequest request) {
@@ -68,8 +82,7 @@ public abstract class ApiSupport {
 				if (patient != null) {
 					pdlLog(action, what, patient, (HttpServletRequest) request);
 				} else {
-					getLog().debug(
-							"pdlLogging requested but no patient present Action: {}->{}",
+					getLog().debug("pdlLogging requested but no patient present Action: {}->{}",
 							new Object[] { action, what });
 				}
 			}
@@ -104,10 +117,37 @@ public abstract class ApiSupport {
 			CareActorBaseView careActor = (CareActorBaseView) user;
 			String path = request.getPathInfo();
 
-			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}->{}, URI: {} ",
-					new Object[] { careActor.getHsaId(), careActor.getUsername(), patient.getCivicRegistrationNumber(),
-							patient.getName(), action, what, path });
+			String actionLabel = getActionLabel(action, what);
+
+			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}, URI: {} ", new Object[] {
+					careActor.getHsaId(), careActor.getName(), patient.getCivicRegistrationNumber(), patient.getName(),
+					actionLabel, path });
+
+			PdlLogImpl pdlLogImpl = new PdlLogImpl();
+			pdlLogImpl.setAction(actionLabel);
+			pdlLogImpl.setCareActorName(careActor.getName());
+			pdlLogImpl.setCivicId(patient.getCivicRegistrationNumber());
+			pdlLogImpl.setHsaId(careActor.getHsaId());
+			pdlLogImpl.setPatientName(patient.getName());
+			pdlLogService.createPdlLog(pdlLogImpl);
 		}
+	}
+
+	private String getActionLabel(String action, final String what) {
+		String actionId = action + "->" + what;
+		if (actionTranslations == null) {
+			actionTranslations = new Properties();
+			try {
+				actionTranslations.load(this.getClass().getClassLoader().getResourceAsStream("action.properties"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		String actionLabel = actionTranslations.getProperty(actionId);
+		if (actionLabel == null) {
+			return actionId;
+		}
+		return actionLabel;
 	}
 
 	protected final Logger getLog() {

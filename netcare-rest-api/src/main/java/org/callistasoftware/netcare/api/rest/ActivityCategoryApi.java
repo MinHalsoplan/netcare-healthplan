@@ -28,22 +28,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/categories", produces="application/json")
+@RequestMapping(value = "/categories", produces = "application/json")
 public class ActivityCategoryApi extends ApiSupport {
-	
+
 	@Autowired
 	private ActivityTypeService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityCategory[]> loadActivityCategories() {
 		this.logAccess("load", "activity categories");
 		return this.service.loadAllActivityCategories();
 	}
-	
-	@RequestMapping(value=""
-			, method=RequestMethod.POST
-			, consumes="application/json")
+
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityCategory> createNewActivityCategory(@RequestBody final ActivityCategoryImpl category) {
 		this.logAccess("create", "activity category");

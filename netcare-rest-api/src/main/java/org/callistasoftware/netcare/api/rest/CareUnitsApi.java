@@ -37,14 +37,14 @@ public class CareUnitsApi extends ApiSupport {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<CareUnit[]> list() {
-		logAccess("list", "care units");
+		logAccess("list", "care_units");
 		return service.listCareUnits();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<CareUnit> save(@PathVariable("id") final Long id, @RequestBody final CareUnit careUnit) {
-		logAccess("save", "care unit");
+		logAccess("save", "care_unit");
 		return service.saveCareUnit(careUnit);
 	}
 }

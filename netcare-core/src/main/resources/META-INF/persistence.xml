@@ -50,6 +50,7 @@
 		<class>org.callistasoftware.netcare.model.entity.TextEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.TextTypeEntity</class>
 		<class>org.callistasoftware.netcare.model.entity.TextDefinitionEntity</class>
+		<class>org.callistasoftware.netcare.model.entity.PdlLogEntity</class>
 	</persistence-unit>
 
 </persistence>
