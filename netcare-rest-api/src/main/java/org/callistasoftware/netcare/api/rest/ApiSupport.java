@@ -48,7 +48,6 @@ public abstract class ApiSupport {
 	private String supportEmail;
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private final Logger pdlLog = LoggerFactory.getLogger("org.callistasoftware.netcare.api.rest.PdlLogger");
 
 	@Autowired
 	private PdlLogService pdlLogService;
@@ -115,13 +114,12 @@ public abstract class ApiSupport {
 		UserBaseView user = this.getUser();
 		if (user.isCareActor()) {
 			CareActorBaseView careActor = (CareActorBaseView) user;
-			String path = request.getPathInfo();
-
 			String actionLabel = getActionLabel(action, what);
 
-			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}, URI: {} ", new Object[] {
-					careActor.getHsaId(), careActor.getName(), patient.getCivicRegistrationNumber(), patient.getName(),
-					actionLabel, path });
+//			String path = request.getPathInfo();
+//			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}, URI: {} ", new Object[] {
+//					careActor.getHsaId(), careActor.getName(), patient.getCivicRegistrationNumber(), patient.getName(),
+//					actionLabel, path });
 
 			PdlLogImpl pdlLogImpl = new PdlLogImpl();
 			pdlLogImpl.setAction(actionLabel);
