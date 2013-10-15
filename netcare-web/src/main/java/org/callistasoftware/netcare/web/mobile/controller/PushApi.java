@@ -39,7 +39,7 @@ public class PushApi extends ApiSupport {
     @RequestMapping(value="/gcm", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public void c2dmRegistration(@RequestBody final Map<String, String> data) {
-		this.logAccess("register", "gcm");
+		this.logAccessWithoutPdl("register", "gcm");
         saveEnvironmentProperties("Android", data);
 		service.registerForGcm(data.get("c2dmRegistrationId"));
 	}
@@ -47,7 +47,7 @@ public class PushApi extends ApiSupport {
     @RequestMapping(value="/apns", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
     public void apnsRegistration(@RequestBody final Map<String, String> data) {
-        this.logAccess("register", "apns");
+        this.logAccessWithoutPdl("register", "apns");
         saveEnvironmentProperties("iOS", data);
 		service.registerForApnsPush(data.get("apnsRegistrationId"));
 	}
@@ -77,14 +77,14 @@ public class PushApi extends ApiSupport {
     @RequestMapping(value="/gcm", method=RequestMethod.DELETE)
     @ResponseBody
     public void gcmUnregistration() {
-    	this.logAccess("unregister", "gcm");
+    	this.logAccessWithoutPdl("unregister", "gcm");
     	service.unregisterGcm();
     }
     
     @RequestMapping(value="/apns", method=RequestMethod.DELETE)
     @ResponseBody
     public void apnsUnregistration() {
-    	this.logAccess("unregister", "apns");
+    	this.logAccessWithoutPdl("unregister", "apns");
     	service.unregisterApns();
     }
 

@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.callistasoftware.netcare.core.api.ScheduledActivity;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.ScheduleService;
@@ -37,6 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PreAuthorize(RoleEntity.PATIENT)
 public class ScheduleApi extends ApiSupport {
 
+	// All methods only performed by patients, no pdl logging
+
 	@Autowired
 	private ScheduleService schedule;
 
@@ -46,8 +46,9 @@ public class ScheduleApi extends ApiSupport {
 			@RequestParam(value = "reported", required = false) final boolean reported,
 			@RequestParam(value = "due", required = false) final boolean due,
 			@RequestParam(value = "start", required = false) final Long start,
-			@RequestParam(value = "end", required = false) final Long end, HttpServletRequest request) {
-		logAccess("lista", "schema", request);
+			@RequestParam(value = "end", required = false) final Long end) {
+
+		logAccessWithoutPdl("lista", "schema");
 
 		getLog().debug("Reported: {}, Due: {}, Start: {}, End: {}", new Object[] { reported, due, start, end });
 		return schedule.load(reported, due, start, end);
@@ -55,17 +56,15 @@ public class ScheduleApi extends ApiSupport {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report,
-			HttpServletRequest request) {
-		logAccess("report", "activity", request);
+	public ServiceResult<ScheduledActivity> report(@RequestBody final ScheduledActivity report) {
+		logAccessWithoutPdl("report", "activity");
 		return schedule.reportReady(report);
 	}
 
 	@RequestMapping(value = "/latestForDefinition", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ScheduledActivity> loadLatestForDefinition(
-			@RequestParam("definitionId") final Long definition, HttpServletRequest request) {
-		logAccess("load", "latest_activity", request);
+	public ServiceResult<ScheduledActivity> loadLatestForDefinition(@RequestParam("definitionId") final Long definition) {
+		logAccessWithoutPdl("load", "latest_activity");
 		return schedule.loadLatestForDefinition(definition);
 	}
 }

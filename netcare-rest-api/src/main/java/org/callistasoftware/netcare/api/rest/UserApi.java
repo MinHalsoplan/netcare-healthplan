@@ -68,7 +68,9 @@ public class UserApi extends ApiSupport {
 		if (user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
 			ServiceResult<Patient[]> result = this.patientService.loadPatientsOnCareUnit(ca.getCareUnit());
-			this.logAccess("load", "patients", request, result.getData());
+			for (Patient patient : result.getData()) {
+				this.logAccess("load", "patients", request, patient, " ");
+			}
 			return result;
 		} else {
 			throw new IllegalAccessException();
@@ -79,23 +81,25 @@ public class UserApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<Patient> loadPatient(@PathVariable(value = "patient") final Long patient,
 			HttpServletRequest request) {
-		this.logAccess("load", "patient", request);
-		return this.patientService.loadPatient(patient);
+		ServiceResult<Patient> result = this.patientService.loadPatient(patient);
+		this.logAccess("load", "patient", request, result.getData(), " ");
+		return result;
 	}
 
 	@RequestMapping(value = "/{patient}/update", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<Patient> updatePatient(@PathVariable(value = "patient") final Long patient,
 			@RequestBody final PatientProfile patientData, HttpServletRequest request) {
-		this.logAccess("update", "patient", request);
-		return this.patientService.updatePatient(patient, patientData);
+		ServiceResult<Patient> result = this.patientService.updatePatient(patient, patientData);
+		this.logAccess("update", "patient", request, result.getData(), " ");
+		return result;
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<Patient> createNewPatient(@RequestBody final Patient patient, HttpServletRequest request)
 			throws IllegalAccessException {
-		this.logAccess("create", "patient", request, patient);
+		this.logAccess("create", "patient", request, patient, " ");
 
 		final UserBaseView user = this.getUser();
 		if (user.isCareActor()) {
@@ -108,17 +112,18 @@ public class UserApi extends ApiSupport {
 	@RequestMapping(value = "/saveUserData", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public ServiceResult<Boolean> saveUserData(@RequestParam(value = "firstName") final String firstName,
-			@RequestParam(value = "surName") final String surName, HttpServletRequest request) {
-		this.logAccess("save", "user_data", request);
+			@RequestParam(value = "surName") final String surName) {
+		this.logAccessWithoutPdl("save", "user_data");
 		return this.userService.saveUserData(firstName, surName);
 	}
 
 	@RequestMapping(value = "/{patient}/delete", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
-	public ServiceResult<Patient> deletePatient(@PathVariable(value = "patient") final Long patient,
+	public ServiceResult<Patient> deletePatient(@PathVariable(value = "patient") final Long patientId,
 			HttpServletRequest request) {
-		this.logAccess("delete", "patient", request);
-		return this.patientService.deletePatient(patient);
+		Patient patient = patientService.loadPatient(patientId).getData();
+		this.logAccess("delete", "patient", request, patient, " ");
+		return this.patientService.deletePatient(patientId);
 	}
 
 	@RequestMapping(value = "/{patient}/select", method = RequestMethod.POST, produces = "application/json")

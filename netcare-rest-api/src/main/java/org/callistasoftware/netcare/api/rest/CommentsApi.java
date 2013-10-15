@@ -16,8 +16,6 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
@@ -37,34 +35,37 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PreAuthorize(RoleEntity.PATIENT)
 public class CommentsApi extends ApiSupport {
 
+	// All methods only performed by patients, no pdl logging
+	// If needed, ActivityComment has patient and healtPlan Name
+
 	@Autowired
 	private HealthPlanService service;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
-	public ServiceResult<ActivityComment[]> list(HttpServletRequest request) {
-		logAccess("list", "comments", request);
+	public ServiceResult<ActivityComment[]> list() {
+		logAccessWithoutPdl("list", "comments");
 		return service.loadCommentsForPatient();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ServiceResult<ActivityComment> remove(@PathVariable(value = "id") final Long id, HttpServletRequest request) {
-		logAccess("remove", "comment", request);
+	public ServiceResult<ActivityComment> remove(@PathVariable(value = "id") final Long id) {
+		logAccessWithoutPdl("remove", "comment");
 		return service.deleteComment(id);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityComment> update(@RequestBody final ActivityComment comment, HttpServletRequest request) {
-		logAccess("update", "comment", request);
+	public ServiceResult<ActivityComment> update(@RequestBody final ActivityComment comment) {
+		logAccessWithoutPdl("update", "comment");
 		return service.replyToComment(comment.getId(), comment.getReply());
 	}
 
 	@RequestMapping(value = "/{id}/hide", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityComment> hide(@PathVariable(value = "id") final Long id, HttpServletRequest request) {
-		logAccess("hide", "comment", request);
+	public ServiceResult<ActivityComment> hide(@PathVariable(value = "id") final Long id) {
+		logAccessWithoutPdl("hide", "comment");
 		// Used by patients only right now!
 		return service.hideComment(id, false);
 	}

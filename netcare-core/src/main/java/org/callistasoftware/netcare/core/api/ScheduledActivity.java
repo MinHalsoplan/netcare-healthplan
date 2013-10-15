@@ -168,4 +168,11 @@ public interface ScheduledActivity extends Serializable {
 	 * @return
 	 */
 	boolean isExtra();
+	
+	/**
+	 * Return the healtplan name
+	 * @return
+	 */
+	public String getHealthPlanName();
+
 }

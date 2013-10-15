@@ -48,13 +48,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/support", produces = "application/json")
 public class SupportApi extends ApiSupport {
 
+	// No patient data, no pdl logging
+
 	@Autowired
 	private MessageSource messageSource;
 
 	@RequestMapping(value = "/measureValueTypes", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadMeasureValueTypes() {
-		this.logAccess("load", "measure value types");
+		this.logAccessWithoutPdl("load", "measure value types");
 		final MeasurementValueType[] valueTypes = MeasurementValueType.values();
 		final Option[] opts = new Option[valueTypes.length];
 		for (int i = 0; i < valueTypes.length; i++) {
@@ -67,7 +69,7 @@ public class SupportApi extends ApiSupport {
 	@RequestMapping(value = "/accessLevels", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadAccessLevels() {
-		this.logAccess("load", "access levels");
+		this.logAccessWithoutPdl("load", "access levels");
 		final AccessLevel[] levels = AccessLevel.values();
 		final Option[] opts = new Option[levels.length];
 		for (int i = 0; i < levels.length; i++) {
@@ -80,7 +82,7 @@ public class SupportApi extends ApiSupport {
 	@RequestMapping(value = "/countyCouncils", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<Option[]> loadCountyCouncils() {
-		this.logAccess("load", "county councils");
+		this.logAccessWithoutPdl("load", "county councils");
 		final CountyCouncil[] opts = CountyCouncil.values();
 		final Option[] options = new Option[opts.length];
 		for (int i = 0; i < opts.length; i++) {

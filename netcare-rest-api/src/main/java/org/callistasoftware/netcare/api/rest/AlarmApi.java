@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.callistasoftware.netcare.core.api.Alarm;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
-import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.UserBaseView;
 import org.callistasoftware.netcare.core.spi.AlarmService;
@@ -45,13 +44,9 @@ public class AlarmApi extends ApiSupport {
 		if (user != null && user.isCareActor()) {
 			final CareActorBaseView ca = (CareActorBaseView) user;
 			ServiceResult<Alarm[]> result = this.service.getCareUnitAlarms(ca.getCareUnit().getHsaId());
-
-			PatientBaseView[] patients = new PatientBaseView[result.getData().length];
-			for (int i = 0; i < patients.length; i++) {
-				patients[i] = result.getData()[i].getPatient();
+			for (Alarm alarm : result.getData()) {
+				this.logAccess("list", "alarms", request, alarm.getPatient(), alarm.getHealtPlanName());
 			}
-			this.logAccess("list", "alarms", request, patients);
-
 			return result;
 		}
 
@@ -63,7 +58,7 @@ public class AlarmApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<Alarm> resolveAlarm(@PathVariable(value = "alarm") final Long alarm, HttpServletRequest request) {
 		ServiceResult<Alarm> result = this.service.resolveAlarm(alarm);
-		this.logAccess("resolve", "alarm", request, result.getData().getPatient());
+		this.logAccess("resolve", "alarm", request, result.getData().getPatient(), result.getData().getHealtPlanName());
 		return result;
 	}
 }

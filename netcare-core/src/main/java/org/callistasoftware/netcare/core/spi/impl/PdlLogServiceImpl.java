@@ -39,7 +39,7 @@ public class PdlLogServiceImpl extends ServiceSupport implements PdlLogService {
 	public ServiceResult<PdlLog> createPdlLog(final PdlLog pdlLog) {
 
 		PdlLogEntity newPdlLog = PdlLogEntity.newEntity(pdlLog.getAction(), pdlLog.getCareActorName(),
-				pdlLog.getCivicId(), pdlLog.getHsaId(), pdlLog.getPatientName());
+				pdlLog.getCivicId(), pdlLog.getHsaId(), pdlLog.getPatientName(), pdlLog.getHealtPlanName());
 
 		final PdlLogEntity saved = this.repo.save(newPdlLog);
 		return ServiceResultImpl.createSuccessResult(PdlLogImpl.newFromEntity(saved), new GenericSuccessMessage());

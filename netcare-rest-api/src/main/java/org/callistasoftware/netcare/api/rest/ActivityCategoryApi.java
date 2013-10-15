@@ -37,14 +37,14 @@ public class ActivityCategoryApi extends ApiSupport {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityCategory[]> loadActivityCategories() {
-		this.logAccess("load", "activity categories");
+		this.logAccessWithoutPdl("load", "activity_categories");
 		return this.service.loadAllActivityCategories();
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityCategory> createNewActivityCategory(@RequestBody final ActivityCategoryImpl category) {
-		this.logAccess("create", "activity category");
+		this.logAccessWithoutPdl("create", "activity_category");
 		return this.service.createActivityCategory(category);
 	}
 }

@@ -73,4 +73,10 @@ public interface Alarm extends Serializable {
 	 * Returns additional info.
 	 */
 	String getInfo();
+	
+	/**
+	 * Returns Health plan name
+	 * @return
+	 */
+	String getHealtPlanName();
 }

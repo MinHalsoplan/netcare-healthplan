@@ -31,6 +31,7 @@ public class PdlLogImpl implements PdlLog {
 	private String civicId;
 	private String patientName;
 	private String action;
+	private String healtPlanName;
 
 	public static PdlLog newFromEntity(PdlLogEntity entity) {
 		
@@ -42,7 +43,7 @@ public class PdlLogImpl implements PdlLog {
 		pdlLog.civicId = entity.getCivicId();
 		pdlLog.hsaId = entity.getHsaId();
 		pdlLog.patientName = entity.getPatientName();
-
+		pdlLog.healtPlanName = entity.getHealtPlanName();
 
 		return pdlLog;
 	}
@@ -97,6 +98,14 @@ public class PdlLogImpl implements PdlLog {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getHealtPlanName() {
+		return healtPlanName;
+	}
+
+	public void setHealtPlanName(String healtPlanName) {
+		this.healtPlanName = healtPlanName;
 	}
 
 

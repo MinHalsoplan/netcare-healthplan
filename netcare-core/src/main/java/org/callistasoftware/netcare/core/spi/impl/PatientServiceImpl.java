@@ -149,19 +149,4 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
 	}
 
-	@Override
-	public ServiceResult<PatientBaseView[]> findPatientsByComments(List<Long> commentIds) {
-		List<PatientEntity> hits = new ArrayList<PatientEntity>();
-		if (commentIds.size() > 0) {
-			hits = this.patientRepository.findByActivityCommentId(commentIds);
-		}
-
-		final List<PatientBaseView> dtos = new ArrayList<PatientBaseView>(hits.size());
-		for (final PatientEntity ent : hits) {
-			dtos.add(PatientBaseViewImpl.newFromEntity(ent));
-		}
-
-		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]),
-				new ListEntitiesMessage(PatientEntity.class, dtos.size()));
-	}
 }

@@ -19,7 +19,6 @@ package org.callistasoftware.netcare.api.rest;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -68,67 +67,61 @@ public abstract class ApiSupport {
 		return !this.getUser().isCareActor();
 	}
 
-	protected void logAccess(final String action, final String what) {
-		debugLog(action, what);
-	}
-
-	protected void logAccess(final String action, final String what, HttpServletRequest request) {
-		debugLog(action, what);
-
-		if (isCareActor()) {
-			if (request != null) {
-				PatientBaseView patient = getCurrentPatient(request.getSession());
-				if (patient != null) {
-					pdlLog(action, what, patient, (HttpServletRequest) request);
-				} else {
-					getLog().debug("pdlLogging requested but no patient present Action: {}->{}",
-							new Object[] { action, what });
-				}
-			}
-		}
-	}
-
-	protected void logAccess(final String action, final String what, ServletRequest request, PatientBaseView patient) {
-		logAccess(action, what, request, new PatientBaseView[] { patient });
-	}
-
-	protected void logAccess(final String action, final String what, ServletRequest request, PatientBaseView[] patients) {
-		debugLog(action, what);
-
-		for (PatientBaseView patient : patients) {
-			pdlLog(action, what, patient, (HttpServletRequest) request);
-		}
-	}
-
 	private void debugLog(final String action, final String what) {
 		getLog().info("User {}, Action: {}->{}", new Object[] { this.getUser().getUsername(), action, what });
 	}
 
-	/**
-	 * PDL logging is only done if the user is a CareActor if information about
-	 * one ore many patients are concerned In case of many persons, one row is
-	 * written for each person
-	 */
-	private void pdlLog(String action, final String what, PatientBaseView patient, HttpServletRequest request) {
+	protected void logAccessWithoutPdl(final String action, final String what) {
+		debugLog(action, what);
+	}
 
-		UserBaseView user = this.getUser();
-		if (user.isCareActor()) {
-			CareActorBaseView careActor = (CareActorBaseView) user;
-			String actionLabel = getActionLabel(action, what);
+	protected void logAccess(final String action, final String what, String healtPlanName, HttpServletRequest request) {
+		debugLog(action, what);
 
-//			String path = request.getPathInfo();
-//			pdlLog.info("User hsa-id: {} name: {} Patient civic id: {} Name: {} Action: {}, URI: {} ", new Object[] {
-//					careActor.getHsaId(), careActor.getName(), patient.getCivicRegistrationNumber(), patient.getName(),
-//					actionLabel, path });
-
-			PdlLogImpl pdlLogImpl = new PdlLogImpl();
-			pdlLogImpl.setAction(actionLabel);
-			pdlLogImpl.setCareActorName(careActor.getName());
-			pdlLogImpl.setCivicId(patient.getCivicRegistrationNumber());
-			pdlLogImpl.setHsaId(careActor.getHsaId());
-			pdlLogImpl.setPatientName(patient.getName());
-			pdlLogService.createPdlLog(pdlLogImpl);
+		PatientBaseView patient = null;
+		if (request != null) {
+			patient = getCurrentPatient(request.getSession());
 		}
+		pdlLog(action, what, patient, healtPlanName, request);
+	}
+
+	protected void logAccess(final String action, final String what, HttpServletRequest request,
+			PatientBaseView patient, String healtPlanName) {
+		debugLog(action, what);
+		pdlLog(action, what, patient, healtPlanName, request);
+	}
+
+	/**
+	 * PDL logging is only done if the user is a CareActor and if information about
+	 * one ore many patients are concerned. In case of info concerning many persons returned by one api call, 
+	 * one log entry is written for each person
+	 */
+	private void pdlLog(String action, final String what, PatientBaseView patient, String healtPlanName,
+			HttpServletRequest request) {
+
+		if (!isCareActor()) {
+			return;
+		}
+		if (patient == null) {
+			getLog().info("pdlLogging requested but no patient present Action: {}->{}", new Object[] { action, what });
+			return;
+		}
+
+		if (healtPlanName == null) {
+			healtPlanName = " ";
+		}
+
+		CareActorBaseView careActor = (CareActorBaseView) this.getUser();
+		String actionLabel = getActionLabel(action, what);
+
+		PdlLogImpl pdlLogImpl = new PdlLogImpl();
+		pdlLogImpl.setAction(actionLabel);
+		pdlLogImpl.setCareActorName(careActor.getName());
+		pdlLogImpl.setCivicId(patient.getCivicRegistrationNumber());
+		pdlLogImpl.setHsaId(careActor.getHsaId());
+		pdlLogImpl.setPatientName(patient.getName());
+		pdlLogImpl.setHealtPlanName(healtPlanName);
+		pdlLogService.createPdlLog(pdlLogImpl);
 	}
 
 	private String getActionLabel(String action, final String what) {

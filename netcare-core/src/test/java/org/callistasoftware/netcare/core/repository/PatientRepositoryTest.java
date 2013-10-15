@@ -188,30 +188,4 @@ public class PatientRepositoryTest extends TestSupport {
 		assertNotNull(patients);
 		assertEquals(2, patients.size());
 	}
-
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void findPatientsByComment() throws Exception {
-
-		final CountyCouncilEntity cc = ccRepo.save(CountyCouncilEntity.newEntity(CountyCouncil.STOCKHOLM));
-		final CareUnitEntity cu = this.cuRepo.save(CareUnitEntity.newEntity("hsa-id", cc));
-		final CareActorEntity ca = this.careActorRepo.save(CareActorEntity.newEntity("Test", "x", "hsa-2", cu));
-		final PatientEntity patient = this.repo.save(PatientEntity.newEntity("Marcus", "x", "123456789004"));
-		final HealthPlanEntity healtPlan = this.hpRepo.save(HealthPlanEntity.newEntity(ca, patient, "Testplan",
-				new Date(), 12, DurationUnit.WEEK));
-		final ActivityCategoryEntity category = acatRepo.save(ActivityCategoryEntity.newEntity("x"));
-		final ActivityTypeEntity activityType = atRepo.save(ActivityTypeEntity.newEntity("x", category , cu, AccessLevel.CAREUNIT));
-		final UserEntity user = userRepo.save(PatientEntity.newEntity("x", "x", "191212121212"));
-		final ActivityDefinitionEntity definition = this.adRepo.save(ActivityDefinitionEntity.newEntity(healtPlan,
-				activityType, new Frequency(), user));
-		final ScheduledActivityEntity sae = this.schRepo.save(ScheduledActivityEntity.newEntity(definition, new Date(0)));
-		final ActivityCommentEntity ace = this.acRepo.save(ActivityCommentEntity.newEntity("", ca, sae));
-
-		List<Long> ids = new ArrayList<Long>();
-		ids.add(ace.getId());
-		final List<PatientEntity> patients = this.repo.findByActivityCommentId(ids);
-		assertNotNull(patients);
-		assertEquals(1, patients.size());
-	}
 }

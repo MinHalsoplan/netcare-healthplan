@@ -43,65 +43,75 @@ public class ActivityDefinitionApi extends ApiSupport {
 	public ServiceResult<ActivityDefinition[]> listActivities(
 			@RequestParam(value = "patient", required = false) final Long patientId,
 			@RequestParam(value = "onlyOngoing") final boolean onlyOngoing, HttpServletRequest request) {
-		logAccess("list", "activities", request);
-		ServiceResult<ActivityDefinition[]> sr = service.getPlannedActivitiesForPatient(patientId, onlyOngoing);
-		return sr;
+
+		ServiceResult<ActivityDefinition[]> result = service.getPlannedActivitiesForPatient(patientId, onlyOngoing);
+		for (ActivityDefinition activityDefinition : result.getData()) {
+			logAccess("list", "activity_definitions", activityDefinition.getHealthPlanName(), request);
+		}
+		return result;
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> createActivityDefintion(
 			@RequestBody final ActivityDefinitionImpl activity, HttpServletRequest request) {
-		logAccess("create", "activity_definition", request);
 
+		logAccess("create", "activity_definition", activity.getHealthPlanName(), request);
 		return this.service.addActvitiyToHealthPlan(activity);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> updateDefinition(@PathVariable("id") final Long id,
-			@RequestBody final ActivityDefinition data, HttpServletRequest request) {
-		logAccess("update", "activity_definition", request);
-		return this.service.updateActivity(data);
+			@RequestBody final ActivityDefinition activity, HttpServletRequest request) {
+		logAccess("update", "activity_definition", activity.getHealthPlanName(), request);
+		return this.service.updateActivity(activity);
 	}
 
 	@RequestMapping(value = "/{id}/enableReminder", method = RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> enableReminder(@PathVariable("id") final Long id,
 			HttpServletRequest request) {
-		logAccess("enable", "reminder", request);
-		return service.updateReminder(id, true);
+
+		ServiceResult<ActivityDefinition> result = service.updateReminder(id, true);
+		logAccess("enable", "reminder", result.getData().getHealthPlanName(), request);
+		return result;
 	}
 
 	@RequestMapping(value = "/{id}/disableReminder", method = RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> disableReminder(@PathVariable("id") final Long id,
 			HttpServletRequest request) {
-		logAccess("disable", "reminder", request);
-		return service.updateReminder(id, false);
+		// TODO Healt Plan Name ?
+		ServiceResult<ActivityDefinition> result = service.updateReminder(id, false);
+		logAccess("disable", "reminder", result.getData().getHealthPlanName(), request);
+		return result;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> loadActivityDefinition(@PathVariable("id") final Long id,
 			HttpServletRequest request) {
-		logAccess("load", "activity_definition", request);
-		return this.service.loadDefinition(id);
+		ServiceResult<ActivityDefinition> result = this.service.loadDefinition(id);
+		logAccess("load", "activity_definition", result.getData().getHealthPlanName(), request);
+		return result;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> inactivateDefinition(@PathVariable(value = "id") final Long definitionId,
 			HttpServletRequest request) {
-		this.logAccess("inactivate", "activity_definition", request);
-		return this.service.inactivateActivity(definitionId);
+		ServiceResult<ActivityDefinition> result = this.service.inactivateActivity(definitionId);
+		this.logAccess("inactivate", "activity_definition", result.getData().getHealthPlanName(), request);
+		return result;
 	}
 
 	@RequestMapping(value = "/{id}/activate", method = RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ActivityDefinition> activateDefinition(@PathVariable("id") final Long id,
 			HttpServletRequest request) {
-		logAccess("activate", "activity_definition", request);
-		return service.activateActivity(id);
+		ServiceResult<ActivityDefinition> result = service.activateActivity(id);
+		logAccess("activate", "activity_definition", result.getData().getHealthPlanName(), request);
+		return result;
 	}
 }

@@ -40,5 +40,7 @@ public interface PdlLog extends Serializable {
 	public String getPatientName();
 
 	public String getAction();
+	
+	public String getHealtPlanName();
 
 }

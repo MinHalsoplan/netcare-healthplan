@@ -39,17 +39,20 @@ public class PdlLogEntity {
 	@Column(name = "hsa_id", length = 64, nullable = false)
 	private String hsaId;
 
-	@Column(name = "care_actor_name", length = 64, nullable = false)
+	@Column(name = "care_actor_name", length = 128, nullable = false)
 	private String careActorName;
 
-	@Column(name = "civic_id", length = 20, nullable = false)
+	@Column(name = "civic_id", length = 16, nullable = false)
 	private String civicId;
 
-	@Column(name = "patient_name", length = 20, nullable = false)
+	@Column(name = "patient_name", length = 128, nullable = false)
 	private String patientName;
 
 	@Column(name = "action", length = 50, nullable = false)
 	private String action;
+
+	@Column(name = "healtPlanName", length = 64, nullable = true)
+	private String healtPlanName;
 
 	PdlLogEntity() {
 	}
@@ -109,6 +112,14 @@ public class PdlLogEntity {
 	public void setAction(String action) {
 		this.action = action;
 	}
+	
+	public String getHealtPlanName() {
+		return healtPlanName;
+	}
+
+	public void setHealtPlanName(String healtPlanName) {
+		this.healtPlanName = healtPlanName;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -120,7 +131,7 @@ public class PdlLogEntity {
 	}
 
 	public static PdlLogEntity newEntity(String action, String careActorName, String civicId, String hsaId,
-			String patientName) {
+			String patientName, String healtPlanName) {
 		PdlLogEntity pdlLogEntity = new PdlLogEntity();
 
 		pdlLogEntity.date = new Timestamp(System.currentTimeMillis());
@@ -129,6 +140,7 @@ public class PdlLogEntity {
 		pdlLogEntity.civicId = civicId;
 		pdlLogEntity.patientName = patientName;
 		pdlLogEntity.action = action;
+		pdlLogEntity.healtPlanName = healtPlanName;
 		
 		return pdlLogEntity;
 		

@@ -31,20 +31,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/units", produces = "application/json")
 public class UnitApi extends ApiSupport {
 
+	// No patient data, no pdl logging
+
 	@Autowired
 	private UnitService service;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<MeasureUnit[]> list() {
-		logAccess("list", "measure units");
+		logAccessWithoutPdl("list", "measure units");
 		return service.loadUnits();
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<MeasureUnit> create(@RequestBody final MeasureUnit measureUnit) {
-		logAccess("create", "measure unit");
+		logAccessWithoutPdl("create", "measure unit");
 		return service.saveUnit(measureUnit);
 	}
 
@@ -52,7 +54,7 @@ public class UnitApi extends ApiSupport {
 	@ResponseBody
 	public ServiceResult<MeasureUnit> update(@PathVariable("id") final Long id,
 			@RequestBody final MeasureUnit measureUnit) {
-		logAccess("update", "measure unit");
+		logAccessWithoutPdl("update", "measure unit");
 		return service.saveUnit(measureUnit);
 	}
 }

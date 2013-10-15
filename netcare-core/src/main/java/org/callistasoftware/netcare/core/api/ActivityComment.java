@@ -105,5 +105,19 @@ public interface ActivityComment extends Serializable {
 	 * Get the date when activity was reported
 	 * @return
 	 */
-	String getActivityReportedAt();
+	String getActivityReportedAt();	
+	
+	/**
+	 * Get Healt Plan Name
+	 * @return
+	 */
+	String getHealtPlanName();
+	
+	/**
+	 * Get Patient
+	 * @return
+	 */
+	PatientBaseView getPatient();
+
+
 }
