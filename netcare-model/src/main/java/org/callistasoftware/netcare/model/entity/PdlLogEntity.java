@@ -16,7 +16,7 @@
  */
 package org.callistasoftware.netcare.model.entity;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +34,7 @@ public class PdlLogEntity {
 	private Long id;
 
 	@Column(name = "date", nullable = false)
-	private Timestamp date;
+	private Date date;
 
 	@Column(name = "hsa_id", length = 64, nullable = false)
 	private String hsaId;
@@ -51,7 +51,7 @@ public class PdlLogEntity {
 	@Column(name = "action", length = 50, nullable = false)
 	private String action;
 
-	@Column(name = "healtPlanName", length = 64, nullable = true)
+	@Column(name = "healt_plan_name", length = 64, nullable = true)
 	private String healtPlanName;
 
 	PdlLogEntity() {
@@ -65,11 +65,11 @@ public class PdlLogEntity {
 		this.id = id;
 	}
 
-	public Timestamp getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(Timestamp date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
@@ -134,7 +134,7 @@ public class PdlLogEntity {
 			String patientName, String healtPlanName) {
 		PdlLogEntity pdlLogEntity = new PdlLogEntity();
 
-		pdlLogEntity.date = new Timestamp(System.currentTimeMillis());
+		pdlLogEntity.date = new Date(System.currentTimeMillis());
 		pdlLogEntity.hsaId = hsaId;
 		pdlLogEntity.careActorName = careActorName;
 		pdlLogEntity.civicId = civicId;
