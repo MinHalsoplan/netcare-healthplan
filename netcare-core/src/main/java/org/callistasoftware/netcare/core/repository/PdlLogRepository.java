@@ -16,9 +16,17 @@
  */
 package org.callistasoftware.netcare.core.repository;
 
+import java.util.Date;
+import java.util.List;
+
 import org.callistasoftware.netcare.model.entity.PdlLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PdlLogRepository extends JpaRepository<PdlLogEntity, Long> {
+
+	@Query("select e from PdlLogEntity e where e.date between :from and :to order by e.hsaId, e.civicId, e.action, e.healtPlanName, e.date ")
+	List<PdlLogEntity> findByDateBetween(@Param("from") final Date from, @Param("to") final Date to);
 
 }
