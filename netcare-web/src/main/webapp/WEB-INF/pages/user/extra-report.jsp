@@ -1,7 +1,6 @@
-
 <%--
 
-    Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+    Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by

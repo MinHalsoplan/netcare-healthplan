@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,34 +48,36 @@ import org.springframework.transaction.annotation.Transactional;
 public class PatientServiceImpl extends ServiceSupport implements PatientService {
 
 	private static Logger log = LoggerFactory.getLogger(PatientServiceImpl.class);
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private SaltSource saltSource;
-	
+
 	@Autowired
 	private CareUnitRepository cuRepo;
-	
+
 	@Autowired
 	private PatientRepository patientRepository;
-	
+
 	@Override
 	public ServiceResult<PatientBaseView[]> findPatients(String freeTextSearch) {
 		if (freeTextSearch.length() < 3) {
-			throw new IllegalArgumentException("Method cannot be invoked if the search string does not contain at least 3 charcaters");
+			throw new IllegalArgumentException(
+					"Method cannot be invoked if the search string does not contain at least 3 charcaters");
 		}
-		
-		final StringBuilder search = new StringBuilder().append("%").append(freeTextSearch).append("%"); 
+
+		final StringBuilder search = new StringBuilder().append("%").append(freeTextSearch).append("%");
 		final List<PatientEntity> hits = this.patientRepository.findPatients(search.toString());
-		
+
 		final List<PatientBaseView> dtos = new ArrayList<PatientBaseView>(hits.size());
 		for (final PatientEntity ent : hits) {
-			dtos.add(PatientBaseViewImpl.newFromEntity(ent)); 
+			dtos.add(PatientBaseViewImpl.newFromEntity(ent));
 		}
-		
-		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]), new ListEntitiesMessage(PatientEntity.class, dtos.size()));
+
+		return ServiceResultImpl.createSuccessResult(dtos.toArray(new PatientBaseView[dtos.size()]),
+				new ListEntitiesMessage(PatientEntity.class, dtos.size()));
 	}
 
 	@Override
@@ -87,16 +89,18 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 	@Override
 	public ServiceResult<Patient[]> loadPatientsOnCareUnit(final CareUnit careUnit) {
 		log.info("Loading patients on care unit {}", careUnit.getHsaId());
-		
+
 		final CareUnitEntity cu = this.cuRepo.findByHsaId(careUnit.getHsaId());
 		if (cu == null) {
-			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, careUnit.getHsaId()));
+			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(CareUnitEntity.class, careUnit
+					.getHsaId()));
 		}
-		
+
 		final List<PatientEntity> patients = this.patientRepository.findByCareUnit(cu.getHsaId());
 		log.debug("Found {} patients with health plans at care unit {}", patients.size(), cu.getHsaId());
-		
-		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntities(patients), new ListEntitiesMessage(PatientEntity.class, patients.size()));
+
+		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntities(patients), new ListEntitiesMessage(
+				PatientEntity.class, patients.size()));
 	}
 
 	@Override
@@ -104,10 +108,11 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		log.info("Creating new patient {}", patient.getCivicRegistrationNumber());
 		PatientEntity ent = this.patientRepository.findByCivicRegistrationNumber(patient.getCivicRegistrationNumber());
 		if (ent == null) {
-			final PatientEntity newPatient = PatientEntity.newEntity(patient.getFirstName(), patient.getSurName(), patient.getCivicRegistrationNumber());
+			final PatientEntity newPatient = PatientEntity.newEntity(patient.getFirstName(), patient.getSurName(),
+					patient.getCivicRegistrationNumber());
 			newPatient.setPhoneNumber(patient.getPhoneNumber());
 			ent = this.patientRepository.save(newPatient);
-		}		
+		}
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(ent), new GenericSuccessMessage());
 	}
 
@@ -118,11 +123,11 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		if (patient == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(PatientEntity.class, id));
 		}
-		
+
 		this.verifyWriteAccess(patient);
-		
+
 		this.patientRepository.delete(patient);
-		
+
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(patient), new GenericSuccessMessage());
 	}
 
@@ -133,14 +138,15 @@ public class PatientServiceImpl extends ServiceSupport implements PatientService
 		if (p == null) {
 			return ServiceResultImpl.createFailedResult(new EntityNotFoundMessage(PatientEntity.class, id));
 		}
-		
+
 		this.verifyWriteAccess(p);
-		
+
 		p.setFirstName(patient.getFirstName());
 		p.setSurName(patient.getSurName());
 		p.setEmail(patient.getEmail());
 		p.setPhoneNumber(patient.getPhoneNumber());
-		
+
 		return ServiceResultImpl.createSuccessResult(PatientImpl.newFromEntity(p), new GenericSuccessMessage());
 	}
+
 }

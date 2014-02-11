@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -105,5 +105,19 @@ public interface ActivityComment extends Serializable {
 	 * Get the date when activity was reported
 	 * @return
 	 */
-	String getActivityReportedAt();
+	String getActivityReportedAt();	
+	
+	/**
+	 * Get Healt Plan Name
+	 * @return
+	 */
+	String getHealtPlanName();
+	
+	/**
+	 * Get Patient
+	 * @return
+	 */
+	PatientBaseView getPatient();
+
+
 }

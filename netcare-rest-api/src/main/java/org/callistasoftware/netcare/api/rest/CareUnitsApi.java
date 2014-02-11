@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,22 +28,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/careunits", produces="application/json")
+@RequestMapping(value = "/careunits", produces = "application/json")
 public class CareUnitsApi extends ApiSupport {
 
-	@Autowired private CareUnitService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	@Autowired
+	private CareUnitService service;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<CareUnit[]> list() {
-		logAccess("list", "care units");
+		logAccessWithoutPdl("list", "care_units");
 		return service.listCareUnits();
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<CareUnit> save(@PathVariable("id") final Long id, @RequestBody final CareUnit careUnit) {
-		logAccess("save", "care unit");
+		logAccessWithoutPdl("save", "care_unit");
 		return service.saveCareUnit(careUnit);
 	}
 }

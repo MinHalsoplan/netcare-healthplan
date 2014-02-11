@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -624,8 +624,8 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
         scheduledActivityRepository.save(scheduledActivityEntities);
 
         /*
-         * TODO: Ska vi re-schedule aktiviteter här från nu till hälsoplanens slut? Förutsatt att
-         * vi gör en hard delete när vi inaktiverar schemaläggningen.
+         * TODO: Ska vi re-schedule aktiviteter h��r fr��n nu till h��lsoplanens slut? F��rutsatt att
+         * vi g��r en hard delete n��r vi inaktiverar schemal��ggningen.
          */
 
         getLog().debug("Activity definition with id {} marked as activated", activityDefinitionId);
@@ -760,7 +760,7 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 		this.commentRepository.save(ent);
 
-		return ServiceResultImpl.createSuccessResult(null, new GenericSuccessMessage());
+		return ServiceResultImpl.createSuccessResult(ActivityCommentImpl.newFromEntity(ent), new GenericSuccessMessage());
 	}
 
 	@Override

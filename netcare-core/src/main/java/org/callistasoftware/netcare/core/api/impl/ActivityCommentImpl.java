@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,7 @@ package org.callistasoftware.netcare.core.api.impl;
 import java.util.List;
 
 import org.callistasoftware.netcare.core.api.ActivityComment;
+import org.callistasoftware.netcare.core.api.PatientBaseView;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
 import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
@@ -47,6 +48,9 @@ public class ActivityCommentImpl implements ActivityComment {
 	private boolean hiddenByAdmin;
 	private boolean hiddenByPatient;
 	
+	private String healtPlanName;
+	private PatientBaseView patient;
+	
 	ActivityCommentImpl() {
 	
 	}
@@ -73,6 +77,9 @@ public class ActivityCommentImpl implements ActivityComment {
 			final PatientEntity p = entity.getActivity().getActivityDefinitionEntity().getHealthPlan().getForPatient();
 			this.repliedBy = p.getFirstName() + " (" + p.getCivicRegistrationNumber() + ")";
 		}
+		this.healtPlanName = entity.getActivity().getActivityDefinitionEntity().getHealthPlan().getName();
+		PatientEntity p = entity.getActivity().getActivityDefinitionEntity().getHealthPlan().getForPatient();
+		this.patient = PatientBaseViewImpl.newFromEntity(p);
 	}
 	
 	public static ActivityComment newFromEntity(final ActivityCommentEntity entity) {
@@ -161,4 +168,12 @@ public class ActivityCommentImpl implements ActivityComment {
 	public boolean isHiddenByPatient() {
 		return hiddenByPatient;
 	}
+
+	public String getHealtPlanName() {
+		return healtPlanName;
+	}
+	public PatientBaseView getPatient() {
+		return patient;
+	}
+
 }

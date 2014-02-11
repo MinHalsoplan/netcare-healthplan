@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,14 +23,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.callistasoftware.netcare.core.api.HealthPlan;
 import org.callistasoftware.netcare.core.support.TestSupport;
+import org.callistasoftware.netcare.model.entity.AccessLevel;
+import org.callistasoftware.netcare.model.entity.ActivityCategoryEntity;
+import org.callistasoftware.netcare.model.entity.ActivityCommentEntity;
+import org.callistasoftware.netcare.model.entity.ActivityDefinitionEntity;
+import org.callistasoftware.netcare.model.entity.ActivityTypeEntity;
 import org.callistasoftware.netcare.model.entity.CareActorEntity;
 import org.callistasoftware.netcare.model.entity.CareUnitEntity;
 import org.callistasoftware.netcare.model.entity.CountyCouncil;
 import org.callistasoftware.netcare.model.entity.CountyCouncilEntity;
 import org.callistasoftware.netcare.model.entity.DurationUnit;
+import org.callistasoftware.netcare.model.entity.Frequency;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
+import org.callistasoftware.netcare.model.entity.UserEntity;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -48,6 +57,19 @@ public class PatientRepositoryTest extends TestSupport {
 	private CareUnitRepository cuRepo;
 	@Autowired
 	private CountyCouncilRepository ccRepo;
+	@Autowired
+	private ScheduledActivityRepository schRepo;
+	@Autowired
+	private ActivityDefinitionRepository adRepo;
+	@Autowired
+	private ActivityCommentRepository acRepo;
+	@Autowired
+	private ActivityTypeRepository atRepo;
+	@Autowired
+	private ActivityCategoryRepository acatRepo;
+	@Autowired
+	private UserRepository userRepo;
+	
 
 	@Test
 	@Transactional

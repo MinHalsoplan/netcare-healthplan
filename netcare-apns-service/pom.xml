@@ -4,13 +4,13 @@
 
 	<artifactId>netcare-apns-service</artifactId>
 	<packaging>war</packaging>
-	<version>2.1</version>
+	<version>2.2-SNAPSHOT</version>
 	<name>netcare-apns-service</name>
 
 	<parent>
 		<groupId>org.callistasoftware.netcare</groupId>
 		<artifactId>netcare</artifactId>
-		<version>2.1</version>
+		<version>2.2-SNAPSHOT</version>
 		<relativePath>../netcare</relativePath>
 	</parent>
 
@@ -71,10 +71,6 @@
 						<contextPath>/</contextPath>
 					</webApp>
 					<systemProperties>
-						<systemProperty>
-							<name>JAVA_HOME</name>
-							<value>/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/</value>
-						</systemProperty>
 						<systemProperty>
 							<name>javax.net.debug</name>
 							<value>ssl</value>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,44 +28,46 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/comments", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/comments", produces = MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize(RoleEntity.PATIENT)
 public class CommentsApi extends ApiSupport {
 
-	@Autowired private HealthPlanService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	// All methods only performed by patients, no pdl logging
+	// If needed, ActivityComment has patient and healtPlan Name
+
+	@Autowired
+	private HealthPlanService service;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<ActivityComment[]> list() {
-		logAccess("list", "comments");
+		logAccessWithoutPdl("list", "comments");
 		return service.loadCommentsForPatient();
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ServiceResult<ActivityComment> remove(@PathVariable(value="id") final Long id) {
-		logAccess("remove", "comment");
+	public ServiceResult<ActivityComment> remove(@PathVariable(value = "id") final Long id) {
+		logAccessWithoutPdl("remove", "comment");
 		return service.deleteComment(id);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ActivityComment> update(@RequestBody final ActivityComment comment) {
-		logAccess("update", "comment");
+		logAccessWithoutPdl("update", "comment");
 		return service.replyToComment(comment.getId(), comment.getReply());
 	}
 
-	@RequestMapping(value="/{id}/hide", method=RequestMethod.POST)
+	@RequestMapping(value = "/{id}/hide", method = RequestMethod.POST)
 	@ResponseBody
-	public ServiceResult<ActivityComment> hide(@PathVariable(value="id") final Long id) {
-		logAccess("hide", "comment");
+	public ServiceResult<ActivityComment> hide(@PathVariable(value = "id") final Long id) {
+		logAccessWithoutPdl("hide", "comment");
 		// Used by patients only right now!
 		return service.hideComment(id, false);
 	}
 
-	
 }

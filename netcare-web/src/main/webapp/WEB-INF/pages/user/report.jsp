@@ -1,7 +1,6 @@
-
 <%--
 
-    Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+    Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -75,7 +74,7 @@
 							</netcare:col>
 							<netcare:col span="3">
 								<netcare:field name="due">
-									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa aktiviteter som inte är utförda</label>
+									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa aktiviteter som inte ��r utf��rda</label>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>

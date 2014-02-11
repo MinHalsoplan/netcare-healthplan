@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,6 +16,7 @@
  */
 package org.callistasoftware.netcare.core.job;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Map;
 import org.callistasoftware.netcare.core.api.ApiUtil;
 import org.callistasoftware.netcare.core.repository.AlarmRepository;
 import org.callistasoftware.netcare.core.repository.HealthPlanRepository;
+import org.callistasoftware.netcare.core.repository.PdlLogRepository;
 import org.callistasoftware.netcare.core.repository.ScheduledActivityRepository;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.core.spi.PushNotificationService;
@@ -35,6 +37,7 @@ import org.callistasoftware.netcare.model.entity.AlarmCause;
 import org.callistasoftware.netcare.model.entity.AlarmEntity;
 import org.callistasoftware.netcare.model.entity.HealthPlanEntity;
 import org.callistasoftware.netcare.model.entity.PatientEntity;
+import org.callistasoftware.netcare.model.entity.PdlLogEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityEntity;
 import org.callistasoftware.netcare.model.entity.ScheduledActivityStatus;
 import org.slf4j.Logger;
@@ -80,10 +83,51 @@ public class SystemAlarmJob {
     @Autowired
     private HealthPlanService service;
 
+    @Autowired
+    private PdlLogRepository pdlLogRepository;
+
+
 	public void init() {
 		alarmJob();
 		reminderJob();
 	}
+
+	// 2 times per day, analyse pdlLog entries from last 24 hours
+    @Scheduled(fixedRate = 43200000)
+    public void compressPdlLog() {
+        log.info("======== COMPRESS PDL LOG JOB STARTED =========");
+		Calendar fromCal = Calendar.getInstance();
+		fromCal.add(Calendar.DATE, -1);
+		Calendar toCal = Calendar.getInstance();
+		toCal.add(Calendar.MINUTE, -2);
+		
+        log.info("select log records between" + fromCal.getTime() + " : " +  toCal.getTime());
+		
+		
+        // Order By hsaId, civiId, action, healthPlanName,  date
+		final List<PdlLogEntity> entities = pdlLogRepository.findByDateBetween(fromCal.getTime(), toCal.getTime());
+        log.debug("remove duplicate pdlLog number of candidates:" + entities.size());        		
+		List<PdlLogEntity> duplicates = new ArrayList<PdlLogEntity>();
+        PdlLogEntity lastPdlLog = null;
+		for (final PdlLogEntity pdlLog : entities) {
+			if ( lastPdlLog == null){
+		       	lastPdlLog = pdlLog;
+				continue;
+			}
+
+        	if ( pdlLog.getHsaId().equals(lastPdlLog.getHsaId()) &&
+        			pdlLog.getCivicId().equals(lastPdlLog.getCivicId())&&
+        			pdlLog.getAction().equals(lastPdlLog.getAction()) &&
+        			pdlLog.getHealtPlanName().equals(lastPdlLog.getHealtPlanName())){
+        		duplicates.add(pdlLog);
+                log.debug("remove duplicate pdlLog:" + pdlLog.getId());        		
+        	}
+        	lastPdlLog = pdlLog;
+        }
+        log.debug("remove duplicate pdlLog number of items:" + duplicates.size());        		
+    	pdlLogRepository.delete(duplicates);
+        log.info("======== COMPRESS PDL LOG JOB COMPLETED =========");
+    }
 
     @Scheduled(fixedRate = 3600000)
     public void inactiveExpiredHealthPlans() {
@@ -212,7 +256,7 @@ public class SystemAlarmJob {
 			}
 			sae.setStatus(ScheduledActivityStatus.CLOSED);
 			sae.setReportedTime(new Date());
-			sae.setNote("Stängd per automatik.");
+			sae.setNote("St��ngd per automatik.");
 			saSave.add(sae);
 		}
 		log.info("Alarm activity job: {} new activity alarms!", al.size());

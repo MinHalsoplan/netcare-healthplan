@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,6 +66,7 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	
 	private boolean reportingPossible;
 	private boolean extra;
+	private String healthPlanName;
 
 	public static ScheduledActivity[] newFromEntities(final List<ScheduledActivityEntity> entities) {
 		final ScheduledActivity[] dtos = new ScheduledActivity[entities.size()];
@@ -79,6 +80,8 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	public static ScheduledActivity newFromEntity(ScheduledActivityEntity entity) {
 		ScheduledActivityImpl scheduledActivity = new ScheduledActivityImpl();
 
+		scheduledActivity.healthPlanName = entity.getActivityDefinitionEntity().getHealthPlan().getName();
+		
 		scheduledActivity.id = entity.getId();
 		scheduledActivity.activityDefinition = ActivityDefinitionImpl.newFromEntity(entity
 				.getActivityDefinitionEntity());
@@ -328,4 +331,14 @@ public class ScheduledActivityImpl implements ScheduledActivity {
 	public String getActDate() {
 		return this.actDate;
 	}
+ 
+	public String getHealthPlanName() {
+		return healthPlanName;
+	}
+
+	public void setHealthPlanName(String healthPlanName) {
+		this.healthPlanName = healthPlanName;
+	}
+	
+	
 }

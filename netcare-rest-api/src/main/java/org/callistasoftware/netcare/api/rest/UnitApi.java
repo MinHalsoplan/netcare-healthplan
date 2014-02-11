@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,30 +28,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value="/units", produces="application/json")
+@RequestMapping(value = "/units", produces = "application/json")
 public class UnitApi extends ApiSupport {
 
-	@Autowired private UnitService service;
-	
-	@RequestMapping(value="", method=RequestMethod.GET)
+	// No patient data, no pdl logging
+
+	@Autowired
+	private UnitService service;
+
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	@ResponseBody
 	public ServiceResult<MeasureUnit[]> list() {
-		logAccess("list", "measure units");
+		logAccessWithoutPdl("list", "measure units");
 		return service.loadUnits();
 	}
-	
-	@RequestMapping(value="", method=RequestMethod.POST, consumes="application/json")
+
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public ServiceResult<MeasureUnit> create(@RequestBody final MeasureUnit measureUnit) {
-		logAccess("create", "measure unit");
+		logAccessWithoutPdl("create", "measure unit");
 		return service.saveUnit(measureUnit);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST, consumes="application/json")
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public ServiceResult<MeasureUnit> update(@PathVariable("id") final Long id, 
+	public ServiceResult<MeasureUnit> update(@PathVariable("id") final Long id,
 			@RequestBody final MeasureUnit measureUnit) {
-		logAccess("update", "measure unit");
+		logAccessWithoutPdl("update", "measure unit");
 		return service.saveUnit(measureUnit);
 	}
 }

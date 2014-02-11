@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011,2012 Callista Enterprise AB <info@callistaenterprise.se>
+ * Copyright (C) 2011,2012 Landstinget i Joenkoepings laen <http://www.lj.se/minhalsoplan>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,40 +26,48 @@ public interface PatientService {
 
 	/**
 	 * Find patients from a free text search.
-	 * @param freeTextSearch - Can be either name, email or civic registration number
+	 * 
+	 * @param freeTextSearch
+	 *            - Can be either name, email or civic registration number
 	 * @return A list of patients or an empty list if no patients could be found
 	 */
 	ServiceResult<PatientBaseView[]> findPatients(final String freeTextSearch);
-	
+
 	/**
 	 * Load all patients
+	 * 
 	 * @return
 	 */
 	ServiceResult<Patient[]> loadPatientsOnCareUnit(final CareUnit careUnit);
-	
+
 	/**
 	 * Load a patient with a specific id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	ServiceResult<Patient> loadPatient(final Long id);
-	
+
 	/**
 	 * Create a new patient
-	 * @param patient the patient.
+	 * 
+	 * @param patient
+	 *            the patient.
 	 * @return the created patient, or the already existing patient.
 	 */
 	ServiceResult<Patient> createPatient(final Patient patient);
-	
+
 	/**
 	 * Delete a patient with the given id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	ServiceResult<Patient> deletePatient(final Long id);
-	
+
 	/**
 	 * Update a patient with new profile data
+	 * 
 	 * @param id
 	 * @param patient
 	 * @return
