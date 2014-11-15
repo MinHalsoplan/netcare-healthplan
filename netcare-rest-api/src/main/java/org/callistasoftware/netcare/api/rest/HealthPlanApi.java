@@ -97,7 +97,6 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> inactivateHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
 		ServiceResult<HealthPlan> result = this.service.inactivateHealthPlan(healthPlan, false);
-		this.logAccess("inactivate", "health_plan", request, result.getData().getPatient(), result.getData().getName());
 		return result;
 	}
 
@@ -106,7 +105,6 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> activateHealthPlan(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
 		ServiceResult<HealthPlan> result = this.service.activateHealthPlan(healthPlan, false);
-		this.logAccess("activate", "health_plan", request, result.getData().getPatient(), result.getData().getName());
 		return result;
 	}
 
@@ -115,7 +113,6 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> healthPlanRenewal(@PathVariable(value = "healthPlan") final Long healthPlan,
 			HttpServletRequest request) {
 		ServiceResult<HealthPlan> result = this.service.healthPlanRenewal(healthPlan, false);
-		this.logAccess("renewal", "health_plan", request, result.getData().getPatient(), result.getData().getName());
 		return result;
 	}
 
@@ -124,8 +121,6 @@ public class HealthPlanApi extends ApiSupport {
 	public ServiceResult<HealthPlan> stopHealthPlanAutoRenewal(
 			@PathVariable(value = "healthPlan") final Long healthPlan, HttpServletRequest request) {
 		ServiceResult<HealthPlan> result = this.service.healthPlanRenewal(healthPlan, true);
-		this.logAccess("stop_renewal", "health_plan", request, result.getData().getPatient(), result.getData()
-				.getName());
 		return result;
 	}
 
