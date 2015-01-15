@@ -38,21 +38,21 @@ public class PushApi extends ApiSupport {
 	@Autowired
 	private UserDetailsService service;
 	
-    @RequestMapping(value="/gcm", method=RequestMethod.POST, produces="application/json", consumes="application/x-www-form-urlencoded")
+    @RequestMapping(value="/gcm", method=RequestMethod.POST, produces="application/json")
 	@ResponseBody
-	public void c2dmRegistration(@RequestBody final MultiValueMap<String, String> data) {
+	public void c2dmRegistration(@RequestBody final Map<String, String> data) {
 		this.logAccessWithoutPdl("register", "gcm");
         saveEnvironmentProperties("Android", data);
-	    service.registerForGcm(data.getFirst("c2dmRegistrationId"));
+	    service.registerForGcm(data.get("c2dmRegistrationId"));
 	}
 
     @RequestMapping(value="/apns", method=RequestMethod.POST, produces="application/json", consumes="application/x-www-form-urlencoded")
 	@ResponseBody
     public void apnsRegistration(@RequestBody final MultiValueMap<String, String> data) {
         this.logAccessWithoutPdl("register", "apns");
-        saveEnvironmentProperties("iOS", data);
+        saveEnvironmentProperties("iOS", data.toSingleValueMap());
         // PATCH for iOS 8 Forms
-        String id = fix(data.getFirst("apnsRegistrationId"));
+        final String id = fix(data.getFirst("apnsRegistrationId"));
 	    service.registerForApnsPush(id);
 	}
 
@@ -68,17 +68,17 @@ public class PushApi extends ApiSupport {
      * Saves env data from request.
      * @param data
      */
-    private void saveEnvironmentProperties(String os, MultiValueMap<String, String> data) {
+    private void saveEnvironmentProperties(final String os, final Map<String, String> data) {
         Map<String, String> props = new HashMap<String, String>();
 
         props.put("os.name", os);
 
-        String osVersion = data.getFirst("os.version");
+        String osVersion = data.get("os.version");
         if (osVersion != null) {
             props.put("os.version", osVersion);
         }
 
-        String appVersion = data.getFirst("app.version");
+        String appVersion = data.get("app.version");
         if (appVersion != null) {
             props.put("app.version", appVersion);
         }
