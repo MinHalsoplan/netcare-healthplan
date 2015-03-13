@@ -31,6 +31,7 @@ public interface ActivityDefinitionRepository extends JpaRepository<ActivityDefi
 			"e.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
 			"hp.endDate > :now " +
+			"and e.removedFlag = false " +
 			"order by e.startDate desc")
 	List<ActivityDefinitionEntity> findByPatientAndNow(
 			@Param("patient") final PatientEntity patient,
