@@ -8,7 +8,7 @@
   <parent>
   	<groupId>org.callistasoftware.netcare</groupId>
   	<artifactId>netcare</artifactId>
-  	<version>2.2-2</version>
+  	<version>2.4.1</version>
   	<relativePath>../netcare</relativePath>
   </parent>
   
@@ -26,7 +26,7 @@
     <dependency>
   		<groupId>org.callistasoftware.netcare.commons</groupId>
   		<artifactId>mvk-integration</artifactId>
-  		<version>1.1</version>
+  		<version>1.2.3</version>
   	</dependency>
   	<dependency>
   	    <groupId>org.callistasoftware.commons</groupId>
@@ -43,11 +43,6 @@
   		<artifactId>netcare-rest-api</artifactId>
   		<version>${project.version}</version>
   	</dependency>
-  	<dependency>
-  		<groupId>org.callistasoftware.netcare.commons</groupId>
-  		<artifactId>mvk-integration</artifactId>
-  		<version>1.1</version>
-  	</dependency>  	
   	<dependency>
   		<groupId>javax.servlet</groupId>
   		<artifactId>servlet-api</artifactId>
@@ -118,16 +113,16 @@
   		<plugin>
   			<groupId>org.mortbay.jetty</groupId>
   			<artifactId>jetty-maven-plugin</artifactId>
-        <version>8.1.9.v20130131</version>
+			<version>8.1.9.v20130131</version>
   			<configuration>
-            <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
+			  <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
   			    <webApp>
   			        <contextPath>/</contextPath>
   			    </webApp>
   			    <systemProperties>
   			        <systemProperty>
   			            <name>spring.profiles.active</name>
-  			            <value>${system.mode},${mobile.mode},${database.mode}</value>
+  			            <value>test,db-embedded</value>
   			        </systemProperty>
                     <systemProperty>
                         <name>logback.configurationFile</name>
@@ -145,14 +140,14 @@
           <properties>
               <system.mode>test</system.mode>
               <mobile.mode>bankid</mobile.mode>
-              <database.mode>db-embedded</database.mode>
+              <database.mode>db-embedded </database.mode>
           </properties>
       </profile>
       <profile>
           <id>qa</id>
           <properties>
           	  <system.mode>test</system.mode>
-              <database.mode>db-psql</database.mode>
+              <database.mode>db-embedded </database.mode>
           </properties>
       </profile>
       <profile>
@@ -167,7 +162,7 @@
           <properties>
               <system.mode>test</system.mode>
               <mobile.mode>bankid</mobile.mode>
-              <database.mode>db-psql</database.mode>
+              <database.mode>db-embedded </database.mode>
           </properties>
       </profile>
   </profiles>

@@ -184,6 +184,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
+				TargetAttributes = {
+					D05D408F14FA4B3D00335899 = {
+						DevelopmentTeam = PK59ZSZECW;
+					};
+				};
 			};
 			buildConfigurationList = D05D408A14FA4B3D00335899 /* Build configuration list for PBXProject "netcare" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -326,13 +331,15 @@
 		D05D40B214FA4B3E00335899 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -343,15 +350,15 @@
 		D05D40B314FA4B3E00335899 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -390,15 +397,15 @@
 		D08E69A615094E7200209FE0 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Johannes Carlen (9H5DH7YB76)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "netcare/netcare-Prefix.pch";
 				INFOPLIST_FILE = "netcare/netcare-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCABB6A4-E8A6-4165-86DF-A567BF1819EA";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = 1;

@@ -7,7 +7,7 @@
   <parent>
   	<groupId>org.callistasoftware.netcare</groupId>
   	<artifactId>netcare</artifactId>
-  	<version>2.2-2</version>
+  	<version>2.4.1</version>
   	<relativePath>../netcare</relativePath>
   </parent>
   
@@ -21,7 +21,7 @@
   	<dependency>
   		<groupId>org.callistasoftware.netcare.commons</groupId>
   		<artifactId>mvk-integration</artifactId>
-  		<version>1.1</version>
+  		<version>1.2.3</version>
   	</dependency>
   	
   	<dependency>
@@ -30,12 +30,12 @@
   	    <version>1.0</version>
   	</dependency>
   	
-  	<dependency>
-  	    <groupId>com.google.android.gcm</groupId>
-  	    <artifactId>gcm-server</artifactId>
-  	    <version>1.0</version>
-  	</dependency>
-  	
+	<dependency>
+	  <groupId>com.ganyo</groupId>
+	  <artifactId>gcm-server</artifactId>
+	  <version>1.0.2</version>
+	</dependency>
+
   	<dependency>
 	    <groupId>com.googlecode.json-simple</groupId>
 	    <artifactId>json-simple</artifactId>
@@ -161,11 +161,12 @@
   			</exclusion>
   		</exclusions>
   	</dependency>
-  	<dependency>
-  		<groupId>javapns</groupId>
-  		<artifactId>javapns</artifactId>
-  		<version>2.2</version>
-  	</dependency>
+	<dependency>
+	  <groupId>com.github.fernandospr</groupId>
+	  <artifactId>javapns-jdk16</artifactId>
+	  <version>2.2.1</version>
+	</dependency>
+
 	<dependency>
 		<groupId>org.bouncycastle</groupId>
 		<artifactId>bcprov-jdk16</artifactId>
