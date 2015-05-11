@@ -16,12 +16,6 @@
  */
 package org.callistasoftware.netcare.api.rest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.callistasoftware.netcare.core.api.ActivityComment;
 import org.callistasoftware.netcare.core.api.ActivityDefinition;
 import org.callistasoftware.netcare.core.api.CareActorBaseView;
@@ -33,6 +27,7 @@ import org.callistasoftware.netcare.core.api.ServiceResult;
 import org.callistasoftware.netcare.core.api.impl.HealthPlanImpl;
 import org.callistasoftware.netcare.core.api.statistics.HealthPlanStatistics;
 import org.callistasoftware.netcare.core.api.util.DateUtil;
+import org.callistasoftware.netcare.core.api.util.SafeString;
 import org.callistasoftware.netcare.core.spi.HealthPlanService;
 import org.callistasoftware.netcare.core.spi.ReportingService;
 import org.slf4j.Logger;
@@ -47,6 +42,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 @RequestMapping(value = "/healthplans")
@@ -229,9 +229,9 @@ public class HealthPlanApi extends ApiSupport {
 	@RequestMapping(value = "/activity/{activity}/comment", produces = "application/json", method = RequestMethod.POST)
 	@ResponseBody
 	public ServiceResult<ScheduledActivity> commentActivity(@PathVariable(value = "activity") final Long activity,
-			@RequestParam(value = "comment") final String comment, HttpServletRequest request) {
+			@RequestParam(value = "comment") final SafeString comment, HttpServletRequest request) {
 		log.debug("Comment is: {}", comment);
-		ServiceResult<ScheduledActivity> result = this.service.commentOnPerformedActivity(activity, comment);
+		ServiceResult<ScheduledActivity> result = this.service.commentOnPerformedActivity(activity, comment.escaped());
 		this.logAccess("comment", "activity", request, result.getData().getPatient(), result.getData()
 				.getHealthPlanName());
 		return result;

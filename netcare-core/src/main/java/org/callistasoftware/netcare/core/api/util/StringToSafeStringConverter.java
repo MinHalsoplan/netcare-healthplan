@@ -16,29 +16,11 @@
  */
 package org.callistasoftware.netcare.core.api.util;
 
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
+import org.springframework.core.convert.converter.Converter;
 
-import java.io.IOException;
-
-public class StringHtmlEscapingDeserializer extends JsonDeserializer<String> {
-
-	public StringHtmlEscapingDeserializer(){
-		// Empty
-	}
-
+public class StringToSafeStringConverter implements Converter<String, SafeString> {
 	@Override
-	public String deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-		JsonToken currentToken = jp.getCurrentToken();
-		if (currentToken.equals(JsonToken.VALUE_STRING)) {
-			String text = jp.getText().trim();
-			text = new SafeString(text).escaped();
-			return text;
-		} else if (currentToken.equals(JsonToken.VALUE_NULL)) {
-			return getNullValue();
-		}
-		throw ctxt.mappingException(String.class);
+	public SafeString convert(String source) {
+		return new SafeString(source);
 	}
 }

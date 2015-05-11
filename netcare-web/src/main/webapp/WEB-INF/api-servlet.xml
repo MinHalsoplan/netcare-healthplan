@@ -31,7 +31,15 @@
 
 	<bean id="objectMapper" class="org.callistasoftware.netcare.core.api.util.NetcareObjectMapper"/>
 
-	<mvc:annotation-driven>
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<set>
+				<bean class="org.callistasoftware.netcare.core.api.util.StringToSafeStringConverter"/>
+			</set>
+		</property>
+	</bean>
+
+	<mvc:annotation-driven conversion-service="conversionService">
 		<mvc:message-converters>
 			<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
 				<property name="objectMapper" ref="objectMapper"/>
