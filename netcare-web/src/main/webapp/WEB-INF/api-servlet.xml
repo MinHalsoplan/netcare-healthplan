@@ -29,7 +29,15 @@
 	<context:annotation-config />
 	<context:component-scan base-package="org.callistasoftware.netcare.api.rest" />
 
-	<mvc:annotation-driven />
+	<bean id="objectMapper" class="org.callistasoftware.netcare.core.api.util.NetcareObjectMapper"/>
+
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+				<property name="objectMapper" ref="objectMapper"/>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 	<mvc:default-servlet-handler />
 	
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
