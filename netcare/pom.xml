@@ -452,19 +452,20 @@
   		</plugin>
   	</plugins>
   </build>
-  
-  <repositories>
-  	<repository>
-  		<id>org.springframework.maven.milestones</id>
-  		<url>http://maven.springframework.org/milestone</url>
-  	</repository>
-  </repositories>
-  
-  <pluginRepositories>
-  	<pluginRepository>
-  		<id>maven-license-plugin</id>
-  		<url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-  	</pluginRepository>
-  </pluginRepositories>
-  
+
+	<repositories>
+		<repository>
+			<id>maven.central</id>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>org.springframework.maven.milestones</id>
+			<url>http://repo.springsource.org/libs-release/</url>
+		</repository>
+		<repository>
+			<id>callistasoftware.release</id>
+			<url>https://repository-callistasoftware.forge.cloudbees.com/release/</url>
+		</repository>
+	</repositories>
+
 </project>
