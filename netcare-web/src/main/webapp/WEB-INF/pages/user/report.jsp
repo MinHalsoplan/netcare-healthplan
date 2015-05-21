@@ -74,7 +74,7 @@
 							</netcare:col>
 							<netcare:col span="3">
 								<netcare:field name="due">
-									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa aktiviteter som inte ��r utf��rda</label>
+									<input id="due" type="checkbox" name="due" /><label style="display: inline;" for="due"> Visa aktiviteter som inte är utförda</label>
 								</netcare:field>
 							</netcare:col>
 						</netcare:row>
