@@ -452,21 +452,19 @@
   		</plugin>
   	</plugins>
   </build>
-  
-  <repositories>
-<repository>
- <id>maven.central</id>
- <url>https://repo1.maven.org/maven2</url>
-</repository>
- <repository>
-  <id>org.springframework.maven.milestones</id>
- <url>http://repo.springsource.org/libs-release/</url>
-  <!--<url>http://maven.springframework.org/milestone</url>-->
- </repository>
-<repository>
- <id>callistasoftware.release</id>
- <url>https://repository-callistasoftware.forge.cloudbees.com/release/</url>
-</repository>
-</repositories>
-  
+	<repositories>
+		<repository>
+			<id>maven.central</id>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>org.springframework.maven.milestones</id>
+			<url>http://repo.springsource.org/libs-release/</url>
+		</repository>
+		<repository>
+			<id>callistasoftware.release</id>
+			<url>https://repository-callistasoftware.forge.cloudbees.com/release/</url>
+		</repository>
+	</repositories>
+
 </project>
