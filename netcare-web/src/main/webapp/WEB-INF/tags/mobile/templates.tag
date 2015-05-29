@@ -48,16 +48,16 @@
 		<fieldset data-role="controlgroup">
 			<legend>{{=definition.activityItemType.name}}</legend>
 			{{ if (answer == true) { }}
-				<input type="radio" name="radio{{=id}}" id="radioyes{{=id}}" data-mini="true" checked="checked"/>
+				<input type="radio" name="radio{{=id}}" value="on" id="radioyes{{=id}}" data-mini="true" checked="checked"/>
 			{{ } else { }}
-				<input type="radio" name="radio{{=id}}" id="radioyes{{=id}}" data-mini="true" />
+				<input type="radio" name="radio{{=id}}" value="on" id="radioyes{{=id}}" data-mini="true" />
 			{{ } }}
 			<label for="radioyes{{=id}}">Ja</label>
 
 			{{ if (answer == false || answer == null) { }}
-				<input type="radio" name="radio{{=id}}" id="radiono{{=id}}" data-mini="true" checked="true"/>
+				<input type="radio" name="radio{{=id}}" value="off" id="radiono{{=id}}" data-mini="true" checked="true"/>
 			{{ } else { }}
-				<input type="radio" name="radio{{=id}}" id="radiono{{=id}}" data-mini="true"/>
+				<input type="radio" name="radio{{=id}}" value="off" id="radiono{{=id}}" data-mini="true"/>
 			{{ } }}
 			<label for="radiono{{=id}}">Nej</label>
 		</fieldset>
