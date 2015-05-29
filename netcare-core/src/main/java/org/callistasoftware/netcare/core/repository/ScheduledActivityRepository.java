@@ -36,7 +36,7 @@ public interface ScheduledActivityRepository extends JpaRepository<ScheduledActi
 	 * @param end end date.
 	 * @return the list.
 	 */
-	@Query("select e from ScheduledActivityEntity as e inner join " +
+	@Query("select distinct e from ScheduledActivityEntity as e inner join " +
 			"e.activityDefinition as ad inner join " +
 			"ad.healthPlan as hp " +
 			"where hp.forPatient = :patient and " +
