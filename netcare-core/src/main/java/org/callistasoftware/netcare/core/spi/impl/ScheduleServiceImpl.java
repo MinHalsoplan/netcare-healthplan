@@ -68,16 +68,14 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 
 		if (start == null || end == null) {
 			start = new DateTime().withMillisOfDay(0).toDate().getTime();
-			end = new DateTime().withMillisOfDay(0).plusDays(1).toDate().getTime();
+			end = new DateTime().withMillisOfDay(0).toDate().getTime();
 		}
 
 		final DateTime s = new DateTime(start);
 		final DateTime e = new DateTime(end);
 
-		if (s.getDayOfYear() == e.getDayOfYear()) {
-			start = s.withMillisOfDay(0).toDate().getTime();
-			end = s.withMillisOfDay(0).plusDays(1).toDate().getTime();
-		}
+		start = s.withMillisOfDay(0).toDate().getTime();
+		end = e.withMillisOfDay(0).plusDays(1).toDate().getTime();
 
 		final List<ScheduledActivityEntity> list = this.repo.findByPatientAndScheduledTimeBetween(getPatient(),
 				new Date(start), new Date(end));
@@ -203,8 +201,8 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 					AlarmEntity ae = AlarmEntity.newEntity(AlarmCause.LIMIT_BREACH, healthPlan.getForPatient(),
 							healthPlan.getCareUnit().getHsaId(), me.getId());
 
-					ae.setInfo(healthPlan.getName()+ " # " + definition.getMeasurementType().getName() + ": " + me.getReportedValue() + " "
-							+ definition.getMeasurementType().getUnit().getName());
+					ae.setInfo(healthPlan.getName() + " # " + definition.getMeasurementType().getName() + ": "
+							+ me.getReportedValue() + " " + definition.getMeasurementType().getUnit().getName());
 
 					alarmRepo.save(ae);
 				}

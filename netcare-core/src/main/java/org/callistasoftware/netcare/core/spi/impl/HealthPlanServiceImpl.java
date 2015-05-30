@@ -67,6 +67,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.joda.time.DateTime;
+
 
 /**
  * Implementation of service definition
@@ -372,14 +374,20 @@ public class HealthPlanServiceImpl extends ServiceSupport implements HealthPlanS
 		}
 		final PatientEntity patient = patientRepository.findByCivicRegistrationNumber(personnummer);
 		this.verifyReadAccess(entity);
+		
+		Date endDate = end;
+		if (end != null){
+			final DateTime e = new DateTime(end);
+			endDate = new Date(e.withMillisOfDay(0).plusDays(1).toDate().getTime());			
+		}
 
-		getLog().info("filtered reports: pnr: {}, start: {}, end: {}, unit: \"{}\"", new Object[] { personnummer, start, end, entity.getHsaId() });
+		getLog().info("filtered reports: pnr: {}, start: {}, end: {}, unit: \"{}\"", new Object[] { personnummer, start, endDate, entity.getHsaId() });
 
 		final List<ScheduledActivityEntity> activities;
 		if (StringUtils.hasText(personnummer)) {
-			activities = this.scheduledActivityRepository.findByCareUnitPatientBetween(entity.getHsaId(), patient, start, end);
+			activities = this.scheduledActivityRepository.findByCareUnitPatientBetween(entity.getHsaId(), patient, start, endDate);
 		} else {
-			activities = this.scheduledActivityRepository.findByCareUnitBetween(entity.getHsaId(), start, end);
+			activities = this.scheduledActivityRepository.findByCareUnitBetween(entity.getHsaId(), start, endDate);
 		}
 
 		getLog().info("filter reports: found {} activities", activities.size());
