@@ -3,13 +3,13 @@
 
 	<artifactId>netcare-apns-service</artifactId>
 	<packaging>war</packaging>
-	<version>2.5.1-SNAPSHOT</version>
+	<version>2.5.1</version>
 	<name>netcare-apns-service</name>
 
 	<parent>
 		<groupId>org.callistasoftware.netcare</groupId>
 		<artifactId>netcare</artifactId>
-		<version>2.5.1-SNAPSHOT</version>
+		<version>2.5.1</version>
 		<relativePath>../netcare</relativePath>
 	</parent>
 
