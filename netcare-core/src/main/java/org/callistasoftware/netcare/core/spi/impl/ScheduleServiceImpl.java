@@ -100,7 +100,7 @@ public class ScheduleServiceImpl extends ServiceSupport implements ScheduleServi
 				filtered.add(sae);
 			} else {
 
-				boolean openCheck = sae.getReportedTime() == null
+				boolean openCheck = includeDue && sae.getReportedTime() == null
 						&& sae.getStatus().equals(ScheduledActivityStatus.OPEN);
 				if (openCheck) {
 					filtered.add(sae);
